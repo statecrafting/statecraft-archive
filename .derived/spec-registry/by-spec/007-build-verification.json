@@ -1,0 +1,36 @@
+{
+  "record": {
+    "created": "2026-07-29",
+    "dependsOn": [
+      "000-bootstrap",
+      "002-toolchain",
+      "003-hiqlite-native",
+      "004-kernel-native",
+      "005-governance-native",
+      "006-fleet-native"
+    ],
+    "establishes": [
+      {
+        "kind": "file",
+        "path": ".github/workflows/build.yml"
+      }
+    ],
+    "id": "007-build-verification",
+    "implementation": "complete",
+    "sectionHeadings": [
+      "007: Build verification",
+      "1. Purpose",
+      "2. Territory",
+      "3. Behavior",
+      "4. Out of scope",
+      "5. Acceptance",
+      "6. Implementation record"
+    ],
+    "specPath": "specs/007-build-verification/spec.md",
+    "status": "approved",
+    "summary": "Publishing here is CI-only and tag-triggered, and until this spec the only workflow that compiled a napi-rs addon was the one that published it. A Rust change could reach `main` reviewed but never built, and the first compile on a Linux leg happened after the tag was pushed, when the version number had already been spent. This adds a pull-request gate that builds all four addons on all three publish platforms with the same release profile publish uses, and runs hiqlite-native's two behavioral sanity suites on each leg. It deliberately does not gate the vendored Encore runtime build; section 4 records why that is a decision and not an oversight.\n",
+    "title": "Build verification: compile the addons before a tag can spend a version"
+  },
+  "shardHash": "439d2ec130e1ee361a4a32f0f95f04b3cd4c8dae66311f926c6b693d6b26a702",
+  "specVersion": "1.1.0"
+}

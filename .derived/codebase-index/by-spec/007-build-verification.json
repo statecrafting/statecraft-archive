@@ -1,0 +1,37 @@
+{
+  "mapping": {
+    "dependsOn": [
+      "000-bootstrap",
+      "002-toolchain",
+      "003-hiqlite-native",
+      "004-kernel-native",
+      "005-governance-native",
+      "006-fleet-native"
+    ],
+    "implementingPaths": [
+      {
+        "path": ".github/workflows/build.yml",
+        "source": "spec-edge"
+      }
+    ],
+    "resolvedUnits": [
+      {
+        "locations": [
+          {
+            "file": ".github/workflows/build.yml"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "file",
+          "path": ".github/workflows/build.yml"
+        }
+      }
+    ],
+    "specId": "007-build-verification",
+    "specStatus": "approved"
+  },
+  "schemaVersion": "1.1.0",
+  "shardHash": "fe29f6d212937f803401d4028b3e89b948243251db5c8a5ad679abadc54047cc"
+}
