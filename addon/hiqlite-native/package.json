@@ -1,18 +1,22 @@
 {
   "name": "@statecrafting/hiqlite-native",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "license": "Apache-2.0",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/statecrafting/statecrafting.git",
     "directory": "addon/hiqlite-native"
   },
-  "spec-spine": { "spec": "003-hiqlite-native" },
-  "description": "In-process hiqlite (cache/KV + counters) as a napi-rs native addon. Prebuilt per-platform binaries ship as optional dependencies (statecrafting spec 003).",
+  "spec-spine": {
+    "spec": "003-hiqlite-native"
+  },
+  "description": "In-process hiqlite as a napi-rs native addon: the state layer. Replicated SQL (query/execute/txn), watch (notify/listen), leased locks with fencing tokens, encrypted backups, plus the original cache/KV and counters. Prebuilt per-platform binaries ship as optional dependencies (statecrafting spec 003).",
   "type": "commonjs",
   "main": "index.js",
   "types": "index.d.ts",
-  "engines": { "node": ">=24" },
+  "engines": {
+    "node": ">=24"
+  },
   "files": [
     "LICENSE",
     "index.js",
@@ -27,8 +31,8 @@
     ]
   },
   "scripts": {
-    "build": "napi build --platform --release",
-    "build:debug": "napi build --platform",
+    "build": "napi build --platform --release && node prepend-dts-header.mjs",
+    "build:debug": "napi build --platform && node prepend-dts-header.mjs",
     "create-npm-dirs": "napi create-npm-dirs",
     "artifacts": "napi artifacts"
   },

@@ -98,3 +98,122 @@ enrahitu/002-in-process-hiqlite, which keeps its other edge
 
 - Bumping upstream hiqlite past 0.14; this move preserves the pin.
 - The Encore-side `backend/hiq/` service, which stays in enrahitu.
+
+## Amendment (2026-07-29): the state-layer expansion, 0.2.0
+
+This addon shipped as a cache: nine functions, `cache` + `counters`
+features, no bundled SQLite-C. enrahitu's pivot makes hiqlite the **state
+layer** rather than a cache (enrahitu spec 001 §4.1), and this is the
+change that makes that true. The surface it must provide was written down
+first, as enrahitu spec 032, so this expansion is derived from a contract
+rather than guessed; that spec is the requirement side of this interface
+and this package is the implementation side.
+
+### What is added
+
+Nine functions become twenty-one. Replicated SQL (`query`,
+`queryConsistent`, `execute`, `executeReturning`, `txn`), watch (`notify`,
+`listenNext`), leases (`lock`, `releaseLock`), and durability (`backup`,
+`backupListLocal`, `backupListS3`). Cluster membership arrives as
+configuration passthrough through `ENRAHITU_HIQ_NODES`, not as consensus
+code: hiqlite already solves bootstrap, auto-join, ordinal identity, and
+learners.
+
+`query` and `queryConsistent` are two names rather than one call with a
+flag, deliberately. A consistency flag has a default, and the default is
+silently wrong at half the call sites; two names make the author state the
+requirement and make the expensive one visible in review.
+
+### Features, and the cost accepted
+
+`sqlite`, `dlock`, `listen_notify_local`, and `backup` join `cache`,
+`counters`, `macros`. The last two of the new ones resolve to `["cache"]`,
+already enabled, so they are nearly free. `sqlite` is not: it pulls
+`rusqlite`, `deadpool`, and `serde_rusqlite`, so **SQLite-C now compiles
+into the `.node` on all three platforms** and this crate's stated
+"no bundled SQLite-C" property ends here. That is accepted rather than
+absorbed quietly: it is what buys replicated SQL, and `backup` resolves to
+`["dep:cron", "s3", "sqlite"]`, so scheduled encrypted off-box backups
+arrive in the same change.
+
+`listen_notify` (the **remote** variant) is deliberately NOT enabled. It
+would let a non-member client subscribe to the cache raft group over SSE,
+which is a second egress path bypassing the API layer where admission
+runs. Client-facing streaming is the consumer's concern, through its own
+API surface.
+
+### Four things the implementation forced, all improvements
+
+Each was found by building and running this, not by reading the contract,
+and each is recorded because the contract now says something different
+because of it.
+
+1. **The fencing token could not come from hiqlite's lock.** enrahitu spec
+   032 §3.4 reasoned that the lock id is the raft log index and therefore
+   already a valid fencing token. It is, and it is **unreachable**:
+   `hiqlite::Lock` keeps `id` in a private field with no accessor. The
+   token is now a monotonic counter in the SQLITE group
+   (`_hiqlite_lease_fence`, created lazily), which is strictly better:
+   lock state lives in the cache group, which is not durable and does not
+   survive a full cluster restart, and **a fencing token that resets is
+   not a fencing token**. The fence is now durable and lives in the same
+   group as the writes it guards, so the fence and the write can commit in
+   one `txn`.
+2. **The lock handle must be parked Rust-side.** `hiqlite::Lock` releases
+   on `Drop`, asynchronously. JavaScript has no deterministic drop, so
+   without holding the handle the lock would release the instant `lock()`
+   returned and the lease would be a silent no-op. Hence explicit
+   `releaseLock`.
+3. **The watch envelope had to become a concrete struct.** hiqlite
+   serializes bus events with bincode, which cannot decode a free-form
+   JSON value (`Serde(AnyNotSupported)`). A `NotifyEnvelope` struct fixes
+   it and is what the contract wanted anyway: with fixed fields a caller
+   **cannot** smuggle a payload onto the cache raft group, where it would
+   cost memory on every node for data nobody may trust.
+4. **`backup` makes encryption keys mandatory at boot.** It pulls `s3`,
+   which makes `NodeConfig.enc_keys` required, so the node refuses to
+   start without them. `ENRAHITU_HIQ_ENC_KEYS` takes the **same format
+   rauthy's `ENC_KEYS` uses**, so a deployment can custody one key set and
+   inject it into both hiqlite instances. That is not cosmetic: off-box
+   backups are encrypted with these keys, so a tenant that loses them
+   holds unrecoverable ciphertext, and two independent key custodies
+   double that exposure for no benefit. A publicly-known development key
+   is the fallback, and using it prints a warning, because a production
+   node quietly encrypting backups with a known key is worse than one that
+   fails to start.
+
+### The SQL value domain, and what it refuses
+
+NULL, INTEGER, REAL, and TEXT round-trip. Blobs do not, and neither do
+arrays or objects as parameters. JSON has no byte type, and every
+candidate encoding (base64 string, array of numbers) is ambiguous with a
+legitimate value of that shape, so choosing one now would become a
+compatibility promise later. A BLOB column raises an error naming the
+column rather than mis-encoding it, and an object parameter says to
+`JSON.stringify` at the call site so the column type stays a decision the
+schema makes.
+
+`SqlValue`, `SqlRow`, and `NotifyEnvelope` are declared in the generated
+`index.d.ts` via `prepend-dts-header.mjs`. napi emits those names in
+signatures but has no way to declare a TypeScript union, so without that
+step every consumer's typecheck fails on a dangling type. `--dts-header`
+is not the hook: it takes literal content, not a path.
+
+### Acceptance
+
+1. `cargo build --release` and `napi build` succeed with the new feature
+   set. **Met.**
+2. `sanity-state.mjs` passes against a running node: 19 checks covering
+   every contract decision that produced a call, plus the two that
+   produced a behavior (txn atomicity, fence monotonicity). **Met.**
+3. The original `sanity.mjs` still passes, so the cache surface is
+   unregressed. **Met.**
+4. enrahitu builds and its full suite passes against the expanded addon
+   patched into `node_modules`, **including the app-level suite that boots
+   the real Encore process**. This re-proves the template-encore PR #40
+   property (two tokio runtimes, separate dylibs, one process) now that
+   SQLite-C, S3, and cron are compiled in. **Met**: 181 tests, 20 files.
+5. Published at `0.2.0` with provenance, all four packages, Apache-2.0.
+   **Pending**: CI-only, per the publish matrix.
+6. enrahitu bumps to `^0.2` and writes `backend/state/` against it.
+   **Pending**: enrahitu spec 032's territory, after publish.

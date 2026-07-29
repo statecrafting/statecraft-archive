@@ -5,8 +5,8 @@
     "name": "hiqlite-native",
     "path": "addon/hiqlite-native",
     "specRef": "003-hiqlite-native",
-    "version": "0.1.0"
+    "version": "0.2.0"
   },
   "schemaVersion": "1.1.0",
-  "shardHash": "46263d16649054676937afa4e01d8bc989f2dbacc28c86c6566e52101926d279"
+  "shardHash": "b890f9c24dabc6e7fa1cccc1ff891a0402147b0bd35fac0dbb78acce2f80689d"
 }
