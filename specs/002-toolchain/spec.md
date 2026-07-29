@@ -280,3 +280,57 @@ The consumer flip rides enrahitu spec 022: enrahitu bumps its toolchain
 dependency to `^0.3.0`, wires `backend/obs/`, flips its manifest declaration,
 and re-extracts; the committed model then records `otel: true` under the
 staleness gate.
+
+## Amendment (2026-07-29): the state layer is a second governed facade (0.4.0)
+
+enrahitu's pivot (its spec 001) makes hiqlite the state layer rather than a
+cache, and its spec 032 gives that surface a governed facade of its own,
+`backend/state/`. The extract surface had one facade over the addon wired
+into it by name, so a second one was a hard error rather than a new
+observation: every file in `backend/state/` tripped the `raw-hiq-init-import`
+ban, and none of its named exports mapped to a capability kind. All four
+packages go to **0.4.0** (lockstep, per the 0.2.0 and 0.3.0 precedent; the
+platform carriers change version only).
+
+- **Two facades, one per raft group.** `lib/extract/usage.mjs` gains
+  `STATE_FACADE_DIR = "backend/state/"` beside the existing constants, and
+  the `raw-hiq-init-import` ban becomes a path-prefix rule admitting
+  `backend/kernel/hiq.ts` and anything under `backend/state/`. This is not a
+  loosening of the honesty clause but a restatement of it: the addon handle
+  is still reachable from exactly two places, and the split follows the raft
+  groups, which have genuinely different guarantees. `backend/kernel/hiq.ts`
+  governs the CACHE group, which is not durable and does not survive a full
+  cluster restart, and `backend/state/` governs the SQLITE group, which is
+  the durable store. One module fronting both would put two durability
+  contracts behind one import.
+- **A directory, not a file.** The other facades are single files; this one
+  splits by concern (sql, watch, lease, backup, migrate) and a consumer may
+  import from the barrel or from a submodule. The walk terminates on the
+  directory prefix so both routes observe the same touch and neither is a
+  hole.
+- **`STATE_KINDS`.** The facade's named exports map to kinds:
+  `query`/`queryConsistent`/`schemaVersion` to `db.read`,
+  `execute`/`executeReturning` to `db.write`, `txn` to `db.txn`, `migrate`
+  to `db.migrate`, `lock`/`withLease` to `lock.acquire`, `notify` to
+  `notify.publish`, `listen` to `notify.listen`, and the three backup calls
+  to `bucket.write`/`bucket.list` on `state-backups`.
+- **Why backup is a bucket capability.** The kernel's vocabulary is a fixed
+  28 kinds (enrahitu spec 020 §3.3) and boot refuses a model declaring one it
+  does not know, so a `backup.*` kind would need a kernel-native release and
+  a contract amendment before the facade could exist. It is also not needed:
+  a backup genuinely is an object-store write of the database, and
+  `bucket.write` is classified non-read, so it fails closed at `read-only`
+  trust. If a later contract adds backup kinds, this map is the only thing
+  that changes.
+- **`otelObserved` terminates there too**, on the same prefix, so the tracer
+  walk keeps treating governed facades as leaves and the two walks stay
+  consistent with each other.
+
+Determinism holds: the mapping is static and the walk is a pure function of
+the source tree.
+
+The consumer flip rides enrahitu spec 032: enrahitu bumps its toolchain
+dependency to `^0.4.0` and its hiqlite-native dependency to `^0.2.0`, adds
+`hiqlite` to its own `contracts/app-model.schema.json` engine enum (that
+schema is the consumer's, read from the repo under verification, not shipped
+here), and re-extracts.

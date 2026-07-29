@@ -22,6 +22,20 @@ const SECRETS_MODULE = "backend/lib/secrets.ts";
 const EGRESS_MODULE = "backend/kernel/egress.ts";
 
 /**
+ * The state layer facade (enrahitu spec 032). A DIRECTORY rather than a single
+ * file, unlike the others, because its surface splits by concern (sql, watch,
+ * lease, backup, migrate) and a consumer may import from `backend/state` or
+ * from one submodule. Terminating on the prefix means both routes are observed
+ * and neither is a hole.
+ *
+ * It is a second governed facade over the same addon, not a replacement for
+ * `backend/kernel/hiq.ts`: that one governs the CACHE raft group (KV, counters,
+ * not durable), this one the SQLITE group (durable state). The split follows the
+ * raft groups, which have genuinely different guarantees.
+ */
+const STATE_FACADE_DIR = "backend/state/";
+
+/**
  * The OTel wiring anchor (enrahitu spec 022): the file that constructs the
  * app's tracer provider. A service that transitively imports it is
  * instrumented; the model's observability.otel derives from that reach.
@@ -36,6 +50,32 @@ const HIQ_KINDS = {
   counterGet: { kind: "counter.get", resource: "counters" },
   counterSet: { kind: "counter.set", resource: "counters" },
   counterDel: { kind: "counter.delete", resource: "counters" },
+};
+
+/**
+ * The state facade's named exports, mapped to the kinds they exercise.
+ *
+ * `backup` adjudicates as a bucket write rather than a backup kind because the
+ * kernel's vocabulary is a fixed 28 kinds (enrahitu spec 020 §3.3) and boot
+ * refuses a model declaring one it does not know. That is not a fudge: a backup
+ * genuinely is an object-store write of the database, and `bucket.write` is
+ * classified non-read, so it fails closed at `read-only` trust.
+ */
+const STATE_KINDS = {
+  query: { kind: "db.read", resource: "state" },
+  queryConsistent: { kind: "db.read", resource: "state" },
+  schemaVersion: { kind: "db.read", resource: "state" },
+  execute: { kind: "db.write", resource: "state" },
+  executeReturning: { kind: "db.write", resource: "state" },
+  txn: { kind: "db.txn", resource: "state" },
+  migrate: { kind: "db.migrate", resource: "state" },
+  lock: { kind: "lock.acquire", resource: "state" },
+  withLease: { kind: "lock.acquire", resource: "state" },
+  notify: { kind: "notify.publish", resource: "state" },
+  listen: { kind: "notify.listen", resource: "state" },
+  backup: { kind: "bucket.write", resource: "state-backups" },
+  backupListLocal: { kind: "bucket.list", resource: "state-backups" },
+  backupListS3: { kind: "bucket.list", resource: "state-backups" },
 };
 
 // Model resource names are the lowercase form of the encore secret binding
@@ -142,6 +182,11 @@ export function observeService(repoRoot, serviceDir) {
         for (const name of names) {
           if (HIQ_KINDS[name]) touches.push({ ...HIQ_KINDS[name], via: rel(repoRoot, file) });
         }
+      } else if (targetRel.startsWith(STATE_FACADE_DIR)) {
+        const names = edge.named.includes("*") ? Object.keys(STATE_KINDS) : edge.named;
+        for (const name of names) {
+          if (STATE_KINDS[name]) touches.push({ ...STATE_KINDS[name], via: rel(repoRoot, file) });
+        }
       } else if (targetRel === SECRETS_MODULE) {
         const names = edge.named.includes("*") ? Object.keys(SECRET_ACCESSORS) : edge.named;
         for (const name of names) {
@@ -195,6 +240,7 @@ export function otelObserved(repoRoot, serviceRelPaths) {
         if (targetRel === OBS_TRACER) return true;
         if (!targetRel.startsWith("backend/")) continue;
         if (targetRel === HIQ_FACADE || targetRel === SECRETS_MODULE || targetRel === EGRESS_MODULE) continue;
+        if (targetRel.startsWith(STATE_FACADE_DIR)) continue;
         if (targetRel.startsWith("backend/kernel/")) continue;
         if (targetRel.startsWith("backend/core/ledger/")) continue;
         queue.push(target);
@@ -226,14 +272,20 @@ const BANS = [
   },
   {
     id: "raw-hiq-init-import",
-    allowed: new Set(["backend/kernel/hiq.ts"]),
+    allowed: undefined, // path-prefix rule: two governed facades, see below
     hit: (edges, file, repoRoot) =>
       edges.some((e) => {
         if (!e.specifier.startsWith(".")) return false;
         const target = resolveRelative(file, e.specifier);
         return target !== undefined && rel(repoRoot, target) === "backend/hiq/init.ts";
       }),
-    message: "hiq/init import outside the governed facade backend/kernel/hiq.ts",
+    // Two facades reach the addon handle, one per raft group: kernel/hiq.ts for
+    // the cache group (KV, counters) and state/ for the SQLITE group (enrahitu
+    // spec 032). Everything else goes through one of them.
+    allowedPath: (relPath) =>
+      relPath === HIQ_FACADE || relPath.startsWith(STATE_FACADE_DIR),
+    message:
+      "hiq/init import outside the governed facades backend/kernel/hiq.ts and backend/state/",
   },
   {
     id: "bare-fetch",
