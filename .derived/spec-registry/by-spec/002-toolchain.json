@@ -50,13 +50,14 @@
       "5. Acceptance",
       "6. Out of scope",
       "Amendment (2026-07-21): the app-model extract surface catches up (0.2.0)",
-      "Amendment (2026-07-22): observability.otel is observed, not declared (0.3.0)"
+      "Amendment (2026-07-22): observability.otel is observed, not declared (0.3.0)",
+      "Amendment (2026-07-29): the state layer is a second governed facade (0.4.0)"
     ],
     "specPath": "specs/002-toolchain/spec.md",
     "status": "approved",
     "summary": "The first package lands: the Encore build toolchain moves from enrahitu to `@statecrafting/toolchain`, bringing the vendored Encore tree (`vendor/encore/`, MPL-2.0, pinning upstream v1.57.9) and the three per-platform binary packages that carry `encore-runtime.node` and `tsparser-encore`. It is the deepest dependency in the family: both enrahitu and statecraft build with it. Retires enrahitu/008-vendored-encore-toolchain (whose only edge is `vendor/encore/`) and drops `packages/` from enrahitu/018-packaged-chassis.\n",
     "title": "The Encore build toolchain: vendored core, per-platform binaries"
   },
-  "shardHash": "25f6fafffaf32894f70d81e81f3eb413daaac04bd3e93f62426cef3f32eb23d3",
+  "shardHash": "49c5e62196d18ad0d5814f3c0917fa7a3f7f8cf818ee81298cfa86e914cb135c",
   "specVersion": "1.1.0"
 }

@@ -18,7 +18,7 @@ import {
   prettyStringify,
 } from "./canonical.mjs";
 import { accessString, pathString } from "./meta.mjs";
-import { covered, observeService, otelObserved } from "./usage.mjs";
+import { banViolations, covered, observeService, otelObserved } from "./usage.mjs";
 
 describe("canonical serialization (spec 020 §3.5)", () => {
   it("sorts keys recursively with compact separators and a trailing newline", () => {
@@ -114,6 +114,49 @@ describe("the import walk over a fixture tree", () => {
     });
     expect(observeService(root, "backend/svc")).toEqual([
       { kind: "kv.get", resource: "cache", via: "backend/svc/api.ts" },
+    ]);
+  });
+
+  it("maps state facade imports to their kinds, from the barrel or a submodule", () => {
+    const barrel = fixture({
+      "backend/state/index.ts": "export const query = 1;\nexport const txn = 2;\nexport const backup = 3;\n",
+      "backend/svc/api.ts":
+        'import { query, txn, backup } from "../state";\nexport const y = [query, txn, backup];\n',
+    });
+    expect(observeService(barrel, "backend/svc")).toEqual([
+      { kind: "db.read", resource: "state", via: "backend/svc/api.ts" },
+      { kind: "db.txn", resource: "state", via: "backend/svc/api.ts" },
+      { kind: "bucket.write", resource: "state-backups", via: "backend/svc/api.ts" },
+    ]);
+
+    // Importing the submodule directly is the same reach and must observe the
+    // same touch, which is why the facade terminates on the directory prefix
+    // rather than on one barrel file.
+    const submodule = fixture({
+      "backend/state/lease.ts": "export const lock = 1;\n",
+      "backend/svc/api.ts": 'import { lock } from "../state/lease";\nexport const y = lock;\n',
+    });
+    expect(observeService(submodule, "backend/svc")).toEqual([
+      { kind: "lock.acquire", resource: "state", via: "backend/svc/api.ts" },
+    ]);
+  });
+
+  it("lets both governed facades import hiq/init and no one else", () => {
+    const hiqInit = { "backend/hiq/init.ts": "export const ready = 1;\nexport default {};\n" };
+
+    const allowed = fixture({
+      ...hiqInit,
+      "backend/kernel/hiq.ts": 'import { ready } from "../hiq/init";\nexport const kvGet = ready;\n',
+      "backend/state/sql.ts": 'import { ready } from "../hiq/init";\nexport const query = ready;\n',
+    });
+    expect(banViolations(allowed)).toEqual([]);
+
+    const smuggled = fixture({
+      ...hiqInit,
+      "backend/svc/api.ts": 'import { ready } from "../hiq/init";\nexport const y = ready;\n',
+    });
+    expect(banViolations(smuggled)).toEqual([
+      "backend/svc/api.ts: hiq/init import outside the governed facades backend/kernel/hiq.ts and backend/state/",
     ]);
   });
 
