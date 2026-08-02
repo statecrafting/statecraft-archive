@@ -140,6 +140,22 @@ start, not a warning. The refusals, all fail-closed:
 5. A capability kind outside the kernel's kind table. The kernel must
    classify every kind it enforces; an unknown kind cannot be enforced
    and therefore cannot be permitted.
+
+   **The table is therefore the gate on the whole vocabulary, and that is
+   the point rather than a limitation.** A consumer cannot govern an
+   effect the kernel has never heard of, so adding a kind is deliberately
+   a change here, reviewed and released, rather than a string a producer
+   invents. The cost is a release on the critical path of every new
+   effect family; the alternative is a model that can name its own
+   ceiling into existence, which is not a ceiling.
+
+   `smtp.egress` is the first kind added after v0.1's original 28
+   (enrahitu spec 037 §3.2). Mail is the first effect to escape the
+   HTTP-shaped egress facade: an SMTP transport opens a TCP socket, which
+   a governed fetch never sees, so a deployment could be made to send
+   mail with no Decision recorded. It is classified non-read for the same
+   reason `secret.read` is: sending acts on the world, whatever the verb
+   suggests.
 6. A constraint key the kernel cannot enforce (v0.1 enforces `tables`,
    `keyPrefix`, `domains`, `topics`, `tools`). A declared constraint the
    kernel would silently skip is a hole in the ceiling.

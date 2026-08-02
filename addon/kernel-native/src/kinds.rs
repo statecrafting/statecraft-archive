@@ -38,6 +38,12 @@ const KINDS: &[(&str, bool)] = &[
     // The callee may mutate; fail closed.
     ("endpoint.call", false),
     ("http.egress", false),
+    // Mail is the first effect to escape the HTTP-shaped egress facade: an SMTP
+    // transport opens a TCP socket, which a governed fetch never sees. A
+    // deployment that can be made to send mail without a Decision has an audit
+    // record incomplete in the direction that matters most, because mail is the
+    // channel that reaches people (enrahitu spec 037 section 3.2).
+    ("smtp.egress", false),
     ("tool.invoke", false),
 ];
 
@@ -58,11 +64,20 @@ mod tests {
 
     #[test]
     fn vocabulary_matches_the_contract() {
-        // 28 kinds in 020 section 3.3.
-        assert_eq!(KINDS.len(), 28);
+        // 29 kinds in 020 section 3.3.
+        assert_eq!(KINDS.len(), 29);
         assert!(is_known("db.read"));
         assert!(is_known("tool.invoke"));
         assert!(!is_known("db.drop"));
+    }
+
+    #[test]
+    fn mail_leaves_through_a_classified_kind() {
+        // The kind exists so that the one module permitted a socket adjudicates
+        // before opening it. Classified non-read for the same reason
+        // `secret.read` is: sending acts on the world.
+        assert!(is_known("smtp.egress"));
+        assert!(!is_read("smtp.egress"));
     }
 
     #[test]
