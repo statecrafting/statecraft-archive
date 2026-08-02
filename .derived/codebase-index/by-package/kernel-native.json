@@ -5,8 +5,8 @@
     "name": "kernel-native",
     "path": "addon/kernel-native",
     "specRef": "004-kernel-native",
-    "version": "0.1.0"
+    "version": "0.2.0"
   },
   "schemaVersion": "1.1.0",
-  "shardHash": "8a7b6ad1b3491f632bf014713886e77c28fcc471c91466d2ad0637580d1e4620"
+  "shardHash": "5785c3221b1dc5b8c548f03f8afe5ea3bbc7bfe6662a2979e502a85ae55e32c7"
 }

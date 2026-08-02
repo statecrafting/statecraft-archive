@@ -35,6 +35,6 @@
     "summary": "The third package: `@statecrafting/kernel-native`, the runtime governance kernel of the governed cell. It is the generalization of chancery's `kernel-addon` (the donor: 853 LOC, Apache-2.0, spineless) from the message-send domain to arbitrary effects: action-gate adjudication, the attest-ledger Decision chain, and the trust-window ladder behind a JSON-in / JSON-out napi surface that is a pure function of its inputs. It boots from `app-model.json` (enrahitu spec 020), builds per-service enforcement tables, and refuses to start on integrity mismatch. Apache-2.0: it is substrate that stamped apps consume; the AGPL shield stays reserved for the control-plane addons. The in-house effect-dispatch crate is Phase B and is not this package.\n",
     "title": "The governance kernel as a napi-rs native addon"
   },
-  "shardHash": "00b64d2f01217434751091840d425035f9c31c59d179eea671124d8bbac0c7b6",
+  "shardHash": "00a44eaec9cc562e62f1ed46ec2a548386e7fa35c8d065dd1b98f767737f4d98",
   "specVersion": "1.1.0"
 }
