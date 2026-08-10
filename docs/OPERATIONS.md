@@ -17,6 +17,41 @@ installations run exactly one and never need a second.
 
 ## 1. Install
 
+### Verify the image before you run it
+
+Every published image is signed by the release workflow with a keyless cosign
+signature over GitHub's OIDC identity, so you can establish that the bytes you
+pulled were built by this repository's CI and not by anyone else with push
+rights to the registry.
+
+```bash
+cosign verify \
+  --certificate-identity-regexp '^https://github\.com/statecrafting/enrahitu/\.github/workflows/image\.yml@refs/(tags|heads)/.+$' \
+  --certificate-oidc-issuer https://token.actions.githubusercontent.com \
+  ghcr.io/statecrafting/enrahitu:latest
+```
+
+**An image that does not verify is not installed.** Not "installed with a note
+in the ticket", not "installed because the release is late": a signature that
+does not check out means you cannot establish where the image came from, and an
+unidentified identity provider is not something to put in front of your members.
+Stop and ask, in the project's issues, before running it.
+
+The same command reads the SBOM, which lists what is actually inside the image
+including the pieces no package manifest records (the rauthy binary and the base
+image both arrive by `COPY --from`, so a scanner reading manifests alone cannot
+see them):
+
+```bash
+cosign verify-attestation --type spdxjson \
+  --certificate-identity-regexp '^https://github\.com/statecrafting/enrahitu/\.github/workflows/image\.yml@refs/(tags|heads)/.+$' \
+  --certificate-oidc-issuer https://token.actions.githubusercontent.com \
+  ghcr.io/statecrafting/enrahitu:latest \
+  | jq -r '.payload | @base64d | fromjson | .predicate.packages[].name' | sort -u
+```
+
+### Run it
+
 The minimum that produces a working cell:
 
 ```bash
@@ -155,6 +190,53 @@ taken: a snapshot encrypted under a key you no longer have is not recoverable.
 provider's relay and reaches only rauthy. `ENRAHITU_MAIL_*` is the
 application's and reaches only the app. Neither process can see the other's
 credentials. They may point at the same relay; they are still configured twice.
+
+### Installing on a host with no outbound network
+
+If the host cannot reach a registry, install from the air-gap bundle published
+with each release. Bundles are per architecture, because `docker load` on a
+stock Docker daemon cannot consume a multi-platform archive and your host has
+exactly one architecture. Take `linux-amd64` or `linux-arm64` to match it.
+
+On a machine that does have network, download the bundle from the release page:
+
+```bash
+gh release download v0.2.0 --pattern 'enrahitu-*-linux-amd64.tar.gz'
+```
+
+Move it to the target host by whatever means that host accepts, then:
+
+```bash
+tar -xzf enrahitu-v0.2.0-linux-amd64.tar.gz
+cd enrahitu-v0.2.0-linux-amd64
+
+./verify.sh          # do this before you load anything
+docker load -i enrahitu-v0.2.0-linux-amd64.tar
+```
+
+`verify.sh` runs two checks and reports them separately, because they fail for
+different reasons:
+
+| Check | Needs | Exit |
+|---|---|---|
+| Integrity: every member is present and matches `checksums.txt` | coreutils only | `1` on a member that was altered, truncated or removed, naming it |
+| Authenticity: the checksum manifest carries a valid signature from the release workflow | `cosign` and the bundle's signature material | `1` if the signature is present and does not verify, `2` if it could not be checked at all |
+
+Exit `2` is the case worth understanding: it means integrity held but
+authenticity was **not established**, almost always because cosign is not
+installed on the air-gapped host. The bundle is internally consistent, and that
+is a different and much weaker claim than "this came from the project". Install
+cosign and re-run if you can. If you genuinely cannot, `./verify.sh
+--allow-unsigned` accepts integrity alone and says so; it will still refuse a
+tampered member, which is not something you may wave through.
+
+The bundle also carries this manual and the architecture overview under `docs/`,
+for the version inside the bundle, since the host you are installing on cannot
+reach the website by definition. `bundle.json` records the image digest, the
+pinned rauthy digest and the source commit the bundle was built from.
+
+Once the image is loaded, the rest of the install is identical: create the
+volume, `docker run`, read the first-boot password, apply the schema.
 
 ---
 

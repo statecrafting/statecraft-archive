@@ -1,7 +1,17 @@
-# Multi-arch single-container image build + smoke (spec 016). NOT on push:
-# the full image build (two Rust builds + docker assembly) is long, so this
-# runs on demand (workflow_dispatch) and weekly, catching drift before the
-# fleet milestone (M3) without gating every push.
+# Multi-arch single-container image build, smoke, publish and provenance
+# (specs 016 and 029).
+#
+# Triggers, and what each one does (spec 016 amendment 2026-08-10):
+#   push to main       build + smoke both arches. No push, no signature, no tag.
+#                      This exists because nothing else builds the image on
+#                      main, so main carried image breakage silently twice.
+#                      It is affordable now: spec 018 moved the Encore runtime,
+#                      the tsparser and the hiqlite addon out of the tree into
+#                      prebuilt binaries, so this workflow compiles no Rust and
+#                      the whole job is ~80 seconds.
+#   workflow_dispatch  build + smoke + publish + sign.
+#   schedule (weekly)  the drift build, same as dispatch.
+#   release published  all of the above, plus the air-gap bundles as assets.
 #
 # Each arch builds NATIVELY on its own runner (amd64 on ubuntu-24.04, arm64 on
 # ubuntu-24.04-arm), so no QEMU emulation is involved: scripts/docker-build.sh
@@ -17,17 +27,27 @@ on:
   schedule:
     # Mondays 05:00 UTC.
     - cron: "0 5 * * 1"
+  push:
+    branches: [main]
 
 # packages: write lets the run push the per-arch images and the multi-arch
-# manifest to GHCR (spec 016 section 3 publish). The workflow runs only on
-# dispatch/release/schedule, never on a PR, so a fork can never push.
+# manifest to GHCR (spec 016 section 3 publish). id-token: write is the OIDC
+# identity cosign signs with, so there is no key to manage, rotate or leak
+# (spec 029 section 3.1). The workflow never runs on a PR, so a fork can never
+# push or sign; a push to main reaches neither step.
 permissions:
   contents: read
   packages: write
+  id-token: write
 
 concurrency:
   group: image-${{ github.ref }}
   cancel-in-progress: true
+
+env:
+  # Everything except a push to main publishes. Kept in one place so the push,
+  # sign and attest steps cannot drift apart.
+  PUBLISH: ${{ github.event_name != 'push' }}
 
 jobs:
   build-smoke:
@@ -52,7 +72,7 @@ jobs:
             frontend/package-lock.json
             frontend-admin/package-lock.json
       - run: npm ci
-      # docker-build.sh runs build:web (the Vue SPA) and build:web-admin (the
+      # docker-build.sh runs build:web (the SPA) and build:web-admin (the
       # operator dashboard, spec 023) inside the worktree, so both dep trees
       # are installed here. The image worktree drops every flavor + e2e/
       # before its own parse walk, so the other flavors are not.
@@ -83,10 +103,13 @@ jobs:
           docker rm -f enrahitu-smoke
       - name: Report built image arch
         run: docker image inspect enrahitu:latest --format 'built enrahitu:latest ({{.Architecture}})'
-      # Push this arch under a per-arch, SHA-scoped tag; the manifest job below
-      # stitches the two arches into the pullable multi-arch tags. Only reached
-      # on dispatch/release/schedule, and only after the smoke above passed.
+
+      # Everything below publishes, so a push to main stops here: it has proven
+      # the image still builds and boots, which is the whole point of the
+      # trigger, and it mints nothing.
       - name: Push the ${{ matrix.arch }} image to GHCR
+        if: env.PUBLISH == 'true'
+        id: push
         env:
           IMAGE: ghcr.io/${{ github.repository_owner }}/enrahitu
         run: |
@@ -94,19 +117,142 @@ jobs:
           echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u "${{ github.actor }}" --password-stdin
           docker tag enrahitu:latest "$IMAGE:${{ github.sha }}-${{ matrix.arch }}"
           docker push "$IMAGE:${{ github.sha }}-${{ matrix.arch }}"
+          # Sign and attest by digest, never by tag: a tag is a mutable pointer
+          # and a signature over one says nothing durable about the bytes.
+          digest="$(docker image inspect "$IMAGE:${{ github.sha }}-${{ matrix.arch }}" \
+            --format '{{index .RepoDigests 0}}' | sed 's/.*@//')"
+          echo "digest=$digest" >> "$GITHUB_OUTPUT"
+          echo "pushed $IMAGE@$digest"
+
+      - name: Install cosign
+        if: env.PUBLISH == 'true'
+        uses: sigstore/cosign-installer@6f9f17788090df1f26f669e9d70d6ae9567deba6 # v4.1.2
+
+      - name: Sign the ${{ matrix.arch }} image (keyless)
+        if: env.PUBLISH == 'true'
+        env:
+          IMAGE: ghcr.io/${{ github.repository_owner }}/enrahitu
+        run: cosign sign --yes "$IMAGE@${{ steps.push.outputs.digest }}"
+
+      - name: Generate the SPDX SBOM
+        if: env.PUBLISH == 'true'
+        uses: anchore/sbom-action@e22c389904149dbc22b58101806040fa8d37a610 # v0.24.0
+        with:
+          image: ghcr.io/${{ github.repository_owner }}/enrahitu@${{ steps.push.outputs.digest }}
+          format: spdx-json
+          output-file: sbom.spdx.json
+          upload-artifact: false
+          upload-release-assets: false
+
+      # Four things enter this image without a package manifest, so a scanner
+      # reading manifests cannot see them at all: rauthy and the Encore runtime
+      # arrive as bare files, and the two SPA bundles are build output. Verified
+      # against a locally built image on 2026-08-10: syft catalogues 301
+      # packages and none of these four is among them. They are exactly the
+      # entries a reviewer asks for, so they are written in explicitly
+      # (spec 029 section 3.2).
+      - name: Record what no package manifest records
+        if: env.PUBLISH == 'true'
+        env:
+          TC_TRIPLE: ${{ matrix.arch == 'amd64' && 'linux-x64' || 'linux-arm64' }}
+        run: |
+          set -euo pipefail
+          rauthy_digest="$(sed -n 's|^FROM ghcr\.io/sebadob/rauthy@\([a-z0-9:]*\).*|\1|p' docker/Dockerfile | head -1)"
+          rauthy_version="$(sed -n 's|^# rauthy \([0-9][^,]*\),.*|\1|p' docker/Dockerfile | head -1)"
+          base_ref="$(sed -n 's|^FROM \(node:[^ ]*\).*|\1|p' docker/Dockerfile.base | head -1)"
+          base_digest="$(docker image inspect "$base_ref" --format '{{index .RepoDigests 0}}' 2>/dev/null | sed 's/.*@//' || echo unknown)"
+          tc_version="$(node -p "require('@statecrafting/toolchain/package.json').version" 2>/dev/null || echo unknown)"
+          echo "rauthy  $rauthy_version @ $rauthy_digest"
+          echo "base    $base_ref @ $base_digest"
+          echo "runtime @statecrafting/toolchain-$TC_TRIPLE@$tc_version"
+          jq --arg rd "$rauthy_digest" --arg rv "${rauthy_version:-0.36.0}" \
+             --arg br "$base_ref" --arg bd "$base_digest" \
+             --arg tcv "$tc_version" --arg tct "$TC_TRIPLE" --arg sha "${{ github.sha }}" '
+            .packages += [
+              {
+                "SPDXID": "SPDXRef-Package-rauthy",
+                "name": "rauthy",
+                "versionInfo": $rv,
+                "downloadLocation": ("ghcr.io/sebadob/rauthy@" + $rd),
+                "filesAnalyzed": false,
+                "sourceInfo": ("copied into the image from ghcr.io/sebadob/rauthy@" + $rd + " by COPY --from"),
+                "licenseDeclared": "Apache-2.0",
+                "comment": "The identity provider binary (spec 007) at /rauthy/rauthy."
+              },
+              {
+                "SPDXID": "SPDXRef-Package-base-image",
+                "name": $br,
+                "versionInfo": $bd,
+                "downloadLocation": ($br + "@" + $bd),
+                "filesAnalyzed": false,
+                "sourceInfo": ("base image of docker/Dockerfile.base, resolved to " + $bd),
+                "comment": "The node base the app layer was built on (spec 008)."
+              },
+              {
+                "SPDXID": "SPDXRef-Package-encore-runtime",
+                "name": "encore-runtime.node",
+                "versionInfo": $tcv,
+                "downloadLocation": ("npm:@statecrafting/toolchain-" + $tct + "@" + $tcv),
+                "filesAnalyzed": false,
+                "sourceInfo": ("prebuilt napi runtime from @statecrafting/toolchain-" + $tct + ", injected at /encore/runtimes/js/encore-runtime.node"),
+                "licenseDeclared": "MPL-2.0",
+                "comment": "The Encore runtime core (spec 008). A bare .node file, so no manifest in the image names it."
+              },
+              {
+                "SPDXID": "SPDXRef-Package-spa",
+                "name": "enrahitu-spa",
+                "versionInfo": $sha,
+                "downloadLocation": "NOASSERTION",
+                "filesAnalyzed": false,
+                "sourceInfo": "built from frontend/ into backend/web/dist at this commit (spec 015)",
+                "comment": "Member-facing SPA bundle. Build output, not a package."
+              },
+              {
+                "SPDXID": "SPDXRef-Package-spa-admin",
+                "name": "enrahitu-admin-spa",
+                "versionInfo": $sha,
+                "downloadLocation": "NOASSERTION",
+                "filesAnalyzed": false,
+                "sourceInfo": "built from frontend-admin/ into backend/web/dist-admin at this commit (spec 023)",
+                "comment": "Operator dashboard bundle. Build output, not a package."
+              }
+            ]
+            | .relationships += [
+              { "spdxElementId": "SPDXRef-DOCUMENT", "relatedSpdxElement": "SPDXRef-Package-rauthy", "relationshipType": "CONTAINS" },
+              { "spdxElementId": "SPDXRef-DOCUMENT", "relatedSpdxElement": "SPDXRef-Package-base-image", "relationshipType": "CONTAINS" },
+              { "spdxElementId": "SPDXRef-DOCUMENT", "relatedSpdxElement": "SPDXRef-Package-encore-runtime", "relationshipType": "CONTAINS" },
+              { "spdxElementId": "SPDXRef-DOCUMENT", "relatedSpdxElement": "SPDXRef-Package-spa", "relationshipType": "CONTAINS" },
+              { "spdxElementId": "SPDXRef-DOCUMENT", "relatedSpdxElement": "SPDXRef-Package-spa-admin", "relationshipType": "CONTAINS" }
+            ]' sbom.spdx.json > sbom.augmented.json
+          mv sbom.augmented.json sbom.spdx.json
+          echo "SBOM packages: $(jq '.packages | length' sbom.spdx.json)"
+
+      - name: Attach the SBOM as an attestation
+        if: env.PUBLISH == 'true'
+        env:
+          IMAGE: ghcr.io/${{ github.repository_owner }}/enrahitu
+        run: |
+          set -euo pipefail
+          cosign attest --yes --type spdxjson --predicate sbom.spdx.json \
+            "$IMAGE@${{ steps.push.outputs.digest }}"
 
   # Stitch the two per-arch images pushed by build-smoke into one multi-arch
   # manifest, so `docker pull ghcr.io/<owner>/enrahitu:<tag>` resolves per host
-  # arch (spec 016 section 3 publish). buildx imagetools needs no experimental
-  # flag and is preinstalled on the runner.
+  # arch (spec 016 section 3 publish), then sign every tag it created. buildx
+  # imagetools needs no experimental flag and is preinstalled on the runner.
   manifest:
     needs: build-smoke
+    if: github.event_name != 'push'
     runs-on: ubuntu-24.04
     permissions:
       contents: read
       packages: write
+      id-token: write
+    outputs:
+      digest: ${{ steps.stitch.outputs.digest }}
     steps:
       - name: Assemble and push the multi-arch manifest
+        id: stitch
         env:
           IMAGE: ghcr.io/${{ github.repository_owner }}/enrahitu
         run: |
@@ -123,3 +269,77 @@ jobs:
               "$IMAGE:${{ github.sha }}-amd64" \
               "$IMAGE:${{ github.sha }}-arm64"
           done
+          # Every tag above is the same manifest list, so one digest covers them
+          # all and one signature does too.
+          digest="$(docker buildx imagetools inspect "$IMAGE:${{ github.sha }}" \
+            --format '{{.Manifest.Digest}}')"
+          echo "digest=$digest" >> "$GITHUB_OUTPUT"
+          echo "manifest list $IMAGE@$digest"
+
+      - name: Install cosign
+        uses: sigstore/cosign-installer@6f9f17788090df1f26f669e9d70d6ae9567deba6 # v4.1.2
+
+      # Signing the manifest list is what a consumer's `cosign verify
+      # ghcr.io/<owner>/enrahitu:latest` actually checks, so it is not optional
+      # extra coverage on top of the per-arch signatures: it is the one a
+      # `docker pull` of a tag corresponds to (spec 029 acceptance 1).
+      - name: Sign the multi-arch manifest (keyless)
+        env:
+          IMAGE: ghcr.io/${{ github.repository_owner }}/enrahitu
+        run: cosign sign --yes "$IMAGE@${{ steps.stitch.outputs.digest }}"
+
+  # The offline install path (spec 029 section 3.3). One bundle per
+  # architecture, both produced on one runner: pulling a foreign-arch image and
+  # saving it needs no emulation, only running it would.
+  airgap-bundle:
+    needs: manifest
+    if: github.event_name == 'release'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 60
+    permissions:
+      contents: write # release assets
+      packages: read
+      id-token: write # signing the checksum manifest
+    steps:
+      - uses: actions/checkout@93cb6efe18208431cddfb8368fd83d5badbf9bfd # v5.0.1
+      - name: Install cosign
+        uses: sigstore/cosign-installer@6f9f17788090df1f26f669e9d70d6ae9567deba6 # v4.1.2
+      - name: Log in to GHCR
+        run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u "${{ github.actor }}" --password-stdin
+      - name: Build both bundles
+        env:
+          IMAGE: ghcr.io/${{ github.repository_owner }}/enrahitu
+          VERSION: ${{ github.event.release.tag_name }}
+        run: |
+          set -euo pipefail
+          for arch in amd64 arm64; do
+            scripts/airgap-bundle.sh "$arch" --image "$IMAGE" --version "$VERSION" --sign --out dist/airgap
+          done
+          ls -lh dist/airgap/*.tar.gz
+      # The bundle's own verifier, run against the bundle it just made, before
+      # anyone downloads it. --allow-unsigned is NOT passed: on release the
+      # manifest is signed, so a bundle that cannot prove it fails here.
+      - name: Verify each bundle the way an operator will
+        run: |
+          set -euo pipefail
+          for dir in dist/airgap/*/; do
+            echo "== $dir"
+            ( cd "$dir" && ./verify.sh )
+          done
+      - name: Attach the bundles to the release
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          VERSION: ${{ github.event.release.tag_name }}
+        run: |
+          set -euo pipefail
+          assets=(dist/airgap/*.tar.gz)
+          for dir in dist/airgap/*/; do
+            name="$(basename "$dir")"
+            cp "$dir/checksums.txt" "dist/airgap/$name.checksums.txt"
+            assets+=("dist/airgap/$name.checksums.txt")
+            if [ -f "$dir/checksums.txt.bundle" ]; then
+              cp "$dir/checksums.txt.bundle" "dist/airgap/$name.checksums.txt.bundle"
+              assets+=("dist/airgap/$name.checksums.txt.bundle")
+            fi
+          done
+          gh release upload "$VERSION" "${assets[@]}" --clobber
