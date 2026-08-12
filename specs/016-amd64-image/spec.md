@@ -108,8 +108,11 @@ image-pull secret (statecraft spec 006, `FLEET_IMAGE_PULL_SECRET`). Back to
 
 ## 5. Out of scope
 
-- Automatic publish on every push (kept to `release`/`workflow_dispatch` +
-  the weekly drift build, so a long image build never gates a push).
+- Automatic publish on every push. Publishing stays on
+  `release`/`workflow_dispatch` + the weekly drift build; a push to
+  `main` builds and smokes without pushing a tag (amendment
+  2026-08-10, which retires this bullet's original "so a long image
+  build never gates a push" rationale).
 - musl/static builds; glibc images match the current base.
 
 ## Amendment (2026-07-23): the admin bundle's deps in the image workflow
@@ -124,3 +127,34 @@ missed this workflow. `image.yml` now installs `frontend-admin/`
 alongside `frontend/` and adds its lockfile to the npm cache key.
 Surfaced by the 007-nonroot-image validation dispatch, the first
 image run after PR #27 merged.
+
+## Amendment (2026-08-10): the build runs on main, because it is no longer long
+
+This spec kept the image build off `push` on an explicit cost premise:
+"two Rust builds + docker assembly" is long, so it "runs on demand and
+weekly, catching drift before the fleet milestone (M3) without gating
+every push". That premise is dead. Spec 018 moved the Encore runtime,
+the tsparser and the hiqlite addon out of the tree and into prebuilt
+per-platform binaries fetched from `@statecrafting/*`, so this workflow
+compiles no Rust at all. Measured on the 2026-08-10 scheduled run
+(31360905121): the whole amd64 job is 80 seconds, of which
+`scripts/docker-build.sh` is 30 (SPA 2s, admin dashboard 3s, app bundle
+0.2s via the prebuilt napi tsparser, base image 15s, final image 4s).
+The arm64 job is 72 seconds and the manifest job 12.
+
+The cost that justified the exclusion is gone; the cost of the exclusion
+is not. Because nothing builds the image on `main`, `main` carries image
+breakage silently, and has twice: spec 023's `frontend-admin` deps (the
+2026-07-23 amendment above) and the test-harness import that broke the
+parse walk, each found by a later dispatch rather than by the merge that
+caused it.
+
+So `image.yml` also runs on `push` to `main`, building and smoking both
+arches. It does **not** sign or publish on that trigger: the GHCR push,
+the cosign signature and the SBOM attestation stay on
+`release`/`workflow_dispatch`/`schedule`, so §5's exclusion of automatic
+publish on every push is preserved exactly as written, and a `main` push
+still cannot mint a tag.
+
+Spec 029 amends this workflow further, without owning it, adding the
+signing and attestation steps and the release-time air-gap bundle.

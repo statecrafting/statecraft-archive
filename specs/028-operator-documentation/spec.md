@@ -262,3 +262,31 @@ the same command either way. A troubleshooting table that only describes the
 current build is a table that fails the people most likely to be reading it.
 
 **§4 item 2's Kubernetes leg is unaffected and remains outstanding.**
+
+## Amendment (2026-08-10): verifying the image, and installing without a network (spec 029)
+
+The manual told an operator how to run the image and never how to
+establish that the image was the one this repository built. Spec 029
+closes that at the artifact end (cosign keyless signatures, an SPDX SBOM
+attestation, a per-architecture air-gap bundle); this spec owns the half
+an operator reads, so `docs/OPERATIONS.md` gains two pieces in section 1.
+
+**Verification before install.** The `cosign verify` invocation with the
+certificate identity and OIDC issuer written out in full, because a
+verify command whose expected identity the reader has to guess verifies
+nothing. It is documented as a refusal and not as optional hygiene: an
+image that does not verify is not installed, and the text says that in
+those words rather than leaving the operator to infer a severity.
+
+**The air-gap path.** How to obtain the bundle for the host's
+architecture, run its `verify.sh`, `docker load` the archive, and reach
+the same first-boot sequence section 1 already documents. The bundle
+carries this manual for the exact version inside it, so the copy the
+air-gapped operator reads is the copy that matches the image; the
+website is by definition unreachable from the host being installed.
+
+This is the same §4 item 2 discipline: the commands are verified against
+a locally built image rather than composed from the spec. The parts that
+cannot be verified without a published release (a real GHCR signature to
+check, and release assets to download) are marked as such in spec 029's
+status rather than presented here as though they had been run.

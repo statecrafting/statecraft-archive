@@ -3,13 +3,14 @@ id: "029-supply-chain-provenance"
 title: "Supply-chain provenance: signed, described, and installable offline"
 status: approved
 created: "2026-07-25"
-implementation: pending
+implementation: in-progress
 depends_on:
   - "012-born-with-provenance"
   - "016-amd64-image"
   - "027-operational-verbs"
 establishes:
   - "scripts/airgap-bundle.sh"
+  - "scripts/airgap-bundle.test.ts"
 summary: >
   Spec 012 established born-with provenance for the repository: a
   stamped app can prove what generated it and under what agentic
@@ -98,10 +99,11 @@ invisible to a scanner that only reads package manifests.
 
 ### 3.3 The air-gap bundle
 
-`scripts/airgap-bundle.sh` produces one directory, and a `.tar.gz` of
-it, containing everything needed to install with no network:
+`scripts/airgap-bundle.sh <arch>` produces one directory, and a
+`.tar.gz` of it, containing everything needed to install with no
+network:
 
-- the multi-arch image as a `docker save` archive,
+- the image for that one architecture as a `docker save` archive,
 - its cosign signature and SBOM attestation,
 - a checksum manifest over every member,
 - `verify.sh`, which checks the checksums and, when cosign is present,
@@ -111,8 +113,13 @@ it, containing everything needed to install with no network:
   bundle, because an air-gapped operator cannot read documentation on a
   website.
 
-The bundle is produced by CI on release and published as a release
-asset. Its checksum manifest is signed by the same keyless flow, so the
+The bundle is per-architecture, not multi-arch. A stock Docker daemon
+on the classic image store cannot `docker load` a multi-platform
+archive, and an air-gapped host has exactly one architecture, so a
+multi-arch bundle would double the transfer to deliver something half
+of which that host can never run. CI produces one bundle per
+architecture on release and publishes each as a release asset. Each
+bundle's checksum manifest is signed by the same keyless flow, so the
 bundle inherits the chain rather than starting a new one.
 
 ### 3.4 The build's own egress, stated
@@ -148,8 +155,8 @@ about custody.
    not checked rather than exiting zero silently.
 5. The rauthy base is pinned by digest, and the digest appears in both
    the Dockerfile and the SBOM.
-6. A release run publishes the bundle and its signed checksum manifest
-   as release assets.
+6. A release run publishes each architecture's bundle and its signed
+   checksum manifest as release assets.
 7. Coupling gate green.
 
 ## 5. Out of scope
@@ -166,3 +173,119 @@ about custody.
 - Mirroring npm and GHCR for air-gapped rebuilds. The bundle installs a
   built image; rebuilding from source offline is a different and much
   larger requirement.
+
+## Amendment (2026-08-10): two mechanisms this spec named imprecisely
+
+Written before implementation, corrected before code, per the backlog
+protocol's design-truth-precedes-code rule.
+
+1. **The bundle is per-architecture** (§3.3, acceptance 6). The spec
+   asked for "the multi-arch image as a `docker save` archive", which is
+   not an artifact a stock Docker daemon can consume: multi-platform
+   export and `docker load` of a platform index require the containerd
+   image store, which an air-gapped operator may well not have enabled.
+   The image is 795 MB, so shipping both arches would also double the
+   transfer to deliver something half of which the host cannot run.
+2. **The rauthy pin is the OCI index digest**, not a per-arch manifest
+   digest (§3.4, acceptance 5). `ghcr.io/sebadob/rauthy:0.36.0` resolves
+   to `sha256:e2a670c7...`, an `application/vnd.oci.image.index.v1+json`
+   carrying linux/amd64 and linux/arm64. Pinning the index preserves the
+   per-arch resolution that `docker build --platform` depends on;
+   pinning a leaf manifest would silently break the other architecture's
+   build. The dev topology (`docker/Dockerfile.dev`,
+   `docker/compose.dev.yml`, specs 033 and 005) intentionally stays on
+   the mutable tag: dev is not the artifact whose custody this spec is
+   about, and pinning it would move two more specs' owned paths for no
+   provenance gain.
+3. **The tsparser is not in the image**, so it is not in the image's
+   SBOM (§3.2, acceptance 2). §3.2 listed "the prebuilt Encore runtime
+   and tsparser binaries" among the image's contents; only the runtime
+   is. `scripts/docker-build.sh` runs the tsparser on the *build host*
+   to produce the app bundle and injects only `encore-runtime.node`
+   into the image, confirmed by inspecting a locally built image on
+   2026-08-10. An SBOM naming a binary the image does not contain is a
+   false statement of contents, which is the one thing a bill of
+   materials may not be. The build-host tsparser version is recorded
+   instead through the toolchain version carried by the runtime entry.
+
+   The same inspection showed the enumeration §3.2 asks for is wider
+   than syft alone provides. syft catalogues 301 packages from the
+   image and none of them is rauthy, the Encore runtime, or either SPA
+   bundle: two arrive as bare files and two are build output, so no
+   package manifest inside the image names any of them. All four are
+   written into the SBOM explicitly, alongside the resolved base image
+   digest.
+
+## Status (2026-08-10): implemented, three acceptance items need a published release
+
+Everything in §3 is built. `implementation` stays `in-progress` because
+three acceptance items cannot be closed from a working tree: they
+require a real publish or release run, and claiming them from local
+evidence would be exactly the ratification this corpus forbids.
+
+**Verified locally, against a real image built from this branch**
+(`scripts/docker-build.sh arm64`, 2026-08-10):
+
+- **Item 4, in full.** `verify.sh` fails a tampered member and names it,
+  fails a member deleted outright and names it, reports both categories
+  separately in one run, refuses a bundle whose manifest is gone, never
+  lets `--allow-unsigned` excuse a tampered member, and on cosign's
+  absence reports the signature as NOT CHECKED and exits 2 rather than
+  zero. Twelve cases in `scripts/airgap-bundle.test.ts`, each
+  mutation-checked: reverting the fix fails them.
+
+  Writing them found a defect worth recording. The first verifier
+  passed a bundle with a member *deleted*, because Darwin's `sha256sum`
+  reports an absent file only on stderr and prints no `FAILED` line on
+  stdout, so a verifier reading stdout sees a clean run. Removing the
+  SBOM or the verifier itself was undetectable. Members are now checked
+  for existence by looking, not by reading the tool's output.
+
+- **Item 5's Dockerfile half.** The image builds from the pinned index
+  digest, and the rauthy binary inside it reports `rauthy 0.36.0`,
+  matching the version the comment claims. The digest, the comment and
+  the shipped binary agree.
+
+- **Item 3, everything except the login itself.** The bundle was built
+  from a real `docker save` (188 MB compressed), the local tag was
+  deleted, and the image was loaded *only* from the bundle. It then ran
+  under `--network none`: no address, no gateway, stricter than the
+  air-gapped host this is for. First boot provisioned both RS256
+  keypairs, the rauthy client secret, the admin password and the metrics
+  token; `/healthz`, `/readyz` (ledger ok, hiqlite ok) and `/hiq/health`
+  all answered 200 within six seconds; the SPA served 200; rauthy's OIDC
+  discovery served 200 with the right issuer through the same-origin
+  proxy; and the app's login endpoint returned its 302 into the IdP.
+  What was **not** done is driving a browser through to a session, which
+  is spec 017's harness. The login *path* is proven to work with no
+  network; the login is not.
+
+- **Item 2's enumeration.** syft catalogues 301 packages from the image,
+  including `@statecrafting/hiqlite-native`, `@statecrafting/kernel-native`,
+  their per-triple carriers, `encore.dev` and the libsql bindings, plus
+  the trixie base evidence (`base-files 13.8+deb13u6`, `libc6 2.41`).
+  It catalogues none of rauthy, the Encore runtime, or either SPA
+  bundle, which is why all four are injected explicitly; the injection
+  step was run against the real 301-package SBOM and produced 306 with
+  every value resolved (base image digest, toolchain 0.4.0, rauthy
+  0.36.0 and its digest).
+
+**Not verifiable without a published release**, and therefore open:
+
+1. **Item 1.** No tag has been signed yet, so no `cosign verify` has
+   succeeded against a real signature. cosign is not installed on the
+   development host either, so even the invocation in `verify.sh` and in
+   `docs/OPERATIONS.md` is unexercised. It is written defensively for
+   that reason: only cosign's own exit 0 counts as verified, and its
+   stderr is printed verbatim on failure, so a wrong flag produces a
+   loud diagnosis rather than a false pass.
+2. **Item 2's attachment.** The SBOM is generated and augmented
+   correctly; whether `cosign attest` attaches it and a consumer can
+   read it back is a claim about a run that has not happened.
+3. **Item 6.** No release has been cut, so no bundle has been published
+   as an asset and no checksum manifest has been signed.
+
+The next release run closes all three. Until then this spec is
+`in-progress`, and `docs/OPERATIONS.md` documents the verification
+commands as the contract they will satisfy rather than as commands that
+have been observed to pass.

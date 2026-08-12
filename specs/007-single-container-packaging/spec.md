@@ -523,3 +523,31 @@ locally built image*, which is the first thing in the corpus that had to build
 one. That is worth recording as evidence for the acceptance criterion rather
 than against it: a documentation requirement found a packaging defect that
 every code gate passed over.
+
+## Amendment (2026-08-10): rauthy enters the image by digest (spec 029)
+
+`docker/Dockerfile` pulled rauthy by mutable tag:
+`FROM ghcr.io/sebadob/rauthy:0.36.0 AS rauthy`. A tag is a pointer its
+publisher can move, so two builds of the same enrahitu commit could
+embed different rauthy binaries and nothing in the image would say so.
+For a substrate whose entire claim is custody (spec 012's born-with
+certificate, spec 024's hash-chained Decisions, spec 021's fail-closed
+boot on an unverifiable model), the identity provider arriving by
+mutable reference was the loosest link in the chain.
+
+The base is now pinned to the digest the tag resolved to,
+`sha256:e2a670c79e04ddf5947fbd6cd5dc2ec7115bb9f21132ddf03129d7b66d26f11d`,
+with `0.36.0` retained as a comment so a human still reads a version.
+The pinned digest is the OCI image *index*, not a per-arch manifest, so
+`docker build --platform linux/amd64|arm64` still resolves the correct
+leaf and the multi-arch build (spec 016) is unaffected.
+
+rauthy reaches the image by `COPY --from`, which means no package
+manifest inside the image records it and a scanner reading only
+manifests cannot see it at all. Spec 029 §3.2 therefore also writes the
+version and this source digest into the SBOM explicitly.
+
+Upgrading rauthy is now a two-line edit (comment plus digest) and the
+digest is what must be justified in review. `docker/Dockerfile.dev` and
+`docker/compose.dev.yml` (specs 033 and 005) deliberately stay on the
+tag: the dev topology is not the artifact under custody.

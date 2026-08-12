@@ -4,7 +4,13 @@
 # worktree and asserts its entrypoint).
 ARG BASE_IMAGE=enrahitu-api:latest
 
-FROM ghcr.io/sebadob/rauthy:0.36.0 AS rauthy
+# rauthy 0.36.0, pinned by digest (spec 029 §3.4): a tag is a pointer its
+# publisher can move, so two builds of this commit could otherwise embed
+# different rauthy binaries with nothing in the image saying so. This is the
+# OCI image INDEX digest, not a per-arch manifest, so --platform still resolves
+# the right leaf and the multi-arch build (spec 016) is unaffected. Upgrading
+# is a two-line edit: this comment and the digest. Keep them in step.
+FROM ghcr.io/sebadob/rauthy@sha256:e2a670c79e04ddf5947fbd6cd5dc2ec7115bb9f21132ddf03129d7b66d26f11d AS rauthy
 
 FROM ${BASE_IMAGE}
 

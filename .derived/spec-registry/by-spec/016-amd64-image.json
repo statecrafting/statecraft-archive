@@ -21,13 +21,14 @@
       "4. Acceptance",
       "Status (2026-07-16)",
       "5. Out of scope",
-      "Amendment (2026-07-23): the admin bundle's deps in the image workflow"
+      "Amendment (2026-07-23): the admin bundle's deps in the image workflow",
+      "Amendment (2026-08-10): the build runs on main, because it is no longer long"
     ],
     "specPath": "specs/016-amd64-image/spec.md",
     "status": "approved",
     "summary": "The single-container image (spec 007) currently ships arm64 only, matching the development Macs. Fleet targets (Hetzner x86 nodes, most customer clusters) need linux/amd64. This spec extends the cross-build pipeline (scripts/encore/build-runtime-linux.sh and scripts/docker-build.sh already take an arch argument) to produce and verify an amd64 image, and wires an optional CI path so the capability cannot silently rot. Owed item carried from the enrahi phase-7 close-out.\n",
     "title": "linux/amd64 image support (multi-arch packaging)"
   },
-  "shardHash": "31a3833d4c496b536148d1be4129a873ca9d017517c351b13342ba455ad0aef1",
+  "shardHash": "b69b7dcb30f62300dd83395636a514b55920ae9d87e9f5c32718e2d7f8305d16",
   "specVersion": "1.1.0"
 }
