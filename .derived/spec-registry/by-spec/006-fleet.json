@@ -36,5 +36,5 @@
     "title": "Fleet: deployd's core as an in-process addon, placing EnRaHiTu apps"
   },
   "shardHash": "5187e4bef681a05e7247063b317cd77b591817fb9fb6fc0a6ef8d5eb93c8a17f",
-  "specVersion": "1.1.0"
+  "specVersion": "1.2.0"
 }

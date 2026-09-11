@@ -2,6 +2,7 @@
 id: "NNN-slug"                 # must equal the directory name
 title: ""
 status: draft                  # draft | approved | superseded | retired
+implementation: pending        # pending | in-progress | complete | n-a | deferred
 created: "YYYY-MM-DD"
 summary: >
   One paragraph: what this spec governs and why.

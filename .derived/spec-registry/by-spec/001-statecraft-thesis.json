@@ -11,7 +11,7 @@
       }
     ],
     "id": "001-statecraft-thesis",
-    "implementation": "pending",
+    "implementation": "n-a",
     "sectionHeadings": [
       "001: statecraft thesis",
       "1. Purpose",
@@ -26,13 +26,14 @@
       "4. Tenancy",
       "5. Licensing",
       "6. Milestone ladder",
-      "7. Out of scope"
+      "7. Out of scope",
+      "8. Lifecycle note (2026-09-11): this spec is a record"
     ],
     "specPath": "specs/001-statecraft-thesis/spec.md",
     "status": "approved",
     "summary": "The product thesis and the consolidation record, rewritten ground-up on 2026-07-19 from the grand-refactor realignment. statecraft is the control plane for governed AI-native software delivery: intent becomes a governed spec, the factory stamps an application from the EnRaHiTu template, the fleet operates the resulting governed cells, and the customer's code lives in the customer's GitHub org the entire time. The architecture is a two-plane model: the platform is ONE EnRaHiTu app (embedded rauthy as THE platform IdP, operator surfaces gated on a custom statecraft_operator role, observability via the in-substrate flag-gated admin dashboard) and every tenant app is ANOTHER, independent EnRaHiTu app (its own IdP, its own state, its own /metrics). Every app honors the substrate observability contract and carries app-model.json, the hash-anchored extracted record of what it contains and what it is permitted to do; enforcement phases in behind the model (Phase A: extraction, kernel adjudication, Decision ledger; Phase B: the Rust effect tier). This spec records the consolidation history, the service map, and the milestone ladder that orders the build.\n",
     "title": "statecraft: the governed agentic delivery control plane"
   },
-  "shardHash": "e28ef8f55b8d2f1be77bb458564915d5e0f6b0d4b1da2457ec81a3445b313af1",
-  "specVersion": "1.1.0"
+  "shardHash": "46515089374fd2e150f88d343f8330746068539aca38b91259645024736c547d",
+  "specVersion": "1.2.0"
 }

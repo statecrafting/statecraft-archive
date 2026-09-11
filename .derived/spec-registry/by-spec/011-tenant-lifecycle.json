@@ -50,5 +50,5 @@
     "title": "Tenant lifecycle and org-derived access"
   },
   "shardHash": "bb82abc9d7569010246ffd9795e7df0cdf8c8d6c33536270534d122fb850cd54",
-  "specVersion": "1.1.0"
+  "specVersion": "1.2.0"
 }

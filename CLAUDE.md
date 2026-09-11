@@ -23,7 +23,10 @@ numbered specs as their build starts.
 specs/       Feature specs, the authoritative design record
 standards/   spec-spine constitution, contract, templates
 .derived/    Compiler output (committed shards; never hand-edit)
-.claude/     rules (orchestrator, governed reads, adversarial refusal)
+AGENTS.md    The cross-agent session protocol and the gate command list
+Makefile     `make gate` (read-only loop), `make refresh`, `make stack`
+.claude/     The spec-spine kit: ten skills, five agents, four rules
+.githooks/   Opt-in merge driver for the committed shard trees
 ```
 
 Service layout (spec 001 §3): `backend/` (the Encore.ts app: `auth/`,
@@ -46,20 +49,37 @@ This repo is governed by spec-spine (`spec-spine.toml`, owned by spec 000):
   check/render/orphans`); never ad-hoc `jq`/`python` parsers
   (`.claude/rules/governed-artifact-reads.md`).
 - **After editing any `specs/*/spec.md`**: run
-  `spec-spine compile && spec-spine index` and commit the regenerated
-  `.derived/` shards with the spec edit.
+  `spec-spine compile && spec-spine index` (or `make refresh`) and commit
+  the regenerated `.derived/` shards with the spec edit.
+- **The ownership ratchet is on.** `[coupling] require_ownership = true`,
+  so `C-002` refuses a changed source file that no spec specifically
+  claims. Claim every new file in the spec you are implementing, in the
+  same change.
+- **The agent harness is governed too** (spec 013): `AGENTS.md`,
+  `CLAUDE.md`, `.claude/**`, `Makefile` and `.githooks/**` are hashed
+  index inputs, so editing one stales the index until it is regenerated
+  and committed. `AGENTS.md` is the project layer the ten skills read;
+  the skills themselves are byte-identical to the spec-spine kit and are
+  updated by copying, never by hand-editing.
 
 ## Build Commands
 
 ```bash
-spec-spine compile    # specs -> .derived/spec-registry/by-spec/
-spec-spine index      # code linkage -> .derived/codebase-index/
-spec-spine lint       # corpus conformance
-spec-spine couple --base origin/main --head HEAD   # the PR coupling gate
+make refresh   # spec-spine compile + index: the writing half
+make gate      # the read-only governed loop, exactly what CI runs:
+               #   check --fail-on-unresolved --fail-on-warn
+               #   lint --fail-on-warn
+               #   index coverage --fail-on-untraced
+               #   couple --base <resolved default branch> --head HEAD
+make stack     # the npm half: build both SPAs + the app, check:model,
+               # typecheck, vitest (mirrors .github/workflows/verify.yml)
+make verify SPEC=013   # one spec's declared `## Verification` block
 ```
 
-Requires `spec-spine` (`cargo install spec-spine-cli`). Application build
-tooling arrives with the first service spec.
+Requires `spec-spine` **0.18.0 or later** (`cargo install spec-spine-cli`),
+pinned in `spec-spine.toml [meta] required_version` and installed at that
+version by CI. Node 24 and npm for the stack half. Run `/setup` once in a
+new checkout and `/prime` at the start of every session.
 
 ## Key Conventions
 

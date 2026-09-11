@@ -28,5 +28,5 @@
     "title": "Tenants: OAuth login + per-org GitHub App installation"
   },
   "shardHash": "904b8829bd5d48a24c9a7eff007e20e57a0153524bacea3eaafe5fd4ae5dba47",
-  "specVersion": "1.1.0"
+  "specVersion": "1.2.0"
 }

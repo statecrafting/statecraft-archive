@@ -1,0 +1,91 @@
+{
+  "record": {
+    "created": "2026-09-11",
+    "dependsOn": [
+      "000-bootstrap"
+    ],
+    "establishes": [
+      {
+        "kind": "file",
+        "path": "AGENTS.md"
+      },
+      {
+        "kind": "file",
+        "path": "CLAUDE.md"
+      },
+      {
+        "kind": "file",
+        "path": "Makefile"
+      },
+      {
+        "kind": "file",
+        "path": ".mcp.json"
+      },
+      {
+        "kind": "file",
+        "path": ".gitattributes"
+      },
+      {
+        "kind": "directory",
+        "path": ".claude/"
+      },
+      {
+        "kind": "directory",
+        "path": ".githooks/"
+      }
+    ],
+    "extends": [
+      {
+        "spec": "000-bootstrap",
+        "unit": {
+          "kind": "file",
+          "path": "spec-spine.toml"
+        }
+      },
+      {
+        "spec": "000-bootstrap",
+        "unit": {
+          "kind": "file",
+          "path": ".github/workflows/spec-spine.yml"
+        }
+      },
+      {
+        "spec": "001-statecraft-thesis",
+        "unit": {
+          "kind": "file",
+          "path": "specs/001-statecraft-thesis/spec.md"
+        }
+      }
+    ],
+    "id": "013-agent-harness",
+    "implementation": "complete",
+    "sectionHeadings": [
+      "013: The agent harness",
+      "1. Purpose",
+      "2. Territory",
+      "3. Behavior",
+      "3.1 The session protocol",
+      "3.2 The ten skills",
+      "3.3 The hooks read and never write",
+      "3.4 The rules",
+      "3.5 The composite gate",
+      "4. What the adoption fixed",
+      "4.1 The harness was nominally hashed and actually was not",
+      "4.2 The committed registry was compiled by an older binary",
+      "4.3 CI repaired the tree it was judging",
+      "4.4 A record spec blocked the planner",
+      "5. Configuration changes in spec 000's file",
+      "5.1 The ownership ratchet is on",
+      "5.2 The lint exceptions are explicit",
+      "6. Acceptance",
+      "Verification",
+      "7. Out of scope"
+    ],
+    "specPath": "specs/013-agent-harness/spec.md",
+    "status": "draft",
+    "summary": "The harness is what an agent may do in this repository, so it is claimed by a spec and held by the coupling gate rather than living as untracked convention. statecraft adopts the spec-spine kit whole (ten skills, four pipeline agents, four rules, the read-only session hooks, the composite Makefile gate) at the 0.18.0 floor, and moves the project layer that the skills read into AGENTS.md so the skills stay byte-identical to the kit and a kit update is a copy rather than a merge. Three defects the adoption exposed are fixed here: the harness globs matched directories and hashed nothing, the session hooks repaired the tree they were reading, and the CI gate ran a writing `compile` against the branch it was judging.\n",
+    "title": "The agent harness: the spec-spine kit as statecraft's governed loop"
+  },
+  "shardHash": "07b9ef2989128ce124d1566b0d5f1769cd44cb74d97dd375027692687ced0a01",
+  "specVersion": "1.2.0"
+}

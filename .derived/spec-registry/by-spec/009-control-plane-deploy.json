@@ -77,5 +77,5 @@
     "title": "The control-plane deploy: one governed container on the statecraft cluster"
   },
   "shardHash": "fff5eab9390f7878a82260e9b002dec222a51389b9e7da59fe94738b213007e9",
-  "specVersion": "1.1.0"
+  "specVersion": "1.2.0"
 }
