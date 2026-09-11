@@ -31,5 +31,5 @@
     "title": "Product-family registry: a single owner for the shared repo list"
   },
   "shardHash": "bdbe1f36bd561f96d6a61c98e598ec8494fb4913ec89c2af121bb6a9a57d96af",
-  "specVersion": "1.1.0"
+  "specVersion": "1.2.0"
 }

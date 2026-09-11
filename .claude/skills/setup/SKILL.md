@@ -1,96 +1,114 @@
 ---
 name: setup
-description: One-time contributor setup. Install the spec-spine CLI, verify the Node toolchain, and verify the governed loop (compile, index check, lint, couple) so /init can report lifecycle and structural counts.
+description: "One-time contributor setup: install the pinned spec-spine, the stack toolchain AGENTS.md names, fetch the base ref, and verify the governed loop once, so /prime can report lifecycle and structural counts."
 allowed-tools: Bash, Read
 ---
 
-# Setup
+# /setup
 
-Get a fresh clone operational. After this completes, `/init` can report
-lifecycle and structural counts through the `spec-spine` binary, never by
-ad-hoc parsing of `.derived/**/*.json` (see
-`.claude/rules/governed-artifact-reads.md`).
+Get a fresh clone operational. After this completes, `/prime` can report
+lifecycle and structural counts through `spec-spine`, never by ad-hoc
+parsing of `.derived/**/*.json` (`.claude/rules/governed-artifact-reads.md`).
 
 ## Process
 
-### 1. Install spec-spine
+### 1. Install the pinned spec-spine
 
-Install the CLI by whichever method fits your environment (CI pins v0.10.0
-in `.github/workflows/spec-spine.yml`; match it):
+`AGENTS.md` pins the version and names the invocation (a binary on `PATH`,
+a package wrapper, or an in-tree build). CI runs the pinned one, so a local
+pass on another version proves nothing: a different version is a halt.
+Any one route:
 
-```bash
-cargo install spec-spine-cli            # from crates.io (needs a Rust toolchain)
-# or, no Rust toolchain: the prebuilt installer CI uses
-curl -fsSL https://raw.githubusercontent.com/statecrafting/spec-spine/main/install.sh | \
-  SPEC_SPINE_VERSION=v0.10.0 SPEC_SPINE_BIN_DIR="$HOME/.local/bin" sh
+```sh
+cargo install spec-spine-cli --version <pin> --locked   # with a Rust toolchain
+npm i -g spec-spine@<pin>                               # prebuilt binary, no toolchain
+uvx spec-spine@<pin> --version                          # Python, ephemeral
 ```
 
-Verify with `spec-spine --version`. Halt on a non-zero exit and surface the
-failing step verbatim.
+Verify: `spec-spine --version` prints the pin. When `AGENTS.md` says the
+binary is built from this checkout, build it as it says instead and use
+that path for every command below.
 
-### 2. Verify the Node toolchain
+### 2. Stack toolchain
 
-```bash
-node --version && npm --version
+Install whatever `AGENTS.md` (or `CLAUDE.md`) names for the language
+gates: a pinned toolchain file, a package manager, optional linters. Report
+each as present or absent; a missing optional tool is a note, a missing
+required one is a halt. `jq` is a convenience the hooks in
+`.claude/settings.json` use; each hook says what it skipped when `jq` is
+absent.
+
+### 3. Fetch the base ref
+
+The coupling gate diffs against the default branch on the remote:
+
+```sh
+git fetch origin main
 ```
-
-The site gates (`npm ci && npm run build`) need Node once spec 001 lands.
-While the repo is pre-code (no `package.json` yet), report presence honestly;
-do not fail setup over it, but flag its absence.
-
-### 3. Compile a fresh registry
-
-```bash
-spec-spine compile
-```
-
-`.derived/` shards are committed in this repo: `compile` is deterministic and
-a no-op on a clean tree. Run it before any read so the registry reflects the
-working tree, and commit the regenerated shards whenever `specs/*/spec.md`
-changes.
 
 ### 4. Verify the governed loop
 
-Smoke-test the gates `/init` and CI depend on. Passing here means the loop works
-on this clone:
+Run the gate exactly as `AGENTS.md` "Working the backlog" lists it under
+"Run the gate before every commit". The governance floor is:
 
-```bash
-spec-spine index check       # codebase index staleness gate
-spec-spine lint --fail-on-warn   # corpus conformance
-spec-spine couple --base origin/main --head HEAD   # PR-time coupling gate
+```sh
+spec-spine compile
+spec-spine index
+spec-spine lint --fail-on-warn
+spec-spine check
+spec-spine couple --base "$(git symbolic-ref --short refs/remotes/origin/HEAD 2>/dev/null || echo origin/main)" --head HEAD
+spec-spine index coverage --fail-on-untraced   # when [coupling] require_ownership is on
 ```
 
-If `index check` exits non-zero the committed index is stale against current
-inputs. Run `spec-spine index`, re-commit the regenerated shards, then
-re-check. Do not parse `.derived/**/*.json` directly to "verify" success.
+then the stack's own build, tests, and lints. On a clean checkout
+`compile` and `index` are deterministic no-ops; if
+`git status --short -- .derived/` shows a diff afterwards, the committed
+shards were stale. Say so and leave the diff for the session to commit
+(`chore(derived): ...`); do not hide it. Halt on the first failing step
+and surface its output verbatim.
+
+Then the reads `/prime` will use:
+
+```sh
+spec-spine registry status-report --json --nonzero-only
+spec-spine registry plan
+spec-spine index coverage
+```
 
 ### 5. Emit summary
 
-Report exactly:
-
 ```
-## setup: statecraft.ing
+## setup: <project>
 
-**Install:** {ok / failed at <step>}
-**Node:** {node <version> + npm <version> / absent (needed once spec 001 lands)}
+**spec-spine:** {<pin> / wrong version <v> / failed at <step>}
+**Toolchain:** {<what AGENTS.md names>: present / absent}
+**Optional tools:** {name: present/absent, ...}
 **Governed loop:**
-  - compile: {fresh registry / failed}
-  - index check: {fresh / stale}
-  - lint: {clean / N diagnostics}
+  - compile: {ok / failed}
+  - index: {ok / regenerated, shards left for the session to commit}
+  - lint --fail-on-warn: {clean / N diagnostics}
+  - check: {registry fresh / stale, index fresh / stale}
   - couple: {clean / drift surfaced}
+  - coverage: {N claimed, M unclaimed / not enforced}
+  - stack gate: {ok / failed at <command> / none declared}
 **Lifecycle:** {N specs across <statuses>}  (from registry status-report)
+**Ready:** {ids / (nothing ready)}  (from registry plan)
 
-Next: run `/init` to load full session context.
+Next: run `/prime` to load full session context.
 ```
 
-Do not invent counts. Only report values that came back from a `spec-spine`
-subcommand.
+Do not invent counts. Only report values that came back from a
+`spec-spine` subcommand or a gate command.
 
 ## Rules
 
-- The loop runs through the installed `spec-spine` binary on your `PATH`.
-- Halt on first failure. Do not silently continue past a missing prerequisite
-  or a failing gate.
-- Never parse `.derived/**/*.json` directly in any verification step. Use the
-  `spec-spine` subcommands.
+- Halt on first failure. Do not silently continue past a missing
+  prerequisite or a failing gate.
+- Never parse `.derived/**/*.json` directly; use the `spec-spine`
+  subcommands.
 - Idempotent: safe to re-run.
+
+## Project layer
+
+Read from `AGENTS.md`: the version pin, the binary invocation, the
+toolchain, the gate command list. Nothing here is edited per project.
