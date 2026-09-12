@@ -84,7 +84,7 @@ export const DOC_STUBS: DocStub[] = [
         heading: "Born-with provenance",
         body: [
           "At stamp time the app receives a born-with certificate that binds an explicit agentic posture. An agent that later operates the app runs under a declared posture, recorded from the moment the app exists, rather than one inferred after the fact.",
-          "This rung is still being built: the contract itself is in progress and the born-with certificate is specced but not yet implemented. The specs below carry the current state; the status ladder on the home page reads it live from the registry.",
+          "This rung is part built: enrahitu 012, the born-with certificate, reports `implementation: complete`, while 009, the contract that drives the stamp, is still in progress. So the certificate exists and the stamp that would issue one at scale does not. The specs below carry the current state; the status ladder on the home page reads it live from the registry.",
         ],
       },
     ],
@@ -116,8 +116,8 @@ export const DOC_STUBS: DocStub[] = [
       {
         heading: "What runs today, and what is planned",
         body: [
-          "You can self-host the EnRaHiTu chassis now: it is a single container, and its specs are shipped. The control plane itself, tenants, the factory, the fleet, and the governance spine, is spec-approved and on the milestone ladder, not yet a thing you deploy.",
-          "Until it ships, the specs are the artifact. The thesis and the app-shell spec below describe the plane the control plane is being built into; the registry tracks how far along each part is.",
+          "You can self-host the EnRaHiTu chassis now: it is a single container, and its specs are shipped. The control plane is a different matter, and the honest answer has two halves. It runs: a deployment of it serves app.statecraft.ing, with tenants, the action gate and the attestation chain live. What does not exist is a self-host path for anyone else, because statecraft 009, the deploy spec, is still `implementation: in-progress` and describes one specific cluster rather than a reproducible install.",
+          "So the specs are still the artifact for a reader. The thesis and the app-shell spec below describe the plane; the registry tracks how far each part has come. Two limits are worth knowing before you read further: the factory has not stamped an application in production, and the plane's attestation chain is hash-linked but unsigned, so re-checking it establishes internal consistency and not who produced it.",
         ],
       },
     ],

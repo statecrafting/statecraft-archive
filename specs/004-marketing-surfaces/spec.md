@@ -261,3 +261,62 @@ records (Apache-2.0 at the root, two packages AGPL-3.0).
 No status badge, spec count, or maturity claim is added: `statecrafting` is
 outside the registry bake set (spec 001 section 3), so the catalog links it to
 GitHub and not to a spec corpus, exactly as section 3.3 specifies.
+
+## 8. Status note (2026-09-11): four published claims corrected
+
+The 2026-09-11 family realignment asked every public surface to replace an
+absolute governance claim with the exact guarantee, and to correct verified
+factual drift. Four corrections land in this spec's own content modules. None
+changes what sections 3.3 to 3.5 require; each makes the copy satisfy section
+1's honesty rule and spec 002 section 1's voice constraint, which it had
+stopped doing as the siblings moved.
+
+1. **The auth host that was retired.** `whitepaper.ts` said "the OIDC signer
+   is live at auth.statecraft.ing" and `explorer-diagrams.ts` figure 3 said
+   the signer was "running today at auth.statecraft.ing". That host is
+   deliberately gone: `statecraft` spec 009 section 2.4 is titled
+   "`auth.statecraft.ing` does not return", its acceptance table records
+   "issuer `https://app.statecraft.ing/auth/v1/`; `auth.statecraft.ing`
+   NXDOMAIN", and spec 010 accepted the cost of stopping it. Both surfaces now
+   say what is true: rauthy runs inside the plane's own container and is
+   reached only through the plane's origin, with no separate auth host.
+
+2. **Static non-overlap stated as proof.** "Disjoint territory is provably
+   disjoint ... cannot collide" claimed more than the mechanism delivers. Two
+   specs whose declared paths do not intersect cannot each claim the same
+   file, and the coupling gate refuses a change reaching outside a claim. It
+   does not cover what two non-overlapping specs still share (generated files,
+   a lockfile, a migration, a fixture, an external resource) and it is not
+   operating-system write isolation. The whitepaper, figure 1's territory node
+   and the positioning table now say exactly that.
+
+3. **A signed ledger that is not signed.** The whitepaper, figure 2, the
+   positioning table, the delivery flow's Verify step and the verification
+   layer blurb all presented Ed25519 signing as a property of the record. It
+   is a capability of the `attest-ledger` library; whether a chain is signed
+   is a deployment property. `statecraft` spec 014 section 3.5 reports the
+   running plane's chain as hash-linked, unsigned, and anchored to a root it
+   declares for itself, with `GOVERNANCEANCHORKEY` absent from the live
+   secret. The copy now separates integrity (settled by recomputation) from
+   issuer trust (not), and says signing is specified and not yet in force.
+
+4. **A verifier path nothing has exercised.** The whitepaper described
+   tenant-tail re-checking "the run-side artifacts the factory asserted about
+   its build" as a live path. `statecraft` spec 014 section 3.3 records that
+   the factory has never run in production, so no production certificate has
+   been through it. The claim is now stated as a library shape, and the reader
+   is told that a chain rebuilt from a fresh anchor verifies while proving
+   nothing about its origin.
+
+One drift fix rides along: `papers.ts` carried a hardcoded "10" for the
+family's repo count, stale since the eleventh repo joined (spec 003 section
+6). It now reads `PRODUCT_FAMILY.length`, which section 2 already permits
+this spec to consume, so the stat cannot fall behind the roster again. The
+`statecraft-cli` catalog entry and the Interface layer blurb gain the local
+engine the repository now holds, matching spec 003 section 7.
+
+Not changed here, and recorded in spec 006 for review instead: the Stamp rung,
+the Substrate layer's framing, the delivery flow's shape, and the addition of
+`rahi`. Each of those changes what spec 002 section 2 or section 3.3 here
+*requires*, and the successor thesis that would motivate them (`statecraft`
+spec 014) is still `status: draft`.

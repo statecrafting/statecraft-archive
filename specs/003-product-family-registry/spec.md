@@ -71,7 +71,7 @@ Each URL is `https://github.com/statecrafting/<repo>`.
 | --- | --- | --- |
 | statecraft | the governed delivery control plane | AGPL-3.0 |
 | enrahitu | the EnRaHiTu template chassis (Encore.ts + rauthy + hiqlite + Turso) | Apache-2.0 |
-| statecraft-cli | the CLI and MCP server | Apache-2.0 |
+| statecraft-cli | the CLI, the MCP server, and the local delivery engine they drive | Apache-2.0 |
 | spec-spine | the spec-governance toolchain everything above is governed by | Apache-2.0 |
 | tenant-emit | the tenant certificate emitter | Apache-2.0 |
 | tenant-tail | the tenant certificate verifier | Apache-2.0 |
@@ -119,3 +119,28 @@ against this spec instead of requiring a waiver.
 2026-07-23: first such roster edit; the `statecrafting` packages repo
 (the @statecrafting/* napi addons and the Encore toolchain) joins as the
 eleventh member, coupled here plus the module, no waiver.
+
+## 7. Status note (2026-09-11): the CLI's role line catches up with its tree
+
+A re-description, not a roster change: the eleven repositories and their
+licenses are unchanged. `statecraft-cli` was described as "the CLI and MCP
+server", which was accurate when this section was written and is now
+materially incomplete. Since 2026-09-09 (its own design record 02) that
+repository is the monorepo for the family's tooling: eight Rust crates
+(contracts, the journal, two sensors, two provider drivers and their cores),
+a Bun orchestrator engine under `members/`, a local browser UI, and a
+`statecraft <name>` dispatch that reaches them without an account. Read at
+its HEAD `15103e2`: 76 spec directories, `crates/`, `members/src/`, and
+`members/web/src/views/`.
+
+The role line becomes "the CLI, the MCP server, and the local delivery engine
+they drive". Section 4's acceptance is unchanged and still holds: eleven
+repos, this order, these licenses, each role a faithful one-line summary of
+the repo's own description.
+
+What is deliberately *not* changed here: `enrahitu`'s role line. Its own
+corpus has pivoted (its approved specs 035 to 038 make it a membership
+platform an organization extends rather than a chassis something is stamped
+from), which is a change to what spec 002 section 2 requires the index to
+say, not a phrasing fix. Spec 006 section 4 records it as proposal P-2 for
+review rather than settling it here.

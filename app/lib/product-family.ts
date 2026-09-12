@@ -39,7 +39,7 @@ export const REPO_META: Record<string, RepoMeta> = {
     repo: "statecraft-cli",
     name: "statecraft-cli",
     license: "Apache-2.0",
-    role: "the CLI and MCP server",
+    role: "the CLI, the MCP server, and the local delivery engine they drive",
     url: `${ORG_URL}/statecraft-cli`,
   },
   "spec-spine": {

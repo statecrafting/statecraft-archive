@@ -292,9 +292,11 @@ function ForAgents({ state }: { state: MilestoneState }) {
         </h2>
         <p className="mt-3 max-w-2xl text-muted-foreground">
           The model is deliberate: same verbs, same guards, an explicit posture,
-          no side doors. The MCP face will expose the governed verbs to coding
-          agents directly, so an agent driving the plane passes through the exact
-          controls a person does.
+          no side doors. The MCP face exposes the governed verbs to coding agents
+          directly, so an agent driving the plane passes through the exact
+          controls a person does. What it cannot show you is whether a provider
+          reported every tool call it made: no driver proves that, so it is
+          recorded as unknown rather than as coverage.
         </p>
         <Link
           to={`/registry/${AGENT_REF.repo}/${AGENT_REF.id}`}

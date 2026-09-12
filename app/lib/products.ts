@@ -66,7 +66,7 @@ export const ARCHITECTURE_LAYERS: ArchLayer[] = [
     name: "Interface",
     icon: "interface",
     blurb:
-      "How people and agents drive the plane: a CLI and an MCP server exposing the same governed verbs, so an agent passes through the controls a person does.",
+      "How people and agents drive the plane: a CLI and an MCP server exposing the same governed verbs, so an agent passes through the controls a person does. The same repository now carries the local engine those verbs dispatch to, which runs a governed session on your own machine without an account.",
     repos: ["statecraft-cli"],
   },
   {
@@ -74,7 +74,7 @@ export const ARCHITECTURE_LAYERS: ArchLayer[] = [
     name: "Verification primitives",
     icon: "verification",
     blurb:
-      "Small, single-purpose libraries that make the record checkable by someone who trusts none of it: certificates, a signed ledger, canonical hashing, a decision gate, and a trust score.",
+      "Small, single-purpose libraries that make the record checkable by someone who trusts none of it: certificates, a hash-linked ledger that can sign its entries, canonical hashing, a decision gate, and a trust score. What a chain establishes by recomputation is integrity; who issued it is a separate question a signature answers.",
     repos: [
       "tenant-emit",
       "tenant-tail",
@@ -106,7 +106,7 @@ export const DELIVERY_FLOW: FlowStep[] = [
   { verb: "Specify", tool: "spec-spine", detail: "intent compiles to a typed, hash-verifiable spec; drift is gated in CI" },
   { verb: "Stamp", tool: "enrahitu + template contract", detail: "a contract stamps a complete app from the chassis, born with a certificate", ref: { repo: "enrahitu", id: "009-template-contract" } },
   { verb: "Operate", tool: "the fleet", detail: "one container, one volume; update and backup are governed verbs with an audit trail", ref: { repo: "statecraft", id: "006-fleet" } },
-  { verb: "Verify", tool: "attest-ledger + tenant-tail", detail: "the run is recorded in a signed ledger and re-checked by an independent verifier", ref: { repo: "statecraft", id: "008-governance-attestation" } },
+  { verb: "Verify", tool: "attest-ledger + tenant-tail", detail: "the run is recorded in a hash-linked ledger and re-checked by an independent verifier; signing is specified and not yet in force", ref: { repo: "statecraft", id: "008-governance-attestation" } },
 ];
 
 export interface ProductDetail {
@@ -137,11 +137,12 @@ export const PRODUCT_DETAIL: Record<string, ProductDetail> = {
   },
   "statecraft-cli": {
     blurb:
-      "The command line and MCP server: the same governed verbs for people and for coding agents.",
+      "The command line and MCP server, and since 2026-09-09 the monorepo for the local delivery engine they drive: the same governed verbs for people and for coding agents.",
     highlights: [
       "One set of verbs, one set of guards",
       "MCP face so an agent uses the controls a person does",
-      "No side doors around the governance model",
+      "Also holds the orchestrator engine, the sensors, the provider drivers and a local browser UI",
+      "Runs locally with no account; publication goes through a broker that journals intent and outcome",
     ],
   },
   "spec-spine": {
