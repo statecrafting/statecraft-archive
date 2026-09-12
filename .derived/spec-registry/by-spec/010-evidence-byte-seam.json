@@ -1,0 +1,55 @@
+{
+  "record": {
+    "created": "2026-09-12",
+    "dependsOn": [
+      "001-packages-thesis",
+      "005-governance-native"
+    ],
+    "establishes": [
+      {
+        "kind": "directory",
+        "path": "specs/010-evidence-byte-seam/"
+      }
+    ],
+    "extends": [
+      {
+        "nature": "additive",
+        "spec": "005-governance-native",
+        "unit": {
+          "kind": "directory",
+          "path": "addon/governance-native/"
+        }
+      }
+    ],
+    "id": "010-evidence-byte-seam",
+    "implementation": "pending",
+    "sectionHeadings": [
+      "010: The evidence-byte seam",
+      "1. Purpose",
+      "2. Territory",
+      "3. What was measured",
+      "3.1 The seam parses",
+      "3.2 Every vector, separately",
+      "3.3 Verification is over the parsed model, not the stored bytes",
+      "3.4 The construction depends on an unpinned float formatter",
+      "3.5 Key sorting is not RFC 8785, and the family does not use RFC 8785",
+      "4. Behavior: the proposed addon contract",
+      "4.1 What this repository accepts from statecraft's 014 D-3",
+      "4.2 The addon's obligations",
+      "4.3 Counterproposal to statecraft's narrower request",
+      "4.4 The reference is opaque to the addon",
+      "5. The regression inputs",
+      "6. Out of scope",
+      "7. This repository's positions on sibling text",
+      "8. Open decisions",
+      "9. Acceptance",
+      "10. Decisions recorded"
+    ],
+    "specPath": "specs/010-evidence-byte-seam/spec.md",
+    "status": "draft",
+    "summary": "What `governance-native` promises about bytes, split from the native extraction (009) because it is on statecraft's evidence-intake path and the extraction is not. Measured on 2026-09-12 against current source and all three published 0.1.0 binaries, the ledger stores and hashes a reparse of what it is given. Distinct bytes share a record hash, including two different 30-digit integers. `ledgerVerify` accepts stored-byte edits that keep the parsed model, including an injected duplicate key. A record carrying a float verifies or reports \"content was altered\" depending on which `serde_json` the verifier links, because every addon's `Cargo.lock` is gitignored. statecraft's 014 D-3 already keeps foreign evidence out of the addon. This spec accepts that and proposes the addon's half: keep 0.1.0's construction permanently, pin it, and add a portable admission rule, aligned with statecraft-cli 113 B-2, that refuses what the ledger would silently rewrite. It supplies 23 regression vectors and the probe that produced every result here. Draft: nothing is approved, and no addon file changes.\n",
+    "title": "The evidence-byte seam: original bytes beside the ledger, never through it"
+  },
+  "shardHash": "85cd741f38b4a3d39380de453cf0512afae19cde5fb4fac3de3d0c181cf30ac3",
+  "specVersion": "1.2.0"
+}

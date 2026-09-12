@@ -1,0 +1,50 @@
+{
+  "mapping": {
+    "dependsOn": [
+      "001-packages-thesis",
+      "005-governance-native"
+    ],
+    "implementingPaths": [
+      {
+        "path": "addon/governance-native/",
+        "source": "spec-edge"
+      },
+      {
+        "path": "specs/010-evidence-byte-seam/",
+        "source": "spec-edge"
+      }
+    ],
+    "resolvedUnits": [
+      {
+        "locations": [
+          {
+            "file": "specs/010-evidence-byte-seam/"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "directory",
+          "path": "specs/010-evidence-byte-seam/"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "addon/governance-native/"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "extends",
+        "unit": {
+          "kind": "directory",
+          "path": "addon/governance-native/"
+        }
+      }
+    ],
+    "specId": "010-evidence-byte-seam",
+    "specStatus": "draft"
+  },
+  "schemaVersion": "1.1.0",
+  "shardHash": "f87d4819d3a338983e13fc486f642f090c8cdb6ad918b1751f158381cfccbd48"
+}
