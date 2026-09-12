@@ -94,6 +94,11 @@ pub enum Scan {
     Malformed,
 }
 
+/// The deepest nesting the scanner follows. Above `serde_json`'s recursion
+/// limit, so a document deeper than this is one the lenient function already
+/// refuses, and the scanner's stack stays bounded however long the input.
+const MAX_DEPTH: usize = 1024;
+
 /// Raised if the scanner calls a document malformed that `serde_json`
 /// parses. Nothing is admitted on that path; a test holds it unreachable.
 const DISAGREEMENT: &str =
@@ -170,6 +175,9 @@ impl Scanner<'_> {
         // itself, to which the pointer is truncated between members.
         let mut stack: Vec<(Container, usize)> = Vec::new();
         'value: loop {
+            if stack.len() > MAX_DEPTH {
+                return Err(Malformed);
+            }
             self.skip_ws();
             match self.peek() {
                 Some(b'{') => {
@@ -622,6 +630,16 @@ mod tests {
             assert_ne!(scan(doc), Scan::Malformed, "{doc:?}");
             assert!(serde_json::from_str::<serde_json::Value>(doc).is_ok(), "{doc:?}");
         }
+    }
+
+    #[test]
+    fn nesting_beyond_the_cap_is_todays_refusal() {
+        let deep = |n: usize| "[".repeat(n) + &"]".repeat(n);
+        assert_eq!(scan(&deep(MAX_DEPTH)), Scan::Portable);
+        assert_eq!(scan(&deep(MAX_DEPTH + 2)), Scan::Malformed);
+        let doc = deep(MAX_DEPTH + 2);
+        let lenient = crate::canon::canonicalize(&doc).err().unwrap();
+        assert_eq!(canonicalize(&doc).err(), Some(PortableError::Lenient(lenient)));
     }
 
     #[test]

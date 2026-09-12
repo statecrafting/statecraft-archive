@@ -2,7 +2,7 @@
 id: "010-evidence-byte-seam"
 title: "The evidence-byte seam: original bytes beside the ledger, never through it"
 status: approved
-implementation: in-progress
+implementation: complete
 created: "2026-09-12"
 depends_on:
   - "001-packages-thesis"
@@ -89,6 +89,7 @@ still owns the directory.
 | `vectors/evidence-bytes.v1.json` | the 23 vectors: base64 bytes, size, declared digest (SHA-256 over the bytes), class, note |
 | `vectors/generate.mjs` | the readable source of the vectors; regenerates the JSON byte for byte |
 | `probe/ledger-seam-probe.mjs` | drives an addon binary with the vectors and six stored-byte mutations; asserts nothing, reports everything |
+| `verifiers/governance-native-0.1.0.v1.json` | the historical verifier by digest: the three published 0.1.0 binaries, tarball integrity and `.node` SHA-256, the deployed one marked (A-2, added with the implementation) |
 
 The vectors are base64 so no line-ending or encoding normalization, in git
 or an editor, can change them. The files sit outside every package
@@ -591,3 +592,132 @@ its commands exists.
   `cx43` instances, which are x86-64. The linux-arm64 and darwin-arm64
   binaries are recorded too, because a rebuild on another host or a
   developer's verification may use them.
+- **2026-09-12. `-0` is refused as `non-integer-number`.** A-3 and D-5
+  were silent on it. `-0` is an integer token by RFC 8259's grammar, but
+  it is the one integer token `serde_json` holds as the float `-0.0`,
+  which the ledger then stores and hashes with a float spelling. It is
+  also refused by `statecraft-journal`'s `check_portable`, which sees the
+  same float. Admitting it would put a float spelling inside a portable
+  record's hash.
+- **2026-09-12. The shape of a refusal.** A-3 asks for the JSON pointer
+  and a reason code. The JavaScript error's `code` is the reason code, and
+  its message is `<code> at JSON pointer "<RFC 6901 pointer>": <why>`, with
+  the pointer JSON-quoted so the empty root pointer is visible. When the
+  document holds more than one refusal, the one reported is the first in
+  document order. Every other failure throws exactly what the lenient
+  function throws, `GenericFailure` code and message included.
+- **2026-09-12. Why a scanner, and why it decides nothing else.** A
+  `serde_json` visitor sees `12345678901234567890123` as an `f64`, and
+  enabling `arbitrary_precision` to see the token would change what
+  `canonicalize` returns for every caller, breaking A-1. So
+  `portable::scan` is a small RFC 8259 scanner over the submitted text,
+  and it only classifies tokens. A document it calls malformed goes to
+  the lenient function, so that refusal is today's. Should the scanner
+  and `serde_json` ever disagree, the portable call refuses rather than
+  admits, and a test holds the two in agreement over a malformed and a
+  well-formed corpus. A 200-deep array (V15) is well formed to the
+  scanner and refused by `serde_json`'s recursion limit, as today. The
+  scanner follows at most 1024 levels, above that limit, so its stack
+  stays bounded on any input, and deeper input also gets today's refusal.
+- **2026-09-12. Why the golden chain lives in the test, not in fixture
+  files.** A fixture file would sit under `.gitattributes`' `text=auto
+  eol=lf`, and changing that file is spec 008's. The two stored lines and
+  the anchor, as the published binaries wrote them, are string constants
+  in `golden_tests.rs`, where no checkout can normalize them.
+- **2026-09-12. Why no `--locked` flag.** With `Cargo.lock` committed and
+  `Cargo.toml` unchanged, cargo builds exactly the locked `serde_json`. A
+  different formatter needs a visible lockfile diff, which the golden tests
+  then fail. `build.yml` and `publish.yml` call `npm run build` unchanged,
+  and their cache key already hashes `addon/*/Cargo.lock`.
+
+## 11. Implementation record
+
+Implemented 2026-09-12 on this spec's branch, after the scoped approval.
+Four commits precede this record: the decisions and approval, the
+`in-progress` flip, the lockfile with the golden tests (D-3), and the
+portable functions with the doc comments, the verifier record and the
+0.2.0 manifests. The commit carrying this record also adds the
+scanner's depth cap, found in review. Every result below is for that
+final source. macOS arm64,
+cargo 1.96.0, Node v24.6.0. Against section 9:
+
+1. **Probe identity.** The probe's `report.json` for the new build and
+   for the published `@statecrafting/governance-native-darwin-arm64@0.1.0`
+   are byte-identical, SHA-256 `669f9b2f8e0565c85d3619eda07343552e8606e23fff7952f996bd42f3a3197a`,
+   and so is their printed output.
+2. **A 0.1.0 chain verifies.** The published darwin-arm64 binary, and the
+   deployed linux-x64-gnu binary under `node:24-slim` with amd64
+   emulation, wrote byte-identical chains of
+   `{"id":"x","kind":"stamp"}` then
+   `{"id":"y","kind":"evidence","big":12345678901234567890123}`: record
+   hashes `sha256:2c3427b0...a6d4e3` and `sha256:ebb921ec...df5b7c`.
+   `golden_tests.rs` pins both hashes and the stored bytes, and
+   `ledgerVerify` from the new build returns `{ ok: true, seq: 2 }` over
+   the chain the published binary wrote.
+3. **The negative case.** On a scratch copy with `serde_json = "=1.0.145"`
+   (`cargo update` removed `zmij` 1.0.23), both golden tests failed. The
+   verify test failed with "record 1: record_hash mismatch (content was
+   altered)" over the unaltered chain, and the append test reproduced the
+   float record as `sha256:b76080772ae9736ea5be5d2919888b4be18c419b49dd0323aec1fa590f6589d4`.
+   `addon/governance-native/Cargo.lock` is committed at `serde_json`
+   1.0.151.
+4. **Section 4.2's table.** `the_committed_vectors_meet_section_4_2`
+   reads the committed vectors and asserts every row: the refusals with
+   their codes and pointers, a refusal leaving no file, today's error for
+   V13, V15 and V16, V14 as not UTF-8, and byte-identical canonical forms,
+   record hashes, `records.jsonl` and `anchor.json` for the eight admitted
+   vectors. Through the napi surface the same table holds, with `code` set
+   to the reason. V14 arrives admitted there: Node replaced its `0xFF`
+   with U+FFFD before the call, which is 3.2's finding and not a byte
+   the addon ever saw. The published binary exports 7 functions and the
+   new build 9, the two additions being the portable pair.
+5. **Doc comments.** `canon.rs` and `ledger.rs` describe the parse, the
+   key sort and the formatter dependence. Outside those comments neither
+   file changed, and neither did `gate.rs` or `trust.rs`.
+6. **Tests and gates.** `cargo test --no-default-features`: 34 passed,
+   the existing 22 unedited, plus 2 golden and 10 portable.
+   `make addons` built all four addons. `make gate`, `make typecheck`,
+   `make test` (22) and `make licenses` (AGPL-3.0 tier unchanged) passed.
+7. **Version.** `Cargo.toml`, `package.json` and `package-lock.json` read
+   0.2.0. Nothing was tagged or published.
+8. **Verifier record.** The three tarball integrity values were read from
+   the registry and recomputed over the downloaded tarballs, and they
+   equal statecraft's lockfile entries. The three `.node` digests equal
+   section 3's.
+
+Not run here: the linux builds of the changed crate (the pull request's
+`build.yml` run builds all three platforms), any Windows build, and
+statecraft's production-chain inventory, which is D-4's verification
+work and statecraft's. Section 9 item 1 needs a published binary from
+the registry, so it is recorded above rather than repeated in the
+Verification block.
+
+## Verification
+
+Each line below is one command, run from the repository root; no line
+depends on a variable another line set.
+
+```verify:cli
+# A-1, A-2, A-3: the existing 22 tests, the golden record hashes, and
+# section 4.2's table over the committed vectors.
+cargo test --manifest-path addon/governance-native/Cargo.toml --no-default-features
+git ls-files --error-unmatch addon/governance-native/Cargo.lock
+# A-2, D-4: the verifier record names section 3's three binaries and marks one deployed.
+grep -q 3177f701b09d1bc39363b2bfad44953eb99ff8347b5180ce62513421a99de8e2 specs/010-evidence-byte-seam/verifiers/governance-native-0.1.0.v1.json
+grep -q 9cb340ca830ec5d0120ebfe07d270630815155415f357404fb3bd9ccf07b3aaf specs/010-evidence-byte-seam/verifiers/governance-native-0.1.0.v1.json
+grep -q 9fd21982e2c510ee23c8a3cfecf4d311b3bf26f08145e334ec332614d16d8fc5 specs/010-evidence-byte-seam/verifiers/governance-native-0.1.0.v1.json
+test 1 -eq "$(grep -c '"deployed": true' specs/010-evidence-byte-seam/verifiers/governance-native-0.1.0.v1.json | tr -d ' ')"
+# A-4: the two untrue claims are gone.
+! grep -q 'stored opaquely and is fully covered' addon/governance-native/src/ledger.rs
+! grep -q 'independently reproducible by any third party' addon/governance-native/src/canon.rs
+# Item 7: the manifests read 0.2.0.
+grep -q '^version = "0.2.0"$' addon/governance-native/Cargo.toml
+grep -q '"version": "0.2.0"' addon/governance-native/package.json
+# Item 6: the addon builds, and the governed loop and stack gate are green.
+npm --prefix addon/governance-native ci
+npm --prefix addon/governance-native run build
+make gate
+make typecheck
+make test
+make licenses
+```
