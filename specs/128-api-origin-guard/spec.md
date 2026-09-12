@@ -33,6 +33,9 @@ extends:
   # 024's web fixtures build an ApiMeta by hand, which gains `guardRefusals`.
   - { spec: "024-web-ui", unit: "members/web/test/fixtures.ts", nature: additive }
   - { spec: "024-web-ui", unit: "members/web/test/store.test.tsx", nature: additive }
+  # 123's policy module computed a path at load, which stopped the built UI
+  # from rendering at all; §5's browser round needs the page to load (D-15).
+  - { spec: "123-policy-kit-handoff", unit: "members/src/orchestrator/lifecycle-policy.ts", nature: additive }
   # 121 owns the candidate, where the origin URL is read before it is
   # journaled in a receipt or served as a project's origin.
   - { spec: "121-candidate-and-receipt", unit: "members/src/orchestrator/candidate.ts", nature: additive }
@@ -435,6 +438,54 @@ loopback names and refuses to load otherwise. The need was found running §5's
 first written could only reach that daemon, so the round would have driven
 it. A contributor in the same position needs the same thing, and a refusal of
 any non-loopback target keeps the proxy from becoming a way off the machine.
+
+D-15 (2026-09-12, build). `lifecycle-policy.ts`'s `POLICY_FILE` becomes the
+literal `.statecraft/policy.json` instead of `join(".statecraft",
+"policy.json")` evaluated at load. Found running §5's browser round: the built
+UI threw `(0, c(...).join) is not a function` before rendering, because
+`api-client.ts` imports `policyPayload` from that module and a browser bundle
+stubs `path` with an empty object. The same throw was reproduced from
+`origin/main` (`874766b`) with an identical bundle, so the built UI has not
+rendered in a browser since spec 123 added the import; no test loads the
+bundle in a browser. The literal is what `join` produced on every platform
+the members support (108 D-10), and 123's tests pass unchanged. The larger
+defect of the same cause, the dev server's, is recorded in the status below
+and not fixed here.
+
+## Status (2026-09-12, in progress: one acceptance round blocked)
+
+Implemented and committed on branch `128-api-origin-guard`; the gate, `make
+members` (typecheck, member builds, 994 Bun tests), `cargo fmt`, `clippy` and
+`cargo test` exit 0. Acceptance, criterion by criterion:
+
+- `bun test`, `cargo test -p statecraft-journal`, `make gate`: pass.
+- The browser round: pass, in headless Chrome 152 driven over the DevTools
+  protocol with a throwaway profile, against a daemon built from this branch
+  on port 4631 with a scratch home and an unqualified scratch repository (so
+  nothing could be driven). A page served from `127.0.0.1:4632` posted
+  `disarm` twice (a `no-cors` simple request and a CORS one): both reached the
+  daemon and were refused, `/api/meta` `guardRefusals` went from 0 to 2, the
+  projects chain's SHA-256 was unchanged and the project stayed armed. The
+  daemon's own UI then loaded and its Disarm control journaled
+  `project.disarmed` with source `ui` at seq 4, with no refusal counted. A
+  second run of the page took the count to 4 and appended nothing. The
+  Chrome extension was not connected, which is why the round was driven
+  headless.
+- The same round through `bun run web:dev`: **blocked, not by this spec.** The
+  dev server (Vite 8.2.0, proxying to the scratch daemon through D-14) serves
+  the UI, which throws before rendering: `Module "path" has been externalized
+  for browser compatibility`, raised from `journal.ts`. The chain is
+  `api-client.ts` → `lifecycle-policy.ts` (`policyPayload`) → `receipt.ts` →
+  `journal.ts` → `path`, `fs`, `crypto`, and every link is present at
+  `origin/main`; a production build drops the unused bindings, which is why
+  D-15 was enough there and is not here. What remains is to take the web
+  client's policy payload off that chain (for example, `policyPayload` in a
+  module with no Node imports, which both `api-client.ts` and
+  `lifecycle-policy.ts` use), then rerun this round and flip to `complete`.
+  That change belongs to 022's client and 123's module; it is reported for the
+  owner to place rather than folded into this spec.
+- The committed evidence bundle verifies under both verifiers (the parity
+  suite's FR-003 (a)); spec 132 has minted no bundles yet.
 
 ## Status (2026-09-12, approved)
 

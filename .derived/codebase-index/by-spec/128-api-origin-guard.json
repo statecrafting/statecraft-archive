@@ -68,6 +68,10 @@
         "source": "spec-edge"
       },
       {
+        "path": "members/src/orchestrator/lifecycle-policy.ts",
+        "source": "spec-edge"
+      },
+      {
         "path": "members/src/orchestrator/projects.test.ts",
         "source": "spec-edge"
       },
@@ -287,6 +291,19 @@
       {
         "locations": [
           {
+            "file": "members/src/orchestrator/lifecycle-policy.ts"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "extends",
+        "unit": {
+          "kind": "file",
+          "path": "members/src/orchestrator/lifecycle-policy.ts"
+        }
+      },
+      {
+        "locations": [
+          {
             "file": "members/src/orchestrator/projects.test.ts"
           }
         ],
@@ -367,5 +384,5 @@
     "specStatus": "approved"
   },
   "schemaVersion": "1.1.0",
-  "shardHash": "50105255b46c999502005ee1882c58e45c12bc7302a9ac0efcd0f16b1d7a8b86"
+  "shardHash": "4146888945762e8273c6c769722131c41a1b6c65b2c8b79850223b73365a23cb"
 }

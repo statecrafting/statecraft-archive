@@ -92,6 +92,14 @@
       },
       {
         "nature": "additive",
+        "spec": "123-policy-kit-handoff",
+        "unit": {
+          "kind": "file",
+          "path": "members/src/orchestrator/lifecycle-policy.ts"
+        }
+      },
+      {
+        "nature": "additive",
         "spec": "121-candidate-and-receipt",
         "unit": {
           "kind": "file",
@@ -195,6 +203,7 @@
       "Verification",
       "6. Out of scope",
       "7. Resolved decisions",
+      "Status (2026-09-12, in progress: one acceptance round blocked)",
       "Status (2026-09-12, approved)",
       "Status (2026-09-12)"
     ],
@@ -203,6 +212,6 @@
     "summary": "The daemon binds loopback because it has no auth layer (022), and loopback keeps other machines out. It does not keep out a web page open in the operator's own browser: the API checks neither Origin nor Host, the version header is optional, and a text/plain body is parsed as JSON, so any page can send a preflight-free POST that arms a project, changes its posture or gate, or approves a human gate, and a DNS-rebinding page can read every answer. Measured on 2026-09-11, a foreign-origin POST disarmed a fixture project. This spec refuses, before any route runs, a request whose Host is not a loopback name at the bound port or whose Origin is not the daemon's own, and requires on every state-changing request a header a cross-origin page cannot send without a preflight the server never grants. It also stops a credential in the origin remote URL from being journaled, served or exported, which was measured passing through a minted receipt and the export policy, and on 2026-09-12 through a second copy of the lookup into the daemon's project registry. A credential already chained is never rewritten: the export withholds it and the API reduces it where it serves it. The daemon's own page, the engine CLI and the Vite dev UI keep working.\n",
     "title": "The origin guard: the daemon answers its own page and its own clients, and never serves a credential"
   },
-  "shardHash": "33dc7d6f14aaeda02ce32e6f7047f37d577b1bef651b3d81dfb7ca234342aea1",
+  "shardHash": "9a59518126e1decf35f4050f4df41815330684e63d2796f7b1afc49d9dc3efee",
   "specVersion": "1.2.0"
 }
