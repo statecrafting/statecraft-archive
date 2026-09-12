@@ -221,3 +221,30 @@ M3 shape. Each is a change to what section 2 *requires*, motivated by a
 successor thesis (`statecraft` spec 014) that is still `status: draft`. Spec 006
 records them as proposals P-1 to P-7 for review, with the evidence and the
 dependency named.
+
+## 9. Status note (2026-09-12): a chip reports the corpus, and says so
+
+The maturity chips on the loop blocks, the for-agents block and the ladder
+read `shipped`, `in progress` and `planned`. The first is the problem: it is
+derived from `implementation: complete`, and a complete spec is not a shipped
+product. On the live build of 2026-09-12 the M4 rung read "The fleet operates
+the result: shipped" and the Operate block read `shipped`, from
+`statecraft/006-fleet` alone, while no release of the plane exists and no
+placed application is on a public record.
+
+One rollup quirk is recorded and left alone: a constituent spec at
+`implementation: n-a` counts as incomplete, so M3, which includes the
+`statecraft` thesis record 001, cannot reach its top state however far the
+rest of the rung moves. Whether a record belongs on a rung at all is a spec 006
+D-1 question.
+
+The derivation in section 0 is unchanged and stays the rule. Only the words
+change: `milestoneStateLabel` in `app/lib/milestones.ts` now reads
+`implemented`, `in progress` and `pending`, the corpus's own vocabulary. The
+loop and status introductions each gain one sentence saying that implemented is
+not released, exercised or hosted, and link to the availability matrix spec
+004 section 3.3.1 adds to `/products`, which is the one place those three axes
+are authored (spec 006 D-4).
+
+Not changed here: the hero, the Stamp block, the ladder's M3 shape, and the
+rungs themselves. Those still wait on spec 006 D-1.

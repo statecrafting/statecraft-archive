@@ -10,6 +10,14 @@ import {
   type MilestoneState,
 } from "~/lib/milestones";
 import {
+  MATRIX_READ_ON,
+  readingChip,
+  readingLabel,
+  resolveMatrix,
+  type Evidence,
+  type ReadingState,
+} from "~/lib/availability";
+import {
   ARCHITECTURE_LAYERS,
   DELIVERY_FLOW,
   productEntries,
@@ -38,7 +46,7 @@ export function meta(_: Route.MetaArgs): Route.MetaDescriptors {
     {
       name: "description",
       content:
-        "The Statecraft family as layers: a governance toolchain, a runnable substrate, the control plane, the interface, and the verification primitives. Ten open repos, one governed stack.",
+        `What you can install, run and use today, capability by capability, and the Statecraft family as layers. ${PRODUCT_FAMILY.length} open repos, one governed stack.`,
     },
   ];
 }
@@ -90,6 +98,9 @@ export function loader() {
   }
 
   return {
+    // Throws, naming every broken row rule, so the prerender fails instead of
+    // publishing a capability that reads louder than its evidence.
+    availability: resolveMatrix(payload),
     entries: productEntries(),
     flow: flow.map(({ missingRef: _drop, ...rest }) => rest),
   };
@@ -122,6 +133,134 @@ function Hero() {
         and agents drive, and the small primitives that make the record
         checkable. All open source, all spec-governed.
       </p>
+    </section>
+  );
+}
+
+type MatrixRow = Route.ComponentProps["loaderData"]["availability"][number];
+
+function EvidenceLinks({ evidence }: { evidence: Evidence[] }) {
+  if (evidence.length === 0) return null;
+  return (
+    <span className="mt-1 flex flex-wrap gap-x-2 gap-y-0.5">
+      {evidence.map((e) =>
+        e.href.startsWith("/") ? (
+          <Link key={e.href} to={e.href} className="font-mono text-[10px] text-primary hover:underline">
+            {e.label}
+          </Link>
+        ) : (
+          <a
+            key={e.href}
+            href={e.href}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="font-mono text-[10px] text-primary hover:underline"
+          >
+            {e.label}
+          </a>
+        )
+      )}
+    </span>
+  );
+}
+
+function AxisCell({
+  axis,
+  title,
+  state,
+  note,
+  evidence,
+}: {
+  axis: "implemented" | "released" | "exercised" | "hosted";
+  title: string;
+  state: ReadingState;
+  note: string;
+  evidence: Evidence[];
+}) {
+  return (
+    <div className="min-w-0 rounded border border-border/40 bg-muted/20 p-3">
+      <div className="mb-1.5 flex flex-wrap items-center justify-between gap-2">
+        <span className="font-mono text-[10px] uppercase tracking-wider text-muted-foreground">{title}</span>
+        <span className={readingChip(state)}>{readingLabel(axis, state)}</span>
+      </div>
+      <p className="text-[11px] leading-relaxed text-foreground/80">{note}</p>
+      <EvidenceLinks evidence={evidence} />
+    </div>
+  );
+}
+
+function Availability({ rows }: { rows: MatrixRow[] }) {
+  return (
+    <section id="availability" className="mt-14 scroll-mt-20">
+      <h2 className="mb-3 font-mono text-2xl font-bold">What you can use today.</h2>
+      <p className="mb-2 max-w-3xl text-sm leading-relaxed text-muted-foreground">
+        Each capability is read on four separate questions. <strong>Implemented</strong>{" "}
+        means the specs that govern it report <code className="font-mono text-xs">implementation: complete</code>;
+        for a repository in the registry that reading is rolled up from its specs, never typed here.{" "}
+        <strong>Released</strong> means a versioned artifact you can install exists.{" "}
+        <strong>Exercised</strong> means a run outside the repository&apos;s own tests is on a public
+        record. <strong>Hosted</strong> means this project operates it as a service you can use.
+      </p>
+      <p className="mb-6 max-w-3xl text-sm leading-relaxed text-muted-foreground">
+        A capability can be implemented and still not released, exercised or hosted, and several here are.
+        The other readings were taken on {MATRIX_READ_ON}; where one and its linked source disagree, the
+        source is right.
+      </p>
+      <div className="space-y-5">
+        {rows.map((row) => (
+          <div key={row.id} id={row.id} className="scroll-mt-20 rounded-lg border border-border/60 bg-card p-5">
+            <div className="mb-3 flex flex-wrap items-start justify-between gap-3">
+              <div className="min-w-0">
+                <h3 className="font-mono text-sm font-bold">{row.capability}</h3>
+                <p className="mt-1 max-w-2xl text-xs text-muted-foreground">{row.summary}</p>
+              </div>
+              <div className="flex flex-wrap gap-1.5">
+                {row.repos.map((repo) => (
+                  <a
+                    key={repo}
+                    href={`${ORG_URL}/${repo}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="spec-chip"
+                  >
+                    {repo}
+                  </a>
+                ))}
+              </div>
+            </div>
+            <div className="grid gap-2 sm:grid-cols-2 lg:grid-cols-4">
+              <AxisCell
+                axis="implemented"
+                title="Implemented"
+                state={row.implemented.state}
+                note={
+                  row.implemented.readAt
+                    ? `${row.implemented.note} Read at ${row.implemented.readAt
+                        .map((r) => `${r.repo}@${r.sha}`)
+                        .join(", ")}.`
+                    : row.implemented.note
+                }
+                evidence={row.implemented.evidence}
+              />
+              <AxisCell axis="released" title="Released" state={row.released.state} note={row.released.note} evidence={"evidence" in row.released && row.released.evidence ? row.released.evidence : []} />
+              <AxisCell axis="exercised" title="Exercised" state={row.exercised.state} note={row.exercised.note} evidence={"evidence" in row.exercised && row.exercised.evidence ? row.exercised.evidence : []} />
+              <AxisCell axis="hosted" title="Hosted" state={row.hosted.state} note={row.hosted.note} evidence={"evidence" in row.hosted && row.hosted.evidence ? row.hosted.evidence : []} />
+            </div>
+            {row.limits.length > 0 && (
+              <ul className="mt-3 space-y-1.5 border-t border-border/30 pt-3">
+                {row.limits.map((limit) => (
+                  <li key={limit.text} className="flex items-start gap-2 text-[11px] leading-relaxed">
+                    <span className="mt-0.5 font-mono text-amber-600 dark:text-amber-400">!</span>
+                    <span className="min-w-0 text-foreground/80">
+                      {limit.text} <EvidenceLinks evidence={limit.evidence} />
+                    </span>
+                  </li>
+                ))}
+              </ul>
+            )}
+          </div>
+        ))}
+      </div>
     </section>
   );
 }
@@ -284,6 +423,7 @@ export default function Products({ loaderData }: Route.ComponentProps) {
   return (
     <div className="container mx-auto max-w-4xl px-4 py-16">
       <Hero />
+      <Availability rows={loaderData.availability} />
       <ArchitectureLayers />
       <DeliveryFlow flow={loaderData.flow} />
       <Catalog entries={loaderData.entries} />

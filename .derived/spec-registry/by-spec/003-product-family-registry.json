@@ -24,13 +24,14 @@
       "4. Acceptance",
       "5. Out of scope",
       "6. Status (2026-07-15): complete",
-      "7. Status note (2026-09-11): the CLI's role line catches up with its tree"
+      "7. Status note (2026-09-11): the CLI's role line catches up with its tree",
+      "8. Status note (2026-09-12): three role lines stop overstating"
     ],
     "specPath": "specs/003-product-family-registry/spec.md",
     "status": "approved",
     "summary": "The canonical registry of the Statecraft product family: each repo's name, role, SPDX license, and URL, encoded once in app/lib/product-family.ts and consumed by the index family section, the footer, and the /registry viewer's repoMeta lookup. This spec gives that module a single explicit owner so a roster change (a repo added, removed, or re-described) is an ordinary authoring edit here plus the module, with no coupling waiver and no edit to the scaffold (001) or launch-content (002) specs. It owns the roster data, not the rendering.\n",
     "title": "Product-family registry: a single owner for the shared repo list"
   },
-  "shardHash": "99ea9c1bf7ef2cb95bf994ee2002d4fb2c8f6fae08b88df2bf0b32afe5cf131a",
+  "shardHash": "21cde2000a8e466e61a6efc257da5c6897f5bb12cbea9669630ca0f949b2b6a1",
   "specVersion": "1.2.0"
 }

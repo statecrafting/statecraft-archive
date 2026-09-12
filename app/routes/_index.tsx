@@ -210,8 +210,12 @@ function TheLoop({
       </h2>
       <p className="mt-3 max-w-2xl text-muted-foreground">
         Each block describes a turn of the loop and carries the state of the
-        spec that governs it. Present tense is the design; the chip is the
-        truth.
+        spec that governs it. Present tense is the design; the chip is what the
+        corpus reports. Implemented is not the same as released or in use: the{" "}
+        <Link to="/products#availability" className="text-primary hover:underline">
+          availability matrix
+        </Link>{" "}
+        keeps those apart.
       </p>
       <div className="mt-6 grid gap-4 sm:grid-cols-2">
         {loop.map((step) => (
@@ -391,7 +395,13 @@ function Status({
       </h2>
       <p className="mt-3 max-w-2xl text-muted-foreground">
         Each rung rolls up the implementation state of the specs that make it
-        up, read from the baked registry. When the specs move, this moves.
+        up, read from the baked registry. When the specs move, this moves. A
+        rung reads implemented when its specs do, which says nothing about
+        whether it is released, has run in production, or is offered; the{" "}
+        <Link to="/products#availability" className="text-primary hover:underline">
+          availability matrix
+        </Link>{" "}
+        answers those separately.
       </p>
       <ol className="mt-6 flex flex-col gap-3">
         {milestones.map((rung) => (

@@ -22,6 +22,7 @@ establishes:
   - "app/lib/products.ts"
   - "app/lib/explorer-diagrams.ts"
   - "app/lib/get-started.ts"
+  - "app/lib/availability.ts"
 extends:
   - spec: "001-site-scaffold"
     paths:
@@ -135,6 +136,42 @@ GitHub; entries whose repos are in the registry bake set also link to their
 spec corpus in `/registry`. No per-repo status badge or spec count is shown
 unless it is derived from the baked registry.
 
+### 3.3.1 The availability matrix (amendment, 2026-09-12)
+
+`/products` opens with an availability matrix, encoded in
+`app/lib/availability.ts` and rendered before the architecture layers. It
+answers the question the layers cannot: what a reader can install, run and use
+today. Each row is one capability, not one repository, and it is read on four
+independent axes:
+
+- **implemented**: the governing specs report `implementation: complete`. For
+  a repository in the registry bake set this is rolled up from the baked shards
+  and cannot be authored; for any other repository it is authored with the
+  commit it was read at, and the page prints that commit.
+- **released**: a versioned artifact a stranger can install exists.
+- **exercised**: a run outside the repository's own tests is on a public
+  record.
+- **hosted**: this project operates it as a service a reader can use.
+
+Each authored axis is `yes`, `partial`, `no`, `unknown` or `n-a`, with a note.
+A positive reading must carry evidence, and evidence is either a path in the
+baked registry or a public URL under the organization, crates.io, npm, or the
+control plane's own host. `unknown` is never styled as a pass. A row may also
+carry limits: the exceptions a reader should hold with the claim, each with its
+evidence.
+
+The loader refuses, and so fails the prerender, when a row names a repository
+off the spec-003 roster, a registry spec that does not resolve, an evidence
+path that does not resolve or a host outside that list, a read-at value that is
+not a commit id, a positive reading with no evidence, or any axis reading `yes`
+while the implemented axis reads anything but `yes`. Complete is necessary for
+available, never sufficient.
+
+The word "available" is not used as a verdict anywhere in the matrix. The
+maturity chips elsewhere on the site keep reporting the corpus and nothing more:
+their labels read `implemented`, `in progress` and `pending` (spec 002 section
+9), and the surfaces that carry them link here for the other three axes.
+
 ### 3.4 Papers and the whitepaper reader (`/papers`, `/papers/:slug`)
 
 The papers index features one flagship whitepaper, "The Statecraft
@@ -163,6 +200,17 @@ links to the governing spec or the real repo. The OAP-era eight-phase
 Hetzner/K3s `oap-bootstrap` choreography is not ported; nothing here claims
 a self-host path that does not exist.
 
+**Amendment (2026-09-12).** The walkthrough states adoption in the order a
+reader can act on it. Runnable today: govern a repository the reader already
+has with spec-spine (`spec-spine init`, `compile`, `lint`, then `couple` in
+their CI), which needs no account and nothing else in the family. Not yet
+installable, each with its own chip: a local governed agent session
+(`statecraft-cli`, implemented and not released; its step publishes no install
+command until the clean-machine job of that repository's draft 130 passes),
+the stamp, and self-hosting the control plane, which states that no
+reproducible self-host path and no hosted plane exist. A command appears on
+this page only once it has been run on a clean machine.
+
 ### 3.6 Static and dependency posture
 
 Icons are inline SVG (`icons.tsx`), consistent with the existing chrome and
@@ -189,6 +237,8 @@ unchanged.
   forward-looking.
 - The built output makes zero runtime requests to any non-same-origin host
   (sign-in is a static outbound link, followed only on user click).
+- `/products` prerenders the availability matrix of section 3.3.1, and the
+  prerender fails on any row rule that section lists.
 - Spine gates green: `spec-spine compile`, `index`, `lint --fail-on-warn`,
   `index check`; `spec-spine couple --base origin/main` passes with spec 004
   as the owner of the new files and the extended wiring, with no
@@ -320,3 +370,37 @@ the Substrate layer's framing, the delivery flow's shape, and the addition of
 `rahi`. Each of those changes what spec 002 section 2 or section 3.3 here
 *requires*, and the successor thesis that would motivate them (`statecraft`
 spec 014) is still `status: draft`.
+
+## 9. Status note (2026-09-12): the matrix, and four claims the first pass missed
+
+Sections 3.3.1 and the 3.5 amendment land with this change, on the owner's
+approval of spec 006's P-1 and P-4 and decisions D-2 and D-4. Sibling states
+read on 2026-09-12 at `statecraft-cli` `874766b`, `spec-spine` `0e41641`,
+`enrahitu` `26c75e2`, `attest-ledger` `a9c3595`, `statecrafting` `85db8fd`.
+
+Four corrections ride along, each a sentence that section 8 should have caught:
+
+1. **A ledger signs its anchor, not its entries.** Section 8 item 3 rewrote
+   "Ed25519-signed" as "can sign entries". `attest-ledger` signs only a chain's
+   genesis anchor (`crates/core/src/signing.rs`, `sign_anchor`), and
+   `verify_anchor` checks that signature against the public key embedded in the
+   same anchor. A valid signature therefore says which key signed, not whose
+   key it is. The whitepaper, figure 2, the verification layer blurb and the
+   catalog card now say so, and the layer blurb no longer says a signature
+   answers who issued a chain on its own.
+2. **A license missing from the statecrafting card.** The three platform
+   packages carrying the vendored Encore core declare MPL-2.0
+   (`statecrafting` spec 002 section 3 and its `packages/toolchain-*`
+   manifests, published at 0.4.0 on npm under that license). The card named
+   only Apache-2.0 and AGPL-3.0.
+3. **"Self-hostable" beside a plane with no self-host path.** The statecraft
+   card said "AGPL-3.0: self-hostable, copyleft" while spec 002 section 8 item
+   3 says no reproducible self-host path exists. The card now states what the
+   license requires and makes no claim about hosting.
+4. **A stale count in a meta description.** `/products` described "Ten open
+   repos"; it now reads `PRODUCT_FAMILY.length`, as the papers stat already
+   does.
+
+Not changed: the Stamp step, the Substrate layer, the delivery flow's shape,
+`rahi`, and the whitepaper's successor banner. Each still waits on spec 006
+D-1, D-3 or D-5.

@@ -101,7 +101,7 @@ export const sections: Section[] = [
         id: "append-only-ledger",
         title: "An append-only, hash-linked ledger",
         content: [
-          "Compliance in an agentic system needs evidence with stated limits, not promises. attest-ledger is an append-only, hash-linked record in which each entry commits to the one before it, so a silent edit anywhere in the history breaks the chain. It can sign entries with Ed25519; whether a given chain is signed is a property of the deployment, not of the library. The control plane's own governance chain is hash-linked and unsigned today, anchored to a root it declares for itself, so re-checking it establishes internal consistency and not who produced it. Issuer trust is a separate outcome and is reported separately. [ref:4]",
+          "Compliance in an agentic system needs evidence with stated limits, not promises. attest-ledger is an append-only, hash-linked record in which each entry commits to the one before it, so a silent edit anywhere in the history breaks the chain. It can sign a chain's genesis anchor with Ed25519, and its verifier checks that signature against the public key the anchor itself carries, so a valid signature says which key signed and not whose key it is; that takes a key pinned by someone other than the producer. Whether a given chain is signed at all is a property of the deployment, not of the library. The control plane's own governance chain is hash-linked and unsigned today, anchored to a root it declares for itself, so re-checking it establishes internal consistency and not who produced it. Issuer trust is a separate outcome and is reported separately. [ref:4]",
           "Hashes only agree across parties if everyone serializes the same bytes. canonical-keysort-json does exactly that: a lexicographic key sort at the serialization boundary, so a record hashed on one machine hashes identically on another. [ref:9] The certificate and record shapes shown in the reader are illustrative schemas, not a real signed artifact; the real ones are produced by tenant-emit from a finished run.",
         ],
       },
@@ -144,7 +144,7 @@ export const references: Reference[] = [
   { id: 1, label: "STATECRAFT", title: "Statecraft: the governed delivery control plane", url: "https://github.com/statecrafting/statecraft", accessed: "July 2026" },
   { id: 2, label: "SPEC-SPINE", title: "spec-spine: the spec-governance toolchain", url: "https://github.com/statecrafting/spec-spine", accessed: "July 2026" },
   { id: 3, label: "ENRAHITU", title: "enrahitu: the EnRaHiTu template chassis", url: "https://github.com/statecrafting/enrahitu", accessed: "July 2026" },
-  { id: 4, label: "ATTEST-LEDGER", title: "attest-ledger: append-only, hash-linked, Ed25519-signed record", url: "https://github.com/statecrafting/attest-ledger", accessed: "July 2026" },
+  { id: 4, label: "ATTEST-LEDGER", title: "attest-ledger: an append-only, hash-linked record with a signable genesis anchor", url: "https://github.com/statecrafting/attest-ledger", accessed: "July 2026" },
   { id: 5, label: "TENANT-TAIL", title: "tenant-tail: the independent certificate verifier", url: "https://github.com/statecrafting/tenant-tail", accessed: "July 2026" },
   { id: 6, label: "RAUTHY", title: "Rauthy: an OpenID Connect provider", url: "https://github.com/sebadob/rauthy", accessed: "July 2026" },
   { id: 7, label: "MCP", title: "Model Context Protocol specification", url: "https://modelcontextprotocol.io/specification", accessed: "July 2026" },
