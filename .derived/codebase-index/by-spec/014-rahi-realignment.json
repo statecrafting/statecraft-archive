@@ -1,9 +1,20 @@
 {
   "mapping": {
+    "amends": [
+      "001-statecraft-thesis"
+    ],
     "dependsOn": [
       "001-statecraft-thesis"
     ],
     "implementingPaths": [
+      {
+        "path": "CLAUDE.md",
+        "source": "spec-edge"
+      },
+      {
+        "path": "README.md",
+        "source": "spec-edge"
+      },
       {
         "path": "specs/014-rahi-realignment/",
         "source": "spec-edge"
@@ -22,11 +33,37 @@
           "kind": "directory",
           "path": "specs/014-rahi-realignment/"
         }
+      },
+      {
+        "locations": [
+          {
+            "file": "CLAUDE.md"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "extends",
+        "unit": {
+          "kind": "file",
+          "path": "CLAUDE.md"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "README.md"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "extends",
+        "unit": {
+          "kind": "file",
+          "path": "README.md"
+        }
       }
     ],
     "specId": "014-rahi-realignment",
-    "specStatus": "draft"
+    "specStatus": "approved"
   },
   "schemaVersion": "1.1.0",
-  "shardHash": "f71b107c0b710e11264590111d75dd63096f9911913793c2c2570d2f15f6301c"
+  "shardHash": "ebb5cbce4e7fc8ad587c5b1aaa1f8cf7bcb1bdc22f819a0d72d84d80aad19e71"
 }

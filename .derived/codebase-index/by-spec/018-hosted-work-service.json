@@ -1,15 +1,13 @@
 {
   "mapping": {
     "dependsOn": [
-      "008-governance-attestation",
       "014-rahi-realignment",
       "015-hosted-work-contract",
-      "017-rahi-cell-migration",
-      "018-hosted-work-service"
+      "017-rahi-cell-migration"
     ],
     "implementingPaths": [
       {
-        "path": "specs/016-permits-and-evidence-chain/",
+        "path": "specs/018-hosted-work-service/",
         "source": "spec-edge"
       }
     ],
@@ -17,20 +15,20 @@
       {
         "locations": [
           {
-            "file": "specs/016-permits-and-evidence-chain/"
+            "file": "specs/018-hosted-work-service/"
           }
         ],
         "ownership": true,
         "sourceField": "establishes",
         "unit": {
           "kind": "directory",
-          "path": "specs/016-permits-and-evidence-chain/"
+          "path": "specs/018-hosted-work-service/"
         }
       }
     ],
-    "specId": "016-permits-and-evidence-chain",
+    "specId": "018-hosted-work-service",
     "specStatus": "draft"
   },
   "schemaVersion": "1.1.0",
-  "shardHash": "45996c1eebb4a951c53312c4bbc57584dcb72a6e36c4d173c88128af75f14854"
+  "shardHash": "da9d8ed546193c73ad3907cc293de11b637be5f6d5aac73f084d312aa517a6da"
 }

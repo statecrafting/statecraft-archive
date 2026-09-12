@@ -1,28 +1,30 @@
 ---
 id: "015-hosted-work-contract"
 title: "The hosted work contract: runners, jobs, leases and evidence intake"
-status: draft
+status: approved
 created: "2026-09-11"
 implementation: pending
 depends_on:
   - "004-tenants-github-app"
   - "008-governance-attestation"
   - "014-rahi-realignment"
-  - "017-rahi-cell-migration"
 establishes:
   - { kind: directory, path: "specs/015-hosted-work-contract/" }
 summary: >
-  The wire contract between the control plane and a runner: how a runner
-  is enrolled and authenticated, how a project and a job are identified,
+  The wire contract between the control plane and a runner, approved on
+  2026-09-12 as the schema and pure-evaluator slice (spec 014 section 11,
+  ST-06). It fixes how a runner is enrolled and authenticated (an enrolled
+  person's device-grant session), how a project and a job are identified,
   how a job binds to an exact revision and an exact policy, how a lease
-  and its fencing token keep one writer, how heartbeat and cancellation
-  work, what evidence the plane accepts and what it refuses to do with
-  it, and how replay, idempotency and reconnection behave. One authority
-  is named for every mutable transition. The schemas and their examples
-  are published before either end is implemented, because two
-  implementations of an unwritten contract drift. This spec covers the
-  admission of work only; the authorization of an external effect is
-  spec 016.
+  and its fencing token keep one writer on a duration and heartbeat
+  interval the plane returns, how cancellation, replay and idempotency
+  behave, and how evidence is judged: four dimensions with their own value
+  domains, admission kept separate, trust only from independently supplied
+  roots, and original bytes behind typed references. The schemas, fixtures
+  and pure evaluator are published in statecraft-cli's Apache-2.0
+  workspace before either end is built; statecraft owns their semantics
+  and pins them by digest. The hosted service that serves this contract is
+  spec 018, and the authorization of an external effect is spec 016.
 ---
 
 # 015: The hosted work contract
@@ -39,49 +41,60 @@ works today, and none of it involves this control plane.
 
 What does not exist anywhere is the seam: how that local execution
 reaches a team. A second person cannot see the run, approve it, or rely
-on its evidence, and a statecraft-hosted worker cannot do the work on
-behalf of a tenant at all. statecraft-cli's doc 05 D71 states plainly
-that this seam is statecraft's to lead and that it will not draft both
-ends. spec-spine's design note 04 (S1 to S4) states the same from its
-side. This spec is that half.
+on its evidence. statecraft-cli's doc 05 D71 states plainly that this seam
+is statecraft's to lead and that it will not draft both ends. spec-spine's
+design note 04 (S1 to S4) states the same from its side. This spec is that
+half.
 
 It is deliberately the **smaller** half. Nothing here authorizes an
 external effect: that is spec 016. Nothing here computes authority: that
 is spec-spine. Nothing here enforces what a candidate may write: that is
 the executor's fence and sandbox, in statecraft-cli. This spec admits
-work, keeps exactly one writer per job, and accepts evidence honestly.
+work, keeps exactly one writer per job, and judges evidence honestly.
+
+### 1.1 What the approval covers
+
+Approved 2026-09-12 (spec 014 section 11, rows ST-06 and G-04) as the
+**schema and pure-evaluator slice**: sections 3 to 11 as a wire contract,
+the JSON schemas and fixtures that encode it, and a pure evaluator for the
+evidence verdict, admission and the lease state machine. All of it is
+published in statecraft-cli's Apache-2.0 workspace, where statecraft owns
+the semantics and contributes no AGPL code.
+
+Not covered: the hosted service that serves the contract. It was split
+into spec 018 the same day, so that this slice is not blocked by spec
+017's pilot cell, and 018 is approvable only for the N=1 pilot after its
+prerequisites. The same approval wrote the adopted rows into this
+contract: G-09 into section 4, G-10 into sections 3, 6 and 8, and G-05 to
+G-07 into section 7.
 
 ## 2. Territory
 
-Planned. A draft's territory is a declaration of intent, not a claim on
-existing code (spec-spine spec 076); the places below are named so review
-can judge the shape, and the spec claims files for real in the change
-that writes them.
+This spec claims `specs/015-hosted-work-contract/` in this repository and
+nothing else here. The work it orders lands elsewhere, and is claimed
+there:
 
-Revised 2026-09-12 (014 section 10.1). The first version put a new
-Encore.ts service in `backend/work/`. That would be an interim hosted
-engine on the EnRaHiTu plane, which the realignment's sequencing avoids,
-and it put the schemas in an AGPL-3.0 tree that an Apache-2.0 runner
-cannot embed.
+- **The wire schemas, worked and refused examples, the fixture manifest
+  and the pure evaluator** live in statecraft-cli's Apache-2.0 workspace,
+  beside its draft 132 (G-04). statecraft authors their semantics in this
+  spec and reviews them there.
+- **The pin.** When a manifest version is adopted, its digest is recorded
+  in this spec's directory, in the change that adopts it.
+- **The service, its byte store and its run views** are spec 018, built in
+  spec 017 Part A's pilot cell.
 
-- **The wire schemas, examples and fixtures** are published in
-  statecraft-cli's Apache-2.0 workspace, beside its draft 132. statecraft
-  authors their semantics in this spec, reviews them there, pins them by
-  digest here, and contributes no AGPL code to that workspace.
-- **The service** (runners, projects, jobs, leases, evidence intake) is
-  built in the Rahi pilot cell of spec 017 Part A, not in `backend/`.
-- **The UI**: a run list and a run detail view, reusing `frontend/`
-  components behind the pilot's adapter.
+History, kept because it explains the shape: the first version (2026-09-11)
+put a new Encore.ts service in `backend/work/`. That would have been an
+interim hosted engine on the EnRaHiTu plane, which the realignment's
+sequencing avoids, and it put the schemas in an AGPL-3.0 tree that an
+Apache-2.0 runner cannot embed.
 
-The service reads tenant, installation and membership semantics through
-017's domain port and adds no table to `tenants/` or `governance/`.
-
-## 3. What this spec refuses to do
+## 3. What this contract refuses to do
 
 Stated first, because each refusal is a requirement and each has a
 sibling repository asking for it.
 
-- **The plane never executes a spec's declared verification.** Not
+- **The plane never executes a spec's declared verification** (G-10). Not
   `## Verification` blocks, not a gate command, not anything a bundle
   carries. It accepts envelopes and payloads produced by a worker and
   recorded under a named tool version. This is spec-spine's S1, and it is
@@ -90,7 +103,8 @@ sibling repository asking for it.
 - **The plane never accepts a bundle's own anchor as a trust root.** A
   chain that verifies internally from a root it selected for itself is
   internally consistent and nothing more. Issuer trust is a separate
-  outcome with its own answer, and `unknown` is a legitimate one.
+  outcome, answered only from roots supplied independently of the
+  evidence (section 7.2), and `unknown` is a legitimate answer.
 - **Signature validity is never evidence that work happened.** A signed
   report from customer-controlled execution proves who signed it. It does
   not prove a test ran. Section 7.3 makes this a typed distinction rather
@@ -99,9 +113,13 @@ sibling repository asking for it.
   issues its own, audience-bound; it never stores a customer's GitHub
   token, model key or SSH material, and an intake that finds one in a
   payload refuses the payload rather than storing it redacted.
-- **Local, account-free operation stays.** Nothing in this spec becomes
-  required for statecraft-cli to work on a laptop. Registering with a
-  plane is an addition, and a run that never registers is a complete run.
+- **Tenant authorization is the plane's.** Which tenant a caller may reach
+  is decided by the plane on every call, never by the chassis, a runner or
+  a payload (ST-06).
+- **Local, account-free operation stays.** Nothing in this contract
+  becomes required for statecraft-cli to work on a laptop. Registering
+  with a plane is an addition, and a run that never registers is a
+  complete run.
 
 ## 4. Runner enrolment and authentication
 
@@ -112,26 +130,28 @@ authenticated session (4.2), and a runner record is created. The code is
 consumed on first use, whatever the outcome, so a replayed code is
 refused rather than creating a second record.
 
-**4.2 Authentication and authorization are separate records.** Proposed
-as 014 D-4, and not settled until the owner answers it. The runner
-authenticates with an access token the platform IdP issued to a person
-through Rahi's native public client (rahi draft 038: device grant or
-authorization code), audience-bound to the plane's resource URL and
-checked in rahi spec 025's resource-server shape (RS256, `aud`, a maximum
-lifetime, a `jti` deny-list). It is authorized by the runner record the
-enrolment created, bound to that person's `sub` and the tenant. The token
-says who is calling; only the runner record and a lease say what the
-caller may do. There is no second credential type.
+**4.2 Authentication and authorization are separate records.** Adopted
+2026-09-12 (G-09). A first-slice runner authenticates as an enrolled
+person: an access token the platform IdP issued to that person through a
+public native client using the device grant (Rahi draft 038),
+audience-bound to the plane's resource URL and checked in Rahi spec 025's
+resource-server shape (RS256, `aud`, a maximum lifetime, a `jti`
+deny-list). It is authorized by the runner record the enrolment created,
+bound to that person's `sub` and the tenant. The token says who is
+calling; only the runner record and a lease say what the caller may do. A
+customer runner holds no OAuth client secret, and there is no second
+credential type.
 
-**4.3 Renewal never touches a lease.** Leases and fences bind to
-`runnerId`, never to a token's `jti`, so a renewed token continues a job.
-Rahi `main` has no bearer renewal, and draft 038 sets lifetimes without a
-refresh rule. The proposed renewal is the device grant's refresh token,
-held per plane, issuer and audience, as statecraft-cli's D72 already
-plans. A runner that cannot renew fails its job cleanly (it reports a
-terminal state, or its lease expires to `abandoned`), and never silently
-stops. A runner with no person behind it needs a non-human principal that
-Rahi does not define; that class is out of the first slice.
+**4.3 Renewal never touches a lease.** A lease binds to `runnerId`, the
+tenant and the principal's `sub`, never to one access token or its `jti`,
+so a renewed token continues a job, and a token for a different principal
+does not (N-20). Renewal is the device grant's refresh token, held per
+plane, issuer and audience as statecraft-cli's D72 plans, in protected
+local storage. Expiry is read from each token response's `expires_in` and
+never assumed: no constant credential lifetime appears in this contract,
+in a runner, or in a fixture (G-10, N-21). A runner that cannot renew
+fails its job cleanly, by reporting a terminal state or by letting its
+lease expire so the job is released (6.4). It never stops silently.
 
 **4.4 A runner is a record, not a machine.** The plane stores
 `{runnerId, tenantId, label, class, principalSub, enrolledBy, lastSeenAt,
@@ -146,6 +166,11 @@ call fails with a typed refusal that says `revoked`, and its live jobs
 are marked `orphaned` rather than `failed`: the plane does not know
 whether the work happened, and saying so is more useful than guessing.
 
+**4.6 Unattended runners are deferred.** A runner with no person behind
+it needs a non-human principal with its own enrolment and revocation
+contract. That contract is a later spec, and nothing in this slice
+anticipates its shape (G-09).
+
 ## 5. Project and job identity
 
 **5.1 A project binds a repository to a tenant.** `{projectId, tenantId,
@@ -158,8 +183,9 @@ been uninstalled makes every job on its projects unadmittable.
 runnerId, kind, baseCommit, specRef?, permitRef, policyDigest,
 authorityRef?, createdBy, createdAt}`.
 
-- `baseCommit` is a full commit sha, never a branch name. A branch is a
-  moving ref and a job that names one cannot be verified afterwards.
+- `baseCommit` is a full commit id with its object format (5.3), never a
+  branch name. A branch is a moving ref and a job that names one cannot be
+  verified afterwards.
 - `policyDigest` is the digest of the policy the job is evaluated under,
   taken from the **base** revision, so a candidate cannot reclassify its
   own change by editing policy. This is spec-spine's S3 and the reason
@@ -172,24 +198,33 @@ authorityRef?, createdBy, createdAt}`.
   job. A job with no permit is admissible only in `dry-run` kind, which
   can produce evidence and can authorize no effect.
 
-**5.3 Every digest is stored with its subject.** `{repo, commit, tree}`
+**5.3 Every digest is stored with its subject.** A git subject is
+`{repo, commit: {format, id}, tree: {format, id} | null}`, where `format`
+is the object format (`sha1` or `sha256`) of that id (G-07). It sits
 beside every spec-spine digest (spec-spine's S2). A digest with no
 subject cannot be checked later, and a subject whose tree is unavailable
 makes any recompute `unknown`, never `pass`.
 
 ## 6. Leases, fencing, heartbeat and cancellation
 
+Adopted 2026-09-12 as the runner's pull, lease, fence, cancel and
+idempotency contract (G-10). The plane never pushes; a runner behind a
+NAT with no inbound path is a first-class case.
+
 **6.1 One writer per job, enforced by a fence.** Taking a job issues a
-lease `{jobId, runnerId, fenceToken, leaseExpiresAt}` where `fenceToken`
-is monotonically increasing per job. Every mutating call on a job carries
-its fence token, and the plane refuses any token lower than the current
-one. This is the same mechanism rahi's store uses for its ten-second
-leases, and it is what makes a resumed older process harmless.
+lease `{jobId, runnerId, tenantId, principalSub, fenceToken,
+leaseDurationSeconds, heartbeatIntervalSeconds, leaseExpiresAt}`. The
+duration and the heartbeat interval are chosen by the plane for that
+lease and returned with it; a runner uses what it was given and assumes
+no constant. `fenceToken` is the plane's own per-job counter: it
+increases on every takeover and never on renewal. Every mutating call on
+a job carries its fence token, and the plane refuses any token lower than
+the current one, which is what makes a resumed older process harmless.
 
 **6.2 A heartbeat renews the lease and carries the desired state back.**
-The runner heartbeats on an interval; the response carries the plane's
-desired state for the job (`continue`, `cancel`). The plane never pushes;
-a runner behind a NAT with no inbound path is a first-class case.
+The runner heartbeats on the lease's interval; the response carries the
+new `leaseExpiresAt` and the plane's desired state for the job
+(`continue`, `cancel`).
 
 **6.3 Cancellation is cooperative and reconciled, never assumed.**
 Setting `cancel` records an intent. The job leaves `cancelling` only when
@@ -205,50 +240,94 @@ cleanly rather than retrying.
 
 ## 7. Evidence intake
 
-**7.1 What is accepted, and what is kept.** An `acceptance.receipt`
-(statecraft-cli's schema version 1) and, optionally, the journal bundle it
-came from. statecraft writes no parser for either until statecraft-cli's
-fixture set (its draft 132) exists, including the negative set; the
-fixtures are the definition, and 014 C-2 requests them.
+**7.1 Original bytes, typed references.** Adopted 2026-09-12 (G-07). An
+`acceptance.receipt` (statecraft-cli's schema version 1) and, optionally,
+the journal bundle it came from. statecraft writes no parser for either
+until statecraft-cli's fixture set (its draft 132) exists, including the
+negative set; the fixtures are the definition.
 
 Every accepted object is kept as its exact submitted bytes, addressed by
-SHA-256 over those bytes, and the evidence row and the ledger hold only a
-typed reference to it (014 section 10.3, proposal D-3). No submitted
-object passes through the governance ledger's canonicalizing append,
-which was measured to give two different integers one digest and to drop
-a duplicate member silently. Intake refuses what a producer's
-construction cannot bind unambiguously: a duplicate member, a number
-outside the producer's declared range, invalid UTF-8, a byte-order mark.
+SHA-256 over those bytes, in an immutable content-addressed store (018
+provides it: an app table the cell's backup covers). Evidence rows and
+ledgers hold only a typed reference to it:
 
-**7.2 Four evidence dimensions, and admission separately.** Revised
-2026-09-12 as the proposed `statecraft.evidence-verdict` version 0 (014
-section 10.2 records its cross-repository status). Each upload is
-evaluated on four dimensions, each `pass`, `fail`, `unknown` or
-`not-applicable`, and each non-`pass` value carries a reason code from a
-closed, versioned list:
+```
+{ type, schemaVersion,
+  digestAlg: "sha-256", byteDigest, byteLength,
+  producerDigest: { construction, value } | null,
+  container: { byteDigest, selector } | null,
+  subject: { repo, commit: { format, id }, tree: { format, id } | null } | null }
+```
 
-| Dimension | Question | `fail` | `unknown` | `not-applicable` |
-|---|---|---|---|---|
-| `integrity` | do the kept bytes recompute under the producer's declared construction, links and digests included? | a mismatch, or ambiguous input (7.1) | construction or MAJOR version unsupported; content withheld or redacted | never |
-| `signature` | does a signature present over the bytes verify? | present and invalid | algorithm or format unsupported | no signature, reason `unsigned` |
-| `issuerTrust` | is the signer a key enrolled from a root established out of band, valid at the evidence's time? | the key is revoked, expired or outside its enrolled scope | `signature` is not `pass`, the key is not enrolled, or the trust snapshot is unavailable | never |
-| `subjectBinding` | does the evidence name exactly the `{repo, commit, tree}` this job named? | it names another subject | the subject tree is unavailable | no subject was asked about |
+- `byteDigest` is always over the exact bytes. A producer's canonical
+  record hash goes in `producerDigest` with its construction named, and
+  never stands in for a byte digest.
+- The construction is part of the reference's identity: two references
+  with equal values under different constructions are different
+  references.
+- `container` addresses a record embedded in a larger object: the
+  container's byte digest and a selector within it.
+- Members are hex strings, ASCII names, `null` and integers inside the
+  portable range, so a reference itself survives any conforming JSON
+  reader. A reader that does not know `digestAlg` or a `construction`
+  refuses the reference.
 
-No boolean summarizes the four, no view invents one, and `unknown` or
-`not-applicable` never satisfies a requirement that names the dimension.
-Today every upload is `signature: not-applicable` (`unsigned`) and
-`issuerTrust: unknown`, and saying so is the point.
+No submitted object passes through the governance ledger's canonicalizing
+append, which was measured to give two different integers one digest and
+to drop a duplicate member silently (spec 014 section 10.3). Intake
+refuses, as `integrity: fail` with reason `ambiguous-json`, what a
+producer's construction cannot bind unambiguously: a duplicate member at
+any depth, a number outside the producer's declared range, invalid UTF-8,
+a byte-order mark. A refused object is recorded by digest and reason and
+its bytes are not kept.
+
+**7.2 Four evidence dimensions, each with its own values, and admission
+separately.** Adopted 2026-09-12 (G-05, G-06). Each upload is evaluated on
+four dimensions. No two dimensions share a value domain, and every value
+other than `pass` carries a reason code from a closed, versioned list:
+
+| Dimension | Values | Question | `fail` when | `unknown` when | Its own extra value |
+|---|---|---|---|---|---|
+| `integrity` | `pass`, `fail`, `unknown` | do the kept bytes recompute under the producer's declared construction, links and digests included? | a mismatch; ambiguous input (7.1) | the construction or MAJOR version is unsupported; content is withheld or redacted; the check was not performed | none |
+| `signature` | `pass`, `fail`, `unsigned`, `unknown` | does a signature present over the bytes verify? | a signature is present and invalid | the algorithm or format is unsupported; the check was not performed | `unsigned`: no signature is present |
+| `issuerTrust` | `pass`, `fail`, `unknown` | is the signing key eligible under a root set supplied independently of the evidence, at the evidence's time? | the key is positively revoked, or excluded by the root set | `signature` is not `pass`; the key is absent from the root set; no root set was supplied | none |
+| `subjectBinding` | `pass`, `fail`, `unknown`, `not-applicable` | does the evidence name exactly the subject the job named? | it names another subject, or the same id under another object format | the expected subject is missing from the evidence; its tree is unavailable | `not-applicable`: the record type has no subject |
+
+The rules that keep the table honest:
+
+1. `issuerTrust` is `pass` only after `signature` is `pass` against a key
+   eligible under the supplied root set. The root set and the evaluation
+   time are inputs to the evaluator, never read from the evidence.
+2. A self-anchored chain has no root outside itself, so it cannot satisfy
+   a policy that requires a trusted issuer, however well it verifies.
+3. A signed observation about another evidence object never changes that
+   object's dimensions.
+4. `unknown`, `unsigned` and `not-applicable` never satisfy a requirement
+   that names the dimension.
+5. No boolean summarizes the four, and no view invents one.
+
+Today every upload is `signature: unsigned` and `issuerTrust: unknown`,
+and saying so is the point.
 
 **Admission is not a dimension.** It is `{decision: admit | refuse,
 policyDigest, reasons[]}`, evaluated under the job's `policyDigest` over
 the four dimensions, the runner's class (7.3) and the producer's claims.
-An `admit` whose inputs include a non-`pass` dimension names the policy
-clause that accepts it.
+An `admit` whose inputs include a value other than `pass` names the policy
+clause that accepts it. Required evidence that is incomplete refuses
+admission with a reason (7.4).
 
 **Producer claims are not dimensions.** What a payload asserts (a
 receipt's `passing`, a spec-spine snapshot's recompute and freshness) is
-reported as `claims[]` in the same value domain, keyed by producer type,
-and never feeds a dimension.
+reported as `claims[]`, keyed by producer type, and never feeds a
+dimension, so a producer's claim stays distinguishable from a fact the
+plane checked.
+
+**The verdict keeps its provenance.** Beside the dimensions, admission
+and claims, a verdict records the verifier's identity and version, the
+identity of the root set it used (or `null`), its coverage (what it
+checked, and what it could not, such as withheld content), and its stop
+reasons (G-06). The concrete version and serialization of this verdict
+are frozen by statecraft-cli's 132, not here (G-05).
 
 **7.3 Trust classes are a property of the runner, not the payload.** A
 `customer-controlled` runner's evidence can be cryptographically perfect
@@ -260,11 +339,13 @@ it either.
 
 **7.4 Incomplete and unknown are outcomes.** A receipt that omits a field
 the policy requires is refused at admission with reason `incomplete`; no
-dimension becomes `fail` because of it. A recompute against a tool version
-the plane does not have is `unknown`. A bundle whose issuer is trusted
-but whose subject tree is unavailable is `subjectBinding: unknown`, never
-`pass` (014 C-1's ninth case). A result that cannot be established never
-becomes a positive one by default.
+dimension becomes `fail` because of it. A check the verifier did not
+perform is `unknown`, and a verifier that stops early records the stop
+and leaves every later dimension `unknown` (N-23). A recompute against a
+tool version the plane does not have is `unknown`. A bundle whose issuer
+is trusted but whose subject tree is unavailable is `subjectBinding:
+unknown`, never `pass`. A result that cannot be established never becomes
+a positive one by default.
 
 **7.5 Runtime assertions carry their population.** If an upload asserts
 anything about a running system (coverage, error rate, latency), it
@@ -291,9 +372,9 @@ the same key and a different body is a refusal, not an overwrite.
 digest uploaded twice against the same job produces one evidence row and
 returns the first evaluation. The same bytes against a *different* job
 are a separate row with their own subject binding, which may differ. A
-byte-different upload whose producer digest equals an existing row's (a
-reformatted copy) is its own row and names the earlier one, so the copy
-is visible rather than silently merged.
+byte-different upload whose producer digest, under the same construction,
+equals an existing row's (a reformatted copy) is its own row and names
+the earlier one, so the copy is visible rather than silently merged.
 
 **8.3 Reconnection is a fence check.** A runner that reconnects
 mid-job presents `{jobId, fenceToken}`. Equal to current: it resumes.
@@ -308,7 +389,9 @@ is stated in both because the failure mode is the same.
 
 ## 9. One authority per mutable transition
 
-Review's first job on this spec is to find a row with two owners.
+Review's first job on this contract is to find a row with two owners.
+Tenant authorization sits under every row: the plane decides which tenant
+a caller may reach (section 3).
 
 | Transition | Authority | Evidence it leaves |
 |---|---|---|
@@ -316,7 +399,7 @@ Review's first job on this spec is to find a row with two owners.
 | runner revoked | tenant admin or platform operator | `revokedAt`, live jobs to `orphaned` |
 | project registered | tenant admin, checked against the installation | project row |
 | job created | the plane, on a valid permit (016) | job row, `permitRef` |
-| job taken | the plane (issues the fence) | lease, `fenceToken` |
+| job taken | the plane (issues the fence, the duration and the interval) | lease, `fenceToken` |
 | job progress reported | the runner holding the current fence | heartbeat |
 | job cancelled (intent) | tenant admin or platform operator | `cancelling` |
 | job terminal (`succeeded`, `failed`, `cancelled`) | the runner holding the current fence | terminal report |
@@ -327,13 +410,15 @@ Review's first job on this spec is to find a row with two owners.
 
 ## 10. The schemas are published first
 
-The artifact this spec produces before either end is implemented is a
+The artifact this contract produces before either end is implemented is a
 versioned JSON Schema per payload, each with at least one worked example
-and one refused example, published in statecraft-cli's Apache-2.0
-workspace (section 2). Versioning follows
-the family's rule: an unknown MAJOR is `unsupported`, which is neither
-pass nor fail; unknown members are refused, not ignored; every emitted
-document has sorted keys.
+and one refused example, in statecraft-cli's Apache-2.0 workspace
+(section 2), together with the fixture manifest of section 12 and the
+pure evaluator. Versioning follows the family's rule: an unknown MAJOR is
+`integrity: unknown` with a reason naming the version, which is neither
+`pass` nor `fail`; unknown members are refused, not ignored; every emitted
+document has sorted keys. A new hash construction is a new, named
+version, and records made under an old one are never silently repaired.
 
 The order is deliberate. statecraft-cli has stated it will not draft both
 ends; if statecraft implements before publishing, the CLI implements
@@ -343,11 +428,13 @@ exists to prevent drift.
 ## 11. Negative cases
 
 These are the acceptance tests, not examples. Eight come from
-statecraft-cli's doc 05 section 14; the ninth is this spec's addition and
-014 C-1 records it as such. N-10 to N-15 were added on 2026-09-12: the
-first three from the byte measurements in 014 section 10.3, the rest so
-that cancellation, retry and enrolment replay each have a refusal to
-show.
+statecraft-cli's doc 05 section 14; N-9 is this contract's addition, and
+spec 014 C-1 records it as such. N-10 to N-15 were added on 2026-09-12:
+the first three from the byte measurements in spec 014 section 10.3, the
+rest so that cancellation, retry and enrolment replay each have a refusal
+to show. N-16 to N-23 were added the same day from the adopted rows G-05
+to G-10. Each is a shared fixture or a fake-clock test of the pure
+evaluator (G-10), and spec 018 runs the same set against the service.
 
 | # | Case | Required behavior |
 |---|---|---|
@@ -358,72 +445,91 @@ show.
 | N-5 | a runner reconnecting mid-job | resumes on an equal fence, refused on a lower one |
 | N-6 | a candidate sha that does not match the job's `baseCommit` lineage | refused; the job does not move |
 | N-7 | a receipt for a revision the job did not name | accepted as a row, `subjectBinding: fail`, admission refuses |
-| N-8 | an unsigned bundle that verifies from its own anchor | `integrity: pass`, `signature: not-applicable` (`unsigned`), `issuerTrust: unknown`; refused by any policy that requires a trusted issuer |
+| N-8 | an unsigned bundle that verifies from its own anchor | `integrity: pass`, `signature: unsigned`, `issuerTrust: unknown`; refused by any policy that requires a trusted issuer |
 | N-9 | issuer trusted, subject tree unavailable | `subjectBinding: unknown`; never `pass` |
-| N-10 | a bundle with a duplicate member placed before the real one, which statecraft-cli's own verifier accepts | `integrity: fail` (`ambiguous-json`), admission refuses, bytes not kept |
-| N-11 | an integer outside the producer's declared range | `integrity: fail`; never normalized to a nearby value |
+| N-10 | a duplicate member placed before the real one (which statecraft-cli's own verifier accepts), after it, or at depth | `integrity: fail` (`ambiguous-json`), admission refuses, bytes not kept |
+| N-11 | an integer outside the producer's declared range, or a numeric spelling the construction cannot bind | `integrity: fail`; never normalized to a nearby value |
 | N-12 | a whitespace or key-order variant of an already accepted bundle | a separate row naming the earlier one; both kept byte-for-byte; neither re-serialized to compare |
 | N-13 | cancellation requested, the runner never confirms, the lease expires | `abandoned`, never `cancelled` or `failed`; a later terminal report on the old fence is refused |
 | N-14 | a job take whose response was lost, retried | the same lease and fence returned; no second lease issued |
 | N-15 | an enrolment code presented a second time | refused; no second runner record |
+| N-16 | a call on a lease whose returned duration elapsed with no heartbeat | refused with the current state; the job is released and the next taker's fence is higher |
+| N-17 | a signature by a key the supplied root set positively revokes, and one by a key the root set does not contain | `issuerTrust: fail` for the first, `unknown` for the second; a trusted-issuer policy admits neither |
+| N-18 | a record type with no subject, and a receipt missing the subject its job expected | `subjectBinding: not-applicable` for the first, `unknown` for the second |
+| N-19 | a subject naming the job's commit id under the other object format | `subjectBinding: fail` |
+| N-20 | a renewed token for a different principal presented on a live lease | refused; the lease and its fence do not move |
+| N-21 | token responses whose `expires_in` values differ from each other and from any familiar lifetime | the runner renews on the value it was given; a fake-clock test shows no constant lifetime assumed |
+| N-22 | a signed evidence object that asserts another object's verdict | the other object's dimensions are unchanged |
+| N-23 | a verifier that stops early (a truncated bundle, say) | the stop and its reason are recorded; every later dimension is `unknown`, never `pass` |
 
 ## 12. Acceptance
 
-0. Before any service code: one statecraft-cli 132 fixture is admitted
-   and one refused, each reporting its four dimensions, its admission
-   result and reason codes a reader can follow, and N-10 to N-12 exist as
-   fixtures in the same manifest.
-1. The published schemas validate every worked example and refuse every
-   refused example, and the suite runs in CI in both repositories.
-2. Each of N-1 through N-15 is a test that fails if the behavior changes.
-3. A runner enrols, takes a job, heartbeats, reports terminal state and
-   uploads evidence against the pilot cell run locally, with no GitHub App
-   and no live data.
-4. Every mutating endpoint refuses a repeated `Idempotency-Key` with a
-   different body, and returns the first outcome for an identical one.
-5. No code path in the work service spawns a process, and a test asserts
-   it: the refusal in section 3 is mechanical.
-6. A job's every mutable transition has exactly one authority in the
-   code, matching section 9's table.
-7. The plane survives a restart mid-job: leases, fences and idempotency
-   keys are durable, and a runner reconnecting after the restart resumes.
+For the approved slice. The service's acceptance is spec 018's.
+
+1. **Two policy-specific fixtures come first.** In one fixture manifest
+   in statecraft-cli's workspace: one fixture admitted under an explicit
+   local policy that allows unsigned evidence, and one refused under a
+   policy that requires a trusted signature. Each reports its four
+   dimensions, its admission result, reason codes a reader can follow,
+   the verifier's identity and the root set's identity. Neither implies
+   that unsigned evidence is trusted.
+2. **The full matrix follows.** The manifest covers payload tampering,
+   truncation, self-anchoring, duplicate members in both positions and
+   at depth, an unsupported format or algorithm, large integers and
+   numeric spellings, invalid encoding, whitespace and key-order changes,
+   original-byte identity against canonical-record identity, a mutated
+   `payloadHash` on a withheld record, a wrong subject or object format,
+   absent and revoked roots, early verifier stops, and JSON type parity.
+   The version-1 compatibility view is kept, and no policy that requires
+   a bound payload commitment admits withheld content.
+3. **One manifest, two verifiers.** statecraft-cli's TypeScript and Rust
+   verifiers read the same manifest and agree on every fixture.
+4. **The schemas hold.** Every worked example validates and every refused
+   example is refused, in statecraft-cli's CI, and statecraft records the
+   adopted manifest's digest in this spec's directory.
+5. **N-1 to N-23 exist** as fixtures or fake-clock tests of the pure
+   evaluator, and each fails if the behavior changes.
+6. **The evaluator is pure.** Verdict, admission and the lease state
+   machine are functions of their inputs (bytes, reference, job, policy,
+   root set, time, prior lease state): no clock, network, filesystem or
+   process of their own. A test replays a recorded evaluation to
+   byte-identical output.
+7. **One authority per transition.** The lease state machine admits each
+   transition of section 9 from exactly the authority that table names.
 
 ## 13. Cross-repo dependency
 
-This spec cannot be implemented to completion without three answers it
-does not own, and none of them should be mocked around:
+- **statecraft-cli 132.** The receipt and bundle fixtures, including the
+  negative set, as the definition of receipt version 1 and bundle version
+  1 (section 7.1), and the frozen version and serialization of the
+  verdict (G-05). Status 2026-09-12: 132 is a merged draft with no fixture
+  files. Nothing in this slice is parsed before those bytes exist.
+- **statecraft-cli C-4** (whether a hosted runner is the engine binary of
+  its draft 130). Moot for this slice, where every runner is a person's
+  statecraft-cli session (4.2); it reopens with the non-human runners of
+  4.6.
+- **spec-spine 087.** Until an AuthoritySnapshot exists, `authorityRef` is
+  present and `null` (5.2). Not a blocker.
+- **statecrafting's draft 010** offers portable-input vectors that N-10
+  and N-11 can reuse. An input, not a dependency.
 
-- **Rahi R-1**: bearer-token renewal for a client whose session outlives
-  one token (section 4.3). Status 2026-09-12: `main` has none; draft 038
-  proposes native clients and lifetimes without a refresh rule; 014 D-4
-  proposes the device grant's refresh token and leases bound to the
-  runner record. Rahi 038 must also land its CSRF exemption, because a
-  bearer write is refused `403 csrf` today.
-- **statecraft-cli C-2**: the receipt and bundle fixtures, including the
-  negative set, as the definition of version 1 (section 7.1). Status: 132
-  is a merged draft with no fixture files; 014 section 10.2 asks for the
-  verdict columns and byte mutations before they are minted.
-- **statecraft-cli C-4**: whether the hosted runner is the engine binary
-  its draft 130 distributes, configured with a hosted endpoint, or a
-  separate member (section 4.4's `class`). Proposed in 014 D-4: the same
-  binary.
-- **Rahi's pilot prerequisites**: a pinned release (draft 039) and 017
-  Part A, since the service is built in the pilot cell (section 2).
-
-Sections 4 through 6, 8, 9 and 10 can be specified without them. Section
-7's parser cannot be written, and no section can be built.
+Rahi R-1 (bearer renewal) and Rahi's pilot prerequisites are the
+service's dependencies, and moved to spec 018 with it. The contract, its
+fixtures and its evaluator need neither a running cell nor a real device
+login (G-10).
 
 ## 14. Out of scope
 
+- **The hosted service.** Spec 018: the plane's endpoints, its durable
+  leases and idempotency keys, its byte store, its run views.
 - **Authorizing any external effect.** Spec 016.
 - **Computing authority.** spec-spine owns snapshots, deltas, closures
-  and scopes; this spec stores references to them.
+  and scopes; this contract stores references to them.
 - **Enforcing what a candidate may write.** The executor's fence and
   sandbox, in statecraft-cli.
-- **Entitlements, metering and retention.** 014 O-6; the records here are
-  designed so metering can read them, and metering is not specified here.
-- **A hosted UI beyond a run list and a run detail.** The explanation
-  view statecraft-cli's draft 131 designs is the richer surface, and
-  duplicating it here would create two accounts of one run.
+- **Entitlements, metering and retention commitments.** Deferred until
+  before external customer enrolment (spec 014 section 11, ST-05). The
+  records here are designed so metering can read them.
+- **Unattended runners.** Section 4.6.
 - **Multi-region, queueing policy, or fair scheduling.** One tenant, one
   runner, one job at a time is sufficient to prove the contract.

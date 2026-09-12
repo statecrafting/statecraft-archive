@@ -1,5 +1,8 @@
 {
   "record": {
+    "amends": [
+      "001-statecraft-thesis"
+    ],
     "created": "2026-09-11",
     "dependsOn": [
       "001-statecraft-thesis"
@@ -8,6 +11,22 @@
       {
         "kind": "directory",
         "path": "specs/014-rahi-realignment/"
+      }
+    ],
+    "extends": [
+      {
+        "spec": "001-statecraft-thesis",
+        "unit": {
+          "kind": "file",
+          "path": "README.md"
+        }
+      },
+      {
+        "spec": "013-agent-harness",
+        "unit": {
+          "kind": "file",
+          "path": "CLAUDE.md"
+        }
       }
     ],
     "id": "014-rahi-realignment",
@@ -35,6 +54,7 @@
       "4.4 One complete customer scenario",
       "4.5 Implemented versus proposed",
       "4.6 The milestone sequence, proposed",
+      "4.7 The amendment to spec 001, section by section",
       "5. The durable-state and deployment inventory",
       "5.1 Identity",
       "5.2 Tenancy and delivery",
@@ -50,13 +70,19 @@
       "10.3 Evidence bytes: measured, then proposed",
       "10.4 Decisions for the owner",
       "10.5 Feature-register coverage",
-      "10.6 The next smallest increment"
+      "10.6 The next smallest increment",
+      "11. Revision 4: the owner's adoption (2026-09-12)",
+      "11.1 The decisions, and where each landed",
+      "11.2 What the adoption supersedes in this record",
+      "11.3 The thesis corrections in `README.md` and `CLAUDE.md`",
+      "11.4 Approvals recorded, and the ones not given",
+      "11.5 The next smallest increment"
     ],
     "specPath": "specs/014-rahi-realignment/spec.md",
-    "status": "draft",
-    "summary": "statecraft's half of the 2026-09-11 family realignment, checked against the tree at 9658e29 and against the running production deployment. The handoff packet's findings are re-verified, superseded where the tree has moved, and extended with seven findings the packet could not have had because it did not inspect the live plane. The record then states the successor thesis: what the enrahitu-era thesis (spec 001) keeps, what Rahi replaces, what retires, and who owns each authorization and each durable record. It carries the durable-state inventory, the declared-versus-enforced table, the requests to sibling repositories, and the owner decisions that remain open. This spec is a record, not a work order: it amends no approved spec, and the work it names lands in drafts 015, 016 and 017. Revised 2026-09-12 against the revision-3 packet (section 10): the sibling answers now on record, the measured byte behavior of both evidence verifiers, one proposed verdict contract, and three decisions (thesis, issuer, bytes) put in their smallest form.\n",
+    "status": "approved",
+    "summary": "statecraft's half of the 2026-09-11 family realignment, checked against the tree at 9658e29 and against the running production deployment, and adopted by the owner on 2026-09-12. The record re-verifies the handoff packet's findings, adds seven the packet could not have had because it did not inspect the live plane, and carries the durable-state inventory, the declared-versus-enforced table and the requests to sibling repositories. Section 4 is the successor thesis and the only amending text: it amends spec 001's loop, identity, governed cell, service map and milestone ladder, and leaves two planes, tenancy and licensing standing. Section 11 records the adoption (revision-4 rows ST-01 to ST-07): existing repositories first, with no initial stamping and no customer-application hosting; four evidence dimensions with admission kept separate; trust only from independently supplied roots; content-addressed evidence bytes; an offline root enrolling an online issuer; device-grant runners; the factory and fleet preserved without expansion; a pilot before any migration; and spec 015's schema slice approved apart from its hosted service, which is spec 018. The record authorizes no cutover, retirement, push or deploy.\n",
     "title": "The Rahi realignment, checked: the successor thesis and the migration record"
   },
-  "shardHash": "40371ca346766208ada5ed60563aa9e9c325c562384868532af451505bff698c",
+  "shardHash": "73216ff432073e9fc32e4fb233d09e90783a02764dfceaf48b6a092ba490d039",
   "specVersion": "1.2.0"
 }

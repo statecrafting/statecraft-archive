@@ -8,22 +8,31 @@ depends_on:
   - "008-governance-attestation"
   - "014-rahi-realignment"
   - "015-hosted-work-contract"
+  - "017-rahi-cell-migration"
+  - "018-hosted-work-service"
 establishes:
   - { kind: directory, path: "specs/016-permits-and-evidence-chain/" }
 summary: >
   Two permits and one chain. A WorkPermit says who may do what work,
   against which authority, for how long; an ActionPermit says that one
-  named external effect may happen, on one exact artifact, in one target
-  environment, under one policy, with one set of approvals, once. Both
-  carry an independent issuer, a scoped audience, an expiry, a nonce and
-  a fence checked at effect time, and neither can be authorized by
-  content that signs itself. The chain that binds them is acyclic:
-  authority and scope, permit, candidate results, acceptance receipt,
-  build provenance and artifact digest, action permit, outcome, runtime
-  binding, each referencing only what came before it by digest. A change
-  to the rules of authority is evaluated under the rules that were
-  trusted before it, with a named bootstrap. Intent and outcome are
-  reconciled, never assumed atomic.
+  named external effect may happen, on one exact subject, in one target,
+  under one policy, with one set of approvals, once. Both carry an
+  independent issuer, a scoped audience, an expiry, a nonce and a fence
+  checked at effect time, and neither can be authorized by content that
+  signs itself. The chain that binds them is acyclic, each link
+  referencing only what came before it by digest. A change to the rules of
+  authority is evaluated under the rules that were trusted before it, with
+  a named bootstrap. Intent and outcome are reconciled, never assumed
+  atomic. Aligned on 2026-09-12 with the owner's adoption (spec 014
+  section 11): the four evidence dimensions and separate admission of
+  G-05 and G-06, typed byte references (G-07), an offline owner-held root
+  enrolling an online platform issuer with the legacy chain archived and
+  closed rather than re-anchored (G-08, ST-03), and a pilot slice
+  (permits, prior-policy authority change, the issuer, broker actions and
+  reconciliation) approvable only for the N=1 pilot after its
+  prerequisites. Artifact and deployment binding, runtime binding and
+  expanded delegation are deferred until the local slice and the pilot
+  pass (ST-07).
 ---
 
 # 016: Permits and the evidence chain
@@ -33,7 +42,7 @@ in its manifest, a `// Spec:` header, or the edges above.
 
 ## 1. Purpose
 
-Spec 015 admits work and accepts evidence. It authorizes nothing. This
+Spec 015 admits work and judges evidence. It authorizes nothing. This
 spec is the authorization half, and it is separate for a reason the
 family has already converged on independently: a uniform substrate is
 uniform at three points, the admission of work, the acceptance of code,
@@ -74,16 +83,36 @@ schemas an Apache-2.0 consumer can embed.
 
 - **The permit service** (issuance, evaluation and revocation; budget and
   waiver-use reservation; the intent and outcome reconciler): in the Rahi
-  pilot cell of spec 017 Part A.
+  pilot cell of spec 017 Part A, beside spec 018's work service.
 - **The permit schemas and worked examples**: published beside spec 015's
   in statecraft-cli's Apache-2.0 workspace, before either end is
   implemented.
-- **The pure evaluator** of section 12.3 (a function of permit, policy,
-  time, usage, fence and evidence): a candidate for the same permissive
-  workspace, since the local broker evaluates the same shape.
+- **The pure evaluator** of section 12, item 3 (a function of permit,
+  policy, time, usage, fence and evidence): in the same permissive
+  workspace, since the local broker evaluates the same shape. Adopted as
+  that home on 2026-09-12 (G-04); statecraft owns the semantics and
+  contributes no AGPL code there.
 - **The governance chain**: spec 008's record shape and construction are
   not redefined here. The issuer of section 5 starts a new chain in the
-  pilot cell; the legacy file chain is not re-anchored (section 5.4).
+  pilot cell; the legacy file chain is archived and closed, never
+  re-anchored (section 5.4).
+
+### 2.1 The pilot slice, and what is deferred
+
+Recorded 2026-09-12 (spec 014 section 11, ST-06 and ST-07). This spec is
+approved in slices, and only the first has a date it can be approved on:
+the N=1 pilot, after the prerequisites spec 018 section 1.1 names.
+
+| Slice | Sections | Approvable |
+|---|---|---|
+| **Pilot**: the permits and prior-policy slice the pilot requires | 3 (a WorkPermit issued directly to a person or a runner); 4 for the source actions `push`, `openPr`, `merge` and `note`; 5 (the issuer); 6 (trusted-base authority change and bootstrap); 7 (intent, outcome, reconciliation); 8 up to `outcome`; 11 and 12 except the rows marked deferred | only for the N=1 pilot, after its prerequisites |
+| **Deferred** until the local slice and the pilot pass (ST-07) | 3.3 beyond a single permit (expanded delegation); 4's `deploy` and `restore` actions and 4.5; 9's artifact provenance; 10.1 (runtime binding) | not before then; the first artifact target is chosen at that point |
+| **Outside the pilot**, specified and unscheduled | 10.2 (historical replay), 10.3 (shadow policy) | when the pilot has records worth replaying (spec 014 section 4.6, step 6) |
+
+Provenance, fleet extraction and observability expansion block no part of
+the pilot slice (ST-07). The named owners are kept as record 06 set them:
+spec-spine for source contracts, statecraft-cli for adapter and
+submission consumers, statecraft for runtime binding.
 
 ## 3. The WorkPermit
 
@@ -93,10 +122,12 @@ policyDigest, obligations[], notBefore, notAfter, nonce, maxUses,
 attenuatedFrom?}`.
 
 - `subject` is the actor the permit is for: a person's IdP `sub`, or a
-  runner id, never both.
+  runner id, never both. In the pilot a runner is always a person's
+  session (spec 015 section 4.2), so a runner id resolves to one `sub`.
 - `scopeRef` is the WorkScope digest, when spec-spine files one. Until
   then the field is present and `null`, and any claim that depends on a
-  scope reports `not recorded`.
+  scope reports `not recorded`. WorkScope is deferred beyond the local
+  slice, and its absence blocks nothing here.
 - `authorityRef` is the AuthoritySnapshot digest the permit was issued
   against (spec-spine draft 087).
 - `obligations[]` are the things that must hold for the work to be
@@ -111,7 +142,10 @@ loophole.
 **3.3 Attenuation only narrows.** A permit derived from another names its
 parent and may remove scope, shorten validity, reduce uses or add
 obligations. It can never widen any of them, and a derivation that tries
-is refused at issue rather than at use.
+is refused at issue rather than at use. **Deferred** (ST-07): chains of
+derivation beyond one permit issued directly to its subject, which is the
+expanded agent delegation the adoption holds back until the local slice
+and the pilot pass. The pilot refuses a derived permit at issue.
 
 **3.4 A permit is not an enforcement mechanism.** It states what must
 hold. The executor maps each requirement onto something that can actually
@@ -128,13 +162,13 @@ this spec depends on that behavior rather than duplicating it.
 |---|---|
 | `requester` | the IdP `sub` or runner id that asked |
 | `tenantId`, `projectId` | whose, and against what |
-| `action` | `push`, `openPr`, `merge`, `note`, `deploy`, `restore` |
-| `source` | repository, exact commit sha, and tree digest where available |
-| `artifact` | for `deploy` and `restore`: the artifact digest, never a tag |
+| `action` | `push`, `openPr`, `merge`, `note`; `deploy` and `restore` are deferred (2.1) |
+| `source` | the repository, the exact commit id and the tree id, each with its object format (spec 015 section 5.3) |
+| `artifact` | for `deploy` and `restore`, when they arrive: the artifact digest, never a tag |
 | `environment` | the exact target, named; `null` for source-only actions |
 | `policyDigest` | the policy this was evaluated under, from the base |
 | `approvals[]` | each approval's subject, time and the policy clause it satisfies |
-| `evidence[]` | the typed references required (byte digest, producer digest, subject), with their four dimensions and admission result as evaluated |
+| `evidence[]` | the typed references required (spec 015 section 7.1), each with its four dimensions and admission result as evaluated, and the verifier and root-set identities of that evaluation |
 | `notBefore`, `notAfter` | a short validity, sized to the effect |
 | `nonce`, `idempotencyKey` | replay refusal, and reconciliation on retry |
 | `fence` | the lease fence that must still be current at effect time |
@@ -159,13 +193,15 @@ already does with its lease and receipt, and its authority is the local
 journal's. It does not reach a hosted environment, and a hosted permit
 does not reach the operator's laptop.
 
-**4.5 Deployment requires more than a permit.** An `action: deploy`
-permit issues only when three things exist: immutable build provenance
-for the artifact digest (section 9), an authorization for the target
-environment distinct from the authorization for the source, and a
-recorded recovery behavior for the environment (what happens on failure,
-and what a restore restores). Missing any one, the permit is refused and
-the refusal names which.
+**4.5 Deployment requires more than a permit.** **Deferred** (ST-07),
+kept as the design the deferral will reopen. An `action: deploy` permit
+issues only when three things exist: immutable build provenance for the
+artifact digest (section 9), an authorization for the target environment
+distinct from the authorization for the source, and a recorded recovery
+behavior for the environment (what happens on failure, and what a restore
+restores). Missing any one, the permit is refused and the refusal names
+which. The first artifact target is chosen when the local slice and the
+pilot have passed, not before.
 
 ## 5. Issuer trust, and the anchor we do not have
 
@@ -179,33 +215,49 @@ explicit rather than letting a `verified: true` stand in for it.
 
 **5.1 Four dimensions and admission, here as in intake.** `integrity`,
 `signature`, `issuerTrust` and `subjectBinding` are evaluated and
-reported separately, never folded, and admission is a separate result
-(spec 015 section 7.2, revised 2026-09-12). A permit that requires a
-trusted issuer cannot be satisfied by `unknown` or `not-applicable`.
+reported separately, each in its own value domain, and admission is a
+separate result (spec 015 section 7.2, adopted 2026-09-12 as G-05 and
+G-06). A permit that requires a trusted issuer is satisfied only by
+`issuerTrust: pass`, which exists only after a passing signature against
+a key eligible under a root set supplied independently of the evidence.
+An absent key is `unknown`; a positively revoked or excluded key is
+`fail`; a self-anchored chain satisfies neither.
 
 **5.2 The issuer is established out of band.** A trust root reaches the
 plane by an operator action recorded as its own attestation, never from
 inside a bundle, a payload or a candidate. Adding a trust root is itself
 an authority change and goes through section 6.
 
-**5.3 The first issuer is proposed, not decided.** This spec fixes the
-shape of the answer: an issuer id, its public key, the scope of what it
-may attest, its validity window, and a revocation path. 014 D-2 proposes
-the answer. An offline owner-held root is published by fingerprint out of
-band. It enrols an online platform issuer held in the pilot cell's secret
-custody. Rotation and revocation are root-signed records, and
-`issuerTrust` is evaluated against the enrolment set valid at the
-evidence's time, passed in explicitly. Nothing here is blocked by the
-decision: an unsigned chain with an honest `unknown` is strictly better
-than a signed chain whose key nobody decided about.
+**5.3 The first issuer.** Adopted 2026-09-12 (G-08). An offline root
+Ed25519 key, held by the owner and never on the cluster, is published by
+fingerprint out of band (a tagged revision of this repository and the
+site), never inside evidence. The root signs the enrolment of an online
+platform issuer key held in the pilot cell's secret custody:
+`{issuerId, publicKey, scope, notBefore, notAfter}`. Rotation and
+revocation are root-signed records, and `issuerTrust` is evaluated
+against the enrolment set valid at the evidence's time, passed in
+explicitly. The bootstrap is the first record of the new chain (6.4).
+Local use keeps the user's own root (statecraft-cli's), and neither root
+is trusted across that line. A transparency log is deferred.
 
-**5.4 No retroactive anchor.** Added 2026-09-12. The existing production
-chain is not signed after the fact. Calling `ledgerAnchor` on it now
-would sign a root chosen after the records it roots, which manufactures
-continuity instead of recording it. Its records keep
-`issuerTrust: unknown` (`unsigned`) permanently. The first record of the
-issuer's chain references the legacy head hash and the archived bytes'
-digest as history, never as trust.
+Before the hosted plane admits anything under a policy that requires a
+trusted issuer, enrolment, rotation, revocation and evaluation-time
+semantics are tested (N-15 to N-17). Setting up the root's custody does
+not delay unsigned local fixtures, and an unsigned chain with an honest
+`unknown` stays strictly better than a signed chain whose key nobody
+decided about.
+
+**5.4 No retroactive anchor; the legacy chain closes.** Added 2026-09-12,
+and made a decision the same day (G-08, ST-03). The existing production
+chain is not signed after the fact. Calling `ledgerAnchor` on it now would
+sign a root chosen after the records it roots, which manufactures
+continuity instead of recording it. Its records keep `issuerTrust:
+unknown` permanently. At migration (spec 017 section 7) the chain is
+archived and closed: its exact bytes and the actual published verifier
+binary that verifies them are preserved, each by digest. It is historical
+evidence and never the active ledger. The first record of the issuer's
+chain references the legacy head hash and the archive's byte digests as
+history, never as trust.
 
 ## 6. Trusted-base authority change
 
@@ -255,7 +307,8 @@ construction or the schema major version is an authority change with a
 migration procedure: which records are re-evaluated, which keep their
 original construction forever, and what a reader of the old version does
 with the new. Historical constructions are never re-derived under new
-rules.
+rules, and their verifiers are kept as the binaries that ran, not as
+source that might build differently.
 
 ## 7. Intent and outcome are not atomic
 
@@ -289,7 +342,10 @@ a counter that undercounts exactly when it matters.
 ## 8. The evidence chain, acyclic
 
 Each link references only links that precede it, by digest. No link
-references a later one, and no link is rewritten once written.
+references a later one, and no link is rewritten once written. The pilot
+slice builds the chain to `outcome`. Two of its links are deferred (2.1):
+build provenance and the artifact digest, which only `deploy` requires,
+and the runtime binding below `outcome`.
 
 ```
 AuthoritySnapshot + WorkScope        (spec-spine)
@@ -304,7 +360,7 @@ candidate results + obligation results
     AcceptanceReceipt                (statecraft-cli, version 1)
         |
         v
-build provenance + artifact digest   (in-toto / SLSA, section 9)
+build provenance + artifact digest   (in-toto / SLSA, section 9; deferred)
         |
         v
     ActionPermit                     (this spec, section 4)
@@ -313,7 +369,7 @@ build provenance + artifact digest   (in-toto / SLSA, section 9)
     outcome                          (section 7)
         |
         v
-runtime epoch / binding              (section 10, detached)
+runtime epoch / binding              (section 10, detached; deferred)
 ```
 
 **8.1 Original bytes, original references.** A link binds the bytes it
@@ -322,24 +378,26 @@ original verifier forever; a migration never re-derives an old digest
 under a new rule, and never substitutes a reconstruction for the bytes
 that were signed.
 
-A link to evidence another producer made is a typed reference `{type,
-schemaVersion, digestAlg, byteDigest, byteLength, producerDigest,
-subject}` to bytes kept verbatim (014 section 10.3, D-3). The object
-itself never enters a ledger payload. The governance ledger's append
-parses and re-serializes, and was measured folding two different
-integers into one digest and dropping a duplicate member.
+A link to evidence another producer made is spec 015 section 7.1's typed
+reference (adopted as G-07) to bytes kept verbatim in the cell's
+content-addressed store. The object itself never enters a ledger payload.
+The governance ledger's append parses and re-serializes, and was measured
+folding two different integers into one digest and dropping a duplicate
+member.
 
 **8.2 A missing link is `not recorded`.** Not absent, not assumed
 satisfied. Every field a future contract will add (scope, closure,
-permit) reports `not recorded` until it exists, so a reader can tell a
-system that did not record something from a system that recorded nothing
-happening.
+provenance) reports `not recorded` until it exists, so a reader can tell
+a system that did not record something from a system that recorded
+nothing happening.
 
 ## 9. Reuse, not reinvention
 
 Build provenance and artifact identity are solved problems with adopted
 standards, and inventing a competing one would produce evidence nobody
-else can read.
+else can read. The artifact half of this section is **deferred** with
+`deploy` (2.1, ST-07); the composition rules for source actions are in
+the pilot slice.
 
 - Build provenance uses **in-toto attestations** with a **SLSA**
   provenance predicate, referencing the artifact by digest. statecraft
@@ -352,20 +410,20 @@ else can read.
   spec-spine supplies stable type names and versions for its own
   payloads and reviews the mapping.
 - Where a family repository defines a record (statecraft-cli's receipt,
-  hqgit's facts), statecraft references it by
-  `(type, schemaVersion, SHA-256 of the record bytes)` plus subject tree
-  and commit, and re-derives nothing.
+  hqgit's facts), statecraft references it by spec 015 section 7.1's
+  typed reference and re-derives nothing.
 
 ## 10. Runtime binding, replay and shadow policy
 
 **10.1 A runtime binding is detached and does not assume a substrate.**
-Binding a running instance to an artifact digest is a separate record
-from the artifact's provenance, because the running thing cannot contain
-an assertion about itself. It carries an epoch so that a restart is
-distinguishable from a redeploy, and it must work for an application that
-does not run Rahi, does not run in our cluster, and reports nothing. For
-such an application the binding is `unknown`, which is a legitimate
-state and not a degraded `pass`.
+**Deferred** until the local slice and the pilot pass (ST-07); statecraft
+remains its named owner. Binding a running instance to an artifact digest
+is a separate record from the artifact's provenance, because the running
+thing cannot contain an assertion about itself. It carries an epoch so
+that a restart is distinguishable from a redeploy, and it must work for
+an application that does not run Rahi, does not run in our cluster, and
+reports nothing. For such an application the binding is `unknown`, which
+is a legitimate state and not a degraded `pass`.
 
 **10.2 Historical replay is not present authorization.** Re-evaluating
 recorded inputs under a named policy and verifier version answers a
@@ -381,42 +439,53 @@ change under section 6.
 ## 11. Negative cases
 
 Acceptance tests, not examples. The packet's exit criteria name five;
-these are those five plus what the sections above require.
+these are those five plus what the sections above require. N-15 to N-17
+were added on 2026-09-12 from G-06 and G-08. Rows marked *deferred*
+belong to a deferred section (2.1) and are not pilot-slice tests.
 
 | # | Case | Required behavior |
 |---|---|---|
 | N-1 | a permit for a different subject or tenant than the caller | refused at effect time; the effect does not happen |
 | N-2 | a candidate that weakens ownership, the constitution, a waiver rule or a verification block | classified under the base's policy, refused without a prior-policy approval |
-| N-3 | a permit or evidence from an untrusted issuer | `issuerTrust` is `fail` or `unknown`; a policy requiring a trusted issuer refuses |
+| N-3 | a permit or evidence signed by a key absent from the supplied root set, and one by a key it revokes | `issuerTrust: unknown` for the first, `fail` for the second; a policy requiring a trusted issuer refuses both |
 | N-4 | an expired permit | refused at effect time even though it was valid at issue |
 | N-5 | a replayed permit (nonce or `maxUses` exhausted) | refused; the reservation is not double-spent |
 | N-6 | required evidence missing | refused, and the refusal names which evidence |
-| N-7 | a `deploy` naming a tag rather than a digest | refused at issue |
+| N-7 | a `deploy` naming a tag rather than a digest (*deferred*) | refused at issue |
 | N-8 | a stale fence at effect time | refused; another run holds the lease |
 | N-9 | an external call whose response is lost | reconciled by reading, never retried blindly, never recorded as failed |
 | N-10 | an approval by the requester where the policy names a second party | does not count toward the requirement |
-| N-11 | a restore | the chain is preserved: original bytes, original digests, original verifiers |
+| N-11 | the plane restored from its backup | every chain is preserved: original bytes, original digests, original verifiers |
 | N-12 | a foreign evidence object sent through a canonicalizing ledger append instead of by typed reference | refused before the append; no digest is recorded for re-serialized bytes |
-| N-13 | a request to anchor or sign the legacy chain after the fact | refused; its records keep `issuerTrust: unknown` (`unsigned`) |
+| N-13 | a request to anchor or sign the legacy chain after the fact | refused; its records keep `issuerTrust: unknown` |
 | N-14 | a trust root, or an issuer enrolment, carried inside a bundle or candidate | ignored as a root; `issuerTrust` unchanged; the attempt recorded |
+| N-15 | evidence signed by the platform issuer before its enrolment's `notBefore`, or after its revocation | `issuerTrust: fail`; evaluated against the enrolment set valid at the evidence's time, not today's |
+| N-16 | a rotation record not signed by the offline root | ignored; the prior enrolment set stays in force |
+| N-17 | a local user's root presented to the hosted plane, or the platform root to a local verifier | not an eligible root across that line; `issuerTrust: unknown` |
 
 ## 12. Acceptance
 
-1. N-1 through N-14 are tests that fail if the behavior changes.
-2. One hosted effect, end to end, rejects N-1, N-2, N-3, N-4 and N-6,
-   which is the packet's exit criterion stated as a single run.
+For the pilot slice, unless an item names a deferred section.
+
+1. N-1 to N-17 are tests that fail if the behavior changes, except N-7,
+   which waits with `deploy`.
+2. One hosted broker action, end to end, rejects N-1, N-2, N-3, N-4 and
+   N-6, which is the packet's exit criterion stated as a single run.
 3. A permit's evaluation is a pure function of `(permit, policy, time,
    usage, fence, evidence)`, with time and usage passed in, and a test
    reproduces a past decision by replaying its inputs.
 4. Intent, outcome and reconciled are three durable records, and a test
    kills the process between intent and outcome and shows the reconciler
    reaching the right answer by reading.
-5. A restore of the control plane preserves every chain: the same
-   digests verify, with the same verifiers, over the original bytes.
+5. A restore of the pilot cell preserves every chain: the same digests
+   verify, with the same verifiers, over the original bytes.
 6. No permit is issued, and no effect is authorized, by anything a
    candidate or a payload contains. A test asserts the trust root cannot
    be set from inside a bundle.
-7. `spec-spine verify 016` is green.
+7. The issuer's enrolment, rotation and revocation are exercised (N-15 to
+   N-17) before any admission under a policy that requires a trusted
+   issuer.
+8. `spec-spine verify 016` is green.
 
 ## 13. Cross-repo dependency
 
@@ -425,14 +494,18 @@ these are those five plus what the sections above require.
   `authorityRef` and section 6.1 are more than references to proposals.
   Status 2026-09-12: both are committed as drafts (spec-spine PR #179),
   087's D3 (framed digest or the legacy `specAttestationHash`) is open,
-  and no release after `v0.18.0` exists, so no installed binary carries
-  either.
-- **statecraft-cli**: receipt version 1's fixtures (its draft 132),
+  and no installed binary carries either. Revision 4 did not certify a
+  current release, so this spec asserts none.
+- **statecraft-cli**: receipt version 1's fixtures (its draft 132), with
+  the verdict's concrete version and serialization frozen there (G-05);
+  the permit schemas and pure evaluator in its workspace (G-04); and
   agreement that the action permit lives here (its doc 04 D52 and doc 05
-  D71 already state it), and acceptance of the verdict contract (014
-  section 10.2).
+  D71 already state it). statecraft adopted the verdict contract on
+  2026-09-12; 132 encodes it.
 - **statecrafting**: none blocking. Its 009 F-3 is answered in 014
-  section 10.3; this spec puts no foreign object in a ledger payload.
+  section 10.3, and this spec puts no foreign object in a ledger payload.
+  The archive of section 5.4 preserves governance-native 0.1.0 as the
+  published binary that ran, which a source tag alone does not reproduce.
 - **Rahi**: the pilot cell (spec 017 Part A) for the service, and no
   second durable store, so the issuer's chain is built in the cell's own
   store. Section 10.1 deliberately does not assume the deployed
@@ -440,15 +513,17 @@ these are those five plus what the sections above require.
 
 ## 14. Out of scope
 
-- **Choosing the first trust root.** Proposed as 014 D-2; the owner
-  decides.
-- **The neutral verifier's implementation.** Its proposed home is
-  statecraft-cli's Apache-2.0 workspace (014 section 10.2); this
-  repository is AGPL-3.0 and cannot host a permissive verifier.
+- **The root key ceremony itself.** Section 5.3 fixes the design (G-08).
+  Generating the offline root and publishing its fingerprint are owner
+  operations, recorded as the bootstrap of section 6.4, not code.
+- **The neutral verifier's implementation.** It lives in statecraft-cli's
+  Apache-2.0 workspace (G-04); this repository is AGPL-3.0 and cannot
+  host a permissive verifier.
 - **Defining an SBOM or build-description format.** Section 9.
 - **Spec-fitness, pressure, CVE and compliance analytics.** Deferred
   until linked data and a customer need justify them. Evidence coverage
   is not certification, correlation is not causality, and no cross-tenant
   learning dataset is created from tenant evidence.
 - **Billing and entitlement enforcement through permits.** A permit is
-  not a licence check; 014 O-6.
+  not a licence check, and commercial terms wait until before external
+  customer enrolment (spec 014 section 11, ST-05).

@@ -1,33 +1,46 @@
 ---
 id: "014-rahi-realignment"
 title: "The Rahi realignment, checked: the successor thesis and the migration record"
-status: draft
+status: approved
 created: "2026-09-11"
 implementation: n-a
 depends_on:
+  - "001-statecraft-thesis"
+amends:
+  # Section 4 is the amending text and nothing else in this record is
+  # (section 4.7). Declared once, here; 001's spec.md is not edited.
   - "001-statecraft-thesis"
 establishes:
   # A record's territory is the record. This spec writes no code and
   # claims none; it owns its own directory so the ownership graph has an
   # edge for it and `lint` has nothing to warn about. See section 1.1.
   - { kind: directory, path: "specs/014-rahi-realignment/" }
+extends:
+  # The thesis corrections the adoption assigns to this change (G-03,
+  # section 11.3): prose in files other specs own, no code.
+  - unit: "README.md"
+    spec: "001-statecraft-thesis"
+  - unit: "CLAUDE.md"
+    spec: "013-agent-harness"
 summary: >
   statecraft's half of the 2026-09-11 family realignment, checked against
-  the tree at 9658e29 and against the running production deployment. The
-  handoff packet's findings are re-verified, superseded where the tree has
-  moved, and extended with seven findings the packet could not have had
-  because it did not inspect the live plane. The record then states the
-  successor thesis: what the enrahitu-era thesis (spec 001) keeps, what
-  Rahi replaces, what retires, and who owns each authorization and each
-  durable record. It carries the durable-state inventory, the
-  declared-versus-enforced table, the requests to sibling repositories,
-  and the owner decisions that remain open. This spec is a record, not a
-  work order: it amends no approved spec, and the work it names lands in
-  drafts 015, 016 and 017. Revised 2026-09-12 against the revision-3
-  packet (section 10): the sibling answers now on record, the measured
-  byte behavior of both evidence verifiers, one proposed verdict
-  contract, and three decisions (thesis, issuer, bytes) put in their
-  smallest form.
+  the tree at 9658e29 and against the running production deployment, and
+  adopted by the owner on 2026-09-12. The record re-verifies the handoff
+  packet's findings, adds seven the packet could not have had because it
+  did not inspect the live plane, and carries the durable-state inventory,
+  the declared-versus-enforced table and the requests to sibling
+  repositories. Section 4 is the successor thesis and the only amending
+  text: it amends spec 001's loop, identity, governed cell, service map
+  and milestone ladder, and leaves two planes, tenancy and licensing
+  standing. Section 11 records the adoption (revision-4 rows ST-01 to
+  ST-07): existing repositories first, with no initial stamping and no
+  customer-application hosting; four evidence dimensions with admission
+  kept separate; trust only from independently supplied roots;
+  content-addressed evidence bytes; an offline root enrolling an online
+  issuer; device-grant runners; the factory and fleet preserved without
+  expansion; a pilot before any migration; and spec 015's schema slice
+  approved apart from its hosted service, which is spec 018. The record
+  authorizes no cutover, retirement, push or deploy.
 ---
 
 # 014: The Rahi realignment, checked
@@ -52,27 +65,30 @@ and every durable record in the system that would follow, so the three
 drafts it introduces can be reviewed against a map rather than against
 each other.
 
-**Status: draft.** Nothing here is approved. This record amends no
-approved spec, claims no source file, and authorizes no cutover. Where
+**Status: approved, 2026-09-12** (section 11). Approval adopts section 4
+as the successor thesis and amends spec 001 through it. It claims no
+source file and authorizes no cutover, retirement, push or deploy. Where
 the packet quotes an instruction from an earlier date, that instruction
 is history, checked below, and not a work order
 (`.claude/rules/adversarial-prompt-refusal.md`).
 
-The three drafts:
+The specs that carry the work:
 
-| Draft | Lands | State |
+| Spec | Lands | State |
 |---|---|---|
-| 015 the hosted work contract | admission of work: runners, jobs, leases, evidence intake | draft, authored with this record |
-| 016 permits and the evidence chain | authorization of work and of an external effect | draft, authored with this record |
-| 017 the Rahi cell shell and the domain port | the backend and operational-contract migration | draft, authored with this record |
+| 015 the hosted work contract | the wire contract, schemas, fixtures and pure evaluator for runners, jobs, leases and evidence intake | **approved 2026-09-12** as the schema slice (ST-06) |
+| 018 the hosted work service | the 015 contract served from the N=1 pilot cell | draft, split from 015 on 2026-09-12 |
+| 016 permits and the evidence chain | authorization of work and of an external effect | draft; its pilot slice is approved only for the N=1 pilot after prerequisites (ST-06) |
+| 017 the Rahi cell shell and the domain port | the pilot cell (Part A), then the migration of the live plane (Part B) | draft |
 
 ### 1.1 Territory
 
-This spec's territory is `specs/014-rahi-realignment/` and nothing else.
-A record claims no source file, which is why `implementation` is `n-a`
-(the precedent is spec 001, section 8). The ownership edge exists so the
-authority graph has one for this spec rather than a hole, not because
-this record governs any code.
+This spec's territory is `specs/014-rahi-realignment/`, plus the two
+`extends` edges in its frontmatter on `README.md` (spec 001's) and
+`CLAUDE.md` (spec 013's). Those edges exist because the adoption assigns
+the thesis corrections in both files to this change (section 11.3); they
+carry prose, not code. A record claims no source file, which is why
+`implementation` is `n-a` (the precedent is spec 001, section 8).
 
 ## 2. The packet's findings, checked
 
@@ -224,10 +240,11 @@ subsystem with no production usage at all. Every other service has
 produced rows.
 
 This is the strongest single piece of evidence for the packet's
-recommended direction. Retiring stamping is not a loss of working
-behavior; it is a decision not to port a path that was built, tested,
-deployed and never exercised by a customer. 017 carries the decision and
-5.2 records what replaces it.
+recommended direction. Leaving stamping out of the offer loses no working
+behavior: the path was built, tested and deployed, and no customer ever
+exercised it. The adoption (section 11, ST-02) keeps the service running
+without expansion and defers its retirement; 017 section 9 records what
+replaces its `adopt` path.
 
 ### 3.4 The fleet is currently empty
 
@@ -322,12 +339,27 @@ human's call, not an agent's.
 
 ## 4. The successor thesis
 
-Spec 001 is a record of the enrahitu-era architecture and stays exactly
-that. This section states what a Rahi-era thesis would say. It is
-proposed, not ratified. Approving this record does not adopt it: adoption
-is the owner's separate act, with the instrument named in section 10.4
-(D-1), and neither act authorizes drafts 015, 016 or 017. (Corrected
-2026-09-12; the earlier sentence here said approval ratified it.)
+**Adopted 2026-09-12** (section 11, ST-01 and G-03). This section is the
+amending text for spec 001, through the `amends` edge in this record's
+frontmatter, and it is the only part of this record that amends
+anything. Spec 001 stays the record of the enrahitu-era architecture
+that was actually built. Where the two disagree about what statecraft
+offers and builds next, this section governs; 4.7 names each 001 section
+it amends and each that stands. Adoption authorizes no cutover, no
+retirement and no implementation: specs 015 to 018 carry the work, each
+under its own approval.
+
+**The offer, in order.** Existing repositories come first. Governed
+delivery works locally, on the customer's own machine through
+statecraft-cli, without a hosted account. The first hosted layer is team
+approvals, evidence retention and policy, served from a Rahi cell. There
+is no initial stamping and no managed hosting of customer applications.
+The first hosted step is a controlled engineering pilot with no external
+customer enrolment. Paid-offer terms, metering, retention commitments and
+support promises are written before external customers enrol, and not
+before; the retention limits and deletion behavior for customer data are
+configured before the plane accepts any (ST-05). This record invents no
+contractual term.
 
 ### 4.1 What the thesis keeps
 
@@ -355,24 +387,24 @@ was ever a claim about enrahitu:
 
 | Today | Disposition | Successor |
 |---|---|---|
-| `tenants/`: tenant, installation, membership, GitHub App semantics, negative authorization tests | **retained** | ported to a domain port behind a Rahi cell; the negative tests move first (017 4.2) |
-| `governance/`: attestation chain, action gate, trust window | **retained, re-rooted** | the chain stays; its anchor gains an issuer (016 section 5) |
+| `tenants/`: tenant, installation, membership, GitHub App semantics, negative authorization tests | **retained** | ported to a domain port behind a Rahi cell (017 Part B); endpoint-level cross-tenant 404 tests are written against today's services first (017 5.1). Tenant authorization stays the plane's in every successor, never the chassis's or a runner's |
+| `governance/`: attestation chain, action gate, trust window | **retained; the legacy chain closes** | the gate and the trust window keep their shapes. The legacy file chain is archived and closed at migration, with its bytes and its actual published verifier binary preserved (017 section 7). It stays historical evidence and is not the active ledger. The active ledger is a new chain in the cell's store, rooted by the issuer of 016 section 5 |
 | `frontend/`, `frontend-admin/`: React product and operator UIs | **retained** | components reused behind new API adapters; `frontend/src/lib/api.ts` is the whole seam |
-| `core/`: CoreLedger over Postgres | **replaced** | rahi's store (hiqlite group) for operational state; see 017 4.3 for the two rows this is genuinely hard for |
-| `auth/`, `idp/`: embedded rauthy, session envelope, refresh tokens | **replaced** | `rahi-idp` and `rahi-edge`; rahi 022 already carries the same "the IdP's `sub` is the principal, no local account row" decision this repository made |
-| `fleet/`: single-replica Deployment, scale-down restic backup | **gated on O-1 (D-6 in 10.4)** | if hosting stays out, unchanged and unextended; if in, rahi 030's verbs and 032's StatefulSet topology, the placement unit changing from "container + volume + ingress" to "a cell". Fleet extraction is not a launch dependency |
-| `app-model.json` extraction | **replaced** | the Rahi manifest as a declared, verified TOML document (2.2); the endpoint table needs a new home or retires with `frontend-admin`'s catalog view |
-| Managed application hosting at all | **optional, and an open decision** | O-1 in section 8 |
-| `factory/`: stamping from `template.toml` | **retirement proposed (D-5 in 10.4)** | never exercised in production (3.3); the existing-repo path (`mode: adopt`, already built) is the successor shape, re-founded without a template. Behavior is preserved until the retirement is adopted |
-| `agents`, `types`, `trust.levels` model sections | **retired** | empty in the extracted model today |
+| `core/`: CoreLedger over Postgres | **replaced in the cell** | rahi's store (hiqlite group) for operational state; the running plane keeps CoreLedger until 017 Part B's cutover, and 017 sections 6 and 7 name where the hard state is |
+| `auth/`, `idp/`: embedded rauthy, session envelope, refresh tokens | **replaced in the cell** | `rahi-idp` and `rahi-edge`; rahi 022 already carries the same "the IdP's `sub` is the principal, no local account row" decision this repository made |
+| `fleet/`: single-replica Deployment, scale-down restic backup | **preserved, not expanded** (ST-02) | keeps running with its current behavior and gains no feature. statecrafting's native extraction is deferred and blocks nothing. Customer-application hosting is out of the offer; if it enters later, 017 section 8's cell-placement branch is the design, reopened once 017 Part B's inventory and rollback are proven |
+| `app-model.json` extraction | **kept for the running plane; not carried into the cell** (ST-04) | the running plane keeps its extracted model for as long as the old service runs. The cell declares its ceiling in Rahi's manifest and injects no unknown section into it; the endpoint table moves to a statecraft-owned overlay (017 section 10). The July central app-model schema stays historical |
+| Managed application hosting at all | **out of the initial offer** (G-03) | |
+| `factory/`: stamping from `template.toml` | **preserved, not expanded; retirement deferred** (ST-02) | not part of the offer and gets no new work, and it is not disabled. Retirement is reopened once 017 Part B's inventory and rollback are proven. The successor to its `adopt` path is 015's project registration |
+| `agents`, `types`, `trust.levels` model sections | **not carried into the cell** | empty in the extracted model today |
 
 Note the one asymmetry worth arguing about at review: `mode: adopt`
 already exists in the factory (`backend/factory/entities.ts`,
 `backend/factory/README.md`: "adopt (PR the chassis onto an existing
-repo)"). Retiring the factory while keeping the adopt-shaped workflow is
-a re-founding, not a port, because adopt today means "overlay the enrahitu
-chassis onto your repo" and the successor means "govern the repo you
-already have, unchanged". 017 states that plainly rather than letting the
+repo)"). Its successor, 015's project registration, is a re-founding and
+not a port, because adopt today means "overlay the enrahitu chassis onto
+your repo" and the successor means "govern the repo you already have,
+unchanged". 017 section 9 states that plainly rather than letting the
 word `adopt` carry it.
 
 ### 4.3 The responsibility map
@@ -385,19 +417,22 @@ exists so review can find one.
 |---|---|---|---|
 | What a tree's authority state is (ownership, lifecycle, freshness, coupling) | spec-spine | pure computation over explicit inputs; no keys, no clock | AuthoritySnapshot is spec-spine draft 087 |
 | How a change classifies against a trusted base | spec-spine | computed under the **base** revision's config | draft 088 |
-| Which trees to snapshot, and retaining them | statecraft (hosted) / the operator (local) | 015 | proposed |
-| That a runner may take work at all | statecraft | 015 section 4: enrollment and audience-bound token | proposed |
-| That this runner may take **this** job | statecraft | 015 section 5: lease with a fencing token | proposed |
-| What a candidate may write and must satisfy | spec-spine computes the scope; the executor enforces it | statecraft-cli (fence 125, sandbox draft 126, gate fence draft 129) | WorkScope proposed, not filed |
-| That work may begin, by whom, for how long | statecraft or an authorized local operator | 016 section 3: the WorkPermit | proposed |
+| Which trees to snapshot, and retaining them | statecraft (hosted) / the operator (local) | 018 | proposed |
+| That a runner may take work at all | statecraft | 015 section 4: enrolment, and an enrolled person's device-grant session (G-09) | contract approved (015); service proposed (018) |
+| That this runner may take **this** job | statecraft | 015 section 6: a lease with a fencing token, its duration and heartbeat interval returned by the plane (G-10) | contract approved (015); service proposed (018) |
+| What a candidate may write and must satisfy | spec-spine computes the scope; the executor enforces it | statecraft-cli (fence 125, sandbox draft 126, gate fence draft 129) | WorkScope deferred beyond the local slice |
+| That work may begin, by whom, for how long | statecraft or an authorized local operator | 016 section 3: the WorkPermit | proposed; in 016's pilot slice |
 | That a candidate's gate actually passed | statecraft-cli | `acceptance.receipt`, schema version 1 | **implemented** (CLI spec 121) |
-| That a declared verification actually ran | a trusted worker, never the control plane | 015 section 7 (spec-spine's S1) | proposed |
-| That an external effect may happen | statecraft | 016: the action permit | proposed |
+| That a declared verification actually ran | a trusted worker, never the control plane | 015 sections 3 and 7 (spec-spine's S1) | contract approved (015) |
+| That an external effect may happen | statecraft | 016: the action permit | proposed; broker actions in 016's pilot slice |
 | The effect itself (push, PR, merge, note) | statecraft-cli's broker, locally | journaled intent and outcome | **implemented** (CLI spec 122) |
-| A deployment of a hosted application | statecraft | 016 section 6, gated on build provenance | proposed |
-| The attestation chain and its issuer | statecraft | `governance/`, `/data/governance/state` | chain implemented, **issuer absent** (3.5) |
+| A deployment of a hosted application | statecraft | 016 section 4.5, gated on build provenance | **deferred** (ST-07) until the local slice and the pilot pass; the first artifact target is chosen then |
+| The legacy attestation chain | statecraft | `governance/`, `/data/governance/state`; archived and closed at migration (017 section 7) | implemented, **unsigned** (3.5); historical evidence once archived |
+| The active chain and its issuer | statecraft | an offline owner-held root enrols an online platform issuer (016 section 5, G-08) | proposed; nothing is signed today |
+| The bytes of foreign evidence | statecraft | a content-addressed app table the cell's backup covers; ledgers hold typed references only (015 section 7.1, G-07) | contract approved (015); store proposed (018) |
 | Tenant, installation, membership | statecraft | `tenants/` | **implemented** |
-| A verdict on somebody else's evidence | a neutral verifier, packaged permissively | four evidence dimensions plus a separate admission result (10.2) | proposed |
+| A verdict on somebody else's evidence | statecraft owns the semantics; the schemas, fixtures and pure verifier live in statecraft-cli's Apache-2.0 workspace (G-04) | four evidence dimensions plus a separate admission result (015 section 7.2, G-05, G-06) | contract approved (015); fixtures not yet minted (CLI 132) |
+| A runtime binding of a running instance to an artifact | statecraft (the owner named in record 06, kept by ST-07) | 016 section 10.1, detached | **deferred** (ST-07) |
 | Per-repository evidence DAG and its identities | hqgit | its own ledger; never in a chassis store | hqgit spec 003 B-4, B-5 |
 | Infrastructure primitives (store, edge, IdP, verbs, packaging) | Rahi | its crates | 010, 011, 020 to 026, 030 to 034 landed |
 
@@ -425,10 +460,12 @@ application to run on Rahi.
    PR against their tree. Authority: statecraft, checking the
    installation covers the repository. Record: a project row binding
    `{tenant, installation, repo, default branch}`.
-4. **Enrol a runner.** The operator's own machine, or a statecraft-hosted
-   worker. Authority: statecraft (015 section 4). Record: a runner row
-   with its audience-bound credential's issuer, audience and expiry, never
-   the credential.
+4. **Enrol a runner.** In the first slice, a person's own machine running
+   statecraft-cli, authenticated as that person's device-grant session
+   (G-09). A statecraft-hosted or unattended runner waits for a separate
+   non-human principal contract. Authority: statecraft (015 section 4).
+   Record: a runner row bound to the tenant and the person's `sub`, with
+   its credential's issuer, audience and expiry, never the credential.
 5. **Name the work.** A spec in the customer's repository, or an
    approved change class. Authority: spec-spine computes what the work
    structurally requires; a human or the tenant's policy approves it.
@@ -440,10 +477,11 @@ application to run on Rahi.
 7. **Upload evidence.** The runner posts the receipt and its bundle.
    Authority: statecraft validates; it does not execute anything the
    bundle carries and does not accept the bundle's own anchor as a trust
-   root. Record: the submitted bytes, kept verbatim and addressed by
-   digest, and an evidence row with four dimensions (integrity,
-   signature, issuer trust, subject binding) and a separate admission
-   result under the job's policy (10.2, 10.3).
+   root. Record: the submitted bytes, kept verbatim in a
+   content-addressed table the cell's backup covers, and an evidence row
+   with four dimensions (integrity, signature, issuer trust, subject
+   binding) and a separate admission result under the job's policy
+   (015 section 7).
 8. **Approve.** A second person on the tenant approves the change class
    the delta reports, under the **base** revision's policy. Authority:
    statecraft. Record: the approval, referenced by the action permit.
@@ -476,38 +514,96 @@ worktrees, the credential fence, `acceptance.receipt` version 1, the
 action broker over lease and receipt, capability negotiation, the handoff
 capsule, lifecycle policy.
 
+**Adopted as contract, nothing built** (section 11): the evidence
+verdict's four dimensions and separate admission (G-05, G-06); typed
+references to original bytes (G-07); the runner's lease, fence,
+cancellation and idempotency contract (G-10); device-grant runner
+identity (G-09). Spec 015 holds all four as its approved schema slice.
+
 **Proposed, nothing built:** every hosted record in 4.3 marked proposed;
-the WorkPermit; the action permit; evidence trust classes; runner
-enrolment; replay and shadow policy; issuer trust for our own chain.
+the WorkPermit; the action permit; evidence trust classes; the hosted
+runner service; shadow policy; issuer trust for our own chain.
+
+**Deferred:** artifact and deployment binding, runtime binding, and
+expanded agent delegation, until the local slice and the pilot pass
+(ST-07); historical replay, as expansion on use (4.6 item 5).
 
 **Not a guarantee, and should stop being written as one:**
 `app-model.json`'s `ledger.signing` block (3.5).
 
 ### 4.6 The milestone sequence, proposed
 
-Added 2026-09-12 from the revision-3 reconciliation, as the replacement
-D-1 would make for 001 section 6.
+Added 2026-09-12 from the revision-3 reconciliation and adopted the same
+day as the replacement for 001 section 6 (4.7). The sequence names no
+dates; each step waits on the evidence of the one before it.
 
 1. **Safety and protocol foundations.** statecraft-cli closes its origin
    and credential gaps (its 128, 129); spec-spine repairs authority
-   verification (085, 086, and 087's digest choice); the family agrees
-   the verdict contract and typed byte references (10.2, 10.3); 132's
-   fixtures are frozen. Ratification and implementation stay distinct.
+   verification (085, 086, and 087's digest choice); the verdict contract
+   and typed byte references are adopted (G-05 to G-07, held by 015) and
+   132's fixtures are frozen against them. Ratification and
+   implementation stay distinct.
 2. **Installable local evidence slice.** Released members on a clean
    machine, one bounded change in an existing repository, and its
    exported evidence checked by a separate verifier. Tampering, a
    self-weakened policy, a wrong subject and absent trust each yield
    their specified result.
-3. **Hosted team pilot** (015, 016, 017 Part A). On a proven Rahi cell:
-   enrol a runner, lease a job, receive evidence, approve under the prior
-   policy, authorize one broker action. Tenant separation,
-   expiry, replay, fencing, cancellation and idempotent reconciliation
-   are demonstrated. The plane executes no repository command.
-4. **Production migration and artifact delivery** (017 Part B). Identity
-   and application data restored in rehearsal, rollback proven, then a
-   recorded cutover decision. No historical ledger root is replaced.
-5. **Expansion on use.** Graph, runtime observation, replay and optional
-   hqgit portability when their prerequisites and demand exist.
+3. **Hosted team pilot** (018, 016's pilot slice, 017 Part A). A
+   controlled engineering pilot at N=1 on a Rahi release that meets 017
+   Part A's checklist, with no external customer: enrol a runner, lease a
+   job, receive evidence, approve under the prior policy, authorize one
+   broker action. Tenant separation, expiry, replay refusal, fencing,
+   cancellation and idempotent reconciliation are demonstrated, and so
+   is recovery of original bytes. The plane executes no repository
+   command.
+4. **Before external customers enrol.** Paid-offer terms, metering,
+   retention commitments and support promises are written, and customer
+   data's retention limits and deletion behavior are configured (ST-05).
+5. **Production migration** (017 Part B). Identity and application data
+   restored in rehearsal, rollback proven, then a recorded cutover
+   decision. The legacy chain is archived and closed; no historical
+   ledger root is replaced. The factory's retirement is reopened here,
+   not before (ST-02).
+6. **Artifact delivery and expansion on use.** Artifact and deployment
+   binding, with its first target chosen at this point (ST-07); then
+   graph, runtime observation, replay and optional hqgit portability when
+   their prerequisites and demand exist.
+
+**The old rungs.** 001's labels stay citable as history, and specs 004,
+005 and 006 keep citing them for what they were built toward. M1 (the
+template contract) was done. M2 (stranger onboarding through a stamped
+app) is not a rung of this sequence: onboarding is 4.4's steps 1 to 3,
+and stamping is out of the offer. M2.5 (the model on ourselves) is
+replaced by the cell's declared manifest in steps 3 and 5. M3 (a fleet of
+ten) is not scheduled, because the fleet is preserved without expansion;
+006's deferred ten-app scale check stays deferred with no rung. M4 (the
+agent bridge) is absorbed into steps 1 to 3, and expanded agent
+delegation waits on step 6 (ST-07). M5 (three paying agencies) stays the
+verdict and cannot begin before step 4.
+
+### 4.7 The amendment to spec 001, section by section
+
+This is the precise amendment the adoption names (ST-01). A section
+marked **amended** is governed by this section 4 from 2026-09-12; a
+section marked **stands** keeps binding as 001 wrote it. 001's text is
+not edited either way.
+
+| 001 section | Disposition | What governs now |
+|---|---|---|
+| 1. Purpose | **amended** | The loop is 4.1's: intent, governed spec, candidate, evidence, publication at an exact revision, starting from a repository the customer already has. Stamped apps and an operated fleet leave the loop, and the offer is the one this section's opening states. "Governance made verifiable" stands |
+| 2. What consolidates here | stands | history |
+| 3 (opening), "the first production EnRaHiTu app" | **amended** | statecraft stays the first production app of its own substrate, which is now Rahi (017). Fleet operations are not sold in the initial offer, so there is nothing to rehearse on ourselves for customers first |
+| 3.1 Two planes | stands, as a principle | the platform is one governed application and a customer's application is another. "EnRaHiTu" there names the running plane's substrate, and fleet-operating a tenant app is out of the initial offer (4.2) |
+| 3.2 The platform app | stands for the running plane only | binds the running EnRaHiTu deployment until 017 Part B's cutover decision, including CoreLedger as its data API and fleet v1 on hetzner-k3s. It binds no new cell |
+| 3.3 Identity | **amended** | one rauthy-based platform IdP with the `statecraft_operator` role separation, delivered in the cell by `rahi-idp`, with the IdP's `sub` as the principal. A first-slice runner is an enrolled person's device-grant session (G-09); unattended service-principal runners are deferred. The stamp-time `<app>_operator` convention lapses with stamping |
+| 3.4 Observability | stands for the running plane | observability expansion blocks no pilot (ST-07); the cell inherits Rahi's observability, not this section's dashboard plan |
+| 3.5 The governed cell and `app-model.json` | **amended** | the cell's ceiling is Rahi's declared manifest, into which statecraft injects no unknown section; the endpoint table lives in a statecraft-owned overlay; the running plane keeps its extracted `app-model.json` until the old service retires (ST-04). The July central schema, `kernel-native` and the Phase A and Phase B plans are historical; statecraft consumes Rahi's kernel and defines none. The model's `ledger.signing` block is not a guarantee (3.5 here) |
+| 3.6 Service map | **amended** | 4.2's dispositions: tenants and governance retained, the legacy chain closing at migration; factory and fleet preserved without expansion; the hosted work service (018) and permits (016) in the Rahi pilot cell (017 Part A); shared schemas and pure evaluators in statecraft-cli's Apache-2.0 workspace, to which statecraft contributes no AGPL code (G-04); `addon/` is no longer in-tree |
+| 4. Tenancy | stands | per-org GitHub App installation, `installation_id` as the key, no tenant end-user in the platform IdP |
+| 5. Licensing | stands | |
+| 6. Milestone ladder | **replaced** | 4.6 |
+| 7. Out of scope | stands | |
+| 8. Lifecycle note | stands | 001 stays `n-a`: a record, not a work order |
 
 ## 5. The durable-state and deployment inventory
 
@@ -688,13 +784,15 @@ asks statecraft a byte-preservation question, F-3, answered in 10.3.)
 
 ## 8. Open owner decisions
 
-Recorded as proposals for decision, not resolved here. Each blocks
-something named. Section 10.4 restates O-1, O-3, O-4 and O-5 as concrete
-proposals (D-1, D-4, D-2 and the verifier home in 10.2) and adds the
-factory and fleet dispositions (D-5, D-6); O-2, O-6 and O-7 stand as
-written, with 10.1's Rahi answers applied to O-7.
+Recorded on 2026-09-11 as proposals for decision. Section 10.4 restated
+O-1, O-3, O-4 and O-5 as concrete proposals (D-1, D-4, D-2 and the
+verifier home in 10.2) and added the factory and fleet dispositions (D-5,
+D-6). **All seven were resolved by the owner on 2026-09-12** (section
+11); each bullet keeps its original reasoning and names its resolution.
+No owner decision in this record remains open.
 
 - **O-1. Does managed application hosting belong in the initial offer?**
+  **Resolved: no** (G-03).
   The packet asks for an explicit decision. Evidence for "no": nothing is
   placed today (3.4), the factory never ran (3.3), and hosting is the
   only part of the product that requires the customer to adopt a
@@ -704,28 +802,45 @@ written, with 10.1's Rahi answers applied to O-7.
   offer.** Keep the fleet running and specified, sell governed delivery
   for existing repositories first. Blocks: 017's scope.
 - **O-2. Is the control plane itself a Rahi cell before or after the
-  hosted slice ships?** Before is cleaner (one substrate, and it proves
+  hosted slice ships?** **Resolved: the pilot cell first, migration of
+  the live plane later** (ST-03; 017 Parts A and B). Before is cleaner (one substrate, and it proves
   the chassis on ourselves); after is safer (the hosted slice is the
   revenue path and does not require it). Blocks: 017's sequencing.
 - **O-3. Which client registration does a native CLI use**, a public
   client with the device grant or dynamic registration, and what scopes
-  may it request? Gated on R-1. Blocks: 015 section 4.
+  may it request? Gated on R-1. Blocks: 015 section 4. **Resolved: a
+  public native client with the device grant and refresh-token renewal;
+  no OAuth client secret on a customer runner** (G-09). The scope list is
+  018's to fix against Rahi 038's native client when the service is
+  built.
 - **O-4. What is the first issuer and trust root for our own chain?**
+  **Resolved: an offline owner-held root enrolling an online platform
+  issuer; local user roots kept separate; no retrospective signature**
+  (G-08; 016 section 5).
   Options: an operator-held Ed25519 key used in an anchoring ceremony
   (what spec 008 already sketches), a key held by the plane, or an
   external transparency log. Nothing is signed today. Blocks: 016
   section 5, and any claim that our evidence is verifiable by a third
   party.
-- **O-5. Where does the neutral verifier live?** statecraft-cli's
+- **O-5. Where does the neutral verifier live?** **Resolved:
+  statecraft-cli's existing Apache-2.0 workspace, with statecraft owning
+  the semantics** (G-04). statecraft-cli's
   Apache-2.0 `statecraft-journal` crate is the obvious seed and this
   repository is AGPL-3.0, so it cannot be here. Blocks: nothing in 015 or
   016; it is a packaging decision.
-- **O-6. Entitlements, metering, retention and support.** Required
+- **O-6. Entitlements, metering, retention and support.** **Resolved:
+  deferred until before external customer enrolment; a controlled
+  engineering pilot first; customer-data retention limits and deletion
+  behavior configured before any customer data is accepted** (ST-05).
+  Required
   commercially, and the packet is explicit that they must not delay
   proving the core workflow. Recommendation: specify after the first
   hosted slice is accepted, and design 015's records so metering can read
   them rather than needing its own.
-- **O-7. Does `app-model.json` survive at all?** 2.2 shows the endpoint
+- **O-7. Does `app-model.json` survive at all?** **Resolved: the running
+  plane keeps it until the old service retires; the cell does not carry
+  it; the endpoint table moves to a statecraft overlay; nothing unknown is
+  injected into Rahi's manifest** (ST-04). 2.2 shows the endpoint
   table has no home in the Rahi ceiling. Either the ceiling grows (R-2),
   or the table moves to a statecraft-owned overlay, or `frontend-admin`'s
   catalog view retires with it. Blocks: 017 section 5.
@@ -733,24 +848,30 @@ written, with 10.1's Rahi answers applied to O-7.
 ## 9. Out of scope
 
 - **Any cutover.** This record authorizes nothing to be migrated,
-  deployed or retired. It records the design so a human can decide.
-- **Amending spec 001.** The successor thesis in section 4 is proposed.
-  Approving this record does not amend 001; adoption is D-1 in 10.4, and
-  until the owner takes it 001 stands unchanged and remains the record of
-  what was actually built.
+  deployed or retired. The adoption settles direction; 017 Part B's
+  cutover still needs its own rehearsed, recorded decision.
+- **Amending spec 001 beyond section 4.** The amendment is exactly 4.7's
+  table. Nothing else in this record amends 001, and 001's `spec.md` is
+  not edited: it remains the record of what was actually built.
 - **Amending spec 013.** The drift in 3.7 is reported, not fixed.
 - **The wire schemas themselves.** 015 and 016 hold them.
 - **Rahi's, spec-spine's, statecraft-cli's or hqgit's internal design.**
   Section 7 asks; it does not decide.
-- **Any commercial commitment.** O-6 stays open.
+- **Any commercial commitment.** Deferred until before external customer
+  enrolment (ST-05); this record invents no contractual term.
+- **Publication.** The adoption did not include public draft
+  publication (revision-4 G-02), so nothing here authorizes a push, a
+  pull request, a merge, a release or a deploy.
 
 ## 10. Revision 3, reconciled (2026-09-12)
 
 The revision-3 packet asks for the smallest reviewable decisions on the
 thesis, the issuer and evidence bytes, one composition agreement, and
-negative evidence that actually ran. This section is that answer. It is
-still a draft: nothing here approves 014 to 017, and nothing was pushed,
-merged or deployed.
+negative evidence that actually ran. This section is that answer, written
+while this spec was a draft: nothing in it approved 014 to 017, and
+nothing was pushed, merged or deployed. It stays as written. Section 11
+records the owner's adoption the same day and names each point here that
+the adoption superseded; where the two differ, section 11 governs.
 
 ### 10.1 What moved, and what it supersedes
 
@@ -1033,3 +1154,112 @@ The entries sent to statecraft, and where they stand:
    schemas plus a pure evaluator in the CLI workspace, still no service.
 4. The tenant-isolated hosted job waits on Rahi 038 and 039 (authenticated
    writes, a pinned release), D-4, and 017 Part A.
+
+## 11. Revision 4: the owner's adoption (2026-09-12)
+
+On 2026-09-12 the owner adopted the statecraft rows of the revision-4
+decision package (`grand-refactor/07-revision-4-decision-package.md`,
+section 3, rows ST-01 to ST-07). ST-01 in turn adopts the package's
+shared rows G-03 to G-10 (its section 2). This section records that
+adoption in the repository that owns it, which is what the package asks
+of each project. Recording it is execution of chosen answers, not another
+design round, and it reopens none of them. The package's own adoption
+line is grand-refactor's to write, not this repository's.
+
+### 11.1 The decisions, and where each landed
+
+| Row | Adopted | Resolves here | Landed in |
+|---|---|---|---|
+| ST-01 | G-03 through G-10, with the precise thesis amendment | D-1 to D-4; O-1, O-3, O-4, O-5 | this record's `amends` edge, section 4 and 4.7; the rows below |
+| G-03 | Existing repositories first: local governed delivery without a hosted account, then team approvals, evidence retention and policy on Rahi. No initial stamping, no customer-application hosting | D-1, O-1 | section 4's opening, 4.2, 4.6, 4.7; `README.md`, `CLAUDE.md` (11.3) |
+| G-04 | statecraft owns contract semantics; reusable schemas, fixtures and the pure verifier live in statecraft-cli's existing Apache-2.0 workspace; 015's schema slice is approved apart from its hosted service | O-5 | 015 sections 1.1, 2, 10; spec 018 |
+| G-05 | `integrity`: pass, fail, unknown. `signature`: pass, fail, unsigned, unknown. `issuerTrust`: pass, fail, unknown. `subjectBinding`: pass, fail, unknown, not-applicable. `admission`: admit or refuse, with reason codes | supersedes 10.2 rules 2 and 3 (11.2) | 015 section 7.2; 016 sections 4.1, 5.1 |
+| G-06 | Trust comes only from roots supplied independently of the evidence. An absent key is `unknown`; a positively revoked or excluded key is `fail`; `issuerTrust` passes only after a passing signature against an eligible root. Claims, verifier identity and version, root-set identity, coverage and stop reasons are preserved | | 015 sections 7.2 to 7.4; 016 section 5 |
+| G-07 | Immutable evidence bytes in a content-addressed app table the cell's backup covers; ledger entries hold typed references | D-3; answers 10.3 item 5 | 015 section 7.1; 016 section 8.1; 018 |
+| G-08 | An offline owner-held root enrols an online platform issuer; local user roots stay separate; historical chain constructions and archived verifier binaries are preserved | D-2, O-4 | 016 section 5; 017 section 7 |
+| G-09 | First pilot runners are an enrolled person's device-grant session, renewed by refresh token; leases bind to `runnerId`, tenant and principal, never to one access token; unattended service-principal runners are deferred | D-4, O-3 | 015 section 4 |
+| G-10 | The runner pull, lease, fence, cancel and idempotency contract, with lease duration and heartbeat interval returned by the plane; token expiry read from `expires_in`; the plane never runs repository verification | D-4 | 015 sections 3, 6, 8, 11 |
+| ST-02 | Preserve the existing factory and fleet without expansion; defer retirement and native extraction. Reopen retirement once migration inventory and rollback are proven | D-5, D-6 | 4.2, 4.6 step 5; 017 sections 8, 9 |
+| ST-03 | Pilot first, migration later. Archive and close the legacy chain, preserving its bytes and the actual published verifier binary; it stays historical evidence, not the new active ledger | O-2 | 4.2, 4.3; 016 section 5.4; 017 sections 1.1, 7 |
+| ST-04 | The endpoint table moves to a statecraft overlay; the legacy model stays for the old service until retirement; no unknown section is injected into Rahi's manifest | O-7 | 4.2, 4.7; 017 section 10 |
+| ST-05 | Paid-offer terms, metering, retention commitments and support promises wait until before external customer enrolment; a controlled engineering pilot comes first; customer-data retention limits and deletion behavior are configured before customer data is accepted | O-6 | section 4's opening, 4.6 step 4; 018 section 7 |
+| ST-06 | Approve 015's schema and pure-evaluator slice now; approve hosted 015 and 016's required permit and prior-policy slice only for the N=1 pilot after its prerequisites. Tenant authorization belongs to the plane; cross-tenant 404s get automated tests | | 015 approved; spec 018; 016 section 2.1; 018 section 6 |
+| ST-07 | Defer artifact and deployment binding and expanded agent delegation until the local slice and the pilot pass; keep the named owners from record 06; provenance, fleet extraction and observability expansion block no pilot | 10.5's B08, B09, B10, B12 (runtime half), B13, B16, B23 | 4.3, 4.5, 4.6 step 6; 016 sections 2.1, 3.3, 4.5, 9, 10.1 |
+
+### 11.2 What the adoption supersedes in this record
+
+- **10.2 rules 2 and 3.** One value domain shared by all four dimensions,
+  and an absent signature recorded as `not-applicable` with reason
+  `unsigned`, give way to G-05's per-dimension domains. `unsigned` is a
+  value of `signature` alone. `not-applicable` belongs to
+  `subjectBinding` alone, for record types that have no subject, and a
+  missing subject that was expected is `unknown`. 132's all-`unknown`
+  issuer column stays valid. Rules 1, 4, 5 and 6 stand, and rule 7 (the
+  home) is adopted as written.
+- **10.3, proposal D-3.** Item 2's reference gains G-07's members: the
+  producer digest names its construction, and the construction is part
+  of the reference's identity; a record embedded in a larger object is
+  addressed by container and selector; a git subject names its
+  repository and the object formats of its commit and tree. A canonical
+  record hash never stands in for a byte digest. Item 5 is answered: the
+  bytes live in a content-addressed app table the cell's backup covers.
+- **10.4 D-5.** The recommendation to retire stamping is not adopted.
+  Retirement is deferred (ST-02).
+- **10.4 D-4, its C-4 half.** Whether a hosted runner is statecraft-cli
+  130's engine binary is moot for the first slice, where every runner is
+  a person's statecraft-cli session (G-09). It reopens with non-human
+  runners and stays a question for statecraft-cli (015 section 13).
+- **10.5.** B10, B13 and B23 move from proposed to deferred, and so does
+  B16 beyond a single permit; B12's runtime half (Rahi 041 epochs) is
+  deferred, while the new chain's reference to the legacy head still
+  lands with 017 Part B. All stay in the coverage record (ST-07).
+- **10.6.** Superseded by 11.5.
+- **Record 06's chain wording.** ST-03 supersedes grand-refactor record
+  06's wording that the chain file stays a continuing authority in the
+  new cell. This record never said so of the cell, but 4.2's earlier row
+  ("the chain stays; its anchor gains an issuer") read the same way, and
+  it is corrected.
+
+### 11.3 The thesis corrections in `README.md` and `CLAUDE.md`
+
+G-03 assigns them to this change. `README.md`'s opening, status and
+product-family table, and `CLAUDE.md`'s project overview and key
+conventions, now state the adopted offer, name section 4 as the governing
+thesis, and keep describing the running plane as it was built, because it
+still runs. The two files belong to specs 001 and 013; this record
+reaches them through its `extends` edges, and neither spec is amended by
+that.
+
+### 11.4 Approvals recorded, and the ones not given
+
+- **014**: approved; amends 001 through section 4 alone.
+- **015**: approved as the schema and pure-evaluator slice. Its
+  dependency on 017 is removed, so `registry plan` no longer reports
+  schema work as blocked by a cell that does not exist.
+- **018**: born a draft on 2026-09-12, holding the hosted service split
+  out of 015. It is approvable only for the N=1 pilot, after its
+  prerequisites are evidenced.
+- **016**: stays a draft. Its pilot slice (016 section 2.1) is approvable
+  on the same terms as 018.
+- **017**: stays a draft. Sequencing is settled (Part A before Part B);
+  neither part is approved.
+- **Not given**: publication (G-02), and every row the package makes
+  accountable to another repository. Where this corpus leans on one
+  (Rahi's G-11 checklist in 017 Part A, statecraft-cli 132's fixtures),
+  it is cited as that repository's to adopt, not as adopted here.
+
+### 11.5 The next smallest increment
+
+1. **No statecraft code.** statecraft-cli folds G-05 to G-07 into 132
+   and mints the two policy-specific fixtures: one admitted under an
+   explicit local policy that allows unsigned evidence, one refused under
+   a policy that requires a trusted signature (015 section 12, item 1).
+   statecraft reviews the manifest and pins its digest in 015.
+2. **The pure evaluator**, in the same workspace: verdict, admission and
+   the lease state machine, tested on a fake clock (G-10). Still no
+   service.
+3. **017 Part A preparation** against Rahi's checklist while Rahi's
+   recovery, authentication and packaging work proceeds.
+4. **018 and 016's pilot slice** are put up for approval only when 017
+   Part A's prerequisites, working identity refresh, issuer setup and the
+   hosted negative tests can be evidenced.

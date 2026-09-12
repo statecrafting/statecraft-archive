@@ -3,8 +3,7 @@
     "dependsOn": [
       "004-tenants-github-app",
       "008-governance-attestation",
-      "014-rahi-realignment",
-      "017-rahi-cell-migration"
+      "014-rahi-realignment"
     ],
     "implementingPaths": [
       {
@@ -28,8 +27,8 @@
       }
     ],
     "specId": "015-hosted-work-contract",
-    "specStatus": "draft"
+    "specStatus": "approved"
   },
   "schemaVersion": "1.1.0",
-  "shardHash": "45e5a8cc87ee57681fc3394aef5e5bb9460e7840f42f89de72ee649d02991654"
+  "shardHash": "742d60668bd2c79271757b4f6eb6f67ac102617bee3090ffa0d394446d3fc497"
 }
