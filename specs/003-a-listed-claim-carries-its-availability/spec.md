@@ -900,14 +900,17 @@ Every run below is in a scratch directory outside any checkout, on
   and attest-ledger's signing phrase are corrected on the page (section 12).
   The copy check and both verification blocks pass again, and so does the
   mutant matrix, now sixteen cases.
+- **2026-09-12. Roster step built; rebuilt on 2026-09-13 over the erratum.**
+  Section 6.1 is applied without its substrate sentence, and "the chassis"
+  is added to 4.9's Apache-2.0 line. Both verification blocks pass (section
+  11 run 4, the roster-step page).
+  This change is published only in statecraft.ing's rahi publication window.
+  On this date the site's PR 12 is open, and no site change listing rahi has
+  been published.
 - **2026-09-12. What remains.** `implementation` stays `in-progress` until
-  both of these land:
-  1. **Roster step (6.1).** Prepared as a separate change that lands only
-     in statecraft.ing's publication window. On this date the site's PR 12
-     is open, and no site change listing rahi is published.
-  2. **Lead step (6.4, and 6.1's substrate sentence).** Waits on G-03 being
-     recorded on statecraft's default branch. On this date statecraft's
-     `main` is `9658e29`, and spec 014 is not on GitHub.
+  the lead step lands: section 6.4 and 6.1's substrate sentence. It waits on
+  G-03 being recorded on statecraft's default branch. On this date
+  statecraft's `main` is `9658e29`, and spec 014 is not on GitHub.
 
 ## Verification
 

@@ -130,6 +130,30 @@ contract is in progress (009) and board governance is pending (038).
 **Released:** no installable artifact this page can point to yet. Its
 README and operations guide describe the container.
 
+### The chassis
+
+#### [rahi](https://github.com/statecrafting/rahi)
+![License](https://img.shields.io/badge/license-Apache--2.0-green?style=flat-square)
+![Rust](https://img.shields.io/badge/-Rust-000?style=flat-square&logo=rust)
+
+A Rust library chassis for a governed cell. It supplies identity (rauthy,
+co-deployed, reached only through the app's own origin), replicated state
+(hiqlite, in-process), a hash-chained decision ledger, a deny-by-default
+capability kernel, an axum edge with probes, metrics and tracing,
+operational verbs for preflight, migrate, backup and restore, single-container
+packaging, and a dev substrate that boots the real binary in tests. An
+application composes the crates and declares a manifest. The name is the
+lineage: enrahitu was Encore, rauthy, hiqlite, Turso; drop Encore and Turso
+and this is what remains.
+
+**Nothing else on this page requires it.**
+
+**Implemented:** the chassis crates, the operational verbs, single-container
+packaging, cluster topology, the dev substrate and the `hello-cell`
+reference application (its specs 010 to 034).
+
+**Released:** not yet; there is no published crate or release.
+
 ### The interface
 
 #### [statecraft-cli](https://github.com/statecrafting/statecraft-cli)
@@ -279,10 +303,10 @@ or, in `statecrafting`, in each package's own manifest. What each requires:
   packages. Running it carries no condition. Distributing it, or offering a
   modified version to users over a network, requires making the
   corresponding source available to them under the same license.
-- **Apache-2.0**: the template, the CLI, the spine, the tenant toolkit, the
-  primitives, and the `toolchain`, `kernel-native` and `hiqlite-native`
-  packages. Redistribution keeps the license text and notices and marks the
-  files that were changed.
+- **Apache-2.0**: the template, the CLI, the spine, the chassis, the tenant
+  toolkit, the primitives, and the `toolchain`, `kernel-native` and
+  `hiqlite-native` packages. Redistribution keeps the license text and
+  notices and marks the files that were changed.
 - **MPL-2.0**: the three `@statecrafting/toolchain-<platform>` packages.
   Distributing them requires making the source of those MPL-covered files
   available under MPL-2.0, including any changes to them; other code in the
