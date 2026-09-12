@@ -32,7 +32,7 @@
       }
     ],
     "id": "009-native-extraction",
-    "implementation": "pending",
+    "implementation": "deferred",
     "sectionHeadings": [
       "009: The native extraction",
       "1. Purpose",
@@ -67,9 +67,9 @@
     ],
     "specPath": "specs/009-native-extraction/spec.md",
     "status": "draft",
-    "summary": "This repository's answer to the 2026-09-11 family realignment packet. The packet asks whether the Rust in these packages can be reused by a consumer that is not Node. Measured at 844ac86, the answer is no, for all four addons, and the reason is not the feature flags the packet suspected: every crate is `publish = false`, and `governance-native` and `fleet-native` declare every module private, so their public Rust surface from outside the crate is empty. `fleet-native` additionally has exactly one feature, `node`, and it is the only path to `kube`, which it enables together with `napi`. `kernel-native` already has the shape the packet asks for and is the pattern rather than a thing to invent. Section 4 proposes the smallest change that makes a Rust consumer possible without touching the npm contract; sections 6 and 7 name what this repository may not decide and what it asks of its siblings. Draft: nothing here is approved, and the placement-topology question belongs to statecraft, not here. Revised 2026-09-12: the evidence-byte question left this spec for draft 010, a scratch copy showed the section 8 increment is buildable, and no Rust consumer of any addon was found in rahi, so this extraction is not on any launch path.\n",
+    "summary": "This repository's answer to the 2026-09-11 family realignment packet. The packet asks whether the Rust in these packages can be reused by a consumer that is not Node. Measured at 844ac86, the answer is no, for all four addons, and the reason is not the feature flags the packet suspected: every crate is `publish = false`, and `governance-native` and `fleet-native` declare every module private, so their public Rust surface from outside the crate is empty. `fleet-native` additionally has exactly one feature, `node`, and it is the only path to `kube`, which it enables together with `napi`. `kernel-native` already has the shape the packet asks for and is the pattern rather than a thing to invent. Section 4 proposes the smallest change that makes a Rust consumer possible without touching the npm contract; sections 6 and 7 name what this repository may not decide and what it asks of its siblings. Draft: nothing here is approved, and the placement-topology question belongs to statecraft, not here. Revised 2026-09-12: the evidence-byte question left this spec for draft 010, a scratch copy showed the section 8 increment is buildable, and no Rust consumer of any addon was found in rahi, so this extraction is not on any launch path. Deferred 2026-09-12 by the repository owner until an actual out-of-tree Rust consumer needs it (section 9); statecraft owns the fleet DTOs' semantics and wire evolution, and this repository their implementation and packaging.\n",
     "title": "The native extraction: a Rust consumer path that does not link Node"
   },
-  "shardHash": "2bfbf40c6c8828b0819287a783b236e04a74f591769f593d3a8ffcc056197c31",
+  "shardHash": "3697cf087f06094dff529316c41383d4ab55bce6330cd8a32da220093cc016ad",
   "specVersion": "1.2.0"
 }

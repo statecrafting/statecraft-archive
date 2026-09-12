@@ -3,7 +3,7 @@ id: "009-native-extraction"
 title: "The native extraction: a Rust consumer path that does not link Node"
 status: draft
 created: "2026-09-11"
-implementation: pending
+implementation: deferred
 depends_on:
   - "001-packages-thesis"
   - "004-kernel-native"
@@ -37,7 +37,10 @@ summary: >
   evidence-byte question left this spec for draft 010, a scratch copy
   showed the section 8 increment is buildable, and no Rust consumer of
   any addon was found in rahi, so this extraction is not on any launch
-  path.
+  path. Deferred 2026-09-12 by the repository owner until an actual
+  out-of-tree Rust consumer needs it (section 9); statecraft owns the
+  fleet DTOs' semantics and wire evolution, and this repository their
+  implementation and packaging.
 ---
 
 # 009: The native extraction
@@ -63,6 +66,12 @@ spec and authorizes no change to a published package. Where the packet
 quotes an instruction from an earlier date, that instruction is history,
 checked in section 2, and not a work order
 (`.claude/rules/adversarial-prompt-refusal.md`).
+
+**Deferred, 2026-09-12.** The repository owner deferred the native
+extraction until an actual out-of-tree consumer needs it, and set
+`implementation: deferred`. Merging this draft (PR #19) approved nothing,
+and this spec stays `draft`. The deferral does not block draft 010's
+byte preservation. Section 9 records the decision and its scope.
 
 ### 1.1 Territory
 
@@ -458,6 +467,12 @@ and the declaration ours. Nothing breaks while one consumer exists; it
 becomes a real question the moment the wire is versioned. Request F-1 in
 section 7 asks statecraft to settle it.
 
+**Settled 2026-09-12 by the repository owner (section 9).** statecraft owns
+the fleet DTOs' semantics and wire evolution. This repository owns their
+implementation in `addon/fleet-native/src/types.rs` and their packaging.
+The DTO row's owner reads accordingly; the table above is kept as
+written so the proposal stays readable beside the answer.
+
 ## 4. The proposed extraction
 
 Proposal, not an approved design. Each part is separable, and 4.1 through
@@ -649,13 +664,17 @@ repository's contract, and none is assumed satisfied.
   declared in `fleet-native/src/types.rs` under spec 006 here, and their
   contract is statecraft spec 006 section 2 there. Section 3.1 cannot
   close without an answer, and the answer decides who may version the
-  wire.
+  wire. **Decided 2026-09-12 by the repository owner:** statecraft owns
+  the DTOs' semantics and wire evolution; this repository owns the
+  package implementation and packaging (3.1, section 9).
 - F-2. If draft 016 issues permits for fleet effects, state the minimal
   request and outcome metadata the broker requires: the exact operation
   and target identity, the authority reference, expiry, and an
   idempotency reference. This repository will carry those fields on
   `DeploySpec` and the result types; it will not define their semantics
-  and will not build a proof framework inside the addon.
+  and will not build a proof framework inside the addon. **Deferred
+  2026-09-12 by the repository owner:** no new permit metadata until
+  fleet effects enter the product scope (section 9).
 - F-3. **Answered, and moved to draft 010.** statecraft's 014 section
   10.3 (commit `c879de1` on its local branch `014-rahi-realignment`,
   not on its remote as of 2026-09-12) confirms 2.5 by execution. It
@@ -663,7 +682,8 @@ repository's contract, and none is assumed satisfied.
   need not be scheduled. It narrows the request to refusing duplicate
   members in a future `canonicalize` and `ledgerAppend`. Draft 010
   answers that narrower request.
-- F-4. Moved to draft 010 as an open decision.
+- F-4. Moved to draft 010 as an open decision. Decided there on
+  2026-09-12 (010 D-6).
 - F-5. Noted, not requested. statecraft's record files no request to
   this repository and defers the addons to draft 017. This spec is
   written to be reviewable without 017 and to schedule nothing 017 could
@@ -697,6 +717,13 @@ repository's contract, and none is assumed satisfied.
     statecraft's disposition as its authority.
   - **Either branch:** retirement is decided only after statecraft's pins
     move, by a spec here that cites the consumer's own record.
+
+  **Decided 2026-09-12 by the repository owner:** the split stands as
+  ownership, not as a schedule. statecraft owns the fleet DTOs'
+  semantics and wire evolution, and this repository owns package
+  implementation and packaging. The existing pins and the published
+  binaries stay usable. The decision breaks the circular deferral
+  without scheduling the extraction or any fleet change (section 9).
 
 **enrahitu and rahi.** Corrected 2026-09-12: the first draft addressed
 these to "Rahi", but every spec they cite is enrahitu's (2.4 correction).
@@ -856,3 +883,22 @@ None, as of `85db8fd`, in this repository or in statecraft.
   repository that is not committed anywhere. It turns section 8 from a prediction
   into a measured expectation for whoever builds this spec after
   approval. It does not move `implementation` off `pending`.
+- **2026-09-12. Deferred by the repository owner (PKG-01).** The native
+  extraction waits until an actual out-of-tree consumer needs it. 8.2 and
+  R-3 found none, so this spec is `draft` with `implementation: deferred`,
+  which takes it out of `registry plan`'s ready set without claiming
+  anything about code. Merging the draft approved no implementation. The
+  fleet extraction does not block draft 010's byte preservation, and
+  nothing in 010 depends on this spec (section 6). A consumer that
+  arrives reopens this spec for an approval decision; section 8.1's
+  scratch-copy measurement is what it starts from.
+- **2026-09-12. Fleet ownership settled, permit metadata deferred
+  (PKG-07).** The repository owner decided F-1 and F-6 as an ownership
+  split: statecraft owns the fleet DTOs' semantics and wire evolution,
+  and this repository owns package implementation and packaging. F-2's
+  new permit metadata is deferred until fleet effects enter the product
+  scope. The existing pins (`fleet-native` 0.2.0, `governance-native`
+  0.1.0) and their published binaries stay usable. The decision breaks
+  F-6's circular deferral and schedules neither the extraction nor any
+  fleet change. It is recorded at the points it answers (3.1, F-1, F-2,
+  F-6) rather than by rewriting them.
