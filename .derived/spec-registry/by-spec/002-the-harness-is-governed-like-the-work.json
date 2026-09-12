@@ -1,0 +1,72 @@
+{
+  "record": {
+    "created": "2026-09-11",
+    "dependsOn": [
+      "000-bootstrap"
+    ],
+    "establishes": [
+      {
+        "kind": "file",
+        "path": "AGENTS.md"
+      },
+      {
+        "kind": "file",
+        "path": "CLAUDE.md"
+      },
+      {
+        "kind": "file",
+        "path": ".claude/settings.json"
+      },
+      {
+        "kind": "directory",
+        "path": ".claude/skills/"
+      },
+      {
+        "kind": "directory",
+        "path": ".claude/agents/"
+      },
+      {
+        "kind": "file",
+        "path": ".mcp.json"
+      },
+      {
+        "kind": "file",
+        "path": "Makefile"
+      },
+      {
+        "kind": "file",
+        "path": ".github/workflows/govern.yml"
+      },
+      {
+        "kind": "directory",
+        "path": ".githooks/"
+      }
+    ],
+    "id": "002-the-harness-is-governed-like-the-work",
+    "implementation": "complete",
+    "origin": {
+      "retroactive": true
+    },
+    "sectionHeadings": [
+      "002: The harness is governed like the work",
+      "1. Purpose",
+      "2. Territory",
+      "3. Behavior",
+      "3.1 The skills stay byte-identical to the kit",
+      "3.2 The hooks read; they do not write",
+      "3.3 The hashed-input globs track the territory",
+      "3.4 A waiver is a human instrument",
+      "3.5 The gate has one definition",
+      "3.6 One deviation from the kit, in one line, recorded here",
+      "4. Out of scope",
+      "5. Acceptance",
+      "Verification"
+    ],
+    "specPath": "specs/002-the-harness-is-governed-like-the-work/spec.md",
+    "status": "approved",
+    "summary": "The agent harness (the cross-agent session protocol, the Claude Code skills and agents, the hooks and permission policy, the composite gate, and the CI workflow that runs it) is what an agent is permitted to do in this repository. It is therefore governed by a spec of its own, its files are folded into the index's global-inputs hash, and an edit to any of them without an edit to this spec is refused by the coupling gate as `C-001`.\n",
+    "title": "The harness is governed like the work"
+  },
+  "shardHash": "28df8c538b33652d7e17b23bcff64487f1f08f47efbfafef3907ca3fed352ef5",
+  "specVersion": "1.2.0"
+}
