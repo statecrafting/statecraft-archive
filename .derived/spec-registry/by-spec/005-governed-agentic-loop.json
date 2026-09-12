@@ -1,0 +1,91 @@
+{
+  "record": {
+    "created": "2026-09-11",
+    "dependsOn": [
+      "000-bootstrap"
+    ],
+    "establishes": [
+      {
+        "kind": "file",
+        "path": "AGENTS.md"
+      },
+      {
+        "kind": "file",
+        "path": "CLAUDE.md"
+      },
+      {
+        "kind": "file",
+        "path": "Makefile"
+      },
+      {
+        "kind": "file",
+        "path": ".mcp.json"
+      },
+      {
+        "kind": "file",
+        "path": ".gitattributes"
+      },
+      {
+        "kind": "file",
+        "path": ".claude/settings.json"
+      },
+      {
+        "kind": "directory",
+        "path": ".claude/agents/"
+      },
+      {
+        "kind": "directory",
+        "path": ".claude/rules/"
+      },
+      {
+        "kind": "directory",
+        "path": ".claude/skills/"
+      },
+      {
+        "kind": "directory",
+        "path": ".githooks/"
+      }
+    ],
+    "extends": [
+      {
+        "spec": "000-bootstrap",
+        "unit": {
+          "kind": "file",
+          "path": "spec-spine.toml"
+        }
+      },
+      {
+        "spec": "000-bootstrap",
+        "unit": {
+          "kind": "file",
+          "path": ".github/workflows/spec-spine.yml"
+        }
+      }
+    ],
+    "id": "005-governed-agentic-loop",
+    "implementation": "complete",
+    "sectionHeadings": [
+      "005: The governed agentic loop",
+      "1. Purpose",
+      "2. Territory",
+      "3. Behavior",
+      "3.1 The ten skills are byte-identical to the kit",
+      "3.2 The hooks read and never write, with one sanctioned exception",
+      "3.3 The push gate protects the branch that deploys",
+      "3.4 One gate definition, three callers",
+      "3.5 The config repairs the upgrade exposed",
+      "3.6 The merge driver is opt-in and never replaces the gate",
+      "4. Acceptance",
+      "5. What changes in spec 000's territory",
+      "6. Out of scope",
+      "7. Decisions",
+      "Verification"
+    ],
+    "specPath": "specs/005-governed-agentic-loop/spec.md",
+    "status": "approved",
+    "summary": "The harness is what an agent may do in this repository, so it gets an owner and the coupling gate holds it. This spec adopts the spec-spine kit at 0.18.0: ten skills that sequence the governed loop (prime, setup, next, build, verify, ship, shepherd, spec, and the commit and code-review skills the loop calls), four pipeline agents, four behavioral rules, read-only session hooks, a Makefile composite gate, an opt-in merge driver for the committed shards, and the AGENTS.md protocol every one of them reads as its project layer. It also repairs three defects the upgrade exposed in the governance config: five `extra_hashed_inputs` globs that matched no files, a CI workflow pinned four minor versions behind the corpus it judged, and generated typegen output counted as unclaimed source. With those fixed the ownership ratchet can be turned on honestly.\n",
+    "title": "The governed agentic loop: the spec-spine kit as this repository's harness"
+  },
+  "shardHash": "a1c9d17e734b2707636654c284f715d706bdcc5eb135aa656df6e35cf6b6096c",
+  "specVersion": "1.2.0"
+}

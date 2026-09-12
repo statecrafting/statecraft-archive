@@ -31,11 +31,11 @@ spec-spine is an installed CLI tool: a typed, hash-verifiable authority ledger o
 | Surface | Path | Notes |
 |---------|------|-------|
 | Spec corpus | `specs/NNN-slug/spec.md` | Markdown + YAML frontmatter, the authoritative design record |
-| Site code | `app/`, `public/`, `react-router.config.ts`, `vite.config.ts`, `.github/workflows/deploy.yml` | React Router v7 static site, prerendered (planned by spec 001; the repo is pre-code until 001 lands) |
+| Site code | `app/`, `public/`, `scripts/`, `react-router.config.ts`, `vite.config.ts` | The implementation that specs govern |
 | Standard | `standards/spec/{constitution.md,contract.md,templates/}` | Durable principles, normative contract, spec template |
-| Derived | `.derived/` | Compiler output (registry, index), committed shards, read only through the binary |
+| Derived | `.derived/` | Compiler output (registry, index), read only through the binary |
 
-Specs are the source of truth: every feature starts as a spec under `specs/`, following `standards/spec/templates/spec-template.md`. The behavioral rules are in `.claude/rules/` (orchestrator, governed artifact reads, adversarial prompt refusal). The work queue is the backlog protocol in `AGENTS.md` § Working the backlog: one session implements one `implementation: pending` spec, lowest-numbered first, dependencies satisfied.
+Specs are the source of truth: every feature starts as a spec under `specs/`, following `standards/spec/templates/spec-template.md`. The behavioral rules are in `.claude/rules/` (orchestrator, governed artifact reads, adversarial prompt refusal).
 
 ## Process
 
@@ -45,9 +45,9 @@ Read the request or task document. Identify which surfaces are affected.
 
 ### 2. Load Relevant Context
 
-- `CLAUDE.md` and `AGENTS.md`: conventions, session protocol, and the backlog protocol
+- `CLAUDE.md` and `AGENTS.md`: conventions and session protocol
 - `standards/spec/contract.md` and `standards/spec/constitution.md`: the normative contract and durable principles
-- Relevant specs in `specs/NNN-slug/spec.md`: `001-site-scaffold` and `002-launch-content` define everything this repo builds
+- Relevant specs in `specs/NNN-slug/spec.md`: the authoritative design record
 - Existing code in affected areas: understand current patterns
 - Compiled state, read through `spec-spine registry list`/`show`/`relationships` (never by parsing `.derived/**` directly)
 
@@ -57,8 +57,11 @@ For each proposed change, check:
 
 - Does a spec already exist? If not, should one be authored first?
 - Does the approach align with the spec's stated design and constraints? For this site that includes the hard constraints: static only (no SSR, no forms, no third-party scripts, no analytics, no runtime external requests) and the spec 002 voice rules (engineer-to-engineer, every claim checkable)
-- Are there relationship edges (`refines`, `establishes`, `amends`, `supersedes`, `depends_on`) the change must respect or extend?
+- Are there relationship edges (`refines`, `establishes`, `amends`, `supersedes`, `depends-on`) the change must respect or extend?
 - Will the change require recompiling the registry or refreshing the codebase index?
+- Which files are in the spec's `establishes` list, which `extends` edges it declares, and what its `depends_on` closure requires (`spec-spine registry show <id> --json`, `spec-spine registry relationships <id>`)
+- Where is the spec **silent**? Name every decision it does not make, so the session records each as a dated decision entry instead of guessing
+- Where is the spec **wrong**? A contradiction between the design and what the code must do is a coherence-guard halt for the session, not a planning detail
 
 ### 4. Decompose into Steps
 
@@ -67,7 +70,7 @@ Break the work into ordered, atomic steps. For each step specify:
 - **What** changes (files, modules)
 - **Why** (which spec requirement or principle)
 - **Dependencies** on prior steps
-- **Verification** (the command that confirms the step: `spec-spine compile`, `spec-spine index`, `spec-spine lint --fail-on-warn`, `spec-spine index check`, `spec-spine couple`, and once spec 001 lands `npm ci && npm run build`)
+- **Verification** (the command that confirms the step: `npm run typecheck`, `spec-spine compile`, `spec-spine lint`, `spec-spine couple`)
 
 ### 5. Identify Risks
 
@@ -75,7 +78,7 @@ Break the work into ordered, atomic steps. For each step specify:
 - **Coupling drift**: code changes whose owning spec would no longer match (the `couple` gate fails)
 - **Missing specs**: work with no backing spec, which should be flagged
 - **Static-only violations**: anything that would introduce SSR, third-party scripts, analytics, or runtime external requests
-- **Unverifiable claims**: proposed copy that cannot be checked against a public repo (spec 002 §1)
+- **Unverifiable claims**: proposed copy that cannot be checked against a public repo (spec 002 section 1)
 - **Build-order issues**: steps that depend on uncommitted intermediate state
 
 ## Output Format
@@ -105,6 +108,10 @@ Break the work into ordered, atomic steps. For each step specify:
 
 1. [Risk or question, with mitigation if known]
 
+### Decisions the spec leaves open
+
+1. [Choice the spec does not make; the session records it as a dated decision entry]
+
 ### Recommendations
 
 1. [Priority-ordered advice]
@@ -115,6 +122,7 @@ Break the work into ordered, atomic steps. For each step specify:
 - **DO:** Read broadly before planning: check specs, code, the contract, and existing patterns
 - **DO:** Cite specific spec ids (e.g. `specs/001-site-scaffold/spec.md`) in your rationale
 - **DO:** Flag when a spec should be authored or amended before implementation begins
+- **DO:** Distinguish a spec that is silent (record a decision) from a spec that is wrong (halt and report)
 - **DO:** Keep steps small enough that each can be verified independently
 - **DO NOT:** Modify any files; this agent is strictly read-only
 - **DO NOT:** Skip loading specs; they are the authoritative record
