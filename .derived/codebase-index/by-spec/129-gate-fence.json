@@ -39,6 +39,14 @@
         "source": "spec-edge"
       },
       {
+        "path": "members/src/orchestrator/fence.test.ts",
+        "source": "spec-edge"
+      },
+      {
+        "path": "members/src/orchestrator/fence.ts",
+        "source": "spec-edge"
+      },
+      {
         "path": "members/src/orchestrator/projects.ts",
         "source": "spec-edge"
       },
@@ -136,6 +144,32 @@
         "unit": {
           "kind": "file",
           "path": "members/src/orchestrator/daemon.test.ts"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "members/src/orchestrator/fence.test.ts"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "extends",
+        "unit": {
+          "kind": "file",
+          "path": "members/src/orchestrator/fence.test.ts"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "members/src/orchestrator/fence.ts"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "extends",
+        "unit": {
+          "kind": "file",
+          "path": "members/src/orchestrator/fence.ts"
         }
       },
       {
@@ -244,8 +278,8 @@
       }
     ],
     "specId": "129-gate-fence",
-    "specStatus": "draft"
+    "specStatus": "approved"
   },
   "schemaVersion": "1.1.0",
-  "shardHash": "4a3c3c940b612603a3443540f7d05751320ec496a9eaadabc92c0a0e93563b81"
+  "shardHash": "7d3ccd17a7450e633ad8c8c6c1cc444c52b527aa4c80ec0e44543424a884fcfb"
 }

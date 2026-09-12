@@ -1,7 +1,7 @@
 ---
 id: "128-api-origin-guard"
 title: "The origin guard: the daemon answers its own page and its own clients, and never serves a credential"
-status: draft
+status: approved
 created: "2026-09-11"
 implementation: pending
 risk: medium
@@ -344,7 +344,7 @@ refusal would hand the thing being refused a way to write to the journal.
 D-5 (2026-09-11). Userinfo is dropped whole, not just the password. GitHub
 accepts a token as the user part of an `https` URL with no password at all.
 
-D-6 (2026-09-12; proposed, the owner's choice). The dev UI is admitted by the
+D-6 (2026-09-12; adopted by the owner the same day, D-9). The dev UI is admitted by the
 proxy, not by the daemon (B-9). The alternative is a daemon flag admitting one
 extra origin, off by default. The proxy is recommended because the daemon then
 has one rule in every mode and no flag an operator can leave on. Its limit is
@@ -364,6 +364,23 @@ string, not only a string that is one. The registration detail (`origin is
 <url>`) puts a token-bearing URL inside prose, and a gate command can embed
 one in an argument (`git ls-remote https://user:token@host/...`); a scan that
 matched only whole values would pass both. Doc 05 D78.
+
+D-9 (2026-09-12, the owner). Approved by the adoption of revision 4's CLI-01
+(doc 05 §19): this spec is built first, the dev proxy of B-9 is kept (D-6),
+both origin lookups use the one reduction (B-6), and historical values are
+redacted where served without rewriting a journal (B-8, D-7). The attack
+probes that measured F1, F3 and F9 are promoted into regression tests, each
+written as the request or remote that was measured, so a test asserts the
+refusal or the absence where the probe saw success: FR-002 carries the
+foreign-origin, `Origin: null`, other-loopback-port and rebinding requests;
+FR-006 to FR-008 carry the token-bearing origin through a receipt, the
+export, the projects chain and a served historical record.
+
+## Status (2026-09-12, approved)
+
+Approved on 2026-09-12 by the owner's adoption of revision 4 (doc 05 §19,
+CLI-01; D-9), `implementation: pending`. It is the first of the revision-4
+builds.
 
 ## Status (2026-09-12)
 

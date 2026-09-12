@@ -1,7 +1,7 @@
 ---
 id: "129-gate-fence"
 title: "The gate fence: acceptance runs in the world the session worked in, not in the daemon's"
-status: draft
+status: approved
 created: "2026-09-11"
 implementation: pending
 risk: medium
@@ -20,6 +20,10 @@ extends:
   - { spec: "016-stage-build", unit: "members/src/orchestrator/stages/build.test.ts", nature: additive }
   # 121 owns the candidate, whose worktree creation runs repository hooks.
   - { spec: "121-candidate-and-receipt", unit: "members/src/orchestrator/candidate.ts", nature: additive }
+  # 125 owns the fence: its shims report each refusal to the supervisor, which
+  # owns the count a child cannot erase (B-3).
+  - { spec: "125-credential-fence", unit: "members/src/orchestrator/fence.ts", nature: additive }
+  - { spec: "125-credential-fence", unit: "members/src/orchestrator/fence.test.ts", nature: additive }
   # 122 owns the broker, whose push runs a pre-push hook beside the credential.
   - { spec: "122-action-broker", unit: "members/src/orchestrator/broker.ts", nature: additive }
   - { spec: "122-action-broker", unit: "members/src/orchestrator/broker.test.ts", nature: additive }
@@ -50,8 +54,10 @@ summary: >
   git run with the session's fenced environment; credentialed git runs with
   no repository hooks; the verify stage reads acceptance at the base revision
   and runs it behind a fence unless the operator journals an allowance. A
-  refusal fails acceptance even when the gate swallows the exit code. The
-  property is credential protection, not hostile-code isolation.
+  refusal fails the gate and acceptance even when a command swallows the exit
+  code, and the refusal is counted by the supervisor, where the child that
+  was refused cannot erase it. The property is credential protection, not
+  hostile-code isolation.
 ---
 
 # 129: The gate fence
@@ -145,14 +151,26 @@ A runner built without a candidate home has no fence (125 D-1). Its gate
 receives the scrub without the overlay, which is exactly what its session
 already receives. No path runs the gate with more than the session had.
 
-### B-3. A gate-time refusal is tallied apart from the session's
+### B-3. A refusal is counted by the supervisor, and a gate's apart from the session's
 
-The fence's refusal log is reset per round (125 B-7) and appended to by every
-shim. The build reads the tally immediately before and after the gate suite,
-and the difference is the gate's. `GateEvidence` gains `fence: { applied:
-boolean; refusals: number }`, required with an explicit zero (125 D-3's rule:
-a missing tally must not read as "nothing was refused"), and the session's
-`fenceRefusals` no longer includes a gate's refusals.
+Every shim reports its refusal, at the moment it refuses and before it exits
+127, to the supervisor: the engine process that spawned the fenced work (the
+build runner for a session and its gate, the verify stage for acceptance).
+The report travels over a channel the supervisor holds and reads itself, and
+the supervisor's count is the tally. The refusal log (125 B-7) stays as a
+legible copy for a person reading the fence, and no stage reads a count from
+it, so a child that truncates, rewrites or deletes the log changes no tally.
+The channel is the build's choice, recorded as a dated decision; its
+requirement is that a refusal once reported cannot be withdrawn by any process
+the supervisor spawned. A process that never reaches a shim (an absolute
+path, D-8) reports nothing, and that stays a residual rather than a refusal.
+
+The build takes the supervisor's count immediately before and after the gate
+suite, and the difference is the gate's. `GateEvidence` gains `fence: {
+applied: boolean; refusals: number }`, required with an explicit zero (125
+D-3's rule: a missing tally must not read as "nothing was refused"), and the
+session's `fenceRefusals`, read from the same count, no longer includes a
+gate's refusals.
 
 ### B-4. A refusal fails acceptance, whatever the gate's exit code
 
@@ -260,9 +278,11 @@ to the driver as the build's sessions pass theirs (125 B-3).
   --fill || true'` exits 0, the suite's exit codes are all 0, `fence.refusals`
   is 1, the round is not accepted with reason `gate-fence-refused`, and no
   `acceptance.receipt` is journaled.
-- **FR-008.** The limit, pinned: a gate command that is refused and then
-  truncates the refusal log exits 0 and reads a tally of 0. The test exists so
-  that nobody reads a zero tally as proof no attempt was made (D-8).
+- **FR-008.** The erasure, closed: a gate command that is refused and then
+  truncates the refusal log exits 0, the supervisor's `fence.refusals` is still
+  1, and the round is not accepted. A companion case pins the residual that
+  remains: a tool invoked by an absolute path meets no shim and adds nothing to
+  the tally, so nobody reads a zero tally as proof no attempt was made (D-8).
 - **FR-009.** With a tracked hooks directory configured, the engine's bracket
   commit runs the `pre-commit` hook, and the hook sees no `GH_TOKEN` and the
   fence's `PATH`.
@@ -271,7 +291,8 @@ to the driver as the build's sessions pass theirs (125 B-3).
   not run, and the remote head equals the pushed head.
 - **FR-011.** A verify stage over a merged spec runs its acceptance lines with
   no `CHILD_ENV_DENY` name present; a line that runs `gh` and swallows the exit
-  fails the stage; under a journaled `inherit` allowance the same line sees the
+  fails the stage, and so does one that is refused and then truncates the
+  refusal log; under a journaled `inherit` allowance the same line sees the
   daemon's environment and the evidence records `reason: "operator-allowed"`.
 - **FR-012.** A merged head whose `## Verification` block differs from the
   base's: the stage runs the base's block and journals `acceptance.changed`
@@ -305,8 +326,9 @@ make gate
   open for the gate and the verify stage as for the session. Draft 126 wraps
   them.
 - **A process that means to escape.** An absolute path skips the shims
-  (measured: `/opt/homebrew/bin/gh --version` answers under the fence), and
-  the refusal log is writable by the process it records (FR-008). See D-8.
+  (measured: `/opt/homebrew/bin/gh --version` answers under the fence). The
+  refusal log is writable by the process it records, which is why no tally is
+  read from it (B-3). See D-8.
 - **Writes outside the candidate.** An unconfined session can write the shared
   `.git/config` (a credential helper, `core.fsmonitor`, a filter) or
   `.git/hooks`, which the daemon's credentialed git would then read. B-7 keeps
@@ -333,7 +355,7 @@ mode; leaving the gate unscrubbed where there is no fence would keep a
 difference with no reason behind it. The cost is that a fixture world's gate
 no longer sees `GH_TOKEN`, which no existing gate reads.
 
-D-3 (2026-09-11). Attribution by difference, not a second log. The shims are
+D-3 (2026-09-11; where the count is read from, superseded 2026-09-12 by D-9). Attribution by difference, not a second log. The shims are
 125's and stay a pure function of the fence directory; reading the tally
 before and after a sequential suite attributes a refusal exactly without
 changing them.
@@ -342,7 +364,7 @@ D-4 (2026-09-11). The fence goes on the evidence, not the receipt (B-5). A
 receipt field would be a schema change for a fact the evidence already
 carries, and receipt revisions are doc 05 D68's to make once.
 
-D-5 (2026-09-12; proposed, the owner's choice). A refusal fails acceptance
+D-5 (2026-09-12; adopted by the owner the same day, D-9). A refusal fails acceptance
 (B-4). The alternative is to record the refusal and accept the round on its
 exit codes. Failing is recommended because a receipt says "a stable, passing
 gate over this revision" (121 D49), and a round in which a command reached for
@@ -358,7 +380,7 @@ project's commit does (a formatting hook); running them everywhere with the
 daemon's environment is F7. The split follows the credential, which is the
 thing this spec protects. Doc 05 D74.
 
-D-7 (2026-09-12; proposed, the owner's choice). The verify stage is in scope,
+D-7 (2026-09-12; adopted by the owner the same day, without the split, D-9). The verify stage is in scope,
 superseding doc 05 D60's residual. Acceptance is read at the base so that the
 session being judged cannot rewrite its own acceptance, and live acceptance
 is an operator's journaled allowance rather than a spec annotation, because a
@@ -371,10 +393,29 @@ D-8 (2026-09-12). Credential protection, not hostile-code isolation. The
 fence takes credentials out of reach so the obvious move fails and the broker
 stays the only working publisher. It does not confine a process that means to
 escape: absolute paths skip the shims, `HOME` is readable, and the refusal log
-is a same-user file the fenced process can truncate. A tally is therefore
-evidence about a capable process that reached for a fenced tool through
-`PATH`; a tally of zero proves nothing stronger, and 131 labels it that way.
-Doc 05 D76.
+is a same-user file the fenced process can truncate, which is why B-3 counts
+at the supervisor instead. A tally is therefore evidence about a capable
+process that reached for a fenced tool through `PATH`; a tally of zero proves
+nothing stronger, and 131 labels it that way. Doc 05 D76.
+
+D-9 (2026-09-12, the owner). Approved by the adoption of revision 4's CLI-02
+(doc 05 §19). A refusal fails both the gate and verify-stage acceptance even
+when a command swallows its exit (D-5, B-4, B-8); the verify stage's fencing
+and base-revision acceptance stay in this spec rather than a split (D-7); an
+allowance for live acceptance is journaled (B-9); hooks, verify commands and
+the broker's push are protected (B-6 to B-8); and an authorized broker push
+still succeeds, which FR-006 and FR-010 hold as the positive control. The
+adoption adds one requirement the draft lacked: refusal accounting belongs to
+the supervisor and a child cannot erase it. B-3 now counts at the supervisor,
+which supersedes D-3's reading of the log, and FR-008 turns the truncation F8
+measured from a pinned limit into a regression test.
+
+## Status (2026-09-12, approved)
+
+Approved on 2026-09-12 by the owner's adoption of revision 4 (doc 05 §19,
+CLI-02; D-9), `implementation: pending`. It follows 128. The adoption added
+B-3's supervisor-owned count and the 125 edges it needs; the rest of the
+revision-3 text stands as drafted.
 
 ## Status (2026-09-12)
 

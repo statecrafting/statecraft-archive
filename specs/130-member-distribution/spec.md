@@ -54,9 +54,12 @@ summary: >
   UI answers 503 with assets expected at /web/dist, and `daemon start` fails
   because it re-spawns itself as if it were a source file (042 D-10 recorded
   the cause and deferred the fix to here). A tag now also builds a member
-  archive per macOS and Linux triple holding the engine, the native sensor
-  and drivers, the built UI, the provider qualification records, and a
-  manifest of every file's digest, with the same checksum, SBOM and
+  archive per macOS and Linux triple holding the compiled engine and its
+  built UI, the provider qualification records, the Rust bundle verifier, the
+  Rust Codex driver and the compiled TypeScript Claude driver (the Claude
+  implementation a checkout runs today; the Rust sensors and the Rust Claude
+  driver wait for parity evidence), and a manifest of every file's digest,
+  with the same checksum, SBOM and
   provenance the umbrella's archives carry. The installer installs it into
   the managed member directory, verifying before it replaces, and keeps the
   previous set. A packaged engine finds its assets, its data and itself at
@@ -134,17 +137,29 @@ than the qualification records: models and prompts are code constants.
 
 ### B-1. What ships
 
-The member set for a triple is: `statecraft-engine` (the TypeScript engine,
-compiled with `bun build --compile --target=<bun target>`); the Rust
-`statecraft-sensor-claude`, `statecraft-sensor-codex`,
-`statecraft-driver-claude` and `statecraft-driver-codex` (112, 114, 115, 116),
-built `--locked` for the triple; `statecraft-engine-web/`, the Vite build of
-the UI; `statecraft-engine-qualification/`, the qualification records the
-release was cut with (124); the Rust `statecraft-journal` (113), the
-independent bundle verifier; and `members.json`. The fixture driver (124) is a
-test instrument and does not ship. D-1 records why the Rust sensor and
-drivers ship rather than the TypeScript builds of the same names, and D-6
-what that choice changes.
+The member set for a triple is:
+
+- `statecraft-engine`, the TypeScript engine, compiled with `bun build
+  --compile --target=<bun target>`, and `statecraft-engine-web/`, the Vite
+  build of the UI it serves on loopback;
+- `statecraft-engine-qualification/`, the provider qualification records the
+  release was cut with (124);
+- `statecraft-journal`, the Rust bundle verifier (113), built `--locked` for
+  the triple: a verifier the user did not get from the exporter's code path;
+- `statecraft-driver-codex`, the Rust Codex driver (116), built `--locked`;
+  Codex has no TypeScript driver, so shipping it changes no driver anyone
+  selects today;
+- `statecraft-driver-claude`, the TypeScript Claude driver (014, 042's
+  `build:member:driver`), compiled for the triple: the implementation a
+  source checkout runs today, so the packaged loop needs no adapter the user
+  supplies separately;
+- `members.json`.
+
+Not shipped: the Rust `statecraft-driver-claude` (114), until explicit parity
+evidence justifies installing or selecting it as a new default; the Rust
+sensors (112, 115), deferred with it; and the fixture driver (124), a test
+instrument. Provider software and its sign-in stay prerequisites: shipping a
+driver bundles neither. D-9 records the set and what installing it changes.
 
 Supported triples are the four macOS and Linux ones of 107. Windows receives
 the umbrella only, as today: the engine's signal handling (108 D-10) and the
@@ -228,6 +243,9 @@ A read-only umbrella verb that reports, in the 104 §5.2 envelope under
 - each member `members.json` expects: `ok`, `missing`, `refused` (contract
   outside the supported range, 108), `digest-mismatch`, or `shadowed` (an
   earlier `PATH` entry would win, which 108 already detects);
+- for each driver name, the location the engine would resolve it from
+  (`explicit`, `managed`, `path` or `source`, 043's order) and the
+  implementation there, so a reader can see which Claude driver runs;
 - the web and qualification directories: present and matching the manifest,
   or not;
 - provider prerequisites, each `found` with its path and version or `absent`:
@@ -254,12 +272,17 @@ prerequisite, not bundled), then:
 
 1. `install.sh` with `STATECRAFT_WITH_MEMBERS=1` and
    `STATECRAFT_ARCHIVE_DIR`;
-2. `statecraft members doctor --output json`: every member `ok`, providers
-   reported absent;
+2. `statecraft members doctor --output json`: every member `ok`, the web and
+   qualification directories matching the manifest, providers reported
+   absent, and the Claude and Codex drivers resolving from the managed
+   directory;
 3. `statecraft engine orchestrator daemon start` with a temporary daemon home
-   and port;
-4. `GET /` answers 200 with the UI's root element, and `GET /api/meta`
-   answers `ok`;
+   and port, run from a working directory that is neither a repository nor a
+   checkout, with no `--repo`;
+4. `GET /` answers 200 with the UI's root element (assets); `GET /api/meta`
+   answers `ok` and names the qualification directory resolved beside the
+   binary (provider data) and the daemon home under the temporary root, and
+   `GET /api/projects` is empty (working directory);
 5. a repository created with `git init` and `spec-spine init` is registered
    through `projects add`, and appears in `GET /api/projects` with its
    qualification verdict;
@@ -342,12 +365,15 @@ make gate
 - **Flattening the engine's verbs.** 042 D-7's condition (a packaged member
   is the primary way its verbs are reached) becomes true with this spec;
   the flattening, with aliases, is doc 05 D73 and a later spec.
-- **Retiring the TypeScript sensor and driver.** They stay for the source
-  path; this spec only chooses what ships (D-1).
+- **Retiring the TypeScript sensor and driver, or shipping the Rust
+  replacements.** The TypeScript Claude driver ships and the TypeScript
+  sensor stays for the source path; the Rust Claude driver and sensors wait
+  for a spec that brings explicit parity evidence (D-9).
+- **A hosted dashboard.** The UI is served by the local engine (D-10).
 
 ## 7. Resolved decisions
 
-D-1 (2026-09-11). The Rust sensor and drivers ship; the TypeScript builds of
+D-1 (2026-09-11; superseded 2026-09-12 by D-9). The Rust sensor and drivers ship; the TypeScript builds of
 the same names do not. The names collide, so one of each must be chosen, and
 the Rust builds are native per triple, need no Bun runtime in the archive,
 and are held to the TypeScript ones by 112's and 114's parity tests. The
@@ -374,7 +400,7 @@ D-5 (2026-09-11). The smoke job proves "no checkout" by construction: its
 second job has no `actions/checkout` step at all, so a path that reaches
 into a source tree fails there rather than passing by accident.
 
-D-6 (2026-09-12; proposed, the owner's choice). D-1 confirmed, with its
+D-6 (2026-09-12; proposed, and not adopted: superseded the same day by D-9). D-1 confirmed, with its
 consequences stated. The engine resolves a driver from an explicit variable,
 then the managed member directory, then `PATH`, then the source entry
 (`driver.ts:212-233`). So installing this member set changes the Claude driver
@@ -401,6 +427,44 @@ delivered as a CI artifact beside the archives. CI has no provider account,
 and a smoke job that depended on one would be skipped more often than run. The
 fixture driver is the conformance instrument 124 built for exactly this, and
 keeping it out of the archive keeps the shipped set free of a test double.
+
+D-9 (2026-09-12, the owner). The member set is B-1's, from the adoption of
+revision 4's CLI-05 and the owner's answer in the adopting session (doc 05
+§19): the Rust verifier ships; the Claude implementation a checkout runs
+today is kept, by shipping the compiled TypeScript Claude driver; the Rust
+Codex driver ships because Codex has no other; the Rust Claude driver and the
+Rust sensors wait for explicit parity evidence. Leaving the Claude driver out
+was rejected: the packaged loop would then depend on the user supplying its
+adapter. What installing the set changes, stated rather than discovered: 043
+resolves the managed directory before a checkout's source entry, so a
+source-checkout engine on a machine with the set installed runs the
+release's compiled TypeScript Claude driver, the same implementation as its
+own source entry at the release's revision; an operator changing the driver
+in a checkout points `STATECRAFT_DRIVER_BIN` at it, and `members doctor` shows
+which location each driver resolves from (B-6). The clean-machine proof
+covers what CLI-05 names: assets, provider data, the working directory,
+member discovery and the daemon lifecycle (B-7 steps 2 to 4 and 8). D-7's
+vocabulary stays this repository's internal packaging criterion (the
+package's G-12) and is not a family-wide or public label.
+
+D-10 (2026-09-12, the owner). The UI stays a local dashboard: the engine
+serves it on loopback and the operator opens it in a browser, with no
+account (D-2's assets beside the binary). A hosted dashboard controlling a
+local engine would add an authentication and browser-origin boundary, and
+connectivity and version-compatibility requirements; a later hosted
+Statecraft dashboard coordinates teams without becoming a prerequisite of the
+local loop.
+
+## Status (2026-09-12, amended)
+
+Amended on 2026-09-12 to the owner's adoption of revision 4 (doc 05 §19,
+CLI-05; D-9, D-10): the summary, B-1's member set, doctor's driver
+resolution, the smoke job's checks for provider data and the working
+directory, and §6. Still `draft`, `implementation: pending`: the flip to
+`approved` is recorded in the change that dispatches it, beside 126 and 127
+after 128 and 129. The smoke job's evidence steps (B-7 steps 6 and 7) wait
+for 132, and calling the engine ready for broad adoption waits for the safety
+slice (128, 129, 126).
 
 ## Status (2026-09-12)
 

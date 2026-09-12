@@ -170,13 +170,14 @@
       "Verification",
       "6. Out of scope",
       "7. Resolved decisions",
+      "Status (2026-09-12, amended)",
       "Status (2026-09-12)"
     ],
     "specPath": "specs/130-member-distribution/spec.md",
     "status": "draft",
-    "summary": "Spec 107 made the umbrella installable; 042 packaged the members and 108 taught the umbrella to discover them, and both put installing members out of scope for \"a later spec\". This is that spec. A compiled engine run outside the checkout was measured on 2026-09-11: its API answers, but its UI answers 503 with assets expected at /web/dist, and `daemon start` fails because it re-spawns itself as if it were a source file (042 D-10 recorded the cause and deferred the fix to here). A tag now also builds a member archive per macOS and Linux triple holding the engine, the native sensor and drivers, the built UI, the provider qualification records, and a manifest of every file's digest, with the same checksum, SBOM and provenance the umbrella's archives carry. The installer installs it into the managed member directory, verifying before it replaces, and keeps the previous set. A packaged engine finds its assets, its data and itself at run time. `statecraft members doctor` names what is missing, refused or altered and which provider prerequisites are absent. A CI job that never checks the repository out proves the result.\n",
+    "summary": "Spec 107 made the umbrella installable; 042 packaged the members and 108 taught the umbrella to discover them, and both put installing members out of scope for \"a later spec\". This is that spec. A compiled engine run outside the checkout was measured on 2026-09-11: its API answers, but its UI answers 503 with assets expected at /web/dist, and `daemon start` fails because it re-spawns itself as if it were a source file (042 D-10 recorded the cause and deferred the fix to here). A tag now also builds a member archive per macOS and Linux triple holding the compiled engine and its built UI, the provider qualification records, the Rust bundle verifier, the Rust Codex driver and the compiled TypeScript Claude driver (the Claude implementation a checkout runs today; the Rust sensors and the Rust Claude driver wait for parity evidence), and a manifest of every file's digest, with the same checksum, SBOM and provenance the umbrella's archives carry. The installer installs it into the managed member directory, verifying before it replaces, and keeps the previous set. A packaged engine finds its assets, its data and itself at run time. `statecraft members doctor` names what is missing, refused or altered and which provider prerequisites are absent. A CI job that never checks the repository out proves the result.\n",
     "title": "Member distribution: one release installs a working engine, its members and its UI, with no checkout"
   },
-  "shardHash": "c64781d4012553f94de34fb345751f4179987caa27b14101f85e0d7bf1a33f55",
+  "shardHash": "e011f66f93b2ac44198822a91aa0542215668ff2cdfef7942818eb2500371776",
   "specVersion": "1.2.0"
 }

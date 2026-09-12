@@ -187,6 +187,10 @@ additive; renaming or removing one moves the version.
   under its label.
 - **FR-006.** Nothing is written: the chains' heads are unchanged after the
   fold, the route and the verb.
+- **FR-007.** Coverage (D-6): a view over evidence whose report reads
+  `signature: unsigned` and `issuerTrust: unknown`, and whose bundle carries an
+  omitted field and an unbound withheld payload, renders each of the four by
+  name; no surface renders a single verified value.
 
 ## 5. Acceptance
 
@@ -233,10 +237,10 @@ when a later contract exists teaches a reader that its absence is normal;
 one that is present and reads `not recorded` with a reason teaches the
 opposite.
 
-D-4 (2026-09-12; proposed). Verification is shown as 132's report, never as a
+D-4 (2026-09-12; adopted by the owner the same day, D-6). Verification is shown as 132's report, never as a
 badge. Where the view shows whether a run's evidence verifies, it renders the
 four evidence dimensions of 132 B-7 with their values and reasons, and the
-policy result apart from them; it never collapses them into "verified". This
+admission result apart from them; it never collapses them into "verified". This
 is why 131 now depends on 132: the view follows the evidence contract rather
 than inventing a display vocabulary for it first. The view's own four labels
 (B-2) describe whether a record exists; the report's values describe what a
@@ -244,8 +248,28 @@ verifier concluded; the two are not mixed. Doc 05 D80.
 
 D-5 (2026-09-12). A fence tally is labelled for what it can show. A gate or
 session tally of zero reads `none` with the note that the tally records a
-reach through `PATH` and can be erased by the process it counts (129 D-8),
-never "no attempt was made".
+reach through `PATH` only (129 D-8), never "no attempt was made". (Amended
+2026-09-12: 129 B-3 now counts at the supervisor, so a child can no longer
+erase a tally; what a zero cannot show is unchanged.)
+
+D-6 (2026-09-12, the owner). The adoption of revision 4's CLI-06 (doc 05
+§19): the view renders 132's report after 132's schema freezes, and not
+before, so it renders the frozen names (G-05's dimensions and `admission`)
+rather than a draft's. Four kinds of incomplete coverage are each shown by
+name wherever a report or a record carries them, and none is folded into its
+neighbor: `unknown` (a check that did not run or could not answer),
+`unsigned` (no signature carried), omitted (a field or payload withheld on
+export) and unbound (a withheld payload whose commitment version 1 does not
+bind, 132 B-3). There is no single verified badge, in the panel, the route
+or the verb.
+
+## Status (2026-09-12, amended)
+
+Amended on 2026-09-12 to the owner's adoption of revision 4 (doc 05 §19,
+CLI-06; D-6): D-4 adopted with `admission` for `policy`, D-5 corrected for
+129 B-3, and the four coverage names. Still `draft`, `implementation:
+pending`: it is built last, against 132's frozen report, and its flip to
+`approved` is recorded in the change that dispatches it.
 
 ## Status (2026-09-12)
 

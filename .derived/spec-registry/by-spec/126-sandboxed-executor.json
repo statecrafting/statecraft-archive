@@ -119,7 +119,7 @@
       "B-3. The deny set",
       "B-4. The wrapper is applied at the session spawn",
       "B-5. Signing moves to the engine, and is not abandoned",
-      "B-6. Containment is an operator policy, with a required setting",
+      "B-6. Protection is an operator policy, and its result is applied, degraded or refused",
       "B-7. The blast radius is the candidate's processes, and only those",
       "B-8. A denial is counted and reaches the evidence",
       "4. Functional requirements",
@@ -127,14 +127,15 @@
       "Verification",
       "6. Out of scope, and what stays open",
       "7. Resolved decisions",
+      "Status (2026-09-12)",
       "Status (2026-09-11)",
       "Status (2026-09-10)"
     ],
     "specPath": "specs/126-sandboxed-executor/spec.md",
     "status": "draft",
-    "summary": "Spec 125 fenced the credential path a driven session reaches for first, and recorded three residuals it could not close: HOME stays readable, an absolute path bypasses PATH, and ~/.ssh keys stay on disk. All three go around PATH, so nothing built from shims and environment variables reaches them; what refuses a read of a path is the operating system. This spec makes the engine apply an OS deny profile at the session spawn in driver.ts and at the gate's spawn (after 129 fenced it), written beside the candidate. It closes the ~/.ssh read, the gh config read and the absolute-path exec outright, and closes the keyring only ergonomically, because the Claude provider authenticates out of that same keyring. The threat model is 125's: a capable session, not a hostile one, and the property is a complete journal, not confinement of source authority; the profile confines no writes and claims no capability token. Signing moves to the engine rather than being abandoned, so the candidate holds no signing key and publication stays autonomous. Whether the profile must be in force is an operator policy with a required setting, not a best effort.\n",
-    "title": "The sandboxed executor: the OS refuses what a shim could only discourage"
+    "summary": "Spec 125 fenced the credential path a driven session reaches for first, and recorded three residuals it could not close: HOME stays readable, an absolute path bypasses PATH, and ~/.ssh keys stay on disk. All three go around PATH, so nothing built from shims and environment variables reaches them; what refuses a read of a path is the operating system. This spec makes the engine apply an OS deny profile at the session spawn in driver.ts and at the gate's spawn (after 129 fenced it), written beside the candidate. It closes the ~/.ssh read, the gh config read and the absolute-path exec outright, and closes the keyring only ergonomically, because the Claude provider authenticates out of that same keyring. The threat model is 125's: a capable session, not a hostile one, and the property is credential protection for a complete journal, not hostile-code isolation and not preventive confinement of territory or source authority; the profile confines no writes and claims no capability token. Signing moves to the engine rather than being abandoned, so the candidate holds no signing key and publication stays autonomous. Whether the profile must be in force is an operator policy with a required setting, and every run's result says whether protection was applied, degraded or refused, with every keychain and environment residual named in it.\n",
+    "title": "Credential protection: the OS refuses the credential reaches a shim could only discourage"
   },
-  "shardHash": "bb022de8e5fdc9e5f02dfa963733b551b899549ca52ea937c1daea8578fb1e3e",
+  "shardHash": "eb0372af0bdaba2b73562fb3f1d6c8c813f62a6cb6742c57044d14e5bec7e793",
   "specVersion": "1.2.0"
 }

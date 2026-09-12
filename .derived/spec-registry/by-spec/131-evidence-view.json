@@ -108,6 +108,7 @@
       "Verification",
       "6. Out of scope",
       "7. Resolved decisions",
+      "Status (2026-09-12, amended)",
       "Status (2026-09-12)"
     ],
     "specPath": "specs/131-evidence-view/spec.md",
@@ -115,6 +116,6 @@
     "summary": "Specs 119 to 125 made a run write the evidence a reviewer needs: gate commands and exit codes, a receipt with its suite and policy digests, denials, fence refusals, the capabilities a driver applied, degraded or refused, a provider's qualification, approvals, and the broker's intents, outcomes and refusals. No surface shows any of it: the UI's panels predate them, and the only verdict on screen is a project's qualification. This spec adds one read-only account per spec, reached by a verb, a route and a UI panel, folded from the existing journals and nothing else. Every value names the record it came from. Absence has three names and never reads as success: none (the run recorded that nothing happened), not recorded (no record of this kind exists, including every field a future scope, context or permit contract will add), and stale (a receipt for a head that is no longer the branch's). What a profile declared sits beside what a session says was applied, and a model's narrative is labelled as narrative, apart from what a machine observed.\n",
     "title": "The evidence view: one account of a change, joined from the records a run already writes, with every gap labelled"
   },
-  "shardHash": "2d186f209ce2c0d936594f47183d24da7d6060da09ee784b874387c752d235ab",
+  "shardHash": "2cd3f984fcd46a31fa972b6c9aea91899173e022b7cdb26d1727e91b5d58de6e",
   "specVersion": "1.2.0"
 }

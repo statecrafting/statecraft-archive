@@ -118,6 +118,7 @@
       "Verification",
       "6. Out of scope",
       "7. Resolved decisions",
+      "Status (2026-09-12)",
       "Status (2026-09-11)",
       "Status (2026-09-10)"
     ],
@@ -126,6 +127,6 @@
     "summary": "This repository reviews locally. `/code-review` runs in the session, before the push, and its findings never leave the terminal: the pull request shows three green checks and no reasoning. The checks UI already reports what CI can know, so the gap is not a CI summary but the thing only the session holds, namely what the review found, what was fixed and what was accepted. This spec adds one sticky comment per pull request, updated in place on every push, carrying the head sha, what changed, the gate verdicts that actually ran, and the review's findings with their disposition. The session writes the note's content; who posts it depends on where the session runs. An interactive session posts with the operator's own credentials. A driven session is fenced (125) and holds no publish credential, so it submits the review in its proposal and the engine's broker posts the note as a fourth action, admitted on the receipt and lease and journaled like a push. Machine results come from the receipt and are marked receipted; the review is marked narrative; the note names the head and the receipt it describes. It never invents a verdict, and failing to post it never blocks a ship.\n",
     "title": "The review note: what the local cycle found, posted where the pull request can see it"
   },
-  "shardHash": "bdb78bfec3651edb86c159865f7f312b63084e6d79969b273ad7b9b96630c65d",
+  "shardHash": "a7821ae58bfb64482b671091f9d3369e4fe84a302d9242f0b0bee2afd592ea67",
   "specVersion": "1.2.0"
 }

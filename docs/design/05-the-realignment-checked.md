@@ -853,3 +853,119 @@ No two sets agree, and nobody defines the value of an absent signature.
 5. For the hosted seam: which credential an unattended runner holds, and who
    renews it (D85), decided with Statecraft and rahi before either end is
    written.
+
+Answered on 2026-09-12 by the owner's adoption of revision 4 (§19).
+
+## 19. Revision 4: the owner's adoption
+
+On 2026-09-12 the owner adopted the statecraft-cli rows of the revision-4
+decision package (`grand-refactor/07-revision-4-decision-package.md` §3,
+CLI-01 to CLI-09), with the shared rows those rows cite (G-04 to G-07, G-09,
+G-10) and the package's shared contract acceptance, in a working session of
+this repository, and answered there the three points the rows left open
+(§19.2). The package is the family's planning record and keeps its own
+adoption line; this section is this repository's record of what was adopted
+and where each decision lands.
+
+Adoption authorizes the scoped local specification amendments,
+implementation and tests. It does not include publication: G-02 keeps draft
+pull requests for an explicit inclusion the owner has not made, and merges,
+releases and deployments for later. The revision-3 commit and the commit
+carrying this section are local until the owner decides.
+
+### 19.1 What was adopted, and where it lands
+
+| ID | Adopted | Lands |
+|---|---|---|
+| CLI-01 | Approve revised 128 and build it first. Keep the compatible dev proxy (D79); reduce both origin lookups and redact served historical values without rewriting a journal (D78). The real attack probes become regression tests | 128 `approved`; its D-6 resolved; D-9 |
+| CLI-02 | A refusal fails the gate and verify-stage acceptance even when a command swallows its exit (D75). Verify-stage fencing and base-revision acceptance stay in 129, not split (D77). Any allowance for live acceptance is journaled. Refusal accounting belongs to the supervisor and its child cannot erase it. Hooks, verify commands and the broker's push are protected, and an authorized broker push still succeeds | 129 `approved`; D-5 and D-7 resolved; B-3 and FR-008 revised; D-9 |
+| CLI-03 | 126 is credential protection reporting `applied`, `degraded` or `refused`, with any keychain or environment residual visible in the result. 127's note is posted by the broker in a driven run. Neither claims hostile-code isolation or preventive territory confinement. Both follow 128 and 129, and neither delays 132 | 126 and 127 amended, still `draft` |
+| CLI-04 | G-04 to G-07: Statecraft owns the verdict semantics and this repository's Apache-2.0 workspace holds the schemas, fixtures and pure verifier; G-05's four dimensions with `admission` apart; G-06's trust rules; G-07's typed byte references. Statecraft and 132 both record the shared decision before a fixture is minted. statecrafting 010's vectors join the negative set. The first acceptance is the admission pair (§19.2), then the full matrix | 132 amended, still `draft`; D80 and D81 superseded (§19.3) |
+| CLI-05 | The member archive ships the Rust verifier and leaves the currently selected Claude driver implementation as it is; installing or selecting the Rust Claude driver as a new default waits for explicit parity evidence. The clean-machine proof covers assets, provider data, the working directory, member discovery and the daemon lifecycle | 130 amended, still `draft`; D83 superseded |
+| CLI-06 | 131 renders 132's report once its schema freezes. Unknown, unsigned, omitted and unbound coverage are visible, and there is no single verified badge | 131 amended, still `draft` |
+| CLI-07 | G-09 and G-10: a first pilot runner is an enrolled person's device-grant session with refresh-token renewal; leases bind to `runnerId`, tenant and principal, never to one access token; unattended service-principal runners are deferred; lease duration and heartbeat interval come back from the plane; expiry is read from `expires_in`; the plane never runs repository verification. Local delivery and packaging do not wait for hosted credentials, and hosted runner integration waits for working Rahi 038 authentication | D85 resolved |
+| CLI-08 | Authority-affecting changes are judged under the trusted base's gate contract and need human approval. The evidence carries the policy identity and the actual candidate and merge-tree identity. A candidate cannot authorize its own weakened rules. spec-spine 088's report is integrated once a pinned release carries it, and no support is claimed before | a later spec on D68's line (below) |
+| CLI-09 | aicortex publishing and observation, a richer submission closure (D69) and the A10 adapter wait for their producer contracts. Capability tokens stay the names of what an executor protects, never a user's authorization. The later publisher is least-privilege and journal-based, and feeds 123's capsules and 131's reports. None of this blocks the local release | nothing built; §15's later rows |
+
+CLI-08, measured against the tree: the gate contract is registry state an
+operator journals (041), never read from the candidate, and the receipt
+already carries that contract's digest and the candidate sha (121). A gate
+command still runs the candidate's own Makefile and tests, which 121 records
+as `acceptance.sensitive` without refusing, and nothing requires a human
+approval before such a receipt admits a publication or records the merge
+tree. Those two parts land with D68's receipt revision, authored once a
+pinned spec-spine release carries 087 and 088. 129 B-8 already reads the
+acceptance a merge is verified by from the base.
+
+### 19.2 Points the rows left open, answered in the adopting session
+
+- **132's first acceptance is the admission pair.** The same intact, unsigned
+  evidence is admitted under an explicit local policy allowing unsigned
+  evidence, and refused under a policy requiring a trusted signature. Neither
+  implies that unsigned evidence is trusted. The redaction pair and the
+  base-policy pair belong to the matrix that follows.
+- **130's archive:** the compiled TypeScript engine and its built web UI, the
+  provider qualification records, the Rust `statecraft-journal` verifier, the
+  Rust Codex driver, and the compiled TypeScript Claude driver, which keeps
+  the Claude implementation a source checkout runs today. The Rust sensors
+  and a switch to the Rust Claude driver are deferred. Leaving the Claude
+  driver out would make the packaged loop depend on the user supplying its
+  adapter; provider software and sign-in stay prerequisites, and shipping the
+  adapter bundles neither.
+- **The UI stays a local dashboard.** The engine serves it on loopback and
+  the operator opens it in a browser (024, 130 D-2), without a Statecraft
+  account. A hosted dashboard controlling a local engine would add an
+  authentication and browser-origin boundary, and connectivity and
+  version-compatibility requirements. A later hosted Statecraft dashboard can
+  coordinate teams without becoming a prerequisite of the local loop.
+
+### 19.3 This document's proposals, settled or superseded
+
+- **D74 to D77:** adopted as drafted, with CLI-02's addition that the
+  supervisor, not a file its child can write, owns refusal accounting (129
+  B-3).
+- **D78 and D79:** adopted (128).
+- **D80:** superseded by G-05 and G-06. The four evidence dimensions and
+  their values stand. `policy` becomes `admission`, `admit` or `refuse` with
+  reason codes, and incomplete required evidence refuses admission with a
+  reason. `subjectBinding: not-applicable` applies only to a record type that
+  carries no subject, and a missing expected subject is `unknown`. A report
+  keeps producer claims, verifier identity and version, root-set identity,
+  coverage and stop reasons apart from the dimensions, and a check that did
+  not run is `unknown`.
+- **D81:** superseded by G-07, which extends it. A reference carries a type,
+  a schema version, the SHA-256 digest and length of the bytes, an optional
+  producer digest naming its construction, and a container and selector for
+  an embedded record. A git subject names its repository and its commit and
+  tree object formats. A reference's identity includes its construction, and
+  a canonical record hash never substitutes for a file-byte digest.
+- **D82:** stands, with the admission pair as the first acceptance and 128
+  first, so the fixtures are minted at policy version 6.
+- **D83:** superseded by CLI-05 and §19.2.
+- **D84:** stands as this repository's internal packaging criterion only.
+  G-12 keeps `installed-verified` out of any family-wide or public label.
+- **D85:** resolved by G-09 and G-10 (CLI-07).
+- **D86:** stands. The package's SP-02 adds that a consumed build is a tagged,
+  pinned release, never a development build.
+- **§16:** the neutral verifier lives in this workspace (G-04), in a form 132
+  chooses (`statecraft-journal` or a sibling crate), with no AGPL code; the
+  shipped members are §19.2's; web assets ship beside the engine; the first
+  issuer is Statecraft's (G-08: an offline owner-held root enrolling an online
+  platform issuer), and local user roots stay separate. R6 and 127 B-5 are
+  unchanged.
+
+### 19.4 Order, and what an approval records
+
+128, then 129, both `approved` in the change that carries this section. 132's
+schema and fixture harness proceed independently of both. Then 126, 127 and
+130 (whose evidence smoke waits for 132), then 131 against the frozen
+report. 126, 127, 130, 131 and 132
+carry the adopted amendments and stay `draft`: each is flipped to `approved`
+in the change that dispatches it, which records this adoption rather than
+asking for it again. Before 132 mints a fixture, Statecraft's 015 and 016
+record the same G-05 to G-07 contract (the package's ST-01); that is the
+shared record CLI-04 names, not a review round.
+
+The local slice's exit, from the package: the attack refusals demonstrated
+beside a successful authorized broker operation, verifier parity, and a
+clean installed run. A source-only UI is not called released.

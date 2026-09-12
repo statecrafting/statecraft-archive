@@ -278,8 +278,8 @@
       }
     ],
     "specId": "128-api-origin-guard",
-    "specStatus": "draft"
+    "specStatus": "approved"
   },
   "schemaVersion": "1.1.0",
-  "shardHash": "fe848d4043e0cefe362ba94280d8d28dcb9e1c547e6804713abb05c90c42cd1c"
+  "shardHash": "6f5c914650313a2bd3cf18fd2bc11caba5be97af06497d36c7c88a6bf7fef352"
 }
