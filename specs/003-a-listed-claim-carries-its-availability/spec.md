@@ -775,8 +775,33 @@ Every run below is in a scratch directory outside any checkout, on
    page.** The block must fail on today's `profile/README.md` and pass on the
    page after the corrections step and after the roster step, with 001's block
    passing on all three. Single-fault mutants of the proposed pages must each
-   fail this block at the command that guards the fault. Recorded when the
-   corrections step is built (section 13).
+   fail this block at the command that guards the fault. Run at 23:07 UTC
+   through `spec-spine verify <id> --repo <dir> --json`, each page in its
+   own copy of the corpus:
+   - Live page: 001 passes (14 of 14); 003 fails at its first command,
+     `## Start here`.
+   - Corrections step and roster step: 001 passes (14 of 14) and 003 passes
+     (33 of 33) on both.
+   - Fifteen mutants, each failing 003 at the command that guards its fault:
+     Start here moved below Projects (the ordering `awk`); the no-account
+     sentence dropped; an **Available:** label; "refuse anything" restored;
+     "signed by code" restored; the CLI's receipts called signed; a license
+     said to prevent; the Rust badge back on `statecraft`; the CLI release no
+     longer dated before the monorepo; enrahitu chassis-first again; the
+     enrahitu image named as released; `hqgit` listed; rahi listed without
+     its disclaimer; and rahi's disclaimer placed outside its own entry,
+     which the earlier whole-page check would have passed. The fifteenth
+     renames the license heading, and it fails 001 at the same heading as
+     well.
+6. **Rendering and links.** Both proposed pages parsed with a GFM parser
+   (`marked` 15, locally): the heading outline is the one section 3.1
+   orders, with the mermaid and `sh` fences intact. Every link and image
+   target on the roster-step page was checked, 30 in all. 28 URLs returned
+   200, two of them only after a retry with browser headers, and the banner
+   resolved on disk. The last, `npmjs.com`, answered 403 to every scripted
+   request; that badge link is unchanged from the live page, and the npm
+   registry returns 200 for the package. GitHub's own rendering of the page was not seen: nothing
+   was pushed.
 5. **The enrahitu container (C-1).** At 22:55 UTC, with no credentials, the
    registry token endpoint for `repository:statecrafting/enrahitu:pull`
    returned 401 `UNAUTHORIZED`, and the `latest` manifest and tag list reads
@@ -848,8 +873,18 @@ Every run below is in a scratch directory outside any checkout, on
 
 ## 13. Implementation notes
 
-None yet. Dated notes on what each landing step did, and what remains, go
-here.
+- **2026-09-12. Corrections step built.** Sections 4, 5 and 6.3 are applied
+  to `profile/README.md`. Every quoted block in them is present on the page
+  word for word, and every block they replace is gone. Both verification
+  blocks pass (section 11 runs 4 and 6).
+- **2026-09-12. What remains.** `implementation` stays `in-progress` until
+  both of these land:
+  1. **Roster step (6.1).** Prepared as a separate change that lands only
+     in statecraft.ing's publication window. On this date the site's PR 12
+     is open, and no site change listing rahi is published.
+  2. **Lead step (6.4, and 6.1's substrate sentence).** Waits on G-03 being
+     recorded on statecraft's default branch. On this date statecraft's
+     `main` is `9658e29`, and spec 014 is not on GitHub.
 
 ## Verification
 

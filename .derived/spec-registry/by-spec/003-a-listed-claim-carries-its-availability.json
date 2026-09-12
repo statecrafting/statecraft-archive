@@ -63,6 +63,6 @@
     "summary": "The landing page lists repositories in the present tense and closes with a license rationale that is, in two places, not true of the files on disk. This spec amends 001 section 3.1 so that every entry states what is implemented, what is released, and what is hosted as three separate facts (the compact vocabulary of decision G-12, none of them a product verdict), the page gains a first adoption path that runs locally with no account, the license section names the three licenses that actually ship and says what each requires rather than what it prevents, and three overclaims are withdrawn (signed-by-code, a gate in every repository, a released CLI that carries the local engine). The owner's decisions of 2026-09-12 (PROF-01 to PROF-04) settle the roster, enrahitu's first sentence, the adoption path, the superseding edge and the license heading. The copy lands in three steps: corrections on their own, rahi in the same window as statecraft.ing lists it, and the lead once G-03 is recorded. hqgit stays off the page. It adopts nothing from the September 2026 realignment.\n",
     "title": "A listed claim carries its availability"
   },
-  "shardHash": "781b3aacac14b2667cf5e61f42b05fad7abb5e89eef35262c6dd2d1fed84d6c5",
+  "shardHash": "57b2a6fc8fbfa7a5357066347036c197ab9ead309c750af6ce14d660535387a6",
   "specVersion": "1.2.0"
 }
