@@ -26,16 +26,14 @@ memory: project
 
 ## spec-spine Context
 
-spec-spine is an installed CLI tool that governs this repo's spec corpus. In this repo, spec-spine is a dependency, not source code you edit.
+spec-spine is an installed CLI tool that governs your repo's spec corpus. In your repo, spec-spine is a dependency, not source code you edit.
 
 | Surface | Path | Key concerns |
 |---------|------|--------------|
-| Spec corpus | `specs/NNN-slug/spec.md` | Frontmatter schema, compiler compatibility, relationship edges, `implementation` status flips |
-| Code | pre-code until spec 002 lands; then the chassis dirs (`addon/`, `core/`, `auth/`, `idp/`, `lib/`, `hiq/`, `health/`, `web/`) plus `tenants/`, `factory/`, `fleet/`, `frontend/` (governance UI) | Correctness, error handling, public API surface, service-boundary discipline |
+| Spec corpus | `specs/NNN-slug/spec.md` | Frontmatter schema, compiler compatibility, relationship edges, status flips |
+| Your code | `backend/ (Encore.ts services), frontend/, frontend-admin/, infra/, scripts/` | Correctness, error handling, public API surface |
 | Standard | `standards/spec/` | Contract and constitution alignment |
-| Derived | `.derived/` | Must not be hand-edited; only `spec-spine compile` / `spec-spine index` output, committed as shards |
-
-Domain rules worth extra scrutiny (from `CLAUDE.md`): CoreLedger is the only durable-data API (no Encore `SQLDatabase` anywhere); the factory consumes `template.toml` and nothing else (never reach into template internals); license boundaries are load-bearing (AGPL-3.0 here, Apache-2.0 in enrahitu and statecraft-cli).
+| Derived | `.derived/` | Must not be hand-edited; only `spec-spine compile` output |
 
 ## Process
 
@@ -44,6 +42,22 @@ Domain rules worth extra scrutiny (from `CLAUDE.md`): CoreLedger is the only dur
 - Use `git diff` or `git diff --staged` to see current changes
 - Use `git log --oneline -5` and `git diff HEAD~N` for recent commits
 - Read the implementation report if one was produced
+- Classify the changed paths: source, `specs/**/spec.md`, standards, the
+  harness (`.claude/**`, `AGENTS.md`, `CLAUDE.md`), derived shards
+
+### 1b. Gate Evidence
+
+- Run the gate exactly as `AGENTS.md` "Working the backlog" lists it
+  (`spec-spine check`,
+  `spec-spine lint --fail-on-warn`, `spec-spine couple` against the base ref
+  "$(git symbolic-ref --short refs/remotes/origin/HEAD 2>/dev/null || echo origin/main)",
+  then the stack's own build and tests) and capture the output. A red gate
+  is the headline finding; a `couple` refusal names the file and the owning
+  spec whose declared edges fail to cover it.
+- Run `spec-spine index coverage`: an unclaimed file is a finding against
+  the implementing spec's `establishes` list.
+- A `.derived/` diff left by the gate means the committed shards were stale:
+  a finding whose fix is to commit them with the change.
 
 ### 2. Review for Correctness
 
@@ -70,15 +84,24 @@ For each changed file:
 ### 5. Validate Spec Compliance
 
 - Does the implementation match what the backing spec describes?
-- Are all spec requirements addressed, or are some deferred? Acceptance sections are satisfied verbatim, or the spec carries a dated Status note saying exactly what remains (`AGENTS.md` § Working the backlog).
-- If a spec was modified, is the frontmatter schema still valid (`spec-spine compile` + `spec-spine lint --fail-on-warn` clean)?
+- Are all spec requirements addressed, or are some deferred?
+- If a spec was modified, is the frontmatter schema still valid (`spec-spine compile` + `spec-spine lint` clean)?
 - If code and its owning spec both changed, does `spec-spine couple` stay clean?
+- If the spec being implemented was edited: only `establishes` growth, a dated
+  decision entry, a dated status note, the `implementation` flip, and a new
+  `extends` edge are legitimate mid-build edits. Anything that changes what
+  the spec *requires* is a coherence-guard finding, severity critical
+  (`.claude/rules/adversarial-prompt-refusal.md`).
+- Flag drift the gate cannot see: code doing something the owning spec's
+  narrative never describes, even when `couple` passes (an over-broad edge).
+- Read the spec through `spec-spine registry show <id> --json` and
+  `spec-spine registry relationships <id>`, never through `.derived/`.
 
 ### 6. Check Conventions
 
 - Code style matches surrounding code (naming, structure, module organization)
 - Behavioral rules respected (steps in order, derived artifacts refreshed)
-- No edits to `.derived/` (compiler output only); regenerated shards committed alongside the spec or manifest edits that produced them
+- No edits to `.derived/` (compiler output only)
 - New public APIs are documented
 
 ## Output Format
@@ -109,15 +132,22 @@ For each changed file:
 [Optional improvements]
 
 ### Spec Compliance
-- Backing spec: `[spec path or "none identified"]`
+- Backing spec: `[spec id or "none identified"]`
 - Compliance: [matches / partial / deviates, with details]
+- Mid-build spec edits: [none / legitimate / coherence-guard finding]
+
+### Gate
+- check: registry [fresh / stale], index [fresh / stale]
+- lint --fail-on-warn: [clean / N]  couple: [clean / C-001 / C-002]
+- coverage: [N unclaimed]  derived: [clean / stale shards left by the gate]
 
 ### Verification
-- [ ] `spec-spine compile` + `spec-spine index` clean (if specs or manifests changed)
-- [ ] `spec-spine lint --fail-on-warn` clean
-- [ ] `spec-spine index check` fresh
+- [ ] Builds cleanly (`npm run typecheck && npm test`)
+- [ ] Tests pass (if applicable)
+- [ ] No new lint warnings
+- [ ] No em dash (U+2014), session link, or AI attribution in authored text
+- [ ] `spec-spine compile` + `lint` clean (if specs changed)
 - [ ] `spec-spine couple` clean (if code and owning spec both changed)
-- [ ] Chassis gates green (`npm run typecheck` + `npm test`, after spec 002 lands)
 
 ### Verdict
 [APPROVE / APPROVE WITH NOTES / REQUEST CHANGES]
@@ -126,7 +156,7 @@ For each changed file:
 ## Guidelines
 
 - **DO:** Review every changed file; do not skip files
-- **DO:** Run the gate chain to catch what tools can find
+- **DO:** Run the project's build check and linter to catch what tools can find
 - **DO:** Cross-reference changes against their backing spec
 - **DO:** Be specific; cite file paths and line numbers for every finding
 - **DO:** Distinguish severity: critical issues vs nice-to-have suggestions

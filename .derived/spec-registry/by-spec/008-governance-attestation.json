@@ -29,5 +29,5 @@
     "title": "Governance spine: attestation ledger + action gate + trust window"
   },
   "shardHash": "dfe419baa3d86a029f8a911b223b1d99d3b917ec432e3ba01eb0b55bb478ae14",
-  "specVersion": "1.1.0"
+  "specVersion": "1.2.0"
 }

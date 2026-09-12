@@ -3,7 +3,7 @@ id: "001-statecraft-thesis"
 title: "statecraft: the governed agentic delivery control plane"
 status: approved
 created: "2026-07-14"
-implementation: pending
+implementation: n-a
 depends_on:
   - "000-bootstrap"
 establishes:
@@ -337,3 +337,13 @@ in behind the model without blocking any milestone.
 - Executing the 009 (deploy) and 010 (cluster) realignments: this spec
   records their required direction (§3.3, §3.4); the work lands in those
   specs.
+
+## 8. Lifecycle note (2026-09-11): this spec is a record
+
+`implementation` moves from `pending` to `n-a`. The thesis is a record, not
+a work order: there is no code whose landing would make it "complete", and
+`AGENTS.md` has said so in prose since the corpus began. While it sat at
+`pending`, `spec-spine registry plan` offered it as ready work and reported
+specs 010 and 011 as blocked on a dependency that could never resolve. The
+flip is a correction to the scheduler's view, not a change to anything this
+spec claims or requires. See specs/013-agent-harness/spec.md section 4.4.

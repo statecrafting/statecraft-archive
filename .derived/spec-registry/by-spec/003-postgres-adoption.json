@@ -31,5 +31,5 @@
     "title": "Control plane on CoreLedger-over-Postgres"
   },
   "shardHash": "5cf9a6d59b9412d1490ef6f8e6a61b6bf6945b845dddc20fdf6322ad32fd7f7c",
-  "specVersion": "1.1.0"
+  "specVersion": "1.2.0"
 }

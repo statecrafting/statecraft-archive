@@ -9,6 +9,10 @@
       {
         "kind": "file",
         "path": ".github/workflows/spec-spine.yml"
+      },
+      {
+        "kind": "directory",
+        "path": "standards/spec/"
       }
     ],
     "id": "000-bootstrap",
@@ -16,7 +20,8 @@
       "000: Bootstrap spec system",
       "1. The authoring / derived boundary",
       "2. The typed authority graph",
-      "Amendment (2026-07-22): spec 012 config pointers"
+      "Amendment (2026-07-22): spec 012 config pointers",
+      "Amendment (2026-09-11): spec 013 harness adoption"
     ],
     "specPath": "specs/000-bootstrap/spec.md",
     "status": "approved",
@@ -30,6 +35,6 @@
       "refusal-rule"
     ]
   },
-  "shardHash": "d3f5fd606f268d4a216a27be71acb2fe97de9bf3cdae445d5dfecb76d3fced4a",
-  "specVersion": "1.1.0"
+  "shardHash": "8566455e171247b8cf1b8103c7cf933266361a00eb0cd02f017cf97ea1a90573",
+  "specVersion": "1.2.0"
 }

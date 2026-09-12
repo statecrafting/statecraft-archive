@@ -1,7 +1,23 @@
-# Governance gate (spec 000): compile -> staleness -> lint -> couple.
-# Mirrors the spec-spine adoption guide's reference workflow.
+# The governed-loop CI gate (spec 000, modernized by spec 013).
+#
+# It runs the same `make gate` chain a session runs locally, so the gate has
+# one definition rather than two that drift. The workflow name and the job id
+# are unchanged from the v0.10.0 gate this replaced: they are the required
+# status check on the protected branch.
+#
+# Read-only throughout. `spec-spine check` compares the committed shard trees
+# against what the corpus compiles to without writing, so a stale tree is
+# reported rather than repaired: a gate that writes hides the defect it exists
+# to find. The old form ran a bare `spec-spine compile` here, which repaired
+# the tree it was judging.
+#
+# The stack half (npm build, typecheck, vitest) is verify.yml's job and is not
+# duplicated here.
 name: spec-spine
-on: pull_request
+on:
+  push:
+    branches: [main]
+  pull_request:
 permissions:
   contents: read
 jobs:
@@ -14,18 +30,29 @@ jobs:
       - name: Install spec-spine (prebuilt, pinned)
         run: |
           curl -fsSL https://raw.githubusercontent.com/statecrafting/spec-spine/main/install.sh | \
-            SPEC_SPINE_VERSION=v0.10.0 SPEC_SPINE_BIN_DIR="$HOME/.local/bin" sh
+            SPEC_SPINE_VERSION=v0.18.0 SPEC_SPINE_BIN_DIR="$HOME/.local/bin" sh
           echo "$HOME/.local/bin" >> "$GITHUB_PATH"
-      - run: spec-spine compile
-      - run: spec-spine index check
-      - run: spec-spine lint --fail-on-warn
-      - name: Coupling gate
+      # The pin is also declared in spec-spine.toml [meta] required_version, so
+      # a binary below the floor refuses every verb rather than judging the
+      # tree with a different built-in bypass list.
+      - name: Governed loop
+        if: github.event_name != 'pull_request'
+        run: make gate BASE=origin/${{ github.event.repository.default_branch }}
+      # The coupling gate needs a base and a head, so the PR arm runs the chain
+      # step by step to pass the PR body. A body containing a
+      # `Spec-Drift-Waiver:` line has no safe shell quoting, and a file has no
+      # quoting at all.
+      - name: Governed loop (pull request)
+        if: github.event_name == 'pull_request'
         env:
           PR_BODY: ${{ github.event.pull_request.body }}
         run: |
           set -euo pipefail
-          printf '%s' "${PR_BODY:-}" > /tmp/pr-body.txt
+          printf '%s' "${PR_BODY:-}" > "$RUNNER_TEMP/pr-body.txt"
+          spec-spine check --fail-on-unresolved --fail-on-warn
+          spec-spine lint --fail-on-warn
+          spec-spine index coverage --fail-on-untraced
           spec-spine couple \
             --base "${{ github.event.pull_request.base.sha }}" \
             --head HEAD \
-            --pr-body /tmp/pr-body.txt
+            --pr-body "$RUNNER_TEMP/pr-body.txt"
