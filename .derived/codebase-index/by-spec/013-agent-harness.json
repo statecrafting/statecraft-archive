@@ -178,8 +178,8 @@
       }
     ],
     "specId": "013-agent-harness",
-    "specStatus": "draft"
+    "specStatus": "approved"
   },
   "schemaVersion": "1.1.0",
-  "shardHash": "c9417bb2c7e31c7a668f4ca5df50ccaff951a9c2ad0e201bf458e2e1e0b338df"
+  "shardHash": "60d9dc8a7478019ade0254df355a645b10e4ab87ebb9bb463a23cb5890a6bec2"
 }

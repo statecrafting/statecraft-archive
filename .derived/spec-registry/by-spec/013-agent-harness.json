@@ -82,10 +82,10 @@
       "7. Out of scope"
     ],
     "specPath": "specs/013-agent-harness/spec.md",
-    "status": "draft",
+    "status": "approved",
     "summary": "The harness is what an agent may do in this repository, so it is claimed by a spec and held by the coupling gate rather than living as untracked convention. statecraft adopts the spec-spine kit whole (ten skills, four pipeline agents, four rules, the read-only session hooks, the composite Makefile gate) at the 0.18.0 floor, and moves the project layer that the skills read into AGENTS.md so the skills stay byte-identical to the kit and a kit update is a copy rather than a merge. Three defects the adoption exposed are fixed here: the harness globs matched directories and hashed nothing, the session hooks repaired the tree they were reading, and the CI gate ran a writing `compile` against the branch it was judging.\n",
     "title": "The agent harness: the spec-spine kit as statecraft's governed loop"
   },
-  "shardHash": "07b9ef2989128ce124d1566b0d5f1769cd44cb74d97dd375027692687ced0a01",
+  "shardHash": "38eb710720ed02609d01d5f1593c2ba0511d4a90046dcdef83cb93453578b04a",
   "specVersion": "1.2.0"
 }

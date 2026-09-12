@@ -54,14 +54,21 @@ blessed: it is what a later spec is written against.
 
 ---
 
-## VI onward: the principles of the system you are specifying
+## VI onward: statecraft's own principles
 
-Principles I through V govern the corpus and come from spec-spine. Number your
-own from VI. They govern the system your corpus describes, and they bind every
-spec equally. Keep them few. Freeze the ones you could not recover from by
-naming their anchors in the bootstrap spec's `unamendable` list.
+Principles I through V govern the corpus and come from spec-spine. Principles
+numbered from VI govern the system this corpus describes, and bind every spec
+equally.
 
-Replace this section with your first principle.
+**statecraft has not yet numbered its own.** Its durable claims are written and
+held elsewhere: the two-plane model, the factory's `template.toml` boundary, the
+CoreLedger data API and the license boundary live in the thesis
+(`specs/001-statecraft-thesis/spec.md`) and in `CLAUDE.md` "Key Conventions".
+They are binding where they are written. Elevating one to a constitutional
+principle is an ordinary spec's act, performed under the Amendment section
+below: an `approved` spec claims the new heading as a section unit of this file.
+Numbering a principle here that no spec claimed would be an unowned rule, which
+is the one thing a governed corpus has no way to hold.
 
 ---
 

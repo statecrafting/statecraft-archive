@@ -1,7 +1,7 @@
 ---
 id: "013-agent-harness"
 title: "The agent harness: the spec-spine kit as statecraft's governed loop"
-status: draft
+status: approved
 created: "2026-09-11"
 implementation: complete
 depends_on:
@@ -285,14 +285,13 @@ grep -q 'SPEC_SPINE_VERSION=v0.18.0' .github/workflows/spec-spine.yml
 ## 7. Out of scope
 
 - **The spec corpus's own lint debt beyond section 5.2.** The four claimed
-  paths that moved into `extra_hashed_inputs` and the ten that are excepted
-  are the whole of it; no other spec's claims are touched.
+  paths that moved into `extra_hashed_inputs` and the eleven that are
+  excepted are the whole of it; no other spec's claims are touched.
 - **`[domains]` and `[kind]` taxonomies.** Both stay empty and free-text.
 - **A domain-specialist agent beyond `encore-expert`.** The kit's pattern
-  allows more; statecraft needs one.
+  allows more; statecraft needs one. The ten skills, four kit agents and
+  four rules are the whole harness this spec claims.
 - **The merge driver as a default.** `.githooks/` ships, and it stays
   opt-in per clone: nothing happens until
   `./.githooks/enable-merge-driver.sh` registers it. Sharding already
   removes the common conflict.
-- **Flipping this spec to `approved`.** It is born `draft`, and approval is
-  a human act.
