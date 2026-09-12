@@ -2,7 +2,7 @@
 id: "010-evidence-byte-seam"
 title: "The evidence-byte seam: original bytes beside the ledger, never through it"
 status: approved
-implementation: pending
+implementation: in-progress
 created: "2026-09-12"
 depends_on:
   - "001-packages-thesis"
