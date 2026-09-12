@@ -5,10 +5,6 @@
       {
         "kind": "file",
         "path": "spec-spine.toml"
-      },
-      {
-        "kind": "file",
-        "path": ".github/workflows/spec-spine.yml"
       }
     ],
     "id": "000-bootstrap",
@@ -16,7 +12,8 @@
       "000: Bootstrap spec system",
       "1. The authoring / derived boundary",
       "2. The typed authority graph",
-      "3. Pre-code"
+      "3. Pre-code",
+      "4. Transferred out"
     ],
     "specPath": "specs/000-bootstrap/spec.md",
     "status": "approved",
@@ -30,6 +27,6 @@
       "refusal-rule"
     ]
   },
-  "shardHash": "6f30dc726e5c6e70813e1f7bf2f8c8bcbd9be9c6509ee68371307046a9309f14",
-  "specVersion": "1.1.0"
+  "shardHash": "990716767e4d31fa75c3eebb008d2ef19efd7d6a58384460e506db414f3c2e06",
+  "specVersion": "1.2.0"
 }

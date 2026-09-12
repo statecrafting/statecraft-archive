@@ -11,7 +11,6 @@ summary: >
   governed: the spine exists before the first package arrives.
 establishes:
   - "spec-spine.toml"
-  - ".github/workflows/spec-spine.yml"
 unamendable:
   - "markdown-truth-boundary"
   - "json-truth-boundary"
@@ -66,3 +65,18 @@ The spine lands before the packages. `standalone_rust_workspaces` and
 `standalone_npm_packages` in `spec-spine.toml` both start empty; a package
 appends itself to both as its own spec lands it. Spec 001 records what is
 coming and in what order.
+
+## 4. Transferred out
+
+**2026-09-11, `.github/workflows/spec-spine.yml` to spec 008.** This spec
+established the governance workflow along with the config, because when it
+was written there was nothing else to hold it. Spec 008 installs the session
+harness and makes `Makefile` the single definition of the gate; the workflow
+that runs that gate belongs with it, so the path was retired and its
+replacement, `.github/workflows/govern.yml`, is claimed there. This is the
+section 2 rule applied to itself: the edge was dropped here in the same
+change that added it there, transferred rather than duplicated or abandoned.
+
+What stays here is the config. `spec-spine.toml` is the bootstrap's, because
+it is the statement of what this corpus is, and spec 008 edits it the way any
+spec edits a unit another spec owns.

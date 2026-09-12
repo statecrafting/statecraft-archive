@@ -15,6 +15,12 @@ hiqlite-native (003), kernel-native (004), governance-native (005), and
 fleet-native (006). No exporting spec retired: each dropped the one path
 that moved and kept the code it still owns.
 
+Two specs follow the ladder and govern how the repository is worked rather
+than what it ships: build verification (007) compiles every addon on every
+publish platform before a tag can spend a version, and the session harness
+(008) claims the agentic loop itself, so an edit to what an agent may do here
+is a governed change like any other.
+
 ## Why this repo
 
 These packages were scattered across three repositories under three npm
@@ -58,14 +64,25 @@ request beside the spine gates.
 ## Governance
 
 Governed by [spec-spine](https://github.com/statecrafting/spec-spine)
-(`cargo install spec-spine-cli`):
+(`cargo install spec-spine-cli`, or `npm i -g spec-spine`). `spec-spine.toml`
+sets `[meta] required_version = ">=0.18.0"`, so a binary too old for the verbs
+below is refused at the call rather than answering with a misleading exit code.
+
+`Makefile` is the single definition of the gate, and
+`.github/workflows/govern.yml` runs the same targets, so the local loop and the
+CI loop cannot drift:
 
 ```bash
-spec-spine compile   # specs -> .derived/spec-registry/by-spec/
-spec-spine index     # code linkage -> .derived/codebase-index/
-spec-spine lint      # corpus conformance
-spec-spine couple --base origin/main --head HEAD   # the PR coupling gate
+make gate        # read-only: check, lint, index coverage, couple
+make refresh     # writing: recompute the committed shard trees
+make typecheck test licenses    # the stack gate CI runs beside the loop
 ```
 
 Read `.derived/**` only through `spec-spine` subcommands; the shards are
 compiler-owned.
+
+The session harness that drives all of this (`AGENTS.md`, `.claude/`,
+`.githooks/`) is the spec-spine kit, governed by
+`specs/008-session-harness/spec.md`. `AGENTS.md` is the cross-agent protocol
+and the authority for the gate command list; start a session with `/prime`, or
+`/setup` on a fresh clone.
