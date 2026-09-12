@@ -9,7 +9,43 @@
         "source": "spec-edge"
       },
       {
-        "path": "app/",
+        "path": "app/app.css",
+        "source": "spec-edge"
+      },
+      {
+        "path": "app/components/site-chrome.tsx",
+        "source": "spec-edge"
+      },
+      {
+        "path": "app/components/theme-toggle.tsx",
+        "source": "spec-edge"
+      },
+      {
+        "path": "app/layouts/site.tsx",
+        "source": "spec-edge"
+      },
+      {
+        "path": "app/lib/registry.server.ts",
+        "source": "spec-edge"
+      },
+      {
+        "path": "app/lib/registry.ts",
+        "source": "spec-edge"
+      },
+      {
+        "path": "app/root.tsx",
+        "source": "spec-edge"
+      },
+      {
+        "path": "app/routes.ts",
+        "source": "spec-edge"
+      },
+      {
+        "path": "app/routes/registry.$repo.$specId.tsx",
+        "source": "spec-edge"
+      },
+      {
+        "path": "app/routes/registry.tsx",
         "source": "spec-edge"
       },
       {
@@ -34,19 +70,6 @@
       }
     ],
     "resolvedUnits": [
-      {
-        "locations": [
-          {
-            "file": "app/"
-          }
-        ],
-        "ownership": true,
-        "sourceField": "establishes",
-        "unit": {
-          "kind": "directory",
-          "path": "app/"
-        }
-      },
       {
         "locations": [
           {
@@ -84,6 +107,136 @@
         "unit": {
           "kind": "file",
           "path": ".github/workflows/deploy.yml"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "app/app.css"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "file",
+          "path": "app/app.css"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "app/components/site-chrome.tsx"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "file",
+          "path": "app/components/site-chrome.tsx"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "app/components/theme-toggle.tsx"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "file",
+          "path": "app/components/theme-toggle.tsx"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "app/layouts/site.tsx"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "file",
+          "path": "app/layouts/site.tsx"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "app/lib/registry.server.ts"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "file",
+          "path": "app/lib/registry.server.ts"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "app/lib/registry.ts"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "file",
+          "path": "app/lib/registry.ts"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "app/root.tsx"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "file",
+          "path": "app/root.tsx"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "app/routes.ts"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "file",
+          "path": "app/routes.ts"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "app/routes/registry.$repo.$specId.tsx"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "file",
+          "path": "app/routes/registry.$repo.$specId.tsx"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "app/routes/registry.tsx"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "file",
+          "path": "app/routes/registry.tsx"
         }
       },
       {
@@ -130,5 +283,5 @@
     "specStatus": "approved"
   },
   "schemaVersion": "1.1.0",
-  "shardHash": "268bcd40a19907832f02694a5220351bfeed1f66ca9201379b446a77a7c7f990"
+  "shardHash": "ccd4d34a039bf3b57ada3c7ecee7426fe077435146f3d171287ec24b9f5013b1"
 }

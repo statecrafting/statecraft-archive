@@ -18,8 +18,44 @@
         "path": "vite.config.ts"
       },
       {
-        "kind": "directory",
-        "path": "app/"
+        "kind": "file",
+        "path": "app/root.tsx"
+      },
+      {
+        "kind": "file",
+        "path": "app/routes.ts"
+      },
+      {
+        "kind": "file",
+        "path": "app/app.css"
+      },
+      {
+        "kind": "file",
+        "path": "app/layouts/site.tsx"
+      },
+      {
+        "kind": "file",
+        "path": "app/components/site-chrome.tsx"
+      },
+      {
+        "kind": "file",
+        "path": "app/components/theme-toggle.tsx"
+      },
+      {
+        "kind": "file",
+        "path": "app/lib/registry.ts"
+      },
+      {
+        "kind": "file",
+        "path": "app/lib/registry.server.ts"
+      },
+      {
+        "kind": "file",
+        "path": "app/routes/registry.tsx"
+      },
+      {
+        "kind": "file",
+        "path": "app/routes/registry.$repo.$specId.tsx"
       },
       {
         "kind": "directory",
@@ -43,13 +79,14 @@
       "3. Behavior",
       "4. Acceptance",
       "5. Out of scope",
-      "6. Status (2026-07-14): complete, live at https://statecraft.ing"
+      "6. Status (2026-07-14): complete, live at https://statecraft.ing",
+      "7. Decision (2026-09-12): the `app/` claim narrows to the files this spec defines"
     ],
     "specPath": "specs/001-site-scaffold/spec.md",
     "status": "approved",
     "summary": "The marketing and docs site, built as a fully static React Router v7 app (framework mode, prerendered, no SSR at runtime) deployed to GitHub Pages under statecraft.ing. Amended 2026-07-14: React Router v7 replaces the earlier Astro choice, harvesting the OAP-era statecraft web app (ecosystem content, the spec-registry viewer) and keeping the whole product family on one frontend stack. The registry viewer runs over build-time-baked shards from the public repos, so the site stays static and every claim stays checkable. The apex DNS cutover is authorized: the legacy control plane no longer owns the domain.\n",
     "title": "statecraft.ing: React Router v7 static site, Pages deploy, apex cutover"
   },
-  "shardHash": "682dd850ced9322c7a546df654d56d1e90c5bb2fe92cc6468d41bc96a09ae88a",
+  "shardHash": "92bc49809db9ce89df43c86a664a9cf2b7fca998310e81648367be7244c34ad8",
   "specVersion": "1.2.0"
 }
