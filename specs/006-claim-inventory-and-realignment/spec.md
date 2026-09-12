@@ -1,7 +1,7 @@
 ---
 id: "006-claim-inventory-and-realignment"
 title: "The claim inventory: what this site may say today, and what waits on a decision"
-status: draft
+status: approved
 created: "2026-09-11"
 implementation: n-a
 depends_on:

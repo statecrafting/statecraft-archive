@@ -27,8 +27,8 @@
       }
     ],
     "specId": "006-claim-inventory-and-realignment",
-    "specStatus": "draft"
+    "specStatus": "approved"
   },
   "schemaVersion": "1.1.0",
-  "shardHash": "180b7493335f419e3835d39709c23e7204d0c4552cbc5a33180d607daaba3d72"
+  "shardHash": "7a00a7c4145fe1a33dd2714113f71ea0ed80cb8e9887e7794d0d4d80c24d00b1"
 }
