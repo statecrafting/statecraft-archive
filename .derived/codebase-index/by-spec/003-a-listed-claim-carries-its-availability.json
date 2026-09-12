@@ -28,8 +28,8 @@
       }
     ],
     "specId": "003-a-listed-claim-carries-its-availability",
-    "specStatus": "draft"
+    "specStatus": "approved"
   },
   "schemaVersion": "1.1.0",
-  "shardHash": "7fabe4076160d907b5e5c68096aa0c3eb09b263fa126bacc6cc0c7d889800f30"
+  "shardHash": "9ae686ba36584b0c33ec10fedf444956eb5062d8e9613b3dd9d3bfd95d802e9c"
 }

@@ -1,7 +1,7 @@
 ---
 id: "003-a-listed-claim-carries-its-availability"
 title: "A listed claim carries its availability"
-status: draft
+status: approved
 implementation: pending
 created: "2026-09-11"
 summary: >
