@@ -22,14 +22,14 @@ pub struct RedactionPolicy {
     pub stripped_fields: Vec<&'static str>,
 }
 
-/// 031's policy at version 5 (spec 119 added the denial records and their
+/// 031's policy at version 6 (spec 119 added the denial records and their
 /// samples; spec 121 the acceptance records; spec 122 the broker's; spec 125
-/// `fence.refused`): the kind allowlist and the
-/// fields stripped at any depth. Reviewable data; a change is a version
-/// bump, mirrored in export.ts.
+/// `fence.refused`; spec 128 the scan for a URL carrying userinfo): the kind
+/// allowlist and the fields stripped at any depth. Reviewable data; a change
+/// is a version bump, mirrored in export.ts.
 pub fn redaction_policy() -> RedactionPolicy {
     RedactionPolicy {
-        version: 5,
+        version: 6,
         included_kinds: vec![
             "acceptance.receipt",
             "acceptance.sensitive",
@@ -102,6 +102,21 @@ pub fn is_private_path_string(value: &str) -> bool {
         || embedded.is_match(value)
 }
 
+/// 128 B-7: whether the string contains an `http` or `https` URL carrying
+/// userinfo. The pattern is candidate.ts's `URL_USERINFO`, spelled so both
+/// engines match the same strings: the scheme letter by letter, not `(?i)`,
+/// and whitespace as its six ASCII bytes, not `\s`.
+pub fn contains_url_userinfo(value: &str) -> bool {
+    let userinfo = Regex::new(r"[hH][tT][tT][pP][sS]?://[^ \t\n\r\x0B\x0C/?#@]+@").unwrap();
+    userinfo.is_match(value)
+}
+
+/// B-2's scan as a whole, since policy version 6: a private path, or a URL
+/// carrying userinfo anywhere in the string, withholds the field holding it.
+pub fn is_withheld_value_string(value: &str) -> bool {
+    is_private_path_string(value) || contains_url_userinfo(value)
+}
+
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub struct RedactedPayload {
     pub payload: Option<Value>,
@@ -118,7 +133,7 @@ fn scrub(value: &Value, stripped: &BTreeSet<&str>, removed: &mut BTreeSet<String
     match value {
         Value::String(s) => Scrubbed {
             value: value.clone(),
-            bare: is_private_path_string(s),
+            bare: is_withheld_value_string(s),
         },
         Value::Null | Value::Bool(_) | Value::Number(_) => Scrubbed {
             value: value.clone(),
@@ -797,6 +812,33 @@ mod tests {
         assert!(bare.withheld_payload);
         let off = redact_payload("run.blocked", &json!({"a": 1}), &policy);
         assert!(off.withheld_payload);
+    }
+
+    #[test]
+    fn policy_six_withholds_a_string_containing_a_url_with_userinfo() {
+        let policy = redaction_policy();
+        assert_eq!(policy.version, 6);
+        let r = redact_payload(
+            "acceptance.receipt",
+            &json!({
+                "repo": {"origin": "https://x-access-token:ghp_fabricated@github.com/org/repo.git", "keep": "https://github.com/org/repo.git"},
+                "suite": {"commands": [["git", "ls-remote", "https://user:secret@example.com/r"]], "digest": "d"},
+                "note": "clone from HTTPS://tok@example.com/r",
+                "scp": "git@github.com:org/repo.git",
+                "query": "https://example.com/path?user=a@b"
+            }),
+            &policy,
+        );
+        assert!(!r.withheld_payload);
+        // The leaf field is named, not its parent (128 FR-006): `origin`, not `repo`.
+        assert_eq!(r.withheld_fields, vec!["commands", "note", "origin"]);
+        let text = r.payload.unwrap().to_string();
+        assert!(!text.contains("ghp_fabricated"));
+        assert!(!text.contains("secret"));
+        assert!(text.contains("git@github.com:org/repo.git"));
+        assert!(text.contains("https://example.com/path?user=a@b"));
+        assert!(!contains_url_userinfo("https://github.com/org/repo.git"));
+        assert!(contains_url_userinfo("see https://tok@github.com/x"));
     }
 
     #[test]

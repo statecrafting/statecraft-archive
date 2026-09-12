@@ -291,7 +291,9 @@ test("the economics route 404s an unknown project, enforces GET, and appears in 
     expect(missingEnvelope.ok).toBe(false);
     expect(missingEnvelope.error.kind).toBe("not-found");
 
-    const posted = await fetch(`${server.url}/api/projects/alpha/economics`, { method: "POST" });
+    // The version header a first-party POST carries (128 B-3), so the route
+    // itself, not the origin guard, is what refuses the method.
+    const posted = await fetch(`${server.url}/api/projects/alpha/economics`, { method: "POST", headers: { "X-Api-Version": "2" } });
     expect(posted.status).toBe(405);
     const postedEnvelope = (await posted.json()) as { ok: boolean; error: { kind: string } };
     expect(postedEnvelope.error.kind).toBe("method-not-allowed");

@@ -139,8 +139,56 @@ export function changedPaths(candidateDir: string, baseSha: string, headSha: str
   return result.stdout.length === 0 ? [] : result.stdout.split("\n");
 }
 
-// The remote the repository publishes to, or null when it has none.
+// --- a URL's userinfo (128 B-6) ---------------------------------------------
+
+// An `http` or `https` URL's userinfo, wherever it sits inside a string: the
+// part between `://` and an `@` that comes before any path, query or fragment.
+// A token can be the user or the password (`x-access-token:<token>@`, or a
+// bare `<token>@`), so the whole userinfo goes (D-5). The scheme is matched
+// letter by letter rather than case-insensitively and whitespace is spelled
+// out, so the Rust copy of this pattern (statecraft-journal's bundle scan)
+// matches exactly the same strings.
+const URL_USERINFO = /([hH][tT][tT][pP][sS]?:\/\/)[^ \t\n\r\x0B\x0C\/?#@]+@/g;
+
+export function containsUrlUserinfo(text: string): boolean {
+  URL_USERINFO.lastIndex = 0;
+  return URL_USERINFO.test(text);
+}
+
+// Every `http` or `https` URL inside the string, without its userinfo; the
+// rest of the string is untouched. What the API applies to a value it serves
+// from a record already written (B-8).
+export function withoutUrlUserinfo(text: string): string {
+  URL_USERINFO.lastIndex = 0;
+  return text.replace(URL_USERINFO, "$1");
+}
+
+// The one reduction both origin lookups use (B-6). An `http` or `https`
+// remote loses its userinfo; one that does not parse as a URL is null, never
+// guessed; an `ssh://` or scp-style remote and a local path are returned as
+// they are, since an SSH user part is not a secret and 031 withholds a private
+// path on export.
+export function reduceRemoteUrl(remote: string): string | null {
+  if (!/^[hH][tT][tT][pP][sS]?:\/\//.test(remote)) return remote;
+  let parsed: URL;
+  try {
+    parsed = new URL(remote);
+  } catch {
+    return null;
+  }
+  if (parsed.username === "" && parsed.password === "") return remote;
+  const reduced = withoutUrlUserinfo(remote);
+  try {
+    const check = new URL(reduced);
+    return check.username === "" && check.password === "" ? reduced : null;
+  } catch {
+    return null;
+  }
+}
+
+// The remote the repository publishes to, without any credential in it, or
+// null when it has none (or has one that does not parse).
 export function originUrl(repoDir: string): string | null {
   const result = git(repoDir, ["remote", "get-url", "origin"]);
-  return result.exitCode === 0 && result.stdout.length > 0 ? result.stdout : null;
+  return result.exitCode === 0 && result.stdout.length > 0 ? reduceRemoteUrl(result.stdout) : null;
 }

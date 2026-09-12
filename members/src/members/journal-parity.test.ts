@@ -143,6 +143,38 @@ test("FR-003 (c): a bundle exported by either implementation is the same bytes",
   expect(tsText).not.toContain("/tmp/private");
 });
 
+// 128 FR-006: policy version 6's scan for a URL carrying userinfo is one rule
+// in two languages, so both exports of a chain holding such URLs, in a leaf
+// field, inside prose and inside a command argument, are the same bytes, and
+// neither carries the token.
+test("FR-003 (c), 128 FR-006: at policy 6 both exports withhold a credentialed URL identically", async () => {
+  const root = fresh();
+  const token = "ghp_fabricated128parity";
+  const work = openJournal(root);
+  try {
+    work.append("acceptance.receipt", {
+      schemaVersion: 1,
+      repo: { origin: `https://x-access-token:${token}@github.com/o/r.git`, branch: "128-x" },
+      suite: { commands: [["git", "ls-remote", `https://u:${token}@github.com/o/r.git`]], digest: "d" },
+      passing: true,
+    });
+    work.append("run.result", { status: "completed", note: `pushed to HTTPS://${token}@github.com/o/r`, plain: "https://github.com/o/r" });
+  } finally {
+    work.close();
+  }
+  openJournal(root, "decisions").close();
+  const ts = exportBundleFromRoot(root, "parity");
+  if (!ts.ok) throw new Error(ts.reason);
+  expect(ts.bundle.policyVersion).toBe(6);
+  const tsText = serializeBundle(ts.bundle);
+  const out = join(root, "rust-bundle.json");
+  const rs = await run([RUST_BIN, "export", "--dir", root, "--project", "parity", "--no-attest", "--out", out]);
+  expect(rs.code).toBe(0);
+  expect(readFileSync(out, "utf8")).toBe(tsText);
+  expect(tsText).not.toContain(token);
+  expect(tsText).toContain('"plain": "https://github.com/o/r"');
+}, 600_000);
+
 test("FR-003 (d): the two verifiers agree on where a tampered bundle first breaks", async () => {
   const root = fresh();
   writeChainWithTypescript(root);

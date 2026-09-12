@@ -17,6 +17,7 @@
 import type { JournalRecord, JsonValue } from "../journal";
 import { foldQuotaState } from "../quota";
 import type { ApiEvent, ApiEventType } from "./types";
+import { reduceServedValue } from "./state";
 
 // --- constants (B-4) --------------------------------------------------------
 
@@ -271,7 +272,9 @@ export function startJournalPump(options: JournalPumpOptions): JournalPump {
           seq: record.seq,
           ts: record.ts,
           kind: record.kind,
-          data: boundEventData(record.payload, record.seq, record.kind, maxEventChars),
+          // 128 B-8: a streamed payload is a served historical value too, and
+          // the ring replays it, so it is reduced before it is buffered.
+          data: boundEventData(reduceServedValue(record.payload), record.seq, record.kind, maxEventChars),
         })
       );
     }

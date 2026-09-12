@@ -21,6 +21,18 @@ extends:
   - { spec: "022-http-api-and-events", unit: "members/src/orchestrator/api/server.test.ts", nature: additive }
   # The API view reduces userinfo in historical values it serves (B-8).
   - { spec: "022-http-api-and-events", unit: "members/src/orchestrator/api/state.ts", nature: additive }
+  # The event pump streams and replays record payloads, which are served
+  # historical values too (D-11).
+  - { spec: "022-http-api-and-events", unit: "members/src/orchestrator/api/events.ts", nature: additive }
+  # 030's route test posts to its GET-only route; the post gains the version
+  # header so the route, not the guard, is what it tests (B-10).
+  - { spec: "030-run-economics", unit: "members/src/orchestrator/economics.test.ts", nature: additive }
+  # 113's parity suite holds the two exports to one byte stream; it gains the
+  # policy-6 case (FR-006).
+  - { spec: "113-journal-port", unit: "members/src/members/journal-parity.test.ts", nature: additive }
+  # 024's web fixtures build an ApiMeta by hand, which gains `guardRefusals`.
+  - { spec: "024-web-ui", unit: "members/web/test/fixtures.ts", nature: additive }
+  - { spec: "024-web-ui", unit: "members/web/test/store.test.tsx", nature: additive }
   # 121 owns the candidate, where the origin URL is read before it is
   # journaled in a receipt or served as a project's origin.
   - { spec: "121-candidate-and-receipt", unit: "members/src/orchestrator/candidate.ts", nature: additive }
@@ -375,6 +387,54 @@ refusal or the absence where the probe saw success: FR-002 carries the
 foreign-origin, `Origin: null`, other-loopback-port and rebinding requests;
 FR-006 to FR-008 carry the token-bearing origin through a receipt, the
 export, the projects chain and a served historical record.
+
+D-10 (2026-09-12, build). At port 80 a `Host` without a port is the same
+authority. B-1 names `<name>:<port>`, and an HTTP client omits the port when
+it is the scheme's default (RFC 9110 §7.2), so a strict reading would refuse
+a browser addressing a daemon bound at 80. The guard admits the bare three
+names, and the matching bare origins, only at port 80; at any other port a
+portless `Host` is refused. This adds no name and resolves nothing, so D-1
+stands.
+
+D-11 (2026-09-12, build). B-8's reduction runs at the two places the API
+serializes, not field by field. Every JSON envelope (`ok` and `fail`) leaves
+through `servedJsonText`, and the event pump reduces a record's payload before
+the ring buffers it, so a stream and its replay carry the same reduced value.
+Per-field reduction was rejected: B-8 lists a check detail, a receipt's
+origin and the capsule's, but the history, run, decisions and evidence views
+and the stream can all carry a record's strings, and a list of fields is the
+kind that is one route short. The cost is one text test per envelope, and a
+second serialization only when that test matches. Raw evidence bytes and
+static assets are not envelopes and are served as they are (§6). The pump's
+module, `events.ts`, is 022's and gains an `extends` edge.
+
+D-12 (2026-09-12, build). The reduction is exported from `candidate.ts`
+(`reduceRemoteUrl`, `containsUrlUserinfo`, `withoutUrlUserinfo`) and used by
+both origin lookups, the export scan and the API. Its pattern spells the
+scheme letter by letter and whitespace as its six ASCII bytes, so the Rust
+copy in `statecraft-journal` matches exactly the same strings: `(?i)` and
+`\s` are not the same set in the two regex engines, and FR-006's byte-for-byte
+parity would otherwise depend on which strings a chain happens to hold. A
+remote that names `http` or `https` and does not parse is `null` (B-6), which
+the probe's check reports as `no "origin" remote`; the probe's interface has
+one null, and telling "unparseable" apart would widen it for a remote git
+itself would not use.
+
+D-13 (2026-09-12, build). The server suite's request helper adds
+`X-Api-Version` to a non-GET request that lacks it, which is B-10's "gain it"
+in one place rather than at 36 call sites, and asserts on every response that
+no `Access-Control-Allow-*` header is present, which is FR-003 for the whole
+suite. The attack probes (FR-002, FR-004, FR-008) call `fetch` directly, so
+each chooses every header it sends.
+
+D-14 (2026-09-12, build). The dev proxy's target is 022's default address,
+or `STATECRAFT_DEV_DAEMON_URL` when set, and the rewritten `Origin` follows
+the target. The config accepts only an `http` URL at one of the three
+loopback names and refuses to load otherwise. The need was found running §5's
+`web:dev` round: the operator's own daemon held port 4519, and the proxy as
+first written could only reach that daemon, so the round would have driven
+it. A contributor in the same position needs the same thing, and a refusal of
+any non-loopback target keeps the proxy from becoming a way off the machine.
 
 ## Status (2026-09-12, approved)
 
