@@ -33,7 +33,11 @@ summary: >
   consumer possible without touching the npm contract; sections 6 and 7
   name what this repository may not decide and what it asks of its
   siblings. Draft: nothing here is approved, and the placement-topology
-  question belongs to statecraft and Rahi, not here.
+  question belongs to statecraft, not here. Revised 2026-09-12: the
+  evidence-byte question left this spec for draft 010, a scratch copy
+  showed the section 8 increment is buildable, and no Rust consumer of
+  any addon was found in rahi, so this extraction is not on any launch
+  path.
 ---
 
 # 009: The native extraction
@@ -69,6 +73,30 @@ own frontmatter, that section 4's work reaches into `addon/governance-native/`
 (spec 005) and `addon/fleet-native/` (spec 006). An `extends` edge amends
 nobody, and while this spec is `draft` it claims nothing. Specs 005 and
 006 stand exactly as written.
+
+### 1.2 Revision of 2026-09-12
+
+A revision-3 packet dated 2026-09-11 asked for four things: take the
+evidence-byte question off the extraction schedule, keep the section 8
+increment ready for a targeted approval decision, confirm who actually
+needs a Rust consumer, and say exactly which tests contact an apiserver.
+It is planning input, not approval, and this revision treats it that way.
+
+What changed, and where each change is recorded:
+
+- **The evidence-byte question moved to draft 010.** Sections 2.5, 4.5
+  and requests F-3, F-4 and C-1 now point there. Bytes are on the
+  critical path for statecraft's evidence intake; extraction is not.
+  One spec holding both would force one approval decision for two
+  questions with different owners and different urgency.
+- **Corrections from re-measurement.** Section 2.5's number-formatting
+  example did not reproduce. Every "Rahi spec 020/021/030/032" citation
+  here named an enrahitu spec. Section 3's "reusable in the new service"
+  had no consumer behind it. Each correction sits at the point it
+  corrects, dated.
+- **Feasibility and test inventory.** Sections 8.1 and 8.2 record them.
+  They are a measurement on a scratch copy, not an implementation.
+  Nothing under `addon/` changed.
 
 ## 2. The packet's findings, checked
 
@@ -183,7 +211,20 @@ supplied by the Node process at load time rather than at link time.
 way round, by gating *out* rather than gating *in*, and inherited a
 default that links Node for everyone. Section 4 proposes converging on
 `kernel-native`'s answer, which is already built, already published, and
-already exercised by Rahi through spec 021.
+already exercised by enrahitu through its spec 021.
+
+**Corrected 2026-09-12.** The first draft wrote "Rahi" here and in
+sections 2.7, 3.1, 4.3, 6 and 7. The specs cited (020 app-model
+contract, 021 kernel-native consumption, 030 infra topology, 032 hiqlite
+interface contract) are enrahitu's, at `26c75e2`. rahi is a separate
+repository; its `docs/design/00-lineage.md` calls it "a rebuild, not an
+amendment, of the enrahitu chassis". Its numbering is different: its
+030 is operational verbs and its 032 is cluster topology. rahi `main`
+(`444bcf8`) has no `package.json` and no dependency on any
+`@statecrafting/*` package or addon crate. Its `Cargo.toml` takes the
+crates.io primitives directly: `attest-ledger-types`,
+`attest-ledger-core` and `canonical-keysort-json` 0.1, and
+`action-gate-types` and `action-gate-core` 0.1.
 
 `kernel-native` is still `publish = false`, so the Rust consumer above
 needs a path dependency. 4.3 addresses that separately.
@@ -206,7 +247,7 @@ Replaying that exact path:
 | `{"zeta":1,"alpha":2}` | `{"alpha":2,"zeta":1}` | no |
 | `{ "a" : 1 }` | `{"a":1}` | no |
 | `{"a":1,"a":2}` | `{"a":2}` | no |
-| `{"n":1.0,"e":1e3,"big":12345678901234567890123}` | `{"big":1.2345678901234568e22,"e":1000.0,"n":1.0}` | no |
+| `{"n":1.0,"e":1e3,"big":12345678901234567890123}` | `{"big":1.2345678901234568e+22,"e":1000.0,"n":1.0}` | no |
 | `{"id":"x","kind":"stamp"}` | `{"id":"x","kind":"stamp"}` | yes |
 
 The last row is why this has never been noticed: statecraft's
@@ -228,13 +269,30 @@ therefore **not** RFC 8785 / JCS. The doc comment on `canon.rs` says a
 payload hash is "independently reproducible by any third party from the
 same JSON", and that holds only for a third party who reproduces
 `serde_json`'s exact number formatting and string escaping. A JavaScript
-verifier canonicalizing the same document writes `1.2345678901234568e+22`
-where this writes `1.2345678901234568e22`, and gets a different SHA-256.
+verifier sorting keys and writing numbers the ECMAScript way turns the
+fourth row into `{"big":1.2345678901234568e+22,"e":1000,"n":1}`, where
+this writes `"e":1000.0,"n":1.0`, and gets a different SHA-256.
+
+**Corrected 2026-09-12.** The first draft printed the fourth row's stored
+value as `1.2345678901234568e22` and gave the `e22` against `e+22`
+difference as the divergence. That does not reproduce. The addon built
+from this tree writes `1.2345678901234568e+22`, and so does the
+published `@statecrafting/governance-native-darwin-arm64@0.1.0` binary.
+The `e22` spelling is what `serde_json` 1.0.145 and earlier produce
+(ryu). 1.0.150 and later produce `e+22` (zmij). The table above is
+re-measured against the real addon. The conclusion stands on `1000.0`
+against `1000`. The formatter change is a finding in its own right:
+every addon's `Cargo.lock` is gitignored, so the published binary's
+formatter is whatever `serde_json` resolved on the publish runner.
+Draft 010 section 2.4 records a chain that verifies under one formatter
+and reports "content was altered" under the other.
 
 Both facts are load-bearing for B32 (original bytes) and B34 (a
 permissive independent verifier). Neither is fixed here: changing either
-changes hashes in a live chain, and the live chain is statecraft's. They
-are reported, with a proposal in 4.5 and a request in section 7.
+changes hashes in a live chain, and the live chain is statecraft's.
+**Moved 2026-09-12:** the measurements, the regression vectors and the
+contract proposal now live in draft 010. This section stays as the first
+report.
 
 ### 2.6 The gate is a policy compiler; it is not an authorization
 
@@ -265,12 +323,13 @@ four-level ladder, with a degrade-only latch. statecraft spec 008 already
 calls trust advisory. Nothing here should change that, and the packet's
 sentence should be preserved verbatim in whatever spec lands B30.
 
-### 2.7 The fleet's placement shape and Rahi's topology have already diverged, and Rahi has written the verdict
+### 2.7 The fleet's placement shape and the chassis topology have already diverged, and enrahitu has written the verdict
 
 **Confirmed, and further along than the packet knew.** The packet
 observes that the single-replica Deployment with scale-down plus restic
-is unlike Rahi's StatefulSet contract. Rahi has recorded its own
-conclusion in its spec 030 section 3.4, approved on 2026-07-25:
+is unlike the chassis's StatefulSet contract. enrahitu recorded its
+conclusion in its spec 030 section 3.4, approved on 2026-07-25 (the
+first draft attributed this to Rahi; see the 2.4 correction):
 
 > statecrafting spec 006 (fleet-native) currently encodes a Deployment
 > plus PVC placement shape. The object graph above is different
@@ -278,15 +337,23 @@ conclusion in its spec 030 section 3.4, approved on 2026-07-25:
 > PodDisruptionBudget, anti-affinity, separate learner Deployment), so
 > that spec is reworked rather than parameterized.
 
-Two qualifications matter and neither is in the packet. Rahi 030 is
+Two qualifications matter and neither is in the packet. enrahitu 030 is
 `approved` but `implementation: pending`, so the StatefulSet topology is
-a design and not a running thing; and Rahi 030 states that N=1 is the
-primary mode and N=3 is the scale path, so the divergence is about the
-object graph rather than about replica count as such.
+a design and not a running thing; and enrahitu 030 states that N=1 is
+the primary mode and N=3 is the scale path, so the divergence is about
+the object graph rather than about replica count as such.
+
+**Added 2026-09-12: what rahi, the successor chassis, says.** rahi spec
+032 (cluster topology) is `approved` and `complete` on `main`
+(`444bcf8`), and its own implementation record says "Not exercised here:
+a real three-pod cluster and a bucket". rahi's consumer contract is a
+draft design note on its unmerged `corpus/runtime-binding` branch
+(`b24de62`). It lists "fleet operations" among the things that "stay the
+consumer's". rahi says nothing about `fleet-native` either way.
 
 The consequence for this repository is a boundary, not a task. "Reworked
 rather than parameterized" is a decision about placement, and placement
-is statecraft's product behavior on Rahi's chassis contract. Section 6
+is statecraft's product behavior on the chassis contract. Section 6
 records it as out of scope here.
 
 ### 2.8 The neutral verifier's blocker is a format, not a crate
@@ -312,7 +379,8 @@ unsigned-anchor fallback in `verify`. Those sixty lines live in
 
 A third party writing a permissive verifier for statecraft's chain must
 therefore either read AGPL source to learn the format, or be handed the
-format by us. 4.5 proposes the second.
+format by us. 4.5 proposed the second; draft 010 carries it as an open
+decision from 2026-09-12.
 
 ### 2.9 The README's consumer list is ahead of the tree, for one consumer
 
@@ -322,7 +390,8 @@ Statecraft, Enrahitu and Chancery consumers." Inspected:
 | consumer | pins | verified |
 |---|---|---|
 | statecraft | `fleet-native` 0.2.0, `governance-native` 0.1.0, `hiqlite-native` 0.1.0, `toolchain` 0.3.0 | yes |
-| enrahitu (Rahi) | `hiqlite-native` ^0.2.0, `kernel-native` ^0.2.0, `toolchain` ^0.4.0 | yes |
+| enrahitu | `hiqlite-native` ^0.2.0, `kernel-native` ^0.2.0, `toolchain` ^0.4.0 | yes |
+| rahi (added 2026-09-12) | none; takes the crates.io primitives directly | yes, `main` `444bcf8` |
 | chancery | none | no |
 
 chancery has no root manifest and no `@statecrafting/*` dependency. Its
@@ -352,7 +421,7 @@ consumable` is the column the packet's exit criterion is about.
 | `@statecrafting/toolchain` | 0.4.0 | Apache-2.0 | statecraft (0.3.0), enrahitu (^0.4.0) | n/a, not a crate | required by legacy consumers |
 | `@statecrafting/toolchain-{darwin-arm64,linux-x64,linux-arm64}` | 0.4.0 | MPL-2.0 | the meta package | n/a, carry vendored binaries | required by legacy consumers |
 | `@statecrafting/hiqlite-native` | 0.2.0 | Apache-2.0 | statecraft (0.1.0), enrahitu (^0.2.0) | no: `publish = false` | required by legacy consumers |
-| `@statecrafting/kernel-native` | 0.2.0 | Apache-2.0 | enrahitu (^0.2.0); chancery planned | partly: public API, but `publish = false` | reusable in the new service |
+| `@statecrafting/kernel-native` | 0.2.0 | Apache-2.0 | enrahitu (^0.2.0); chancery planned | partly: public API, but `publish = false` | reusable; no Rust consumer identified (corrected 2026-09-12) |
 | `@statecrafting/governance-native` | 0.1.0 | AGPL-3.0 | statecraft (0.1.0) | no: private modules and `publish = false` | unresolved, pending statecraft |
 | `@statecrafting/fleet-native` | 0.2.0 | AGPL-3.0 | statecraft (0.2.0) | no: private modules and `publish = false` | unresolved, pending statecraft |
 
@@ -371,7 +440,7 @@ it should say.
 
 | schema | declared in | owner | consumed by |
 |---|---|---|---|
-| `app-model.json` | Rahi spec 020 | Rahi | `kernel-native::model` |
+| `app-model.json` | enrahitu spec 020 | enrahitu | `kernel-native::model` |
 | gate config v1 (four ordered check ids) | `addon/governance-native/config/gate.v1.json` | statecrafting spec 005, with statecraft spec 008 holding the deployed copy and both pinning one hash | `governance-native::gate` |
 | `LedgerRecord`, `ChainAnchor` | `attest-ledger-types` (Apache-2.0) | attest-ledger | `governance-native::ledger`, `kernel-native::payload` |
 | the ledger's on-disk layout and genesis seed | `addon/governance-native/src/ledger.rs` | statecrafting spec 005 | statecraft `backend/governance/`; **no permissive declaration exists** (2.8) |
@@ -379,8 +448,8 @@ it should say.
 | `WindowConfig`, `WindowSnapshot`, `Sample` | `trust-window` (Apache-2.0) | trust-window | `governance-native::trust`, `kernel-native::ladder` |
 | the trust envelope (`{config, window}`) | `addon/governance-native/src/trust.rs` | statecrafting spec 005 | statecraft `backend/governance/` |
 | `DeploySpec`, `AppStatus`, `BackupTarget`, `BackupResult`, `RemoveResult` | `addon/fleet-native/src/types.rs` | **ambiguous**, see below | statecraft `backend/fleet/` |
-| the EnRaHiTu placement object graph | `addon/fleet-native/src/resources.rs` | statecraft spec 006 section 3 decided it; statecrafting spec 006 implements it; Rahi spec 030 supersedes the topology it assumes | statecraft `backend/fleet/` |
-| the hiqlite KV and counter surface | Rahi spec 032 | Rahi | `hiqlite-native` |
+| the EnRaHiTu placement object graph | `addon/fleet-native/src/resources.rs` | statecraft spec 006 section 3 decided it; statecrafting spec 006 implements it; enrahitu spec 030 supersedes the topology it assumes | statecraft `backend/fleet/` |
+| the hiqlite KV and counter surface | enrahitu spec 032 | enrahitu | `hiqlite-native` |
 
 The one genuine ambiguity is the fleet DTOs. statecrafting spec 006
 section 3.2 says the napi surface is "unchanged from what statecraft spec
@@ -432,8 +501,19 @@ doing what it does now, and the 13 golden tests keep passing unchanged,
 which is the regression guard for the whole change.
 
 A Rust consumer then writes `features = ["kube"]` and links `k8s-openapi`,
-`kube`, `tokio` and serde, with no `napi`, no `napi-build` and no
+`kube`, `tokio` and serde, with no `napi`, no `napi-derive` and no
 Node-API symbols.
+
+**Corrected 2026-09-12.** The first draft also said "no `napi-build`".
+That is not what the `kernel-native` pattern gives. `napi-build` stays an
+unconditional `[build-dependencies]` entry there, and in both crates
+here. With `build.rs` keyed on `CARGO_FEATURE_NAPI` it emits nothing
+for a `kube`-only build. It is a build-time helper, not a link-time
+dependency. The scratch consumer in 8.1 shows `napi-build` only on the
+build edge, and `cargo tree -i napi` matches no package. Acceptance item
+1 names `napi` and `napi-derive`, and it holds as written. Making
+`napi-build` optional as well is possible, but it would depart from
+`kernel-native`, and nothing here needs it.
 
 ### 4.3 Decide `publish = false` deliberately, per crate
 
@@ -454,9 +534,11 @@ What publishing does change is a promise: a published crate version is
 immutable and its API is something other people can depend on. That is
 the decision, and it is different per crate:
 
-- `kernel-native` (Apache-2.0, public API today, consumed by Rahi through
-  spec 021): the strongest candidate, and the only one where a Rust
-  consumer is already conceivable.
+- `kernel-native` (Apache-2.0, public API today, consumed over napi by
+  enrahitu through its spec 021): the strongest candidate, and the only
+  one where a Rust consumer is conceivable. None exists: rahi, the one
+  Rust chassis in the family, links the crates.io primitives directly
+  rather than any addon crate (2.4 correction).
 - `governance-native` and `fleet-native` (AGPL-3.0): publishing is
   premature while statecraft draft 017 is open (section 6).
 - `hiqlite-native`: no request for it exists. Leave it.
@@ -482,6 +564,14 @@ later spec change the JSON wire shape, that is a major bump argued in its
 own spec, never a republish of a version already on npm.
 
 ### 4.5 The evidence-byte question is stated, not solved
+
+**Moved 2026-09-12 to draft 010, and item 1 is superseded there.** A
+field of JSON cannot carry bytes "verbatim": it would have to encode
+them, and the encoding becomes the new thing to canonicalize. Draft 010
+proposes an immutable object addressed by its SHA-256, with the ledger
+holding only a typed reference to it. Item 2 is carried into 010 as an
+open decision. The text below is the first draft's, kept as the record
+of what was proposed.
 
 2.5 and 2.8 describe two properties this repository could change and
 should not change unilaterally, because the artifacts they govern are
@@ -517,8 +607,10 @@ Neither is scheduled by this spec.
 
 ## 6. Out of scope
 
-- **The fleet's future placement topology.** Rahi spec 030 section 3.4
-  says spec 006 is "reworked rather than parameterized"; statecraft's
+- **The evidence-byte seam.** Draft 010, from 2026-09-12. Nothing in
+  section 8 depends on it, and nothing in 010 depends on this spec.
+- **The fleet's future placement topology.** enrahitu spec 030 section
+  3.4 says spec 006 is "reworked rather than parameterized"; statecraft's
   2026-09-11 record recommends managed hosting stay out of the initial
   offer and defers the two AGPL addons' future to its draft 017. Both are
   other repositories' decisions. This repository will not encode a
@@ -564,40 +656,68 @@ repository's contract, and none is assumed satisfied.
   idempotency reference. This repository will carry those fields on
   `DeploySpec` and the result types; it will not define their semantics
   and will not build a proof framework inside the addon.
-- F-3. Confirm or correct 2.5. The byte normalization is invisible in
-  every record the live chain holds today, and becomes visible the first
-  time a `payload` carries a large integer or an externally produced
-  document. If draft 016 intends to put third-party evidence into that
-  payload, 4.5 item 1 needs scheduling before it, not after.
-- F-4. Say whether the permissive format declaration in 4.5 item 2 is
-  wanted, and where it should live. Open decision O-5 in statecraft's
-  record ("where does the neutral verifier live?") is adjacent but not
-  the same question: the format is a document and can be published from
-  anywhere; the verifier is a crate and cannot be AGPL.
-- F-5. Noted, not requested: statecraft's record files no request to this
-  repository and defers the addons to draft 017. This spec is written to
-  be reviewable without 017 and to schedule nothing that 017 could
-  contradict. It also cites 014, 015 and 016 as uncommitted working-tree
-  files, which by statecraft's own standard (its S-3 to spec-spine) is
-  not a citable state; sections 2.7, 3 and 6 are written so that they
-  stand on Rahi 030 and on this repository's own measurements even if
-  those drafts change.
+- F-3. **Answered, and moved to draft 010.** statecraft's 014 section
+  10.3 (commit `c879de1` on its local branch `014-rahi-realignment`,
+  not on its remote as of 2026-09-12) confirms 2.5 by execution. It
+  says 016 puts no foreign object in a ledger payload, so 4.5 item 1
+  need not be scheduled. It narrows the request to refusing duplicate
+  members in a future `canonicalize` and `ledgerAppend`. Draft 010
+  answers that narrower request.
+- F-4. Moved to draft 010 as an open decision.
+- F-5. Noted, not requested. statecraft's record files no request to
+  this repository and defers the addons to draft 017. This spec is
+  written to be reviewable without 017 and to schedule nothing 017 could
+  contradict. The first draft cited 014, 015 and 016 as uncommitted
+  working-tree files. They are now committed on statecraft's local
+  branch (`afe31c3`, then `c879de1`), and that branch is still not
+  pushed. Sections 2.7, 3 and 6 are written to stand on enrahitu 030,
+  rahi `main` and this repository's own measurements, even if those
+  drafts change.
+- F-6. **Proposed 2026-09-12: break a circular deferral.** statecraft 014
+  section 7 says 017 decides the addons' future. 017 section 5.2 calls
+  `governance-native`'s future "a packaging question, not a design one".
+  017 section 8 says whether `fleet-native` stays a separate package "is
+  a statecrafting question and is not decided here". Each side defers to
+  the other. The split proposed here: statecraft decides the product
+  disposition (its O-1, 014 D-1 and D-6), and this repository decides
+  packaging under it, by this rule:
+  - **Hosting out of the first offer** (014's recommendation):
+    `fleet-native` 0.2.0 and `governance-native` 0.1.0 stay published and
+    unchanged while statecraft pins them. They get no rework and no
+    retirement, and are rebuilt only for a security or toolchain reason
+    under a spec. This spec stays an optional increment with no launch
+    dependency, as 017 section 8 already states. The 0.1.0 binaries stay
+    fetchable for as long as statecraft keeps the archive, because 017
+    section 7 verifies the archive with 0.1.0's `ledgerVerify`. Draft 010
+    section 2.4 says why the published binaries, not a rebuild of 0.1.0's
+    source, are that verifier.
+  - **Hosting in:** a cell links the Rust directly (017 section 5.2), and
+    this spec's section 8 increment is the prerequisite for doing so
+    without Node. Any placement rework is a new spec that names
+    statecraft's disposition as its authority.
+  - **Either branch:** retirement is decided only after statecraft's pins
+    move, by a spec here that cites the consumer's own record.
 
-**Rahi.**
+**enrahitu and rahi.** Corrected 2026-09-12: the first draft addressed
+these to "Rahi", but every spec they cite is enrahitu's (2.4 correction).
 
-- R-1. Confirm that spec 030 section 3.4's "reworked rather than
-  parameterized" is a statement about the object graph and not about
-  `fleet-native`'s continued existence, and say whether a reworked
-  placement engine is expected to be a native addon at all. This
-  repository will not begin either the rework or a retirement without it.
-- R-2. State whether spec 030's N=3 scale path is on the path to
-  `implementation: complete`, or remains a design that the primary N=1
-  mode does not need. 2.7 reports it as approved and pending; the
-  urgency of R-1 follows from the answer.
-- R-3. If `kernel-native` is to be a crates.io crate (4.3), Rahi is the
-  consumer that would benefit first, through spec 021. Say whether a Rust
-  consumer of the kernel is foreseen, or whether the napi surface remains
-  the only one Rahi needs.
+- R-1. **Superseded.** enrahitu 030 section 3.4 is the source of
+  "reworked rather than parameterized". rahi, its successor, does not
+  consume `fleet-native`. rahi's draft consumer contract (unmerged
+  `corpus/runtime-binding`, `b24de62`) keeps "fleet operations" on the
+  consumer's side. So whether a placement engine is a native addon is
+  statecraft's question, and F-6 carries it.
+- R-2. **Answered from the tree.** enrahitu 030 is `approved` and
+  `pending`. rahi 032 is `approved` and `complete`, and records "Not
+  exercised here: a real three-pod cluster and a bucket". Neither changes
+  anything this spec schedules.
+- R-3. **Answered from the tree: no Rust consumer.** rahi `main`
+  (`444bcf8`) links `attest-ledger`, `canonical-keysort-json` and
+  `action-gate` from crates.io, and no addon crate. enrahitu consumes
+  `kernel-native` over napi only. Residual, not blocking: rahi's draft
+  039 leaves "whether chassis crates go to crates.io" open. If a chassis
+  crate is ever meant to depend on a crate from this repository, 039 is
+  where to say so.
 
 **spec-spine.**
 
@@ -612,11 +732,8 @@ repository's contract, and none is assumed satisfied.
 
 **statecraft-cli.**
 
-- C-1. Requested: the receipt and bundle fixtures of its draft 132,
-  including the negative set, if a permissive verifier is ever to read
-  this ledger's records. 2.5 and 2.8 are the two facts that would make a
-  naive reader's verifier disagree with ours, and both are cheaper to fix
-  in fixtures than in a live chain.
+- C-1. Moved to draft 010, which offers this repository's byte vectors to
+  132's fixture set rather than only asking for 132's.
 - C-2. Noted: `statecraft-journal` is Apache-2.0 and the four family
   primitives are Apache-2.0, so a neutral verifier has a clean base
   today. What it lacks is the format (2.8), not a licence-compatible
@@ -650,6 +767,61 @@ The smallest implementable increment is items 1 through 5 for
 sets, and `governance-native`'s visibility change can follow in the same
 spec or a later one without either blocking the other.
 
+Approving this spec approves a path dependency and a visibility change.
+It does not approve publishing any crate: 4.3 is a separate decision per
+crate, and nothing in items 1 to 6 needs it.
+
+### 8.1 Feasibility, measured on a scratch copy (2026-09-12)
+
+This is a measurement, not an implementation. `addon/fleet-native` and
+`addon/governance-native` at `85db8fd` were copied outside the
+repository. Only the changes 4.1 and 4.2 describe were applied: the
+`[features]` tables, the `CARGO_FEATURE_*` key in both `build.rs` files,
+the module visibility and `cfg` lines in both `lib.rs` files, and
+`--features napi` in both `build` scripts. SHA-256 of every file holding
+a test (`resources.rs`, `naming.rs`, `canon.rs`, `gate.rs`, `ledger.rs`,
+`trust.rs`), and of `types.rs` and `kube_ops.rs`, matched before and
+after. The copies were built with the untracked on-disk `Cargo.lock`
+files, cargo 1.96.0, macOS arm64. The repository tree was not modified.
+
+| item | result |
+|---|---|
+| 1 | `cargo build --no-default-features --features kube` finished. `cargo tree -i napi` and `-i napi-derive` matched no package. `napi-build` appears only as a build dependency (4.2 correction). The depth-1 normal tree is `k8s-openapi`, `kube`, `serde`, `serde_json`, `tokio`. |
+| 2 | An out-of-tree crate took path dependencies on `fleet-native` (`default-features = false, features = ["kube"]`) and `governance-native` (defaults), and ran with `env -i` and no Node on `PATH`. It built a Deployment (`replicas=Some(1)`, `strategy=Recreate`), canonicalized `{"b":1,"a":2}` to `{"a":2,"b":1}`, and called `kube_ops::app_status` through a kubeconfig naming `https://127.0.0.1:1`. That returned `get deployment: ServiceError: client error (Connect)`. The binary links only macOS system libraries and has no `napi_` symbol. |
+| 3 | `cargo test --no-default-features`: 13 passed in `fleet-native` and 22 in `governance-native`, the same as the unmodified crates. `fleet-native` with `--features kube` also ran 13, and `governance-native` with its new empty default ran 22. |
+| 4 | Not run as written: `npm --prefix ... run build` needs `npm ci` for `@napi-rs/cli`. Substituted: `cargo build --features napi` on each copy, and `cargo build` (old default) on each original. Both `.node` files loaded in Node v24.6.0 with identical exports: `appStatus`, `backupApp`, `placeApp`, `removeApp`, `updateApp`, and `canonicalize`, `gateEvaluate`, `ledgerAnchor`, `ledgerAppend`, `ledgerVerify`, `trustLevel`, `trustSample`. The split `governance-native` build gave a report identical to the original build's over draft 010's 23 byte vectors and 6 mutations. |
+| 5, 6 | Not applicable to a scratch copy. |
+
+What 8.1 does not establish: that `kube_ops` works against a real
+apiserver. It establishes that the I/O path compiles, links and executes
+without Node, up to the TCP connect.
+
+### 8.2 Which tests contact an apiserver
+
+None, as of `85db8fd`, in this repository or in statecraft.
+
+- **This repository.** The only code that opens a Kubernetes client is
+  `addon/fleet-native/src/kube_ops.rs` (`make_client`, reading
+  `FLEET_KUBECONFIG_PATH` or the kube-rs defaults). It has no test
+  module. The tests that exist are:
+  - the unit tests in `fleet-native/src/naming.rs` and `resources.rs`
+    (pure builders)
+  - `governance-native`'s modules and `flow_tests` (temp directories)
+  - `addon/kernel-native/tests/composition.rs`
+  - `packages/toolchain/lib/resolve.test.ts` and `extract.test.ts`
+  - `addon/hiqlite-native`'s `sanity.mjs` and `sanity-state.mjs`, run by
+    `make sanity`
+  
+  `build.yml` compiles `fleet-native`, which includes `kube_ops`, and
+  runs none of it. `govern.yml` builds no addon.
+- **statecraft** (read-only, `main` `9658e29`): `backend/fleet/`'s tests
+  are pure logic or database-backed, and none imports the addon. No
+  workflow names Kubernetes. The only live-cluster evidence remains the
+  manual end-to-end run recorded in statecraft spec 006, dated
+  2026-07-16.
+- **The 8.1 probe** contacted no apiserver. Its one I/O call was refused
+  at TCP connect on `127.0.0.1:1`.
+
 ## 9. Decisions recorded
 
 - **2026-09-11. Why this is a spec and not a patch.** Specs 005 section 6
@@ -670,3 +842,17 @@ spec or a later one without either blocking the other.
   absent, and statecraft has filed no request and deferred to its own
   draft 017. Classifying a package as superseded for a consumer would be
   claiming another repository's conclusion.
+- **2026-09-12. Why the byte question became its own draft.** It is on
+  statecraft's intake path, and the extraction is on no launch path.
+  Keeping both here would give one approval decision two questions with
+  different owners and different urgency. The repository owner chose a
+  separate draft (010) over a separate section of this one.
+- **2026-09-12. Why corrections sit at the point they correct.** Rewriting
+  2.4, 2.5 or 2.7 in place would hide that the first draft said
+  otherwise. Section 7 of statecraft's 014 cites this spec at `85db8fd`,
+  so the original text stays readable beside each dated correction.
+- **2026-09-12. Why the feasibility run is not an implementation.** It
+  changed no file under `addon/`, and it used a copy outside the
+  repository that is not committed anywhere. It turns section 8 from a prediction
+  into a measured expectation for whoever builds this spec after
+  approval. It does not move `implementation` off `pending`.
