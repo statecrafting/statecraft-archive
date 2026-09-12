@@ -81,7 +81,7 @@ const LOOP: Array<{
 ];
 
 // The for-agents block resolves its maturity from the MCP server spec.
-const AGENT_REF = { repo: "statecraft-cli", id: "005-mcp-server" };
+const AGENT_REF = { repo: "statecraft-cli", id: "105-mcp-server" };
 
 // Runs in Node during prerender (ssr: false). Rolls the milestone ladder and
 // the per-block maturity chips up from the baked registry and passes only the

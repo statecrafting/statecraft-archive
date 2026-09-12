@@ -157,3 +157,27 @@ prerender to 200); the built output makes zero off-origin resource
 requests; the skim test holds (what it is, what runs today, and the
 licenses are all answerable from the index). Spine gates green (`compile`,
 `index`, `lint --fail-on-warn`, `index check`).
+
+## 7. Status note (2026-09-11): the ladder re-points at a renumbered corpus
+
+`statecraft-cli` merged the `claude-observatory` corpus into its own (its
+spec `110-corpus-merge`) and moved its original specs into the `1xx` range.
+The three ids the M5 rung named stopped resolving at the moment that repo's
+`main` moved, and the index loader's build-time check did exactly what
+section 2 asks of it: it failed the build loud rather than rendering a rung
+with dead links.
+
+The rung's meaning is unchanged; only the ordinals are. `app/lib/milestones.ts`
+now names `101-cli-mcp-thesis`, `104-governance-verbs` and `105-mcp-server`,
+which are the same three specs under their post-merge ids, each `complete` in
+the baked payload. A fourth reference to the same corpus lives outside the
+ladder: the for-agents block's `AGENT_REF` in `app/routes/_index.tsx`, moved
+from `005-mcp-server` to `105-mcp-server`. Nothing here is re-curated: the
+rollup still reads live state from the shards, so the position on the ladder
+remains a pure function of the sibling repos and not a claim this file
+makes.
+
+This is the failure mode section 2 anticipated when it told the implementing
+session to check the registries for the then-current truth rather than trust a
+sentence. It will recur whenever a sibling renumbers, and the honest fix is
+the same each time: re-point the ids, never weaken the check.

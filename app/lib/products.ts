@@ -50,8 +50,8 @@ export const ARCHITECTURE_LAYERS: ArchLayer[] = [
     name: "Substrate",
     icon: "substrate",
     blurb:
-      "The runnable chassis a stamped app is born from: Encore.ts, rauthy, hiqlite, and Turso in a single container with zero managed dependencies.",
-    repos: ["enrahitu"],
+      "The runnable chassis a stamped app is born from: Encore.ts, rauthy, hiqlite, and Turso in a single container with zero managed dependencies, plus the shared native packages and vendored toolchain it is built from.",
+    repos: ["enrahitu", "statecrafting"],
   },
   {
     id: "control-plane",
@@ -199,6 +199,15 @@ export const PRODUCT_DETAIL: Record<string, ProductDetail> = {
     highlights: [
       "Weighted samples map to a graduated privilege level",
       "Trust reflects recent behavior, not a one-time grant",
+    ],
+  },
+  statecrafting: {
+    blurb:
+      "The shared native packages and build toolchain the chassis is assembled from.",
+    highlights: [
+      "The @statecrafting/* napi addons",
+      "The Encore build toolchain enrahitu vendors",
+      "Apache-2.0 at the root; two packages are AGPL-3.0, recorded in its own corpus",
     ],
   },
 };

@@ -235,3 +235,29 @@ Deploy is gated by human approval: main auto-deploys to the live apex, so
 the change ships in PR #6 and awaits merge. Sign-in is a real hand-off once
 `app.statecraft.ing` is deployed with a valid certificate; until then the
 link reaches the control-plane host's own (in-progress) state.
+
+## 7. Status note (2026-09-11): the eleventh roster repo gets its layer
+
+Section 3.3 requires every family repo to appear in exactly one architecture
+layer, and the route loader asserts it at build time against the spec-003
+roster. When spec 003 added `statecrafting` as the eleventh repo, no layer
+claimed it, so the assertion fired and the deploy on `main` went red on
+2026-07-23 and stayed red.
+
+`statecrafting` is placed in **Substrate**. It holds the shared native
+packages (the `@statecrafting/*` napi addons) and the vendored Encore
+toolchain that the chassis is built from, which is the same layer `enrahitu`
+occupies and the one `enrahitu/008-vendored-encore-toolchain` consumes it in.
+The layer blurb is extended to name that second half, so a layer that now
+lists two repos describes both rather than only the chassis.
+
+The catalog carries a second assertion the layer fix does not satisfy: every
+roster repo needs a `PRODUCT_DETAIL` entry, and the loader throws by name when
+one is absent. `statecrafting` gets one, with three claims each checkable
+against the repo: the `@statecrafting/*` napi addons, the Encore build
+toolchain `enrahitu` vendors, and the license shape spec 003 section 3 already
+records (Apache-2.0 at the root, two packages AGPL-3.0).
+
+No status badge, spec count, or maturity claim is added: `statecrafting` is
+outside the registry bake set (spec 001 section 3), so the catalog links it to
+GitHub and not to a spec corpus, exactly as section 3.3 specifies.
