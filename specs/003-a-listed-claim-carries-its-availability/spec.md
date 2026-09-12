@@ -9,16 +9,17 @@ summary: >
   license rationale that is, in two places, not true of the files on disk.
   This spec amends 001 section 3.1 so that every entry states what is
   implemented, what is released, and what is hosted as three separate facts
-  (none of them a product verdict), the page gains a first adoption path that
-  runs locally with no account, the license section names the three licenses
-  that actually ship and says what each requires rather than what it
-  prevents, and three overclaims are withdrawn (signed-by-code, a gate in
-  every repository, a released CLI that carries the local engine). Proposed
-  copy is split into factual corrections, new blocks that need no thesis or
-  roster decision, and copy that waits on a named owner decision (rahi and
-  hqgit in the roster, enrahitu's first sentence, the lead). It adopts
-  nothing from the September 2026 realignment, and it proposes the words in
-  section 3.2 as the vocabulary statecraft.ing and this page share.
+  (the compact vocabulary of decision G-12, none of them a product verdict),
+  the page gains a first adoption path that runs locally with no account, the
+  license section names the three licenses that actually ship and says what
+  each requires rather than what it prevents, and three overclaims are
+  withdrawn (signed-by-code, a gate in every repository, a released CLI that
+  carries the local engine). The owner's decisions of 2026-09-12 (PROF-01 to
+  PROF-04) settle the roster, enrahitu's first sentence, the adoption path,
+  the superseding edge and the license heading. The copy lands in three
+  steps: corrections on their own, rahi in the same window as statecraft.ing
+  lists it, and the lead once G-03 is recorded. hqgit stays off the page. It
+  adopts nothing from the September 2026 realignment.
 depends_on:
   - "001-the-profile-is-the-org-front-door"
 amends:
@@ -113,7 +114,7 @@ new.
    declaration, and what each requires of a redistributor. Nothing about what
    a license guarantees or prevents.
 
-### 3.2 Four facts, stated independently, never as one verdict
+### 3.2 Three facts, stated independently, never as one verdict
 
 The 2026-09-11 draft defined a single **Available:** line as "the specs
 governing it are approved and implemented". That definition is withdrawn: it
@@ -127,9 +128,12 @@ own labelled line, and omits the ones that do not.
 | **Implemented:** | the owning specs in that repository read `implementation: complete` at the revision checked | the spec ids | released, exercised, supported, or fit for production |
 | **Released:** | a versioned artifact a reader can install without a source checkout | the registry or release, and what the release contains when that differs from the default branch | that it contains everything implemented, or that it is supported |
 | **Hosted:** | a service this organisation operates that a reader can sign up for | the sign-up | that some deployment exists somewhere; a running internal plane is not a hosted offer |
-| **Specification only.** | approved specs, none of the product implemented | the repository's own status | a roadmap commitment or a date |
 
-Three rules hold over all four.
+These three are the compact vocabulary of decision G-12 (section 8 D-7). The
+2026-09-12 draft carried a fourth label, **Specification only.**, for
+`hqgit`; with `hqgit` off the page (D-2) nothing uses it, and it is dropped.
+
+Four rules hold over all three.
 
 - A draft spec is named as a draft or omitted. It is never written in the
   present tense and never appears under **Implemented:**.
@@ -139,8 +143,12 @@ Three rules hold over all four.
 - Counts of specs are not published. A count stales on the next merge, and
   the spec ids an entry cites are the checkable part. Each repository's
   `spec-spine registry plan` is the live answer, and the page says so once.
+- A positive line cites evidence a reader can reach: a public default branch,
+  a public registry, a public release. A claim whose only evidence is local,
+  private or unverified is omitted, not softened (G-12). Section 8 C-1 is the
+  instance.
 
-A fifth fact, **exercised** (a dated, recorded use outside the development
+A fourth fact, **exercised** (a dated, recorded use outside the development
 loop), belongs to statecraft.ing's availability matrix, where each row can
 carry its evidence. The profile does not claim it for any entry, and the
 definitions above make clear that implemented and released do not imply it.
@@ -183,7 +191,7 @@ on 2026-09-12 against each default branch on GitHub:
 
 | Record | Where | State |
 | --- | --- | --- |
-| AuthoritySnapshot, and specs 084 to 088 | spec-spine `0e41641` | merged as drafts (PR 179); `status: draft`, `implementation: pending` |
+| AuthoritySnapshot, and specs 084 to 088 | spec-spine `59cba05` | merged as drafts (PR 179). 084, 086, 087 (AuthoritySnapshot) and 088 are still `status: draft`; 085 was since ratified and implemented (PRs 181, 182) and is in no release |
 | WorkScope, ContextClosure | spec-spine `docs/design/04-authority-evidence-extension.md` | a design record, no spec |
 | WorkPermit | statecraft-cli draft 132, doc 05 | named in a draft and a design record |
 | The evaluation itself | statecraft-cli `874766b`, `docs/design/05-the-realignment-checked.md` (PR 41) | merged; specs 126 to 132 `status: draft` |
@@ -194,21 +202,34 @@ The page MUST NOT describe any of it. A merged draft is a filed proposal, not
 an adopted design, and `statecraft-cli`'s own evaluation is the precedent: the
 packet is evidence and a recommendation, and it amends no approved spec.
 
-### 3.6 Corrections, new blocks and decisions are kept apart
+### 3.6 Corrections, the roster and the lead land separately
 
-Section 4 is copy that corrects a sentence against a source and needs no
-decision beyond approving this spec. Section 5 is new content that needs no
-thesis or roster decision. Section 6 is copy that lands only when the named
-decision in section 8 is recorded, and each block says which. Approving this
-spec approves sections 4 and 5; it does not approve section 6.
+Section 4 is copy that corrects a sentence against a source. Section 5 is new
+content that needs no thesis or roster decision. Section 6 is copy a decision
+in section 8 releases, and each block says which. Approving this spec
+approves sections 4 and 5 and, with the decisions of 2026-09-12, sections 6.1
+and 6.3. Section 6.2 is withdrawn, and 6.4 waits on G-03.
+
+The copy lands in three steps, because each depends on something different
+(PROF-01):
+
+1. **Corrections:** sections 4, 5 and 6.3. They depend on nothing outside
+   this repository and land on their own.
+2. **Roster:** section 6.1 without its substrate sentence, and "the chassis"
+   in 4.9's Apache-2.0 line. It lands in the same publication window as
+   statecraft.ing's change that lists rahi, and not before it.
+3. **Lead:** section 6.4 and 6.1's substrate sentence, once G-03 is recorded
+   (D-1).
 
 ### 3.7 One vocabulary with statecraft.ing
 
 The labels in section 3.2 and the nouns in statecraft.ing spec 006 section 6
 (governed, spec corpus, coupling gate, territory, receipt, hash-linked,
-signed, verified, proposed) are proposed as the one vocabulary both public
-surfaces use. Section 9 carries the proposal to the site, including the one
-place it differs from the site's record (the word "available").
+signed, verified, proposed) are the one vocabulary both public surfaces use,
+as decided in G-12: the site states implemented, released, exercised and
+hosted as separate facts, and this page uses the compact three. That settles
+the one place the site's record differed: "available" is a label on neither
+surface.
 
 ## 4. Proposed copy, part one: factual corrections
 
@@ -327,8 +348,12 @@ Append to the entry:
 > **Released:** no installable artifact this page can point to yet. Its
 > README and operations guide describe the container.
 
-The **Released:** line is the one claim here that rests on a negative reading
-(section 10); section 8 C-1 asks the owner to confirm it.
+The **Released:** line rests on a negative reading, and section 8 C-1 records
+the check behind it: on 2026-09-12 an anonymous pull of
+`ghcr.io/statecrafting/enrahitu` was refused, while the same token and
+manifest requests against a known public image succeeded. The page therefore makes no claim that the
+container is publicly available (PROF-04). Naming an image here later is a
+change to this line, with its evidence.
 
 ### 4.6 The tenant toolkit
 
@@ -378,14 +403,14 @@ with:
 > Each license below is the one declared in that repository's `LICENSE` file
 > or, in `statecrafting`, in each package's own manifest. What each requires:
 >
-> - **AGPL-3.0**: `statecraft`, `hqgit`, and the `governance-native` and
->   `fleet-native` packages. Running it carries no condition. Distributing it,
->   or offering a modified version to users over a network, requires making
->   the corresponding source available to them under the same license.
-> - **Apache-2.0**: the template, the CLI, the spine, the chassis, the tenant
->   toolkit, the primitives, and the `toolchain`, `kernel-native` and
->   `hiqlite-native` packages. Redistribution keeps the license text and
->   notices and marks the files that were changed.
+> - **AGPL-3.0**: `statecraft`, and the `governance-native` and `fleet-native`
+>   packages. Running it carries no condition. Distributing it, or offering a
+>   modified version to users over a network, requires making the
+>   corresponding source available to them under the same license.
+> - **Apache-2.0**: the template, the CLI, the spine, the tenant toolkit, the
+>   primitives, and the `toolchain`, `kernel-native` and `hiqlite-native`
+>   packages. Redistribution keeps the license text and notices and marks the
+>   files that were changed.
 > - **MPL-2.0**: the three `@statecrafting/toolchain-<platform>` packages.
 >   Distributing them requires making the source of those MPL-covered files
 >   available under MPL-2.0, including any changes to them; other code in the
@@ -396,8 +421,9 @@ with:
 > section summarises license terms. It is not legal advice, and no license
 > here is a warranty.
 
-Omit the `hqgit` and "the chassis" mentions if section 8 D-2 leaves those
-repositories off the page.
+The roster step (3.6) inserts "the chassis" after "the spine" in the
+Apache-2.0 line, in the same change that lists rahi. `hqgit` is not named
+(D-2).
 
 ## 5. Proposed copy, part two: new blocks that need no thesis or roster decision
 
@@ -424,7 +450,9 @@ repositories off the page.
 The first command is the site's own (`INSTALL_COMMAND` in statecraft.ing
 `app/lib/get-started.ts`), so the two surfaces send a reader to the same
 place. `statecraft-cli`'s `install.sh` is not offered here: its release does
-not yet carry the local engine (section 4.3).
+not yet carry the local engine (section 4.3). Section 8 D-4 records the
+choice, and section 11 run 1 records the path exercised from each of the
+three registries the block names.
 
 ### 5.2 The key, immediately under `## Projects`
 
@@ -436,12 +464,15 @@ not yet carry the local engine (section 4.3).
 > named as one. Every repository here has its own spec corpus, and
 > `spec-spine registry plan` run there is the live answer.
 
-## 6. Proposed copy, part three: copy that waits on a named decision
+## 6. Proposed copy, part three: copy a recorded decision releases
 
-None of this lands with the approval of this spec alone. Each block names the
-decision in section 8 that releases it.
+Each block names the decision in section 8 that releases it and the landing
+step in section 3.6 it belongs to.
 
-### 6.1 rahi, if D-2 includes it: a new group, "The chassis", after "The template"
+### 6.1 rahi (D-2, roster step): a new group, "The chassis", after "The template"
+
+Lands in the same publication window as statecraft.ing's change that lists
+rahi, not before it.
 
 > #### [rahi](https://github.com/statecrafting/rahi)
 > ![License](https://img.shields.io/badge/license-Apache--2.0-green?style=flat-square)
@@ -465,29 +496,20 @@ decision in section 8 that releases it.
 >
 > **Released:** not yet; there is no published crate or release.
 
-If, and only if, D-1 records Statecraft's adoption of a successor thesis that
-names it, append to the paragraph:
+In the lead step, and only once G-03 is recorded (D-1), append to the
+paragraph:
 
 > It is the planned substrate for Statecraft's hosted service. Applications
 > built with anything else on this page do not need to adopt it.
 
-### 6.2 hqgit, if D-2 includes it: a new group, "Specified, not built", last before the packages
+### 6.2 hqgit: withdrawn (D-2)
 
-> #### [hqgit](https://github.com/statecrafting/hqgit)
-> ![License](https://img.shields.io/badge/license-AGPL--3.0-blue?style=flat-square)
-> ![Specification only](https://img.shields.io/badge/-specification%20only-lightgrey?style=flat-square)
->
-> A proposed verifiable evidence ledger for software change: canonical state
-> as a per-repository DAG of signed, content-addressed objects covering code,
-> collaboration and evidence, with every index, feed and dashboard a
-> projection rebuildable from zero, built over repositories that stay where
-> they are.
->
-> **Specification only.** The repository holds an approved specification
-> corpus and the harness that builds it. None of the product is implemented,
-> there is no code, and nothing else on this page depends on it.
+D-2 keeps `hqgit` off both public surfaces for now, so the entry this section
+proposed on 2026-09-12 is withdrawn and the page does not link it. Listing
+`hqgit` later is its own change, made on this page and statecraft.ing
+together.
 
-### 6.3 enrahitu's paragraph, if D-3 takes the recommendation
+### 6.3 enrahitu's paragraph (D-3, corrections step)
 
 Replace the paragraph with:
 
@@ -507,15 +529,20 @@ unchanged. The mermaid label `enrahitu · the template chassis` stays: the
 diagram draws Statecraft's approved thesis (its spec 001), in which that is
 still enrahitu's role.
 
-### 6.4 The lead, if D-1 records a successor thesis
+### 6.4 The lead (D-1, lead step): waits on G-03
 
-Not proposed for landing now. When Statecraft's governing thesis records the
-first offer as governed delivery for existing repositories, the heading line
-`### Governed software delivery for the agentic era` would become:
+G-03 adopts existing-repositories-first as Statecraft's thesis, through
+statecraft's spec 014 and its amendment to 001. It counts as recorded when
+that approval is on statecraft's GitHub default branch: the front door cites
+evidence a reader can reach (3.2). On 2026-09-12 it is not. statecraft's
+`main` is `9658e29`, and 014 sits on a local branch that is not on GitHub.
+
+Once it is recorded, the heading line
+`### Governed software delivery for the agentic era` becomes:
 
 > ### Governed delivery for the repositories you already have
 
-and the paragraph beneath the thesis line would add, after "Stop reviewing
+and the paragraph beneath the thesis line adds, after "Stop reviewing
 output; start constraining intent.":
 
 > Local use needs no account; a hosted team layer is planned.
@@ -548,51 +575,69 @@ not this spec's to make.
   does not invite anyone to run the unreleased engine, and it does not
   describe those drafts.
 
-## 8. Open decisions, as concrete proposals
+## 8. Decisions
 
-This spec is `draft` and these are why. None is an agent's to settle.
+This spec was `draft` while these were open, and none was an agent's to
+settle. The owner decided them on 2026-09-12 by adopting rows PROF-01 to
+PROF-04 of the revision-4 decision package (`07-revision-4-decision-package.md`,
+section 3), which cite that package's decisions G-03 and G-12. Each entry
+keeps the proposal it answered.
 
 - **D-1. The lead and the successor thesis.** Proposal: keep the current
   thesis-first lead and heading until Statecraft records adoption of a
-  successor thesis in its own governing corpus (its draft 014 is not yet on
-  GitHub). Then land section 6.4 and the rahi substrate sentence of 6.1 in the
-  same change, with a follow-up spec for the diagram. Owner: Statecraft's
-  owner for the thesis, this repository's owner for the lead.
+  successor thesis in its own governing corpus. Then land section 6.4 and the
+  rahi substrate sentence of 6.1 in the same change, with a follow-up spec for
+  the diagram.
+  **Decided (PROF-01):** update the lead once G-03 is recorded. Until then the
+  current lead and heading stay. Section 6.4 says what "recorded" means here.
+  The diagram change a successor thesis requires is a further amendment to
+  001, not this spec's.
 - **D-2. The roster.** 001 section 3.2 says a repository that is not listed is
   not part of the family's public story, and statecraft.ing's roster (its spec
-  003) must move with this page. Proposal: add `rahi` now (6.1 without the
-  substrate sentence), on both surfaces together, since the site's own
-  proposal P-3 already recommends it. Hold `hqgit` off both surfaces for now:
-  the site's approved record keeps it unnamed until it has exercised behavior
-  (statecraft.ing 006 section 5), and it is deferred from the launch path. If
-  the owner wants it listed, 6.2 is the copy and the site must list it the
-  same way in the same week.
+  003) must move with this page. Proposal: add `rahi` (6.1 without the
+  substrate sentence) on both surfaces together, and hold `hqgit` off both.
+  **Decided (PROF-01):** add rahi with the site and omit hqgit. The roster
+  step (3.6) lands in statecraft.ing's publication window; corrections do not
+  wait for it. Section 6.2 is withdrawn.
 - **D-3. enrahitu's first sentence.** Proposal: lead with the membership
   platform (its README's own first sentence, and its spec 035), with the
-  chassis history second and the template contract named as in progress
-  (6.3). The alternative is today's chassis-first paragraph plus the 4.5
-  lines, which is accurate to Statecraft's approved thesis and silent about
-  what enrahitu has become.
+  chassis history second and the template contract named as in progress.
+  **Decided (PROF-01):** as proposed (6.3), in the corrections step.
 - **D-4. The adoption path.** Proposal: `cargo install spec-spine-cli`, then
   `spec-spine init` (5.1), matching the site's `INSTALL_COMMAND`. Revisit
   `statecraft-cli`'s `install.sh` as a second path only when a release carries
   the local engine and its draft 130's clean-machine job has passed.
+  **Decided (PROF-02):** spec-spine installation followed by `init`. The page
+  does not equate the `statecraft-cli` v0.1.0 release with the local engine
+  (4.3). The tested installation is recorded in section 11 run 1, and an
+  install that was already on the machine is not called a clean install.
 - **D-5. The `extends` edge.** This spec claims superseding authority over a
   unit spec 001 owns, which the `/spec` skill makes a human checkpoint.
-  Proposal: grant it by approving this spec. The alternative is a ratified
-  authoring edit to 001 instead, and then this spec is withdrawn.
+  Proposal: grant it by approving this spec.
+  **Decided (PROF-03):** approved. The edge stands as declared, and this spec
+  is approved with it.
 - **D-6. The license heading.** Proposal: keep `## Why these licenses` with
   the factual body of 4.9, so 001's `## Verification` stays green without
-  touching an approved spec. The alternative heading ("Which license applies,
-  and what it requires") needs an authoring edit to 001's verification line,
-  which is an edit to an approved spec and needs the owner's approval.
+  touching an approved spec.
+  **Decided (PROF-03):** keep the exact heading. 001's heading test is not
+  amended, and both 001's and this spec's verification blocks run on the
+  change (section 11 run 4).
 - **D-7. The shared vocabulary.** Proposal: statecraft.ing and this page adopt
-  section 3.2's labels and the site's nouns (3.7). This is a counterproposal
-  on one row of the site's vocabulary packet; section 9 states it.
-- **C-1. A confirmation, not a choice.** Whether `ghcr.io/statecrafting/enrahitu`
-  is a public image. An anonymous pull token was refused on 2026-09-12 and the
-  repository has no release artifacts; if the image is public, 4.5's
-  **Released:** line names it instead.
+  section 3.2's labels and the site's nouns (3.7).
+  **Decided (PROF-02):** adopt G-12. The site states implemented, released,
+  exercised and hosted separately; this page uses the compact implemented,
+  released and hosted (3.2). No single available or shipped label is inferred
+  from spec completion, and a public positive claim needs evidence a reader
+  can reach.
+- **C-1. A check, not a choice.** Whether `ghcr.io/statecrafting/enrahitu` is
+  publicly available.
+  **Checked (PROF-04), 2026-09-12:** it is not anonymously pullable. The
+  anonymous token request returned 401 and the manifest and tag reads
+  returned 403, while the same token and manifest requests against a known
+  public image both succeeded (section 11 run 5). Whether the image is
+  private or absent is not distinguishable anonymously, and it does not need
+  to be. The page makes no public-availability claim, and 4.5's
+  **Released:** line stands as the negative reading.
 
 ## 9. What this asks of other repositories
 
@@ -600,13 +645,11 @@ Requests, not changes. Nothing here is edited by this spec or by the session
 that wrote it.
 
 - **statecraft.ing.**
-  1. Its request T-13 asked which vocabulary this page settles on. Answer: the
-     site's nouns and its six phrases to avoid, as written, plus section 3.2's
-     four labels. The one counterproposal is the word "available": the site's
-     record defines it as "a reader can run it or see it today". Proposed
-     instead: split it into **released** and **hosted**, keep **implemented**
-     as its own column, and put **exercised** in the availability matrix
-     (its P-1), where each row can carry evidence.
+  1. Its request T-13 asked which vocabulary this page settles on. G-12
+     answers it: the site's nouns and its six phrases to avoid, as written;
+     implemented, released, exercised and hosted as separate facts on the
+     site, with exercise evidence naming its environment and limits; the
+     compact three on this page; and "available" as a label on neither.
   2. Its spec 003 licensing note still says the `statecrafting` packages are
      Apache-2.0 with "two AGPL-3.0 per-package licenses"; it omits the three
      MPL-2.0 toolchain platform packages, the defect 3.4 fixes here.
@@ -614,8 +657,10 @@ that wrote it.
      trust as separate outcomes") is not yet true: `statecraft-cli` receipts
      are unsigned and the verdict dimensions are not agreed across the family.
      Hold it until they are.
-  4. Its get-started step "Run the enrahitu substrate" depends on C-1.
-  5. D-2's roster has to land on both surfaces together.
+  4. Its get-started step "Run the enrahitu substrate" depends on C-1, which
+     found the image not anonymously pullable on 2026-09-12.
+  5. rahi lands on both surfaces in the same window (D-2), and hqgit stays
+     off both. This page's roster step waits for the site's.
 - **statecraft-cli.** Its README's Status paragraph names milestone M4 and
   specs 102 to 110, and its Install section does not say that v0.1.0 predates
   member dispatch. Either note it there or cut a release that carries the
@@ -634,15 +679,19 @@ that wrote it.
 - **action-gate, attest-ledger, trust-window.** Each carries a draft bootstrap
   spec, no committed shards and no coupling gate. 4.7 says so; adopting the
   spine there is each repository's own work.
-- **spec-spine.** Nothing for this page. Its drafts 084 to 088 stay off it
-  (3.5).
+- **spec-spine.** Nothing for this page. Its realignment specs 084 to 088
+  stay off it (3.5), including 085, which is implemented but in no release.
 
 ## 10. Sources
 
 Every capability claim in sections 4 to 6, and where it was checked. Revisions
 are each repository's GitHub default branch on 2026-09-12. Lifecycle was read
 with `spec-spine registry list --repo` (0.18.0) and the specs' own
-frontmatter, never by parsing `.derived/`.
+frontmatter, never by parsing `.derived/`. Every cited revision was re-read
+against GitHub at 22:57 UTC that day. Twelve were unchanged. spec-spine had
+moved to `59cba05` (specs 085 and 089 ratified, 085 implemented), and
+statecrafting had moved to `35126be` (a draft spec 009, no package manifest
+touched). Neither move changes a claim on the page.
 
 | Claim | Source |
 |---|---|
@@ -654,23 +703,23 @@ frontmatter, never by parsing `.derived/`.
 | statecraft-cli: receipts not signed | statecraft-cli spec 121 D-3 |
 | statecraft-cli: v0.1.0 assets, checksum, SBOM, attestation | GitHub release `v0.1.0` (2026-07-22); section 11 run 3 |
 | statecraft-cli: v0.1.0 has no member verbs | `statecraft --help` of the v0.1.0 darwin-arm64 archive (section 11 run 3) |
-| spec-spine: stands alone, no account | section 11 run 1 |
-| spec-spine: 0.18.0 on crates.io, npm, PyPI; release binaries | crates.io, npm and PyPI APIs; GitHub release `v0.18.0` |
-| spec-spine: `attest --sign`, Ed25519, spec 023 complete | `spec-spine attest --help`; spec-spine `0e41641` registry; section 11 run 2 |
+| spec-spine: stands alone, no account; the Start here path | section 11 run 1 |
+| spec-spine: 0.18.0 on crates.io, npm, PyPI; release binaries | crates.io, npm and PyPI APIs, each reporting 0.18.0 as latest at 22:55 UTC; GitHub release `v0.18.0` (15 assets); section 11 run 1 installed from all three |
+| spec-spine: `attest --sign`, Ed25519, spec 023 complete | `spec-spine attest --help`; spec 023 frontmatter at spec-spine `59cba05`; section 11 run 2 |
 | coupling gate in CI everywhere except three primitives | each repository's `.github/workflows/` at its default branch |
 | enrahitu: 002, 005, 007, 035, 036, 037 complete; 009 in progress; 038 pending | enrahitu `26c75e2`, spec frontmatter (its committed registry is stale) |
 | enrahitu: membership platform; `app/` boundary | enrahitu `README.md`; spec 035 |
-| enrahitu: no installable artifact to point to | GitHub release `v0.2.0` has no assets; anonymous `ghcr.io` pull token refused (C-1) |
+| enrahitu: no installable artifact to point to | GitHub release `v0.2.0`, its latest, has no assets; anonymous `ghcr.io` pull refused, with a positive control (C-1, section 11 run 5) |
 | tenant-emit, tenant-tail: npm, PyPI, release binaries | npm and PyPI APIs (0.3.0, 0.4.0); GitHub releases |
 | primitives: crates.io presence; tags | crates.io API; GitHub releases `v0.1.0` |
 | primitives: draft bootstrap only, no gate | each repository's `specs/000-*` frontmatter; no `couple` in its workflows |
 | attest-ledger: signing is a library capability | attest-ledger `README.md`; statecraft.ing 006 section 3.4 |
-| statecrafting: per-package licenses | each package's `package.json` and `LICENSE`, statecrafting `844ac86`; npm registry `license` fields |
+| statecrafting: per-package licenses | each package's `package.json` and `LICENSE`, statecrafting `844ac86` (no package file changed by `35126be`); npm registry `license` fields |
 | statecrafting: every package on npm | npm registry, all eight `@statecrafting/*` names |
 | rahi: responsibilities, lineage | rahi `c13cc70` `README.md`, spec 002 |
 | rahi: 010 to 034 complete; 000 and 002 n-a | rahi `c13cc70`, registry |
 | rahi: no release | no GitHub release; crates.io reports no `rahi` crate |
-| hqgit: specification only; harness complete | hqgit `4d0f9c2`, `README.md` status; registry (001 complete, 000, 002, 003 n-a, the rest pending) |
+| G-03 not yet recorded | statecraft `main` at `9658e29`; no `014` branch on its GitHub remote |
 | AGPL-3.0, Apache-2.0 per repository | GitHub license detection for each repository, matching its `LICENSE` |
 | site install command | statecraft.ing `f074586`, `app/lib/get-started.ts` |
 
@@ -679,22 +728,42 @@ frontmatter, never by parsing `.derived/`.
 Every run below is in a scratch directory outside any checkout, on
 2026-09-12, with spec-spine 0.18.0.
 
-1. **The adoption path, and its negative case.** An empty Git repository:
-   `spec-spine init`, `compile`, `index`, `lint`, `registry list`, all exit 0.
-   A spec claiming one file, committed as the base. A branch that changes the
-   file without touching the spec: `spec-spine couple --base main --head HEAD`
-   exits 1 with `C-001 'greeting.txt' changed without an authoring edit to any
-   owning spec (001-greeting)`. The positive control, the same change plus an
-   authoring edit to the spec: exits 0, "2 path(s) checked, no drift". The
-   binary was a prior `cargo install`; a clean `npm` install in the scratch
-   repository was declined by the operator and did not run.
-2. **The attestation seal, and its negative cases.** `spec-spine attest
+1. **The adoption path, installed from each registry, and its negative case.**
+   Each install went into empty scratch space on the operator's macOS arm64
+   workstation between 22:55 and 22:57 UTC. None of them is a clean-machine
+   install: Rust 1.96, Node 24 and Python 3.14 were already present, and
+   cargo's local registry cache supplied most dependency sources. None used
+   the `spec-spine` already on the operator's `PATH`; each run resolved the
+   binary its own install produced.
+   - **crates.io:** `cargo install spec-spine-cli`, into an empty `--root`
+     with a fresh target directory, built `spec-spine-cli` 0.18.0 (exit 0).
+     The run's `PATH` held only that root and the system directories, so the
+     bare `spec-spine` of the Start here block resolved to it.
+   - **npm:** `npm i -D spec-spine`, in an empty package with an empty cache
+     (exit 0). `spec-spine` was then not on `PATH`, and
+     `npx --no-install spec-spine --version` printed 0.18.0. The run invoked
+     `node_modules/.bin/spec-spine`, the file `npx` resolves.
+   - **PyPI:** `pip install --no-cache-dir spec-spine`, in a new virtual
+     environment, installed the 0.18.0 macOS arm64 wheel (exit 0).
+
+   With each of the three binaries, in an empty Git repository:
+   `spec-spine init`, `compile`, `index`, `lint` and `registry list`, all
+   exit 0. A spec claiming one file, committed as the base. A branch that
+   changes the file without touching the spec:
+   `spec-spine couple --base main --head HEAD` exits 1 with
+   `C-001 'greeting.txt' changed without an authoring edit to any owning spec (001-greeting)`.
+   The positive control, the same change plus an authoring edit to the spec:
+   exits 0, "2 path(s) checked, no drift". All three gave identical results.
+   Not exercised: Linux, Windows, and a machine without a toolchain.
+2. **The attestation seal, and its negative cases.** With the operator's
+   previously installed 0.18.0 binary: `spec-spine attest
    --sign` with a fresh Ed25519 key: exit 0. `verify-attestation --recompute
    --signature` with the signer's public key: `MATCH`, `VALID`, exit 0. With a
    different key: `INVALID`, exit 1. With one field of the attestation changed
    after sealing: `--signature` `INVALID`, exit 1; `--recompute` `CONTENT
    MISMATCH`, exit 1. This exercises the seal only; it does not test the
-   recomputation gaps spec-spine's drafts 085 and 086 describe.
+   recomputation gaps described by spec-spine's 085 (implemented after
+   0.18.0, in no release) and draft 086.
 3. **The statecraft-cli release.** The v0.1.0 darwin-arm64 archive: `.sha256`
    check exit 0; `gh attestation verify --repo statecrafting/statecraft-cli`
    exit 0, SLSA provenance v1, signer `release.yml@refs/tags/v0.1.0`. The same
@@ -703,9 +772,21 @@ Every run below is in a scratch directory outside any checkout, on
    `login`, `whoami`, `tenants`, `stamp`, `fleet`, `template`, `mcp`,
    `version`, `config`, `completions`, and no member verb.
 4. **This verification block against the live page, and against the proposed
-   page.** Recorded in the handback that accompanies this revision: the block
-   must fail on today's `profile/README.md` and pass on the proposed one, with
-   001's block passing on both.
+   page.** The block must fail on today's `profile/README.md` and pass on the
+   page after the corrections step and after the roster step, with 001's block
+   passing on all three. Single-fault mutants of the proposed pages must each
+   fail this block at the command that guards the fault. Recorded when the
+   corrections step is built (section 13).
+5. **The enrahitu container (C-1).** At 22:55 UTC, with no credentials, the
+   registry token endpoint for `repository:statecrafting/enrahitu:pull`
+   returned 401 `UNAUTHORIZED`, and the `latest` manifest and tag list reads
+   returned 403 `DENIED`. The GitHub package page for it returned 404 to an
+   anonymous request. The positive control, the same token and manifest
+   requests for `home-assistant/home-assistant`, returned 200 with a token and
+   200 for the manifest. The enrahitu repository's latest release, `v0.2.0`,
+   has no assets. The operator's GitHub token lacks `read:packages`, so the
+   package's visibility setting was not read; public accessibility is what
+   the page would claim, and that is what was tested.
 
 ## 12. Revision history
 
@@ -744,6 +825,31 @@ Every run below is in a scratch directory outside any checkout, on
       alternative to the Encore.ts template" had no source; removed.
   14. rahi, hqgit, enrahitu's first sentence and the lead moved from the
       copy into section 6, behind the decisions that release them.
+- **2026-09-12, later.** Revised against the owner's decisions PROF-01 to
+  PROF-04 (section 8), before ratification. Changed:
+  1. Section 8 records each decision beside the proposal it answered.
+  2. G-12's compact vocabulary: three labels, and **Specification only.**
+     dropped with `hqgit` (3.2). A new rule: a positive line cites evidence a
+     reader can reach.
+  3. The three landing steps (3.6): corrections, the roster with the site,
+     and the lead after G-03.
+  4. 6.2 withdrawn, `hqgit` removed from 4.9, and 6.4 defines when G-03
+     counts as recorded.
+  5. Run 1 replaced. The earlier run used a binary already on the machine
+     and no install; the new run installs from crates.io, npm and PyPI and
+     exercises each binary.
+  6. C-1 checked with a positive control (run 5). No public-availability
+     claim.
+  7. 3.5 and section 10 refreshed where spec-spine and statecrafting had
+     moved on their default branches.
+  8. Verification: `hqgit` must be absent, a listed rahi is checked inside
+     its own entry, enrahitu leads with the membership platform, and the
+     enrahitu image is not named.
+
+## 13. Implementation notes
+
+None yet. Dated notes on what each landing step did, and what remains, go
+here.
 
 ## Verification
 
@@ -779,9 +885,14 @@ grep -qF 'Apache-2.0' profile/README.md
 awk '/^#### \[statecraft-cli\]/{f=1;next} /^###/{f=0} f' profile/README.md | grep -qF 'predates the monorepo'
 # 4.7: the three primitives without a gate are not described as governed.
 awk '/^### The primitives/{f=1;next} /^### /{f=0} f' profile/README.md | grep -qF 'draft bootstrap spec'
-# Section 6, whichever way D-2 goes: a listed rahi says nothing needs it; a listed hqgit says specification only.
-! grep -qF 'github.com/statecrafting/rahi' profile/README.md || grep -qF 'Nothing else on this page requires it' profile/README.md
-! grep -qF 'github.com/statecrafting/hqgit' profile/README.md || awk '/^#### \[hqgit\]/{f=1;next} /^###/{f=0} f' profile/README.md | grep -qF 'Specification only'
+# 4.5, C-1: no public-availability claim for an image anonymous pull refused.
+! grep -qF 'ghcr.io/statecrafting/enrahitu' profile/README.md
+# 6.1, D-2: before and after the roster step, a listed rahi says in its own entry that nothing needs it.
+! grep -qF 'github.com/statecrafting/rahi' profile/README.md || awk '/^#### \[rahi\]/{f=1;next} /^###/{f=0} f' profile/README.md | grep -qF 'Nothing else on this page requires it'
+# 6.2, D-2: hqgit is not listed.
+! grep -qF 'github.com/statecrafting/hqgit' profile/README.md
+# 6.3, D-3: enrahitu leads with the membership platform.
+awk '/^#### \[enrahitu\]/{f=1;next} /^###/{f=0} f' profile/README.md | grep -qF 'A membership and association management platform'
 # 2: every line 001's own verification reads is still true.
 grep -qF 'AI can write the code' profile/README.md
 grep -q '```mermaid' profile/README.md
