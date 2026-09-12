@@ -37,5 +37,5 @@
     "title": "In-process hiqlite as a napi-rs native addon"
   },
   "shardHash": "fd79734614d6b1a9d85605200f3b7472b8c84a241ba067e10e2b3fd34876c9ac",
-  "specVersion": "1.1.0"
+  "specVersion": "1.2.0"
 }

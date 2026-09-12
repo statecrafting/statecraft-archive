@@ -58,3 +58,21 @@ Dockerfile* text eol=lf
 # Binary test fixtures (e.g. in a vendored build workspace) must never be
 # line-ending normalized.
 *.bin binary
+
+# --- spec-spine derived shards (spec 008) ---
+# Registers the merge driver (spec-spine spec 020) on the committed shard
+# globs. The driver itself is opt-in per clone: it does nothing until
+# `./.githooks/enable-merge-driver.sh` registers it in that clone's git
+# config, and a clone that never runs it behaves exactly as before.
+#
+# Sharding (spec 024) already removes the common conflict, since two PRs
+# touching different specs or packages write disjoint files. This is for the
+# same-shard case: two PRs editing the same authority unit.
+#
+# It never replaces the `index check` staleness gate. The driver resolves a
+# textual conflict by regenerating from the merged tree; the gate is what
+# proves the result is what the corpus compiles to.
+.derived/spec-registry/by-spec/*.json merge=spec-spine-derived-regen
+.derived/codebase-index/by-spec/*.json merge=spec-spine-derived-regen
+.derived/codebase-index/by-package/*.json merge=spec-spine-derived-regen
+.derived/codebase-index/slices.json merge=spec-spine-derived-regen

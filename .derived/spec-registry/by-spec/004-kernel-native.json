@@ -36,5 +36,5 @@
     "title": "The governance kernel as a napi-rs native addon"
   },
   "shardHash": "00a44eaec9cc562e62f1ed46ec2a548386e7fa35c8d065dd1b98f767737f4d98",
-  "specVersion": "1.1.0"
+  "specVersion": "1.2.0"
 }

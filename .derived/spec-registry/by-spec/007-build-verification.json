@@ -32,5 +32,5 @@
     "title": "Build verification: compile the addons before a tag can spend a version"
   },
   "shardHash": "439d2ec130e1ee361a4a32f0f95f04b3cd4c8dae66311f926c6b693d6b26a702",
-  "specVersion": "1.1.0"
+  "specVersion": "1.2.0"
 }

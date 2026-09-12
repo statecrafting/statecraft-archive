@@ -33,5 +33,5 @@
     "title": "The fleet placement core as a napi-rs native addon"
   },
   "shardHash": "0d05fb543a0b6af2618dbe068e89b56fce40b4e5d49ba01e643a9e00f2778131",
-  "specVersion": "1.1.0"
+  "specVersion": "1.2.0"
 }
