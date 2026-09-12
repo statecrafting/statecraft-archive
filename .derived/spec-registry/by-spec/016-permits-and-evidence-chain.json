@@ -1,0 +1,41 @@
+{
+  "record": {
+    "created": "2026-09-11",
+    "dependsOn": [
+      "008-governance-attestation",
+      "014-rahi-realignment",
+      "015-hosted-work-contract"
+    ],
+    "establishes": [
+      {
+        "kind": "directory",
+        "path": "specs/016-permits-and-evidence-chain/"
+      }
+    ],
+    "id": "016-permits-and-evidence-chain",
+    "implementation": "pending",
+    "sectionHeadings": [
+      "016: Permits and the evidence chain",
+      "1. Purpose",
+      "2. Territory",
+      "3. The WorkPermit",
+      "4. The ActionPermit",
+      "5. Issuer trust, and the anchor we do not have",
+      "6. Trusted-base authority change",
+      "7. Intent and outcome are not atomic",
+      "8. The evidence chain, acyclic",
+      "9. Reuse, not reinvention",
+      "10. Runtime binding, replay and shadow policy",
+      "11. Negative cases",
+      "12. Acceptance",
+      "13. Cross-repo dependency",
+      "14. Out of scope"
+    ],
+    "specPath": "specs/016-permits-and-evidence-chain/spec.md",
+    "status": "draft",
+    "summary": "Two permits and one chain. A WorkPermit says who may do what work, against which authority, for how long; an ActionPermit says that one named external effect may happen, on one exact artifact, in one target environment, under one policy, with one set of approvals, once. Both carry an independent issuer, a scoped audience, an expiry, a nonce and a fence checked at effect time, and neither can be authorized by content that signs itself. The chain that binds them is acyclic: authority and scope, permit, candidate results, acceptance receipt, build provenance and artifact digest, action permit, outcome, runtime binding, each referencing only what came before it by digest. A change to the rules of authority is evaluated under the rules that were trusted before it, with a named bootstrap. Intent and outcome are reconciled, never assumed atomic.\n",
+    "title": "Permits and the evidence chain: authorizing work, authorizing an effect"
+  },
+  "shardHash": "97935a3b56bd9387f37d44aa028b3ce93abcee2e91f550ede60c4f5c67037687",
+  "specVersion": "1.2.0"
+}

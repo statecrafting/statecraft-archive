@@ -1,0 +1,32 @@
+{
+  "mapping": {
+    "dependsOn": [
+      "001-statecraft-thesis"
+    ],
+    "implementingPaths": [
+      {
+        "path": "specs/014-rahi-realignment/",
+        "source": "spec-edge"
+      }
+    ],
+    "resolvedUnits": [
+      {
+        "locations": [
+          {
+            "file": "specs/014-rahi-realignment/"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "directory",
+          "path": "specs/014-rahi-realignment/"
+        }
+      }
+    ],
+    "specId": "014-rahi-realignment",
+    "specStatus": "draft"
+  },
+  "schemaVersion": "1.1.0",
+  "shardHash": "cde99a77507670a50f48bb8ab3a441b4f752590dbb8f0dd0fd6682e87ab90f11"
+}
