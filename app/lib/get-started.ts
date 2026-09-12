@@ -56,7 +56,7 @@ export const PLANNED_STEPS: Step[] = [
     id: "local-session",
     title: "Run a governed agent session on your own machine",
     body:
-      "statecraft-cli implements a local, account-free governed run: candidate worktrees, a credential fence, an acceptance receipt and an action broker. It is not released. The only release, v0.1.0 of July 22, 2026, predates the local engine, and a packaged engine does not yet run outside a source checkout, so no install command for it is published here. That changes when the clean-machine job in statecraft-cli draft 130 passes.",
+      "statecraft-cli implements a local, account-free governed run: candidate worktrees, a credential fence, an acceptance receipt and an action broker. It is not released. The only release, v0.1.0 of July 22, 2026, is the CLI and MCP server and predates the local engine, so installing it (install.sh included) does not give you the engine, and a packaged engine does not yet run outside a source checkout. No install command for it is published here until a release containing the engine exists and has been tested on a clean machine, which is the job statecraft-cli draft 130 specifies.",
     repo: "statecraft-cli",
     spec: { repo: "statecraft-cli", id: "130-member-distribution" },
     badge: "not released",

@@ -205,11 +205,14 @@ reader can act on it. Runnable today: govern a repository the reader already
 has with spec-spine (`spec-spine init`, `compile`, `lint`, then `couple` in
 their CI), which needs no account and nothing else in the family. Not yet
 installable, each with its own chip: a local governed agent session
-(`statecraft-cli`, implemented and not released; its step publishes no install
-command until the clean-machine job of that repository's draft 130 passes),
-the stamp, and self-hosting the control plane, which states that no
-reproducible self-host path and no hosted plane exist. A command appears on
-this page only once it has been run on a clean machine.
+(`statecraft-cli`, implemented and not released; it stays not released, and
+its step publishes no install command, until a release containing the engine
+exists and has been tested on a clean machine, the job that repository's draft
+130 specifies), the stamp, and self-hosting the control plane, which states
+that no reproducible self-host path and no hosted plane exist. A command
+appears on this page only once it has been run on a clean machine. The
+`statecraft-cli` `install.sh` installs that repository's v0.1.0 release, the
+CLI and MCP server, and is never offered as a way to install the engine.
 
 ### 3.6 Static and dependency posture
 
@@ -344,19 +347,22 @@ stopped doing as the siblings moved.
    positioning table, the delivery flow's Verify step, the verification layer
    blurb and the `attest-ledger` catalog card all presented Ed25519 signing as
    a property of the record. It is a capability of the `attest-ledger` library;
-   whether a chain is signed is a deployment property. `statecraft` spec 014 section 3.5 reports the
-   running plane's chain as hash-linked, unsigned, and anchored to a root it
-   declares for itself, with `GOVERNANCEANCHORKEY` absent from the live
-   secret. The copy now separates integrity (settled by recomputation) from
-   issuer trust (not), and says signing is specified and not yet in force.
+   whether a chain is signed is a deployment property. `statecraft` spec 008
+   anchors the plane's chain to a fixed genesis root it declares for itself and
+   leaves the anchor unsigned until an operator key is configured, and spec 009
+   records that key as declared with no delivery path in the deployment. The
+   copy now separates integrity (settled by recomputation) from issuer trust
+   (not), and says signing is specified and not yet in force.
 
 4. **A verifier path nothing has exercised.** The whitepaper described
    tenant-tail re-checking "the run-side artifacts the factory asserted about
-   its build" as a live path. `statecraft` spec 014 section 3.3 records that
-   the factory has never run in production, so no production certificate has
-   been through it. The claim is now stated as a library shape, and the reader
-   is told that a chain rebuilt from a fresh anchor verifies while proving
-   nothing about its origin.
+   its build" as a live path. No production stamp of an application is on a
+   public record, so no production certificate is recorded as having been
+   through it. The claim is now stated as a library shape, and the reader is
+   told that a chain rebuilt from a fresh anchor verifies while proving nothing
+   about its origin.
+
+(Items 3 and 4: evidence re-pointed 2026-09-12 to public sources; section 9.)
 
 One drift fix rides along: `papers.ts` carried a hardcoded "10" for the
 family's repo count, stale since the eleventh repo joined (spec 003 section
@@ -368,15 +374,30 @@ engine the repository now holds, matching spec 003 section 7.
 Not changed here, and recorded in spec 006 for review instead: the Stamp rung,
 the Substrate layer's framing, the delivery flow's shape, and the addition of
 `rahi`. Each of those changes what spec 002 section 2 or section 3.3 here
-*requires*, and the successor thesis that would motivate them (`statecraft`
-spec 014) is still `status: draft`.
+*requires*, and the successor thesis that would motivate them was then an
+unratified draft in `statecraft`.
 
 ## 9. Status note (2026-09-12): the matrix, and four claims the first pass missed
 
 Sections 3.3.1 and the 3.5 amendment land with this change, on the owner's
-approval of spec 006's P-1 and P-4 and decisions D-2 and D-4. Sibling states
-read on 2026-09-12 at `statecraft-cli` `874766b`, `spec-spine` `0e41641`,
-`enrahitu` `26c75e2`, `attest-ledger` `a9c3595`, `statecrafting` `85db8fd`.
+2026-09-12 adoption of revision-4 row WEB-01, which answers spec 006's D-2
+(the matrix is a section of `/products`), D-4 (the matrix alone authors the
+axes the chips do not carry), D-6 (the first adoption path is spec-spine in a
+repository the reader already has) and D-9 (all three prepared tiers), and
+accepts P-1 and P-4 in that shape (spec 006 section 10). The same row fixes one
+rule for the local engine: it reads not released until a tested release
+exists, and `install.sh` is not an engine-install path. Sibling states read on
+2026-09-12 at `statecraft-cli` `874766b`, `spec-spine` `59cba05`, `statecraft`
+`9658e29`, `enrahitu` `26c75e2`, `attest-ledger` `a9c3595`, `statecrafting`
+`85db8fd`; every external evidence link in the matrix was fetched that day and
+resolved.
+
+Two readings moved between the proposal and this change. `spec-spine` spec
+085, the verifier that refuses unknown fields and an unsupported schema
+version, is now implemented on `main` and in no release, so the matrix states
+that limit against the released v0.18.0 and names 085 as the unreleased fix;
+086 is still a draft. And the statecraft row's unsigned-anchor limit now cites
+spec 009's record of the undeliverable key beside spec 008.
 
 Four corrections ride along, each a sentence that section 8 should have caught:
 
@@ -401,6 +422,17 @@ Four corrections ride along, each a sentence that section 8 should have caught:
    repos"; it now reads `PRODUCT_FAMILY.length`, as the papers stat already
    does.
 
+**Evidence that is not public (WEB-03).** Section 8 items 3 and 4, the
+whitepaper's ledger and verifier paragraphs, and figure 2's ledger node leaned
+on `statecraft` spec 014 for the unsigned live chain and the factory never
+having run. That record is on no public branch and publication of drafts has
+not been authorized, so each now rests on public evidence (`statecraft` 008
+and 009) or says "no public record". The matrix already cited none of 014. The
+whitepaper edits are mechanism corrections of the kind section 8 made; the July
+paper is not re-authored.
+
 Not changed: the Stamp step, the Substrate layer, the delivery flow's shape,
-`rahi`, and the whitepaper's successor banner. Each still waits on spec 006
-D-1, D-3 or D-5.
+`rahi`, and the whitepaper's superseded banner. The owner adopted the successor
+thesis on 2026-09-12 (WEB-02: add `rahi`, keep hqgit off, supersede the
+whitepaper with a dated banner), and every one of those lands as an explicit
+follow-on amendment to this spec, not inside this change.

@@ -94,6 +94,8 @@ const SPINE_SEAL: Evidence = {
   label: "spec-spine 023",
   href: "https://github.com/statecrafting/spec-spine/tree/main/specs/023-ledger-seal",
 };
+/** The spec-spine main commit the authored readings were taken at. */
+const SPINE_READ_AT = "59cba05";
 
 export const CAPABILITIES: CapabilityRow[] = [
   {
@@ -104,7 +106,7 @@ export const CAPABILITIES: CapabilityRow[] = [
     repos: ["spec-spine"],
     implemented: {
       from: "read",
-      at: [{ repo: "spec-spine", sha: "0e41641" }],
+      at: [{ repo: "spec-spine", sha: SPINE_READ_AT }],
       state: "yes",
       note: "The compiler, the index, the linter and the coupling gate are implemented in its own corpus.",
       evidence: [{ label: "spec-spine specs", href: "https://github.com/statecrafting/spec-spine/tree/main/specs" }],
@@ -131,8 +133,22 @@ export const CAPABILITIES: CapabilityRow[] = [
         evidence: [{ label: "spec 004 section 8", href: "/registry/statecraft.ing/004-marketing-surfaces" }],
       },
       {
-        text: "Re-checking an attestation by recomputation still accepts added unknown fields and an unsupported schema version, and a rewritten index shard can read fresh. Fixes are drafted, not implemented.",
+        text: "The released v0.18.0 verifier still accepts an attestation with added unknown fields or an unsupported schema version. The fix, spec 085, is implemented on main and not yet in a release.",
         evidence: [
+          SPINE_RELEASE,
+          {
+            label: "spec 085",
+            href: "https://github.com/statecrafting/spec-spine/tree/main/specs/085-a-verifier-checks-the-bytes-it-was-given",
+          },
+        ],
+      },
+      {
+        text: "A rewritten index shard can still read fresh. Its fix is a draft, spec 086, and is not implemented.",
+        evidence: [
+          {
+            label: "draft 086",
+            href: "https://github.com/statecrafting/spec-spine/tree/main/specs/086-the-committed-index-is-compared-not-trusted",
+          },
           {
             label: "spec-spine authority evidence",
             href: "https://github.com/statecrafting/spec-spine/blob/main/docs/authority-evidence.md",
@@ -149,7 +165,7 @@ export const CAPABILITIES: CapabilityRow[] = [
     repos: ["spec-spine"],
     implemented: {
       from: "read",
-      at: [{ repo: "spec-spine", sha: "0e41641" }],
+      at: [{ repo: "spec-spine", sha: SPINE_READ_AT }],
       state: "yes",
       note: "Spec 023, the ledger seal, is implemented.",
       evidence: [SPINE_SEAL],
@@ -187,7 +203,7 @@ export const CAPABILITIES: CapabilityRow[] = [
     },
     released: {
       state: "no",
-      note: "Not in a release. The only release, v0.1.0 of July 22, 2026, predates member dispatch and the local engine, and a packaged engine does not yet run outside a source checkout.",
+      note: "Not in a release. The only release, v0.1.0 of July 22, 2026, predates member dispatch and the local engine, and a packaged engine does not yet run outside a source checkout. It stays not released until a release containing the engine exists and has been tested on a clean machine.",
       evidence: [CLI_RELEASE, { label: "draft 130", href: "/registry/statecraft-cli/130-member-distribution" }],
     },
     exercised: {
@@ -228,7 +244,7 @@ export const CAPABILITIES: CapabilityRow[] = [
     },
     released: {
       state: "yes",
-      note: "v0.1.0 binaries for macOS, Linux and Windows, each with a checksum and a CycloneDX SBOM; install.sh installs the macOS and Linux builds.",
+      note: "v0.1.0 binaries for macOS, Linux and Windows, each with a checksum and a CycloneDX SBOM. That release is the CLI and the MCP server only: installing it, by install.sh or by hand, does not install the local engine.",
       evidence: [CLI_RELEASE, { label: "spec 107", href: "/registry/statecraft-cli/107-release-distribution" }],
     },
     exercised: {
@@ -313,8 +329,11 @@ export const CAPABILITIES: CapabilityRow[] = [
     hosted: { state: "no", note: "No sign-up, pricing or support is offered." },
     limits: [
       {
-        text: "Spec 008 leaves the chain's anchor unsigned until an operator key is configured. This site does not claim the running chain is signed.",
-        evidence: [{ label: "spec 008", href: "/registry/statecraft/008-governance-attestation" }],
+        text: "Spec 008 leaves the chain's anchor unsigned until an operator key is configured, and the deploy spec records that key as declared with no delivery path. This site does not claim the running chain is signed.",
+        evidence: [
+          { label: "spec 008", href: "/registry/statecraft/008-governance-attestation" },
+          { label: "spec 009", href: "/registry/statecraft/009-control-plane-deploy" },
+        ],
       },
     ],
   },
