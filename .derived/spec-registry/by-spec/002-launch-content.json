@@ -37,13 +37,14 @@
       "4. Acceptance",
       "5. Out of scope",
       "6. Status (2026-07-14): complete",
-      "7. Status note (2026-09-11): the ladder re-points at a renumbered corpus"
+      "7. Status note (2026-09-11): the ladder re-points at a renumbered corpus",
+      "8. Status note (2026-09-11): three claims catch up with the siblings"
     ],
     "specPath": "specs/002-launch-content/spec.md",
     "status": "approved",
     "summary": "The words on the site at launch. One index page that states what Statecraft is in the builder's own register (creator-led, OSS-credible, no startup theater), a product-family section presenting the roster owned by spec 003, and an honest status section tied to the public milestone ladder. The positioning facts are inlined here so the implementing session needs no external archive.\n",
     "title": "Launch content: positioning, product family, honest status"
   },
-  "shardHash": "da486a2739f3fba5b775291ed5f34107c41fd34f4e7ef179d369ba81aaec634a",
+  "shardHash": "b62aaa802706c4f494186689594255e5358d50841ed8d0677915651357e67223",
   "specVersion": "1.2.0"
 }

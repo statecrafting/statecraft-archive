@@ -54,7 +54,7 @@ export const sections: Section[] = [
         id: "safe-parallel-work",
         title: "Safe parallel work",
         content: [
-          "This design makes parallel work by many agents tractable. Disjoint territory is provably disjoint: two agents editing documents whose paths do not overlap cannot collide, and the graph tells them their boundaries before either edits a line.",
+          "This design makes parallel work by many agents tractable. The graph tells two agents their declared boundaries before either edits a line, and the coupling gate refuses a change that reaches outside them. The guarantee is exactly that, and no more: it covers the source paths a spec claims, checked at merge. It does not cover what two non-overlapping specs can still share, such as generated files, a lockfile, a migration, a test fixture or an external resource, and it is not operating-system write isolation. Declared and enforced are two different columns.",
           "When two documents must touch the same path, they declare co-authority section by section against named anchors. A potential collision becomes a structured merge rather than a free-for-all. History stays queryable too: an amendment patches its predecessor in place rather than overwriting it.",
         ],
       },
@@ -101,7 +101,7 @@ export const sections: Section[] = [
         id: "append-only-ledger",
         title: "An append-only, hash-linked ledger",
         content: [
-          "Compliance in an agentic system needs verifiable proof, not promises. Statecraft records what the plane did in attest-ledger: an append-only, hash-linked, Ed25519-signed record where each entry commits to the one before it, so a silent edit anywhere in the history breaks the chain. [ref:4]",
+          "Compliance in an agentic system needs evidence with stated limits, not promises. attest-ledger is an append-only, hash-linked record in which each entry commits to the one before it, so a silent edit anywhere in the history breaks the chain. It can sign entries with Ed25519; whether a given chain is signed is a property of the deployment, not of the library. The control plane's own governance chain is hash-linked and unsigned today, anchored to a root it declares for itself, so re-checking it establishes internal consistency and not who produced it. Issuer trust is a separate outcome and is reported separately. [ref:4]",
           "Hashes only agree across parties if everyone serializes the same bytes. canonical-keysort-json does exactly that: a lexicographic key sort at the serialization boundary, so a record hashed on one machine hashes identically on another. [ref:9] The certificate and record shapes shown in the reader are illustrative schemas, not a real signed artifact; the real ones are produced by tenant-emit from a finished run.",
         ],
       },
@@ -109,8 +109,8 @@ export const sections: Section[] = [
         id: "independent-verification",
         title: "Independent verification",
         content: [
-          "The load-bearing property is that the verifier does not trust the producer. tenant-tail re-checks the run-side artifacts the factory asserted about its build, offline, identity-free, and read-only all the way down to the package boundary. [ref:5]",
-          "If any artifact has been tampered with, the verifier rejects the record with a specific diagnostic pointing at the exact mismatch. The emit side (tenant-emit) and the verify side (tenant-tail) are deliberately separate binaries with no shared trust, so the paperwork can be re-checked by someone who ran none of it.",
+          "The load-bearing property is that the verifier does not trust the producer. tenant-tail re-checks the run-side artifacts a factory asserted about its build, offline, identity-free, and read-only down to the package boundary. [ref:5] It is a library with that shape rather than a path anyone has exercised end to end: the control plane has not stamped an application in production, so no production certificate has been through it.",
+          "If an artifact covered by the record has been altered, the verifier rejects it with a specific diagnostic pointing at the exact mismatch. What recomputation cannot catch is a chain rebuilt end to end from a fresh anchor, which is internally perfect and says nothing about its origin: integrity and issuer trust are two questions, and only the first is answered by arithmetic. The emit side (tenant-emit) and the verify side (tenant-tail) are deliberately separate binaries with no shared trust, so the paperwork can be re-checked by someone who ran none of it.",
         ],
       },
     ],
@@ -124,7 +124,7 @@ export const sections: Section[] = [
         id: "federated-identity",
         title: "Federated identity",
         content: [
-          "Collaboration between people and agents needs one trust fabric. Statecraft uses Rauthy as the sole OpenID Connect session signer, with GitHub as an upstream identity provider. A developer's GitHub login federates through Rauthy, giving one centralized source of identity truth. This runs today: the OIDC signer is live at auth.statecraft.ing. [ref:6]",
+          "Collaboration between people and agents needs one trust fabric. Statecraft uses Rauthy as the sole OpenID Connect session signer, with GitHub as an upstream identity provider. A developer's GitHub login federates through Rauthy, giving one centralized source of identity truth. Rauthy runs inside the control plane's own container and is reached only through the plane's origin: the issuer is https://app.statecraft.ing/auth/v1/, and there is no separate auth host (statecraft spec 009 section 2.4 retired one). [ref:6]",
           "Rauthy issues scoped tokens that define precisely what a person or agent may do. There is no anonymous session: every actor is identified before it can act, and an agent driving the plane passes through the exact controls a person does. [ref:7]",
         ],
       },
@@ -201,10 +201,10 @@ export const comparisonTable = {
       name: "Statecraft",
       values: [
         "Spec-spine graph plus coupling gate and refusal rule",
-        "Append-only, hash-linked, signed ledger",
+        "Append-only, hash-linked ledger; signing specified, not yet in force",
         "A first-class actor on the same rails as people",
-        "Independent verifier that trusts no producer",
-        "Provably disjoint territory",
+        "Independent verifier; issuer trust reported, never assumed",
+        "Declared, non-overlapping source paths, checked at merge",
       ],
       highlight: true,
     },

@@ -181,3 +181,43 @@ This is the failure mode section 2 anticipated when it told the implementing
 session to check the registries for the then-current truth rather than trust a
 sentence. It will recur whenever a sibling renumbers, and the honest fix is
 the same each time: re-point the ids, never weaken the check.
+
+## 8. Status note (2026-09-11): three claims catch up with the siblings
+
+Content corrections in this spec's own surfaces, from the 2026-09-11 family
+realignment. Nothing in section 2 or section 3 changes what it requires; each
+edit makes a sentence true again after a sibling moved. Sibling states read at
+`statecraft` `afe31c3`, `statecraft-cli` `15103e2`, `enrahitu` `26c75e2`.
+
+1. **The MCP face is present tense now.** The for-agents block said the face
+   "will expose the governed verbs", while the maturity chip rendered beside it
+   already read `shipped`, because `statecraft-cli/105-mcp-server` is
+   `implementation: complete` in the baked payload. The prose was the only part
+   still waiting. It also gains the limit the CLI's own doc 05 section 12
+   records: no driver proves it observed every tool call a provider made, so
+   provider tool-event coverage is `unknown` rather than claimed.
+
+2. **The born-with certificate exists.** The template-contract stub said the
+   certificate was "specced but not yet implemented".
+   `enrahitu/012-born-with-provenance` is `implementation: complete`; only
+   `009-template-contract`, the contract that drives the stamp, is still in
+   progress. The stub now separates the two.
+
+3. **The control plane runs, and you still cannot install it.** The self-host
+   stub said the plane was "spec-approved and on the milestone ladder, not yet
+   a thing you deploy", which is wrong in one direction and right in the other.
+   `statecraft` spec 014 section 3.1 records a live deployment serving
+   `app.statecraft.ing`, reconciled to that repository's `main`, with tenants,
+   the gate and the attestation chain running. What does not exist is a
+   reproducible self-host path: `statecraft/009-control-plane-deploy` is still
+   `implementation: in-progress` and describes one specific cluster. The stub
+   now says both halves, and names the two limits a reader should carry into
+   the rest of the docs: the factory has not stamped an application in
+   production (014 section 3.3), and the plane's chain is unsigned (014
+   section 3.5).
+
+Not changed here: the Stamp rung, the hero's factory sentence, and the ladder's
+M3 shape. Each is a change to what section 2 *requires*, motivated by a
+successor thesis (`statecraft` spec 014) that is still `status: draft`. Spec 006
+records them as proposals P-1 to P-7 for review, with the evidence and the
+dependency named.

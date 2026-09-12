@@ -99,13 +99,14 @@
       "4. Acceptance",
       "5. Out of scope",
       "6. Status (2026-07-16): complete",
-      "7. Status note (2026-09-11): the eleventh roster repo gets its layer"
+      "7. Status note (2026-09-11): the eleventh roster repo gets its layer",
+      "8. Status note (2026-09-11): four published claims corrected"
     ],
     "specPath": "specs/004-marketing-surfaces/spec.md",
     "status": "approved",
     "summary": "Restores the richer marketing experience the OAP-era statecraft web app carried, ported onto the static apex: a products/architecture page, a papers index with a full whitepaper reader (sticky TOC, reading-progress, scroll-spy, inline references) and an interactive clickable-SVG architecture explorer, and a get-started walkthrough. It expands the site chrome (Products, Papers, Get Started in the nav) and adds a sign-in link that hands off to the control plane's login initiator at app.statecraft.ing/api/v1/auth/login. All content is re-authored to be truthful and checkable against the current public repos (no fabricated hashes, spec counts, signatures, or dead subsystems): the OAP name becomes Statecraft, and factory-encore / template-encore become enrahitu. The site stays fully static and prerendered, with zero runtime off-origin requests; sign-in is a plain outbound link, not an auth flow this site runs.\n",
     "title": "Rich marketing surfaces: products, whitepaper, get-started, sign-in"
   },
-  "shardHash": "3982959fc8078e6524894ed9859393c62d76ae853ba4d0110ebf2367e6859186",
+  "shardHash": "8ee4a742a34de7ed824878bc871bb36353645fca5dc6e4fe6e7360df18faf5eb",
   "specVersion": "1.2.0"
 }

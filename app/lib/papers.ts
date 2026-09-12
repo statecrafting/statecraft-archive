@@ -5,6 +5,7 @@
 // given; this module normalises the whitepaper content into that shape.
 
 import type { ArchDiagram } from "~/components/architecture-explorer";
+import { PRODUCT_FAMILY } from "./product-family";
 import {
   paperMeta,
   sections as whitepaperSections,
@@ -87,8 +88,14 @@ const flagship: ReaderPaper = {
   featured: true,
   tags: ["architecture", "governance", "spec-spine", "overview"],
   stats: [
-    { value: "10", label: "public repos, one governed family" },
-    { value: "Ed25519", label: "signed, hash-linked attestation ledger" },
+    // Read off the spec-003 roster rather than typed, so the count cannot fall
+    // behind the family the way a hardcoded "10" did when the eleventh repo
+    // joined.
+    {
+      value: String(PRODUCT_FAMILY.length),
+      label: "public repos, one governed family",
+    },
+    { value: "hash-linked", label: "attestation ledger; signing not yet in force" },
     { value: "1 container", label: "the enrahitu substrate, zero managed deps" },
   ],
   sections: whitepaperSections.map((s) => ({
