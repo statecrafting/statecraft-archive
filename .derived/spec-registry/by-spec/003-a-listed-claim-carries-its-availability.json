@@ -1,0 +1,57 @@
+{
+  "record": {
+    "amends": [
+      "001-the-profile-is-the-org-front-door"
+    ],
+    "created": "2026-09-11",
+    "dependsOn": [
+      "001-the-profile-is-the-org-front-door"
+    ],
+    "extends": [
+      {
+        "nature": "superseding",
+        "spec": "001-the-profile-is-the-org-front-door",
+        "unit": {
+          "kind": "file",
+          "path": "profile/README.md"
+        }
+      }
+    ],
+    "id": "003-a-listed-claim-carries-its-availability",
+    "implementation": "pending",
+    "sectionHeadings": [
+      "003: A listed claim carries its availability",
+      "1. Purpose",
+      "2. Territory",
+      "3. Behavior",
+      "3.1 The page carries five things, in this order",
+      "3.2 Availability is stated per capability, never as a product verdict",
+      "3.3 Evidence claims are bounded to what is independently checkable",
+      "3.4 The license section separates the label from the promise",
+      "3.5 Nothing here adopts the September 2026 realignment",
+      "4. The proposed copy",
+      "4.1 The thesis block: one sentence tightened",
+      "4.2 A new block, between the thesis and the projects",
+      "4.3 The project list: a key, and one changed heading",
+      "4.4 statecraft",
+      "4.5 statecraft-cli",
+      "4.6 spec-spine",
+      "4.7 A new group, \"The chassis\", after \"The template\"",
+      "4.8 A new group, \"Specified, not built\", last before the packages",
+      "4.9 enrahitu",
+      "4.10 statecrafting",
+      "4.11 The license section",
+      "5. Out of scope",
+      "6. Open decisions, for the approver",
+      "7. What this asks of other repositories",
+      "8. The site description this page is coordinated against",
+      "Verification"
+    ],
+    "specPath": "specs/003-a-listed-claim-carries-its-availability/spec.md",
+    "status": "draft",
+    "summary": "The landing page lists eleven repositories in the present tense and closes with a license rationale that is, in two places, not true of the files on disk. This spec amends 001 section 3.1: every project entry states what is available at the level of a capability rather than a product, the family gains the two repositories it has grown since (rahi and hqgit, the second labelled as specification only), statecraft-cli is described as the tooling monorepo it became on 2026-09-09, the license section names the three licenses that actually ship and stops claiming what a license prevents, and the page acquires a first adoption link that runs locally with no account. It does not adopt the September 2026 realignment's proof-protocol roadmap, which is proposed and unratified in the repositories that would implement it.\n",
+    "title": "A listed claim carries its availability"
+  },
+  "shardHash": "457704c09977287ad818b1fbfa514725fd4805ce9ed76c79e33706f763eaa38a",
+  "specVersion": "1.2.0"
+}
