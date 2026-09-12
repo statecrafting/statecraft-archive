@@ -182,7 +182,7 @@ export const PRODUCT_DETAIL: Record<string, ProductDetail> = {
     blurb:
       "A tamper-evident record ledger: what the plane did, in a form a stranger can re-check.",
     highlights: [
-      "Append-only, hash-linked, Ed25519-signed",
+      "Append-only, hash-linked; can sign entries with Ed25519",
       "Ships with an independent verifier",
     ],
   },

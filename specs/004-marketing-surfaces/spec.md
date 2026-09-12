@@ -291,10 +291,10 @@ stopped doing as the siblings moved.
    and the positioning table now say exactly that.
 
 3. **A signed ledger that is not signed.** The whitepaper, figure 2, the
-   positioning table, the delivery flow's Verify step and the verification
-   layer blurb all presented Ed25519 signing as a property of the record. It
-   is a capability of the `attest-ledger` library; whether a chain is signed
-   is a deployment property. `statecraft` spec 014 section 3.5 reports the
+   positioning table, the delivery flow's Verify step, the verification layer
+   blurb and the `attest-ledger` catalog card all presented Ed25519 signing as
+   a property of the record. It is a capability of the `attest-ledger` library;
+   whether a chain is signed is a deployment property. `statecraft` spec 014 section 3.5 reports the
    running plane's chain as hash-linked, unsigned, and anchored to a root it
    declares for itself, with `GOVERNANCEANCHORKEY` absent from the live
    secret. The copy now separates integrity (settled by recomputation) from
