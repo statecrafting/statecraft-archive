@@ -2,7 +2,7 @@
 id: "003-a-listed-claim-carries-its-availability"
 title: "A listed claim carries its availability"
 status: approved
-implementation: pending
+implementation: in-progress
 created: "2026-09-11"
 summary: >
   The landing page lists repositories in the present tense and closes with a
