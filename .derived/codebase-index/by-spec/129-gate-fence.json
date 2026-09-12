@@ -13,7 +13,9 @@
     "dependsOn": [
       "125-credential-fence",
       "121-candidate-and-receipt",
-      "016-stage-build"
+      "122-action-broker",
+      "016-stage-build",
+      "019-stage-verify"
     ],
     "implementingPaths": [
       {
@@ -21,7 +23,23 @@
         "source": "spec-edge"
       },
       {
+        "path": "members/src/orchestrator/broker.test.ts",
+        "source": "spec-edge"
+      },
+      {
+        "path": "members/src/orchestrator/broker.ts",
+        "source": "spec-edge"
+      },
+      {
+        "path": "members/src/orchestrator/candidate.ts",
+        "source": "spec-edge"
+      },
+      {
         "path": "members/src/orchestrator/daemon.test.ts",
+        "source": "spec-edge"
+      },
+      {
+        "path": "members/src/orchestrator/projects.ts",
         "source": "spec-edge"
       },
       {
@@ -30,6 +48,14 @@
       },
       {
         "path": "members/src/orchestrator/stages/build.ts",
+        "source": "spec-edge"
+      },
+      {
+        "path": "members/src/orchestrator/stages/verify.test.ts",
+        "source": "spec-edge"
+      },
+      {
+        "path": "members/src/orchestrator/stages/verify.ts",
         "source": "spec-edge"
       },
       {
@@ -63,6 +89,45 @@
       {
         "locations": [
           {
+            "file": "members/src/orchestrator/broker.test.ts"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "extends",
+        "unit": {
+          "kind": "file",
+          "path": "members/src/orchestrator/broker.test.ts"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "members/src/orchestrator/broker.ts"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "extends",
+        "unit": {
+          "kind": "file",
+          "path": "members/src/orchestrator/broker.ts"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "members/src/orchestrator/candidate.ts"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "extends",
+        "unit": {
+          "kind": "file",
+          "path": "members/src/orchestrator/candidate.ts"
+        }
+      },
+      {
+        "locations": [
+          {
             "file": "members/src/orchestrator/daemon.test.ts"
           }
         ],
@@ -71,6 +136,19 @@
         "unit": {
           "kind": "file",
           "path": "members/src/orchestrator/daemon.test.ts"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "members/src/orchestrator/projects.ts"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "extends",
+        "unit": {
+          "kind": "file",
+          "path": "members/src/orchestrator/projects.ts"
         }
       },
       {
@@ -97,6 +175,32 @@
         "unit": {
           "kind": "file",
           "path": "members/src/orchestrator/stages/build.ts"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "members/src/orchestrator/stages/verify.test.ts"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "extends",
+        "unit": {
+          "kind": "file",
+          "path": "members/src/orchestrator/stages/verify.test.ts"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "members/src/orchestrator/stages/verify.ts"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "extends",
+        "unit": {
+          "kind": "file",
+          "path": "members/src/orchestrator/stages/verify.ts"
         }
       },
       {
@@ -143,5 +247,5 @@
     "specStatus": "draft"
   },
   "schemaVersion": "1.1.0",
-  "shardHash": "99bda66f7c01fd46ffb6e6fbc9e8c0372a12029ca6776e808d2d1ccae92605fa"
+  "shardHash": "4a3c3c940b612603a3443540f7d05751320ec496a9eaadabc92c0a0e93563b81"
 }

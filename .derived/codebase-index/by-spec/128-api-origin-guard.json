@@ -39,6 +39,10 @@
         "source": "spec-edge"
       },
       {
+        "path": "members/src/orchestrator/api/state.ts",
+        "source": "spec-edge"
+      },
+      {
         "path": "members/src/orchestrator/api/types.ts",
         "source": "spec-edge"
       },
@@ -56,6 +60,18 @@
       },
       {
         "path": "members/src/orchestrator/export.ts",
+        "source": "spec-edge"
+      },
+      {
+        "path": "members/src/orchestrator/projects.test.ts",
+        "source": "spec-edge"
+      },
+      {
+        "path": "members/src/orchestrator/projects.ts",
+        "source": "spec-edge"
+      },
+      {
+        "path": "members/web/vite.config.ts",
         "source": "spec-edge"
       }
     ],
@@ -133,6 +149,19 @@
       {
         "locations": [
           {
+            "file": "members/src/orchestrator/api/state.ts"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "extends",
+        "unit": {
+          "kind": "file",
+          "path": "members/src/orchestrator/api/state.ts"
+        }
+      },
+      {
+        "locations": [
+          {
             "file": "members/src/orchestrator/api/types.ts"
           }
         ],
@@ -198,6 +227,45 @@
       {
         "locations": [
           {
+            "file": "members/src/orchestrator/projects.test.ts"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "extends",
+        "unit": {
+          "kind": "file",
+          "path": "members/src/orchestrator/projects.test.ts"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "members/src/orchestrator/projects.ts"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "extends",
+        "unit": {
+          "kind": "file",
+          "path": "members/src/orchestrator/projects.ts"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "members/web/vite.config.ts"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "extends",
+        "unit": {
+          "kind": "file",
+          "path": "members/web/vite.config.ts"
+        }
+      },
+      {
+        "locations": [
+          {
             "file": "docs/design/05-the-realignment-checked.md"
           }
         ],
@@ -213,5 +281,5 @@
     "specStatus": "draft"
   },
   "schemaVersion": "1.1.0",
-  "shardHash": "65ebd8424729ba5184feff90589563c14d77bb7a7258236182e7c74f15e265c4"
+  "shardHash": "fe848d4043e0cefe362ba94280d8d28dcb9e1c547e6804713abb05c90c42cd1c"
 }

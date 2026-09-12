@@ -12,6 +12,7 @@ depends_on:
   - "124-provider-conformance"
   - "125-credential-fence"
   - "129-gate-fence"
+  - "132-evidence-fixtures"
   - "027-api-projects"
 establishes:
   - "members/src/orchestrator/explain.ts"
@@ -232,9 +233,28 @@ when a later contract exists teaches a reader that its absence is normal;
 one that is present and reads `not recorded` with a reason teaches the
 opposite.
 
-## Status (2026-09-11)
+D-4 (2026-09-12; proposed). Verification is shown as 132's report, never as a
+badge. Where the view shows whether a run's evidence verifies, it renders the
+four evidence dimensions of 132 B-7 with their values and reasons, and the
+policy result apart from them; it never collapses them into "verified". This
+is why 131 now depends on 132: the view follows the evidence contract rather
+than inventing a display vocabulary for it first. The view's own four labels
+(B-2) describe whether a record exists; the report's values describe what a
+verifier concluded; the two are not mixed. Doc 05 D80.
+
+D-5 (2026-09-12). A fence tally is labelled for what it can show. A gate or
+session tally of zero reads `none` with the note that the tally records a
+reach through `PATH` and can be erased by the process it counts (129 D-8),
+never "no attempt was made".
+
+## Status (2026-09-12)
 
 Authored `draft`, `implementation: pending`, from doc 05 D65 and the
 packet's third action. It depends on 129 only for the gate's fence record,
-and reads `not recorded` for it on journals written before 129. Approval is
-a human flip.
+and reads `not recorded` for it on journals written before 129.
+
+Revised on 2026-09-12 from doc 05 §18 (D76, D80): a dependency on 132, whose
+report the view renders, and the label for a fence tally. The UI this view
+would join is `source-only` today (doc 05 D84): a compiled engine outside the
+checkout answers its root with 503. Nothing is implemented, and approval is a
+human flip.

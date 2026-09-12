@@ -52,6 +52,10 @@
         "source": "spec-edge"
       },
       {
+        "path": "members/src/orchestrator/api/server.ts",
+        "source": "spec-edge"
+      },
+      {
         "path": "members/src/orchestrator/api/static.test.ts",
         "source": "spec-edge"
       },
@@ -61,6 +65,10 @@
       },
       {
         "path": "members/src/orchestrator/qualification.ts",
+        "source": "spec-edge"
+      },
+      {
+        "path": "members/src/orchestrator/standby.ts",
         "source": "spec-edge"
       },
       {
@@ -176,6 +184,19 @@
       {
         "locations": [
           {
+            "file": "members/src/orchestrator/api/server.ts"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "extends",
+        "unit": {
+          "kind": "file",
+          "path": "members/src/orchestrator/api/server.ts"
+        }
+      },
+      {
+        "locations": [
+          {
             "file": "members/src/orchestrator/api/static.test.ts"
           }
         ],
@@ -210,6 +231,19 @@
         "unit": {
           "kind": "file",
           "path": "members/src/orchestrator/qualification.ts"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "members/src/orchestrator/standby.ts"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "extends",
+        "unit": {
+          "kind": "file",
+          "path": "members/src/orchestrator/standby.ts"
         }
       },
       {
@@ -299,5 +333,5 @@
     "specStatus": "draft"
   },
   "schemaVersion": "1.1.0",
-  "shardHash": "47c219ce0f7ab68dca03cc24bf952b29c47f13e3513d28b59555d67c8a623fb5"
+  "shardHash": "66114ae1e2144d53b22826805d6e68bc175721e8b495abc1f5842d366a87404b"
 }

@@ -8,35 +8,50 @@ risk: medium
 depends_on:
   - "125-credential-fence"
   - "121-candidate-and-receipt"
+  - "122-action-broker"
   - "016-stage-build"
+  - "019-stage-verify"
 establishes:
   - "members/src/orchestrator/gate-fence.test.ts"
 extends:
-  # 016 owns the build runner, whose runGate spawns the gate with no env today.
+  # 016 owns the build runner, whose runGate and git helper spawn with no env
+  # today.
   - { spec: "016-stage-build", unit: "members/src/orchestrator/stages/build.ts", nature: additive }
   - { spec: "016-stage-build", unit: "members/src/orchestrator/stages/build.test.ts", nature: additive }
+  # 121 owns the candidate, whose worktree creation runs repository hooks.
+  - { spec: "121-candidate-and-receipt", unit: "members/src/orchestrator/candidate.ts", nature: additive }
+  # 122 owns the broker, whose push runs a pre-push hook beside the credential.
+  - { spec: "122-action-broker", unit: "members/src/orchestrator/broker.ts", nature: additive }
+  - { spec: "122-action-broker", unit: "members/src/orchestrator/broker.test.ts", nature: additive }
+  # 019 owns the verify stage: its acceptance lines and browser sessions.
+  - { spec: "019-stage-verify", unit: "members/src/orchestrator/stages/verify.ts", nature: additive }
+  - { spec: "019-stage-verify", unit: "members/src/orchestrator/stages/verify.test.ts", nature: additive }
+  # 025 owns the registry, where the verify allowance is journaled per project.
+  - { spec: "025-project-registry", unit: "members/src/orchestrator/projects.ts", nature: additive }
   # 021 and 026 own fixture runners and evidence literals that gain the field,
   # as they did for 125's tally.
   - { spec: "021-orchestrator-daemon", unit: "members/src/orchestrator/daemon.test.ts", nature: additive }
   - { spec: "026-standby-daemon", unit: "members/src/orchestrator/standby.test.ts", nature: additive }
-  # Doc 05 is the record this spec is born from (D60).
+  # Doc 05 is the record this spec is born from (D60, D74 to D77).
   - { spec: "110-corpus-merge", unit: { kind: directory, path: "docs/design/" }, nature: additive }
 references:
   - { unit: { kind: file, path: "docs/design/05-the-realignment-checked.md" }, role: context }
   - { unit: { kind: file, path: "specs/125-credential-fence/spec.md" }, role: context }
 summary: >
   Spec 125 fenced the driven session so the broker is the only path that
-  works and the journal is complete. The fence stops at the session. The
-  build runner's runGate spawns every gate and bracket command with no env,
-  so the gate inherits the daemon's whole environment: the model keys, the
-  GitHub tokens, the SSH agent, the real gh on PATH and the operator's git
-  credential helper. The gate runs the project's own commands in the
-  candidate, and the candidate can edit every file those commands execute, so
-  a test that publishes during the gate is an effect no receipt covers and no
-  journal records. This spec runs the gate with exactly the environment the
-  session receives, scrubbed and fenced, tallies a gate-time refusal apart from
-  a session's, and records the fence on the build evidence. The broker keeps
-  the daemon's environment, as 125 B-6 requires.
+  works and the journal is complete. The fence stops at the session. Every
+  other place the engine runs code a repository controls inherits the
+  daemon's whole environment: the gate suite in every round, the bracket, the
+  engine's own git (whose hooks a tracked hooks directory supplies), the
+  broker's push (whose pre-push hook runs beside the one credential the broker
+  holds), and the verify stage's acceptance lines. Each was measured on
+  2026-09-12 seeing a fabricated token from the daemon's environment. This
+  spec gives every such path a named disposition: gate, bracket and candidate
+  git run with the session's fenced environment; credentialed git runs with
+  no repository hooks; the verify stage reads acceptance at the base revision
+  and runs it behind a fence unless the operator journals an allowance. A
+  refusal fails acceptance even when the gate swallows the exit code. The
+  property is credential protection, not hostile-code isolation.
 ---
 
 # 129: The gate fence
@@ -45,7 +60,8 @@ summary: >
 
 125's claim is precise: "the broker is the only path that works, so the
 journal is complete." It holds for the process 125 fenced, the provider
-session. It does not hold for the process that judges the session's work.
+session. It does not hold for the processes that judge and publish the
+session's work.
 
 `createProcessRunner` in `stages/build.ts` runs every gate command through
 `runProcessSync(workDir, cmd)`, which calls `Bun.spawnSync(cmd, { cwd })` with
@@ -66,21 +82,49 @@ obvious move: a test, or a Makefile target, that does what it wanted. No
 malice is required for the same effect: a project whose own integration tests
 push to a remote does it on every gate. Either way the effect happens with
 the operator's credential, outside the broker, with no receipt, no lease and
-no journal record. 125 §6 lists three residuals and this is a fourth it does
-not name. Draft 126's B-7 wraps only the session as well.
+no journal record.
 
-This spec closes the gap the way 125 closed it for the session. It is an
-integrity property, not containment, for the same reasons 125 gives.
+The gate is not the only such path. Measured on 2026-09-12 at `874766b`
+(doc 05 §18.2 F7), with a fabricated `GH_TOKEN` in the daemon's environment:
+
+- the production `runGate` over a real candidate saw the token and resolved
+  `gh` to the operator's binary;
+- with a tracked hooks directory (`core.hooksPath`, husky's shape), the
+  engine's own commit in the candidate ran the candidate's `pre-commit` with
+  the token;
+- the broker's production push ran the candidate's `pre-push` with the token,
+  and then pushed;
+- the verify stage's production runner ran a declared acceptance line with
+  the token and the real `gh`.
+
+And the refusal record is weaker than draft 129 first assumed (F8): under the
+fenced environment, `sh -c 'gh pr create --fill || true'` exits 0 with the
+refusal tallied, and a child that truncates the refusal log afterwards exits
+0 with a tally of 0.
+
+This spec closes the reach the way 125 closed it for the session, for every
+path in B-11's table. It is credential protection, not hostile-code isolation,
+for the reasons D-8 gives.
 
 ## 2. Territory
 
-- `members/src/orchestrator/stages/build.ts` (extends 016): `runGate` spawns
-  with the session's environment; the gate evidence gains the fence record.
+- `members/src/orchestrator/stages/build.ts` (extends 016): `runGate` and the
+  candidate-local git spawn with the session's environment; credentialed git
+  runs without repository hooks; the gate evidence gains the fence record and
+  the refusal rule.
+- `members/src/orchestrator/candidate.ts` (extends 121): `git worktree add`
+  runs with the fenced environment of the fence it has just built.
+- `members/src/orchestrator/broker.ts` (extends 122): the push seam runs
+  without repository hooks.
+- `members/src/orchestrator/stages/verify.ts` (extends 019): acceptance read
+  at the base, run behind a verify fence, browser sessions fenced.
+- `members/src/orchestrator/projects.ts` (extends 025): the per-project verify
+  allowance, journaled.
 - `members/src/orchestrator/gate-fence.test.ts`: the negative suite, run from
   a real fenced candidate, the shape of 125's `fence.test.ts`.
-- `members/src/orchestrator/stages/build.test.ts` (extends 016), and the
-  fixture literals in `daemon.test.ts` (021) and `standby.test.ts` (026): the
-  evidence field.
+- `members/src/orchestrator/stages/build.test.ts` (extends 016),
+  `broker.test.ts` (extends 122), `stages/verify.test.ts` (extends 019), and
+  the fixture literals in `daemon.test.ts` (021) and `standby.test.ts` (026).
 
 ## 3. Behavior
 
@@ -88,11 +132,12 @@ integrity property, not containment, for the same reasons 125 gives.
 
 `runGate` spawns each command with `applyFence(scrubEnv(process.env),
 fenceDir)`, the same expression `driver.ts` uses for the session, where
-`fenceDir` is the fence of the open candidate (125 D-1). The bracket commands
-(`spec-spine compile` and `index`, 016 D-8) run through `runGate` and are
-fenced with it. The broker is untouched: it publishes from the daemon with the
-daemon's environment (125 B-6), and a test asserts a broker push still
-succeeds beside a fenced gate.
+`fenceDir` is the fence of the open candidate (125 D-1). Every caller reaches
+the gate through `runGate`: the build preflight's "gate green at base" check,
+build rounds 1 and 2, ship's round 3 and shepherd's round 4 (both through
+`evaluateCompletion`). The bracket commands (`spec-spine compile` and `index`,
+016 D-8) and the receipt's `spec-spine --version` read run through `runGate`
+and are fenced with it.
 
 ### B-2. In-place mode keeps its shape
 
@@ -109,12 +154,15 @@ boolean; refusals: number }`, required with an explicit zero (125 D-3's rule:
 a missing tally must not read as "nothing was refused"), and the session's
 `fenceRefusals` no longer includes a gate's refusals.
 
-### B-4. A refusal in the gate is a red gate, not a bypass
+### B-4. A refusal fails acceptance, whatever the gate's exit code
 
-A shim exits 127, so a gate command that reached for `gh` or `ssh` fails and
-the suite is red. No receipt is minted over a red suite (121). The build's
-remediation prompt already carries the gate's tail, so the next session sees
-the shim's message naming the broker.
+A round whose gate-time tally rose is not accepted, even when every command
+exited 0: no receipt is minted, the round's completion carries the reason
+`gate-fence-refused` with the count and the tools named in the log, and the
+remediation prompt carries the shim's message naming the broker. The exit
+code is not the rule because a gate can swallow it: `gh pr create || true`
+exits 0 with the refusal logged. A gate command that does not swallow the
+shim's 127 fails the suite as well, so both reasons can appear together.
 
 ### B-5. The receipt is unchanged
 
@@ -122,6 +170,74 @@ the shim's message naming the broker.
 build evidence beside it, not inside it, so no existing receipt reader changes
 and no receipt bytes change meaning. Doc 05 D68 puts the execution context into
 a later receipt revision.
+
+### B-6. The engine's git in the candidate runs fenced
+
+Every git invocation the engine makes inside the candidate and that needs no
+network (`git worktree add` for the candidate, `add`, `commit`, `status`,
+`branch`, `checkout`, `rev-parse`, `diff`) spawns with the same fenced
+environment as the gate. Repository hooks and filters still run, so a
+formatting `pre-commit` keeps working; they run without a credential.
+`openCandidate` builds the fence before the worktree exists (125 B-2), so the
+fence is available to `worktree add`'s `post-checkout`.
+
+### B-7. Credentialed git runs without repository hooks
+
+The git invocations that need the operator's credential (`fetch` in
+`resolveBaseSha` and in the verify stage, the in-place scheduler's `pull
+--ff-only`, and the broker's `ls-remote` and `push`) keep the daemon's
+environment, and pass `-c core.hooksPath=/dev/null`, so no hook from the
+shared git directory or a tracked hooks directory runs beside the credential.
+Measured on git 2.50.1: a tracked `pre-push` hook that exits 1 blocks a plain
+push and does not run under that flag. A project's pre-push checks therefore
+do not run on a brokered push; the gate, which ran fenced over the same head,
+is acceptance.
+
+### B-8. The verify stage reads acceptance at the base and runs it fenced
+
+The verify stage reads the `## Verification` block from the spec as it stood
+at the base revision of the run that produced the merge (the consumed
+receipt's `baseSha`). When the merged head's block differs, it journals
+`acceptance.changed` with the spec id and both blocks' digests, and runs the
+base's block. Each acceptance line runs in the verify worktree with
+`applyFence(scrubEnv(process.env), verifyFence)`, where `verifyFence` is built
+beside the verify worktree under the daemon home and removed with it. The
+verify evidence gains the same `fence` record as the gate's (B-3), and a
+refusal fails the stage (B-4's rule).
+
+A requalification or re-verify with no recorded run reads the block at the
+revision it verifies and records `acceptance.base: "unrecorded"`, never an
+inferred base.
+
+### B-9. Live acceptance needs an operator allowance, never a spec's say-so
+
+A project's verify allowance is journaled like its gate contract (041), with
+two values: `fenced` (the default) and `inherit`. Under `inherit`, acceptance
+lines run with the daemon's environment, the allowance and its source are
+shown on the project, and every verify evidence records `fence: { applied:
+false, refusals: 0, reason: "operator-allowed" }`. The allowance is never read
+from a spec or a file in the repository, which a session can edit.
+
+### B-10. Browser verification sessions are fenced too
+
+The verify stage's browser sessions (019's `verify:browser` blocks) run in the
+verify worktree rather than the operator's checkout, with `verifyFence` passed
+to the driver as the build's sessions pass theirs (125 B-3).
+
+### B-11. Every path, disposed
+
+| Path | Runs repository-controlled code | Disposition |
+|---|---|---|
+| Gate suite in every round (build preflight and rounds, ship round 3, shepherd round 4) | yes | fenced (B-1), refusal fails acceptance (B-4) |
+| Bracket `spec-spine compile`/`index`; `spec-spine --version` | reads the repository; `couple` in the floor runs git | fenced (B-1) |
+| Engine git in the candidate, including `worktree add` | hooks and filters | fenced (B-6) |
+| `fetch`, `pull --ff-only`, broker `ls-remote` and `push` | hooks | daemon environment, no repository hooks (B-7) |
+| Verify stage acceptance lines | yes | base block, fenced, operator allowance (B-8, B-9) |
+| Verify stage browser sessions | the repository's provider hooks | fenced, in the verify worktree (B-10) |
+| Driven sessions (build, ship, shepherd remediation) | yes | fenced by 125, unchanged |
+| Broker's `gh` client, the project probe's `spec-spine compile`, `dag.ts` registry reads, member version probes | reads only | unchanged; each named in this table so the absence of a fence is a decision |
+| `adopt synthesize`'s session and commits, `journal export`'s attest, `statecraft template upgrade` codemods | yes | out of scope (§6): run by the operator in the operator's own shell |
+| An unconfined session writing the shared `.git/config` or `.git/hooks` | yes, afterwards | out of scope (§6): confinement of writes is 126's |
 
 ## 4. Functional requirements
 
@@ -139,36 +255,68 @@ a later receipt revision.
 - **FR-005.** In-place mode (no candidate home): the gate environment is the
   scrub, `fence.applied` is false, and every existing build test passes.
 - **FR-006.** A broker push with a receipt and a lease succeeds in the same
-  world whose gate was fenced (B-1).
+  world whose gate was fenced (B-1): the positive control.
+- **FR-007.** The swallowed refusal: a gate command `sh -c 'gh pr create
+  --fill || true'` exits 0, the suite's exit codes are all 0, `fence.refusals`
+  is 1, the round is not accepted with reason `gate-fence-refused`, and no
+  `acceptance.receipt` is journaled.
+- **FR-008.** The limit, pinned: a gate command that is refused and then
+  truncates the refusal log exits 0 and reads a tally of 0. The test exists so
+  that nobody reads a zero tally as proof no attempt was made (D-8).
+- **FR-009.** With a tracked hooks directory configured, the engine's bracket
+  commit runs the `pre-commit` hook, and the hook sees no `GH_TOKEN` and the
+  fence's `PATH`.
+- **FR-010.** With a tracked `pre-push` hook that records its environment and
+  exits 1, the broker's push over a local bare remote succeeds, the hook did
+  not run, and the remote head equals the pushed head.
+- **FR-011.** A verify stage over a merged spec runs its acceptance lines with
+  no `CHILD_ENV_DENY` name present; a line that runs `gh` and swallows the exit
+  fails the stage; under a journaled `inherit` allowance the same line sees the
+  daemon's environment and the evidence records `reason: "operator-allowed"`.
+- **FR-012.** A merged head whose `## Verification` block differs from the
+  base's: the stage runs the base's block and journals `acceptance.changed`
+  with both digests.
 
 ## 5. Acceptance
 
 - `bun test` in `members/` is green; `make gate` exits 0; `make members` exits 0.
 - A live round on a governed fixture project whose gate is this repository's
   shape (`make gate` plus a language gate): the build passes under the fence
-  and mints a receipt. Any gate that needs a credential to pass is found here,
-  named in the status section, and resolved by changing the gate, not by
-  unfencing it.
+  and mints a receipt, the broker publishes, and the verify stage passes under
+  its fence. Any gate or acceptance line that needs a credential to pass is
+  found here, named in the status section, and resolved by changing the gate,
+  or by the project's journaled allowance for live acceptance, never by
+  unfencing a path.
 
 ## Verification
 
 ```sh
 cd members && bun test src/orchestrator/gate-fence.test.ts
 cd members && bun test src/orchestrator/stages/build.test.ts
+cd members && bun test src/orchestrator/stages/verify.test.ts
+cd members && bun test src/orchestrator/broker.test.ts
 cd members && bun test src/orchestrator/fence.test.ts
 make gate
 ```
 
 ## 6. Out of scope, and what stays open
 
-- **The verify stage.** `stages/verify.ts` runs a merged spec's declared
-  acceptance in a detached worktree of the merged head, with the daemon's
-  environment. It runs after publication, on accepted code, and some declared
-  acceptance is live by design (a qualification round, a check against a real
-  plane). It is a recorded residual, not an oversight; spec-spine's request R7
-  asks for it too, and doc 05 §13 defers it to the owner.
 - **Everything 125 §6 names.** `HOME` reads, absolute paths and `~/.ssh` stay
-  open for the gate as for the session. Draft 126 wraps both.
+  open for the gate and the verify stage as for the session. Draft 126 wraps
+  them.
+- **A process that means to escape.** An absolute path skips the shims
+  (measured: `/opt/homebrew/bin/gh --version` answers under the fence), and
+  the refusal log is writable by the process it records (FR-008). See D-8.
+- **Writes outside the candidate.** An unconfined session can write the shared
+  `.git/config` (a credential helper, `core.fsmonitor`, a filter) or
+  `.git/hooks`, which the daemon's credentialed git would then read. B-7 keeps
+  hooks off; configuration-defined commands stay a residual, and confining
+  writes is 126's.
+- **Operator-invoked verbs.** `adopt synthesize` (whose session is scrubbed,
+  not fenced, in the operator's checkout), `journal export`'s attest and
+  `statecraft template upgrade` run as the operator's own command in the
+  operator's shell. The synthesize session is a named follow-up for the adopt
+  specs, not part of this one.
 - **A private dependency fetched over SSH during the gate** fails, as it does
   in the session under 125. A project that needs one fetches over HTTPS or
   vendors it.
@@ -194,9 +342,48 @@ D-4 (2026-09-11). The fence goes on the evidence, not the receipt (B-5). A
 receipt field would be a schema change for a fact the evidence already
 carries, and receipt revisions are doc 05 D68's to make once.
 
-## Status (2026-09-11)
+D-5 (2026-09-12; proposed, the owner's choice). A refusal fails acceptance
+(B-4). The alternative is to record the refusal and accept the round on its
+exit codes. Failing is recommended because a receipt says "a stable, passing
+gate over this revision" (121 D49), and a round in which a command reached for
+a credentialed tool and hid the result is not what that sentence describes.
+The cost is compatibility: a test that probes for `gh` by running it (`gh
+--version`) is refused and tallied, because the shim does not read its
+arguments, so such a project fails acceptance until its probe changes.
+Doc 05 D75.
 
-Authored `draft`, `implementation: pending`, from doc 05 §3 F2. The finding is
-a read of `stages/build.ts` (`runProcessSync` at the top of the file and
-`runGate` in `createProcessRunner`) against 121 B-3 and 125 B-1, both of which
-scope the scrub and the fence to the session. Approval is a human flip.
+D-6 (2026-09-12). Hooks run fenced where no credential is needed, and not at
+all where one is. Disabling hooks everywhere would change what an ordinary
+project's commit does (a formatting hook); running them everywhere with the
+daemon's environment is F7. The split follows the credential, which is the
+thing this spec protects. Doc 05 D74.
+
+D-7 (2026-09-12; proposed, the owner's choice). The verify stage is in scope,
+superseding doc 05 D60's residual. Acceptance is read at the base so that the
+session being judged cannot rewrite its own acceptance, and live acceptance
+is an operator's journaled allowance rather than a spec annotation, because a
+spec is a file the session can edit. When a pinned spec-spine release provides
+`verify --plan --json` (doc 05 R3), the base block is read through it. The
+owner may instead split B-8 to B-10 into their own spec after this one. Doc 05
+D77.
+
+D-8 (2026-09-12). Credential protection, not hostile-code isolation. The
+fence takes credentials out of reach so the obvious move fails and the broker
+stays the only working publisher. It does not confine a process that means to
+escape: absolute paths skip the shims, `HOME` is readable, and the refusal log
+is a same-user file the fenced process can truncate. A tally is therefore
+evidence about a capable process that reached for a fenced tool through
+`PATH`; a tally of zero proves nothing stronger, and 131 labels it that way.
+Doc 05 D76.
+
+## Status (2026-09-12)
+
+Authored `draft`, `implementation: pending`, on 2026-09-11 from doc 05 §3 F2.
+Revised on 2026-09-12 from doc 05 §18 (F7, F8; D74 to D77) after the packet's
+third revision asked for every execution path to be disposed of and for a rule
+on a swallowed refusal. The revision rests on throwaway probes at `874766b`
+against the production runner, broker push seam and verify runner, with
+fabricated tokens, temporary repositories and local bare remotes; nothing
+touched a real remote or the operator's daemon. Nothing is implemented, and
+approval is a human flip. D-5 and D-7 are the choices most worth a look at
+approval.

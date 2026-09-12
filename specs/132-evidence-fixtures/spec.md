@@ -16,6 +16,8 @@ establishes:
   - { kind: directory, path: "docs/evidence/fixtures/" }
   - "members/scripts/mint-evidence-fixtures.ts"
   - "members/src/orchestrator/evidence-fixtures.test.ts"
+  - "members/src/orchestrator/verification-report.ts"
+  - "members/src/orchestrator/verification-report.test.ts"
 extends:
   # 121 owns the receipt; it gains the two pure checks a verifier needs
   # (internal consistency and subject binding).
@@ -41,12 +43,15 @@ summary: >
   policy version 5 carrying a receipt, the broker's intents, outcomes and
   refusals, and a fence refusal, with and without an attestation, beside the
   existing policy-1 bundle. It derives a negative set by stated mutations, and
-  writes a manifest giving each fixture's expected outcome in four dimensions
-  (integrity, subject binding, issuer trust, policy), each pass, fail, unknown
-  or not-applicable. Both existing verifiers run the manifest. JSON Schemas
-  describe version 1 exactly as the code parses it. A verifier never executes
-  what a bundle carries, never takes the bundle's own anchor as its trust
-  root, and today reports every issuer as unknown, because nothing is signed.
+  writes a manifest giving each fixture's expected verification report: four
+  evidence dimensions (integrity, signature, issuer trust, subject binding),
+  each with a closed set of values and a reason, and a policy result kept
+  apart from them. Both existing verifiers emit that report and run the
+  manifest. JSON Schemas describe version 1 exactly as the code parses it, and
+  evidence is referenced by typed digests of its bytes. A verifier never
+  executes what a bundle carries, never takes the bundle's own anchor as its
+  trust root, and today reports every signature as unsigned and every issuer
+  as unknown, because nothing is signed.
 ---
 
 # 132: Evidence fixtures
@@ -75,8 +80,21 @@ Three facts make that handoff impossible today:
   a non-zero exit code and never recomputes the suite or policy digest. A
   minted receipt cannot have either defect; a hand-written one can.
 
-This spec fixes the bytes, the expected verdicts and the two receipt checks,
-and nothing more. Where the neutral verifier is finally packaged is an open
+Two more facts were measured on 2026-09-12 at `874766b` (doc 05 §18.1,
+§18.2 F12). A hand-written receipt with `passing: true` beside exit code 1 and
+a zero suite digest, in a freshly anchored bundle, verifies under both
+verifiers with exit 0, and a one-byte payload edit fails under both with exit
+1: the verifiers agree on integrity. Their `--json` shapes do not agree: the
+TypeScript verb answers `data.verified: true` with an array of chains, and the
+Rust verb answers `data.chains.ok` as the string `"true"`, nested one level
+deeper, with no `verified` member. And the three repositories that will read
+this evidence name different verdicts (doc 05 §18.4): Statecraft's draft 015
+puts policy among four outcomes, hqgit's design note keeps policy apart and
+adds signature validity, and spec-spine's note lists six. Nobody defines the
+answer for an absent signature.
+
+This spec fixes the bytes, the expected verdicts, the report that states them
+and the two receipt checks, and nothing more. Where the neutral verifier is finally packaged is an open
 decision (doc 05 §16), and the manifest is what any verifier, wherever it
 lives, is held to.
 
@@ -91,6 +109,8 @@ lives, is held to.
   of the manifest.
 - `members/src/orchestrator/receipt.ts` (extends 121): `checkReceipt` and
   `receiptBindsSubject`.
+- `members/src/orchestrator/verification-report.ts`: the report (B-7), built
+  from `verifyBundle`, `checkReceipt` and `receiptBindsSubject`, with its test.
 - `members/src/commands/orchestrator.ts` (extends 023) and the Rust journal
   crate (extends 113): the input cap on bundle verification, and the Rust
   runner of the manifest.
@@ -118,21 +138,22 @@ policy-1 bundle is referenced, not copied, as the oldest fixture.
 ### B-2. Every fixture has a manifest entry
 
 `docs/evidence/fixtures/manifest.json` lists each fixture with its file, what
-it is (a bundle, a single record, a receipt payload), the mutation that made
-it when it is negative, the subject question it is asked when subject
-binding applies (`{origin, head}`), and its expected outcome in four
-dimensions:
+it is (a bundle, a single record, a receipt payload), its typed digest (B-8),
+the mutation that made it when it is negative, the subject question it is
+asked when one applies (`{origin, head}`, or none), and its expected report
+(B-7): four evidence dimensions and the policy result.
 
-| Dimension | Question | Checked today by |
-|---|---|---|
-| `integrity` | do the bytes, links, sequence and verbatim payloads recompute | `verifyBundle`, `verify_bundle`, `checkReceipt` |
-| `subject` | does the evidence name the repository and head asked about, and are the records it references present | `receiptBindsSubject`, the runner's reference check |
-| `issuer` | was it produced by a key or anchor the reader trusts, given out of band | nothing: every entry is `unknown` |
-| `policy` | does it meet the reader's rules | nothing: every entry is `not-applicable` until a reader policy is specified |
+| Member | Values | Question, and the rule for each value | Checked today by |
+|---|---|---|---|
+| `evidence.integrity` | `pass`, `fail`, `unknown` | do the bytes, links, sequence and verbatim payloads recompute, and is every receipt internally consistent; `unknown` only when the format or version is unsupported (reason `unsupported-version`), never `fail` and never `pass` | `verifyBundle`, `verify_bundle`, `checkReceipt` |
+| `evidence.signature` | `pass`, `fail`, `unsigned`, `unknown` | is a signature carried, and does it verify; `unsigned` when none is carried, `fail` when one is carried and does not verify, `unknown` for a scheme the verifier does not support | nothing signs: every entry is `unsigned` |
+| `evidence.issuerTrust` | `pass`, `fail`, `unknown` | was it signed by a key in a trust set the reader supplied out of band, valid when it signed; `pass` requires `signature: pass`; `fail` when the signature verifies and that set revokes or distrusts the key; `unknown` otherwise, including all unsigned evidence. The bundle's own `anchorHash` is never an issuer | every entry is `unknown` |
+| `evidence.subjectBinding` | `pass`, `fail`, `unknown`, `not-applicable` | does the evidence name the repository and head asked about, and are the records it references present; `not-applicable` when no subject was asked; `unknown` when the evidence cannot answer (a withheld receipt, a bundle with no receipt) | `receiptBindsSubject`, the runner's reference check |
+| `policy` | `{ evaluated: false }`, or `{ evaluated: true, policyDigest, decision, reasons }` with `decision` `admit` or `refuse` | not an evidence dimension: whether a reader's rules accept this evidence for an action, including whether `unsigned` or `unknown` is acceptable | nothing: every entry is `{ evaluated: false }` until a reader policy is specified |
 
-Each value is `pass`, `fail`, `unknown` or `not-applicable`, with a one-line
-reason for anything but `pass`. A runner that folds the four into one
-boolean fails the manifest's own self-check.
+Every value other than `pass` carries a one-line reason. A runner or a report
+that folds the dimensions into one boolean, or places `policy` among them,
+fails the manifest's own self-check.
 
 ### B-3. The negative set, and the mutation behind each
 
@@ -160,14 +181,25 @@ mutation, so a reader can reproduce it by hand:
   perfect;
 - **oversized**: a bundle over the input cap (B-5).
 
-The expectations that matter most: re-anchored is `integrity: pass`,
-`issuer: unknown`; the two forged receipts are `integrity: fail` from
-`checkReceipt` although the chain verifies; dangling is `integrity: pass`,
-`subject: fail`.
+- **historical credential**: a receipt minted with a fabricated token-bearing
+  origin (the shape 128 B-6 stops at the source), exported at the current
+  policy. Under policy version 6 (128 B-7) the bundle withholds `origin` and
+  carries no token, and the journal fixture beside it still holds the token,
+  byte for byte: redaction without rewriting.
 
-Reserved, with `not-applicable` and a reason, until the record they need
-exists: a **stale permit** (no WorkPermit format exists, doc 05 D70) and a
-**wrong audience** (no hosted evidence intake exists, doc 05 D71).
+The expectations that matter most: re-anchored is `integrity: pass`,
+`signature: unsigned`, `issuerTrust: unknown`, `subjectBinding:
+not-applicable`; the two forged receipts are `integrity: fail` from
+`checkReceipt` although the chain verifies; dangling is `integrity: pass`,
+`subjectBinding: fail`; unsupported version is `integrity: unknown`; and the
+committed policy-1 bundle, asked about a head, is `subjectBinding: unknown`,
+because it holds no receipt.
+
+Reserved, each with its reason, until the record it needs exists: a
+**signature that does not verify** and an **untrusted or revoked issuer** (no
+signing format exists, doc 05 §16), a **stale permit** (no WorkPermit format
+exists, doc 05 D70) and a **wrong audience** (no hosted evidence intake exists,
+doc 05 D71).
 
 ### B-4. Two receipt checks, both pure
 
@@ -205,6 +237,33 @@ written out beside them, with the exact recipe for `recordHash` and
 `payloadHash`, so a reader in another language can recompute without reading
 this repository's code.
 
+### B-7. Both verifiers emit one report, additively
+
+`journal verify --bundle --json` and `statecraft-journal verify-bundle --json`
+each gain a `report` member holding B-2's shape with `reportVersion: 1`, the
+verifier's name and version, and the subject asked (or none), built from the
+same checks. Everything either verb emits today stays, with the same exit
+codes (0 intact, 1 broken): the TypeScript `verified` and the Rust
+`chains.ok` keep meaning integrity only, and their documentation says so.
+The two envelopes still differ (F12), which is why the manifest runners
+compare `report` objects and nothing else. A report contains no boolean
+summary. A verb that refuses an unsupported input outright (exit 3) emits no
+report; one that reads it reports `integrity: unknown`.
+
+### B-8. Evidence is referenced by typed digests of bytes
+
+A bundle is referenced as `{ type: "observatory-journal-export",
+formatVersion: 1, digest: { alg: "sha-256", hex } }`, over the file's bytes
+exactly as written. A record in it is referenced by its chain, `seq`, the
+chain's `anchorHash`, its `kind` and its `recordHash`, beside the bundle's
+reference. `recordHash` is the chain's identity, computed over the canonical
+serialization of the record without `recordHash` (B-6's recipe); it is not a
+digest of any bytes a receiver was handed, and the manifest never uses one in
+place of the other. `alg` accepts exactly `sha-256`, and a reference naming
+anything else is refused. The schemas and the manifest state that a receiver
+which parses a bundle into a JSON value and re-serializes it has stored a
+reparse, whose digest is not the bundle's.
+
 ## 4. Functional requirements
 
 - **FR-001.** The TypeScript runner reproduces every manifest expectation for
@@ -220,7 +279,16 @@ this repository's code.
 - **FR-006.** An oversized bundle is refused by both verifiers before
   parsing, with the limit named; `--max-bytes` admits it.
 - **FR-007.** The manifest's self-check: a runner that reports one boolean in
-  place of the four dimensions fails.
+  place of the four dimensions fails, and so does a report that carries
+  `policy` among the evidence dimensions.
+- **FR-008.** For every bundle fixture, the TypeScript and Rust `report`
+  members are equal as JSON values, and each verb's existing members and exit
+  code are unchanged from before this spec.
+- **FR-009.** No fixture this repository mints reports `signature` other than
+  `unsigned` or `issuerTrust` other than `unknown`; a report whose
+  `issuerTrust` is `pass` while `signature` is not `pass` fails validation.
+- **FR-010.** Every manifest entry's typed digest recomputes from the file's
+  bytes, and a reference with an `alg` other than `sha-256` is refused.
 
 ## 5. Acceptance
 
@@ -235,6 +303,7 @@ this repository's code.
 
 ```sh
 cd members && bun test src/orchestrator/evidence-fixtures.test.ts
+cd members && bun test src/orchestrator/verification-report.test.ts
 cd members && bun test src/orchestrator/receipt.test.ts
 cargo test -p statecraft-journal
 make gate
@@ -242,9 +311,12 @@ make gate
 
 ## 6. Out of scope
 
-- **Signing, and so issuer trust.** Every issuer outcome is `unknown` until
-  a receipt or bundle is signed by a key a reader can pin. Who signs, and
-  with what, is doc 05 §16's open decision.
+- **Signing, and so issuer trust.** Every signature outcome is `unsigned` and
+  every issuer outcome `unknown` until a receipt or bundle is signed by a key
+  a reader can pin. Who signs, and with what, is doc 05 §16's open decision.
+- **A trust store and hosted ingestion.** How a reader supplies its trust set,
+  and how Statecraft stores what it receives (doc 05 D81's bytes rule), are
+  theirs.
 - **The neutral verifier's package.** The manifest is packaging-neutral on
   purpose. Extending `statecraft-journal`, a sibling crate, or another
   repository are all compatible with it; no AGPL code may enter whichever is
@@ -254,8 +326,8 @@ make gate
 - **Archive formats.** A bundle is one JSON file today, so archive-specific
   hazards (path traversal, symlink escape, decompression bombs) do not arise
   here. A future archive format brings its own negative cases.
-- **A reader policy.** The `policy` dimension is reserved and
-  `not-applicable` everywhere.
+- **A reader policy.** The `policy` result is reserved and `{ evaluated:
+  false }` everywhere.
 
 ## 7. Resolved decisions
 
@@ -269,15 +341,47 @@ bundle and the qualification records, rather than a new top-level directory.
 `docs/**` is already a hashed governance input, so the claim needs no change
 to `spec-spine.toml`.
 
-D-3 (2026-09-11). Four dimensions, reported apart. Folding them is how a
+D-3 (2026-09-11, revised 2026-09-12). Four evidence dimensions, reported
+apart, and policy beside them rather than among them. Folding them is how a
 fabricated but consistent bundle comes to read as "verified", and the
-manifest's self-check (FR-007) makes the separation a tested property.
+manifest's self-check (FR-007) makes the separation a tested property. The
+first draft named `integrity`, `subject`, `issuer` and `policy`; the revision
+follows doc 05 D80: `signature` joins because an absent signature and an
+invalid one are different answers (`unsigned` and `fail`), and `policy` leaves
+because it is a reader's decision over the evidence, not a property of it.
 
 D-4 (2026-09-11). 64 MiB. The largest bundle this repository has produced is
 under 1 MiB; the cap is two orders of magnitude above it and exists to make
 "refuse before parsing" a stated behavior rather than an accident of memory.
 
-## Status (2026-09-11)
+D-5 (2026-09-12; proposed, the owner's choice). This repository proposes the
+report rather than waiting for Statecraft to lead it. The fixtures need
+expected verdicts to be useful at all, and Statecraft's draft 015 writes no
+parser until they exist, so one side has to write the shape down first. The
+values are a counter-proposal to Statecraft 015 §7.2 and hqgit's note 02 T-3,
+sent with the fixtures (doc 05 D80 lists what each would change). If either
+settles differently before this spec is approved, the manifest follows the
+agreed shape, and this decision is replaced with a dated entry naming it.
+
+D-6 (2026-09-12). What approval of this spec authorizes: the `v1/` fixtures
+minted through the real code paths and frozen, the negative set, the
+manifest, the schemas, `checkReceipt` and `receiptBindsSubject`, the input
+cap, both runners, and the report in both verifiers. Not signing, a trust
+store, a reader policy, hosted ingestion, receipt version 2, or any change to
+a committed bundle's bytes. Doc 05 D82.
+
+D-7 (2026-09-12; proposed). Land 128 first. The fixtures are then minted at
+policy version 6 and the historical-credential fixture proves redaction
+without rewriting. If this spec lands first, its fixtures are policy 5, and
+128 adds a policy-6 fixture directory beside `v1/` without touching it.
+
+D-8 (2026-09-12). Keep both existing JSON envelopes and add the report,
+rather than normalizing the Rust envelope to the TypeScript one. The Rust
+`chains.ok` string is an unversioned shape somebody may already read;
+changing it would be the kind of silent contract edit this spec exists to
+prevent. The report is the versioned shape from here on.
+
+## Status (2026-09-12)
 
 Authored `draft`, `implementation: pending`, from doc 05 §3 F5 and D66 and
 D67. The facts it rests on: the committed bundle's header reads
@@ -285,4 +389,12 @@ D67. The facts it rests on: the committed bundle's header reads
 record of kind `acceptance.receipt` or `broker.action`; `verifyBundle` begins
 each chain at the bundle's own `anchorHash`; `parseReceipt` checks field
 types and `passing === true` only; neither verifier bounds its input.
-Approval is a human flip.
+
+Revised on 2026-09-12 from doc 05 §18 (F5 re-measured, F12; D80 to D82): the
+report's dimensions and values, `signature` and the separate policy result,
+the typed byte references, the historical-credential fixture, the approval
+scope and the order with 128. The re-measurement ran both verifiers on the
+committed bundle, a forged self-anchored bundle and a tampered copy, all
+throwaway except the committed one. No fixture has been minted: that is the
+implementation this spec would authorize, and approval is a human flip. D-5
+is the choice most worth a look at approval.

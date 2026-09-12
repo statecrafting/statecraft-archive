@@ -101,6 +101,22 @@
       },
       {
         "nature": "additive",
+        "spec": "026-standby-daemon",
+        "unit": {
+          "kind": "file",
+          "path": "members/src/orchestrator/standby.ts"
+        }
+      },
+      {
+        "nature": "additive",
+        "spec": "022-http-api-and-events",
+        "unit": {
+          "kind": "file",
+          "path": "members/src/orchestrator/api/server.ts"
+        }
+      },
+      {
+        "nature": "additive",
         "spec": "124-provider-conformance",
         "unit": {
           "kind": "file",
@@ -154,13 +170,13 @@
       "Verification",
       "6. Out of scope",
       "7. Resolved decisions",
-      "Status (2026-09-11)"
+      "Status (2026-09-12)"
     ],
     "specPath": "specs/130-member-distribution/spec.md",
     "status": "draft",
     "summary": "Spec 107 made the umbrella installable; 042 packaged the members and 108 taught the umbrella to discover them, and both put installing members out of scope for \"a later spec\". This is that spec. A compiled engine run outside the checkout was measured on 2026-09-11: its API answers, but its UI answers 503 with assets expected at /web/dist, and `daemon start` fails because it re-spawns itself as if it were a source file (042 D-10 recorded the cause and deferred the fix to here). A tag now also builds a member archive per macOS and Linux triple holding the engine, the native sensor and drivers, the built UI, the provider qualification records, and a manifest of every file's digest, with the same checksum, SBOM and provenance the umbrella's archives carry. The installer installs it into the managed member directory, verifying before it replaces, and keeps the previous set. A packaged engine finds its assets, its data and itself at run time. `statecraft members doctor` names what is missing, refused or altered and which provider prerequisites are absent. A CI job that never checks the repository out proves the result.\n",
     "title": "Member distribution: one release installs a working engine, its members and its UI, with no checkout"
   },
-  "shardHash": "865d781965a8852e90ca628447f0f59517986c502ddb627278d92d233e90990a",
+  "shardHash": "c64781d4012553f94de34fb345751f4179987caa27b14101f85e0d7bf1a33f55",
   "specVersion": "1.2.0"
 }

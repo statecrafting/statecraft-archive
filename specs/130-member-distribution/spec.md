@@ -32,6 +32,11 @@ extends:
   # 023 owns the engine's CLI: `daemon start` re-spawns itself correctly when
   # compiled, and the daemon passes the resolved asset directory.
   - { spec: "023-orchestrator-cli", unit: "members/src/commands/orchestrator.ts", nature: additive }
+  # 026 owns the standby daemon's code-staleness freeze, and 022 the meta
+  # route that reports it; a packaged engine compares a build constant or
+  # reports the freeze unknown.
+  - { spec: "026-standby-daemon", unit: "members/src/orchestrator/standby.ts", nature: additive }
+  - { spec: "022-http-api-and-events", unit: "members/src/orchestrator/api/server.ts", nature: additive }
   # 124 owns qualification records, which a packaged engine must find.
   - { spec: "124-provider-conformance", unit: "members/src/orchestrator/qualification.ts", nature: additive }
   # 024 owns package.json's scripts section (042 extended it with the member
@@ -97,6 +102,18 @@ directory outside the checkout:
 042 D-10 recorded exactly this and assigned the fix to "the spec that makes a
 member binary the primary way its verbs are reached". This spec is that one.
 
+Measured again on 2026-09-12 at `874766b` (doc 05 §18.1, §18.2 F11): the 503
+and the 15-second `daemon start` failure both reproduce, and `daemon stop`
+works. Three more source-relative defaults were found. With no `--repo`, a
+compiled `daemon run` registers `/$bunfs`, the bundle's virtual root, as its
+first project (measured). The code-staleness freeze reads the engine's git
+head from `import.meta.dir`, which compiled is `/`, so the freeze is silently
+off (`orchestrator.ts:2814-2817`, read). And `daemon start` with port 0 waits
+on the literal `:0` URL (read). The umbrella's `members list` already finds a
+compiled engine placed in a managed member directory (measured), and `members
+doctor` does not exist yet. The engine reads no provider data from disk other
+than the qualification records: models and prompts are code constants.
+
 ## 2. Territory
 
 - `.github/workflows/release.yml` (extends 107): the member archives.
@@ -123,9 +140,11 @@ compiled with `bun build --compile --target=<bun target>`); the Rust
 `statecraft-driver-claude` and `statecraft-driver-codex` (112, 114, 115, 116),
 built `--locked` for the triple; `statecraft-engine-web/`, the Vite build of
 the UI; `statecraft-engine-qualification/`, the qualification records the
-release was cut with (124); and `members.json`. The fixture driver (124) is a
+release was cut with (124); the Rust `statecraft-journal` (113), the
+independent bundle verifier; and `members.json`. The fixture driver (124) is a
 test instrument and does not ship. D-1 records why the Rust sensor and
-drivers ship rather than the TypeScript builds of the same names.
+drivers ship rather than the TypeScript builds of the same names, and D-6
+what that choice changes.
 
 Supported triples are the four macOS and Linux ones of 107. Windows receives
 the umbrella only, as today: the engine's signal handling (108 D-10) and the
@@ -181,6 +200,19 @@ The static handler's "not built" page (024 B-1's serving, which `static.ts`
 holds to B-7's honesty rule) names the resolved directory and the variable
 that overrides it.
 
+Three defaults that have no location to resolve change for a packaged engine
+only; the source checkout keeps each as it is:
+
+- **The default repository.** A packaged `daemon run` or `daemon start` with
+  no `--repo` registers nothing: an empty registry stays empty and says so,
+  rather than registering the bundle's virtual root.
+- **The code-staleness freeze.** A packaged engine carries its build's commit
+  as a compile-time constant and compares that; with no constant, the freeze
+  reports its state as `unknown` on `/api/meta`, never silently off.
+- **Port 0.** `daemon start` refuses `--url` with port 0 and says why (it
+  cannot wait on a port it does not know); `daemon run` keeps accepting it and
+  prints the bound URL, as today.
+
 ### B-5. `daemon start` re-spawns what is running
 
 When compiled, `daemon start` spawns `process.execPath` with the verb
@@ -231,7 +263,15 @@ prerequisite, not bundled), then:
 5. a repository created with `git init` and `spec-spine init` is registered
    through `projects add`, and appears in `GET /api/projects` with its
    qualification verdict;
-6. `daemon stop`, and the job fails if any step did.
+6. one governed change: an approved fixture spec in that repository is built
+   by the engine with the fixture driver (124), which the build job hands to
+   this job as a separate CI artifact and never puts in the archive, pointed
+   at by `STATECRAFT_DRIVER_BIN`; the round mints a receipt;
+7. the run's bundle is exported by the installed engine and verified by the
+   installed Rust `statecraft-journal verify-bundle`, a second implementation
+   of the verifier, whose report (132 B-7, once 132 lands) reads `integrity:
+   pass`, `signature: unsigned`, `issuerTrust: unknown`;
+8. `daemon stop`, and the job fails if any step did.
 
 ## 4. Functional requirements
 
@@ -252,6 +292,13 @@ prerequisite, not bundled), then:
   absent.
 - **FR-006.** The release pipeline's publish step fails on a missing member
   archive exactly as it does on a missing umbrella archive (107 §3.5).
+- **FR-007.** A compiled engine run outside the checkout with no `--repo`
+  and an empty daemon home registers no project; with a build commit constant
+  the freeze compares it, and without one `/api/meta` reports the freeze
+  `unknown`; `daemon start` with port 0 exits non-zero naming the reason.
+- **FR-008.** The smoke job's governed change (B-7 steps 6 and 7) mints a
+  receipt, and the exported bundle verifies under the installed Rust
+  verifier.
 
 ## 5. Acceptance
 
@@ -266,8 +313,11 @@ prerequisite, not bundled), then:
 - A live check on a clean user account on a developer machine: install with
   members from that release, run `members doctor`, start the daemon, load the
   UI, register an existing repository and run one governed build with
-  whichever provider is signed in. The transcript goes in this spec's status
+  whichever provider is signed in, then export its bundle and verify it with
+  the installed Rust verifier. The transcript goes in this spec's status
   section, as 107's did.
+- Until the smoke job has passed for a tag, no document, page or view
+  describes the UI or the engine as available (D-7).
 
 ## Verification
 
@@ -324,10 +374,45 @@ D-5 (2026-09-11). The smoke job proves "no checkout" by construction: its
 second job has no `actions/checkout` step at all, so a path that reaches
 into a source tree fails there rather than passing by accident.
 
-## Status (2026-09-11)
+D-6 (2026-09-12; proposed, the owner's choice). D-1 confirmed, with its
+consequences stated. The engine resolves a driver from an explicit variable,
+then the managed member directory, then `PATH`, then the source entry
+(`driver.ts:212-233`). So installing this member set changes the Claude driver
+a *source-checkout* engine runs, from the TypeScript build to the Rust one,
+not only a packaged engine's; 114's parity tests are the justification, and
+the release notes say it. Codex has only a Rust driver, so nothing changes for
+it. The engine never invokes a sensor, so the sensors ship for the umbrella's
+dispatch and could be left out of the first archive without changing anything
+the engine does; they are included because they are built and parity-tested.
+`statecraft-journal` ships because a verifier the user did not get from the
+same code path as the exporter is the point of "separately verified". Doc 05
+D83.
+
+D-7 (2026-09-12; proposed). "Available" means installed and verified. Each
+surface (the engine API, the UI, the drivers, the verifier) is described as
+`source-only`, `packaged` (built by CI, not released), `released` (in a tag's
+assets), `installed-verified` (this spec's smoke job passed for that tag) or
+`exercised` (a recorded live round), and nothing is called available below
+`installed-verified`. On 2026-09-12 the UI is `source-only`, the engine API and
+driver discovery are `packaged`, and nothing is `released`. Doc 05 D84.
+
+D-8 (2026-09-12). The smoke job's governed change uses the fixture driver,
+delivered as a CI artifact beside the archives. CI has no provider account,
+and a smoke job that depended on one would be skipped more often than run. The
+fixture driver is the conformance instrument 124 built for exactly this, and
+keeping it out of the archive keeps the shipped set free of a test double.
+
+## Status (2026-09-12)
 
 Authored `draft`, `implementation: pending`, from doc 05 §3 F4 and D63 and
 D64. The measurements were taken on macOS with Bun 1.3.11, a compiled engine
 in a scratch directory, a throwaway daemon home and ports other than the
-operator's running daemon's. Approval is a human flip, and D-1 is the choice
-most worth a look at approval.
+operator's running daemon's.
+
+Revised on 2026-09-12 from doc 05 §18 (F4 re-measured, F11; D83, D84): the
+three further defaults, the verifier in the member set, the smoke job's
+governed change and separate verification, the availability vocabulary, and
+D-1's consequences. No clean machine was used and nothing was released; the
+re-measurement copied a locally compiled engine to a scratch directory.
+Nothing is implemented, and approval is a human flip. D-6 is the choice most
+worth a look at approval.
