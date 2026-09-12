@@ -5,8 +5,8 @@
     "name": "governance-native",
     "path": "addon/governance-native",
     "specRef": "005-governance-native",
-    "version": "0.1.0"
+    "version": "0.2.0"
   },
   "schemaVersion": "1.1.0",
-  "shardHash": "221db38bb6de5213f055f8cf8512c23506186e125040d6e126185f846255dbae"
+  "shardHash": "2b109c464e74c8a255cddebb169e918b40e06358b9cc3df044a24a89f4115bd4"
 }

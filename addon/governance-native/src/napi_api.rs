@@ -29,6 +29,32 @@ pub fn canonicalize(json: String) -> napi::Result<CanonicalResult> {
     })
 }
 
+/// A portable call's error. A refusal throws with `code` set to its reason
+/// code (`duplicate-member`, `non-integer-number`, `unsafe-integer`,
+/// `invalid-unicode`) and a message naming the JSON pointer; any other
+/// failure throws exactly what the lenient function throws.
+fn portable_to_napi(err: crate::portable::PortableError) -> napi::Error<String> {
+    match err {
+        crate::portable::PortableError::Refused(refusal) => {
+            napi::Error::new(refusal.reason.code().to_string(), refusal.to_string())
+        }
+        crate::portable::PortableError::Lenient(reason) => {
+            napi::Error::new(napi::Status::GenericFailure.as_ref().to_string(), reason)
+        }
+    }
+}
+
+/// `canonicalize` for portable input only (spec 010 A-3): the same result
+/// for everything it admits.
+#[napi]
+pub fn canonicalize_portable(json: String) -> napi::Result<CanonicalResult, String> {
+    let out = crate::portable::canonicalize(&json).map_err(portable_to_napi)?;
+    Ok(CanonicalResult {
+        canonical: out.canonical,
+        sha256: out.sha256,
+    })
+}
+
 /// `{ seq, recordHash, chainHash }` after an append.
 #[napi(object)]
 pub struct AppendResult {
@@ -40,6 +66,21 @@ pub struct AppendResult {
 #[napi]
 pub fn ledger_append(state_dir: String, record: String) -> napi::Result<AppendResult> {
     let out = crate::ledger::append(Path::new(&state_dir), &record).map_err(to_napi)?;
+    Ok(AppendResult {
+        seq: out.seq,
+        record_hash: out.record_hash,
+        chain_hash: out.chain_hash,
+    })
+}
+
+/// `ledgerAppend` for portable input only (spec 010 A-3): the same record,
+/// hash and chain for everything it admits; a refusal writes nothing.
+#[napi]
+pub fn ledger_append_portable(
+    state_dir: String,
+    record: String,
+) -> napi::Result<AppendResult, String> {
+    let out = crate::portable::append(Path::new(&state_dir), &record).map_err(portable_to_napi)?;
     Ok(AppendResult {
         seq: out.seq,
         record_hash: out.record_hash,

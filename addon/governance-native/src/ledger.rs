@@ -115,8 +115,16 @@ fn ensure_anchor(dir: &Path) -> Result<ChainAnchor, String> {
 ///
 /// Optional top-level `id` / `timestamp` string fields in the payload become
 /// the record envelope's id/timestamp; when absent, `id` defaults to the
-/// zero-padded sequence and `timestamp` to the empty string. The payload is
-/// stored opaquely and is fully covered by the record hash.
+/// zero-padded sequence and `timestamp` to the empty string.
+///
+/// The payload is not stored opaquely (spec 010 3.1). It is parsed into a
+/// `serde_json::Value`, so the stored line holds that parse re-serialized
+/// (keys sorted, whitespace and escape spellings dropped, the last duplicate
+/// member kept, out-of-range integers and non-integers as `f64`), and the
+/// record hash covers the parse, not the submitted bytes. Distinct inputs can
+/// therefore share a record hash, and a float's spelling inside the hash
+/// depends on the linked `serde_json` (3.4). [`crate::portable::append`]
+/// refuses the inputs this rewrites.
 pub fn append(dir: &Path, record_json: &str) -> Result<Appended, String> {
     fs::create_dir_all(dir).map_err(|err| format!("create {}: {err}", dir.display()))?;
     let anchor = ensure_anchor(dir)?;

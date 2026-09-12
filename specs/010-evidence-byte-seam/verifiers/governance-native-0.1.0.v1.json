@@ -1,0 +1,38 @@
+{
+  "format": "statecrafting.governance-native.verifiers/v1",
+  "spec": "010-evidence-byte-seam",
+  "package": "@statecrafting/governance-native",
+  "version": "0.1.0",
+  "note": "The historical verifier of every chain governance-native 0.1.0 wrote is these published binaries, identified by digest, not a rebuild of 0.1.0's source (spec 010 section 3.4, A-2). No 0.1.0 package is unpublished.",
+  "recorded": "2026-09-12",
+  "binaries": [
+    {
+      "package": "@statecrafting/governance-native-linux-x64-gnu",
+      "version": "0.1.0",
+      "deployed": true,
+      "deployedEvidence": "statecraft main 9658e29: package-lock.json pins this tarball by the integrity below, and infra/hetzner/cluster.yaml runs cx23 and cx43 instances, which are x86-64",
+      "tarball": "https://registry.npmjs.org/@statecrafting/governance-native-linux-x64-gnu/-/governance-native-linux-x64-gnu-0.1.0.tgz",
+      "tarballIntegrity": "sha512-gaCVihQX6WpMqD43l5qZzPObVFX6K/nZeCaSoEAotS3ZhkURysHXmpIsrLWr+QL14CNsNOc2sgiqH8tVCi8SzA==",
+      "nodeFile": "package/governance-native.linux-x64-gnu.node",
+      "nodeSha256": "sha256:3177f701b09d1bc39363b2bfad44953eb99ff8347b5180ce62513421a99de8e2"
+    },
+    {
+      "package": "@statecrafting/governance-native-linux-arm64-gnu",
+      "version": "0.1.0",
+      "deployed": false,
+      "tarball": "https://registry.npmjs.org/@statecrafting/governance-native-linux-arm64-gnu/-/governance-native-linux-arm64-gnu-0.1.0.tgz",
+      "tarballIntegrity": "sha512-TKILtmu5CxenA/riNbIIHUXXDaV1F01UyLc+WdmiJvWtkwIBvOQfd6dYK5+4S8PYaNi8u938OF1dv5X6Iz23jg==",
+      "nodeFile": "package/governance-native.linux-arm64-gnu.node",
+      "nodeSha256": "sha256:9cb340ca830ec5d0120ebfe07d270630815155415f357404fb3bd9ccf07b3aaf"
+    },
+    {
+      "package": "@statecrafting/governance-native-darwin-arm64",
+      "version": "0.1.0",
+      "deployed": false,
+      "tarball": "https://registry.npmjs.org/@statecrafting/governance-native-darwin-arm64/-/governance-native-darwin-arm64-0.1.0.tgz",
+      "tarballIntegrity": "sha512-1nVgTGZ4cRkkJIPFNaDo1iL3QnlxqksdqaDIajZkSiRNXpmBDxvn06+jzHV8wqvYAVIv23RrY8vwbO7wQdwqKQ==",
+      "nodeFile": "package/governance-native.darwin-arm64.node",
+      "nodeSha256": "sha256:9fd21982e2c510ee23c8a3cfecf4d311b3bf26f08145e334ec332614d16d8fc5"
+    }
+  ]
+}

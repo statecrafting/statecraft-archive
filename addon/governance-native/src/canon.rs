@@ -3,8 +3,17 @@
 //! Wraps `canonical-keysort-json` (recursive lexicographic key sort at the
 //! serialization boundary) and appends a SHA-256 over the canonical bytes.
 //! The pair `{canonical, sha256}` is the substrate every other governance
-//! primitive hashes over: a payloadHash is the `sha256` of an action payload,
-//! independently reproducible by any third party from the same JSON.
+//! primitive hashes over: a payloadHash is the `sha256` of an action payload.
+//!
+//! The canonical form is of the parse, not of the submitted bytes (spec 010
+//! 3.1). The input becomes a `serde_json::Value` first, so whitespace and
+//! escape spellings are dropped, the last of two duplicate members wins, and
+//! a number with a fraction or exponent, `-0`, or an integer beyond
+//! `u64`/`i64` becomes an `f64` spelled by whichever float formatter the
+//! linked `serde_json` uses (3.4; the committed `Cargo.lock` pins it). A third
+//! party reproduces the hash only by reproducing that key order (UTF-8 byte
+//! order) and that number formatting. [`crate::portable::canonicalize`]
+//! refuses the inputs where either would matter.
 
 use serde_json::Value;
 use sha2::{Digest, Sha256};
