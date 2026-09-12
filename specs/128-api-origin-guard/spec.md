@@ -3,7 +3,7 @@ id: "128-api-origin-guard"
 title: "The origin guard: the daemon answers its own page and its own clients, and never serves a credential"
 status: approved
 created: "2026-09-11"
-implementation: pending
+implementation: in-progress
 risk: medium
 depends_on:
   - "022-http-api-and-events"
