@@ -116,7 +116,7 @@ export const DOC_STUBS: DocStub[] = [
       {
         heading: "What runs today, and what is planned",
         body: [
-          "You can self-host the EnRaHiTu chassis now: it is a single container, and its specs are shipped. The control plane is a different matter, and the honest answer has two halves. It runs: a deployment of it serves app.statecraft.ing, and statecraft 009 describes that deployment. What does not exist is a self-host path for anyone else, because statecraft 009, the deploy spec, is still `implementation: in-progress` and describes one specific cluster rather than a reproducible install.",
+          "You can self-host the EnRaHiTu chassis now: it is a single container, and the spec that packages it is implemented. The control plane is a different matter, and the honest answer has two halves. It runs: a deployment of it serves app.statecraft.ing, and statecraft 009 describes that deployment. What does not exist is a self-host path for anyone else, because statecraft 009, the deploy spec, is still `implementation: in-progress` and describes one specific cluster rather than a reproducible install.",
           "So the specs are still the artifact for a reader. The thesis and the app-shell spec below describe the plane; the registry tracks how far each part has come. Two limits are worth knowing before you read further. No production stamp of an application is on a public record. And the plane's attestation chain is hash-linked with an anchor that statecraft 008 leaves unsigned until an operator key is configured, a key 009 records as declared with no delivery path, so re-checking the chain establishes internal consistency and not who produced it.",
         ],
       },

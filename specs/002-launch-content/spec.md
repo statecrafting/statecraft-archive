@@ -247,6 +247,12 @@ not released, exercised or hosted, and link to the availability matrix spec
 004 section 3.3.1 adds to `/products`, which is the one place those three axes
 are authored (spec 006 D-4).
 
+The docs stubs carry the same kind of chip, authored rather than derived, and
+it read `shipping` and `planned`. Those labels now read `implemented` and
+`pending`, so no chip on the site uses a release word for a spec state, and the
+self-host stub's "its specs are shipped" now says the spec that packages the
+chassis is implemented. The stubs' maturity values are unchanged.
+
 This lands on the owner's 2026-09-12 adoption of revision-4 row WEB-01, which
 chooses the matrix and chips together with the factual corrections and the
 spec-spine-first adoption path (spec 006 section 10).

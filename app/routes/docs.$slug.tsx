@@ -24,7 +24,7 @@ export function loader({ params }: Route.LoaderArgs) {
 
 const MATURITY: Record<DocStub["maturity"], { label: string; className: string }> = {
   shipping: {
-    label: "shipping",
+    label: "implemented",
     className:
       "border border-emerald-500/30 bg-emerald-500/10 text-emerald-600 dark:text-emerald-400",
   },
@@ -34,7 +34,7 @@ const MATURITY: Record<DocStub["maturity"], { label: string; className: string }
       "border border-amber-500/30 bg-amber-500/10 text-amber-600 dark:text-amber-400",
   },
   planned: {
-    label: "planned",
+    label: "pending",
     className: "border border-border bg-muted text-muted-foreground",
   },
 };

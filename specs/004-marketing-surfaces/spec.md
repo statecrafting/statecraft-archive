@@ -428,8 +428,9 @@ on `statecraft` spec 014 for the unsigned live chain and the factory never
 having run. That record is on no public branch and publication of drafts has
 not been authorized, so each now rests on public evidence (`statecraft` 008
 and 009) or says "no public record". The matrix already cited none of 014. The
-whitepaper edits are mechanism corrections of the kind section 8 made; the July
-paper is not re-authored.
+whitepaper edits are mechanism corrections of the kind section 8 made, plus one
+word in its abstract ("not yet shipped" becomes "not yet implemented", the
+ladder's vocabulary it points to); the July paper is not re-authored.
 
 Not changed: the Stamp step, the Substrate layer, the delivery flow's shape,
 `rahi`, and the whitepaper's superseded banner. The owner adopted the successor

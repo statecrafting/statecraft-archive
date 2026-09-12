@@ -32,7 +32,7 @@ export const paperMeta = {
   author: "Bartek Kus",
   date: "July 16, 2026",
   abstract:
-    "Statecraft is a governed control plane for agentic software delivery. It is built around one loop: intent becomes a governed spec, a contract stamps a complete application from an open template, a fleet operates the result, and a tamper-evident record makes the whole run checkable by someone who trusts none of it. This paper walks the mechanisms that make that loop honest, from the spec spine that governs every repo in the family (including this website) to the identity, decision, and attestation primitives that keep humans and agents on the same rails. Where a piece is designed but not yet shipped, it is marked as such: the status ladder on the home page rolls up from the specs, not from this paper.",
+    "Statecraft is a governed control plane for agentic software delivery. It is built around one loop: intent becomes a governed spec, a contract stamps a complete application from an open template, a fleet operates the result, and a tamper-evident record makes the whole run checkable by someone who trusts none of it. This paper walks the mechanisms that make that loop honest, from the spec spine that governs every repo in the family (including this website) to the identity, decision, and attestation primitives that keep humans and agents on the same rails. Where a piece is designed but not yet implemented, it is marked as such: the status ladder on the home page rolls up from the specs, not from this paper.",
 };
 
 export const sections: Section[] = [

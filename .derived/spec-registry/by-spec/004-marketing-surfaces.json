@@ -113,6 +113,6 @@
     "summary": "Restores the richer marketing experience the OAP-era statecraft web app carried, ported onto the static apex: a products/architecture page, a papers index with a full whitepaper reader (sticky TOC, reading-progress, scroll-spy, inline references) and an interactive clickable-SVG architecture explorer, and a get-started walkthrough. It expands the site chrome (Products, Papers, Get Started in the nav) and adds a sign-in link that hands off to the control plane's login initiator at app.statecraft.ing/api/v1/auth/login. All content is re-authored to be truthful and checkable against the current public repos (no fabricated hashes, spec counts, signatures, or dead subsystems): the OAP name becomes Statecraft, and factory-encore / template-encore become enrahitu. The site stays fully static and prerendered, with zero runtime off-origin requests; sign-in is a plain outbound link, not an auth flow this site runs.\n",
     "title": "Rich marketing surfaces: products, whitepaper, get-started, sign-in"
   },
-  "shardHash": "1a258e49be40670c53c6f4f60d668e0a55f05601e2132c987c0f0d4bf544d6f4",
+  "shardHash": "2c706afe6446fb19fe3573cc7d96e346f426b257ce9f6caa31e4d7ded0906976",
   "specVersion": "1.2.0"
 }
