@@ -1,0 +1,75 @@
+{
+  "record": {
+    "created": "2026-09-11",
+    "dependsOn": [
+      "001-packages-thesis",
+      "004-kernel-native",
+      "005-governance-native",
+      "006-fleet-native"
+    ],
+    "establishes": [
+      {
+        "kind": "directory",
+        "path": "specs/009-native-extraction/"
+      }
+    ],
+    "extends": [
+      {
+        "nature": "additive",
+        "spec": "005-governance-native",
+        "unit": {
+          "kind": "directory",
+          "path": "addon/governance-native/"
+        }
+      },
+      {
+        "nature": "additive",
+        "spec": "006-fleet-native",
+        "unit": {
+          "kind": "directory",
+          "path": "addon/fleet-native/"
+        }
+      }
+    ],
+    "id": "009-native-extraction",
+    "implementation": "pending",
+    "sectionHeadings": [
+      "009: The native extraction",
+      "1. Purpose",
+      "1.1 Territory",
+      "1.2 Revision of 2026-09-12",
+      "2. The packet's findings, checked",
+      "2.0 The realignment amendment's governance claims are superseded",
+      "2.1 No crate here is usable by any Rust consumer, and the reason is not the features",
+      "2.2 `fleet-native`'s `node` feature is the only path to Kubernetes I/O",
+      "2.3 The pure-builder suites pass, and prove less than a reader expects",
+      "2.4 `kernel-native` is the contrast, and it is the pattern",
+      "2.5 The ledger normalizes the caller's bytes; it does not preserve them",
+      "2.6 The gate is a policy compiler; it is not an authorization",
+      "2.7 The fleet's placement shape and the chassis topology have already diverged, and enrahitu has written the verdict",
+      "2.8 The neutral verifier's blocker is a format, not a crate",
+      "2.9 The README's consumer list is ahead of the tree, for one consumer",
+      "3. The package, consumer and license map",
+      "3.1 Schema ownership",
+      "4. The proposed extraction",
+      "4.1 Converge on the shape `kernel-native` already has",
+      "4.2 Split `fleet-native`'s features into three",
+      "4.3 Decide `publish = false` deliberately, per crate",
+      "4.4 The npm contract does not move",
+      "4.5 The evidence-byte question is stated, not solved",
+      "5. What this spec does not claim",
+      "6. Out of scope",
+      "7. Requests to sibling repositories",
+      "8. Acceptance",
+      "8.1 Feasibility, measured on a scratch copy (2026-09-12)",
+      "8.2 Which tests contact an apiserver",
+      "9. Decisions recorded"
+    ],
+    "specPath": "specs/009-native-extraction/spec.md",
+    "status": "draft",
+    "summary": "This repository's answer to the 2026-09-11 family realignment packet. The packet asks whether the Rust in these packages can be reused by a consumer that is not Node. Measured at 844ac86, the answer is no, for all four addons, and the reason is not the feature flags the packet suspected: every crate is `publish = false`, and `governance-native` and `fleet-native` declare every module private, so their public Rust surface from outside the crate is empty. `fleet-native` additionally has exactly one feature, `node`, and it is the only path to `kube`, which it enables together with `napi`. `kernel-native` already has the shape the packet asks for and is the pattern rather than a thing to invent. Section 4 proposes the smallest change that makes a Rust consumer possible without touching the npm contract; sections 6 and 7 name what this repository may not decide and what it asks of its siblings. Draft: nothing here is approved, and the placement-topology question belongs to statecraft, not here. Revised 2026-09-12: the evidence-byte question left this spec for draft 010, a scratch copy showed the section 8 increment is buildable, and no Rust consumer of any addon was found in rahi, so this extraction is not on any launch path.\n",
+    "title": "The native extraction: a Rust consumer path that does not link Node"
+  },
+  "shardHash": "2bfbf40c6c8828b0819287a783b236e04a74f591769f593d3a8ffcc056197c31",
+  "specVersion": "1.2.0"
+}
