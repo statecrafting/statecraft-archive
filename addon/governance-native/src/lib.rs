@@ -28,6 +28,9 @@ mod trust;
 mod napi_api;
 
 #[cfg(test)]
+mod golden_tests;
+
+#[cfg(test)]
 mod flow_tests {
     // statecraft spec 008 §4: one integration test proving the statecraft
     // spec-005 pattern, a fake stamp flow that calls gate -> append -> verify
