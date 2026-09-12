@@ -21,7 +21,11 @@ summary: >
   the migration's primary object and the evidence chain moves as original
   bytes with its original verifier. Cutover is staged behind a reverse
   proxy with a stated rollback, and acceptance is live, never a green
-  unit suite.
+  unit suite. Revised 2026-09-12: the spec is two parts approved
+  separately. Part A is a new Rahi pilot cell that holds no live data.
+  Part B migrates the running plane, and only after rehearsal evidence
+  and a recorded cutover decision. The factory and fleet keep their
+  behavior until their dispositions are adopted on their own.
 ---
 
 # 017: The Rahi cell shell and the domain port
@@ -48,6 +52,23 @@ can run on Rahi without any customer application running on Rahi, and
 spec 014 section 4.1 keeps that as a thesis-level property. An existing
 EnRaHiTu customer application does not move when the control plane does.
 
+### 1.1 Two parts, two approvals
+
+Added 2026-09-12. The first version folded a pilot into the first step of
+a cutover. They carry different risks and are now separate.
+
+| | Part A: the pilot cell | Part B: migrating the live plane |
+|---|---|---|
+| What runs | a new cell on its own hostname, carrying the services of specs 015 and 016 | the existing control plane's domain, ported (sections 5 to 11) |
+| Live data touched | none; no production volume, table or chain is read or written | all of it (spec 014 sections 3 and 5) |
+| Rahi prerequisites | a pinned release (rahi draft 039); authenticated bearer writes, a native client and revocation (038); the evolution checks (036) before its first schema change after deploy | all of 035 to 039, including real-rauthy identity backup and restore (037) proven |
+| Gate beyond approval | none | the rehearsals of section 13, then a cutover decision recorded by the owner |
+| Rollback | delete the pilot | section 12 |
+
+Approving this spec approves Part A's design. Part B's design can be
+reviewed now, but it executes only after its gate. Neither part retires
+the factory or changes the fleet (sections 8 and 9).
+
 ## 2. What the port actually is, measured
 
 `backend/` is 137 TypeScript files, 8811 lines of production code and
@@ -68,7 +89,10 @@ section 6 and section 7 name, where the durable state lives.
 
 `hqgit`'s spec 003 B-2 already describes the shape for a sibling product
 and statecraft adopts the same one, which is worth saying because it
-means the pattern gets two independent proofs rather than one.
+means the pattern gets two independent proofs rather than one. Part A's
+pilot uses this shell with only the services of specs 015 and 016 and
+their run views. The ported domain and `operator_routes` arrive with
+Part B.
 
 A `statecraft-cell` crate implements rahi's `Cell` trait
 (`crates/rahi-cli/src/cell.rs`):
@@ -137,6 +161,17 @@ to the new stack and watching them fail against an empty implementation.
 A port that writes the happy path first and adds the negative tests
 afterwards will reproduce the happy path and quietly lose a refusal.
 
+Measured 2026-09-12: fewer refusals are tested than that sentence
+assumes. `authorizeTenant` is unit-tested to deny a stranger and a
+missing tenant alike (`backend/tenants/access/authz.test.ts`, 8 passing).
+No test asserts that an endpoint answers 404 rather than 403, and no test
+file mentions a 404, while production code has 20 `notFound` call sites
+across `tenants/`, `fleet/`, `factory/`, `admin/` and `auth/`. The 404
+rule has been checked only in the live walks. Part B therefore starts one
+step earlier: endpoint-level cross-tenant tests are written against
+today's services, and seen to pass there, before any of them is
+translated.
+
 **5.2 Governance ports as-is, with one addition.** The attestation chain,
 the action gate and its config hash, and the trust window keep their
 shapes; spec 008 remains their design. The addition is the issuer
@@ -181,26 +216,43 @@ from git.
 ## 7. Evidence moves as original bytes
 
 `/data/governance/state/records.jsonl` is 10 records and
-`anchor.json` is their root. The chain moves byte-for-byte:
+`anchor.json` is their root.
 
-- The file is copied, not re-serialized. A canonical re-emission that
-  produces identical bytes is still a re-emission and a migration that
-  relies on it has bet the chain on a serializer.
-- The original verifier is preserved and kept runnable. Old records keep
-  their original digest construction forever (spec 016 section 8.1), so
-  whatever verifies them today must still exist after the port.
-- The Postgres index rows (`governance_attestations`) are rebuilt from
-  the file, never the reverse. The file is the authority and the port is
-  where that could silently invert.
-- If an issuer is established before the port (spec 014 O-4), the
-  anchoring happens on one side or the other and is recorded, never on
-  both.
+Revised 2026-09-12. The first version moved the chain as a file into the
+cell. Rahi has since answered R-3 (spec 014 section 10.1): a cell keeps
+no second durable store, and Rahi's backup holds app hiqlite, rauthy,
+keys and `manifest.json` only, so a file chain on a cell volume would be
+neither backed up nor replicated. The legacy chain is therefore archived
+and closed, not moved:
+
+- **Archived as bytes.** `records.jsonl` and `anchor.json` are copied, not
+  re-serialized, into immutable storage outside the cell, each addressed
+  by SHA-256 over its bytes. Rewriting the file would not break
+  `ledgerVerify`, which re-canonicalizes. A TypeScript
+  `JSON.parse`/`JSON.stringify` pass would break it at any record holding
+  an integer above 2^53, which that pass changes (measured, 014 section
+  10.3). The rule is to copy, and to compare byte digests before and
+  after.
+- **Verified with its original verifier.** `@statecrafting/governance-native`
+  0.1.0's `ledgerVerify` runs over the archive before the old workload
+  stops and again over the restored copy. That verifier is kept runnable
+  for as long as the archive is kept.
+- **Closed, not continued.** The cell's own chain lives in the cell's
+  store and begins with a record that references the legacy head hash
+  and the archive's byte digests as history (spec 016 section 5.4). No
+  legacy record is re-derived, re-anchored or re-signed.
+- **The index follows the file.** `governance_attestations` rows are
+  rebuilt from the archived file, never the reverse.
 
 ## 8. The fleet disposition
 
 Gated on spec 014 O-1 (whether managed application hosting is in the
-initial offer). Both branches are specified so the decision is a choice
-between two designs rather than a choice to design later.
+initial offer; 014 D-1 and D-6 carry the recommendation). Both branches
+are specified so the decision is a choice between two designs rather than
+a choice to design later. Until it is taken, the fleet's behavior is
+preserved exactly, and neither part of this spec changes it.
+statecrafting's extraction of `fleet-native` (its draft 009) is not a
+dependency of Part A or of the first offer.
 
 **If hosting is out of the initial offer:** the fleet stays running,
 unported, on the existing deployment until the last placed application is
@@ -244,14 +296,18 @@ matters enough to state rather than let the word carry:
 | What it produces | a born-green stamped tree | a project registration (spec 015 section 5.1) |
 
 So the successor to the factory is spec 015's project, not a renamed
-stamp. `backend/factory/` is deleted with its spec marked superseded, and
-three of its pieces are kept because they are useful independently of
-stamping: the born-with certificate construction (`cert.ts`, a
-keysorted-canonical digest), the GitHub App client (`github.ts`), and the
-job state machine pattern, which spec 015's jobs reuse.
+stamp. If retirement is adopted, `backend/factory/` is deleted with its
+spec marked superseded, and three of its pieces are kept because they are
+useful independently of stamping: the born-with certificate construction
+(`cert.ts`, a keysorted-canonical digest), the GitHub App client
+(`github.ts`), and the job state machine pattern, which spec 015's jobs
+reuse.
 
-**A retirement is a human decision.** This spec proposes it; approving
-this spec approves it; nothing is deleted before that.
+**A retirement is a human decision, and a separate one.** Revised
+2026-09-12: the first version said approving this spec approved the
+retirement. It does not. Retirement is spec 014 D-5, taken on its own
+record, and until then the factory's behavior is preserved and nothing
+in `backend/factory/` changes.
 
 ## 10. The model disposition
 
@@ -287,43 +343,54 @@ silent single retry through refresh on an expired-access-token 401. Both
 become chassis behaviors in Rahi's session model and should be checked
 against `rahi-idp` rather than reimplemented.
 
-## 12. Cutover and rollback
+## 12. Part B: cutover and rollback
 
 Staged, per subsystem, behind a routing seam. Never a big-bang swap.
+Revised 2026-09-12: the pilot is no longer step 1. Part A proves the
+chassis on a cell that holds no live data and can be deleted without
+consequence, so it is not a cutover step.
 
-1. **The shell serves nothing.** The cell is deployed beside the running
-   control plane, on its own hostname, with `EmptyCell`-shaped routes
-   plus health. Acceptance is a boot, a `/readyz`, and a login through
-   the cell's own flow. This proves the chassis without touching the
-   product.
-2. **Read-only mirrors.** The cell reads the existing durable state and
+1. **Inventory both stores, by identifier.** The app volume (`/data`:
+   rauthy, keys, the governance chain) and the relational store (the
+   eleven Postgres tables) are inventoried read-only against spec 014
+   section 5. Counts and key relationships are recorded before the
+   rehearsal and again before the window. Postgres rows are imported
+   into the cell's store; they do not move as a volume.
+2. **Rehearse in scratch.** Restore both stores from the backups step 5
+   relies on, import the tables, archive and verify the chain (section 7),
+   and log in as an existing subject. Section 13 lists what must be seen.
+3. **Read-only mirrors.** The cell reads the existing durable state and
    serves read-only routes. Any disagreement between old and new on the
    same request is a defect found before anything writes.
-3. **One subsystem at a time, writes included.** Governance first (its
-   writes are append-only and its authority is a file), then tenants,
-   then whatever section 8 decided about the fleet. Each subsystem's
-   traffic moves at the reverse proxy.
-4. **The volume moves once.** `/data` is detached from the old workload
-   and attached to the new, in a scheduled window, with a verified backup
-   taken immediately before. This is the only irreversible step, and it
-   is why steps 1 to 3 exist.
-5. **The old workload stays deployable for one release.** Its image
+4. **One subsystem at a time, writes included.** Governance first (its
+   new chain starts in the cell's store and references the archive), then
+   tenants, then whatever section 8 decided about the fleet. Each
+   subsystem's traffic moves at the reverse proxy.
+5. **Decide, then move the identity volume once.** The owner records the
+   cutover decision, citing the rehearsal evidence. Then `/data/rauthy`
+   and the signing keys move from the old workload to the new in a
+   scheduled window, with verified backups of both stores taken
+   immediately before. This is the only irreversible step, and it is why
+   steps 1 to 4 exist.
+6. **The old workload stays deployable for one release.** Its image
    digest is pinned and recorded; rolling back is re-pointing the
    Deployment and re-attaching the volume.
 
 **Rollback conditions, named in advance:** login fails for an existing
 subject; any owner-scoped route returns 403 where it must return 404; the
-evidence chain fails to verify with its original verifier; a write lands
-in the new store that the old one cannot read; or the `migrate` verb
-reports a schema the old workload refuses. Any one of those is a
-rollback, not a debugging session in production.
+archived chain fails to verify with its original verifier, or its byte
+digests differ before and after; an imported table's count or key
+relationships differ from the inventory; a write lands in the new store
+that the old one cannot read; or the `migrate` verb reports a schema the
+old workload refuses. Any one of those is a rollback, not a debugging
+session in production.
 
-**Rollback is not free after step 4.** Writes made by the new cell to a
+**Rollback is not free after step 5.** Writes made by the new cell to a
 migrated store are not readable by the old workload, so a rollback after
-step 4 is a restore from the pre-cutover backup with those writes lost.
+step 5 is a restore from the pre-cutover backup with those writes lost.
 Saying so in advance is the difference between a plan and a hope.
 
-## 13. Live prerequisites
+## 13. Part B's gate: live prerequisites
 
 Acceptance is live. A green unit suite is not operational acceptance, and
 this repository has already recorded what that mistake costs: a published
@@ -331,54 +398,85 @@ image that lagged `main` by 60 files while every gate stayed green, and a
 stop-path fix that could only be proved by the boot after a deliberate
 delete, never by the roll that deployed it.
 
-Before step 4:
+Before step 5:
 
-- A restore has been performed from the backup that step 4 relies on,
-  into a scratch environment, and the evidence chain verified there.
+- Rahi drafts 035 to 039 have landed in a release the cell pins, and
+  037's real-rauthy backup and restore has been shown against that
+  release, not in process. If the cell runs more than one replica, a real
+  multi-replica test has run; the in-process reproduction does not count.
+- Both stores have been inventoried (step 1) and restored into a scratch
+  environment from the backups step 5 relies on, and the archived chain
+  verified there with its original verifier over identical bytes.
 - The GitHub App installation has been exercised end to end against the
   new cell (an installation callback, a membership reconcile, one
   owner-scoped 404).
 - The IdP has served a login to an existing subject from the migrated
   volume, not a fresh one.
-- The rollback in section 12 step 5 has been rehearsed, not just written.
+- The rollback in section 12 step 6 has been rehearsed, not just written.
+- The owner's cutover decision is recorded.
 
 ## 14. Acceptance
 
-1. The cell boots, `/readyz` answers, and a login completes through its
-   own flow (rahi spec 033's harness shape).
-2. Every negative authorization test from `tenants/` passes against the
+**Part A.**
+
+1. The pilot cell boots from a pinned Rahi release, `/readyz` answers,
+   and a login completes through its own flow (rahi spec 033's harness
+   shape).
+2. A bearer write from a native client succeeds, and the same write with
+   a revoked token is refused.
+3. The pilot's configuration names no production volume, table, chain or
+   secret, and a deployment check asserts it.
+4. Spec 015's acceptance item 3 runs against the pilot.
+
+**Part B.**
+
+5. Every negative authorization test from `tenants/` passes against the
    port, and each one was seen to fail first against the empty
    implementation.
-3. The evidence chain verifies after the move with its original
-   verifier, over bytes identical to the pre-move file.
-4. An existing IdP subject logs in after the volume move and resolves to
+6. The archived chain verifies with its original verifier over bytes
+   whose digests match the pre-move file, and the cell's first chain
+   record references them.
+7. Every imported table matches the inventory in counts and key
+   relationships.
+8. An existing IdP subject logs in after the volume move and resolves to
    the same application identity as before.
-5. `spec-spine index coverage` stays at 100 percent through every stage:
-   each file the port adds is claimed in the change that adds it.
-6. The rollback of section 12 step 5 has been performed once, in a
+9. The rollback of section 12 step 6 has been performed once, in a
    scratch environment, and recorded.
-7. `spec-spine verify 017` is green.
+
+**Both.**
+
+10. `spec-spine index coverage` stays at 100 percent through every stage:
+    each file a part adds is claimed in the change that adds it.
+11. `spec-spine verify 017` is green.
 
 ## 15. Cross-repo dependency
 
-- **Rahi R-2** (manifest evolution) gates section 10's first decision.
-- **Rahi R-3** (recovery and consumer contract, and whether a cell may
-  carry a second durable store it owns) gates section 7: statecraft's
-  evidence chain is a file, not a hiqlite table, and Rahi must say
-  whether that is a supported shape or a thing to migrate.
-- **Rahi's crate availability.** `rahi-cli`, `rahi-edge`, `rahi-idp`,
-  `rahi-kernel`, `rahi-ledger`, `rahi-ops` and `rahi-store` exist in that
-  repository; whether they are published or consumed by path is a
-  packaging question this spec does not answer.
+- **Rahi R-2** (manifest evolution). Answered no for now (spec 014
+  section 10.1): unknown manifest sections are refused, so section 10's
+  endpoint table goes to a statecraft overlay.
+- **Rahi R-3** (recovery, and a second durable store). Answered: no second
+  store, and a backup that would not include a file chain. Section 7 is
+  written for that answer.
+- **Rahi's drafts.** Part A needs 039 (a pinned release), 038 (bearer
+  writes past CSRF, a native client, revocation) and 036 before its first
+  schema change after deploy. Part B needs 035 to 039. All are drafts on
+  an unmerged Rahi branch today.
+- **Rahi's crate availability.** Nothing is published: no tag, crate or
+  image. A git dependency pinned to a full commit is the only working
+  route Rahi documents, and its draft 039 decides the rest.
 - **statecrafting**: `fleet-native` and `governance-native`'s future,
-  gated on section 8's branch.
+  gated on section 8's branch, and not a dependency of Part A.
+  governance-native 0.1.0's verifier is kept runnable for the archive.
 
 ## 16. Out of scope
 
 - **Deciding spec 014 O-1 or O-2.** Section 8 specifies both branches of
-  the first; the second is a sequencing decision for the owner.
+  the first; the second is a sequencing decision for the owner, now
+  proposed as Part A before Part B.
+- **Deciding spec 014 D-5 or D-6.** The factory's retirement and the
+  fleet's disposition are separate owner decisions.
 - **Executing any cutover.** This spec is a draft, and section 12 is a
-  plan awaiting approval.
+  plan that also needs its own gate (section 13).
 - **Migrating customer applications.** They do not move.
 - **Rahi's internal design.** Section 15 asks; it does not decide.
 - **The hosted work and permit contracts.** Specs 015 and 016.

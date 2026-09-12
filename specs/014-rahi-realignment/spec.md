@@ -23,7 +23,11 @@ summary: >
   declared-versus-enforced table, the requests to sibling repositories,
   and the owner decisions that remain open. This spec is a record, not a
   work order: it amends no approved spec, and the work it names lands in
-  drafts 015, 016 and 017.
+  drafts 015, 016 and 017. Revised 2026-09-12 against the revision-3
+  packet (section 10): the sibling answers now on record, the measured
+  byte behavior of both evidence verifiers, one proposed verdict
+  contract, and three decisions (thesis, issuer, bytes) put in their
+  smallest form.
 ---
 
 # 014: The Rahi realignment, checked
@@ -59,7 +63,7 @@ The three drafts:
 | Draft | Lands | State |
 |---|---|---|
 | 015 the hosted work contract | admission of work: runners, jobs, leases, evidence intake | draft, authored with this record |
-| 016 the external action permit | authorization of an external effect | draft, authored with this record |
+| 016 permits and the evidence chain | authorization of work and of an external effect | draft, authored with this record |
 | 017 the Rahi cell shell and the domain port | the backend and operational-contract migration | draft, authored with this record |
 
 ### 1.1 Territory
@@ -320,8 +324,10 @@ human's call, not an agent's.
 
 Spec 001 is a record of the enrahitu-era architecture and stays exactly
 that. This section states what a Rahi-era thesis would say. It is
-proposed, not ratified; approving this spec ratifies it, and spec 001
-then gains a dated lifecycle note pointing here.
+proposed, not ratified. Approving this record does not adopt it: adoption
+is the owner's separate act, with the instrument named in section 10.4
+(D-1), and neither act authorizes drafts 015, 016 or 017. (Corrected
+2026-09-12; the earlier sentence here said approval ratified it.)
 
 ### 4.1 What the thesis keeps
 
@@ -354,10 +360,10 @@ was ever a claim about enrahitu:
 | `frontend/`, `frontend-admin/`: React product and operator UIs | **retained** | components reused behind new API adapters; `frontend/src/lib/api.ts` is the whole seam |
 | `core/`: CoreLedger over Postgres | **replaced** | rahi's store (hiqlite group) for operational state; see 017 4.3 for the two rows this is genuinely hard for |
 | `auth/`, `idp/`: embedded rauthy, session envelope, refresh tokens | **replaced** | `rahi-idp` and `rahi-edge`; rahi 022 already carries the same "the IdP's `sub` is the principal, no local account row" decision this repository made |
-| `fleet/`: single-replica Deployment, scale-down restic backup | **replaced** | rahi 030's verbs and 032's StatefulSet topology, for hosted applications; the placement unit changes from "container + volume + ingress" to "a cell" |
+| `fleet/`: single-replica Deployment, scale-down restic backup | **gated on O-1 (D-6 in 10.4)** | if hosting stays out, unchanged and unextended; if in, rahi 030's verbs and 032's StatefulSet topology, the placement unit changing from "container + volume + ingress" to "a cell". Fleet extraction is not a launch dependency |
 | `app-model.json` extraction | **replaced** | the Rahi manifest as a declared, verified TOML document (2.2); the endpoint table needs a new home or retires with `frontend-admin`'s catalog view |
 | Managed application hosting at all | **optional, and an open decision** | O-1 in section 8 |
-| `factory/`: stamping from `template.toml` | **retired** | never exercised in production (3.3); the existing-repo path (`mode: adopt`, already built) is the successor shape, re-founded without a template |
+| `factory/`: stamping from `template.toml` | **retirement proposed (D-5 in 10.4)** | never exercised in production (3.3); the existing-repo path (`mode: adopt`, already built) is the successor shape, re-founded without a template. Behavior is preserved until the retirement is adopted |
 | `agents`, `types`, `trust.levels` model sections | **retired** | empty in the extracted model today |
 
 Note the one asymmetry worth arguing about at review: `mode: adopt`
@@ -391,7 +397,7 @@ exists so review can find one.
 | A deployment of a hosted application | statecraft | 016 section 6, gated on build provenance | proposed |
 | The attestation chain and its issuer | statecraft | `governance/`, `/data/governance/state` | chain implemented, **issuer absent** (3.5) |
 | Tenant, installation, membership | statecraft | `tenants/` | **implemented** |
-| A verdict on somebody else's evidence | a neutral verifier, packaged permissively | four separate outcomes, never folded | proposed (CLI D67) |
+| A verdict on somebody else's evidence | a neutral verifier, packaged permissively | four evidence dimensions plus a separate admission result (10.2) | proposed |
 | Per-repository evidence DAG and its identities | hqgit | its own ledger; never in a chassis store | hqgit spec 003 B-4, B-5 |
 | Infrastructure primitives (store, edge, IdP, verbs, packaging) | Rahi | its crates | 010, 011, 020 to 026, 030 to 034 landed |
 
@@ -434,8 +440,10 @@ application to run on Rahi.
 7. **Upload evidence.** The runner posts the receipt and its bundle.
    Authority: statecraft validates; it does not execute anything the
    bundle carries and does not accept the bundle's own anchor as a trust
-   root. Record: an evidence row with four separate outcomes (integrity,
-   subject binding, issuer trust, policy).
+   root. Record: the submitted bytes, kept verbatim and addressed by
+   digest, and an evidence row with four dimensions (integrity,
+   signature, issuer trust, subject binding) and a separate admission
+   result under the job's policy (10.2, 10.3).
 8. **Approve.** A second person on the tenant approves the change class
    the delta reports, under the **base** revision's policy. Authority:
    statecraft. Record: the approval, referenced by the action permit.
@@ -474,6 +482,32 @@ enrolment; replay and shadow policy; issuer trust for our own chain.
 
 **Not a guarantee, and should stop being written as one:**
 `app-model.json`'s `ledger.signing` block (3.5).
+
+### 4.6 The milestone sequence, proposed
+
+Added 2026-09-12 from the revision-3 reconciliation, as the replacement
+D-1 would make for 001 section 6.
+
+1. **Safety and protocol foundations.** statecraft-cli closes its origin
+   and credential gaps (its 128, 129); spec-spine repairs authority
+   verification (085, 086, and 087's digest choice); the family agrees
+   the verdict contract and typed byte references (10.2, 10.3); 132's
+   fixtures are frozen. Ratification and implementation stay distinct.
+2. **Installable local evidence slice.** Released members on a clean
+   machine, one bounded change in an existing repository, and its
+   exported evidence checked by a separate verifier. Tampering, a
+   self-weakened policy, a wrong subject and absent trust each yield
+   their specified result.
+3. **Hosted team pilot** (015, 016, 017 Part A). On a proven Rahi cell:
+   enrol a runner, lease a job, receive evidence, approve under the prior
+   policy, authorize one broker action. Tenant separation,
+   expiry, replay, fencing, cancellation and idempotent reconciliation
+   are demonstrated. The plane executes no repository command.
+4. **Production migration and artifact delivery** (017 Part B). Identity
+   and application data restored in rehearsal, rollback proven, then a
+   recorded cutover decision. No historical ledger root is replaced.
+5. **Expansion on use.** Graph, runtime observation, replay and optional
+   hqgit portability when their prerequisites and demand exist.
 
 ## 5. The durable-state and deployment inventory
 
@@ -570,6 +604,9 @@ row (016 section 7).
 Proposals for each repository's own governance. None changes its contract
 from here, and none is a dependency this record assumes satisfied.
 
+The requests below are as sent on 2026-09-11. Section 10.1 records, per
+request, what has since been answered, superseded or left open.
+
 **Rahi.**
 
 - R-1. Say whether spec 025's 15-minute access token is renewed for a
@@ -646,12 +683,16 @@ from here, and none is a dependency this record assumes satisfied.
 **statecrafting.** No request. The two native addons (`fleet-native`,
 `governance-native`) are pinned dependencies and 017 decides their future
 as part of the fleet disposition; an extraction question would be
-premature before that.
+premature before that. (Superseded 2026-09-12: statecrafting's draft 009
+asks statecraft a byte-preservation question, F-3, answered in 10.3.)
 
 ## 8. Open owner decisions
 
 Recorded as proposals for decision, not resolved here. Each blocks
-something named.
+something named. Section 10.4 restates O-1, O-3, O-4 and O-5 as concrete
+proposals (D-1, D-4, D-2 and the verifier home in 10.2) and adds the
+factory and fleet dispositions (D-5, D-6); O-2, O-6 and O-7 stand as
+written, with 10.1's Rahi answers applied to O-7.
 
 - **O-1. Does managed application hosting belong in the initial offer?**
   The packet asks for an explicit decision. Evidence for "no": nothing is
@@ -694,11 +735,301 @@ something named.
 - **Any cutover.** This record authorizes nothing to be migrated,
   deployed or retired. It records the design so a human can decide.
 - **Amending spec 001.** The successor thesis in section 4 is proposed.
-  If this spec is approved, 001 gains a dated lifecycle note pointing
-  here; until then 001 stands unchanged and remains the record of what
-  was actually built.
+  Approving this record does not amend 001; adoption is D-1 in 10.4, and
+  until the owner takes it 001 stands unchanged and remains the record of
+  what was actually built.
 - **Amending spec 013.** The drift in 3.7 is reported, not fixed.
 - **The wire schemas themselves.** 015 and 016 hold them.
 - **Rahi's, spec-spine's, statecraft-cli's or hqgit's internal design.**
   Section 7 asks; it does not decide.
 - **Any commercial commitment.** O-6 stays open.
+
+## 10. Revision 3, reconciled (2026-09-12)
+
+The revision-3 packet asks for the smallest reviewable decisions on the
+thesis, the issuer and evidence bytes, one composition agreement, and
+negative evidence that actually ran. This section is that answer. It is
+still a draft: nothing here approves 014 to 017, and nothing was pushed,
+merged or deployed.
+
+### 10.1 What moved, and what it supersedes
+
+Revisions read on 2026-09-12 (statecraft's remote fetched; the sibling
+repositories read as their local refs stood):
+
+| Repository | Revision | State that matters here |
+|---|---|---|
+| statecraft | `014-rahi-realignment` at `afe31c3`, local only; `origin/main` at `9658e29` | `spec-spine check` fresh on both trees, 11 allowed unwitnessed claims; 14 approved, 4 draft |
+| statecraft-cli | `origin/main` at `874766b` (PR #41), tree identical to local `15103e2` | 128 to 132 merged as drafts; 132's fixtures are not minted; both bundle verifiers hash a re-serialization |
+| spec-spine | `main` at `0e41641` | 085 to 088 merged as drafts (PR #179); 087 keeps the unframed `specAttestationHash`, and design note 04 holds that choice (D3) open for review; latest release `v0.18.0`, and no release contains 083 or 089 |
+| rahi | `main` at `444bcf8`; drafts 035 to 041 on the unmerged `corpus/runtime-binding` (`b24de62`) | no tag, crate or image published |
+| hqgit | `main` at `4d0f9c2` | design 02 names four outcomes (T-3) and keeps original bytes as the object (R-1) |
+| statecrafting | `009-native-extraction` at `85db8fd` | 009 draft; its 2.5 records that the ledger normalizes caller bytes; F-3 asks statecraft |
+
+Superseded or answered:
+
+- **S-3 is obsolete.** 085 to 088 are committed (spec-spine PR #179). They
+  are drafts, so 016's dependency is on their approval, not their commit.
+- **C-2 stands, restated.** 132 is a merged draft with no fixture files.
+  10.2 asks for four column changes and 10.3 for four byte mutations.
+- **The four outcomes of 4.3, 4.4, 015 7.2 and 016 5.1 are superseded** by
+  10.2: `signature` joins, `policy` leaves the set and becomes admission.
+Rahi has not replied to this record. The four R answers below are read
+from its tree and its drafts, which is weaker than a reply.
+
+- **R-1.** `main` has no
+  bearer renewal; the configured lifetime is rauthy's 1800 s default.
+  Draft 038 adds public native clients (device grant, authorization code)
+  and a 600 s lifetime, and leaves how a runner authenticates to a control
+  plane to the consumer. 015 section 4 now carries D-4.
+- **R-2, answered no for now.** Every manifest struct denies unknown
+  fields, so an older kernel refuses a newer section; draft 036 ledgers
+  transitions but adds no forward compatibility. O-7's endpoint table
+  cannot ride in the ceiling; 017's overlay recommendation stands.
+- **R-3, answered no.** No Rahi spec or draft lets a cell keep a second
+  durable store; the backup holds app hiqlite, rauthy, keys and
+  `manifest.json` only, so a file chain on a cell volume is neither backed
+  up nor replicated. 017 section 7 is rewritten for that.
+- **R-4, confirmed.** Tenancy, business authorization, approvals, billing
+  and any job system are application concerns.
+- **Statecraft's own draft territories are superseded where they put a new
+  hosted service in `backend/`.** The packet's sequencing avoids an
+  interim hosted engine on the EnRaHiTu plane; 015 and 016 now land their
+  services in 017's pilot cell, and their shared schemas where an
+  Apache-2.0 runner can consume them.
+- **Section 6's first row is enforced but only partly tested.** The
+  refusal beneath the 404 is unit-tested (`authorizeTenant` denies a
+  stranger and a missing tenant alike). The endpoint mapping to 404,
+  never 403, has no automated test; it was checked in the live walks.
+  017 section 5.1 now adds those tests before the port.
+- **Not repeated:** the production observations of section 3 date from
+  2026-09-11. The cluster was not read in this revision.
+
+### 10.2 The evidence verdict contract, proposed
+
+Four vocabularies were in play:
+
+| Source | Dimensions | Policy |
+|---|---|---|
+| statecraft 015/016 (before this revision), statecraft-cli 132 and doc 05 D67 | integrity, subject, issuer | a fourth dimension |
+| hqgit design 02 T-3 | byte integrity, signature validity, issuer trust, subject binding | a separate, later predicate (T-1) |
+| spec-spine design note 04, 4.7 rule 4 | integrity, signature, subject binding, recompute, freshness | a sixth dimension |
+| revision-3 packet | integrity, signature, issuer trust, subject binding | a separate result |
+
+**Proposal: `statecraft.evidence-verdict` version 0.** statecraft accepts
+the packet's recommendation, which is hqgit's T-3 set, and adds the
+encoding rules that make the three existing tables map onto it without
+loss. The normative text is 015 section 7.2.
+
+1. Four dimensions for every evidence object, never folded: `integrity`,
+   `signature`, `issuerTrust`, `subjectBinding`.
+2. One closed value domain, `pass`, `fail`, `unknown`, `not-applicable`,
+   which 132 and note 04 already use. Every non-`pass` value carries a
+   reason code from a closed, versioned list.
+3. An absent signature is `signature: not-applicable` with reason
+   `unsigned`; an invalid one is `fail`; an unsupported algorithm is
+   `unknown`. `issuerTrust` is `unknown` whenever `signature` is not
+   `pass`, which keeps 132's all-`unknown` issuer column valid.
+4. `unknown` and `not-applicable` never satisfy a requirement that names
+   the dimension.
+5. **Admission is not a dimension:** `{decision: admit | refuse,
+   policyDigest, reasons[]}`, under the trusted base's policy. 015's
+   `incomplete` is a refusal reason.
+6. **Producer claims are not dimensions:** a receipt's `passing` and
+   spec-spine's recompute and freshness are `claims[]` in the same value
+   domain, keyed by producer type.
+7. **Home:** schemas, fixtures and the neutral verifier live in
+   statecraft-cli's Apache-2.0 workspace (132 and `statecraft-journal`).
+   statecraft leads the semantics and contributes no AGPL code there;
+   hqgit reviews the format and is not a linked dependency.
+
+What each repository is asked to accept:
+
+| Repository | Ask | Cost to it |
+|---|---|---|
+| statecraft-cli | 132: rename `subject` to `subjectBinding` and `issuer` to `issuerTrust`; add `signature` (every current fixture `not-applicable`, `unsigned`); move `policy` to an optional `admission`; record each fixture's byte digest; add the four byte mutations of 10.3 | a draft edit before minting |
+| spec-spine | map note 04's six onto four dimensions plus `claims[]` plus admission; say whether 088 gains a class for waiver rules and trust roots (it has neither) | a design-note amendment |
+| hqgit | confirm T-3 matches, and that a redacted record is `integrity: unknown`, reason `withheld` | a review |
+| Rahi | nothing | |
+
+No repository has accepted this yet. It is a proposal from the lead.
+
+### 10.3 Evidence bytes: measured, then proposed
+
+The packet asked for large numbers, duplicate keys, whitespace and
+reordered keys to be tested without trusting a re-serialization. Two
+probes ran on 2026-09-12, both in a scratch directory, neither writing to
+any repository.
+
+**Probe 1: the governance ledger this deployment runs.**
+`@statecrafting/governance-native@0.1.0` (the pinned darwin-arm64 build),
+Node v24.6.0. Each pair was appended as the first record of two fresh
+chains, so equal record hashes mean the submitted bytes did not matter.
+
+| Submitted pair (distinct bytes) | Record hashes | Stored payload |
+|---|---|---|
+| `{"kind":"probe","n":1}` / the same with spaces and a newline | equal | compact, keys sorted |
+| `{"a":1,"b":2}` / `{"b":2,"a":1}` | equal | `{"a":1,"b":2}` |
+| `{"s":"é"}` / `{"s":"é"}` | equal | the literal character |
+| `{"n":1e2}` / `{"n":100.0}` | equal | `100.0` |
+| `{"n":123456789012345678901234567890}` / `{"n":123456789012345678901234567891}` | **equal: two different integers, one digest** | `1.2345678901234568e+29` |
+| `{"role":"viewer","role":"admin"}` / `{"role":"admin"}` | **equal: the duplicate vanishes** | `{"role":"admin"}` |
+
+Kept exactly: `9007199254740993`, `18446744073709551615`, and `1.0` apart
+from `1`. The record hash recomputes as SHA-256 over canonical-keysort
+JSON of `{id, timestamp, previous_record_hash, payload}`, the first
+linking to `sha256:7d7f6941...`, the constant anchor of 3.5.
+`ledgerVerify` re-canonicalizes rather than hashing line bytes: a stored
+line reformatted with different whitespace still verifies, a changed
+value fails (the positive control), and a TypeScript
+`JSON.parse`/`JSON.stringify` re-emission of the file fails at the record
+holding `9007199254740993`, which becomes `9007199254740992`.
+
+**Probe 2: statecraft-cli's Rust bundle verifier.** `statecraft-journal
+verify-bundle`, a debug build from 2026-09-12 at `15103e2`, over byte
+variants of `docs/evidence/journal-bundle.json`:
+
+| Variant | Exit | Reading |
+|---|---|---|
+| minified; re-indented; top-level keys reversed | 0 | distinct bytes, one verdict |
+| a verified record's value changed | 1 | positive control: `included payload does not match its payload hash` |
+| a duplicate member inserted **before** the real one | **0** | last one wins; a first-wins reader sees the injected value |
+| the same duplicate inserted after | 1 | the parser read the injected value |
+| an integer of 30 digits added | 1 | refused: `non-integer number ... is not portable (integers only)` |
+| a value changed inside a record with withheld fields | 0 | counted as redacted, and the bundle still reports `ok: true` |
+
+Not run: the TypeScript `verifyBundle`, and the production chain.
+
+**What this establishes.** Neither path binds the bytes it was given.
+Both accept a duplicate member silently, so a file can carry a value some
+readers see and the digest does not. governance-native also folds
+distinct out-of-range integers into one digest, where the CLI refuses
+them. "Copy the file, never re-serialize it" (017 section 7) is necessary
+and not sufficient.
+
+**Proposal D-3, the smallest form:**
+
+1. Foreign evidence (anything statecraft did not produce) is kept as its
+   exact submitted bytes, addressed by SHA-256 over those bytes.
+2. The ledger records only a typed reference: `{type, schemaVersion,
+   digestAlg: "sha-256", byteDigest, byteLength, producerDigest:
+   {construction, value} | null, subject: {repo, commit, tree | null}}`.
+   Its members are hex strings, ASCII names, `null` and integers below
+   2^53. Submitted in canonical form through `ledgerAppend`, such a
+   reference was stored byte-identical and verified (Probe 1, one further
+   case). A reader that does not know `digestAlg` refuses (hqgit's rule).
+3. No foreign object passes through `canonicalize` or `ledgerAppend`.
+4. Intake refuses, as `integrity: fail` with reason `ambiguous-json`, a
+   duplicate member, a number outside the producer's declared range,
+   invalid UTF-8 or a byte-order mark. A refused object is recorded by
+   digest and reason and is not retained.
+5. Where the bytes live is 017 Part A's choice, not this one. They cannot
+   be a file on a cell volume (R-3). The legacy plane ingests no foreign
+   evidence, so it needs no store.
+6. statecraft's own chain keeps its construction and its verifier
+   (governance-native 0.1.0) permanently; nothing is re-derived.
+7. Content-addressed bytes can be erased while their reference and digest
+   stay in the chain, which an encoding inside the payload would not
+   allow. That is why base64 inside the payload is the rejected
+   alternative.
+
+**Answer to statecrafting 009 F-3.** Its section 2.5 is confirmed by
+execution, and Probe 1 adds the integer collision. 016 will not put
+third-party evidence into the ledger payload, so 009's 4.5 item 1 (a
+verbatim-bytes field) is not needed for statecraft and need not be
+scheduled for it. The narrower request: refuse duplicate members in a
+future major version of `canonicalize` and `ledgerAppend`, keep 0.1.0's
+construction for historical chains, and document the normalization.
+
+### 10.4 Decisions for the owner
+
+Each is put so that a yes or a no is a complete answer.
+
+- **D-1. Adopt the successor thesis?** Recommended: yes, with the packet's
+  first offer. Governed delivery comes first, for repositories customers
+  already have. Local use needs no hosted account. The first paid layer
+  is team approval, evidence retention and policy. There is no initial
+  stamping and no managed customer-app hosting, which answers O-1 no.
+  **The instrument:** this repository's contract declares an amendment
+  once, as an `amends` edge in the amending spec's frontmatter, and never
+  edits the amended `spec.md`. Adoption is therefore
+  `amends: ["001-statecraft-thesis"]` added to this spec in the same
+  change that flips it to `approved`, with section 4 as the amending
+  text. It amends 001's loop (section 1), identity (3.3), the governed
+  cell and `app-model.json` (3.5), the service map (3.6) and the milestone
+  ladder (6, replaced by 4.6); two planes, tenancy and licensing stand.
+  `supersedes` is not recommended, because 001 stays the record of what
+  was built. Without that edge, approving 014 approves a record and adopts
+  nothing. The edge is not added in this draft, because a draft carrying
+  it would already report 001 as amended.
+- **D-2. The first issuer.** Recommended: two tiers. An offline root
+  Ed25519 key, held by the owner and never on the cluster, is published by
+  fingerprint out of band (a tagged revision of this repository and the
+  site), never inside evidence. The root signs the enrolment of an online
+  platform issuer key held in the hosted cell's secret custody:
+  `{issuerId, publicKey, scope, notBefore, notAfter}`. Rotation and
+  revocation are root-signed records, and `issuerTrust` is evaluated
+  against the enrolment set valid at the evidence's time, passed in
+  explicitly. Bootstrap is the first record of the new chain. **The
+  legacy chain is not anchored after the fact:** `ledgerAnchor` is not
+  called on the 10 production records. Their `issuerTrust` stays
+  `unknown`, reason `unsigned`, and the new chain's bootstrap references
+  the legacy head hash as history, not as trust. Local use keeps the
+  user's own root (statecraft-cli's); neither root is trusted across that
+  line. A transparency log is deferred.
+- **D-3. Evidence bytes.** 10.3.
+- **D-4. How a runner authenticates.** Recommended for the first slice:
+  a runner is a person's native-client session (Rahi 038's device grant,
+  refreshed per plane, issuer and audience as statecraft-cli D72 already
+  plans), authorized by a runner record bound to that person's `sub` and
+  tenant. Leases bind to `runnerId`, never to a token, so renewal never
+  loses one. A runner with no person behind it waits for a non-human
+  principal Rahi does not define. Also recommended, for C-4: the hosted
+  runner is 130's engine binary configured with a plane endpoint, not a
+  new member.
+- **D-5. Retire stamping?** Recommended: yes, as its own recorded decision.
+  Approving 017 does not retire it, and `backend/factory/` behavior is
+  preserved until this is taken.
+- **D-6. The fleet.** Follows D-1. If hosting stays out, the fleet keeps
+  running, unextended, and statecrafting's extraction of `fleet-native` is
+  not a launch dependency.
+- **Standing:** O-2 is now proposed as a sequence, not a fork: the pilot
+  cell first (017 Part A), migration of the live plane later (Part B).
+  O-6 and O-7 are unchanged.
+
+### 10.5 Feature-register coverage
+
+The packet's register (A01 to A10, B01 to B35) is a proposal inventory.
+The entries sent to statecraft, and where they stand:
+
+| ID | Lands in | State |
+|---|---|---|
+| B08 spec-linked runtime telemetry | 016 10.1 (detached binding); Rahi 040 | **deferred**, P4 |
+| B09 runtime drift | 016 10.1: an unreported binding is `unknown` | **deferred**, P4 |
+| B10 root embedded in `app-model.json` | 016 9 and 10.1; 017 10 drops `ledger.signing`; Rahi 040/041 | proposed as a detached binding |
+| B12 runtime ledger rooted at governance state | D-2 (the new chain references the legacy head); Rahi 041 epochs | proposed; lands with 017 Part B |
+| B13 proof-carrying deployments | 016 4.5 | proposed |
+| B14 proof-carrying external actions | 016 4 and 7 | proposed |
+| B15 effects as authority units | not taken here | deferred to a spec-spine overlay |
+| B16 delegation chains | 016 3.3; D-2 | proposed |
+| B17 waiver half-life | 016 7.4 (reservation only; expiry unspecified) | partial |
+| B18 constraint budgets | 016 7.4 | partial |
+| B19 to B21, B31 analytics and compliance | 016 14 | **deferred** |
+| B23 software bill of intent | binding only: 016 9 references the intent projection by typed reference; spec-spine emits it | **binding proposed, projection deferred** |
+| B25, B26, B29 | not taken | deferred |
+| B27 replay, B28 shadow policy | 016 10.2, 10.3 | proposed |
+| B30 semantic trust window | 016 1: evaluated at effect time | proposed |
+| B32 audit bundles | 015 7; D-3; CLI 132 | proposed |
+| B33 proof protocol | 10.2 | proposed, version 0 |
+
+### 10.6 The next smallest increment
+
+1. **No statecraft code.** statecraft-cli folds 10.2's columns and 10.3's
+   mutations into 132 and mints the fixtures. One fixture admitted and
+   one refused, each with its four dimensions and reasons, is the first
+   acceptance. statecraft reviews the manifest against 015 7.2.
+2. The owner answers D-1, D-2 and D-3, each a paragraph.
+3. Only then is 015's schema-first slice worth approving, and it remains
+   schemas plus a pure evaluator in the CLI workspace, still no service.
+4. The tenant-isolated hosted job waits on Rahi 038 and 039 (authenticated
+   writes, a pinned release), D-4, and 017 Part A.

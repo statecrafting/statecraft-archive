@@ -16,6 +16,7 @@
     "sectionHeadings": [
       "017: The Rahi cell shell and the domain port",
       "1. Purpose",
+      "1.1 Two parts, two approvals",
       "2. What the port actually is, measured",
       "3. The cell shell",
       "4. What the shell inherits, and what it must not assume",
@@ -26,17 +27,17 @@
       "9. The factory disposition",
       "10. The model disposition",
       "11. The UI",
-      "12. Cutover and rollback",
-      "13. Live prerequisites",
+      "12. Part B: cutover and rollback",
+      "13. Part B's gate: live prerequisites",
       "14. Acceptance",
       "15. Cross-repo dependency",
       "16. Out of scope"
     ],
     "specPath": "specs/017-rahi-cell-migration/spec.md",
     "status": "draft",
-    "summary": "The control plane becomes a Rahi cell: a manifest, migrations, routes, operator routes, and a one-line main that hands control to the chassis runner. Roughly half of today's backend is chassis plumbing that Rahi supplies outright and is deleted rather than ported; the other half is the domain, which moves behind a port that preserves tenant and GitHub semantics exactly, negative authorization tests first. Stamping retires (it has never run in production); the fleet's disposition waits on one owner decision. Identity is a volume, not a database, so the volume is the migration's primary object and the evidence chain moves as original bytes with its original verifier. Cutover is staged behind a reverse proxy with a stated rollback, and acceptance is live, never a green unit suite.\n",
+    "summary": "The control plane becomes a Rahi cell: a manifest, migrations, routes, operator routes, and a one-line main that hands control to the chassis runner. Roughly half of today's backend is chassis plumbing that Rahi supplies outright and is deleted rather than ported; the other half is the domain, which moves behind a port that preserves tenant and GitHub semantics exactly, negative authorization tests first. Stamping retires (it has never run in production); the fleet's disposition waits on one owner decision. Identity is a volume, not a database, so the volume is the migration's primary object and the evidence chain moves as original bytes with its original verifier. Cutover is staged behind a reverse proxy with a stated rollback, and acceptance is live, never a green unit suite. Revised 2026-09-12: the spec is two parts approved separately. Part A is a new Rahi pilot cell that holds no live data. Part B migrates the running plane, and only after rehearsal evidence and a recorded cutover decision. The factory and fleet keep their behavior until their dispositions are adopted on their own.\n",
     "title": "The Rahi cell shell and the domain port: migration, cutover and rollback"
   },
-  "shardHash": "4684c8819f2909730a57d69d6b6675c9900453b4ce7eac0a3459ef26287ff362",
+  "shardHash": "7ad490747ad78a17ca4d75234080e535eb00980318c1d3ea3f27520381d32724",
   "specVersion": "1.2.0"
 }

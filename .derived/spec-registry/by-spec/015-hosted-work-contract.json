@@ -4,7 +4,8 @@
     "dependsOn": [
       "004-tenants-github-app",
       "008-governance-attestation",
-      "014-rahi-realignment"
+      "014-rahi-realignment",
+      "017-rahi-cell-migration"
     ],
     "establishes": [
       {
@@ -36,6 +37,6 @@
     "summary": "The wire contract between the control plane and a runner: how a runner is enrolled and authenticated, how a project and a job are identified, how a job binds to an exact revision and an exact policy, how a lease and its fencing token keep one writer, how heartbeat and cancellation work, what evidence the plane accepts and what it refuses to do with it, and how replay, idempotency and reconnection behave. One authority is named for every mutable transition. The schemas and their examples are published before either end is implemented, because two implementations of an unwritten contract drift. This spec covers the admission of work only; the authorization of an external effect is spec 016.\n",
     "title": "The hosted work contract: runners, jobs, leases and evidence intake"
   },
-  "shardHash": "e02306632b604e99a36be222d4544bb92219efa47d5287f2bbbbde4b255ab711",
+  "shardHash": "fb19385e1f12043cf59a972bd2d9d61fa31c32257f7275ec9a50a0b798454056",
   "specVersion": "1.2.0"
 }

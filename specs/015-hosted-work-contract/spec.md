@@ -8,6 +8,7 @@ depends_on:
   - "004-tenants-github-app"
   - "008-governance-attestation"
   - "014-rahi-realignment"
+  - "017-rahi-cell-migration"
 establishes:
   - { kind: directory, path: "specs/015-hosted-work-contract/" }
 summary: >
@@ -53,21 +54,27 @@ work, keeps exactly one writer per job, and accepts evidence honestly.
 ## 2. Territory
 
 Planned. A draft's territory is a declaration of intent, not a claim on
-existing code (spec-spine spec 076); the files below are named so review
-can judge the shape, and the spec claims them for real in the change that
-writes them.
+existing code (spec-spine spec 076); the places below are named so review
+can judge the shape, and the spec claims files for real in the change
+that writes them.
 
-- `backend/work/`: a new Encore.ts service (runners, projects, jobs,
-  leases, evidence intake), its entities, store and API.
-- `backend/work/schemas/`: the versioned JSON Schemas and their worked
-  examples, which are the published artifact this spec exists to produce.
-- `frontend/src/routes/`: a run list and a run detail route, reusing the
-  existing components behind the existing adapter.
+Revised 2026-09-12 (014 section 10.1). The first version put a new
+Encore.ts service in `backend/work/`. That would be an interim hosted
+engine on the EnRaHiTu plane, which the realignment's sequencing avoids,
+and it put the schemas in an AGPL-3.0 tree that an Apache-2.0 runner
+cannot embed.
 
-This spec touches `backend/tenants/` only through its existing
-owner-scoping helpers, by an `extends` edge on spec 004, and
-`backend/governance/` likewise through spec 008. It adds no table to
-either.
+- **The wire schemas, examples and fixtures** are published in
+  statecraft-cli's Apache-2.0 workspace, beside its draft 132. statecraft
+  authors their semantics in this spec, reviews them there, pins them by
+  digest here, and contributes no AGPL code to that workspace.
+- **The service** (runners, projects, jobs, leases, evidence intake) is
+  built in the Rahi pilot cell of spec 017 Part A, not in `backend/`.
+- **The UI**: a run list and a run detail view, reusing `frontend/`
+  components behind the pilot's adapter.
+
+The service reads tenant, installation and membership semantics through
+017's domain port and adds no table to `tenants/` or `governance/`.
 
 ## 3. What this spec refuses to do
 
@@ -100,33 +107,39 @@ sibling repository asking for it.
 
 **4.1 Enrolment is a two-step exchange.** A tenant admin, authenticated
 in the UI, mints a single-use enrolment code scoped to
-`{tenant, projects, expiry}`. The runner presents the code once and
-receives a runner credential. The code is consumed on first use,
-whatever the outcome, so a replayed code is refused rather than issuing a
-second credential.
+`{tenant, projects, expiry}`. The runner presents the code once, with an
+authenticated session (4.2), and a runner record is created. The code is
+consumed on first use, whatever the outcome, so a replayed code is
+refused rather than creating a second record.
 
-**4.2 The credential is audience-bound and short-lived.** It names the
-plane's resource URL as its audience, the tenant as its subject's scope,
-and an expiry. It follows rahi spec 025's resource-server shape (RS256,
-`aud` must contain the resource URL, a maximum lifetime, a `jti`
-deny-list for revocation), which is the contract the platform IdP already
-implements.
+**4.2 Authentication and authorization are separate records.** Proposed
+as 014 D-4, and not settled until the owner answers it. The runner
+authenticates with an access token the platform IdP issued to a person
+through Rahi's native public client (rahi draft 038: device grant or
+authorization code), audience-bound to the plane's resource URL and
+checked in rahi spec 025's resource-server shape (RS256, `aud`, a maximum
+lifetime, a `jti` deny-list). It is authorized by the runner record the
+enrolment created, bound to that person's `sub` and the tenant. The token
+says who is calling; only the runner record and a lease say what the
+caller may do. There is no second credential type.
 
-**4.3 Renewal is an open dependency.** rahi 025 defines no refresh for a
-bearer client and a runner's session outlives one token. This spec cannot
-choose between a refresh grant, a re-enrolment on expiry, and a longer
-lifetime for a registered runner until Rahi answers (014 R-1). Until
-then the contract states the requirement and not the mechanism: a runner
-must be able to continue a job across a credential expiry without losing
-its lease, and a runner that cannot renew must fail the job cleanly
-rather than silently stopping.
+**4.3 Renewal never touches a lease.** Leases and fences bind to
+`runnerId`, never to a token's `jti`, so a renewed token continues a job.
+Rahi `main` has no bearer renewal, and draft 038 sets lifetimes without a
+refresh rule. The proposed renewal is the device grant's refresh token,
+held per plane, issuer and audience, as statecraft-cli's D72 already
+plans. A runner that cannot renew fails its job cleanly (it reports a
+terminal state, or its lease expires to `abandoned`), and never silently
+stops. A runner with no person behind it needs a non-human principal that
+Rahi does not define; that class is out of the first slice.
 
 **4.4 A runner is a record, not a machine.** The plane stores
-`{runnerId, tenantId, label, class, issuer, audience, credentialExpiry,
-enrolledBy, lastSeenAt, revokedAt}`. It never stores the credential.
-`class` is one of `customer-controlled`, `registered-runner` or
-`platform-managed`, and it is assigned at enrolment by who minted the
-code and where the runner runs, never self-declared by the runner.
+`{runnerId, tenantId, label, class, principalSub, enrolledBy, lastSeenAt,
+revokedAt}`. It never stores a token. `class` is one of
+`customer-controlled`, `registered-runner` or `platform-managed`, and it
+is assigned at enrolment by who minted the code and where the runner
+runs, never self-declared by the runner. The first slice admits
+`customer-controlled` only.
 
 **4.5 Revocation is immediate and observable.** A revoked runner's next
 call fails with a typed refusal that says `revoked`, and its live jobs
@@ -192,25 +205,50 @@ cleanly rather than retrying.
 
 ## 7. Evidence intake
 
-**7.1 What is accepted.** An `acceptance.receipt` (statecraft-cli's
-schema version 1) and, optionally, the journal bundle it came from.
-statecraft writes no parser for either until statecraft-cli's fixture set
-(its draft 132) exists, including the negative set; the fixtures are the
-definition, and 014 C-2 requests them.
+**7.1 What is accepted, and what is kept.** An `acceptance.receipt`
+(statecraft-cli's schema version 1) and, optionally, the journal bundle it
+came from. statecraft writes no parser for either until statecraft-cli's
+fixture set (its draft 132) exists, including the negative set; the
+fixtures are the definition, and 014 C-2 requests them.
 
-**7.2 Four outcomes, never folded.** Each upload is evaluated on four
-independent axes, each `pass`, `fail`, `unknown` or `not-applicable`:
+Every accepted object is kept as its exact submitted bytes, addressed by
+SHA-256 over those bytes, and the evidence row and the ledger hold only a
+typed reference to it (014 section 10.3, proposal D-3). No submitted
+object passes through the governance ledger's canonicalizing append,
+which was measured to give two different integers one digest and to drop
+a duplicate member silently. Intake refuses what a producer's
+construction cannot bind unambiguously: a duplicate member, a number
+outside the producer's declared range, invalid UTF-8, a byte-order mark.
 
-| Outcome | Question |
-|---|---|
-| integrity | do the bytes, links and digests recompute? |
-| subject binding | does the receipt name the repository and revision this job named? |
-| issuer trust | was it produced by a key or anchor the plane trusts, established out of band? |
-| policy | does it satisfy the rules this job was admitted under? |
+**7.2 Four evidence dimensions, and admission separately.** Revised
+2026-09-12 as the proposed `statecraft.evidence-verdict` version 0 (014
+section 10.2 records its cross-repository status). Each upload is
+evaluated on four dimensions, each `pass`, `fail`, `unknown` or
+`not-applicable`, and each non-`pass` value carries a reason code from a
+closed, versioned list:
 
-No boolean summarizes them, no view invents one, and no policy reads a
-summary that does not exist. Today, for an unsigned chain, issuer trust
-is `unknown` for every upload, and saying so is the point.
+| Dimension | Question | `fail` | `unknown` | `not-applicable` |
+|---|---|---|---|---|
+| `integrity` | do the kept bytes recompute under the producer's declared construction, links and digests included? | a mismatch, or ambiguous input (7.1) | construction or MAJOR version unsupported; content withheld or redacted | never |
+| `signature` | does a signature present over the bytes verify? | present and invalid | algorithm or format unsupported | no signature, reason `unsigned` |
+| `issuerTrust` | is the signer a key enrolled from a root established out of band, valid at the evidence's time? | the key is revoked, expired or outside its enrolled scope | `signature` is not `pass`, the key is not enrolled, or the trust snapshot is unavailable | never |
+| `subjectBinding` | does the evidence name exactly the `{repo, commit, tree}` this job named? | it names another subject | the subject tree is unavailable | no subject was asked about |
+
+No boolean summarizes the four, no view invents one, and `unknown` or
+`not-applicable` never satisfies a requirement that names the dimension.
+Today every upload is `signature: not-applicable` (`unsigned`) and
+`issuerTrust: unknown`, and saying so is the point.
+
+**Admission is not a dimension.** It is `{decision: admit | refuse,
+policyDigest, reasons[]}`, evaluated under the job's `policyDigest` over
+the four dimensions, the runner's class (7.3) and the producer's claims.
+An `admit` whose inputs include a non-`pass` dimension names the policy
+clause that accepts it.
+
+**Producer claims are not dimensions.** What a payload asserts (a
+receipt's `passing`, a spec-spine snapshot's recompute and freshness) is
+reported as `claims[]` in the same value domain, keyed by producer type,
+and never feeds a dimension.
 
 **7.3 Trust classes are a property of the runner, not the payload.** A
 `customer-controlled` runner's evidence can be cryptographically perfect
@@ -221,11 +259,12 @@ class. A runner cannot raise its own class, and a payload cannot raise
 it either.
 
 **7.4 Incomplete and unknown are outcomes.** A receipt that omits a field
-the policy requires is `incomplete`, not `fail`. A recompute against a
-tool version the plane does not have is `unknown`. A bundle whose issuer
-is trusted but whose subject tree is unavailable is `unknown` on subject
-binding, never `pass` (014 C-1's ninth case). An outcome that cannot be
-established never becomes a positive one by default.
+the policy requires is refused at admission with reason `incomplete`; no
+dimension becomes `fail` because of it. A recompute against a tool version
+the plane does not have is `unknown`. A bundle whose issuer is trusted
+but whose subject tree is unavailable is `subjectBinding: unknown`, never
+`pass` (014 C-1's ninth case). A result that cannot be established never
+becomes a positive one by default.
 
 **7.5 Runtime assertions carry their population.** If an upload asserts
 anything about a running system (coverage, error rate, latency), it
@@ -248,10 +287,13 @@ itself.
 outcome unchanged, including the first outcome's failure. A repeat with
 the same key and a different body is a refusal, not an overwrite.
 
-**8.2 Evidence upload is idempotent on content.** The same receipt hash
-uploaded twice against the same job produces one evidence row and returns
-the first evaluation. The same receipt hash against a *different* job is
-a separate row with its own subject binding, which may differ.
+**8.2 Evidence upload is idempotent on exact bytes.** The same byte
+digest uploaded twice against the same job produces one evidence row and
+returns the first evaluation. The same bytes against a *different* job
+are a separate row with their own subject binding, which may differ. A
+byte-different upload whose producer digest equals an existing row's (a
+reformatted copy) is its own row and names the earlier one, so the copy
+is visible rather than silently merged.
 
 **8.3 Reconnection is a fence check.** A runner that reconnects
 mid-job presents `{jobId, fenceToken}`. Equal to current: it resumes.
@@ -279,15 +321,16 @@ Review's first job on this spec is to find a row with two owners.
 | job cancelled (intent) | tenant admin or platform operator | `cancelling` |
 | job terminal (`succeeded`, `failed`, `cancelled`) | the runner holding the current fence | terminal report |
 | job terminal (`abandoned`, `orphaned`) | the plane, on lease expiry or revocation | lease expiry |
-| evidence accepted | the plane | evidence row with four outcomes |
-| evidence evaluated against policy | the plane, under the job's `policyDigest` | policy outcome |
+| evidence accepted | the plane | kept bytes, and an evidence row with four dimensions |
+| evidence admitted or refused | the plane, under the job's `policyDigest` | admission result |
 | an external effect | **not here**: spec 016 | |
 
 ## 10. The schemas are published first
 
-The artifact this spec produces before either end is implemented is
-`backend/work/schemas/`: a versioned JSON Schema per payload, each with
-at least one worked example and one refused example. Versioning follows
+The artifact this spec produces before either end is implemented is a
+versioned JSON Schema per payload, each with at least one worked example
+and one refused example, published in statecraft-cli's Apache-2.0
+workspace (section 2). Versioning follows
 the family's rule: an unknown MAJOR is `unsupported`, which is neither
 pass nor fail; unknown members are refused, not ignored; every emitted
 document has sorted keys.
@@ -301,31 +344,44 @@ exists to prevent drift.
 
 These are the acceptance tests, not examples. Eight come from
 statecraft-cli's doc 05 section 14; the ninth is this spec's addition and
-014 C-1 records it as such.
+014 C-1 records it as such. N-10 to N-15 were added on 2026-09-12: the
+first three from the byte measurements in 014 section 10.3, the rest so
+that cancellation, retry and enrolment replay each have a refusal to
+show.
 
 | # | Case | Required behavior |
 |---|---|---|
 | N-1 | credential whose `aud` is not the plane's resource URL | refused; no job state changes |
 | N-2 | credential valid but for another tenant | refused as not found, never as forbidden; existence is not leaked |
-| N-3 | the same evidence uploaded twice | one row, first outcome returned, no second evaluation |
+| N-3 | the same evidence bytes uploaded twice | one row, first result returned, no second evaluation |
 | N-4 | a call carrying an expired or superseded fence token | refused with the current fence named |
 | N-5 | a runner reconnecting mid-job | resumes on an equal fence, refused on a lower one |
 | N-6 | a candidate sha that does not match the job's `baseCommit` lineage | refused; the job does not move |
-| N-7 | a receipt for a revision the job did not name | accepted as a row, subject binding `fail`, policy cannot pass |
-| N-8 | a bundle that verifies from its own anchor, issuer untrusted | integrity `pass`, issuer trust `fail` or `unknown`; never satisfies a policy that requires a trusted issuer |
-| N-9 | issuer trusted, subject tree unavailable | subject binding `unknown`; never `pass` |
+| N-7 | a receipt for a revision the job did not name | accepted as a row, `subjectBinding: fail`, admission refuses |
+| N-8 | an unsigned bundle that verifies from its own anchor | `integrity: pass`, `signature: not-applicable` (`unsigned`), `issuerTrust: unknown`; refused by any policy that requires a trusted issuer |
+| N-9 | issuer trusted, subject tree unavailable | `subjectBinding: unknown`; never `pass` |
+| N-10 | a bundle with a duplicate member placed before the real one, which statecraft-cli's own verifier accepts | `integrity: fail` (`ambiguous-json`), admission refuses, bytes not kept |
+| N-11 | an integer outside the producer's declared range | `integrity: fail`; never normalized to a nearby value |
+| N-12 | a whitespace or key-order variant of an already accepted bundle | a separate row naming the earlier one; both kept byte-for-byte; neither re-serialized to compare |
+| N-13 | cancellation requested, the runner never confirms, the lease expires | `abandoned`, never `cancelled` or `failed`; a later terminal report on the old fence is refused |
+| N-14 | a job take whose response was lost, retried | the same lease and fence returned; no second lease issued |
+| N-15 | an enrolment code presented a second time | refused; no second runner record |
 
 ## 12. Acceptance
 
-1. The schemas in `backend/work/schemas/` validate every worked example
-   and refuse every refused example, and the suite runs in `make stack`.
-2. Each of N-1 through N-9 is a test that fails if the behavior changes.
+0. Before any service code: one statecraft-cli 132 fixture is admitted
+   and one refused, each reporting its four dimensions, its admission
+   result and reason codes a reader can follow, and N-10 to N-12 exist as
+   fixtures in the same manifest.
+1. The published schemas validate every worked example and refuse every
+   refused example, and the suite runs in CI in both repositories.
+2. Each of N-1 through N-15 is a test that fails if the behavior changes.
 3. A runner enrols, takes a job, heartbeats, reports terminal state and
-   uploads evidence against a local plane, with no GitHub App and no
-   cluster.
+   uploads evidence against the pilot cell run locally, with no GitHub App
+   and no live data.
 4. Every mutating endpoint refuses a repeated `Idempotency-Key` with a
    different body, and returns the first outcome for an identical one.
-5. No code path in `backend/work/` spawns a process, and a test asserts
+5. No code path in the work service spawns a process, and a test asserts
    it: the refusal in section 3 is mechanical.
 6. A job's every mutable transition has exactly one authority in the
    code, matching section 9's table.
@@ -338,15 +394,24 @@ This spec cannot be implemented to completion without three answers it
 does not own, and none of them should be mocked around:
 
 - **Rahi R-1**: bearer-token renewal for a client whose session outlives
-  one token (section 4.3).
+  one token (section 4.3). Status 2026-09-12: `main` has none; draft 038
+  proposes native clients and lifetimes without a refresh rule; 014 D-4
+  proposes the device grant's refresh token and leases bound to the
+  runner record. Rahi 038 must also land its CSRF exemption, because a
+  bearer write is refused `403 csrf` today.
 - **statecraft-cli C-2**: the receipt and bundle fixtures, including the
-  negative set, as the definition of version 1 (section 7.1).
+  negative set, as the definition of version 1 (section 7.1). Status: 132
+  is a merged draft with no fixture files; 014 section 10.2 asks for the
+  verdict columns and byte mutations before they are minted.
 - **statecraft-cli C-4**: whether the hosted runner is the engine binary
   its draft 130 distributes, configured with a hosted endpoint, or a
-  separate member (section 4.4's `class`).
+  separate member (section 4.4's `class`). Proposed in 014 D-4: the same
+  binary.
+- **Rahi's pilot prerequisites**: a pinned release (draft 039) and 017
+  Part A, since the service is built in the pilot cell (section 2).
 
-Sections 4 through 6, 8, 9 and 10 can be specified and built without
-them. Section 7's parser cannot.
+Sections 4 through 6, 8, 9 and 10 can be specified without them. Section
+7's parser cannot be written, and no section can be built.
 
 ## 14. Out of scope
 

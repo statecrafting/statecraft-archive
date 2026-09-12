@@ -68,16 +68,22 @@ rather than repeated:
 ## 2. Territory
 
 Planned (spec-spine spec 076); claimed for real in the change that writes
-these files.
+the files. Revised 2026-09-12 for the same two reasons as spec 015
+section 2: no interim hosted engine on the EnRaHiTu plane, and shared
+schemas an Apache-2.0 consumer can embed.
 
-- `backend/permits/`: permit issuance, evaluation and revocation; the
-  reservation of budgets and waiver uses; the intent and outcome
-  reconciler.
-- `backend/permits/schemas/`: the versioned schemas and worked examples,
-  published before either end is implemented, as in spec 015 section 10.
-- `backend/governance/`: reached by an `extends` edge on spec 008. The
-  chain gains an issuer (section 5); its record shape and file store are
-  008's and are not redefined here.
+- **The permit service** (issuance, evaluation and revocation; budget and
+  waiver-use reservation; the intent and outcome reconciler): in the Rahi
+  pilot cell of spec 017 Part A.
+- **The permit schemas and worked examples**: published beside spec 015's
+  in statecraft-cli's Apache-2.0 workspace, before either end is
+  implemented.
+- **The pure evaluator** of section 12.3 (a function of permit, policy,
+  time, usage, fence and evidence): a candidate for the same permissive
+  workspace, since the local broker evaluates the same shape.
+- **The governance chain**: spec 008's record shape and construction are
+  not redefined here. The issuer of section 5 starts a new chain in the
+  pilot cell; the legacy file chain is not re-anchored (section 5.4).
 
 ## 3. The WorkPermit
 
@@ -128,7 +134,7 @@ this spec depends on that behavior rather than duplicating it.
 | `environment` | the exact target, named; `null` for source-only actions |
 | `policyDigest` | the policy this was evaluated under, from the base |
 | `approvals[]` | each approval's subject, time and the policy clause it satisfies |
-| `evidence[]` | the receipt and bundle digests required, with their four outcomes as evaluated |
+| `evidence[]` | the typed references required (byte digest, producer digest, subject), with their four dimensions and admission result as evaluated |
 | `notBefore`, `notAfter` | a short validity, sized to the effect |
 | `nonce`, `idempotencyKey` | replay refusal, and reconciliation on retry |
 | `fence` | the lease fence that must still be current at effect time |
@@ -171,22 +177,35 @@ ceremonies out of scope. So today, every verification of our own evidence
 answers `unknown` on issuer trust, and this spec makes that answer
 explicit rather than letting a `verified: true` stand in for it.
 
-**5.1 Four outcomes, here as in intake.** Integrity, subject binding,
-issuer trust and policy are evaluated and reported separately, never
-folded (spec 015 section 7.2). A permit that requires a trusted issuer
-cannot be satisfied by an `unknown`.
+**5.1 Four dimensions and admission, here as in intake.** `integrity`,
+`signature`, `issuerTrust` and `subjectBinding` are evaluated and
+reported separately, never folded, and admission is a separate result
+(spec 015 section 7.2, revised 2026-09-12). A permit that requires a
+trusted issuer cannot be satisfied by `unknown` or `not-applicable`.
 
 **5.2 The issuer is established out of band.** A trust root reaches the
 plane by an operator action recorded as its own attestation, never from
 inside a bundle, a payload or a candidate. Adding a trust root is itself
 an authority change and goes through section 6.
 
-**5.3 The first issuer is an open decision.** 014 O-4 records the
-options. This spec specifies the shape of the answer (an issuer id, its
-public key, the scope of what it may attest, its validity window, and a
-revocation path) and does not pick one. Nothing here is blocked by that:
-an unsigned chain with an honest `unknown` is strictly better than a
-signed chain whose key nobody decided about.
+**5.3 The first issuer is proposed, not decided.** This spec fixes the
+shape of the answer: an issuer id, its public key, the scope of what it
+may attest, its validity window, and a revocation path. 014 D-2 proposes
+the answer. An offline owner-held root is published by fingerprint out of
+band. It enrols an online platform issuer held in the pilot cell's secret
+custody. Rotation and revocation are root-signed records, and
+`issuerTrust` is evaluated against the enrolment set valid at the
+evidence's time, passed in explicitly. Nothing here is blocked by the
+decision: an unsigned chain with an honest `unknown` is strictly better
+than a signed chain whose key nobody decided about.
+
+**5.4 No retroactive anchor.** Added 2026-09-12. The existing production
+chain is not signed after the fact. Calling `ledgerAnchor` on it now
+would sign a root chosen after the records it roots, which manufactures
+continuity instead of recording it. Its records keep
+`issuerTrust: unknown` (`unsigned`) permanently. The first record of the
+issuer's chain references the legacy head hash and the archived bytes'
+digest as history, never as trust.
 
 ## 6. Trusted-base authority change
 
@@ -206,6 +225,15 @@ verification block of a spec, the gate configuration and its hash, the
 resolver exclusions and the ownership ratchet, and the trust roots of
 section 5. The list is data, versioned with the policy, not a constant in
 code.
+
+Decision (2026-09-12), recorded because the section was silent on it:
+spec-spine's draft 088 names the classes `authority`, `constitutional`,
+`verification` and `policy`, and has no class for waiver rules or for
+trust roots. A waiver rule that lives in `spec-spine.toml` is caught by
+`policy`, without being told apart from any other configuration edit.
+Trust roots are plane state, not tree state, so the plane classifies them
+itself and 088 never will. A finer waiver class is a request to
+spec-spine (014 section 10.2), not a dependency of this spec.
 
 **6.3 What an authority change requires.** Approval under the prior
 policy by a party the prior policy names; a permit whose `policyDigest`
@@ -294,6 +322,13 @@ original verifier forever; a migration never re-derives an old digest
 under a new rule, and never substitutes a reconstruction for the bytes
 that were signed.
 
+A link to evidence another producer made is a typed reference `{type,
+schemaVersion, digestAlg, byteDigest, byteLength, producerDigest,
+subject}` to bytes kept verbatim (014 section 10.3, D-3). The object
+itself never enters a ledger payload. The governance ledger's append
+parses and re-serializes, and was measured folding two different
+integers into one digest and dropping a duplicate member.
+
 **8.2 A missing link is `not recorded`.** Not absent, not assumed
 satisfied. Every field a future contract will add (scope, closure,
 permit) reports `not recorded` until it exists, so a reader can tell a
@@ -352,7 +387,7 @@ these are those five plus what the sections above require.
 |---|---|---|
 | N-1 | a permit for a different subject or tenant than the caller | refused at effect time; the effect does not happen |
 | N-2 | a candidate that weakens ownership, the constitution, a waiver rule or a verification block | classified under the base's policy, refused without a prior-policy approval |
-| N-3 | a permit or evidence from an untrusted issuer | issuer trust `fail` or `unknown`; a policy requiring a trusted issuer cannot pass |
+| N-3 | a permit or evidence from an untrusted issuer | `issuerTrust` is `fail` or `unknown`; a policy requiring a trusted issuer refuses |
 | N-4 | an expired permit | refused at effect time even though it was valid at issue |
 | N-5 | a replayed permit (nonce or `maxUses` exhausted) | refused; the reservation is not double-spent |
 | N-6 | required evidence missing | refused, and the refusal names which evidence |
@@ -361,10 +396,13 @@ these are those five plus what the sections above require.
 | N-9 | an external call whose response is lost | reconciled by reading, never retried blindly, never recorded as failed |
 | N-10 | an approval by the requester where the policy names a second party | does not count toward the requirement |
 | N-11 | a restore | the chain is preserved: original bytes, original digests, original verifiers |
+| N-12 | a foreign evidence object sent through a canonicalizing ledger append instead of by typed reference | refused before the append; no digest is recorded for re-serialized bytes |
+| N-13 | a request to anchor or sign the legacy chain after the fact | refused; its records keep `issuerTrust: unknown` (`unsigned`) |
+| N-14 | a trust root, or an issuer enrolment, carried inside a bundle or candidate | ignored as a root; `issuerTrust` unchanged; the attempt recorded |
 
 ## 12. Acceptance
 
-1. N-1 through N-11 are tests that fail if the behavior changes.
+1. N-1 through N-14 are tests that fail if the behavior changes.
 2. One hosted effect, end to end, rejects N-1, N-2, N-3, N-4 and N-6,
    which is the packet's exit criterion stated as a single run.
 3. A permit's evaluation is a pure function of `(permit, policy, time,
@@ -384,18 +422,28 @@ these are those five plus what the sections above require.
 
 - **spec-spine**: draft 087 (AuthoritySnapshot) and draft 088
   (classification under the base's rules) must be approved before
-  `authorityRef` and section 6.1 are more than a reference to an
-  uncommitted working-tree file. 014 S-3 requests they be committed.
-- **statecraft-cli**: receipt version 1's fixtures (its draft 132), and
-  agreement that the action permit lives here, which its D52 and D71
-  already state.
-- **Rahi**: nothing blocking. Section 10.1 deliberately does not assume
-  the deployed application is a cell.
+  `authorityRef` and section 6.1 are more than references to proposals.
+  Status 2026-09-12: both are committed as drafts (spec-spine PR #179),
+  087's D3 (framed digest or the legacy `specAttestationHash`) is open,
+  and no release after `v0.18.0` exists, so no installed binary carries
+  either.
+- **statecraft-cli**: receipt version 1's fixtures (its draft 132),
+  agreement that the action permit lives here (its doc 04 D52 and doc 05
+  D71 already state it), and acceptance of the verdict contract (014
+  section 10.2).
+- **statecrafting**: none blocking. Its 009 F-3 is answered in 014
+  section 10.3; this spec puts no foreign object in a ledger payload.
+- **Rahi**: the pilot cell (spec 017 Part A) for the service, and no
+  second durable store, so the issuer's chain is built in the cell's own
+  store. Section 10.1 deliberately does not assume the deployed
+  application is a cell.
 
 ## 14. Out of scope
 
-- **The first trust root.** 014 O-4.
-- **The neutral verifier's implementation and home.** 014 O-5; this
+- **Choosing the first trust root.** Proposed as 014 D-2; the owner
+  decides.
+- **The neutral verifier's implementation.** Its proposed home is
+  statecraft-cli's Apache-2.0 workspace (014 section 10.2); this
   repository is AGPL-3.0 and cannot host a permissive verifier.
 - **Defining an SBOM or build-description format.** Section 9.
 - **Spec-fitness, pressure, CVE and compliance analytics.** Deferred
