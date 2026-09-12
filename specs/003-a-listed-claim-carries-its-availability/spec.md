@@ -217,7 +217,10 @@ Immediately under `## Projects`:
 
 ### 4.4 statecraft
 
-Keep the paragraph. Append:
+Drop the Rust badge, keep TypeScript. The napi addons moved to the
+`statecrafting` repository, and GitHub now reports the tree as 90 per cent
+TypeScript with no Rust at all; the badge is a claim about this repository and
+it is no longer true of it. Keep the paragraph. Append:
 
 > **Available:** the app shell, Postgres adoption, tenants, factory, fleet,
 > the governance web app, the attestation ledger and the admin frontend are
@@ -375,6 +378,9 @@ Replace the whole `## Why these licenses` section with:
   them is its own decision.
 - **Community health files.** Still unwritten, still a spec each (001
   section 2).
+- **`profile/artifacts/statecraft-ing-logo.jpg`.** On disk, referenced by
+  neither rendered surface. Using it or removing it is a change to 001's
+  imagery territory (its section 3.4) and is not this spec's to make.
 
 ## 6. Open decisions, for the approver
 
@@ -492,6 +498,8 @@ grep -qF 'github.com/statecrafting/rahi' profile/README.md
 grep -qF 'github.com/statecrafting/hqgit' profile/README.md
 grep -qF 'Nothing else on this page requires it' profile/README.md
 grep -qF 'specification only' profile/README.md
+# 4.4: the statecraft entry no longer claims a language its tree does not have.
+! awk '/^#### \[statecraft\]/{f=1;next} /^####|^###/{f=0} f' profile/README.md | grep -qF 'logo=rust'
 # 2: what 001 still owns is untouched.
 grep -qF 'AI can write the code' profile/README.md
 grep -q '```mermaid' profile/README.md

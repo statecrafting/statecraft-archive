@@ -52,6 +52,6 @@
     "summary": "The landing page lists eleven repositories in the present tense and closes with a license rationale that is, in two places, not true of the files on disk. This spec amends 001 section 3.1: every project entry states what is available at the level of a capability rather than a product, the family gains the two repositories it has grown since (rahi and hqgit, the second labelled as specification only), statecraft-cli is described as the tooling monorepo it became on 2026-09-09, the license section names the three licenses that actually ship and stops claiming what a license prevents, and the page acquires a first adoption link that runs locally with no account. It does not adopt the September 2026 realignment's proof-protocol roadmap, which is proposed and unratified in the repositories that would implement it.\n",
     "title": "A listed claim carries its availability"
   },
-  "shardHash": "457704c09977287ad818b1fbfa514725fd4805ce9ed76c79e33706f763eaa38a",
+  "shardHash": "d06ab56631ed9711a777496a2d8eead2ad72ccc3c2ea03b797595bf1acb5833b",
   "specVersion": "1.2.0"
 }
