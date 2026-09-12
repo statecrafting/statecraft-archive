@@ -109,9 +109,9 @@ export const MILESTONES: Milestone[] = [
       "A tamper-evident attestation ledger with an action gate and trust window, and the statecraft binary that drives the same governed verbs from the terminal and over MCP.",
     specs: [
       { repo: "statecraft", id: "008-governance-attestation" },
-      { repo: "statecraft-cli", id: "001-cli-mcp-thesis" },
-      { repo: "statecraft-cli", id: "004-governance-verbs" },
-      { repo: "statecraft-cli", id: "005-mcp-server" },
+      { repo: "statecraft-cli", id: "101-cli-mcp-thesis" },
+      { repo: "statecraft-cli", id: "104-governance-verbs" },
+      { repo: "statecraft-cli", id: "105-mcp-server" },
     ],
   },
 ];
