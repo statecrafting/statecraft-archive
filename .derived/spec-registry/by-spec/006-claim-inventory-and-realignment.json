@@ -35,10 +35,10 @@
       "Verification"
     ],
     "specPath": "specs/006-claim-inventory-and-realignment/spec.md",
-    "status": "draft",
+    "status": "approved",
     "summary": "statecraft.ing's half of the 2026-09-11 family realignment. Every claim the site publishes is inventoried and classified as verified available, current implementation work, proposed, historical or unsupported, with the evidence named. The corrections that needed no decision landed with this change, in spec 002 section 8, spec 003 section 7 and spec 004 section 8. What is left is recorded here as proposals, because each one changes what spec 002 section 2 or spec 004 section 3.3 requires the site to say, and the successor thesis that would motivate them is statecraft spec 014, still draft. Also carries the requests to sibling repositories and the vocabulary packet statecrafting-profile asked for. This spec is a record, not a work order: it amends no approved spec and authorizes no publication.\n",
     "title": "The claim inventory: what this site may say today, and what waits on a decision"
   },
-  "shardHash": "85ad58d965ba5e7f49c07e618617678f32154df1cc76da62946839402e421ac1",
+  "shardHash": "ee1f42cff385656f0b4286431d035c3856d99e03a30c996ec6cbe43714c61dfe",
   "specVersion": "1.2.0"
 }
