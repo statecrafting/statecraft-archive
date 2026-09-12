@@ -43,8 +43,8 @@
       }
     ],
     "specId": "010-evidence-byte-seam",
-    "specStatus": "draft"
+    "specStatus": "approved"
   },
   "schemaVersion": "1.1.0",
-  "shardHash": "f87d4819d3a338983e13fc486f642f090c8cdb6ad918b1751f158381cfccbd48"
+  "shardHash": "30bbfc7700f9d1f7aaa961f5dc4f9e92b714a699f51f063027c9236e7e20ce94"
 }

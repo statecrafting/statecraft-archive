@@ -1,7 +1,7 @@
 ---
 id: "010-evidence-byte-seam"
 title: "The evidence-byte seam: original bytes beside the ledger, never through it"
-status: draft
+status: approved
 implementation: pending
 created: "2026-09-12"
 depends_on:
@@ -29,7 +29,10 @@ summary: >
   pin it, and add a portable admission rule, aligned with statecraft-cli
   113 B-2, that refuses what the ledger would silently rewrite. It
   supplies 23 regression vectors and the probe that produced every
-  result here. Draft: nothing is approved, and no addon file changes.
+  result here. Approved 2026-09-12 on the repository owner's
+  instruction, scoped to the addon contract A-1 to A-5 as its seven open
+  decisions were answered that day (section 10). Publishing 0.2.0 is a
+  separate act.
 ---
 
 # 010: The evidence-byte seam
@@ -64,13 +67,22 @@ the inputs it would otherwise rewrite silently.
 014 is a draft on a local branch (`c879de1`, not on its remote as of
 2026-09-12). Nothing here amends spec 005 or changes a published package.
 
+**Approved, 2026-09-12.** The paragraph above is this spec as drafted. The
+repository owner answered D-1 to D-7 the same day (section 8) and
+instructed that a scoped approval be recorded before implementation.
+The scope is A-1 to A-5 and section 9's acceptance. It does not cover
+publishing 0.2.0, D-6's format declaration, spec 009, or any fleet
+change. Section 10 records the ratification.
+
 ## 2. Territory
 
 This spec's territory is `specs/010-evidence-byte-seam/`: this file, the
 regression vectors under `vectors/`, and the probe under `probe/`. The
 `extends` edge declares that section 4's work would reach into
 `addon/governance-native/`, which spec 005 owns. It amends nobody, and
-while this spec is `draft` it claims nothing there.
+while this spec is `draft` it claims nothing there. Approved, the edge is
+how section 9's changes to that crate reach spec 005's unit; spec 005
+still owns the directory.
 
 | file | role |
 |---|---|
@@ -282,13 +294,20 @@ non-canonical spellings a strict decoder must refuse.
   flat-string record and of a record holding `12345678901234567890123` as
   the 0.1.0 binaries write them. A change of float formatter then fails a
   pull request instead of failing a verification years later.
+  **Added 2026-09-12 (D-3, D-4):** the historical verifier is preserved
+  by digest, whatever D-4's production inventory later finds.
+  `verifiers/governance-native-0.1.0.v1.json` MUST name each published
+  0.1.0 platform binary by its npm tarball integrity and the SHA-256 of
+  its `.node` file, and MUST mark the one statecraft deploys. A rebuild of
+  0.1.0's source is not that verifier (3.4). No 0.1.0 package is
+  unpublished.
 - **A-3. A portable admission rule, additive.** Two new functions,
   `canonicalizePortable(json)` and `ledgerAppendPortable(stateDir,
   record)`. They MUST refuse, with an error naming the JSON pointer and a
   reason code, any input holding a duplicate member at any depth
   (`duplicate-member`), a number that is not an integer
-  (`non-integer-number`), an integer outside the safe range
-  (`unsafe-integer`, boundary per D-5), or text that is not valid Unicode
+  (`non-integer-number`), an integer outside -(2^53 - 1) through
+  2^53 - 1 inclusive (`unsafe-integer`, D-5), or text that is not valid Unicode
   (`invalid-unicode`). For every input they admit, they MUST return
   exactly what `canonicalize` and `ledgerAppend` return, record hash
   included. That keeps one construction and one `ledgerVerify`, lets
@@ -313,8 +332,9 @@ token (a strict visitor), not the `Value`.
 | V03, V04 | refuse `duplicate-member` |
 | V05, V06, V07, V19, V20 | refuse `unsafe-integer` |
 | V08, V09 | refuse `non-integer-number` |
-| V17 | per D-5 |
-| V12, V13, V15, V16 | refused, as today |
+| V17 | refuse `unsafe-integer` (D-5, decided 2026-09-12) |
+| V12 | refuse `invalid-unicode` (D-5's decision names invalid Unicode) |
+| V13, V15, V16 | refused, as today |
 | V14 | not representable at a `String` seam (3.2) |
 | V01, V02, V10, V11, V18, C01, C02, C03 | admitted, output identical to the lenient function |
 
@@ -343,6 +363,11 @@ Agreed on the second and third. On the first, two changes are proposed.
    If statecraft prefers the major form, the rule is the same and only
    the names and version change (D-2).
 
+**Decided 2026-09-12 (D-1, D-2).** Both as proposed: the stricter rule,
+through additive `canonicalizePortable` and `ledgerAppendPortable` in
+0.2.0, with the existing functions' behavior and hashes preserved. The
+major form is not taken.
+
 ### 4.4 The reference is opaque to the addon
 
 The addon does not interpret the typed reference. Statecraft's D-3 form
@@ -355,7 +380,8 @@ agreement, not this seam's. The seam's only condition is 3.2's: a
 reference stays byte-identical when its members are in the portability
 set and its keys are in UTF-8 order (C02). With A-3, a reference outside
 the set is refused. A reference with keys out of order (C03) is still
-admitted and sorted. Refusing that too is D-7.
+admitted and sorted. Refusing that too is D-7, decided no on 2026-09-12:
+admitted reference input is not required to be in canonical spelling.
 
 ## 5. The regression inputs
 
@@ -397,7 +423,12 @@ offered to statecraft-cli's draft 132 as candidates for its negative set.
 - The other three addons' `Cargo.lock` files. Pinning all four is a spec
   007 question; A-2 pins the one whose hashes are load-bearing.
 - Publishing anything. A release is a tag, after approval and
-  implementation, and no version is republished.
+  implementation, and no version is republished. Publishing 0.2.0 is
+  distinct from implementing it and needs its own authorization.
+- The permissive format declaration D-6 decides. It is a later spec,
+  written against the rights holder's explicit grant.
+- statecraft's read-only inventory of its production chain (D-4). It is
+  verification work, not a prerequisite for A-2.
 
 ## 7. This repository's positions on sibling text
 
@@ -410,46 +441,68 @@ reviewed.
 | statecraft 014 D-3 | **Accepted** as it binds the addon (4.1): items 1, 2, 3, 5, 6 and 7. Item 4 accepted with the two cautions of 3.2. |
 | statecraft 014 section 10.3, the narrower request | **Counterproposed** (4.3): portability set plus duplicates, as additive names in 0.2.0. |
 | statecraft 017 section 7 | **Accepted**, with one precision. "0.1.0's `ledgerVerify`" means the three published binaries listed in section 3, kept fetchable for as long as the archive is kept, not a rebuild of 0.1.0's source (3.4). |
-| statecraft-cli 113 B-2 | **Adopted** as A-3's rule, subject to D-5's boundary. |
+| statecraft-cli 113 B-2 | **Adopted** as A-3's rule. D-5, decided 2026-09-12, fixes the boundary 113's prose leaves ambiguous at -(2^53 - 1) through 2^53 - 1, which is what `statecraft-journal`'s `MAX_SAFE_INTEGER` already enforces (statecraft-cli `main`, `f570b0a`). Correcting 113's "±2^53" is statecraft-cli's edit. |
 | statecraft-cli 132 | **Offered**: the 23 vectors and 6 mutations (009 C-1, moved here). |
 | spec-spine design note 04, section 4.7 | **Noted**: "Refuse bytes that are not the canonical serialization of their own parse" is stricter than A-3; D-7. |
 | Rahi 041 B-3, hqgit 02 R-2 | **Not this seam's decision** (4.4). |
 
 ## 8. Open decisions
 
-Each is stated so that a yes or a no is a complete answer.
+Each is stated so that a yes or a no is a complete answer. All seven were
+answered by the repository owner on 2026-09-12. Each answer follows its
+question; the questions stand as drafted.
 
 - **D-1 (statecraft).** Does the admission rule refuse the portability
   set's complement as well as duplicate members? Recommended: yes (4.3).
+  **Decided: yes.** Safer intake, without silently breaking legacy
+  callers.
 - **D-2 (statecraft, then this repository's owner).** Additive
   `canonicalizePortable` and `ledgerAppendPortable` in 0.2.0, rather than
   changed `canonicalize` and `ledgerAppend` in 1.0.0? Recommended: yes,
-  additive.
+  additive. **Decided: yes, additive, in 0.2.0.** The existing functions'
+  behavior and hashes are preserved. Publishing the new version is a
+  separate act from implementing it.
 - **D-3 (this repository's owner).** Commit
   `addon/governance-native/Cargo.lock` and add A-2's golden test?
   Recommended: yes. It is the only change here that protects existing
-  records.
+  records. **Decided: yes.**
 - **D-4 (statecraft).** Does any of the production chain's records hold a
   non-integer number or an integer beyond 64 bits? If none does, A-2
   protects future records and rebuilds only. If one does, the published
   `linux-x64-gnu` or `linux-arm64-gnu` binary that wrote it is part of
   the archive's verifier and should be recorded beside the archive by
-  sha256.
+  sha256. **Decided: preserve the deployed published verifier by digest
+  regardless of the answer** (A-2's addition). The read-only production
+  inventory is verification work, not a prerequisite for protecting
+  future builds, and a source tree tagged 0.1.0 alone is not sufficient
+  as the historical verifier.
 - **D-5 (this repository, with statecraft-cli).** Is 2^53 (V17) admitted?
   113 B-2 says "integers within `±2^53`" and also "outside the safe
   range", and JavaScript's safe range ends at 2^53 - 1. Recommended:
   refuse 2^53, matching `Number.isSafeInteger`, once statecraft-cli
-  confirms what its implementation does.
+  confirms what its implementation does. **Decided: no.** Portable
+  integers are -(2^53 - 1) through 2^53 - 1. Duplicate members,
+  non-integer number tokens and invalid Unicode are refused. The boundary
+  is resolved explicitly here rather than left waiting on 113's prose.
 - **D-6 (statecraft; 009 F-4, moved here).** Is a permissive declaration
   of the ledger's on-disk format wanted: layout, genesis seed, chain id,
   unsigned-anchor rule, with conformance vectors? If so, where does it
   live? Recommended: yes, as a document plus vectors, since statecraft's
   016 section 14 says its own repository cannot host a permissive
-  verifier.
+  verifier. **Decided: yes, prepared in this repository's existing
+  Apache-2.0 root, with statecraft-cli as its consumer.** Current file
+  licenses are preserved. Any new grant is recorded explicitly by the
+  rights holder, and no AGPL-3.0 code is relicensed by implication. It is
+  not permission to translate protected source wholesale. The work is
+  outside this spec's approved scope (section 6).
 - **D-7 (this repository's owner).** Should admission also refuse bytes
   that differ from their own canonical serialization (C03, V01, V02)?
   Recommended: not now. No consumer submits reference bytes whose
   identity it then claims, and statecraft builds its references in code.
+  **Decided: no.** Canonical spelling of admitted reference input is not
+  required. Reference normalization and an opaque byte store are
+  different seams: opaque storage round-trips bytes, and typed intake
+  refuses malformed input.
 
 ## 9. Acceptance
 
@@ -474,9 +527,17 @@ If this spec is approved, it is satisfied by:
    unedited. `make addons`, `make gate` and
    `make typecheck test licenses` pass, and the AGPL-3.0 tier is
    unchanged.
-7. The release is `governance-native` 0.2.0 by tag. No version is
+7. The crate and npm manifests read 0.2.0. Publishing it is a tag, a
+   separate act with its own authorization (D-2). No version is
    republished, and the JSON shape of every existing function is
    unchanged.
+8. `verifiers/governance-native-0.1.0.v1.json` names all three published
+   0.1.0 binaries. Its integrity values equal the registry's, its
+   `.node` digests equal section 3's, and it marks the deployed one
+   (A-2's addition, D-4).
+
+Items 7 and 8 replace the drafted item 7, "The release is
+`governance-native` 0.2.0 by tag", as D-2 and D-4's answers require.
 
 A `## Verification` block is added with the implementation, when each of
 its commands exists.
@@ -504,3 +565,29 @@ its commands exists.
   ryu-era `serde_json` would break the records those binaries wrote. The
   historical construction is the one already shipped, and A-2 pins that
   one.
+- **2026-09-12. Ratified on the repository owner's instruction, scoped.**
+  This spec was authored by an agent session. The repository owner
+  answered D-1 to D-7 and instructed that a scoped approval be recorded
+  before implementation. An agent session then set `status: approved` on
+  that instruction. The harness rule is that ratification is a human act
+  and an agent never flips a spec it wrote on its own authority. It is
+  not weakened here, and it is why the exception is written down, as
+  spec 008's was. The approval covers A-1 to A-5 and section 9's
+  acceptance as answered. It does not cover:
+  - tagging or publishing 0.2.0
+  - D-6's format declaration
+  - statecraft's production inventory (D-4)
+  - spec 009, which the same owner deferred the same day
+  - any fleet change
+
+  Merging PR #20 is a separate publishing action, taken when authorized.
+  Implementation proceeds on this spec's existing branch without waiting
+  for that merge. An earlier refusal of an automated merge is not a
+  reason to loosen any permission rule.
+- **2026-09-12. Why the deployed verifier is `linux-x64-gnu`.**
+  statecraft's lockfile (`main` `9658e29`) pins all three 0.1.0 platform
+  packages by the integrity values the npm registry reports.
+  Its cluster definition (`infra/hetzner/cluster.yaml`) runs `cx23` and
+  `cx43` instances, which are x86-64. The linux-arm64 and darwin-arm64
+  binaries are recorded too, because a rebuild on another host or a
+  developer's verification may use them.
