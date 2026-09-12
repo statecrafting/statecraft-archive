@@ -1,0 +1,45 @@
+{
+  "record": {
+    "created": "2026-09-11",
+    "dependsOn": [
+      "000-bootstrap"
+    ],
+    "establishes": [
+      {
+        "kind": "file",
+        "path": "README.md"
+      },
+      {
+        "kind": "file",
+        "path": "profile/README.md"
+      },
+      {
+        "kind": "directory",
+        "path": "profile/artifacts/"
+      }
+    ],
+    "id": "001-the-profile-is-the-org-front-door",
+    "implementation": "complete",
+    "origin": {
+      "retroactive": true
+    },
+    "sectionHeadings": [
+      "001: The profile is the org front door",
+      "1. Purpose",
+      "2. Territory",
+      "3. Behavior",
+      "3.1 The landing page carries four things, in this order",
+      "3.2 A listed repository is a real repository",
+      "3.3 The repository README points, it does not duplicate",
+      "3.4 Owned imagery is referenced relatively",
+      "4. Out of scope",
+      "Verification"
+    ],
+    "specPath": "specs/001-the-profile-is-the-org-front-door/spec.md",
+    "status": "approved",
+    "summary": "The statecrafting organisation presents itself through exactly two rendered surfaces: `profile/README.md`, which GitHub renders at github.com/statecrafting, and the repository's own `README.md`, which tells a contributor which file to edit. The profile states the thesis, draws the two-plane shape of the family, and lists every repository with its license and its one-paragraph reason to exist. A repository that is not listed is not part of the family's public story.\n",
+    "title": "The profile is the org front door"
+  },
+  "shardHash": "6e40816aae3c3a808feaf9d0a3d52b6186a085f642e84dc8b406eafc5fe1c19b",
+  "specVersion": "1.2.0"
+}

@@ -2,3 +2,16 @@ tor cruft
 .DS_Store
 *.swp
 .idea/
+
+# --- spec-spine ---
+# Wall-clock metadata: the one non-deterministic derived artifact, excluded
+# from every determinism and golden check, so it must never be committed.
+.derived/**/build-meta.json
+
+# NOT ignored, deliberately: .derived/spec-registry/ and .derived/codebase-index/
+# are the committed shard trees. Committing them is what makes `spec-spine check`
+# a freshness gate on a pull request: CI compares the corpus against what the
+# branch committed.
+
+# Claude Code per-clone overrides, never the shared harness.
+.claude/settings.local.json

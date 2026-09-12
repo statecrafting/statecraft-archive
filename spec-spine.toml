@@ -1,0 +1,106 @@
+# spec-spine governs this repository: the statecrafting organisation's
+# `.github` repo (community health files and the public org profile).
+#
+# This is a code-free corpus. There is no Cargo workspace and no npm package,
+# so the language halves of the gate and of `govern.yml` are clean no-ops; what
+# is governed here is prose and the agent harness that edits it.
+
+# A FLOOR, not an exact pin. The failure guarded is one-directional (a binary
+# older than the corpus it judges). 0.18.0 is the floor because the kit hooks
+# in `.claude/settings.json` call `spec-spine check`, the single freshness verb
+# that release added (spec 075), and `/verify` wraps `spec-spine verify`.
+[meta]
+required_version = ">=0.18.0"
+
+[manifest]
+metadata_namespace = "spec-spine"
+
+[domains]
+# Disabled: with one product surface there is nothing for a taxonomy to
+# separate, and L-002 would warn on every spec to say so.
+allowed = []
+
+[kind]
+allowed = []
+
+[layout]
+specs_dir     = "specs"
+derived_dir   = ".derived"
+standards_dir = "standards/spec"
+schemas_dir   = "standards/schemas"
+# No manifests in this repository; the probes below find none, which is the
+# specify-first case rather than a misconfiguration.
+cargo_workspace = "Cargo.toml"
+npm_workspaces = ["package.json", "pnpm-workspace.yaml"]
+
+[index]
+# Files folded into the global-inputs scalar, so a change to one stales every
+# shard until the trees are regenerated and committed.
+#
+# WATCH THE GLOB FORM: `dir/**` matches directories and therefore no files.
+# Every pattern below ends in a filename or `/*`, and every pattern is
+# deliberately narrow. This list hashes what is on disk, tracked or not, so a
+# bare `.claude/**/*` would fold in `.DS_Store` and `settings.local.json` and
+# make the shard hashes machine-dependent.
+#
+# Every claimed file unit in this corpus appears below, which is what keeps
+# L-008 silent: a claimed path in no content hash can change without staling
+# any shard, and on a corpus whose whole deliverable is prose that would mean a
+# rewritten front door leaving the ledger reading "fresh". Restaling all three
+# shards on a profile edit is the honest outcome here; it would be the wrong
+# trade for a tree of source.
+extra_hashed_inputs = [
+  "standards/**/*.md",
+  ".github/workflows/*.yml",
+  # Spec 001 claims these: the rendered surfaces.
+  "README.md",
+  "profile/README.md",
+  # Spec 000 claims these: what is committed, and how the shards merge.
+  ".gitignore",
+  ".gitattributes",
+  # The harness spec 002 claims these, so an edit to any of them must stale the
+  # ledger that describes them.
+  "AGENTS.md",
+  "CLAUDE.md",
+  ".claude/settings.json",
+  ".claude/rules/*.md",
+  ".claude/agents/*.md",
+  ".claude/skills/*/SKILL.md",
+  ".githooks/*.sh",
+  ".mcp.json",
+  "Makefile",
+]
+resolver_exclusions = ["target", "node_modules", ".derived", "dist", "build", ".next"]
+
+[branding]
+compiler_id = "spec-spine"
+indexer_id  = "spec-spine"
+
+[coupling]
+waiver_keyword = "Spec-Drift-Waiver:"
+# ADDITIVE to the built-in generic floor; it cannot remove an entry.
+# JetBrains project metadata is per-developer noise, not governed content.
+bypass_prefixes = [".idea/"]
+# C-002: refuse a changed source file that no spec specifically claims.
+#
+# OFF, and not as a concession. The ownership ratchet walks the source files
+# under a discovered package, and this repository has no package to discover:
+# no Cargo.toml, no package.json, nothing but prose. `index coverage` says so
+# in as many words, and with `--fail-on-untraced` it exits 1 rather than 0,
+# because a gate that cannot ask the question refuses to imply it asked and got
+# a clean answer (spec 080).
+#
+# Turning this on would therefore assert nothing while making every skill that
+# reads "when require_ownership is on" add a flag that fails the gate. What
+# actually binds the tracked paths here is C-001: all fifteen of them are
+# claimed by 000, 001 or 002, so a change to any one without an authoring edit
+# to its owning spec is refused. Revisit this the day this repository gains a
+# manifest.
+require_ownership = false
+# Off: no bot opens dependency bumps against a repository with no manifests.
+auto_waive_dependency_only = false
+
+[lint]
+# On: this corpus files by date, so a `depends_on` naming a higher ordinal
+# would be a real inversion rather than a domain-first filing choice.
+require_ordinal_monotonic_depends_on = true
