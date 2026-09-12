@@ -285,6 +285,64 @@ Two units, both through `extends`, neither by amending the bootstrap spec:
   `AGENTS.md` says so explicitly rather than leaving a session to discover
   the difference by hitting it.
 
+## 8. Status note (2026-09-12): the ratchet reaches `app/`, and what coupling does not prove
+
+On 2026-09-12 the owner adopted revision-4 row WEB-05 (spec 006 D-10): narrow
+the blanket `app/` ownership claim under the governing specs, separately from
+the copy change; report that a comment-only spec edit passes coupling; and ask
+upstream for better semantics without making that a prerequisite for copy.
+Coupling presence is not proof of substantive specification review.
+
+### 8.1 Section 3.5's ratchet did not hold under `app/`, and now does
+
+Section 3.5 says a changed source file no spec specifically claims is `C-002`
+and that `index coverage --fail-on-untraced` refuses it. Under `app/` neither
+was true, because spec 001 claimed the directory. Spec 001 section 7 narrows
+that claim to the ten files it defines. Each probe below ran in a throwaway
+worktree with a probe commit on top of the named revision, `couple` against
+`origin/main`:
+
+| Probe | `main` at `f074586` | with spec 001 section 7 |
+|---|---|---|
+| N9: an unclaimed `app/lib/unclaimed-claim.ts`, `index coverage --fail-on-untraced` | exit 0, 33/33 claimed | exit 1, 32/33, one unclaimed |
+| N9: the same file, `couple` | exit 1, `C-001` naming spec 001 as its owner | exit 1, `C-002`, not claimed by any spec |
+| N8a: a line added to `app/lib/products.ts`, no spec edit | exit 1, `C-001`, owners 001 and 004 | exit 1, `C-001`, owner 004 |
+| N8c: the same line, and a comment appended to spec 001 | exit 0, no drift | exit 1, `C-001`, owner 004 |
+
+So the ratchet now fires under `app/`, and the scaffold spec no longer clears
+a copy change it never described. `check` reports 31 unwitnessed claims where
+it reported 23, all inside `[lint] unwitnessed_allowed`: ten file units replace
+one directory unit, and section 3.5's gap is unchanged in kind.
+
+### 8.2 A comment is enough for the coupling gate
+
+| Probe | `main` at `f074586` | with spec 001 section 7 |
+|---|---|---|
+| N8b: the N8a line, and an HTML comment appended to spec 004 | exit 0, no drift | exit 0, no drift |
+
+The gate checks that an owning spec's bytes moved in the same change. That is
+its documented contract, and it is met by an edit that says nothing about the
+change. Narrowing ownership makes the gate ask the right spec; it does not make
+the gate read the answer. In this repository "governed" therefore means the
+owning spec moved with the code, never that the spec was reviewed, which is how
+spec 006 section 6 already defines the word. Whether a spec edit actually
+describes its change stays a human reading at review time, and merging stays a
+checkpoint (section 3.3).
+
+### 8.3 Requested of spec-spine, and a prerequisite for nothing here
+
+As a consumer of the released CLI, this repository requests, without depending
+on any of it:
+
+- a coupling check that can tell an edit changing what an owning spec says from
+  one that adds only a comment or whitespace, and can refuse the second;
+- a `C-001` report that marks which listed owners hold the path through a
+  directory claim, so a catch-all owner is visible at review time;
+- a lint that warns when one spec's directory claim contains files another spec
+  claims by name, which is how this repository's case arose.
+
+No copy change on this site waits on any of them (WEB-05).
+
 ## Verification
 
 ```verify:cli
