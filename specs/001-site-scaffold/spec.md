@@ -196,7 +196,7 @@ two effects the corpus did not intend:
   this spec satisfied coupling for a change to spec 004's content.
 
 Spec 005 section 8 records the measurements. On 2026-09-12 the owner adopted
-revision-4 row WEB-05, which answers spec 006's D-10: narrow the blanket
+row WEB-05 of the family's revision-4 decision package: narrow the blanket
 `app/` claim under the governing specs, separately from any copy change.
 
 `establishes` now names the ten files under `app/` that section 3 defines: the

@@ -87,6 +87,6 @@
     "summary": "The marketing and docs site, built as a fully static React Router v7 app (framework mode, prerendered, no SSR at runtime) deployed to GitHub Pages under statecraft.ing. Amended 2026-07-14: React Router v7 replaces the earlier Astro choice, harvesting the OAP-era statecraft web app (ecosystem content, the spec-registry viewer) and keeping the whole product family on one frontend stack. The registry viewer runs over build-time-baked shards from the public repos, so the site stays static and every claim stays checkable. The apex DNS cutover is authorized: the legacy control plane no longer owns the domain.\n",
     "title": "statecraft.ing: React Router v7 static site, Pages deploy, apex cutover"
   },
-  "shardHash": "92bc49809db9ce89df43c86a664a9cf2b7fca998310e81648367be7244c34ad8",
+  "shardHash": "444c4162c121008a4b9c1a8d06df936ec7d63bfb3c057655c584323f95f7c24a",
   "specVersion": "1.2.0"
 }

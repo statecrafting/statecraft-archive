@@ -287,7 +287,8 @@ Two units, both through `extends`, neither by amending the bootstrap spec:
 
 ## 8. Status note (2026-09-12): the ratchet reaches `app/`, and what coupling does not prove
 
-On 2026-09-12 the owner adopted revision-4 row WEB-05 (spec 006 D-10): narrow
+On 2026-09-12 the owner adopted row WEB-05 of the family's revision-4 decision
+package: narrow
 the blanket `app/` ownership claim under the governing specs, separately from
 the copy change; report that a comment-only spec edit passes coupling; and ask
 upstream for better semantics without making that a prerequisite for copy.
@@ -311,8 +312,8 @@ worktree with a probe commit on top of the named revision, `couple` against
 
 So the ratchet now fires under `app/`, and the scaffold spec no longer clears
 a copy change it never described. `check` reports 31 unwitnessed claims where
-it reported 23, all inside `[lint] unwitnessed_allowed`: ten file units replace
-one directory unit, and section 3.5's gap is unchanged in kind.
+`main` reports 23, all inside `[lint] unwitnessed_allowed`, because spec 001
+now claims bare file units; section 3.5's gap is unchanged in kind.
 
 ### 8.2 A comment is enough for the coupling gate
 

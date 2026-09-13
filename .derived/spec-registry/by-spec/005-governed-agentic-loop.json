@@ -90,6 +90,6 @@
     "summary": "The harness is what an agent may do in this repository, so it gets an owner and the coupling gate holds it. This spec adopts the spec-spine kit at 0.18.0: ten skills that sequence the governed loop (prime, setup, next, build, verify, ship, shepherd, spec, and the commit and code-review skills the loop calls), four pipeline agents, four behavioral rules, read-only session hooks, a Makefile composite gate, an opt-in merge driver for the committed shards, and the AGENTS.md protocol every one of them reads as its project layer. It also repairs three defects the upgrade exposed in the governance config: five `extra_hashed_inputs` globs that matched no files, a CI workflow pinned four minor versions behind the corpus it judged, and generated typegen output counted as unclaimed source. With those fixed the ownership ratchet can be turned on honestly.\n",
     "title": "The governed agentic loop: the spec-spine kit as this repository's harness"
   },
-  "shardHash": "dc9283404e589823b89f96b1763df62788d573ade98e75d196746479df493368",
+  "shardHash": "7d8f8d86bbe7fdd2e388045e979bce0caf55f46f707403cf510c6f7975c8f747",
   "specVersion": "1.2.0"
 }
