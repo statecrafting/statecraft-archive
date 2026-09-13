@@ -45,11 +45,14 @@ jobs:
         working-directory: .
         run: cargo build -p statecraft-driver-codex --locked && ./target/debug/statecraft-driver-codex --member-manifest
       # The synthesis tests scaffold a target with `spec-spine init` (spec 035);
-      # the same binary the governance job installs.
+      # the same binary the governance job installs, which 109 D-2 pins to the
+      # release `[meta] required_version` names.
       - name: Install spec-spine
         working-directory: .
         run: |
-          curl -fsSL https://raw.githubusercontent.com/statecrafting/spec-spine/main/install.sh | sh
+          version="$(sed -n 's/^required_version = "[=^]*\([0-9][0-9.]*\)"$/\1/p' spec-spine.toml)"
+          test -n "$version" || { echo "spec-spine.toml pins no required_version"; exit 1; }
+          curl -fsSL https://raw.githubusercontent.com/statecrafting/spec-spine/main/install.sh | SPEC_SPINE_VERSION="v$version" sh
           echo "$HOME/.local/bin" >> "$GITHUB_PATH"
       - run: bun install --frozen-lockfile
       - run: bun run typecheck

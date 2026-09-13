@@ -53,6 +53,14 @@
         "spec": "110-corpus-merge",
         "unit": {
           "kind": "file",
+          "path": ".github/workflows/members.yml"
+        }
+      },
+      {
+        "nature": "additive",
+        "spec": "110-corpus-merge",
+        "unit": {
+          "kind": "file",
           "path": "spec-spine.toml"
         }
       },
@@ -96,6 +104,6 @@
     "summary": "The harness is what an agent may do in this repository, so it is claimed by a spec and held by the coupling gate. This spec adopts the spec-spine Claude Code kit (spec-spine 0.18.0, kit spec 082): ten repository-invariant skills forming the governed loop, four pipeline agents carrying this repo's project layer, four rules, the read-only hook set, a Makefile whose `make gate` is the one definition of the gate that CI and every session run, and the pin that refuses an older binary. It replaces the hand-copied five-skill harness that predated `spec-spine check`, and turns on the ownership ratchet now that every source file is specifically claimed.\n",
     "title": "Governed harness: the spec-spine kit as the loop this repo runs"
   },
-  "shardHash": "3eb05e520258d23ee4eb7e88b9bbee4c7c5e9808fc3c66d7eed89f9effc5850e",
+  "shardHash": "5ea57fd426ab2360e495fe0290c1d17dfb7e0db4846d2a19835fa825db7c398a",
   "specVersion": "1.2.0"
 }

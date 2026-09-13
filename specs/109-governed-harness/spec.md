@@ -22,6 +22,9 @@ extends:
   # filename 100 chose, so the owner keeps "there is a governance gate on
   # every PR" and 109 owns its shape.
   - { spec: "110-corpus-merge", unit: ".github/workflows/spec-spine.yml", nature: additive }
+  # 110 owns the members workflow; its spec-spine install honors the pin
+  # (D-2), which is harness policy, so 109 extends that one step's file.
+  - { spec: "110-corpus-merge", unit: ".github/workflows/members.yml", nature: additive }
   # 110 owns the configuration file; 109 adds the version pin, the hashed
   # governance inputs and the ownership ratchet, which are harness policy.
   - { spec: "110-corpus-merge", unit: "spec-spine.toml", nature: additive }
@@ -231,3 +234,20 @@ establish it) rather than at the one file 082 changed: every kit update
 regenerates whichever skills moved, so a per-file edge would have to be
 widened by hand on each one, and the durable statement is that adopting a
 kit legitimately rewrites the generated mirror.
+
+D-2 (2026-09-13). CI installs the release the pin names. Both workflows that
+install spec-spine (`spec-spine.yml`'s govern job and `members.yml`) read
+`[meta] required_version` from `spec-spine.toml` and pass it to the installer
+as `SPEC_SPINE_VERSION`, instead of taking the latest release. Measured the
+same day: spec-spine 0.19.0 was released at 18:11 UTC, after `main`'s last
+green run, and the next govern job (PR #44) installed it and refused at exit 3
+before running a verb, because the caret pin `0.18.0` excludes 0.19. That is
+§3.4's pin doing its job against a CI step that ignored it, which is the same
+drift §1 describes (a workflow on one version while `/setup` installed
+another). The version is read from the one place that declares it, so a
+deliberate bump of the pin moves CI with it. Rejected: adopting 0.19.0 in the
+same change, which is a kit update (its upgrade notes ask for the kit
+Makefile and the shepherd skill to be re-copied, and it tightens index
+freshness) and is left for its own decision; and a version literal in each
+workflow, a second and third copy of the pin to drift. Adopted on the owner's
+instruction.
