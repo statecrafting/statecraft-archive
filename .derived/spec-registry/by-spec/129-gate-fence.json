@@ -118,10 +118,74 @@
           "kind": "directory",
           "path": "docs/design/"
         }
+      },
+      {
+        "nature": "additive",
+        "spec": "017-stage-ship",
+        "unit": {
+          "kind": "file",
+          "path": "members/src/orchestrator/stages/ship.ts"
+        }
+      },
+      {
+        "nature": "additive",
+        "spec": "018-stage-shepherd",
+        "unit": {
+          "kind": "file",
+          "path": "members/src/orchestrator/stages/shepherd.ts"
+        }
+      },
+      {
+        "nature": "additive",
+        "spec": "021-orchestrator-daemon",
+        "unit": {
+          "kind": "file",
+          "path": "members/src/orchestrator/daemon.ts"
+        }
+      },
+      {
+        "nature": "additive",
+        "spec": "022-http-api-and-events",
+        "unit": {
+          "kind": "directory",
+          "path": "members/src/orchestrator/api/"
+        }
+      },
+      {
+        "nature": "additive",
+        "spec": "023-orchestrator-cli",
+        "unit": {
+          "kind": "file",
+          "path": "members/src/commands/orchestrator.ts"
+        }
+      },
+      {
+        "nature": "additive",
+        "spec": "024-web-ui",
+        "unit": {
+          "kind": "file",
+          "path": "members/web/test/fixtures.ts"
+        }
+      },
+      {
+        "nature": "additive",
+        "spec": "024-web-ui",
+        "unit": {
+          "kind": "file",
+          "path": "members/web/test/store.test.tsx"
+        }
+      },
+      {
+        "nature": "additive",
+        "spec": "034-adoption-preflight",
+        "unit": {
+          "kind": "file",
+          "path": "members/src/orchestrator/adopt/preflight.test.ts"
+        }
       }
     ],
     "id": "129-gate-fence",
-    "implementation": "pending",
+    "implementation": "complete",
     "references": [
       {
         "role": "context",
@@ -160,6 +224,7 @@
       "Verification",
       "6. Out of scope, and what stays open",
       "7. Resolved decisions",
+      "Status (2026-09-13, complete)",
       "Status (2026-09-12, approved)",
       "Status (2026-09-12)"
     ],
@@ -168,6 +233,6 @@
     "summary": "Spec 125 fenced the driven session so the broker is the only path that works and the journal is complete. The fence stops at the session. Every other place the engine runs code a repository controls inherits the daemon's whole environment: the gate suite in every round, the bracket, the engine's own git (whose hooks a tracked hooks directory supplies), the broker's push (whose pre-push hook runs beside the one credential the broker holds), and the verify stage's acceptance lines. Each was measured on 2026-09-12 seeing a fabricated token from the daemon's environment. This spec gives every such path a named disposition: gate, bracket and candidate git run with the session's fenced environment; credentialed git runs with no repository hooks; the verify stage reads acceptance at the base revision and runs it behind a fence unless the operator journals an allowance. A refusal fails the gate and acceptance even when a command swallows the exit code, and the refusal is counted by the supervisor, where the child that was refused cannot erase it. The property is credential protection, not hostile-code isolation.\n",
     "title": "The gate fence: acceptance runs in the world the session worked in, not in the daemon's"
   },
-  "shardHash": "f20f49ee8cdeec7fd2ad17fec5ea78cda427c80fb7031961d86d356459bd58bc",
+  "shardHash": "9ddb83c735145f61d2bd20cab5ae73b1b4041bad0ebbe6308cb673514b5fc5e8",
   "specVersion": "1.2.0"
 }

@@ -10,7 +10,7 @@
 import * as fs from "fs";
 import { join } from "path";
 
-import { buildFence, fencePath } from "./fence";
+import { applyFence, buildFence, fencePath, type FenceChannel, type GitIdentity } from "./fence";
 
 // --- the environment deny list (B-3) ----------------------------------------
 
@@ -43,6 +43,20 @@ export function scrubEnv(env: NodeJS.ProcessEnv): Record<string, string> {
   return out;
 }
 
+// 129 B-1 and D-1: the one expression every fenced child receives, the
+// session's as the gate's and the engine's own git in the candidate. With no
+// fence (121 D-5's in-place mode) it is the scrub alone, which is what an
+// in-place session receives too.
+export function fencedEnv(fenceDir: string | null): Record<string, string> {
+  return applyFence(scrubEnv(process.env), fenceDir);
+}
+
+// 129 B-7: what a git invocation that keeps the daemon's credential passes, so
+// no hook from the shared git directory or a tracked hooks directory runs
+// beside that credential. Measured on git 2.50.1: a tracked `pre-push` hook
+// that exits 1 blocks a plain push and does not run under this flag.
+export const WITHOUT_REPOSITORY_HOOKS: readonly string[] = ["-c", "core.hooksPath=/dev/null"];
+
 // --- the worktree (B-1) -----------------------------------------------------
 
 export interface OpenCandidateParams {
@@ -54,6 +68,9 @@ export interface OpenCandidateParams {
   readonly branch: string;
   // The commit a fresh branch starts from (119 B-2's resolved base).
   readonly baseSha: string;
+  // 129 B-3: the supervisor the fence's shims report to. Absent builds 125's
+  // fence, whose only record is its log.
+  readonly channel?: FenceChannel | null;
 }
 
 export interface Candidate {
@@ -67,8 +84,15 @@ export interface Candidate {
   readonly fenceDir: string;
 }
 
-function git(cwd: string, args: readonly string[]): { exitCode: number; stdout: string; stderr: string } {
-  const result = Bun.spawnSync(["git", ...args], { cwd });
+// `env` absent is the daemon's own environment: the reads below that touch
+// only configuration (an origin URL, the operator's identity) and the removal
+// of a worktree, none of which runs repository-controlled code.
+function git(
+  cwd: string,
+  args: readonly string[],
+  env?: Record<string, string>
+): { exitCode: number; stdout: string; stderr: string } {
+  const result = Bun.spawnSync(["git", ...args], env === undefined ? { cwd } : { cwd, env });
   return {
     exitCode: result.exitCode,
     stdout: new TextDecoder().decode(result.stdout).trim(),
@@ -76,10 +100,20 @@ function git(cwd: string, args: readonly string[]): { exitCode: number; stdout: 
   };
 }
 
-function requireGit(cwd: string, args: readonly string[], label: string): string {
-  const result = git(cwd, args);
+function requireGit(cwd: string, args: readonly string[], label: string, env?: Record<string, string>): string {
+  const result = git(cwd, args, env);
   if (result.exitCode !== 0) throw new Error(`candidate: ${label} failed (exit ${result.exitCode}): ${result.stderr}`);
   return result.stdout;
+}
+
+// 129 D-12: the name and email the operator's git would commit under, read
+// before the fence redirects git away from the operator's configuration.
+export function readGitIdentity(repoDir: string): GitIdentity {
+  const read = (key: string): string | null => {
+    const result = git(repoDir, ["config", "--get", key]);
+    return result.exitCode === 0 && result.stdout.length > 0 ? result.stdout : null;
+  };
+  return { name: read("user.name"), email: read("user.email") };
 }
 
 export function candidatePath(homeDir: string, project: string, branch: string): string {
@@ -97,9 +131,15 @@ export function openCandidate(params: OpenCandidateParams): Candidate {
   const path = candidatePath(params.homeDir, params.project, branch);
   // 125 B-2: the fence is rebuilt on every open, before the worktree is
   // touched, so a session never runs against shims left by a crashed round.
-  const fenceDir = buildFence(fencePath(params.homeDir, params.project, branch));
+  const fenceDir = buildFence(fencePath(params.homeDir, params.project, branch), {
+    channel: params.channel ?? null,
+    identity: readGitIdentity(repoDir),
+  });
+  // 129 B-6: the fence exists before the worktree does, so `worktree add`
+  // (whose `post-checkout` hook is the candidate's code) runs inside it.
+  const env = fencedEnv(fenceDir);
   if (fs.existsSync(join(path, ".git"))) {
-    const current = requireGit(path, ["branch", "--show-current"], "git branch --show-current");
+    const current = requireGit(path, ["branch", "--show-current"], "git branch --show-current", env);
     if (current !== branch) {
       throw new Error(`candidate: ${path} is a worktree on "${current}", not "${branch}"; remove it before reopening`);
     }
@@ -111,13 +151,13 @@ export function openCandidate(params: OpenCandidateParams): Candidate {
   fs.mkdirSync(join(params.homeDir, "candidates", params.project), { recursive: true });
   // `git worktree prune` first: a worktree whose directory vanished still
   // holds its branch, and `add` would refuse the branch as checked out.
-  git(repoDir, ["worktree", "prune"]);
-  const exists = git(repoDir, ["show-ref", "--verify", "--quiet", `refs/heads/${branch}`]).exitCode === 0;
+  git(repoDir, ["worktree", "prune"], env);
+  const exists = git(repoDir, ["show-ref", "--verify", "--quiet", `refs/heads/${branch}`], env).exitCode === 0;
   if (exists) {
-    requireGit(repoDir, ["worktree", "add", path, branch], `git worktree add ${branch}`);
+    requireGit(repoDir, ["worktree", "add", path, branch], `git worktree add ${branch}`, env);
     return { path, branch, reused: true, fenceDir };
   }
-  requireGit(repoDir, ["worktree", "add", "-b", branch, path, baseSha], `git worktree add -b ${branch}`);
+  requireGit(repoDir, ["worktree", "add", "-b", branch, path, baseSha], `git worktree add -b ${branch}`, env);
   return { path, branch, reused: false, fenceDir };
 }
 
@@ -132,9 +172,10 @@ export function closeCandidate(repoDir: string, path: string): void {
 }
 
 // The paths a candidate changed against its base, repository-relative, for
-// the receipt's policy-sensitive set (121 B-5).
-export function changedPaths(candidateDir: string, baseSha: string, headSha: string): string[] {
-  const result = git(candidateDir, ["diff", "--name-only", `${baseSha}..${headSha}`]);
+// the receipt's policy-sensitive set (121 B-5). 129 B-6: inside the fence the
+// candidate was worked in, or the scrub in place.
+export function changedPaths(candidateDir: string, baseSha: string, headSha: string, fenceDir: string | null = null): string[] {
+  const result = git(candidateDir, ["diff", "--name-only", `${baseSha}..${headSha}`], fencedEnv(fenceDir));
   if (result.exitCode !== 0) throw new Error(`candidate: git diff --name-only failed: ${result.stderr}`);
   return result.stdout.length === 0 ? [] : result.stdout.split("\n");
 }

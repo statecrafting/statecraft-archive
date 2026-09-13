@@ -525,6 +525,8 @@ export function projectsView(rows: readonly ProjectRowInput[], nowMs: number): P
       // path. Registry state, so an unreadable state root does not lose it.
       gate: project.gate,
       policy: project.policy,
+      // 129 B-9: the verify allowance, on the same path for the same reason.
+      verify: project.verify,
     };
     try {
       const records = row.records();

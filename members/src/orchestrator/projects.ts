@@ -81,6 +81,24 @@ export interface QualificationVerdict {
   readonly adoptable?: boolean;
 }
 
+// 129 B-9: whether a project's verify-stage acceptance lines run behind a
+// fence (the default) or with the daemon's environment. Operator registry
+// state, journaled like the gate contract, and never read from a spec or any
+// file in the repository, which a session can edit.
+export type VerifyAllowance = "fenced" | "inherit";
+export const VERIFY_ALLOWANCES: readonly VerifyAllowance[] = ["fenced", "inherit"];
+
+export interface RecordedVerifyAllowance {
+  readonly allowance: VerifyAllowance;
+  // Who journaled it. "default" is a chain with no record, which is `fenced`
+  // and a complete answer: nobody allowed anything.
+  readonly source: ProjectSource | "default";
+  // The journaling record's envelope timestamp; null for the default.
+  readonly setAt: string | null;
+}
+
+export const DEFAULT_VERIFY_ALLOWANCE: RecordedVerifyAllowance = { allowance: "fenced", source: "default", setAt: null };
+
 // A verdict as read back out of the chain. `checkedAt` is the recording
 // record's own envelope timestamp rather than a field the verdict carries, so
 // there is exactly one clock in the chain and it is the journal's.
@@ -112,6 +130,8 @@ export interface Project {
   // 123 B-2: the lifecycle policy, registry state beside the gate. A chain
   // that predates 123 folds to the default flagged legacy.
   readonly policy: RecordedLifecyclePolicy;
+  // 129 B-9: the verify allowance and its source, shown on the project.
+  readonly verify: RecordedVerifyAllowance;
 }
 
 // Keyed by name, in registration order (a project re-registered after removal
@@ -144,6 +164,8 @@ export const PROJECT_KINDS = {
   // chain by B-8 rather than inferred by the fold.
   gateSet: "project.gate.set",
   policySet: "project.policy.set",
+  // 129 B-9: the verify allowance, on the gate contract's reasoning.
+  verifySet: "project.verify.set",
 } as const;
 
 // The projects chain lives in the daemon home: projects.jsonl plus its own
@@ -306,6 +328,7 @@ export function foldProjects(records: readonly JournalRecord[]): ProjectsSnapsho
           // is different from saying it has none to run.
           gate: LEGACY_GATE_CONTRACT,
           policy: LEGACY_LIFECYCLE_POLICY,
+          verify: DEFAULT_VERIFY_ALLOWANCE,
         });
         break;
       }
@@ -355,6 +378,22 @@ export function foldProjects(records: readonly JournalRecord[]): ProjectsSnapsho
         const name = asString(o, "name", kind);
         const current = projects.get(name);
         if (current) projects.set(name, { ...current, policy: parseRecordedPolicy(o, kind) });
+        break;
+      }
+      case PROJECT_KINDS.verifySet: {
+        const o = asObject(record.payload, kind);
+        const name = asString(o, "name", kind);
+        const current = projects.get(name);
+        if (current) {
+          projects.set(name, {
+            ...current,
+            verify: {
+              allowance: parseVerifyAllowance(asString(o, "allowance", kind), kind),
+              source: asString(o, "source", kind) as ProjectSource,
+              setAt: record.ts,
+            },
+          });
+        }
         break;
       }
       case PROJECT_KINDS.removed: {
@@ -430,6 +469,32 @@ export interface SetProjectGateParams {
   readonly chain: JournalHandle;
   readonly name: string;
   readonly gate: GateContract;
+}
+
+export interface SetProjectVerifyAllowanceParams {
+  readonly chain: JournalHandle;
+  readonly name: string;
+  readonly allowance: VerifyAllowance;
+  readonly source: ProjectSource;
+}
+
+export function parseVerifyAllowance(value: string, context: string): VerifyAllowance {
+  if (!(VERIFY_ALLOWANCES as readonly string[]).includes(value)) {
+    throw new Error(`projects: ${context} expected a verify allowance (${VERIFY_ALLOWANCES.join(" or ")}), got "${value}"`);
+  }
+  return value as VerifyAllowance;
+}
+
+// 129 B-9: sets the verify allowance, journaled as its own record. Appended
+// even when unchanged, as arm and disarm are: the chain records what was asked
+// and by whom. `inherit` is the operator's journaled say-so that this
+// project's acceptance lines need the daemon's environment; nothing a session
+// can write reaches this record.
+export function setProjectVerifyAllowance(params: SetProjectVerifyAllowanceParams): ProjectMutation {
+  requireLive(params.chain, params.name);
+  const allowance = parseVerifyAllowance(params.allowance, "setProjectVerifyAllowance");
+  const record = params.chain.append(PROJECT_KINDS.verifySet, { name: params.name, allowance, source: params.source });
+  return mutationOf(params.chain, record, params.name);
 }
 
 export interface SetProjectPolicyParams {

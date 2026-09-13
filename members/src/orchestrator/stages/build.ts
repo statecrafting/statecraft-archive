@@ -21,8 +21,24 @@ import type { JournalHandle, JsonValue } from "../journal";
 import { createProcessDriver, type Driver, type SessionResult } from "../driver";
 import type { ModelTier } from "../models";
 import { profilePayload, resolveProfileSource, type ProfileSource } from "../profile";
-import { candidatePath, changedPaths, closeCandidate, openCandidate, originUrl } from "../candidate";
-import { readFenceRefusals } from "../fence";
+import {
+  candidatePath,
+  changedPaths,
+  closeCandidate,
+  fencedEnv,
+  openCandidate,
+  originUrl,
+  WITHOUT_REPOSITORY_HOOKS,
+} from "../candidate";
+import {
+  FENCE_MESSAGES,
+  NO_FENCE_TALLY,
+  openFenceChannel,
+  toolsBetween,
+  type FenceChannel,
+  type FencedTool,
+  type FenceTally,
+} from "../fence";
 import { latestReceipt, mintReceipt, receiptPayload, RECEIPT_KIND, SENSITIVE_KIND, UNSTABLE_KIND, type Receipt } from "../receipt";
 import { buildCapsule, renderCapsule } from "../handoff";
 import type { CostCeiling } from "../budget";
@@ -113,15 +129,48 @@ export interface Runner {
   // --- session driving (delegates to spec 014's driver) ---
   runSession(options: RunnerSessionOptions): Promise<SessionResult>;
 
-  // 125 B-7: how many times the fence refused during the round just run. A
-  // non-zero count is a session that tried to publish around the broker,
-  // which is the signal that a prompt still asks for what the boundary
-  // forbids. Zero in the in-place mode, which has no fence (121 D-5).
+  // 125 B-7: how many times the fence refused a session since the fence was
+  // built. A non-zero count is a session that tried to publish around the
+  // broker, which is the signal that a prompt still asks for what the
+  // boundary forbids. Zero in the in-place mode, which has no fence (121 D-5).
+  // 129 B-3: read from the supervisor's count, never the log, and without
+  // the refusals of the processes the runner spawned itself (the gate, the
+  // engine's git), which are the gate's to account for.
   //
   // Optional for the same reason `candidateHome` may be null: a fixture
   // Runner is a world without candidates, and requiring the method would
   // make 125 edit test doubles owned by 021 and 026 for no behavior.
   fenceRefusals?(): number;
+
+  // 129 B-3: the supervisor's whole count for the open fence, gate and
+  // session alike, and whether a fence is applied at all. A stage reads it
+  // immediately before and after the gate suite; the difference is the
+  // gate's. Optional for fenceRefusals's reason; absent reads as no fence.
+  fenceTally?(): RunnerFenceTally;
+}
+
+export interface RunnerFenceTally extends FenceTally {
+  readonly applied: boolean;
+}
+
+const NO_RUNNER_FENCE: RunnerFenceTally = { applied: false, ...NO_FENCE_TALLY };
+
+// 129 B-3: the fence record on gate and verify evidence. Required, with an
+// explicit zero (125 D-3's rule): a missing count must not read as "nothing
+// was refused".
+export interface FenceRecord {
+  readonly applied: boolean;
+  readonly refusals: number;
+}
+
+// 129 B-4: why a round whose commands may all have exited 0 is not accepted.
+export const GATE_FENCE_REFUSED = "gate-fence-refused";
+export const FENCE_REFUSED_KIND = "acceptance.fence-refused";
+
+export interface GateFenceRefusal {
+  readonly reason: typeof GATE_FENCE_REFUSED;
+  readonly refusals: number;
+  readonly tools: readonly FencedTool[];
 }
 
 const GATE_TAIL_BYTES = 16 * 1024;
@@ -132,8 +181,15 @@ function tailText(text: string, maxBytes: number): string {
   return new TextDecoder().decode(bytes.subarray(bytes.length - maxBytes));
 }
 
-function runProcessSync(cwd: string, cmd: readonly string[]): { exitCode: number; stdout: string; stderr: string } {
-  const result = Bun.spawnSync(cmd as string[], { cwd });
+// `env` absent is the daemon's own environment, which only the credentialed
+// git below keeps (129 B-7); everything that runs repository-controlled code
+// passes the fenced one.
+function runProcessSync(
+  cwd: string,
+  cmd: readonly string[],
+  env?: Record<string, string>
+): { exitCode: number; stdout: string; stderr: string } {
+  const result = Bun.spawnSync(cmd as string[], env === undefined ? { cwd } : { cwd, env });
   return {
     exitCode: result.exitCode,
     stdout: new TextDecoder().decode(result.stdout),
@@ -141,8 +197,8 @@ function runProcessSync(cwd: string, cmd: readonly string[]): { exitCode: number
   };
 }
 
-function requireOk(cwd: string, cmd: readonly string[], label: string): void {
-  const result = runProcessSync(cwd, cmd);
+function requireOk(cwd: string, cmd: readonly string[], label: string, env?: Record<string, string>): void {
+  const result = runProcessSync(cwd, cmd, env);
   if (result.exitCode !== 0) {
     throw new Error(`build: ${label} failed (exit ${result.exitCode}): ${result.stderr.trim()}`);
   }
@@ -151,8 +207,9 @@ function requireOk(cwd: string, cmd: readonly string[], label: string): void {
 // 119 B-2 / D-5: `origin/<branch>` after a fetch when the remote answers,
 // else the local branch (a fixture world, or a checkout with no remote).
 // Neither resolving is an error the preflight turns into `base-unresolved`.
+// 129 B-7: the fetch keeps the daemon's credential and runs no repository hook.
 export function resolveBaseSha(repoDir: string, defaultBranch: string): string {
-  const remote = runProcessSync(repoDir, ["git", "fetch", "--quiet", "origin", defaultBranch]);
+  const remote = runProcessSync(repoDir, ["git", ...WITHOUT_REPOSITORY_HOOKS, "fetch", "--quiet", "origin", defaultBranch]);
   if (remote.exitCode === 0) {
     const ref = runProcessSync(repoDir, ["git", "rev-parse", "--verify", `origin/${defaultBranch}^{commit}`]);
     if (ref.exitCode === 0) return ref.stdout.trim();
@@ -201,6 +258,31 @@ export function createProcessRunner(params: CreateProcessRunnerParams): Runner {
   // 125 B-2: the fence beside the open candidate, null until one is opened
   // and in the in-place mode that never opens one.
   let fenceDir: string | null = null;
+  // 129 B-3: this runner is the supervisor of everything it fences, the
+  // session and the gate alike. Opened with the first candidate and reset
+  // each time the fence is rebuilt, as the log is.
+  let channel: FenceChannel | null = null;
+  // Refusals counted while one of this runner's own synchronous spawns ran
+  // (a gate command, the engine's git): the gate's or the engine's, never a
+  // session's, so fenceRefusals() leaves them out.
+  let spawnedRefusals = 0;
+
+  const tally = (): FenceTally => (fenceDir === null || channel === null ? NO_FENCE_TALLY : channel.tally());
+
+  // 129 B-1, B-6: a process the runner spawns inside the candidate (a gate
+  // command, the engine's git) receives exactly what the session receives.
+  const runFenced = (cmd: readonly string[]): { exitCode: number; stdout: string; stderr: string } => {
+    const before = tally().refusals;
+    const result = runProcessSync(workDir, cmd, fencedEnv(fenceDir));
+    spawnedRefusals += tally().refusals - before;
+    return result;
+  };
+  const requireFenced = (cmd: readonly string[], label: string): void => {
+    const result = runFenced(cmd);
+    if (result.exitCode !== 0) {
+      throw new Error(`build: ${label} failed (exit ${result.exitCode}): ${result.stderr.trim()}`);
+    }
+  };
 
   return {
     candidateHome(): string | null {
@@ -214,9 +296,11 @@ export function createProcessRunner(params: CreateProcessRunnerParams): Runner {
         const reused = this.createBranch(branch);
         return { path: repoDir, reused };
       }
-      const candidate = openCandidate({ repoDir, homeDir: candidateHome, project, branch, baseSha });
+      channel ??= openFenceChannel();
+      const candidate = openCandidate({ repoDir, homeDir: candidateHome, project, branch, baseSha, channel });
       workDir = candidate.path;
       fenceDir = candidate.fenceDir;
+      spawnedRefusals = 0;
       return { path: candidate.path, reused: candidate.reused };
     },
 
@@ -232,7 +316,7 @@ export function createProcessRunner(params: CreateProcessRunnerParams): Runner {
     },
 
     changedPaths(baseSha: string, headSha: string): readonly string[] {
-      return changedPaths(workDir, baseSha, headSha);
+      return changedPaths(workDir, baseSha, headSha, fenceDir);
     },
 
     originUrl(): string | null {
@@ -240,52 +324,54 @@ export function createProcessRunner(params: CreateProcessRunnerParams): Runner {
     },
 
     statusText(): string {
-      return runProcessSync(workDir, ["git", "status", "--porcelain"]).stdout.trim();
+      return runFenced(["git", "status", "--porcelain"]).stdout.trim();
     },
 
     statusClean(): boolean {
-      const result = runProcessSync(workDir, ["git", "status", "--porcelain"]);
+      const result = runFenced(["git", "status", "--porcelain"]);
       return result.stdout.trim().length === 0;
     },
 
     currentBranch(): string {
-      const result = runProcessSync(workDir, ["git", "branch", "--show-current"]);
+      const result = runFenced(["git", "branch", "--show-current"]);
       return result.stdout.trim();
     },
 
     createBranch(branch: string): boolean {
-      const exists =
-        runProcessSync(workDir, ["git", "show-ref", "--verify", "--quiet", `refs/heads/${branch}`]).exitCode === 0;
+      const exists = runFenced(["git", "show-ref", "--verify", "--quiet", `refs/heads/${branch}`]).exitCode === 0;
       if (exists) {
-        requireOk(workDir, ["git", "checkout", branch], `git checkout ${branch}`);
+        requireFenced(["git", "checkout", branch], `git checkout ${branch}`);
         return true;
       }
-      requireOk(workDir, ["git", "checkout", "-b", branch], `git checkout -b ${branch}`);
+      requireFenced(["git", "checkout", "-b", branch], `git checkout -b ${branch}`);
       return false;
     },
 
     checkout(branch: string): void {
-      requireOk(workDir, ["git", "checkout", branch], `git checkout ${branch}`);
+      requireFenced(["git", "checkout", branch], `git checkout ${branch}`);
     },
 
+    // 129 B-7: the in-place scheduler's fast-forward needs the operator's
+    // credential, so it keeps the daemon's environment and runs no hook.
     pullFfOnly(): void {
       const upstream = runProcessSync(workDir, ["git", "rev-parse", "--abbrev-ref", "@{u}"]);
       if (upstream.exitCode !== 0) return; // no upstream: nothing to be stale against
-      requireOk(workDir, ["git", "pull", "--ff-only"], "git pull --ff-only");
+      requireOk(workDir, ["git", ...WITHOUT_REPOSITORY_HOOKS, "pull", "--ff-only"], "git pull --ff-only");
     },
 
     add(paths: readonly string[]): void {
       const existing = paths.filter((p) => fs.existsSync(join(workDir, p)));
       if (existing.length === 0) return;
-      requireOk(workDir, ["git", "add", "--", ...existing], "git add");
+      requireFenced(["git", "add", "--", ...existing], "git add");
     },
 
+    // A formatting `pre-commit` still runs here (129 D-6), without a credential.
     commit(message: string): void {
-      requireOk(workDir, ["git", "commit", "-m", message], "git commit");
+      requireFenced(["git", "commit", "-m", message], "git commit");
     },
 
     headSha(): string {
-      const result = runProcessSync(workDir, ["git", "rev-parse", "HEAD"]);
+      const result = runFenced(["git", "rev-parse", "HEAD"]);
       return result.stdout.trim();
     },
 
@@ -293,8 +379,10 @@ export function createProcessRunner(params: CreateProcessRunnerParams): Runner {
       return resolveBaseSha(repoDir, defaultBranch);
     },
 
+    // 129 B-1: the gate receives the session's environment; in place, the
+    // scrub the in-place session receives (B-2, D-2).
     runGate(cmd: readonly string[]): GateResult {
-      const result = runProcessSync(workDir, cmd);
+      const result = runFenced(cmd);
       return {
         exitCode: result.exitCode,
         stdoutTail: tailText(result.stdout, GATE_TAIL_BYTES),
@@ -333,7 +421,11 @@ export function createProcessRunner(params: CreateProcessRunnerParams): Runner {
     },
 
     fenceRefusals(): number {
-      return readFenceRefusals(fenceDir);
+      return tally().refusals - spawnedRefusals;
+    },
+
+    fenceTally(): RunnerFenceTally {
+      return { applied: fenceDir !== null, ...tally() };
     },
   };
 }
@@ -384,10 +476,46 @@ export const INDEX_REGENERATE_COMMAND: readonly string[] = ["spec-spine", "index
 
 export interface GateEvidence extends GateResult {
   readonly cmd: readonly string[];
+  // 129 B-3: the refusals the supervisor counted while this command ran.
+  readonly fence: FenceRecord;
 }
 
-function runGateSuite(runner: Runner, gate: AnyGateContract, baseSha: string): GateEvidence[] {
-  return gateSuiteFor(gate, baseSha).map((cmd) => ({ cmd, ...runner.runGate(cmd) }));
+function runnerTally(runner: Runner): RunnerFenceTally {
+  return runner.fenceTally?.() ?? NO_RUNNER_FENCE;
+}
+
+// One command through the runner, with the supervisor's count read either
+// side of it (129 B-3).
+function runGateCommand(runner: Runner, cmd: readonly string[]): GateEvidence {
+  const before = runnerTally(runner);
+  const result = runner.runGate(cmd);
+  const after = runnerTally(runner);
+  return { cmd, ...result, fence: { applied: after.applied, refusals: after.refusals - before.refusals } };
+}
+
+interface GateSweep {
+  readonly gates: GateEvidence[];
+  // 129 B-3: the count immediately before and after the whole suite; the
+  // difference is the gate's, and the tools are the ones it reached for.
+  readonly fence: FenceRecord;
+  readonly refusal: GateFenceRefusal | null;
+}
+
+function runGateSuite(runner: Runner, gate: AnyGateContract, baseSha: string): GateSweep {
+  const before = runnerTally(runner);
+  const gates = gateSuiteFor(gate, baseSha).map((cmd) => runGateCommand(runner, cmd));
+  const after = runnerTally(runner);
+  const refusals = after.refusals - before.refusals;
+  return {
+    gates,
+    fence: { applied: after.applied, refusals },
+    refusal: refusals > 0 ? { reason: GATE_FENCE_REFUSED, refusals, tools: toolsBetween(before, after) } : null,
+  };
+}
+
+function describeFenceRefusal(refusal: GateFenceRefusal): string {
+  const tools = refusal.tools.length === 0 ? "a fenced tool" : refusal.tools.join(" and ");
+  return `${GATE_FENCE_REFUSED}: the gate reached for ${tools} and the fence refused it ${refusal.refusals} time(s)`;
 }
 
 // D-13: whether two gate sweeps are the same answer, tails included. The
@@ -402,14 +530,27 @@ function sameGateAnswer(a: readonly GateEvidence[], b: readonly GateEvidence[]):
       g.cmd.join(" ") === h.cmd.join(" ") &&
       g.exitCode === h.exitCode &&
       g.stdoutTail === h.stdoutTail &&
-      g.stderrTail === h.stderrTail
+      g.stderrTail === h.stderrTail &&
+      g.fence.refusals === h.fence.refusals
     );
   });
 }
 
 type Preflight =
-  | { refusal: Refusal; baseSha: null; reused: null }
-  | { refusal: null; baseSha: string; reused: boolean | null };
+  | { refusal: Refusal; baseSha: null; reused: null; fence: FenceRecord }
+  | { refusal: null; baseSha: string; reused: boolean | null; fence: FenceRecord };
+
+// B-1's "gate green at base", which since 129 B-4 a swallowed refusal fails as
+// surely as a red command.
+function gateAtBaseRefusal(sweep: GateSweep, where: string): Refusal | null {
+  const failing = sweep.gates.find((g) => g.exitCode !== 0);
+  const reasons: string[] = [];
+  if (failing) {
+    reasons.push(`"${failing.cmd.join(" ")}" exited ${failing.exitCode} at ${where}: ${failing.stderrTail || failing.stdoutTail}`);
+  }
+  if (sweep.refusal !== null) reasons.push(`${describeFenceRefusal(sweep.refusal)} at ${where}`);
+  return reasons.length === 0 ? null : { kind: "gate-red-at-base", message: reasons.join("; ") };
+}
 
 function preflightRefusal(
   runner: Runner,
@@ -418,7 +559,10 @@ function preflightRefusal(
   isSpecReady: ReadinessCheck,
   gate: AnyGateContract
 ): Preflight {
-  const refuse = (refusal: Refusal): Preflight => ({ refusal, baseSha: null, reused: null });
+  // 129 B-3: the count of the last suite the preflight ran, so a refused
+  // stage's evidence still carries the fence record with its explicit zero.
+  let fence: FenceRecord = { applied: runnerTally(runner).applied, refusals: 0 };
+  const refuse = (refusal: Refusal): Preflight => ({ refusal, baseSha: null, reused: null, fence });
 
   // 121 B-2: with a candidate home, the operator's checkout is read for its
   // base and its `.git` and nothing else; the candidate is what the
@@ -439,20 +583,14 @@ function preflightRefusal(
     if (!runner.statusClean()) {
       return refuse({ kind: "dirty-tree", message: `the candidate for ${specId} is not clean; refusing to start` });
     }
-    const gates = runGateSuite(runner, gate, baseSha);
-    const failing = gates.find((g) => g.exitCode !== 0);
-    if (failing) {
-      return refuse({
-        kind: "gate-red-at-base",
-        message: `"${failing.cmd.join(" ")}" exited ${failing.exitCode} at the candidate's base: ${
-          failing.stderrTail || failing.stdoutTail
-        }`,
-      });
-    }
+    const sweep = runGateSuite(runner, gate, baseSha);
+    fence = sweep.fence;
+    const red = gateAtBaseRefusal(sweep, "the candidate's base");
+    if (red !== null) return refuse(red);
     if (!isSpecReady(specId)) {
       return refuse({ kind: "spec-not-ready", message: `${specId} is not ready (unmet or invalidated dependencies)` });
     }
-    return { refusal: null, baseSha, reused };
+    return { refusal: null, baseSha, reused, fence };
   }
 
   if (!runner.statusClean()) {
@@ -496,22 +634,16 @@ function preflightRefusal(
     return refuse({ kind: "base-unresolved", message: (err as Error).message });
   }
 
-  const gates = runGateSuite(runner, gate, baseSha);
-  const failing = gates.find((g) => g.exitCode !== 0);
-  if (failing) {
-    return refuse({
-      kind: "gate-red-at-base",
-      message: `"${failing.cmd.join(" ")}" exited ${failing.exitCode} at the base branch: ${
-        failing.stderrTail || failing.stdoutTail
-      }`,
-    });
-  }
+  const sweep = runGateSuite(runner, gate, baseSha);
+  fence = sweep.fence;
+  const red = gateAtBaseRefusal(sweep, "the base branch");
+  if (red !== null) return refuse(red);
 
   if (!isSpecReady(specId)) {
     return refuse({ kind: "spec-not-ready", message: `${specId} is not ready (unmet or invalidated dependencies)` });
   }
 
-  return { refusal: null, baseSha, reused: null };
+  return { refusal: null, baseSha, reused: null, fence };
 }
 
 // --- frontmatter helpers (B-2, B-5) ----------------------------------------
@@ -727,6 +859,11 @@ export interface Completion {
   readonly stable: boolean | null;
   // 121 B-5: the receipt minted for a passing, stable round, else null.
   readonly receipt: Receipt | null;
+  // 129 B-3: the supervisor's count across the suite, with its explicit zero.
+  readonly fence: FenceRecord;
+  // 129 B-4: set when that count rose, whatever the commands exited; such a
+  // round is not accepted and mints no receipt.
+  readonly fenceRefusal: GateFenceRefusal | null;
 }
 
 export interface EvaluateParams {
@@ -745,16 +882,33 @@ export interface EvaluateParams {
 // passes. Head and status are read before and after the suite; a candidate
 // that moved or dirtied across it is journaled `acceptance.unstable` and the
 // round does not pass, whatever the commands said.
+//
+// 129 B-4: likewise a suite during which the supervisor's count rose. The exit
+// code cannot be the rule, because a gate can swallow it (`gh pr create ||
+// true` exits 0 with the refusal counted), so the refusal is journaled as
+// `acceptance.fence-refused` and the round does not pass, whatever the
+// commands said. Every round reaches the gate through here (build rounds 1
+// and 2, ship's round 3, shepherd's round 4), so the rule is one rule.
 export function evaluateCompletion(p: EvaluateParams): Completion {
   const { runner, specId, specPath, gate, baseSha, round, journal } = p;
   const headBefore = runner.headSha();
   const dirtyBefore = runner.statusText();
-  const gates = runGateSuite(runner, gate, baseSha);
+  const sweep = runGateSuite(runner, gate, baseSha);
+  const { gates, fence, refusal: fenceRefusal } = sweep;
   const headAfter = runner.headSha();
   const dirtyAfter = runner.statusText();
   const allGreen = gates.every((g) => g.exitCode === 0);
   const frontmatterComplete = readImplementationStatus(runner.readFile(specPath)) === "complete";
   const stable = headBefore === headAfter && dirtyBefore.length === 0 && dirtyAfter.length === 0;
+  if (fenceRefusal !== null) {
+    journal.append(FENCE_REFUSED_KIND, {
+      specId,
+      round,
+      reason: fenceRefusal.reason,
+      refusals: fenceRefusal.refusals,
+      tools: [...fenceRefusal.tools],
+    });
+  }
   if (!stable) {
     const payload: Record<string, JsonValue> = {
       specId,
@@ -764,10 +918,10 @@ export function evaluateCompletion(p: EvaluateParams): Completion {
       dirty: dirtyAfter.length > 0 ? dirtyAfter : dirtyBefore,
     };
     journal.append(UNSTABLE_KIND, payload);
-    return { gates, frontmatterComplete, passing: false, stable, receipt: null };
+    return { gates, frontmatterComplete, passing: false, stable, receipt: null, fence, fenceRefusal };
   }
-  const passing = allGreen && frontmatterComplete;
-  if (!passing) return { gates, frontmatterComplete, passing, stable, receipt: null };
+  const passing = allGreen && frontmatterComplete && fenceRefusal === null;
+  if (!passing) return { gates, frontmatterComplete, passing, stable, receipt: null, fence, fenceRefusal };
   const version = runner.runGate(["spec-spine", "--version"]);
   const receipt = mintReceipt({
     specId,
@@ -787,7 +941,28 @@ export function evaluateCompletion(p: EvaluateParams): Completion {
   if (receipt.sensitivePaths.length > 0) {
     journal.append(SENSITIVE_KIND, { specId, round, paths: [...receipt.sensitivePaths] });
   }
-  return { gates, frontmatterComplete, passing, stable, receipt };
+  return { gates, frontmatterComplete, passing, stable, receipt, fence, fenceRefusal };
+}
+
+// 129 B-4: what the remediation session is told when the gate reached for a
+// fenced tool. The shim's own message is quoted because a gate that swallowed
+// the exit code may well have swallowed the message with it.
+function fenceRefusalSection(refusal: GateFenceRefusal | null): string {
+  if (refusal === null) return "";
+  const tools: readonly FencedTool[] = refusal.tools.length === 0 ? ["gh", "ssh"] : refusal.tools;
+  const messages = tools.map((tool) => `  ${FENCE_MESSAGES[tool]}`).join("\n");
+  return `
+### The gate reached for a fenced tool (${GATE_FENCE_REFUSED})
+
+While the gate suite ran, the credential fence refused ${refusal.refusals} time(s)
+(${refusal.tools.length === 0 ? "a fenced tool" : refusal.tools.map((t) => `\`${t}\``).join(" and ")}), so the round is not
+accepted whatever the commands exited. The fence said:
+
+${messages}
+
+A test, a Makefile target or a build script that publishes, or that probes
+for a tool by running it, must change: publishing goes through the broker.
+`;
 }
 
 function remediationPrompt(basePrompt: string, completion: Completion, capsule: string = ""): string {
@@ -812,6 +987,7 @@ This is a second, follow-up session on the same branch, the last one before
 the build stage fails honestly. Fix the following, then finish:
 ${frontmatterNote}
 ${gateSection}
+${fenceRefusalSection(completion.fenceRefusal)}
 ${capsule}`;
 }
 
@@ -851,6 +1027,12 @@ export interface BuildEvidence {
   // and the gate answered identically, so another attempt would re-ask a
   // question already answered twice. Null when no remediation session ran.
   readonly stalled: boolean | null;
+  // 129 B-3: the fence record of the last gate suite the stage ran, with its
+  // explicit zero; the session counts above no longer include it.
+  readonly gateFence: FenceRecord;
+  // 129 B-4: why that suite was not accepted though its commands may have
+  // exited 0. Null when the count did not rise.
+  readonly fenceRefusal: GateFenceRefusal | null;
 }
 
 export interface BuildResult {
@@ -902,7 +1084,17 @@ function journalFenceRefusals(
 }
 
 function gateEvidenceToJson(g: GateEvidence): Record<string, JsonValue> {
-  return { cmd: [...g.cmd], exitCode: g.exitCode, stdoutTail: g.stdoutTail, stderrTail: g.stderrTail };
+  return {
+    cmd: [...g.cmd],
+    exitCode: g.exitCode,
+    stdoutTail: g.stdoutTail,
+    stderrTail: g.stderrTail,
+    fence: { applied: g.fence.applied, refusals: g.fence.refusals },
+  };
+}
+
+function fenceToJson(fence: FenceRecord): Record<string, JsonValue> {
+  return { applied: fence.applied, refusals: fence.refusals };
 }
 
 // --- defaults (B-4) ----------------------------------------------------------
@@ -978,6 +1170,8 @@ export async function runBuildStage(options: RunBuildStageOptions): Promise<Buil
         receipt: null,
         sensitivePaths: [],
         stalled: null,
+        gateFence: preflight.fence,
+        fenceRefusal: null,
       },
     };
   }
@@ -996,7 +1190,8 @@ export async function runBuildStage(options: RunBuildStageOptions): Promise<Buil
   let bracketIndex: GateEvidence | null = null;
   if (flip.changed) {
     runner.writeFile(specPath, flip.content);
-    bracketGate = { cmd: COMPILE_REGENERATE_COMMAND, ...runner.runGate(COMPILE_REGENERATE_COMMAND) };
+    // 129 B-1: the bracket reaches the repository through runGate, fenced.
+    bracketGate = runGateCommand(runner, COMPILE_REGENERATE_COMMAND);
     // D-8: the flip touches the codebase-index shards too, so the bracket
     // regenerates them before its commit. A flip commit carrying the
     // pre-flip shard is absorbed by the session's final commit on the happy
@@ -1004,7 +1199,7 @@ export async function runBuildStage(options: RunBuildStageOptions): Promise<Buil
     // dirty the tree, which is exactly what makes 021 D-17's normalization
     // refuse to act.
     if (bracketGate.exitCode === 0) {
-      bracketIndex = { cmd: INDEX_REGENERATE_COMMAND, ...runner.runGate(INDEX_REGENERATE_COMMAND) };
+      bracketIndex = runGateCommand(runner, INDEX_REGENERATE_COMMAND);
     }
     runner.add([specPath, ".derived"]);
     runner.commit(`chore(${specId}): flip implementation to in-progress`);
@@ -1042,6 +1237,11 @@ export async function runBuildStage(options: RunBuildStageOptions): Promise<Buil
         receipt: null,
         sensitivePaths: [],
         stalled: null,
+        gateFence: {
+          applied: runnerTally(runner).applied,
+          refusals: bracketEvidence.reduce((sum, g) => sum + g.fence.refusals, 0),
+        },
+        fenceRefusal: null,
       },
     };
   }
@@ -1079,8 +1279,11 @@ export async function runBuildStage(options: RunBuildStageOptions): Promise<Buil
   // --- B-4: drive (one session, at most one remediation) ---
   const sessions: SessionEvidence[] = [];
 
+  // 129 B-3: each session's count is the supervisor's difference across that
+  // session alone, so neither the preflight's gate nor a later round's is in it.
+  const firstStart = runner.fenceRefusals?.() ?? 0;
   const first = await runner.runSession({ prompt: promptBase, timeoutMs, maxTurns, tier: options.tier, model: options.model, journal });
-  const firstFence = runner.fenceRefusals?.() ?? 0;
+  const firstFence = (runner.fenceRefusals?.() ?? 0) - firstStart;
   sessions.push(toSessionEvidence(first, firstFence));
   journalDenials(journal, specId, 1, first);
   journalFenceRefusals(journal, specId, 1, first.sessionId, firstFence);
@@ -1090,7 +1293,15 @@ export async function runBuildStage(options: RunBuildStageOptions): Promise<Buil
 
   let blocked = first.classification.kind === "hook-blocked";
   let completion: Completion = blocked
-    ? { gates: [], frontmatterComplete: false, passing: false, stable: null, receipt: null }
+    ? {
+        gates: [],
+        frontmatterComplete: false,
+        passing: false,
+        stable: null,
+        receipt: null,
+        fence: { applied: runnerTally(runner).applied, refusals: 0 },
+        fenceRefusal: null,
+      }
     : evaluate(1);
 
   if (!blocked) {
@@ -1100,6 +1311,8 @@ export async function runBuildStage(options: RunBuildStageOptions): Promise<Buil
       baseSha,
       gates: completion.gates.map(gateEvidenceToJson),
       frontmatterComplete: completion.frontmatterComplete,
+      fence: fenceToJson(completion.fence),
+      reason: completion.fenceRefusal?.reason ?? null,
     };
     journal.append("stage.build.gate", gateRecord);
   }
@@ -1124,6 +1337,7 @@ export async function runBuildStage(options: RunBuildStageOptions): Promise<Buil
       })
     );
     const secondPrompt = remediationPrompt(promptBase, completion, capsule);
+    const secondStart = runner.fenceRefusals?.() ?? 0;
     const second = await runner.runSession({
       prompt: secondPrompt,
       timeoutMs,
@@ -1132,7 +1346,7 @@ export async function runBuildStage(options: RunBuildStageOptions): Promise<Buil
       model: options.model,
       journal,
     });
-    const secondFence = runner.fenceRefusals?.() ?? 0;
+    const secondFence = (runner.fenceRefusals?.() ?? 0) - secondStart;
     sessions.push(toSessionEvidence(second, secondFence));
     journalDenials(journal, specId, 2, second);
     journalFenceRefusals(journal, specId, 2, second.sessionId, secondFence);
@@ -1147,6 +1361,8 @@ export async function runBuildStage(options: RunBuildStageOptions): Promise<Buil
         baseSha,
         gates: completion.gates.map(gateEvidenceToJson),
         frontmatterComplete: completion.frontmatterComplete,
+        fence: fenceToJson(completion.fence),
+        reason: completion.fenceRefusal?.reason ?? null,
       };
       journal.append("stage.build.gate", gateRecord);
     }
@@ -1171,6 +1387,8 @@ export async function runBuildStage(options: RunBuildStageOptions): Promise<Buil
     receipt: completion.receipt,
     sensitivePaths: completion.receipt?.sensitivePaths ?? [],
     stalled,
+    gateFence: completion.fence,
+    fenceRefusal: completion.fenceRefusal,
   };
 
   const resultPayload: Record<string, JsonValue> = {
@@ -1187,6 +1405,8 @@ export async function runBuildStage(options: RunBuildStageOptions): Promise<Buil
     stable: completion.stable,
     receipt: completion.receipt !== null,
     sensitivePaths: completion.receipt === null ? [] : [...completion.receipt.sensitivePaths],
+    gateFence: fenceToJson(completion.fence),
+    reason: completion.fenceRefusal?.reason ?? null,
   };
   journal.append("stage.build.result", resultPayload);
 

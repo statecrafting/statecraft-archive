@@ -3,7 +3,7 @@ id: "129-gate-fence"
 title: "The gate fence: acceptance runs in the world the session worked in, not in the daemon's"
 status: approved
 created: "2026-09-11"
-implementation: pending
+implementation: complete
 risk: medium
 depends_on:
   - "125-credential-fence"
@@ -38,6 +38,21 @@ extends:
   - { spec: "026-standby-daemon", unit: "members/src/orchestrator/standby.test.ts", nature: additive }
   # Doc 05 is the record this spec is born from (D60, D74 to D77).
   - { spec: "110-corpus-merge", unit: { kind: directory, path: "docs/design/" }, nature: additive }
+  # D-11: ship's round 3 and shepherd's round 4 name the refusal as the reason.
+  - { spec: "017-stage-ship", unit: "members/src/orchestrator/stages/ship.ts", nature: additive }
+  - { spec: "018-stage-shepherd", unit: "members/src/orchestrator/stages/shepherd.ts", nature: additive }
+  # D-13, D-14: the daemon builds the verify runner under its home and reads
+  # the project's allowance at the verify stage.
+  - { spec: "021-orchestrator-daemon", unit: "members/src/orchestrator/daemon.ts", nature: additive }
+  # D-14: the allowance's route, its client, the project row, and the fixtures.
+  - { spec: "022-http-api-and-events", unit: { kind: directory, path: "members/src/orchestrator/api/" }, nature: additive }
+  # D-14: the `projects verify` verb, its detail line, and the standby wiring.
+  - { spec: "023-orchestrator-cli", unit: "members/src/commands/orchestrator.ts", nature: additive }
+  # D-14: the web fixtures and store test build the project row and client.
+  - { spec: "024-web-ui", unit: "members/web/test/fixtures.ts", nature: additive }
+  - { spec: "024-web-ui", unit: "members/web/test/store.test.tsx", nature: additive }
+  # B-9: a hand-built Project carries the allowance the fold always produces.
+  - { spec: "034-adoption-preflight", unit: "members/src/orchestrator/adopt/preflight.test.ts", nature: additive }
 references:
   - { unit: { kind: file, path: "docs/design/05-the-realignment-checked.md" }, role: context }
   - { unit: { kind: file, path: "specs/125-credential-fence/spec.md" }, role: context }
@@ -409,6 +424,125 @@ adoption adds one requirement the draft lacked: refusal accounting belongs to
 the supervisor and a child cannot erase it. B-3 now counts at the supervisor,
 which supersedes D-3's reading of the log, and FR-008 turns the truncation F8
 measured from a pinned limit into a regression test.
+
+D-10 (2026-09-13). The channel B-3 leaves to the build: a loopback listener on
+a worker thread, counting into memory the engine shares with it. Each channel
+is a slot with a random secret. A shim built with a channel runs under bash,
+reports `refused <slot> <secret> <tool>` over `/dev/tcp`, waits at most two
+seconds for the listener's acknowledgement, and then refuses as 125's shim
+does. The listener counts before it acknowledges, so the count is final by the
+time the refused process returns, including under the synchronous spawn the
+gate and the verify stage use. That is why it is a worker: a listener on the
+engine's own thread cannot answer while `Bun.spawnSync` blocks that thread. No
+process the engine spawns can reach the count except to add to it. A
+truncated, rewritten or deleted log changes nothing, and a rewritten shim loses
+only the reports after it, which is D-8's escape. Rejected: an inherited pipe
+descriptor, because a provider's shell tool does not pass arbitrary
+descriptors to its children and a session's refusal would go uncounted; a
+named pipe, which any child can open and drain; signals, which coalesce; and
+the log with an append-only flag, which its owner can clear. The cost: the
+report needs `/bin/bash`, so a host without it refuses without counting, which
+a zero tally already does not rule out (D-8); and a refusal whose listener is
+gone waits out the two-second bound.
+
+D-11 (2026-09-13). Where the gate's count is recorded. `GateEvidence` is 016's
+per-command record, so each command carries the count read either side of it,
+and the round carries the count read either side of the whole suite, which is
+B-3's difference; the two agree because the suite runs one command at a time.
+The completion carries `fence` and, when the count rose, `fenceRefusal: {
+reason: "gate-fence-refused", refusals, tools }`, and `evaluateCompletion`
+journals the refusal as `acceptance.fence-refused` beside `acceptance.unstable`,
+so ship's round 3 and shepherd's round 4 record it as build rounds 1 and 2 do.
+The tools come from the supervisor's per-tool count rather than the log B-4
+names, because the log is the copy a child can erase; the log still names them
+for a person. A refusal during the preflight's gate at the base is a
+`gate-red-at-base` refusal whose message names `gate-fence-refused`, not a new
+refusal kind. Each session's `fenceRefusals` is the supervisor's difference
+across that session alone, so the remediation session's count no longer
+includes round 1's session either. Ship's and shepherd's failure text names the
+reason rather than reading it as an incomplete frontmatter, which is why this
+spec extends 017 and 018.
+
+D-12 (2026-09-13). Identity is carried into the fence. B-6 points the engine's
+commit at the fence's git configuration instead of the operator's, which
+(measured on git 2.50.1, macOS) commits under a guessed `user@host` identity,
+and would refuse to commit on a host where no email can be guessed.
+`openCandidate` reads `user.name` and `user.email` from the operator's git
+before it builds the fence and writes them into the fence's configuration.
+Identity is not a credential, so sessions and the engine commit as the
+operator. Signing stays off inside the fence: a signing key or agent is a
+credential, and 126's brokered signing is the answer to it. Rejected: including
+the operator's global configuration from the fence's, which would bring back
+`url.insteadOf` and `http.extraHeader` values that can carry a token.
+
+D-13 (2026-09-13). The verify stage's base, and its layout. "The run that
+produced the merge" is read from the journal: the broker's merge outcome whose
+merge sha is the revision being verified names the receipt it consumed, and
+that receipt names the base. With no such outcome (a re-verify at a later head,
+or a merge made before 122), `acceptance.base` records `"unrecorded"` and the
+verified revision's block runs. A base at which the spec cannot be read fails
+the stage rather than falling back to the head. The worktree and its fence sit
+side by side at `<home>/verify/<id>/worktree` and `<home>/verify/<id>/fence`
+and are removed together, and the verify runner holds a channel of its own as
+the supervisor of its acceptance lines. Under `inherit`, a browser session
+receives the scrub and no fence, as the acceptance lines receive the daemon's
+environment. `acceptance.base`, `acceptance.changed` and
+`acceptance.fence-refused` are kinds the export allowlist does not name, so
+they export hash-only until a policy version names them.
+
+D-14 (2026-09-13). The allowance's surface. B-9's "journaled like its gate
+contract" and "its source" are read as the gate contract's whole path: a
+`project.verify.set` record on the projects chain (with no record, `fenced`
+from source `default`), a `projects verify <name> <fenced|inherit>` verb, a
+`POST /api/projects/<name>/verify` route that refuses an absent or unknown
+value rather than defaulting it, and the allowance on the project row and in
+the project detail. The daemon reads it late-bound at the verify stage, as it
+reads the gate. The verb, the route and their fixtures are 022's, 023's and
+024's units, declared as `extends`. `inherit` passes the engine's current
+environment explicitly, because Bun's default for a child is the environment
+the process started with.
+
+## Status (2026-09-13, complete)
+
+Built on 2026-09-13. §5's criteria, each with its evidence:
+
+- `bun test` in `members/` is green: 1023 pass, 0 fail across 63 files, and
+  `make members` (typecheck, the three member builds, the suite) and `make
+  gate` exit 0. Every line of the Verification block exits 0.
+- The negative suite, `gate-fence.test.ts`, runs over a real fenced candidate
+  of a governed fixture (the real spec-spine floor) with fabricated values for
+  all six `CHILD_ENV_DENY` names in the daemon's environment: FR-001 to FR-009,
+  FR-011 and FR-012, including FR-008's residual pinned (a `gh` by absolute
+  path adds nothing to the tally). FR-010 is in `broker.test.ts`, with a
+  control showing the same tracked `pre-push` hook blocks a plain push. The
+  supervisor's count (D-10) is proven in `fence.test.ts`: a refusal survives
+  the log being truncated, deleted and the shim rewritten; a forged or stale
+  report counts nothing. The same suite ran green on Linux (dash as
+  `/bin/sh`) in a Bun container.
+- The live round, run through the production seams as 122's and 125's were:
+  the build runner with a candidate home, the broker's git seam over a bare
+  remote on disk, the production verify runner under the daemon home, with
+  GitHub's API faked and git, make, bun and spec-spine real. The fixture is
+  governed and gated as this repository is: a Makefile `gate` target running
+  `check`, `lint`, `index coverage --fail-on-untraced` and `couple`, plus
+  `bun test`. On a host whose `gh` is keyring-backed (outside any fence `gh
+  auth token` exits 0 and yields a token), the build passed under the fence
+  and minted a receipt, every gate command carrying `fence: { applied: true,
+  refusals: 0 }`; inside the same candidate `gh auth token` through `runGate`
+  exited 127 with nothing on stdout, named the broker and was counted by the
+  supervisor, and no deny-list name reached the gate. The broker pushed (the
+  remote head equals the candidate head), opened and merged, journaling intent
+  and outcome for all three. The verify stage over the merge passed under its
+  fence, running `make gate` and `bun test` with the acceptance read at the
+  run's base (`acceptance.base` equal to the receipt's `baseSha`). The
+  operator's checkout stayed clean on `main`. No gate or acceptance line
+  needed a credential, so nothing was changed and no allowance journaled.
+
+What stays open is §6, unchanged, and D-10's two costs: the report needs
+`/bin/bash`, and a refusal whose listener is gone waits out a two-second
+bound. One observation, recorded as 125 recorded its own: once, in a
+whole-file run right after the full suite, FR-002 ran for 30 seconds and
+failed; it did not recur in seven later runs, alone or in the file.
 
 ## Status (2026-09-12, approved)
 

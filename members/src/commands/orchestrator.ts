@@ -81,7 +81,11 @@ import {
   setProjectGate,
   setProjectPolicy,
   setProjectProfile,
+  setProjectVerifyAllowance,
   slugifyProjectName,
+  VERIFY_ALLOWANCES,
+  type RecordedVerifyAllowance,
+  type VerifyAllowance,
   type Project,
   type ProjectProbe,
   type ProjectSource,
@@ -192,6 +196,9 @@ export const ORCHESTRATOR_USAGE = `usage: observatory orchestrator <command> [--
   projects policy <name>       set the lifecycle policy: --file <path> or --json-policy <text>
   projects gate <name> -- <argv>  set the language gate run after the spec-spine
                                   floor; "--" with nothing after it is governance-only
+  projects verify <name> <fenced|inherit>  whether verify-stage acceptance runs
+                                  behind the credential fence (the default) or
+                                  with the daemon's environment
   projects ceiling <name>      spend limits: --per-run/--per-day <usd>, or "none"
   projects requalify <name>    re-run the preflight and journal the verdict
   projects remove <name>       drop it from the registry (a tombstone)
@@ -798,6 +805,14 @@ function verdictOf(view: ProjectView): QualificationVerdict | null {
   return view.driverQualified === null ? null : { qualified: view.driverQualified, record: null };
 }
 
+// 129 B-9: `fenced` is the default and says so; `inherit` names its source and
+// when it was journaled, because it is a consent an operator gave.
+function renderVerifyAllowance(verify: RecordedVerifyAllowance): string {
+  if (verify.source === "default") return `verify:  ${verify.allowance} (default; acceptance runs behind the credential fence)`;
+  const note = verify.allowance === "inherit" ? "acceptance runs with the daemon's environment" : "acceptance runs behind the credential fence";
+  return `verify:  ${verify.allowance} (journaled by ${verify.source} at ${verify.setAt ?? "an unknown time"}; ${note})`;
+}
+
 function renderProjectRows(projects: readonly ProjectView[]): string[] {
   if (projects.length === 0) return ["no projects are registered with this daemon"];
   const nameWidth = projects.reduce((max, view) => Math.max(max, view.name.length), 0);
@@ -839,6 +854,8 @@ function renderProjectDetail(view: ProjectView): string[] {
   lines.push(...renderGateDetail(view.gate));
   // 123 B-2: the policy block after the gate.
   lines.push(...renderPolicy(view.policy));
+  // 129 B-9: the verify allowance, with who journaled it.
+  lines.push(renderVerifyAllowance(view.verify));
   // 033 B-7: the ceiling and the spend evaluated against it, on the surface an
   // operator reads before deciding anything. Both floors are named even when
   // there is no ceiling, because "what has this cost so far" is the question
@@ -1522,6 +1539,25 @@ async function cmdProjects(
     const refusal = gateRefusal({ commands, source: "cli", rule: null });
     if (refusal !== null) return usage(deps, refusal);
     return respond(deps, args.json, await client.setProjectGate(name, commands), renderProjectControl);
+  }
+
+  // 129 B-9's one write verb. The value is a positional because it is the
+  // whole point of the command, and it is named outright: `inherit` is a
+  // consent, so nothing defaults to it.
+  if (sub === "verify") {
+    const name = rest[1];
+    if (name === undefined) return usage(deps, "projects verify needs a project name");
+    const allowance = rest[2];
+    if (allowance === undefined || !(VERIFY_ALLOWANCES as readonly string[]).includes(allowance)) {
+      return usage(deps, `projects verify needs an allowance: ${VERIFY_ALLOWANCES.join(" or ")}`);
+    }
+    if (rest.length > 3) return usage(deps, `unexpected argument "${rest[3]}" after projects verify`);
+    return respond(
+      deps,
+      args.json,
+      await client.setProjectVerifyAllowance(name, allowance as VerifyAllowance),
+      renderProjectControl
+    );
   }
 
   // 123 B-2: the policy travels whole, from a file or inline JSON.
@@ -2795,6 +2831,9 @@ function standbyProjects(standby: StandbyDaemon, probe: ProjectProbe): ProjectsT
     setPolicy(name: string, policy: LifecyclePolicy, source: "cli" | "api"): void {
       setProjectPolicy({ chain: chain(), name, policy, source });
     },
+    setVerifyAllowance(name: string, allowance: VerifyAllowance, source: ProjectSource): void {
+      setProjectVerifyAllowance({ chain: chain(), name, allowance, source });
+    },
     requalify(name: string, source: ProjectSource): void {
       const project = live(name);
       requalifyProject({ chain: chain(), name, qualification: qualifyProject(probe, project.repoDir), source });
@@ -2869,6 +2908,8 @@ async function cmdDaemonRun(deps: OrchestratorCliDeps, url: string): Promise<num
         gate: () => standby.projects.get(project.name)?.gate ?? project.gate,
         // 123 B-3: the lifecycle policy, late-bound for the same reason.
         policy: () => standby.projects.get(project.name)?.policy ?? project.policy,
+        // 129 B-9: the verify allowance, late-bound for the same reason.
+        verifyAllowance: () => (standby.projects.get(project.name)?.verify ?? project.verify).allowance,
         // 041 B-8: a project registered before this spec has no gate record
         // and folds to governance-only; the first daemon to service it probes
         // its tree and writes the record it was missing, before any stage of

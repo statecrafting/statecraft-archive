@@ -233,6 +233,7 @@ export const FIXTURE_PROJECT_VIEW: ProjectView = {
     legacy: false,
   },
   policy: LEGACY_LIFECYCLE_POLICY,
+  verify: { allowance: "fenced", source: "default", setAt: null },
   driverQualified: null,
   budget: FIXTURE_NO_CEILING,
   run: FIXTURE_RUN.run,
@@ -262,6 +263,7 @@ export function fixtureProjectView(name: string, overrides: Partial<ProjectView>
     profile: { mode: "bypass", legacy: false },
     gate: { commands: [["make", "ci"]], source: "probe", rule: "make-ci", legacy: false },
     policy: LEGACY_LIFECYCLE_POLICY,
+    verify: { allowance: "fenced", source: "default", setAt: null },
     driverQualified: null,
     budget: FIXTURE_NO_CEILING,
     run: null,
@@ -418,6 +420,7 @@ const REGISTRY_KIND: Readonly<Record<ProjectControlVerb, string>> = {
   ceiling: "project.ceiling.set",
   gate: "project.gate.set",
   policy: "project.policy.set",
+  verify: "project.verify.set",
 };
 
 export function registryAnswerFor(verb: ProjectControlVerb, name: string | null, seq: number = 12): ProjectControlResult {
@@ -509,6 +512,7 @@ export function fixtureApiClient(options: FixtureClientOptions = {}): FixtureCli
     setProjectCeiling: (name) => registryAnswer("ceiling", name),
     setProjectGate: (name) => registryAnswer("gate", name),
     setProjectPolicy: (name) => registryAnswer("policy", name),
+    setProjectVerifyAllowance: (name) => registryAnswer("verify", name),
     project: (name) => projectClient(name, calls, options),
   };
 }

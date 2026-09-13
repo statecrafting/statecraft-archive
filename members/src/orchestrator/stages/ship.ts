@@ -855,11 +855,14 @@ function publishThroughBroker(p: PublishParams): ShipResult {
     });
     if (completion.receipt === null) {
       const red = completion.gates.find((g) => g.exitCode !== 0);
+      // 129 B-4: a refusal fails the round even when every command exited 0.
       const why = red
         ? `"${red.cmd.join(" ")}" exited ${red.exitCode}`
-        : completion.stable === false
-          ? "the candidate did not hold still across the gate"
-          : "the spec's frontmatter does not read complete";
+        : completion.fenceRefusal !== null
+          ? `${completion.fenceRefusal.reason}: the gate reached for ${completion.fenceRefusal.tools.join(" and ") || "a fenced tool"}`
+          : completion.stable === false
+            ? "the candidate did not hold still across the gate"
+            : "the spec's frontmatter does not read complete";
       return failed(p, `no-receipt: ${why}`, p.precheckPr, null);
     }
     folded = latestReceipt(journal.fold().records, specId);

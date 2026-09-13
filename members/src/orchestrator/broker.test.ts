@@ -4,7 +4,7 @@
 // and answers ok. Plus the production git seam over a real bare remote.
 
 import { test, expect } from "bun:test";
-import { mkdtempSync, writeFileSync } from "fs";
+import { existsSync, mkdirSync, mkdtempSync, rmSync, writeFileSync } from "fs";
 import { tmpdir } from "os";
 import { join } from "path";
 import { openJournal, type JournalHandle } from "./journal";
@@ -259,6 +259,51 @@ test("a failed effect journals a failed outcome and rethrows", () => {
   expect(outcome).toMatchObject({ phase: "outcome", ok: false });
   expect((outcome.detail as string).includes("permission denied")).toBe(true);
   w.journal.close();
+});
+
+// Spec 129 FR-010, B-7: the push carries the one credential the broker holds,
+// so no repository hook runs beside it. The control first proves the hook is
+// live: a plain push runs it and is blocked by it.
+test("129 FR-010: a tracked pre-push hook that exits 1 blocks a plain push, and the broker's push seam neither runs it nor is blocked", () => {
+  const remote = mkdtempSync(join(tmpdir(), "broker-hooked-remote-"));
+  Bun.spawnSync(["git", "init", "-q", "--bare", remote]);
+  const repo = mkdtempSync(join(tmpdir(), "broker-hooked-repo-"));
+  const marker = join(mkdtempSync(join(tmpdir(), "broker-hooked-marker-")), "pre-push-ran.txt");
+  const g = (args: string[]): { exitCode: number; stdout: string } => {
+    const r = Bun.spawnSync(["git", ...args], { cwd: repo });
+    return { exitCode: r.exitCode, stdout: new TextDecoder().decode(r.stdout).trim() };
+  };
+  const must = (args: string[]): string => {
+    const r = g(args);
+    if (r.exitCode !== 0) throw new Error(`git ${args.join(" ")} failed`);
+    return r.stdout;
+  };
+  must(["init", "-q", "-b", "main"]);
+  must(["config", "user.email", "t@example.com"]);
+  must(["config", "user.name", "t"]);
+  must(["remote", "add", "origin", remote]);
+  mkdirSync(join(repo, ".githooks"), { recursive: true });
+  writeFileSync(join(repo, ".githooks", "pre-push"), `#!/bin/sh
+env > ${JSON.stringify(marker)}
+exit 1
+`, { mode: 0o755 });
+  writeFileSync(join(repo, "a.txt"), "a\n");
+  must(["add", "-A"]);
+  must(["commit", "-q", "-m", "one"]);
+  must(["config", "core.hooksPath", ".githooks"]);
+  must(["checkout", "-q", "-b", "129-x"]);
+  const head = must(["rev-parse", "HEAD"]);
+
+  // The control: the hook runs, records its environment, and blocks the push.
+  expect(g(["push", "-q", "origin", "129-x"]).exitCode).not.toBe(0);
+  expect(existsSync(marker)).toBe(true);
+  rmSync(marker);
+
+  const seam = createProcessGitPush(() => repo);
+  expect(seam.remoteHead("129-x")).toBeNull();
+  seam.push("129-x");
+  expect(existsSync(marker)).toBe(false);
+  expect(seam.remoteHead("129-x")).toBe(head);
 });
 
 test("B-3: the production git seam pushes to a real bare remote and reads its head back", () => {

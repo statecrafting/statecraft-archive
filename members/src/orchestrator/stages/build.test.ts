@@ -14,10 +14,13 @@ import {
   parseFrontmatterListField,
   extractBacklogStep,
   BUILD_PROMPT_VERSION,
+  FENCE_REFUSED_KIND,
   GATE_COMMANDS,
+  GATE_FENCE_REFUSED,
   type Runner,
   type RunnerSessionOptions,
 } from "./build";
+import { FENCE_MESSAGES } from "../fence";
 import { gateSuiteFor, LEGACY_GATE_CONTRACT, type GateContract } from "../gate-contract";
 import { latestReceipt, policyDigest, RECEIPT_KIND, suiteDigest } from "../receipt";
 
@@ -1319,3 +1322,134 @@ test("121 B-2: a candidate whose branch the operator has checked out is refused 
   decisionsChain.close();
 });
 
+
+// --- 129: the gate fence, at the stage ---------------------------------------
+
+// A scripted supervisor: the count rises only when the runner is asked to run
+// a gate command the script names, which is how a fenced gate that reached for
+// `gh` looks from the stage. No process is spawned for the fence itself; the
+// real one is proven in gate-fence.test.ts.
+function scriptedFence(reaches: (cmd: readonly string[]) => boolean): Pick<Runner, "runGate" | "fenceTally" | "fenceRefusals"> {
+  let gh = 0;
+  return {
+    runGate: (cmd) => {
+      if (reaches(cmd)) gh++;
+      return { exitCode: 0, stdoutTail: "", stderrTail: "" };
+    },
+    fenceTally: () => ({ applied: true, refusals: gh, byTool: { gh, ssh: 0 } }),
+    fenceRefusals: () => 0,
+  };
+}
+
+test("129 B-4: a gate whose commands all exit 0 but reached for gh is not accepted, and the remediation prompt quotes the fence", async () => {
+  const { dir, specId } = initFixtureRepo();
+  const state = { sessionCalls: 0 };
+  const prompts: string[] = [];
+  const runner: Runner = {
+    ...createProcessRunner({ repoDir: dir }),
+    ...scriptedFence((cmd) => state.sessionCalls > 0 && cmd.join(" ").startsWith("spec-spine lint")),
+    runSession: async (opts) => {
+      state.sessionCalls++;
+      prompts.push(opts.prompt);
+      return fakeWritingSession(dir, specId)(opts);
+    },
+  };
+  const { journalDir } = openHandles(dir);
+  const journal = openJournal(journalDir);
+  const decisionsChain = openDecisionsChain(journalDir);
+
+  const result = await runBuildStage({
+    runner,
+    specId,
+    journal,
+    decisionsChain,
+    dropboxDir: join(journalDir, "decision-dropbox"),
+    knownSpecIds: new Set([specId]),
+    isSpecReady: () => true,
+  });
+
+  expect(result.outcome).toBe("failed");
+  expect(result.evidence.gates.every((g) => g.exitCode === 0)).toBe(true);
+  expect(result.evidence.gateFence).toEqual({ applied: true, refusals: 1 });
+  expect(result.evidence.fenceRefusal).toEqual({ reason: GATE_FENCE_REFUSED, refusals: 1, tools: ["gh"] });
+  expect(result.evidence.gates.find((g) => g.cmd[1] === "lint")!.fence).toEqual({ applied: true, refusals: 1 });
+  expect(result.evidence.gates.find((g) => g.cmd[1] === "check")!.fence).toEqual({ applied: true, refusals: 0 });
+  expect(prompts[1]).toContain(GATE_FENCE_REFUSED);
+  expect(prompts[1]).toContain(FENCE_MESSAGES.gh);
+  expect(prompts[1]).toContain("(every gate command passed)");
+  expect(prompts[0]).not.toContain(GATE_FENCE_REFUSED);
+  const folded = journal.fold().byKind;
+  expect(folded[FENCE_REFUSED_KIND]!.map((r) => (r.payload as { round: number }).round)).toEqual([1, 2]);
+  expect((folded["stage.build.gate"]![0]!.payload as { reason: string | null }).reason).toBe(GATE_FENCE_REFUSED);
+  expect((folded["stage.build.result"]!.at(-1)!.payload as { reason: string | null }).reason).toBe(GATE_FENCE_REFUSED);
+  expect(folded[RECEIPT_KIND]).toBeUndefined();
+
+  journal.close();
+  decisionsChain.close();
+});
+
+test("129 B-4: a gate that reaches for gh at the base refuses the stage before any session, naming the fence", async () => {
+  const { dir, specId } = initFixtureRepo();
+  const runner: Runner = {
+    ...createProcessRunner({ repoDir: dir }),
+    ...scriptedFence((cmd) => cmd[1] === "check"),
+    runSession: async () => {
+      throw new Error("no session may be driven when the gate at the base reached for a fenced tool");
+    },
+  };
+  const { journalDir } = openHandles(dir);
+  const journal = openJournal(journalDir);
+  const decisionsChain = openDecisionsChain(journalDir);
+
+  const result = await runBuildStage({
+    runner,
+    specId,
+    journal,
+    decisionsChain,
+    dropboxDir: join(journalDir, "decision-dropbox"),
+    knownSpecIds: new Set([specId]),
+    isSpecReady: () => true,
+  });
+
+  expect(result.outcome).toBe("refused");
+  expect(result.evidence.refusal?.kind).toBe("gate-red-at-base");
+  expect(result.evidence.refusal?.message).toContain(GATE_FENCE_REFUSED);
+  expect(result.evidence.refusal?.message).toContain("gh");
+  expect(result.evidence.gateFence).toEqual({ applied: true, refusals: 1 });
+
+  journal.close();
+  decisionsChain.close();
+});
+
+test("129 B-3: a runner without a fence (a fixture world) records every gate with an explicit zero, never an absent count", async () => {
+  const { dir, specId } = initFixtureRepo();
+  const runner: Runner = {
+    ...createProcessRunner({ repoDir: dir }),
+    runGate: greenGate(),
+    runSession: fakeWritingSession(dir, specId),
+  };
+  delete (runner as { fenceTally?: unknown }).fenceTally;
+  const { journalDir } = openHandles(dir);
+  const journal = openJournal(journalDir);
+  const decisionsChain = openDecisionsChain(journalDir);
+
+  const result = await runBuildStage({
+    runner,
+    specId,
+    journal,
+    decisionsChain,
+    dropboxDir: join(journalDir, "decision-dropbox"),
+    knownSpecIds: new Set([specId]),
+    isSpecReady: () => true,
+  });
+
+  expect(result.outcome).toBe("passed");
+  expect(result.evidence.gateFence).toEqual({ applied: false, refusals: 0 });
+  expect(result.evidence.gates.every((g) => g.fence.applied === false && g.fence.refusals === 0)).toBe(true);
+  const gateRecord = journal.fold().byKind["stage.build.gate"]![0]!.payload as { fence: unknown; gates: { fence: unknown }[] };
+  expect(gateRecord.fence).toEqual({ applied: false, refusals: 0 });
+  expect(gateRecord.gates.every((g) => JSON.stringify(g.fence) === JSON.stringify({ applied: false, refusals: 0 }))).toBe(true);
+
+  journal.close();
+  decisionsChain.close();
+});

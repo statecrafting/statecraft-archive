@@ -671,6 +671,38 @@ test("041 FR-005: the project payload carries the gate, and the gate verb sets i
   });
 });
 
+test("129 B-9: the project payload carries the verify allowance with its source, and the verify verb journals it", async () => {
+  await withServer("projects-verify", async ({ server }) => {
+    // Shown on the project with no record at all: fenced, by default.
+    const before = expectOk((await getJson<ProjectsView>(server, API_ROUTES.projects)).body);
+    expect(before.projects[0]!.verify).toEqual({ allowance: "fenced", source: "default", setAt: null });
+
+    const set = expectOk(
+      (await getJson<ProjectControlResult>(server, projectRoute("beta", PROJECT_ROUTES.verify), {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ allowance: "inherit" }),
+      })).body
+    );
+    expect(set).toMatchObject({ verb: "verify", project: "beta", applied: true });
+    expect(set.record?.kind).toBe("project.verify.set");
+    expect(set.record?.payload).toEqual({ name: "beta", allowance: "inherit", source: "api" });
+    expect(set.snapshot?.verify).toEqual({ allowance: "inherit", source: "api", setAt: set.record!.ts });
+
+    // `inherit` is a consent: a body that names nothing, or names something
+    // else, is refused rather than read as either value.
+    for (const body of [{}, { allowance: "everything" }, { allowance: null }]) {
+      const refused = await getJson<never>(server, projectRoute("beta", PROJECT_ROUTES.verify), {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(body),
+      });
+      expect(refused.status).toBe(400);
+      expect(expectErr(refused.body).message).toContain(`"allowance"`);
+    }
+  });
+});
+
 test("041 B-3: a project registered before this spec serves its gate as legacy", async () => {
   await withServer("projects-gate-legacy", async ({ server, registry }) => {
     // The pre-041 registry's one record, appended straight to the chain: a

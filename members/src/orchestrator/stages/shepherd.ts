@@ -653,7 +653,12 @@ export async function runShepherdStage(options: RunShepherdStageOptions): Promis
           specId,
           attempt: attemptNumber,
           headSha: fixedHead,
-          reason: red ? `"${red.cmd.join(" ")}" exited ${red.exitCode}` : "no-receipt",
+          // 129 B-4: a refusal fails the round even when every command exited 0.
+          reason: red
+            ? `"${red.cmd.join(" ")}" exited ${red.exitCode}`
+            : completion.fenceRefusal !== null
+              ? `${completion.fenceRefusal.reason}: the gate reached for ${completion.fenceRefusal.tools.join(" and ") || "a fenced tool"}`
+              : "no-receipt",
         });
         return finish("failed", true, null, pr.number);
       }

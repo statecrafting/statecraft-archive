@@ -103,7 +103,12 @@ function sensitivePathsFor(paths: readonly string[], prefixes: readonly string[]
 import type { RunShepherdStageOptions, ShepherdResult } from "./stages/shepherd";
 import { runShepherdStage } from "./stages/shepherd";
 import type { BrowserVerifier, RunVerifyStageOptions, VerifyResult, VerifyRunner } from "./stages/verify";
-import { createBrowserMcpVerifier, createProcessVerifyRunner, runVerifyStage } from "./stages/verify";
+import {
+  createBrowserMcpVerifier,
+  createProcessVerifyRunner,
+  runVerifyStage,
+  type VerifyAllowanceBinding,
+} from "./stages/verify";
 
 // --- process inspector (B-1) -----------------------------------------------
 //
@@ -287,6 +292,11 @@ export interface DaemonDeps {
   // 123 B-3: this project's lifecycle policy, late-bound for the same reason
   // the gate is. Absent is the default policy (today's loop).
   readonly policy?: PolicyBinding;
+  // 129 B-9: this project's journaled verify allowance, late-bound for the
+  // reason the gate is: an operator who journals `inherit` for a project whose
+  // acceptance is live by design is correcting a verify stage that is waiting.
+  // Absent is `fenced`.
+  readonly verifyAllowance?: VerifyAllowanceBinding;
   // 041 B-8: append this project's missing gate record, probing its tree, if
   // and only if its chain holds none. Called once at start(), before any
   // stage of this run is scheduled; the record's existence is the idempotence
@@ -377,6 +387,8 @@ export interface CreateProductionDaemonDepsParams {
   readonly migrateGateContract?: () => void;
   // 123 B-3: this project's lifecycle policy, late-bound like the gate.
   readonly policy?: PolicyBinding;
+  // 129 B-9: this project's verify allowance, late-bound like the gate.
+  readonly verifyAllowance?: VerifyAllowanceBinding;
 }
 
 export function createProductionDaemonDeps(params: CreateProductionDaemonDepsParams): DaemonDeps {
@@ -402,6 +414,7 @@ export function createProductionDaemonDeps(params: CreateProductionDaemonDepsPar
     gate: params.gate,
     migrateGateContract: params.migrateGateContract,
     policy: params.policy,
+    verifyAllowance: params.verifyAllowance,
     dagReader: createProcessDagReader(),
     runner,
     readCheckoutBranch: () => {
@@ -438,7 +451,8 @@ export function createProductionDaemonDeps(params: CreateProductionDaemonDepsPar
     gh,
     // 122 B-3: the push runs in the candidate the runner has open.
     broker: (journal) => createBroker({ journal, gh, git: createProcessGitPush(() => runner.workDir()) }),
-    verifyRunner: createProcessVerifyRunner({ repoDir }),
+    // 129 B-8: the verify worktree and its fence live under the daemon's home.
+    verifyRunner: createProcessVerifyRunner({ repoDir, homeDir: dataDir }),
     browserVerifier: createBrowserMcpVerifier({ repo: repoDir, driver, profile }),
     runSession: (request) => driver.runSession(request),
     killLiveSession,
@@ -1897,6 +1911,7 @@ export class Daemon {
           journal: this.workJournal,
           evidenceDir: this.evidenceDir,
           isReVerification,
+          allowance: this.deps.verifyAllowance,
         };
         const result = await this.deps.stageFns.verify(options);
         return { stage, result };
@@ -1928,6 +1943,7 @@ export class Daemon {
       journal: this.workJournal,
       evidenceDir: this.evidenceDir,
       isReVerification: true,
+      allowance: this.deps.verifyAllowance,
     };
     try {
       const result = await this.deps.stageFns.verify(options);

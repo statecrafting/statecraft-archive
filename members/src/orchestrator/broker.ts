@@ -6,6 +6,7 @@
 // head and the receipt it consumed; a retry reconciles first and never
 // repeats an effect that already happened.
 
+import { WITHOUT_REPOSITORY_HOOKS } from "./candidate";
 import type { JournalHandle, JournalRecord, JsonValue } from "./journal";
 import { latestReceipt, receiptCovers, type FoldedReceipt } from "./receipt";
 import { foldOrchestratorState } from "./state";
@@ -102,10 +103,17 @@ function runSync(cwd: string, cmd: readonly string[]): { exitCode: number; stdou
 // The production seam over the candidate directory (121 B-2). `cwd` is
 // read at every call so a candidate reopened after the seam was built is
 // the one pushed.
+//
+// 129 B-7: `ls-remote` and `push` are the two invocations that carry the one
+// credential the broker exists to hold, so they run no repository hook: a
+// `pre-push` in a tracked hooks directory is candidate-authored code, and
+// under the daemon's environment it would run beside that credential. A
+// project's pre-push checks therefore do not run on a brokered push; the
+// gate, which ran fenced over the same head, is acceptance.
 export function createProcessGitPush(cwd: () => string): GitPush {
   return {
     remoteHead(branch: string): string | null {
-      const result = runSync(cwd(), ["git", "ls-remote", "--heads", "origin", branch]);
+      const result = runSync(cwd(), ["git", ...WITHOUT_REPOSITORY_HOOKS, "ls-remote", "--heads", "origin", branch]);
       if (result.exitCode !== 0) throw new Error(`broker: git ls-remote failed: ${result.stderr}`);
       const line = result.stdout.split("\n").find((l) => l.length > 0);
       if (line === undefined) return null;
@@ -115,7 +123,7 @@ export function createProcessGitPush(cwd: () => string): GitPush {
       return runSync(cwd(), ["git", "merge-base", "--is-ancestor", ancestor, descendant]).exitCode === 0;
     },
     push(branch: string): void {
-      const result = runSync(cwd(), ["git", "push", "--set-upstream", "origin", branch]);
+      const result = runSync(cwd(), ["git", ...WITHOUT_REPOSITORY_HOOKS, "push", "--set-upstream", "origin", branch]);
       if (result.exitCode !== 0) throw new Error(`broker: git push failed: ${result.stderr}`);
     },
   };

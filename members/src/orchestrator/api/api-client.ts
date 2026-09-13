@@ -50,6 +50,7 @@ import { policyPayload } from "../policy-payload";
 import type { Capsule } from "../handoff";
 import type { ExecutionProfile } from "../profile";
 import type { CostCeiling } from "../budget";
+import type { VerifyAllowance } from "../projects";
 
 export type FetchLike = (input: string, init?: RequestInit) => Promise<Response>;
 
@@ -115,6 +116,8 @@ export interface ApiClient {
   setProjectGate(name: string, commands: readonly (readonly string[])[]): Promise<ApiResponse<ProjectControlResult>>;
   // 123 B-2: sets the lifecycle policy, whole.
   setProjectPolicy(name: string, policy: LifecyclePolicy): Promise<ApiResponse<ProjectControlResult>>;
+  // 129 B-9: journals the project's verify allowance.
+  setProjectVerifyAllowance(name: string, allowance: VerifyAllowance): Promise<ApiResponse<ProjectControlResult>>;
   project(name: string): ProjectClient;
 }
 
@@ -242,6 +245,8 @@ export function createApiClient(options: ApiClientOptions): ApiClient {
       post<ProjectControlResult>(projectRoute(name, PROJECT_ROUTES.gate), { commands }),
     setProjectPolicy: (name, policy) =>
       post<ProjectControlResult>(projectRoute(name, PROJECT_ROUTES.policy), { policy: policyPayload(policy, "api").policy }),
+    setProjectVerifyAllowance: (name, allowance) =>
+      post<ProjectControlResult>(projectRoute(name, PROJECT_ROUTES.verify), { allowance }),
     project: projectClient,
   };
 }

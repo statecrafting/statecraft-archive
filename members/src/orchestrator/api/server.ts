@@ -18,8 +18,8 @@ import type { JournalHandle, JournalRecord, JsonValue } from "../journal";
 import type { DagReader } from "../dag";
 import { createProcessSpecFileAtShaReader, loadRegistrySnapshot } from "../dag";
 import type { RunStatus } from "../state";
-import type { Project, ProjectSource, ProjectsSnapshot } from "../projects";
-import { isValidProjectName } from "../projects";
+import type { Project, ProjectSource, ProjectsSnapshot, VerifyAllowance } from "../projects";
+import { isValidProjectName, VERIFY_ALLOWANCES } from "../projects";
 import type { ExecutionProfile } from "../profile";
 import { parseProfile, profileRefusal } from "../profile";
 import type { GateContract } from "../gate-contract";
@@ -177,6 +177,8 @@ export interface ProjectsTarget {
   setGate(name: string, gate: GateContract, source: ProjectSource): void;
   // 123 B-2: the lifecycle policy, whole.
   setPolicy(name: string, policy: LifecyclePolicy, source: "cli" | "api"): void;
+  // 129 B-9: the verify allowance, journaled like the gate contract.
+  setVerifyAllowance(name: string, allowance: VerifyAllowance, source: ProjectSource): void;
   requalify(name: string, source: ProjectSource): void;
   remove(name: string, source: ProjectSource): void;
 }
@@ -787,6 +789,7 @@ const REGISTRY_VERB_FOR_ROUTE: Readonly<Record<string, ProjectControlVerb | unde
   [PROJECT_ROUTES.ceiling]: "ceiling",
   [PROJECT_ROUTES.gate]: "gate",
   [PROJECT_ROUTES.policy]: "policy",
+  [PROJECT_ROUTES.verify]: "verify",
 };
 
 // A fresh Response every time: a body can only be consumed once, so a shared
@@ -968,6 +971,18 @@ async function routeProject(
         return fail("bad-request", (err as Error).message);
       }
       return runRegistryControl(deps, registryVerb, name, clock.now(), () => deps.projects.setPolicy(name, policy, "api"));
+    }
+    // 129 B-9: the fifth registry verb with state of its own. The value is
+    // named outright; an absent or unknown one is refused rather than read as
+    // the default, because `inherit` is a consent and silence is not one.
+    if (registryVerb === "verify") {
+      const allowance = body === null ? undefined : body.allowance;
+      if (typeof allowance !== "string" || !(VERIFY_ALLOWANCES as readonly string[]).includes(allowance)) {
+        return fail("bad-request", `POST ${path} expects a JSON body with "allowance": ${VERIFY_ALLOWANCES.map((a) => `"${a}"`).join(" or ")}`);
+      }
+      return runRegistryControl(deps, registryVerb, name, clock.now(), () =>
+        deps.projects.setVerifyAllowance(name, allowance as VerifyAllowance, source)
+      );
     }
     if (registryVerb === "gate") {
       if (body === null || !Object.hasOwn(body, "commands")) {
