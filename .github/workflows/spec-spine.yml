@@ -23,9 +23,14 @@ jobs:
         with:
           fetch-depth: 0
 
+      # 109 D-2: the release `[meta] required_version` names, not the latest.
+      # A release the pin excludes refuses at exit 3 before the gate runs a
+      # verb, so a new spec-spine would turn every PR red with no change in it.
       - name: Install spec-spine
         run: |
-          curl -fsSL https://raw.githubusercontent.com/statecrafting/spec-spine/main/install.sh | sh
+          version="$(sed -n 's/^required_version = "[=^]*\([0-9][0-9.]*\)"$/\1/p' spec-spine.toml)"
+          test -n "$version" || { echo "spec-spine.toml pins no required_version"; exit 1; }
+          curl -fsSL https://raw.githubusercontent.com/statecrafting/spec-spine/main/install.sh | SPEC_SPINE_VERSION="v$version" sh
           echo "$HOME/.local/bin" >> "$GITHUB_PATH"
 
       # Read-only. `compile --check` and `index check` compare the committed

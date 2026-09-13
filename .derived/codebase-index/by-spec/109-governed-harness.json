@@ -30,6 +30,10 @@
         "source": "spec-edge"
       },
       {
+        "path": ".github/workflows/members.yml",
+        "source": "spec-edge"
+      },
+      {
         "path": ".github/workflows/spec-spine.yml",
         "source": "spec-edge"
       },
@@ -188,6 +192,19 @@
       {
         "locations": [
           {
+            "file": ".github/workflows/members.yml"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "extends",
+        "unit": {
+          "kind": "file",
+          "path": ".github/workflows/members.yml"
+        }
+      },
+      {
+        "locations": [
+          {
             "file": ".github/workflows/spec-spine.yml"
           }
         ],
@@ -216,5 +233,5 @@
     "specStatus": "approved"
   },
   "schemaVersion": "1.1.0",
-  "shardHash": "78fcb6827de7cc954219f6c75240786fbb8adf47da78ebda246adfc162f6aac7"
+  "shardHash": "3a6c552067db7202ff638bb91e6635c0f4056c7ca6440ff783253b5cae5cc922"
 }
