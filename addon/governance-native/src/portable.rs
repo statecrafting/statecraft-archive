@@ -1,10 +1,11 @@
 //! The portable admission rule (spec 010 A-3), additive beside the lenient
 //! functions.
 //!
-//! [`canonicalize`] and [`append`] refuse, by JSON pointer and reason code,
-//! the inputs the lenient pair would silently rewrite: a duplicate member at
-//! any depth, a number token with a fraction or exponent, an integer outside
-//! -(2^53 - 1) through 2^53 - 1, and an escape that is not valid Unicode.
+//! [`canonicalize`] and [`append`] refuse, by JSON pointer and reason code, a
+//! duplicate member at any depth, a number token with a fraction or exponent
+//! (or `-0`), an integer outside -(2^53 - 1) through 2^53 - 1, and an escape
+//! that is not valid Unicode. The lenient pair silently rewrites the first
+//! three; the last it already refuses, but without a pointer or a code.
 //! Everything they admit goes to [`crate::canon::canonicalize`] and
 //! [`crate::ledger::append`] unchanged, so an admitted input's output,
 //! record hash included, is exactly the lenient function's, and portable and
