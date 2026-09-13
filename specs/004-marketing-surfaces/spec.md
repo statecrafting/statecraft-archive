@@ -389,8 +389,8 @@ rule for the local engine: it reads not released until a tested release
 exists, and `install.sh` is not an engine-install path. Sibling states read on
 2026-09-12 at `statecraft-cli` `874766b`, `spec-spine` `59cba05`, `statecraft`
 `9658e29`, `enrahitu` `26c75e2`, `attest-ledger` `a9c3595`, `statecrafting`
-`85db8fd`; every external evidence link in the matrix was fetched that day and
-resolved.
+`35126be`, each that repository's public `main`; every external evidence link
+in the matrix was fetched that day and resolved.
 
 Two readings moved between the proposal and this change. `spec-spine` spec
 085, the verifier that refuses unknown fields and an unsupported schema

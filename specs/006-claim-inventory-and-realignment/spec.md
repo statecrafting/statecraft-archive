@@ -505,7 +505,10 @@ Sections 1 and 3 cited `statecraft` spec 014, read at `afe31c3`, as evidence.
 Neither is on a public branch of `statecraft`, and publishing drafts has not
 been authorized, so a sentence resting on them cannot be checked by a
 stranger. Each such claim is replaced in place with public evidence, or
-restated as having no public record, and one is withdrawn:
+restated as having no public record, and one is withdrawn. (Section 3's
+`statecrafting` read, `85db8fd`, is on no public branch either; the one fact
+this site still takes from that repository, its MPL-2.0 toolchain packages, is
+re-read at its public `main` `35126be` in spec 003 section 8.)
 
 | Where | Rested on | Now rests on |
 |---|---|---|

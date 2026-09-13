@@ -151,7 +151,7 @@ review rather than settling it here.
 A re-description, not a roster change: the eleven repositories, their order and
 their root licenses are unchanged, and section 4 still holds. Read at
 `attest-ledger` `a9c3595`, `tenant-emit` `2d5b538`, `tenant-tail` `7855a65`,
-`statecrafting` `85db8fd`.
+`statecrafting` `35126be`, each that repository's public `main`.
 
 These role lines render in the footer of every prerendered page, so a sentence
 here is the most-published sentence on the site.
