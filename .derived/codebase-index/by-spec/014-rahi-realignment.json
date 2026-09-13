@@ -1,16 +1,22 @@
 {
   "mapping": {
+    "amends": [
+      "001-statecraft-thesis"
+    ],
+    "dependsOn": [
+      "001-statecraft-thesis"
+    ],
     "implementingPaths": [
       {
-        "path": ".github/workflows/spec-spine.yml",
+        "path": "CLAUDE.md",
         "source": "spec-edge"
       },
       {
-        "path": "spec-spine.toml",
+        "path": "README.md",
         "source": "spec-edge"
       },
       {
-        "path": "standards/spec/",
+        "path": "specs/014-rahi-realignment/",
         "source": "spec-edge"
       }
     ],
@@ -18,46 +24,46 @@
       {
         "locations": [
           {
-            "file": "standards/spec/"
+            "file": "specs/014-rahi-realignment/"
           }
         ],
         "ownership": true,
         "sourceField": "establishes",
         "unit": {
           "kind": "directory",
-          "path": "standards/spec/"
+          "path": "specs/014-rahi-realignment/"
         }
       },
       {
         "locations": [
           {
-            "file": ".github/workflows/spec-spine.yml"
+            "file": "CLAUDE.md"
           }
         ],
         "ownership": true,
-        "sourceField": "establishes",
+        "sourceField": "extends",
         "unit": {
           "kind": "file",
-          "path": ".github/workflows/spec-spine.yml"
+          "path": "CLAUDE.md"
         }
       },
       {
         "locations": [
           {
-            "file": "spec-spine.toml"
+            "file": "README.md"
           }
         ],
         "ownership": true,
-        "sourceField": "establishes",
+        "sourceField": "extends",
         "unit": {
           "kind": "file",
-          "path": "spec-spine.toml"
+          "path": "README.md"
         }
       }
     ],
-    "specId": "000-bootstrap",
+    "specId": "014-rahi-realignment",
     "specStatus": "approved"
   },
   "schemaVersion": "1.1.0",
-  "shardHash": "02fdef4ce0c0231d6b6cc3f34ba085e991918253007c31364a6badb6548c83d1"
+  "shardHash": "ebb5cbce4e7fc8ad587c5b1aaa1f8cf7bcb1bdc22f819a0d72d84d80aad19e71"
 }

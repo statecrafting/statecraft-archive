@@ -1,0 +1,42 @@
+{
+  "record": {
+    "created": "2026-09-11",
+    "dependsOn": [
+      "004-tenants-github-app",
+      "008-governance-attestation",
+      "014-rahi-realignment"
+    ],
+    "establishes": [
+      {
+        "kind": "directory",
+        "path": "specs/015-hosted-work-contract/"
+      }
+    ],
+    "id": "015-hosted-work-contract",
+    "implementation": "pending",
+    "sectionHeadings": [
+      "015: The hosted work contract",
+      "1. Purpose",
+      "1.1 What the approval covers",
+      "2. Territory",
+      "3. What this contract refuses to do",
+      "4. Runner enrolment and authentication",
+      "5. Project and job identity",
+      "6. Leases, fencing, heartbeat and cancellation",
+      "7. Evidence intake",
+      "8. Replay, idempotency and reconnection",
+      "9. One authority per mutable transition",
+      "10. The schemas are published first",
+      "11. Negative cases",
+      "12. Acceptance",
+      "13. Cross-repo dependency",
+      "14. Out of scope"
+    ],
+    "specPath": "specs/015-hosted-work-contract/spec.md",
+    "status": "approved",
+    "summary": "The wire contract between the control plane and a runner, approved on 2026-09-12 as the schema and pure-evaluator slice (spec 014 section 11, ST-06). It fixes how a runner is enrolled and authenticated (an enrolled person's device-grant session), how a project and a job are identified, how a job binds to an exact revision and an exact policy, how a lease and its fencing token keep one writer on a duration and heartbeat interval the plane returns, how cancellation, replay and idempotency behave, and how evidence is judged: four dimensions with their own value domains, admission kept separate, trust only from independently supplied roots, and original bytes behind typed references. The schemas, fixtures and pure evaluator are published in statecraft-cli's Apache-2.0 workspace before either end is built; statecraft owns their semantics and pins them by digest. The hosted service that serves this contract is spec 018, and the authorization of an external effect is spec 016.\n",
+    "title": "The hosted work contract: runners, jobs, leases and evidence intake"
+  },
+  "shardHash": "f0b31386660f0282fe4ffd69536439fc53a61807712128dae8337ecec1696052",
+  "specVersion": "1.2.0"
+}

@@ -1,11 +1,13 @@
 {
   "mapping": {
     "dependsOn": [
-      "005-factory-service"
+      "004-tenants-github-app",
+      "008-governance-attestation",
+      "014-rahi-realignment"
     ],
     "implementingPaths": [
       {
-        "path": "backend/fleet/",
+        "path": "specs/015-hosted-work-contract/",
         "source": "spec-edge"
       }
     ],
@@ -13,20 +15,20 @@
       {
         "locations": [
           {
-            "file": "backend/fleet/"
+            "file": "specs/015-hosted-work-contract/"
           }
         ],
         "ownership": true,
         "sourceField": "establishes",
         "unit": {
           "kind": "directory",
-          "path": "backend/fleet/"
+          "path": "specs/015-hosted-work-contract/"
         }
       }
     ],
-    "specId": "006-fleet",
+    "specId": "015-hosted-work-contract",
     "specStatus": "approved"
   },
   "schemaVersion": "1.1.0",
-  "shardHash": "f6784999031b129f50570c235def086b0261e53d76b18dc9d4fbe010f0ea0e61"
+  "shardHash": "742d60668bd2c79271757b4f6eb6f67ac102617bee3090ffa0d394446d3fc497"
 }

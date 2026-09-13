@@ -1,11 +1,12 @@
 {
   "mapping": {
     "dependsOn": [
-      "005-factory-service"
+      "002-app-shell",
+      "014-rahi-realignment"
     ],
     "implementingPaths": [
       {
-        "path": "backend/fleet/",
+        "path": "specs/017-rahi-cell-migration/",
         "source": "spec-edge"
       }
     ],
@@ -13,20 +14,20 @@
       {
         "locations": [
           {
-            "file": "backend/fleet/"
+            "file": "specs/017-rahi-cell-migration/"
           }
         ],
         "ownership": true,
         "sourceField": "establishes",
         "unit": {
           "kind": "directory",
-          "path": "backend/fleet/"
+          "path": "specs/017-rahi-cell-migration/"
         }
       }
     ],
-    "specId": "006-fleet",
-    "specStatus": "approved"
+    "specId": "017-rahi-cell-migration",
+    "specStatus": "draft"
   },
   "schemaVersion": "1.1.0",
-  "shardHash": "f6784999031b129f50570c235def086b0261e53d76b18dc9d4fbe010f0ea0e61"
+  "shardHash": "b0f24603805546431154611a1d0e52db184fbc6c33a8b65ea2b087376b52a193"
 }

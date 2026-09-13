@@ -1,0 +1,88 @@
+{
+  "record": {
+    "amends": [
+      "001-statecraft-thesis"
+    ],
+    "created": "2026-09-11",
+    "dependsOn": [
+      "001-statecraft-thesis"
+    ],
+    "establishes": [
+      {
+        "kind": "directory",
+        "path": "specs/014-rahi-realignment/"
+      }
+    ],
+    "extends": [
+      {
+        "spec": "001-statecraft-thesis",
+        "unit": {
+          "kind": "file",
+          "path": "README.md"
+        }
+      },
+      {
+        "spec": "013-agent-harness",
+        "unit": {
+          "kind": "file",
+          "path": "CLAUDE.md"
+        }
+      }
+    ],
+    "id": "014-rahi-realignment",
+    "implementation": "n-a",
+    "sectionHeadings": [
+      "014: The Rahi realignment, checked",
+      "1. Purpose",
+      "1.1 Territory",
+      "2. The packet's findings, checked",
+      "2.1 The stale shards and the unwitnessed claims",
+      "2.2 The ceiling delta, field by field",
+      "2.3 Why the migration is smaller than the surface suggests",
+      "3. What the check found that the packet did not",
+      "3.1 Production is live, healthy, and reconciled to this HEAD",
+      "3.2 The durable state is small and exactly enumerable",
+      "3.3 The factory has never run in production",
+      "3.4 The fleet is currently empty",
+      "3.5 The governance ledger is unsigned and self-anchored",
+      "3.6 Identity is a volume, not a database",
+      "3.7 One prose drift inside an approved spec",
+      "4. The successor thesis",
+      "4.1 What the thesis keeps",
+      "4.2 Retained, replaced, optional, deferred, retired",
+      "4.3 The responsibility map",
+      "4.4 One complete customer scenario",
+      "4.5 Implemented versus proposed",
+      "4.6 The milestone sequence, proposed",
+      "4.7 The amendment to spec 001, section by section",
+      "5. The durable-state and deployment inventory",
+      "5.1 Identity",
+      "5.2 Tenancy and delivery",
+      "5.3 Evidence",
+      "5.4 Secrets and external references",
+      "6. Declared versus enforced, today",
+      "7. Requests to sibling repositories",
+      "8. Open owner decisions",
+      "9. Out of scope",
+      "10. Revision 3, reconciled (2026-09-12)",
+      "10.1 What moved, and what it supersedes",
+      "10.2 The evidence verdict contract, proposed",
+      "10.3 Evidence bytes: measured, then proposed",
+      "10.4 Decisions for the owner",
+      "10.5 Feature-register coverage",
+      "10.6 The next smallest increment",
+      "11. Revision 4: the owner's adoption (2026-09-12)",
+      "11.1 The decisions, and where each landed",
+      "11.2 What the adoption supersedes in this record",
+      "11.3 The thesis corrections in `README.md` and `CLAUDE.md`",
+      "11.4 Approvals recorded, and the ones not given",
+      "11.5 The next smallest increment"
+    ],
+    "specPath": "specs/014-rahi-realignment/spec.md",
+    "status": "approved",
+    "summary": "statecraft's half of the 2026-09-11 family realignment, checked against the tree at 9658e29 and against the running production deployment, and adopted by the owner on 2026-09-12. The record re-verifies the handoff packet's findings, adds seven the packet could not have had because it did not inspect the live plane, and carries the durable-state inventory, the declared-versus-enforced table and the requests to sibling repositories. Section 4 is the successor thesis and the only amending text: it amends spec 001's loop, identity, governed cell, service map and milestone ladder, and leaves two planes, tenancy and licensing standing. Section 11 records the adoption (revision-4 rows ST-01 to ST-07): existing repositories first, with no initial stamping and no customer-application hosting; four evidence dimensions with admission kept separate; trust only from independently supplied roots; content-addressed evidence bytes; an offline root enrolling an online issuer; device-grant runners; the factory and fleet preserved without expansion; a pilot before any migration; and spec 015's schema slice approved apart from its hosted service, which is spec 018. The record authorizes no cutover, retirement, push or deploy.\n",
+    "title": "The Rahi realignment, checked: the successor thesis and the migration record"
+  },
+  "shardHash": "73216ff432073e9fc32e4fb233d09e90783a02764dfceaf48b6a092ba490d039",
+  "specVersion": "1.2.0"
+}
