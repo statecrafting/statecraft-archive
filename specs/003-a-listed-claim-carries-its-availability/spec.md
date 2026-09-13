@@ -2,7 +2,7 @@
 id: "003-a-listed-claim-carries-its-availability"
 title: "A listed claim carries its availability"
 status: approved
-implementation: in-progress
+implementation: complete
 created: "2026-09-11"
 summary: >
   The landing page lists repositories in the present tense and closes with a
@@ -538,6 +538,8 @@ statecraft's spec 014 and its amendment to 001. It counts as recorded when
 that approval is on statecraft's GitHub default branch: the front door cites
 evidence a reader can reach (3.2). On 2026-09-12 it is not. statecraft's
 `main` is `9658e29`, and 014 sits on a local branch that is not on GitHub.
+On 2026-09-13 it is: statecraft's PR 76 merged 014 as `approved` at
+`f3d001c`, with section 4 adopted as the thesis.
 
 Once it is recorded, the heading line
 `### Governed software delivery for the agentic era` becomes:
@@ -662,7 +664,8 @@ that wrote it.
   4. Its get-started step "Run the enrahitu substrate" depends on C-1, which
      found the image not anonymously pullable on 2026-09-12.
   5. rahi lands on both surfaces in the same window (D-2), and hqgit stays
-     off both. This page's roster step waits for the site's.
+     off both. This page's roster step waits for the site's, and the lead
+     step travels with it (section 13).
 - **statecraft-cli.** Its README's Status paragraph names milestone M4 and
   specs 102 to 110, and its Install section does not say that v0.1.0 predates
   member dispatch. Either note it there or cut a release that carries the
@@ -721,7 +724,7 @@ touched). Neither move changes a claim on the page.
 | rahi: responsibilities, lineage | rahi `c13cc70` `README.md`, spec 002 |
 | rahi: 010 to 034 complete; 000 and 002 n-a | rahi `c13cc70`, registry |
 | rahi: no release | no GitHub release; crates.io reports no `rahi` crate |
-| G-03 not yet recorded | statecraft `main` at `9658e29`; no `014` branch on its GitHub remote |
+| G-03 recorded; the lead and rahi's substrate sentence | statecraft `f3d001c` (PR 76, merged 2026-09-13): spec 014 `status: approved`, section 4 "The offer, in order": local governed delivery without a hosted account, then a hosted team layer served from a Rahi cell. On 2026-09-12 `main` was `9658e29`, with no 014 on GitHub |
 | AGPL-3.0, Apache-2.0 per repository | GitHub license detection for each repository, matching its `LICENSE` |
 | site install command | statecraft.ing `f074586`, `app/lib/get-started.ts` |
 
@@ -800,6 +803,11 @@ Every run below is in a scratch directory outside any checkout, on
    The re-run also caught a line wrap in the first draft of the erratum
    that split "draft bootstrap spec" across two lines, where the line-based
    check could not see it. The page was rewrapped before commit.
+   For the roster-and-lead change, re-run on 2026-09-13 at 17:24 UTC: the
+   merged corrections page fails 003 at the lead heading; the change's page
+   passes 001 (14 of 14) and 003 (38 of 38). Nineteen mutants fail 003 at
+   their guards. The three new ones restore the old lead heading, drop the
+   no-account sentence from the lead, and drop rahi's substrate sentence.
 6. **Rendering and links.** Both proposed pages parsed with a GFM parser
    (`marked` 15, locally): the heading outline is the one section 3.1
    orders, with the mermaid and `sh` fences intact. Every link and image
@@ -807,8 +815,10 @@ Every run below is in a scratch directory outside any checkout, on
    200, two of them only after a retry with browser headers, and the banner
    resolved on disk. The last, `npmjs.com`, answered 403 to every scripted
    request; that badge link is unchanged from the live page, and the npm
-   registry returns 200 for the package. GitHub's own rendering of the page was not seen: nothing
-   was pushed.
+   registry returns 200 for the package. On 2026-09-13 GitHub's own
+   rendering of the corrections page, read from its pull request (PR 2),
+   matched: the same heading outline, and every **Implemented:**,
+   **Released:** and **Hosted:** label rendered bold.
 5. **The enrahitu container (C-1).** At 22:55 UTC, with no credentials, the
    registry token endpoint for `repository:statecrafting/enrahitu:pull`
    returned 401 `UNAUTHORIZED`, and the `latest` manifest and tag list reads
@@ -900,14 +910,30 @@ Every run below is in a scratch directory outside any checkout, on
   and attest-ledger's signing phrase are corrected on the page (section 12).
   The copy check and both verification blocks pass again, and so does the
   mutant matrix, now sixteen cases.
-- **2026-09-12. What remains.** `implementation` stays `in-progress` until
-  both of these land:
-  1. **Roster step (6.1).** Prepared as a separate change that lands only
-     in statecraft.ing's publication window. On this date the site's PR 12
-     is open, and no site change listing rahi is published.
-  2. **Lead step (6.4, and 6.1's substrate sentence).** Waits on G-03 being
-     recorded on statecraft's default branch. On this date statecraft's
-     `main` is `9658e29`, and spec 014 is not on GitHub.
+- **2026-09-12. Roster step built; rebuilt on 2026-09-13 over the erratum.**
+  Section 6.1 is applied without its substrate sentence, and "the chassis"
+  is added to 4.9's Apache-2.0 line. Both verification blocks pass (section
+  11 run 4, the roster-step page).
+  This change is published only in statecraft.ing's rahi publication window.
+  On this date the site's PR 12 is open, and no site change listing rahi has
+  been published.
+- **2026-09-13. Lead step built, in the same change as the roster.**
+  G-03 is recorded (6.4: statecraft `f3d001c`). This change adds 6.4's
+  heading and sentence and 6.1's substrate sentence. Decision: the lead
+  travels with the roster step, not ahead of it, for two reasons. 6.1's
+  substrate sentence appends to rahi's entry, which is not on the page until
+  the roster step lands. And D-1 lands 6.4 with that sentence in one change.
+  The rejected alternative was a separate lead change before the site's
+  window, which would split D-1's single change in two. The revision-4
+  package also coordinates the roster and the lead with the site together.
+- **2026-09-13. Complete when this change lands.** With the corrections
+  step merged (PR 2) and this change carrying the roster and the lead, every
+  landing step in 3.6 is in the tree, and both verification blocks pass on
+  it. `implementation` is `complete` in this change and nowhere earlier.
+  What this spec leaves to a successor is named in 6.4: the two-plane
+  diagram and "The shape of the family" still draw the stamping design,
+  which G-03 takes out of the offer. Changing them is a further amendment
+  to 001.
 
 ## Verification
 
@@ -949,6 +975,12 @@ awk '/^### The primitives/{f=1;next} /^### /{f=0} f' profile/README.md | grep -q
 ! grep -qF 'ghcr.io/statecrafting/enrahitu' profile/README.md
 # 6.1, D-2: before and after the roster step, a listed rahi says in its own entry that nothing needs it.
 ! grep -qF 'github.com/statecrafting/rahi' profile/README.md || awk '/^#### \[rahi\]/{f=1;next} /^###/{f=0} f' profile/README.md | grep -qF 'Nothing else on this page requires it'
+# 6.1 and 6.4, D-1 (G-03 recorded at statecraft f3d001c): a listed rahi carries the substrate sentence.
+! grep -qF 'github.com/statecrafting/rahi' profile/README.md || awk '/^#### \[rahi\]/{f=1;next} /^###/{f=0} f' profile/README.md | grep -qF 'planned substrate for Statecraft'
+# 6.4, D-1: the lead names the repositories a reader already has, and says local use needs no account.
+grep -qF '### Governed delivery for the repositories you already have' profile/README.md
+! grep -qF '### Governed software delivery for the agentic era' profile/README.md
+grep -qF 'Local use needs no account; a hosted team layer is planned.' profile/README.md
 # 6.2, D-2: hqgit is not listed.
 ! grep -qF 'github.com/statecrafting/hqgit' profile/README.md
 # 6.3, D-3: enrahitu leads with the membership platform.
