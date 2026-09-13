@@ -231,8 +231,9 @@ test("session.result keeps costs, counts, and classification; tails, transcript 
 });
 
 test("119 B-6: the denial count survives the export and its samples are stripped; the denial records are allowlisted", () => {
-  // 125 D-6: `fence.refused` joined the allowlist, which is a version bump.
-  expect(REDACTION_POLICY.version).toBe(5);
+  // 125 D-6: `fence.refused` joined the allowlist, which is a version bump;
+  // 128 B-7's scan for a URL carrying userinfo is the next one.
+  expect(REDACTION_POLICY.version).toBe(6);
   const action = redactPayload("broker.action", { action: "push", phase: "outcome", runId: "r", specId: "122-x", target: "122-x", headSha: "h", receiptHash: "rh", ok: true, detail: "pushed" });
   expect(action.withheldPayload).toBe(false);
   expect(action.withheldFields).toEqual(["detail"]);
@@ -277,6 +278,65 @@ test("121 B-6: the acceptance records are exported whole but for the unstable re
   expect(unstable.withheldPayload).toBe(false);
   expect(unstable.withheldFields).toEqual(["dirty"]);
   expect((unstable.payload as Record<string, JsonValue>).headAfter).toBe("a");
+});
+
+// 128 FR-006 (F3, F13): a receipt minted before 128 B-6 carries whatever the
+// origin lookup returned; at policy version 6 the leaf field holding a URL with
+// userinfo is withheld and named, and so is a gate command embedding one.
+test("128 FR-006: a token-bearing origin and a command embedding a credentialed URL are withheld by leaf name", () => {
+  const token = "ghp_fabricated128export";
+  const receipt = redactPayload("acceptance.receipt", {
+    schemaVersion: 1,
+    specId: "128-x",
+    round: 1,
+    repo: { origin: `https://x-access-token:${token}@github.com/o/r.git`, baseSha: "a", candidateSha: "b", branch: "128-x" },
+    suite: { commands: [["git", "ls-remote", `https://user:${token}@github.com/o/r.git`]], digest: "d" },
+    policy: { gate: { commands: [], source: "cli", rule: null }, profile: { mode: "bypass" }, digest: "p" },
+    verifier: { specSpine: "spec-spine 0.18.0" },
+    results: [{ cmd: ["git", "ls-remote", `https://user:${token}@github.com/o/r.git`], exitCode: 0 }],
+    sensitivePaths: [],
+    passing: true,
+  });
+  expect(receipt.withheldPayload).toBe(false);
+  // The key the scan removes is `origin`, not the enclosing `repo` (F13).
+  expect(receipt.withheldFields).toEqual(["cmd", "commands", "origin"]);
+  const payload = receipt.payload as { repo: Record<string, JsonValue> };
+  expect(payload.repo).toEqual({ baseSha: "a", candidateSha: "b", branch: "128-x" });
+  expect(JSON.stringify(receipt.payload)).not.toContain(token);
+  // A URL without userinfo, and an scp-style remote, are not credentials.
+  const plain = redactPayload("acceptance.receipt", { repo: { origin: "https://github.com/o/r.git" }, note: "git@github.com:o/r.git" });
+  expect(plain.withheldFields).toEqual([]);
+});
+
+test("128 FR-006: an export of a chain holding a token-bearing receipt withholds it, verifies, and leaves the journal's bytes alone", () => {
+  const root = freshRoot("credential");
+  const token = "ghp_fabricated128chain";
+  try {
+    const work = openJournal(root);
+    work.append("acceptance.receipt", {
+      schemaVersion: 1,
+      specId: "128-x",
+      round: 1,
+      repo: { origin: `https://x-access-token:${token}@github.com/o/r.git`, baseSha: "a", candidateSha: "b", branch: "128-x" },
+      passing: true,
+    });
+    work.close();
+    openDecisionsChain(root).close();
+    const before = fs.readFileSync(join(root, "journal.jsonl"));
+    expect(before.toString("utf8")).toContain(token);
+
+    const bundle = exportFixture(root);
+    expect(bundle.policyVersion).toBe(6);
+    const text = serializeBundle(bundle);
+    expect(text).not.toContain(token);
+    expect(recordOfKind(bundle, "work", "acceptance.receipt").withheldFields).toEqual(["origin"]);
+    expect(verifyBundle(bundle).ok).toBe(true);
+
+    // Redaction without rewriting: the chain is byte for byte what it was.
+    expect(fs.readFileSync(join(root, "journal.jsonl")).equals(before)).toBe(true);
+  } finally {
+    fs.rmSync(root, { recursive: true, force: true });
+  }
 });
 
 test("named fields are stripped at any nesting depth: a gate's tails go, its command and exit code stay", () => {

@@ -52,9 +52,11 @@ import {
   quotaView,
   runView,
   servedEconomicsView,
+  servedJsonText,
   type ProjectQuotaInput,
   type ProjectRowInput,
 } from "./state";
+import { admitRequest, guardRequestOf } from "./origin-guard";
 import { ECONOMICS_ROUTE } from "../economics";
 import { createStaticHandler, defaultWebDistDir, type StaticHandler } from "./static";
 import {
@@ -248,6 +250,7 @@ export interface ApiServer {
 
 const STATUS_FOR_KIND: Readonly<Record<ApiErrorKind, number>> = {
   "bad-request": 400,
+  forbidden: 403,
   "api-version-mismatch": 400,
   "not-found": 404,
   "method-not-allowed": 405,
@@ -265,14 +268,16 @@ const JSON_HEADERS: Readonly<Record<string, string>> = {
   "Cache-Control": "no-store",
 };
 
+// Both helpers serialize through `servedJsonText`, so every envelope this
+// server answers with loses the userinfo of any URL inside it (128 B-8).
 function ok<T>(data: T): Response {
   const body: ApiResponse<T> = { ok: true, data };
-  return new Response(JSON.stringify(body), { status: 200, headers: JSON_HEADERS });
+  return new Response(servedJsonText(body), { status: 200, headers: JSON_HEADERS });
 }
 
 function fail(kind: ApiErrorKind, message: string): Response {
   const body: ApiResponse<never> = { ok: false, error: { kind, message } };
-  return new Response(JSON.stringify(body), { status: STATUS_FOR_KIND[kind], headers: JSON_HEADERS });
+  return new Response(servedJsonText(body), { status: STATUS_FOR_KIND[kind], headers: JSON_HEADERS });
 }
 
 // --- request validation -----------------------------------------------------
@@ -819,7 +824,7 @@ function controlsAllowed(deps: ApiDeps): boolean {
   return deps.controlsAvailable ?? true;
 }
 
-function metaView(deps: ApiDeps, nowMs: number): ApiMeta {
+function metaView(deps: ApiDeps, nowMs: number, guardRefusals: number): ApiMeta {
   const registry = deps.projects.projects();
   // Only folded when there is a daemon to describe: `parked` exists here to
   // tell a held flight slot apart from a countdown, and nothing else on this
@@ -851,6 +856,7 @@ function metaView(deps: ApiDeps, nowMs: number): ApiMeta {
       ...SPEC_CONTROL_VERBS.map((verb) => projectRoute(NAMED, `${PROJECT_ROUTES.specPrefix}<id>/${verb}`)),
       projectRoute(NAMED, `${PROJECT_ROUTES.specPrefix}<id>/${PROJECT_ROUTES.handoff}`),
     ],
+    guardRefusals,
   };
 }
 
@@ -1090,13 +1096,30 @@ async function routeProject(
   return fail("not-found", `no route for ${method} ${path}`);
 }
 
+// The origin guard's side of a running server (128 B-5): the port it
+// actually bound, which B-1 and B-2 compare against, and the refusals it has
+// counted since start. Counted, never journaled (D-4).
+interface GuardContext {
+  readonly port: number;
+  readonly counter: { refusals: number };
+}
+
 async function route(
   deps: ApiDeps,
   request: Request,
   hub: EventHub,
   closers: Set<() => void>,
-  staticHandler: StaticHandler | null
+  staticHandler: StaticHandler | null,
+  guard: GuardContext
 ): Promise<Response> {
+  // 128: first, before the version check, the authorize seam and every
+  // route, static assets included. A refused request reaches nothing.
+  const verdict = admitRequest(guardRequestOf(request), guard.port);
+  if (!verdict.admitted) {
+    guard.counter.refusals++;
+    return fail("forbidden", verdict.message);
+  }
+
   const mismatch = versionMismatch(request);
   if (mismatch) return mismatch;
 
@@ -1113,7 +1136,7 @@ async function route(
 
   switch (path) {
     case API_ROUTES.meta:
-      return requireGet() ?? ok(metaView(deps, clock.now()));
+      return requireGet() ?? ok(metaView(deps, clock.now(), guard.counter.refusals));
     case API_ROUTES.quota:
       return requireGet() ?? ok(quotaView(quotaInputs(deps), clock.now()));
     case API_ROUTES.events: {
@@ -1199,6 +1222,7 @@ export function createApiServer(deps: ApiDeps): ApiServer {
   const closers = new Set<() => void>();
   const staticHandler =
     deps.staticDir === null ? null : createStaticHandler({ distDir: deps.staticDir ?? defaultWebDistDir() });
+  const guardCounter = { refusals: 0 };
 
   const server = Bun.serve({
     hostname: host,
@@ -1210,9 +1234,12 @@ export function createApiServer(deps: ApiDeps): ApiServer {
     // is loopback-only, every JSON route answers in one fold, and the one
     // long-lived route is exactly the one this timeout kept breaking.
     idleTimeout: 0,
-    async fetch(request: Request): Promise<Response> {
+    async fetch(request: Request, bound): Promise<Response> {
       try {
-        return await route(deps, request, hub, closers, staticHandler);
+        // The port the listener actually holds, which differs from the one
+        // requested when port 0 asked the OS to choose.
+        const port = bound.port ?? deps.port ?? DEFAULT_API_PORT;
+        return await route(deps, request, hub, closers, staticHandler, { port, counter: guardCounter });
       } catch (err) {
         // Every unexpected throw still leaves through the one envelope, so a
         // client never has to parse an HTML error page or a bare stack.

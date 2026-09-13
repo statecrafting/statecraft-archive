@@ -41,6 +41,7 @@ import {
 } from "./lifecycle-policy";
 import type { CostCeiling } from "./budget";
 import { ceilingPayload, parseCeiling } from "./budget";
+import { reduceRemoteUrl } from "./candidate";
 
 // --- model (B-1) ------------------------------------------------------------
 
@@ -713,10 +714,13 @@ export function createProcessProjectProbe(): ProjectProbe {
       return result.stdout;
     },
 
+    // 128 B-6: the same reduction as the candidate's lookup, so a
+    // registration journals `origin is https://github.com/...` and never a
+    // token a CI-shaped remote carries.
     originUrl(repoDir: string): string | null {
       const result = git(repoDir, ["remote", "get-url", "origin"]);
       if (result === null || result.exitCode !== 0 || result.stdout.length === 0) return null;
-      return result.stdout;
+      return reduceRemoteUrl(result.stdout);
     },
 
     defaultBranch(repoDir: string): string | null {

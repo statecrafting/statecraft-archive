@@ -10,7 +10,6 @@
 
 import * as fs from "fs";
 import { join } from "path";
-import type { JsonValue } from "./journal";
 import { POLICY_SENSITIVE_PREFIXES } from "./receipt";
 import type { Stage } from "./state";
 
@@ -62,8 +61,13 @@ export const DEFAULT_LIFECYCLE_POLICY: LifecyclePolicy = {
 
 export const LEGACY_LIFECYCLE_POLICY: RecordedLifecyclePolicy = { ...DEFAULT_LIFECYCLE_POLICY, source: "default", legacy: true };
 
-// The file a registration probes, once, read-only (B-2).
-export const POLICY_FILE = join(".statecraft", "policy.json");
+// The file a registration probes, once, read-only (B-2). A literal, not
+// `join(...)` at load: the web UI's bundle reached this module through
+// api-client.ts's `policyPayload` until 128 D-16 moved it, and in a browser
+// `path` is an empty stub, so a call here at module load stopped the page
+// before it rendered (128 D-15). Members are unix-only (108 D-10), so the
+// separator is the one `join` gave.
+export const POLICY_FILE = ".statecraft/policy.json";
 
 function isRecord(v: unknown): v is Record<string, unknown> {
   return typeof v === "object" && v !== null && !Array.isArray(v);
@@ -134,17 +138,9 @@ export function parseLifecyclePolicy(value: unknown, label: string): LifecyclePo
   return { schedulable, merge, sensitive, humanGate };
 }
 
-export function policyPayload(policy: LifecyclePolicy, source: PolicySource): Record<string, JsonValue> {
-  return {
-    policy: {
-      schedulable: { statuses: [...policy.schedulable.statuses], namedDraft: policy.schedulable.namedDraft },
-      merge: { method: policy.merge.method },
-      sensitive: { prefixes: [...policy.sensitive.prefixes], onTouch: policy.sensitive.onTouch },
-      humanGate: policy.humanGate,
-    },
-    source,
-  };
-}
+// The payload builder lives in a module with no run-time imports, so the web
+// client can reach it without this module's `fs` and `path` (128 D-16).
+export { policyPayload } from "./policy-payload";
 
 // The chain's record back out: the whole policy and its source.
 export function parseRecordedPolicy(payload: Record<string, unknown>, label: string): RecordedLifecyclePolicy {

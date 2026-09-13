@@ -1,19 +1,4 @@
 {
-  "diagnostics": {
-    "errors": [],
-    "warnings": [
-      {
-        "code": "W-001",
-        "message": "spec '128-api-origin-guard' file unit 'members/src/orchestrator/api/origin-guard.ts' does not exist",
-        "path": "members/src/orchestrator/api/origin-guard.ts"
-      },
-      {
-        "code": "W-001",
-        "message": "spec '128-api-origin-guard' file unit 'members/src/orchestrator/api/origin-guard.test.ts' does not exist",
-        "path": "members/src/orchestrator/api/origin-guard.test.ts"
-      }
-    ]
-  },
   "mapping": {
     "dependsOn": [
       "022-http-api-and-events",
@@ -28,6 +13,26 @@
       },
       {
         "path": "docs/design/",
+        "source": "spec-edge"
+      },
+      {
+        "path": "members/src/members/journal-parity.test.ts",
+        "source": "spec-edge"
+      },
+      {
+        "path": "members/src/orchestrator/api/api-client.ts",
+        "source": "spec-edge"
+      },
+      {
+        "path": "members/src/orchestrator/api/events.ts",
+        "source": "spec-edge"
+      },
+      {
+        "path": "members/src/orchestrator/api/origin-guard.test.ts",
+        "source": "spec-edge"
+      },
+      {
+        "path": "members/src/orchestrator/api/origin-guard.ts",
         "source": "spec-edge"
       },
       {
@@ -55,11 +60,23 @@
         "source": "spec-edge"
       },
       {
+        "path": "members/src/orchestrator/economics.test.ts",
+        "source": "spec-edge"
+      },
+      {
         "path": "members/src/orchestrator/export.test.ts",
         "source": "spec-edge"
       },
       {
         "path": "members/src/orchestrator/export.ts",
+        "source": "spec-edge"
+      },
+      {
+        "path": "members/src/orchestrator/lifecycle-policy.ts",
+        "source": "spec-edge"
+      },
+      {
+        "path": "members/src/orchestrator/policy-payload.ts",
         "source": "spec-edge"
       },
       {
@@ -71,13 +88,29 @@
         "source": "spec-edge"
       },
       {
+        "path": "members/web/test/browser-imports.test.ts",
+        "source": "spec-edge"
+      },
+      {
+        "path": "members/web/test/fixtures.ts",
+        "source": "spec-edge"
+      },
+      {
+        "path": "members/web/test/store.test.tsx",
+        "source": "spec-edge"
+      },
+      {
         "path": "members/web/vite.config.ts",
         "source": "spec-edge"
       }
     ],
     "resolvedUnits": [
       {
-        "locations": [],
+        "locations": [
+          {
+            "file": "members/src/orchestrator/api/origin-guard.test.ts"
+          }
+        ],
         "ownership": true,
         "sourceField": "establishes",
         "unit": {
@@ -86,12 +119,42 @@
         }
       },
       {
-        "locations": [],
+        "locations": [
+          {
+            "file": "members/src/orchestrator/api/origin-guard.ts"
+          }
+        ],
         "ownership": true,
         "sourceField": "establishes",
         "unit": {
           "kind": "file",
           "path": "members/src/orchestrator/api/origin-guard.ts"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "members/src/orchestrator/policy-payload.ts"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "file",
+          "path": "members/src/orchestrator/policy-payload.ts"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "members/web/test/browser-imports.test.ts"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "file",
+          "path": "members/web/test/browser-imports.test.ts"
         }
       },
       {
@@ -118,6 +181,45 @@
         "unit": {
           "kind": "directory",
           "path": "docs/design/"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "members/src/members/journal-parity.test.ts"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "extends",
+        "unit": {
+          "kind": "file",
+          "path": "members/src/members/journal-parity.test.ts"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "members/src/orchestrator/api/api-client.ts"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "extends",
+        "unit": {
+          "kind": "file",
+          "path": "members/src/orchestrator/api/api-client.ts"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "members/src/orchestrator/api/events.ts"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "extends",
+        "unit": {
+          "kind": "file",
+          "path": "members/src/orchestrator/api/events.ts"
         }
       },
       {
@@ -201,6 +303,19 @@
       {
         "locations": [
           {
+            "file": "members/src/orchestrator/economics.test.ts"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "extends",
+        "unit": {
+          "kind": "file",
+          "path": "members/src/orchestrator/economics.test.ts"
+        }
+      },
+      {
+        "locations": [
+          {
             "file": "members/src/orchestrator/export.test.ts"
           }
         ],
@@ -227,6 +342,19 @@
       {
         "locations": [
           {
+            "file": "members/src/orchestrator/lifecycle-policy.ts"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "extends",
+        "unit": {
+          "kind": "file",
+          "path": "members/src/orchestrator/lifecycle-policy.ts"
+        }
+      },
+      {
+        "locations": [
+          {
             "file": "members/src/orchestrator/projects.test.ts"
           }
         ],
@@ -248,6 +376,32 @@
         "unit": {
           "kind": "file",
           "path": "members/src/orchestrator/projects.ts"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "members/web/test/fixtures.ts"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "extends",
+        "unit": {
+          "kind": "file",
+          "path": "members/web/test/fixtures.ts"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "members/web/test/store.test.tsx"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "extends",
+        "unit": {
+          "kind": "file",
+          "path": "members/web/test/store.test.tsx"
         }
       },
       {
@@ -281,5 +435,5 @@
     "specStatus": "approved"
   },
   "schemaVersion": "1.1.0",
-  "shardHash": "6f5c914650313a2bd3cf18fd2bc11caba5be97af06497d36c7c88a6bf7fef352"
+  "shardHash": "b06cf6d49ed60bf433044fefddaf8d7031ee7ab696fd884eab28bb59b6e8d6df"
 }

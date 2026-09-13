@@ -6,6 +6,7 @@ import * as fs from "fs";
 import { join } from "path";
 import { sha256Hex } from "../journal";
 import { foldOrchestratorState, transition } from "../state";
+import { requalifyProject, verifyProjectsChain } from "../projects";
 import type { Daemon } from "../daemon";
 import { createApiClient } from "./api-client";
 import { EventHub } from "./events";
@@ -94,9 +95,25 @@ async function withServer(
   }
 }
 
+// A state-changing request carries X-Api-Version, as both first-party clients
+// send it (128 B-3); the helper adds it where a test's request lacks it. The
+// guard's own tests (FR-002) call fetch directly so they choose every header.
 async function getJson<T>(server: ApiServer, path: string, init?: RequestInit): Promise<{ status: number; body: ApiResponse<T> }> {
-  const response = await fetch(`${server.url}${path}`, init);
+  const method = (init?.method ?? "GET").toUpperCase();
+  const headers = { ...((init?.headers as Record<string, string> | undefined) ?? {}) };
+  if (method !== "GET" && method !== "HEAD" && !Object.keys(headers).some((k) => k.toLowerCase() === API_VERSION_HEADER.toLowerCase())) {
+    headers[API_VERSION_HEADER] = String(API_VERSION);
+  }
+  const response = await fetch(`${server.url}${path}`, { ...init, headers });
+  expectNoCorsGrant(response.headers);
   return { status: response.status, body: (await response.json()) as ApiResponse<T> };
+}
+
+// 128 FR-003: the server grants no cross-origin access, so no response this
+// suite reads through its helpers carries an Access-Control-Allow-* header.
+function expectNoCorsGrant(headers: Headers): void {
+  const granted = [...headers.keys()].filter((name) => name.toLowerCase().startsWith("access-control-allow-"));
+  expect(granted).toEqual([]);
 }
 
 function expectOk<T>(body: ApiResponse<T>): T {
@@ -226,6 +243,162 @@ test("AC-2: a client declaring X-Api-Version: 1 is refused with the version-mism
     const undeclared = await getJson<ApiMeta>(server, API_ROUTES.meta);
     expect(undeclared.body.ok).toBe(true);
   });
+});
+
+// --- the origin guard (spec 128 FR-002, FR-003, FR-004, FR-008) -------------
+//
+// The attack probes of doc 05 §18.1, promoted: each request below is the shape
+// that was measured changing state or reading the registry at `874766b`, sent
+// over real HTTP with fetch so the test chooses every header, and each now
+// asserts the refusal where the probe saw success (128 D-9).
+
+async function raw(server: ApiServer, path: string, init: RequestInit): Promise<{ status: number; body: ApiResponse<unknown>; headers: Headers }> {
+  const response = await fetch(`${server.url}${path}`, init);
+  return { status: response.status, body: (await response.json()) as ApiResponse<unknown>, headers: response.headers };
+}
+
+function expectForbidden(result: { status: number; body: ApiResponse<unknown>; headers: Headers }, rule: string): void {
+  expect(result.status).toBe(403);
+  const error = expectErr(result.body);
+  expect(error.kind).toBe("forbidden");
+  expect(error.message.startsWith(`${rule}: `)).toBe(true);
+  expectNoCorsGrant(result.headers);
+}
+
+test("128 FR-002: a foreign-origin text/plain POST is refused and journals nothing; so are Origin null and another loopback port", async () => {
+  await withServer("guard-origin", async ({ server, registry }) => {
+    const port = new URL(server.url).port;
+    const disarm = projectRoute("alpha", PROJECT_ROUTES.disarm);
+    const headSeq = registry.chain.headSeq;
+    const simple = (origin: string): RequestInit => ({
+      method: "POST",
+      headers: { Origin: origin, "Content-Type": "text/plain" },
+      body: JSON.stringify({ source: "attacker" }),
+    });
+
+    // The measured probe: a CORS simple request, which a browser sends unasked.
+    expectForbidden(await raw(server, disarm, simple("https://attacker.example")), "origin");
+    expectForbidden(await raw(server, disarm, simple("null")), "origin");
+    expectForbidden(await raw(server, disarm, simple("http://localhost:5173")), "origin");
+    expectForbidden(await raw(server, disarm, simple(`http://127.0.0.1:${Number(port) + 1}`)), "origin");
+    // With the version header as well, so the Origin rule alone is what refuses.
+    const withHeader = simple("https://attacker.example");
+    (withHeader.headers as Record<string, string>)[API_VERSION_HEADER] = "2";
+    expectForbidden(await raw(server, disarm, withHeader), "origin");
+    // No Origin and no header: the header rule, for a client that omits Origin.
+    expectForbidden(await raw(server, disarm, { method: "POST", headers: { "Content-Type": "text/plain" }, body: "{}" }), "header");
+
+    expect(registry.chain.headSeq).toBe(headSeq);
+    expect(registry.projects().get("alpha")?.armed).toBe(true);
+
+    // The same POST with no Origin and with the header is the CLI's shape, applied.
+    const applied = await raw(server, disarm, { method: "POST", headers: { [API_VERSION_HEADER]: "2", "Content-Type": "text/plain" }, body: "{}" });
+    expect(applied.status).toBe(200);
+    expect(registry.chain.headSeq).toBe(headSeq + 1);
+    expect(registry.projects().get("alpha")?.armed).toBe(false);
+
+    // The daemon's own page: its own Origin, the header, admitted.
+    const own = await raw(server, projectRoute("alpha", PROJECT_ROUTES.arm), {
+      method: "POST",
+      headers: { Origin: `http://127.0.0.1:${port}`, [API_VERSION_HEADER]: "2" },
+    });
+    expect(own.status).toBe(200);
+    expect(registry.projects().get("alpha")?.armed).toBe(true);
+  });
+});
+
+test("128 FR-002: a rebinding-shaped read is refused before any route, the registry and static assets included", async () => {
+  await withServer("guard-host", async ({ server, alpha }) => {
+    const port = new URL(server.url).port;
+    for (const path of [API_ROUTES.projects, API_ROUTES.meta, "/", "/index.html"]) {
+      const rebound = await raw(server, path, { headers: { Host: `rebind.attacker.example:${port}` } });
+      expectForbidden(rebound, "host");
+      expect(JSON.stringify(rebound.body)).not.toContain(alpha.repoDir);
+    }
+    expectForbidden(await raw(server, API_ROUTES.projects, { headers: { Host: "rebind.attacker.example" } }), "host");
+    // The same read at the daemon's own name is served, repoDir and all.
+    const own = await raw(server, API_ROUTES.projects, { headers: { Host: `localhost:${port}` } });
+    expect(own.status).toBe(200);
+    expect(JSON.stringify(own.body)).toContain(alpha.repoDir);
+  });
+});
+
+test("128 FR-003, FR-004: a preflight grants nothing, and refusals are counted on /api/meta without a journal record", async () => {
+  await withServer("guard-meta", async ({ server, registry, alpha }) => {
+    const before = expectOk((await getJson<ApiMeta>(server, API_ROUTES.meta)).body);
+    expect(before.guardRefusals).toBe(0);
+    const registryHead = registry.chain.headSeq;
+    const alphaHead = alpha.journal.headSeq;
+
+    const preflight = await raw(server, projectRoute("alpha", PROJECT_ROUTES.disarm), {
+      method: "OPTIONS",
+      headers: { "Access-Control-Request-Method": "POST", "Access-Control-Request-Headers": API_VERSION_HEADER },
+    });
+    expectForbidden(preflight, "preflight");
+    expectForbidden(await raw(server, API_ROUTES.meta, { headers: { Origin: "https://attacker.example" } }), "origin");
+    expectForbidden(
+      await raw(server, projectRoute("alpha", PROJECT_ROUTES.runPause), { method: "POST", headers: { Origin: "null" } }),
+      "origin"
+    );
+
+    const after = expectOk((await getJson<ApiMeta>(server, API_ROUTES.meta)).body);
+    expect(after.guardRefusals).toBe(3);
+    expect(registry.chain.headSeq).toBe(registryHead);
+    expect(alpha.journal.headSeq).toBe(alphaHead);
+  });
+});
+
+test("128 FR-008: historical token-bearing values are served reduced, streamed reduced, and left in the chains byte for byte", async () => {
+  await withServer(
+    "guard-history",
+    async ({ server, registry, alpha }) => {
+      const token = "ghp_fabricated128served";
+      // Written as a pre-128 daemon wrote them: a registration check detail
+      // and a receipt carrying the remote verbatim.
+      requalifyProject({
+        chain: registry.chain,
+        name: "alpha",
+        qualification: {
+          qualified: true,
+          checks: [{ id: "origin-remote", ok: true, detail: `origin is https://x-access-token:${token}@github.com/o/alpha.git` }],
+          warnings: [],
+        },
+        source: "cli",
+      });
+      alpha.journal.append("acceptance.receipt", {
+        schemaVersion: 1,
+        specId: "001-alpha",
+        round: 1,
+        repo: { origin: `https://x-access-token:${token}@github.com/o/alpha.git`, baseSha: "a", candidateSha: "b", branch: "001-alpha" },
+        passing: true,
+      });
+      const registryFile = join(registry.dir, "projects.jsonl");
+      const alphaFile = join(alpha.dir, "journal.jsonl");
+      const registryBytes = fs.readFileSync(registryFile);
+      const alphaBytes = fs.readFileSync(alphaFile);
+      expect(registryBytes.toString("utf8")).toContain(token);
+      expect(alphaBytes.toString("utf8")).toContain(token);
+
+      const served = await getJson<ProjectsView>(server, API_ROUTES.projects);
+      const text = JSON.stringify(served.body);
+      expect(text).not.toContain(token);
+      expect(text).toContain("origin is https://github.com/o/alpha.git");
+      for (const suffix of [PROJECT_ROUTES.history, PROJECT_ROUTES.run, PROJECT_ROUTES.decisions]) {
+        expect(JSON.stringify((await getJson<unknown>(server, alphaRoute(suffix))).body)).not.toContain(token);
+      }
+
+      server.pump.pumpOnce();
+      const streamed = await readSseFor(`${server.url}${API_ROUTES.events}`, 150, { "Last-Event-ID": "0" });
+      expect(streamed).toContain("acceptance.receipt");
+      expect(streamed).toContain("https://github.com/o/alpha.git");
+      expect(streamed).not.toContain(token);
+
+      expect(fs.readFileSync(registryFile).equals(registryBytes)).toBe(true);
+      expect(fs.readFileSync(alphaFile).equals(alphaBytes)).toBe(true);
+      expect(verifyProjectsChain(registry.dir).ok).toBe(true);
+    },
+    { heartbeatMs: 10_000, pumpIntervalMs: 1_000_000 }
+  );
 });
 
 test("the daemon state tells a held flight slot from a parked one", async () => {

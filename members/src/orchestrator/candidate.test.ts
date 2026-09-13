@@ -5,7 +5,18 @@ import { test, expect } from "bun:test";
 import { existsSync, mkdtempSync, readFileSync, writeFileSync } from "fs";
 import { tmpdir } from "os";
 import { join } from "path";
-import { CHILD_ENV_DENY, candidatePath, changedPaths, closeCandidate, openCandidate, originUrl, scrubEnv } from "./candidate";
+import {
+  CHILD_ENV_DENY,
+  candidatePath,
+  changedPaths,
+  closeCandidate,
+  containsUrlUserinfo,
+  openCandidate,
+  originUrl,
+  reduceRemoteUrl,
+  scrubEnv,
+  withoutUrlUserinfo,
+} from "./candidate";
 
 function git(cwd: string, args: string[]): string {
   const result = Bun.spawnSync(["git", ...args], { cwd });
@@ -101,6 +112,32 @@ test("originUrl answers the remote or null", () => {
   expect(originUrl(repo)).toBeNull();
   git(repo, ["remote", "add", "origin", "git@example.invalid:o/r.git"]);
   expect(originUrl(repo)).toBe("git@example.invalid:o/r.git");
+});
+
+// 128 FR-005: the remote shapes F3 measured passing through verbatim, each
+// set on a real repository and read back through the production lookup.
+test("128 FR-005: originUrl drops the whole userinfo of an https remote and leaves the other shapes alone", () => {
+  const cases: readonly (readonly [string, string | null])[] = [
+    ["https://x-access-token:ghp_fabricated0000@github.com/org/repo.git", "https://github.com/org/repo.git"],
+    ["https://user:password@github.com/org/repo.git", "https://github.com/org/repo.git"],
+    ["https://ghp_fabricatedUserOnly@github.com/org/repo.git", "https://github.com/org/repo.git"],
+    ["http://user:pw@git.example.invalid:8080/r.git", "http://git.example.invalid:8080/r.git"],
+    ["https://github.com/org/repo.git", "https://github.com/org/repo.git"],
+    ["git@github.com:org/repo.git", "git@github.com:org/repo.git"],
+    ["ssh://git@github.com/org/repo.git", "ssh://git@github.com/org/repo.git"],
+    ["/srv/git/repo.git", "/srv/git/repo.git"],
+    // Names https and does not parse as a URL (a port that is not one): null, never guessed.
+    ["https://user:pa/ss@github.com/org/repo.git", null],
+  ];
+  for (const [remote, expected] of cases) {
+    const repo = initRepo();
+    git(repo, ["remote", "add", "origin", remote]);
+    expect(originUrl(repo)).toBe(expected);
+  }
+  expect(reduceRemoteUrl("https://x-access-token:tok@github.com/o/r")).toBe("https://github.com/o/r");
+  expect(containsUrlUserinfo("origin is https://tok@github.com/o/r")).toBe(true);
+  expect(containsUrlUserinfo("https://github.com/o/r?u=a@b")).toBe(false);
+  expect(withoutUrlUserinfo("a https://u:t@h/x and HTTP://v@h2/y")).toBe("a https://h/x and HTTP://h2/y");
 });
 
 test("B-3 / FR-004: scrubEnv drops exactly the deny list and sets NO_COLOR; the list is the contract's", () => {

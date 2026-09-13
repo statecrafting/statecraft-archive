@@ -14,6 +14,7 @@
 import type { JournalRecord, JsonValue } from "../journal";
 import { foldState } from "../journal";
 import { parseReceipt, RECEIPT_KIND } from "../receipt";
+import { containsUrlUserinfo, withoutUrlUserinfo } from "../candidate";
 import { qualificationFor } from "../qualification";
 import type { OrchestratorState, FoldedStageExec } from "../state";
 import { foldOrchestratorState } from "../state";
@@ -60,6 +61,33 @@ function numberField(payload: JsonValue, field: string): number | null {
   if (!isJsonRecord(payload)) return null;
   const v = payload[field];
   return typeof v === "number" ? v : null;
+}
+
+// --- served values lose URL userinfo (spec 128 B-8) --------------------------
+
+// A value read from a record already written (a registration's check detail,
+// a receipt's `repo.origin`, anything a pre-128 chain carries) is served
+// without the userinfo of any `http` or `https` URL inside its strings. The
+// journal is never touched: this runs on the way out, over the copy being
+// served, and a verifier of the chain still sees what was written (D-7).
+export function reduceServedValue(value: JsonValue): JsonValue {
+  if (typeof value === "string") return containsUrlUserinfo(value) ? withoutUrlUserinfo(value) : value;
+  if (value === null || typeof value !== "object") return value;
+  if (Array.isArray(value)) return value.map(reduceServedValue);
+  const out: { [key: string]: JsonValue } = {};
+  for (const [key, entry] of Object.entries(value)) out[key] = reduceServedValue(entry);
+  return out;
+}
+
+// The text of a JSON body as served. Every envelope passes through here, so no
+// route can serve a credential-bearing URL by forgetting a field (128 D-11).
+// The text test is a superset of the per-string one (it can also match across
+// two strings), so a body with nothing to reduce is serialized once, and a body
+// that matches is reduced string by string, never by editing JSON text.
+export function servedJsonText(body: unknown): string {
+  const text = JSON.stringify(body);
+  if (!containsUrlUserinfo(text)) return text;
+  return JSON.stringify(reduceServedValue(JSON.parse(text) as JsonValue));
 }
 
 // --- shipped-set (spec 012 D-1) ---------------------------------------------

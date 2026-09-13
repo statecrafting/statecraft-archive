@@ -3,7 +3,7 @@ id: "128-api-origin-guard"
 title: "The origin guard: the daemon answers its own page and its own clients, and never serves a credential"
 status: approved
 created: "2026-09-11"
-implementation: pending
+implementation: complete
 risk: medium
 depends_on:
   - "022-http-api-and-events"
@@ -13,6 +13,10 @@ depends_on:
 establishes:
   - "members/src/orchestrator/api/origin-guard.ts"
   - "members/src/orchestrator/api/origin-guard.test.ts"
+  # D-16: the policy payload builder with no run-time imports, and the walk of
+  # the web UI's import graph that holds it there.
+  - "members/src/orchestrator/policy-payload.ts"
+  - "members/web/test/browser-imports.test.ts"
 extends:
   # 022 owns the API directory: the guard runs first in the router, and the
   # envelope's error vocabulary gains `forbidden` (additive; no shape changes).
@@ -21,6 +25,24 @@ extends:
   - { spec: "022-http-api-and-events", unit: "members/src/orchestrator/api/server.test.ts", nature: additive }
   # The API view reduces userinfo in historical values it serves (B-8).
   - { spec: "022-http-api-and-events", unit: "members/src/orchestrator/api/state.ts", nature: additive }
+  # The event pump streams and replays record payloads, which are served
+  # historical values too (D-11).
+  - { spec: "022-http-api-and-events", unit: "members/src/orchestrator/api/events.ts", nature: additive }
+  # 030's route test posts to its GET-only route; the post gains the version
+  # header so the route, not the guard, is what it tests (B-10).
+  - { spec: "030-run-economics", unit: "members/src/orchestrator/economics.test.ts", nature: additive }
+  # 113's parity suite holds the two exports to one byte stream; it gains the
+  # policy-6 case (FR-006).
+  - { spec: "113-journal-port", unit: "members/src/members/journal-parity.test.ts", nature: additive }
+  # 024's web fixtures build an ApiMeta by hand, which gains `guardRefusals`.
+  - { spec: "024-web-ui", unit: "members/web/test/fixtures.ts", nature: additive }
+  - { spec: "024-web-ui", unit: "members/web/test/store.test.tsx", nature: additive }
+  # 123's policy module computed a path at load, which stopped the built UI
+  # from rendering at all; §5's browser round needs the page to load (D-15).
+  - { spec: "123-policy-kit-handoff", unit: "members/src/orchestrator/lifecycle-policy.ts", nature: additive }
+  # 022's typed client, which the web UI bundles, imports the payload builder
+  # from the module with no run-time imports (D-16).
+  - { spec: "022-http-api-and-events", unit: "members/src/orchestrator/api/api-client.ts", nature: additive }
   # 121 owns the candidate, where the origin URL is read before it is
   # journaled in a receipt or served as a project's origin.
   - { spec: "121-candidate-and-receipt", unit: "members/src/orchestrator/candidate.ts", nature: additive }
@@ -375,6 +397,135 @@ refusal or the absence where the probe saw success: FR-002 carries the
 foreign-origin, `Origin: null`, other-loopback-port and rebinding requests;
 FR-006 to FR-008 carry the token-bearing origin through a receipt, the
 export, the projects chain and a served historical record.
+
+D-10 (2026-09-12, build). At port 80 a `Host` without a port is the same
+authority. B-1 names `<name>:<port>`, and an HTTP client omits the port when
+it is the scheme's default (RFC 9110 §7.2), so a strict reading would refuse
+a browser addressing a daemon bound at 80. The guard admits the bare three
+names, and the matching bare origins, only at port 80; at any other port a
+portless `Host` is refused. This adds no name and resolves nothing, so D-1
+stands.
+
+D-11 (2026-09-12, build). B-8's reduction runs at the two places the API
+serializes, not field by field. Every JSON envelope (`ok` and `fail`) leaves
+through `servedJsonText`, and the event pump reduces a record's payload before
+the ring buffers it, so a stream and its replay carry the same reduced value.
+Per-field reduction was rejected: B-8 lists a check detail, a receipt's
+origin and the capsule's, but the history, run, decisions and evidence views
+and the stream can all carry a record's strings, and a list of fields is the
+kind that is one route short. The cost is one text test per envelope, and a
+second serialization only when that test matches. Raw evidence bytes and
+static assets are not envelopes and are served as they are (§6). The pump's
+module, `events.ts`, is 022's and gains an `extends` edge.
+
+D-12 (2026-09-12, build). The reduction is exported from `candidate.ts`
+(`reduceRemoteUrl`, `containsUrlUserinfo`, `withoutUrlUserinfo`) and used by
+both origin lookups, the export scan and the API. Its pattern spells the
+scheme letter by letter and whitespace as its six ASCII bytes, so the Rust
+copy in `statecraft-journal` matches exactly the same strings: `(?i)` and
+`\s` are not the same set in the two regex engines, and FR-006's byte-for-byte
+parity would otherwise depend on which strings a chain happens to hold. A
+remote that names `http` or `https` and does not parse is `null` (B-6), which
+the probe's check reports as `no "origin" remote`; the probe's interface has
+one null, and telling "unparseable" apart would widen it for a remote git
+itself would not use.
+
+D-13 (2026-09-12, build). The server suite's request helper adds
+`X-Api-Version` to a non-GET request that lacks it, which is B-10's "gain it"
+in one place rather than at 36 call sites, and asserts on every response that
+no `Access-Control-Allow-*` header is present, which is FR-003 for the whole
+suite. The attack probes (FR-002, FR-004, FR-008) call `fetch` directly, so
+each chooses every header it sends.
+
+D-14 (2026-09-12, build). The dev proxy's target is 022's default address,
+or `STATECRAFT_DEV_DAEMON_URL` when set, and the rewritten `Origin` follows
+the target. The config accepts only an `http` URL at one of the three
+loopback names and refuses to load otherwise. The need was found running §5's
+`web:dev` round: the operator's own daemon held port 4519, and the proxy as
+first written could only reach that daemon, so the round would have driven
+it. A contributor in the same position needs the same thing, and a refusal of
+any non-loopback target keeps the proxy from becoming a way off the machine.
+
+D-15 (2026-09-12, build). `lifecycle-policy.ts`'s `POLICY_FILE` becomes the
+literal `.statecraft/policy.json` instead of `join(".statecraft",
+"policy.json")` evaluated at load. Found running §5's browser round: the built
+UI threw `(0, c(...).join) is not a function` before rendering, because
+`api-client.ts` imports `policyPayload` from that module and a browser bundle
+stubs `path` with an empty object. The same throw was reproduced from
+`origin/main` (`874766b`) with an identical bundle, so the built UI has not
+rendered in a browser since spec 123 added the import; no test loads the
+bundle in a browser. The literal is what `join` produced on every platform
+the members support (108 D-10), and 123's tests pass unchanged. The larger
+defect of the same cause, the dev server's, is recorded in the status below
+and not fixed here.
+
+D-16 (2026-09-12, the owner). The dev server's defect is fixed in this spec,
+on the owner's instruction after the status below reported it. `policyPayload`
+moves, unchanged, to `policy-payload.ts`, which imports nothing at run time;
+`lifecycle-policy.ts` re-exports it, so 123's callers are untouched, and
+`api-client.ts` imports it from the new module, so the client no longer
+reaches `lifecycle-policy.ts`, `receipt.ts` or `journal.ts`. A test walks the
+UI's run-time import graph from `web/src/main.tsx`, counting every import but
+an `import type` or `export type` as an edge, and fails on any Node or Bun
+built-in it reaches; its control walks `lifecycle-policy.ts` and finds `fs`
+and `crypto`. The alternative, a Vite alias stubbing the built-ins, was
+rejected: it would hide the next such import instead of refusing it.
+
+## Status (2026-09-12, complete)
+
+`implementation: complete`. With D-16 in place, the round the previous status
+recorded as blocked was rerun, in headless Chrome 152 against a daemon built
+from this branch on port 4631 (scratch home, unqualified scratch repository)
+and `bun run web:dev` on port 4633 with `STATECRAFT_DEV_DAEMON_URL` pointing
+at it (D-14):
+
+- the dev UI loaded and its Arm control, sent through the proxy, journaled
+  `project.armed` with source `ui` at seq 5, with `guardRefusals` at 0;
+- a POST sent to the dev server with `Origin: https://attacker.example` was
+  forwarded unchanged and refused by the daemon (`origin: "https://attacker.example"
+  is not this daemon's origin ...`), `guardRefusals` 1, no record appended;
+- the production build, rebuilt with D-16, loaded from the daemon and its
+  Disarm control journaled `project.disarmed` with source `ui` at seq 6.
+
+Every §5 criterion now holds: the suites and gate, the browser round (the
+previous status), the dev round (above), and the committed evidence bundle
+verifying under both verifiers. The processes, profile and scratch
+repository were throwaway; the operator's own daemon was not touched.
+
+## Status (2026-09-12, in progress: one acceptance round blocked)
+
+Implemented and committed on branch `128-api-origin-guard`; the gate, `make
+members` (typecheck, member builds, 994 Bun tests), `cargo fmt`, `clippy` and
+`cargo test` exit 0. Acceptance, criterion by criterion:
+
+- `bun test`, `cargo test -p statecraft-journal`, `make gate`: pass.
+- The browser round: pass, in headless Chrome 152 driven over the DevTools
+  protocol with a throwaway profile, against a daemon built from this branch
+  on port 4631 with a scratch home and an unqualified scratch repository (so
+  nothing could be driven). A page served from `127.0.0.1:4632` posted
+  `disarm` twice (a `no-cors` simple request and a CORS one): both reached the
+  daemon and were refused, `/api/meta` `guardRefusals` went from 0 to 2, the
+  projects chain's SHA-256 was unchanged and the project stayed armed. The
+  daemon's own UI then loaded and its Disarm control journaled
+  `project.disarmed` with source `ui` at seq 4, with no refusal counted. A
+  second run of the page took the count to 4 and appended nothing. The
+  Chrome extension was not connected, which is why the round was driven
+  headless.
+- The same round through `bun run web:dev`: **blocked, not by this spec.** The
+  dev server (Vite 8.2.0, proxying to the scratch daemon through D-14) serves
+  the UI, which throws before rendering: `Module "path" has been externalized
+  for browser compatibility`, raised from `journal.ts`. The chain is
+  `api-client.ts` → `lifecycle-policy.ts` (`policyPayload`) → `receipt.ts` →
+  `journal.ts` → `path`, `fs`, `crypto`, and every link is present at
+  `origin/main`; a production build drops the unused bindings, which is why
+  D-15 was enough there and is not here. What remains is to take the web
+  client's policy payload off that chain (for example, `policyPayload` in a
+  module with no Node imports, which both `api-client.ts` and
+  `lifecycle-policy.ts` use), then rerun this round and flip to `complete`.
+  That change belongs to 022's client and 123's module; it is reported for the
+  owner to place rather than folded into this spec.
+- The committed evidence bundle verifies under both verifiers (the parity
+  suite's FR-003 (a)); spec 132 has minted no bundles yet.
 
 ## Status (2026-09-12, approved)
 

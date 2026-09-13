@@ -27,6 +27,7 @@ import {
   type JournalRecord,
   type JsonValue,
 } from "./journal";
+import { containsUrlUserinfo } from "./candidate";
 
 // --- the redaction policy (B-2, FR-002) --------------------------------------
 
@@ -64,8 +65,13 @@ export interface RedactionPolicy {
 // count and the tool that was refused, which is the fact worth exporting: a
 // session that tried to publish around the broker. Its `detail` is stripped
 // as `broker.refused`'s is.
+// Version 6 (spec 128): the value scan also withholds a string that contains
+// an `http` or `https` URL with userinfo, the shape a CI remote puts a token
+// in. Nothing joins the allowlist; a receipt minted before 128 B-6 whose
+// `origin` carries a token now exports with `origin` withheld, and its journal
+// bytes stay as they were.
 export const REDACTION_POLICY: RedactionPolicy = {
-  version: 5,
+  version: 6,
   includedKinds: [
     "acceptance.receipt",
     "acceptance.sensitive",
@@ -139,6 +145,13 @@ export function isPrivatePathString(value: string): boolean {
   return value.startsWith("/") || value.startsWith("~") || value.includes("~/") || EMBEDDED_ABSOLUTE_PATH.test(value);
 }
 
+// 128 B-7: the scan's whole test. A private path, or a string that contains a
+// URL carrying userinfo anywhere in it (a remote, a registration detail's
+// prose, a gate command's argument), strips the field holding it.
+export function isWithheldValueString(value: string): boolean {
+  return isPrivatePathString(value) || containsUrlUserinfo(value);
+}
+
 export interface RedactedPayload {
   // Present exactly when withheldPayload is false.
   readonly payload?: JsonValue;
@@ -157,7 +170,7 @@ interface ScrubResult {
 }
 
 function scrubValue(value: JsonValue, stripped: ReadonlySet<string>, removed: Set<string>): ScrubResult {
-  if (typeof value === "string") return { value, bare: isPrivatePathString(value) };
+  if (typeof value === "string") return { value, bare: isWithheldValueString(value) };
   if (value === null || typeof value === "boolean" || typeof value === "number") return { value, bare: false };
   if (Array.isArray(value)) {
     const out: JsonValue[] = [];

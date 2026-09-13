@@ -1,5 +1,5 @@
 import { test, expect } from "bun:test";
-import { mkdtempSync, mkdirSync, writeFileSync } from "fs";
+import { mkdtempSync, mkdirSync, readFileSync, writeFileSync } from "fs";
 import { tmpdir } from "os";
 import { join } from "path";
 import {
@@ -540,6 +540,37 @@ test("an unqualified target registers with its reasons and requalifies in place 
   } finally {
     chain.close();
   }
+});
+
+// 128 FR-007 (F9): the probe's own origin lookup, over a real repository whose
+// origin carries a fabricated token, journals the bare URL, and the token is
+// nowhere in the projects chain's bytes after a registration and a
+// requalification.
+test("128 FR-007: a token-bearing https origin registers and requalifies as the bare URL, and never reaches the chain", () => {
+  const home = freshHome();
+  const repoDir = governedRepo();
+  const token = "ghp_fabricated128projects";
+  git(repoDir, ["remote", "set-url", "origin", `https://x-access-token:${token}@github.com/org/target.git`]);
+  const chain = openProjectsChain(home);
+  try {
+    const registered = registerProject({
+      chain,
+      repoDir,
+      name: "target",
+      qualification: qualifyProject(probeWith(0), repoDir),
+      source: "cli",
+    });
+    expect(checkOf(registered.project!.qualification, "origin-remote")).toEqual({
+      ok: true,
+      detail: "origin is https://github.com/org/target.git",
+    });
+    requalifyProject({ chain, name: "target", qualification: qualifyProject(probeWith(0), repoDir), source: "cli" });
+  } finally {
+    chain.close();
+  }
+  const bytes = readFileSync(join(home, "projects.jsonl"), "utf8");
+  expect(bytes).toContain("origin is https://github.com/org/target.git");
+  expect(bytes).not.toContain(token);
 });
 
 // --- the ratification-input record (spec 036 B-3, FR-003) --------------------

@@ -43,7 +43,10 @@ import {
   type RegisterProjectRequest,
   type RunView,
 } from "./types";
-import { policyPayload, type LifecyclePolicy } from "../lifecycle-policy";
+import type { LifecyclePolicy } from "../lifecycle-policy";
+// Not from lifecycle-policy.ts, whose `fs` and `path` a browser cannot load:
+// the web UI bundles this client (128 D-16).
+import { policyPayload } from "../policy-payload";
 import type { Capsule } from "../handoff";
 import type { ExecutionProfile } from "../profile";
 import type { CostCeiling } from "../budget";

@@ -44,6 +44,9 @@ export const DEFAULT_CONTROL_SOURCE = "api";
 // branching on `kind` never has to special-case transport failure.
 export const API_ERROR_KINDS = [
   "bad-request",
+  // 128 D-3: well-formed and not allowed from where it came (the origin
+  // guard's refusal), a different branch from a malformed request.
+  "forbidden",
   "not-found",
   "method-not-allowed",
   "conflict",
@@ -156,6 +159,10 @@ export interface ApiMeta {
   readonly daemon: DaemonMetaView | null;
   readonly projectCount: number;
   readonly routes: readonly string[];
+  // 128 B-5: requests the origin guard refused since this server started.
+  // Counted rather than journaled (D-4), so a hostile page cannot write to a
+  // journal by being refused.
+  readonly guardRefusals: number;
 }
 
 // --- shared record projection -----------------------------------------------

@@ -67,6 +67,7 @@ function meta(activeProject: string | null): ApiMeta {
     daemon: { state: "driving", activeProject, scanIntervalMs: 60_000, lastScanMs: null },
     projectCount: PROJECTS.projects.length,
     routes: ["/api/meta"],
+    guardRefusals: 0,
   };
 }
 

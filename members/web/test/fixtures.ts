@@ -353,6 +353,7 @@ export const FIXTURE_META: ApiMeta = {
   daemon: { state: "driving", activeProject: FIXTURE_PROJECT, scanIntervalMs: 60_000, lastScanMs: null },
   projectCount: 1,
   routes: ["/api/meta"],
+  guardRefusals: 0,
 };
 
 // --- the fixture client -----------------------------------------------------
