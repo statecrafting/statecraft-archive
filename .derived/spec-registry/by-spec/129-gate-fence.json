@@ -121,7 +121,7 @@
       }
     ],
     "id": "129-gate-fence",
-    "implementation": "pending",
+    "implementation": "in-progress",
     "references": [
       {
         "role": "context",
@@ -168,6 +168,6 @@
     "summary": "Spec 125 fenced the driven session so the broker is the only path that works and the journal is complete. The fence stops at the session. Every other place the engine runs code a repository controls inherits the daemon's whole environment: the gate suite in every round, the bracket, the engine's own git (whose hooks a tracked hooks directory supplies), the broker's push (whose pre-push hook runs beside the one credential the broker holds), and the verify stage's acceptance lines. Each was measured on 2026-09-12 seeing a fabricated token from the daemon's environment. This spec gives every such path a named disposition: gate, bracket and candidate git run with the session's fenced environment; credentialed git runs with no repository hooks; the verify stage reads acceptance at the base revision and runs it behind a fence unless the operator journals an allowance. A refusal fails the gate and acceptance even when a command swallows the exit code, and the refusal is counted by the supervisor, where the child that was refused cannot erase it. The property is credential protection, not hostile-code isolation.\n",
     "title": "The gate fence: acceptance runs in the world the session worked in, not in the daemon's"
   },
-  "shardHash": "f20f49ee8cdeec7fd2ad17fec5ea78cda427c80fb7031961d86d356459bd58bc",
+  "shardHash": "6b1ca56f3c8c7992213d66a1c6455aafc248b17e2147e15de02e2c8e4c3bc74b",
   "specVersion": "1.2.0"
 }

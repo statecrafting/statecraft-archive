@@ -3,7 +3,7 @@ id: "129-gate-fence"
 title: "The gate fence: acceptance runs in the world the session worked in, not in the daemon's"
 status: approved
 created: "2026-09-11"
-implementation: pending
+implementation: in-progress
 risk: medium
 depends_on:
   - "125-credential-fence"
