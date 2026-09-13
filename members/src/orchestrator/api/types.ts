@@ -18,7 +18,7 @@ import type { JsonValue, JournalRecord } from "../journal";
 import type { RunStatus, SpecExecStatus, Stage, StageExecStatus } from "../state";
 import type { ShippedSource } from "../dag";
 import type { DecisionRecord } from "../decisions";
-import type { RecordedQualification } from "../projects";
+import type { RecordedQualification, RecordedVerifyAllowance } from "../projects";
 import type { ExecutionProfile, RecordedProfile } from "../profile";
 import type { RecordedGateContract } from "../gate-contract";
 import type { RecordedLifecyclePolicy } from "../lifecycle-policy";
@@ -102,6 +102,8 @@ export const PROJECT_ROUTES = {
   gate: "gate",
   // 123 B-2: the lifecycle policy, whole, on one route.
   policy: "policy",
+  // 129 B-9: the verify allowance, `fenced` or `inherit`, on one route.
+  verify: "verify",
   runStart: "run/start",
   runPause: "run/pause",
   runResume: "run/resume",
@@ -126,7 +128,7 @@ export type SpecControlVerb = (typeof SPEC_CONTROL_VERBS)[number];
 
 export type ControlVerbToken = "start" | "pause" | "resume" | SpecControlVerb;
 
-export const PROJECT_CONTROL_VERBS = ["register", "arm", "disarm", "requalify", "remove", "profile", "ceiling", "gate", "policy"] as const;
+export const PROJECT_CONTROL_VERBS = ["register", "arm", "disarm", "requalify", "remove", "profile", "ceiling", "gate", "policy", "verify"] as const;
 export type ProjectControlVerb = (typeof PROJECT_CONTROL_VERBS)[number];
 
 // --- /api/meta (B-4) --------------------------------------------------------
@@ -234,6 +236,9 @@ export interface ProjectView {
   // 123 B-2: the lifecycle policy, on the same row, legacy-flagged the way
   // the gate is.
   readonly policy: RecordedLifecyclePolicy;
+  // 129 B-9: the verify allowance and who journaled it, on the same row, so
+  // an `inherit` is never a fact an operator has to go looking for.
+  readonly verify: RecordedVerifyAllowance;
   // 124 B-6: whether the driver's binary, as the seam last saw it, has a
   // qualification record. Null before any session named a version.
   readonly driverQualified: boolean | null;

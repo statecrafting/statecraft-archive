@@ -2,8 +2,11 @@ import { test, expect } from "bun:test";
 import { mkdtempSync, mkdirSync, writeFileSync, readFileSync, existsSync } from "fs";
 import { tmpdir } from "os";
 import { join } from "path";
-import { openJournal } from "../journal";
+import { openJournal, type JsonValue } from "../journal";
+import { mintReceipt, receiptPayload, RECEIPT_KIND } from "../receipt";
 import {
+  consumedReceiptBase,
+  verificationDigest,
   parseVerificationSection,
   parseBrowserVerdict,
   buildBrowserVerifyPrompt,
@@ -684,5 +687,77 @@ test("addWorktree fetches from origin when the sha is not yet local (remote squa
     expect(readFileSync(join(worktree, "a.txt"), "utf8")).toBe("two\n");
   } finally {
     runner.removeWorktree(worktree);
+  }
+});
+
+// --- 129 B-8, B-9: acceptance at the base, behind a fence ---------------------
+
+test("129 B-8: consumedReceiptBase names the base of the receipt a brokered merge of exactly this sha consumed, and nothing else", () => {
+  const journal = openJournal(mkdtempSync(join(tmpdir(), "verify-base-journal-")));
+  try {
+    const base = "a".repeat(40);
+    const merged = "c".repeat(40);
+    const receipt = mintReceipt({
+      specId: "900-x",
+      round: 1,
+      origin: null,
+      baseSha: base,
+      candidateSha: "b".repeat(40),
+      branch: "900-x",
+      suite: [["true"]],
+      gate: null,
+      profile: { mode: "bypass" },
+      specSpineVersion: null,
+      results: [{ cmd: ["true"], exitCode: 0 }],
+      changedPaths: [],
+    });
+    const hash = journal.append(RECEIPT_KIND, receiptPayload(receipt)).recordHash;
+    const outcome = (over: Record<string, JsonValue>) =>
+      journal.append("broker.action", { action: "merge", phase: "outcome", runId: "r", specId: "900-x", target: "#1", headSha: "b".repeat(40), receiptHash: hash, ok: true, detail: merged, ...over });
+
+    expect(consumedReceiptBase(journal.fold().records, "900-x", merged)).toBeNull();
+    outcome({ ok: false, detail: "gh: merge refused" });
+    outcome({ specId: "901-y" });
+    outcome({ action: "push" });
+    expect(consumedReceiptBase(journal.fold().records, "900-x", merged)).toBeNull();
+    outcome({});
+    expect(consumedReceiptBase(journal.fold().records, "900-x", merged)).toBe(base);
+    // A later head (a requalification) is not the merge this receipt produced.
+    expect(consumedReceiptBase(journal.fold().records, "900-x", "d".repeat(40))).toBeNull();
+    expect(verificationDigest(null)).toBeNull();
+    expect(verificationDigest("x")).toMatch(/^[0-9a-f]{64}$/);
+  } finally {
+    journal.close();
+  }
+});
+
+test("129 B-8, B-9: runCommand inside a worktree the runner added is fenced; `inherit` is the daemon's environment; another cwd gets the scrub", () => {
+  const dir = initRepo();
+  writeFileSync(join(dir, "marker.txt"), "v1");
+  git(dir, ["add", "-A"]);
+  git(dir, ["commit", "-q", "-m", "base"]);
+  const sha = Bun.spawnSync(["git", "rev-parse", "HEAD"], { cwd: dir }).stdout.toString().trim();
+  const saved = process.env.GH_TOKEN;
+  process.env.GH_TOKEN = "gho_fabricated_verify_129";
+  try {
+    const home = mkdtempSync(join(tmpdir(), "verify-fence-home-"));
+    const runner = createProcessVerifyRunner({ repoDir: dir, homeDir: home });
+    const worktree = runner.addWorktree(sha);
+    expect(worktree.startsWith(join(home, "verify"))).toBe(true);
+    const fence = runner.fenceFor!(worktree)!;
+    expect(existsSync(join(fence, "bin", "gh"))).toBe(true);
+    expect(fence.startsWith(worktree)).toBe(false);
+
+    const probe = ["sh", "-c", 'printf "%s|%s" "${GH_TOKEN-}" "$(command -v gh || true)"'];
+    expect(runner.runCommand(worktree, probe, 5000).stdout).toBe(`|${join(fence, "bin", "gh")}`);
+    expect(runner.runCommand(worktree, probe, 5000, "inherit").stdout.startsWith("gho_fabricated_verify_129|")).toBe(true);
+    expect(runner.runCommand(dir, probe, 5000).stdout.startsWith("|")).toBe(true);
+
+    runner.removeWorktree(worktree);
+    expect(existsSync(fence)).toBe(false);
+    expect(runner.fenceFor!(worktree)).toBeNull();
+  } finally {
+    if (saved === undefined) delete process.env.GH_TOKEN;
+    else process.env.GH_TOKEN = saved;
   }
 });

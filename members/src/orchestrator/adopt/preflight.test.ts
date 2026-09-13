@@ -9,7 +9,7 @@ import { mkdtempSync, mkdirSync, writeFileSync } from "fs";
 import { tmpdir } from "os";
 import { join } from "path";
 import { openJournal, verifyChain } from "../journal";
-import type { Project } from "../projects";
+import { DEFAULT_VERIFY_ALLOWANCE, type Project } from "../projects";
 import { LEGACY_LIFECYCLE_POLICY } from "../lifecycle-policy";
 import {
   DEFAULT_EXCLUSIONS,
@@ -453,6 +453,8 @@ function projectWith(qualified: boolean, adoptable: boolean): Project {
     gate: { commands: [], source: null, rule: null, legacy: true },
     // 123 B-2: likewise the lifecycle policy.
     policy: LEGACY_LIFECYCLE_POLICY,
+    // 129 B-9: and the verify allowance, which with no record is the default.
+    verify: DEFAULT_VERIFY_ALLOWANCE,
   };
 }
 

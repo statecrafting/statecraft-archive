@@ -29,14 +29,25 @@
 // screenshot) is written to a content-addressed file (sha256 name) under
 // the caller's evidenceDir; the journal only ever references {assertion,
 // evidenceHash}, never inline content (FR-003).
+//
+// Spec 129 B-8 to B-10: the acceptance a merge is verified by is the one the
+// run was judged against, read at the base revision, so the session being
+// judged cannot rewrite it; each acceptance line runs behind a fence built
+// beside the verify worktree, and a refusal fails the stage whatever the line
+// exited. A project whose acceptance is live by design has an operator's
+// journaled allowance (B-9), never a spec's say-so.
 import * as fs from "fs";
 import { join } from "path";
 import { tmpdir } from "os";
 import { randomUUID, createHash } from "crypto";
-import type { JournalHandle, JsonValue } from "../journal";
+import type { JournalHandle, JournalRecord, JsonValue } from "../journal";
 import { createProcessDriver, type Driver } from "../driver";
 import { tierForStage } from "../models";
 import { resolveProfileSource, type ProfileSource } from "../profile";
+import { fencedEnv, WITHOUT_REPOSITORY_HOOKS } from "../candidate";
+import { buildFence, NO_FENCE_TALLY, openFenceChannel, toolsBetween, type FenceChannel, type FenceTally } from "../fence";
+import { parseReceipt, RECEIPT_KIND } from "../receipt";
+import type { VerifyAllowance } from "../projects";
 
 // --- Verification-section parser (B-1, FR-001) ------------------------------
 
@@ -65,7 +76,7 @@ const NEXT_HEADING_RE = /^## /m;
 const FENCE_RE = /^```([^\n`]*)\r?\n([\s\S]*?)^```[ \t]*\r?$/gm;
 const URL_LINE_RE = /^url:\s*(\S+)\s*$/i;
 
-function extractVerificationSection(specBody: string): string | null {
+export function extractVerificationSection(specBody: string): string | null {
   const heading = VERIFICATION_HEADING_RE.exec(specBody);
   if (!heading) return null;
   const rest = specBody.slice(heading.index + heading[0].length);
@@ -203,20 +214,42 @@ export interface VerifyRunner {
   // worktree never leaves stray registrations or files behind.
   removeWorktree(path: string): void;
   // Runs `cmd` with the given cwd (always the worktree, never the target
-  // repo's own working tree) and a hard timeout.
-  runCommand(cwd: string, cmd: readonly string[], timeoutMs: number): CliRunResult;
+  // repo's own working tree) and a hard timeout. 129 B-8, B-9: `fenced` (the
+  // default) runs it inside the fence built beside that worktree; `inherit`,
+  // an operator's journaled allowance, runs it with the daemon's environment.
+  runCommand(cwd: string, cmd: readonly string[], timeoutMs: number, allowance?: VerifyAllowance): CliRunResult;
   // Reads a file at an absolute path (used to read spec.md out of the
   // worktree once it exists); verify never writes back into the target
   // repo or its worktree.
   readFile(path: string): string;
+  // 129 B-8: a repository-relative file as it stood at a revision, or null
+  // when it did not exist there or cannot be read. Optional so a fixture
+  // runner that never reaches a verification section need not grow it.
+  readFileAtRevision?(sha: string, path: string): string | null;
+  // 129 B-8: the fence built beside a worktree this runner added, or null.
+  fenceFor?(worktreePath: string): string | null;
+  // 129 B-3: the supervisor's count of the refusals this runner's fences
+  // reported. The stage reads it either side of each line.
+  fenceTally?(): FenceTally;
 }
 
 export interface CreateProcessVerifyRunnerParams {
   readonly repoDir: string;
+  // 129 B-8: the daemon home the verify worktree and its fence are built
+  // under, side by side, and removed with. Absent is the system temporary
+  // directory, which is what a runner built outside a daemon has.
+  readonly homeDir?: string;
 }
 
 export function createProcessVerifyRunner(params: CreateProcessVerifyRunnerParams): VerifyRunner {
   const { repoDir } = params;
+  // 129 B-3: the verify stage is the supervisor of its acceptance lines, so it
+  // holds a channel of its own, for the runner's life. Every worktree's fence
+  // shares it and each addWorktree resets it, which assumes one verify at a
+  // time per runner: the daemon drains its re-verify queue one spec at a time.
+  // A caller that opened two worktrees at once would need a channel each.
+  let channel: FenceChannel | null = null;
+  const fences = new Map<string, { root: string; fence: string }>();
 
   return {
     addWorktree(sha: string): string {
@@ -224,34 +257,52 @@ export function createProcessVerifyRunner(params: CreateProcessVerifyRunnerParam
       // fetched (the live run failed on exactly this: invalid reference).
       const known = Bun.spawnSync(["git", "rev-parse", "--verify", `${sha}^{commit}`], { cwd: repoDir });
       if (known.exitCode !== 0) {
-        const fetch = Bun.spawnSync(["git", "fetch", "origin"], { cwd: repoDir });
+        // 129 B-7: the fetch keeps the daemon's credential and runs no hook.
+        const fetch = Bun.spawnSync(["git", ...WITHOUT_REPOSITORY_HOOKS, "fetch", "origin"], { cwd: repoDir });
         if (fetch.exitCode !== 0) {
           throw new Error(`verify: git fetch origin failed: ${new TextDecoder().decode(fetch.stderr).trim()}`);
         }
       }
-      const target = join(tmpdir(), `verify-worktree-${randomUUID()}`);
-      const result = Bun.spawnSync(["git", "worktree", "add", "--detach", target, sha], { cwd: repoDir });
+      // 129 B-8: the worktree and its fence side by side under one root, the
+      // fence never inside the tree it guards, and both removed together.
+      const id = randomUUID();
+      const root = params.homeDir === undefined ? join(tmpdir(), `verify-${id}`) : join(params.homeDir, "verify", id);
+      const target = join(root, "worktree");
+      fs.mkdirSync(root, { recursive: true });
+      channel ??= openFenceChannel();
+      const fence = buildFence(join(root, "fence"), { channel });
+      // 129 B-6's rule for a checkout the engine makes: `post-checkout` is the
+      // repository's code, so the worktree is added inside the fence.
+      const result = Bun.spawnSync(["git", "worktree", "add", "--detach", target, sha], { cwd: repoDir, env: fencedEnv(fence) });
       if (result.exitCode !== 0) {
+        fs.rmSync(root, { recursive: true, force: true });
         throw new Error(
           `verify: git worktree add ${target} ${sha} failed: ${new TextDecoder().decode(result.stderr).trim()}`
         );
       }
+      fences.set(target, { root, fence });
       return target;
     },
 
     removeWorktree(path: string): void {
       Bun.spawnSync(["git", "worktree", "remove", "--force", path], { cwd: repoDir });
+      const layout = fences.get(path);
       try {
-        fs.rmSync(path, { recursive: true, force: true });
+        fs.rmSync(layout === undefined ? path : layout.root, { recursive: true, force: true });
       } catch {
         // already gone
       }
+      fences.delete(path);
       Bun.spawnSync(["git", "worktree", "prune"], { cwd: repoDir });
     },
 
-    runCommand(cwd: string, cmd: readonly string[], timeoutMs: number): CliRunResult {
+    runCommand(cwd: string, cmd: readonly string[], timeoutMs: number, allowance: VerifyAllowance = "fenced"): CliRunResult {
       const startedAtMs = Date.now();
-      const result = Bun.spawnSync(cmd as string[], { cwd, timeout: timeoutMs, killSignal: "SIGKILL" });
+      // `inherit` is the daemon's own environment, passed as it stands now
+      // (Bun's default is the environment the process started with); a cwd
+      // this runner did not add has no fence and receives the scrub.
+      const env = allowance === "inherit" ? process.env : fencedEnv(fences.get(cwd)?.fence ?? null);
+      const result = Bun.spawnSync(cmd as string[], { cwd, env, timeout: timeoutMs, killSignal: "SIGKILL" });
       return {
         exitCode: result.exitedDueToTimeout ? null : result.exitCode,
         stdout: new TextDecoder().decode(result.stdout),
@@ -268,6 +319,20 @@ export function createProcessVerifyRunner(params: CreateProcessVerifyRunnerParam
         throw new Error(`verify: could not read "${path}": ${(err as Error).message}`);
       }
     },
+
+    // A blob read: `git show <rev>:<path>` runs no hook and no filter.
+    readFileAtRevision(sha: string, path: string): string | null {
+      const result = Bun.spawnSync(["git", "show", `${sha}:${path}`], { cwd: repoDir });
+      return result.exitCode === 0 ? new TextDecoder().decode(result.stdout) : null;
+    },
+
+    fenceFor(worktreePath: string): string | null {
+      return fences.get(worktreePath)?.fence ?? null;
+    },
+
+    fenceTally(): FenceTally {
+      return channel === null ? NO_FENCE_TALLY : channel.tally();
+    },
   };
 }
 
@@ -279,8 +344,17 @@ export interface BrowserAssertResult {
   readonly screenshotPngBase64?: string;
 }
 
+// 129 B-10: where an assertion session runs. The verify worktree rather than
+// the operator's checkout, and the fence built beside it, passed to the driver
+// the way the build passes its session's (125 B-3); null under an operator's
+// `inherit` allowance, when the session receives the scrub alone.
+export interface BrowserAssertContext {
+  readonly cwd: string;
+  readonly fenceDir: string | null;
+}
+
 export interface BrowserVerifier {
-  assert(url: string, assertion: string): Promise<BrowserAssertResult>;
+  assert(url: string, assertion: string, context?: BrowserAssertContext): Promise<BrowserAssertResult>;
 }
 
 // A remediation-shaped quota signal (mirroring shepherd's own StatuslessAbortError
@@ -449,7 +523,7 @@ export function createBrowserMcpVerifier(params: CreateBrowserMcpVerifierParams)
   const driver = params.driver ?? createProcessDriver();
 
   return {
-    async assert(url: string, assertion: string): Promise<BrowserAssertResult> {
+    async assert(url: string, assertion: string, context?: BrowserAssertContext): Promise<BrowserAssertResult> {
       const workDir = fs.mkdtempSync(join(tmpdir(), "verify-browser-"));
       try {
         const outputDir = join(workDir, "output");
@@ -470,7 +544,8 @@ export function createBrowserMcpVerifier(params: CreateBrowserMcpVerifierParams)
         let resultText: string | null = null;
         const profile = resolveProfileSource(params.profile);
         const session = await driver.runSession({
-          repo: params.repo,
+          repo: context?.cwd ?? params.repo,
+          ...(context?.fenceDir == null ? {} : { fenceDir: context.fenceDir }),
           tier: tierForStage("verify"),
           ...(params.model === undefined ? {} : { model: params.model }),
           maxTurns: params.maxTurns ?? DEFAULT_BROWSER_MAX_TURNS,
@@ -527,6 +602,8 @@ export interface VerifyCliEvidence {
   readonly timedOut: boolean;
   readonly durationMs: number;
   readonly evidenceHash: string;
+  // 129 B-8: the refusals the supervisor counted while this line ran.
+  readonly fenceRefusals: number;
 }
 
 export interface VerifyBrowserEvidence {
@@ -537,6 +614,8 @@ export interface VerifyBrowserEvidence {
   readonly pass: boolean;
   readonly detailHash: string;
   readonly screenshotHash: string | null;
+  // 129 B-10: the refusals counted while this assertion's session ran.
+  readonly fenceRefusals: number;
 }
 
 export interface VerifyFailure {
@@ -544,6 +623,20 @@ export interface VerifyFailure {
   readonly description: string;
   readonly evidenceHash: string;
 }
+
+// 129 B-8, B-9: the same record the gate's evidence carries (B-3), with the
+// reason an operator's allowance gives when there is no fence to apply.
+export interface VerifyFenceRecord {
+  readonly applied: boolean;
+  readonly refusals: number;
+  readonly reason?: "operator-allowed";
+}
+
+// 129 B-8: what acceptance.base records when no run's receipt names the base
+// a merge was judged against. Never an inferred base.
+export const ACCEPTANCE_BASE_UNRECORDED = "unrecorded";
+export const ACCEPTANCE_BASE_KIND = "acceptance.base";
+export const ACCEPTANCE_CHANGED_KIND = "acceptance.changed";
 
 export interface VerifyEvidence {
   readonly specId: string;
@@ -560,6 +653,11 @@ export interface VerifyEvidence {
   // rebuild loop.
   readonly needsHuman: boolean;
   readonly quotaResetAtMs: number | null;
+  // 129 B-8: the revision whose `## Verification` block ran, or "unrecorded"
+  // when no run's receipt names one and the verified revision's block ran.
+  readonly acceptanceBase: string;
+  // 129 B-8, B-9: required, with an explicit zero.
+  readonly fence: VerifyFenceRecord;
 }
 
 export interface VerifyResult {
@@ -570,6 +668,45 @@ export interface VerifyResult {
 // --- defaults ----------------------------------------------------------------
 
 export const DEFAULT_CLI_TIMEOUT_MS = 5 * 60_000;
+
+// --- acceptance at the base (129 B-8) ----------------------------------------
+
+// The base revision of the run that produced `mergeSha`: the broker's merge
+// outcome that answered this merge sha names the receipt it consumed, and that
+// receipt names the base its gate judged against. Null when no brokered merge
+// produced this sha (a re-verify at a later head, or a merge from before 122),
+// which the stage records as "unrecorded" rather than guessing at a receipt.
+export function consumedReceiptBase(records: readonly JournalRecord[], specId: string, mergeSha: string): string | null {
+  let receiptHash: string | null = null;
+  for (const record of records) {
+    if (record.kind !== "broker.action") continue;
+    const p = record.payload;
+    if (typeof p !== "object" || p === null || Array.isArray(p)) continue;
+    if (p.action === "merge" && p.phase === "outcome" && p.ok === true && p.specId === specId && p.detail === mergeSha) {
+      if (typeof p.receiptHash === "string") receiptHash = p.receiptHash;
+    }
+  }
+  if (receiptHash === null) return null;
+  for (const record of records) {
+    if (record.kind !== RECEIPT_KIND || record.recordHash !== receiptHash) continue;
+    const receipt = parseReceipt(record.payload);
+    return receipt !== null && receipt.specId === specId ? receipt.repo.baseSha : null;
+  }
+  return null;
+}
+
+// A section's identity for acceptance.changed: the sha256 of its text, or
+// null when the spec declares no Verification section at that revision.
+export function verificationDigest(section: string | null): string | null {
+  return section === null ? null : createHash("sha256").update(section, "utf8").digest("hex");
+}
+
+export type VerifyAllowanceBinding = VerifyAllowance | (() => VerifyAllowance);
+
+function resolveAllowance(binding: VerifyAllowanceBinding | undefined): VerifyAllowance {
+  if (binding === undefined) return "fenced";
+  return typeof binding === "function" ? binding() : binding;
+}
 
 // --- the stage (B-1 through B-5) --------------------------------------------
 
@@ -589,6 +726,9 @@ export interface RunVerifyStageOptions {
   // per spec 012 B-4, rather than a first-time verify inside the normal
   // pipeline.
   readonly isReVerification?: boolean;
+  // 129 B-9: the owning project's journaled verify allowance, read when the
+  // stage runs. Absent is `fenced`.
+  readonly allowance?: VerifyAllowanceBinding;
 }
 
 export async function runVerifyStage(options: RunVerifyStageOptions): Promise<VerifyResult> {
@@ -596,6 +736,7 @@ export async function runVerifyStage(options: RunVerifyStageOptions): Promise<Ve
   const cliTimeoutMs = options.cliTimeoutMs ?? DEFAULT_CLI_TIMEOUT_MS;
   const isReVerification = options.isReVerification ?? false;
   const specPath = `specs/${specId}/spec.md`;
+  const allowance = resolveAllowance(options.allowance);
 
   // B-2: the clean checkout. Created before anything else runs (so even the
   // "is Verification even declared" read comes from the merged sha's own
@@ -603,8 +744,47 @@ export async function runVerifyStage(options: RunVerifyStageOptions): Promise<Ve
   // path, success or failure.
   const worktreePath = runner.addWorktree(sha);
   try {
-    const specBody = runner.readFile(join(worktreePath, specPath));
-    const parsed = parseVerificationSection(specBody);
+    // 129 B-9: under an operator's `inherit` there is no fence to apply, and
+    // the record says why; otherwise the fence beside the worktree applies.
+    const fenceDir = allowance === "inherit" ? null : (runner.fenceFor?.(worktreePath) ?? null);
+    const tally = (): FenceTally => (fenceDir === null ? NO_FENCE_TALLY : (runner.fenceTally?.() ?? NO_FENCE_TALLY));
+    const stageStart = tally();
+    const fenceRecord = (): VerifyFenceRecord =>
+      allowance === "inherit"
+        ? { applied: false, refusals: 0, reason: "operator-allowed" }
+        : { applied: fenceDir !== null, refusals: tally().refusals - stageStart.refusals };
+    const fencePayload = (): Record<string, JsonValue> => ({ ...fenceRecord() });
+
+    const headBody = runner.readFile(join(worktreePath, specPath));
+
+    // 129 B-8: the block the run was judged against, read at its base.
+    const base = consumedReceiptBase(journal.fold().records, specId, sha);
+    const acceptanceBase = base ?? ACCEPTANCE_BASE_UNRECORDED;
+    journal.append(ACCEPTANCE_BASE_KIND, { specId, sha, base: acceptanceBase });
+
+    let specBody = headBody;
+    let baseUnreadable: string | null = null;
+    if (base !== null) {
+      const baseBody = runner.readFileAtRevision?.(base, specPath) ?? null;
+      if (baseBody === null) {
+        baseUnreadable = `the spec's acceptance could not be read at the run's base ${base}; nothing ran`;
+      } else {
+        specBody = baseBody;
+        const baseSection = extractVerificationSection(baseBody);
+        const headSection = extractVerificationSection(headBody);
+        if (baseSection !== headSection) {
+          journal.append(ACCEPTANCE_CHANGED_KIND, {
+            specId,
+            sha,
+            baseSha: base,
+            baseDigest: verificationDigest(baseSection),
+            headDigest: verificationDigest(headSection),
+          });
+        }
+      }
+    }
+    const parsed: ParseVerificationResult =
+      baseUnreadable === null ? parseVerificationSection(specBody) : { declared: "error", message: baseUnreadable };
 
     const parsedPayload: Record<string, JsonValue> = {
       specId,
@@ -613,6 +793,7 @@ export async function runVerifyStage(options: RunVerifyStageOptions): Promise<Ve
       parseError: parsed.declared === "error" ? parsed.message : null,
       cliBlocks: parsed.declared === true ? parsed.cli.length : 0,
       browserBlocks: parsed.declared === true ? parsed.browser.length : 0,
+      acceptanceBase,
     };
     journal.append("stage.verify.parsed", parsedPayload);
 
@@ -628,8 +809,10 @@ export async function runVerifyStage(options: RunVerifyStageOptions): Promise<Ve
         evidenceDir,
         needsHuman: false,
         quotaResetAtMs: null,
+        acceptanceBase,
+        fence: fenceRecord(),
       };
-      const resultPayload: Record<string, JsonValue> = { specId, sha, outcome: "not-declared", needsHuman: false };
+      const resultPayload: Record<string, JsonValue> = { specId, sha, outcome: "not-declared", needsHuman: false, fence: fencePayload() };
       journal.append("stage.verify.result", resultPayload);
       return { outcome: "not-declared", evidence };
     }
@@ -646,6 +829,8 @@ export async function runVerifyStage(options: RunVerifyStageOptions): Promise<Ve
         evidenceDir,
         needsHuman: isReVerification,
         quotaResetAtMs: null,
+        acceptanceBase,
+        fence: fenceRecord(),
       };
       const resultPayload: Record<string, JsonValue> = {
         specId,
@@ -653,6 +838,7 @@ export async function runVerifyStage(options: RunVerifyStageOptions): Promise<Ve
         outcome: "failed",
         needsHuman: isReVerification,
         parseError: parsed.message,
+        fence: fencePayload(),
       };
       journal.append("stage.verify.result", resultPayload);
       return { outcome: "failed", evidence };
@@ -667,7 +853,10 @@ export async function runVerifyStage(options: RunVerifyStageOptions): Promise<Ve
     for (const block of parsed.cli) {
       for (let i = 0; i < block.commands.length; i++) {
         const command = block.commands[i]!;
-        const runResult = runner.runCommand(worktreePath, ["sh", "-c", command], cliTimeoutMs);
+        const before = tally();
+        const runResult = runner.runCommand(worktreePath, ["sh", "-c", command], cliTimeoutMs, allowance);
+        const after = tally();
+        const fenceRefusals = after.refusals - before.refusals;
         const combined = `$ ${command}\n\n--- stdout ---\n${runResult.stdout}\n--- stderr ---\n${runResult.stderr}`;
         const evidenceHash = writeTextEvidence(evidenceDir, combined, DEFAULT_EVIDENCE_TEXT_BYTES);
 
@@ -679,6 +868,7 @@ export async function runVerifyStage(options: RunVerifyStageOptions): Promise<Ve
           timedOut: runResult.timedOut,
           durationMs: runResult.durationMs,
           evidenceHash,
+          fenceRefusals,
         };
         cliEvidence.push(entry);
 
@@ -691,14 +881,18 @@ export async function runVerifyStage(options: RunVerifyStageOptions): Promise<Ve
           exitCode: entry.exitCode,
           timedOut: entry.timedOut,
           evidenceHash,
+          fenceRefusals,
         };
         journal.append("stage.verify.cli", cliPayload);
 
-        const passed = !runResult.timedOut && runResult.exitCode === 0;
+        // 129 B-8: a refusal fails the line whatever it exited (129 B-4's rule).
+        const passed = !runResult.timedOut && runResult.exitCode === 0 && fenceRefusals === 0;
         if (!passed && firstFailure === null) {
+          const refused =
+            fenceRefusals > 0 ? ` (gate-fence-refused: reached for ${toolsBetween(before, after).join(" and ")})` : "";
           firstFailure = {
             kind: "cli",
-            description: `verify:cli block ${entry.blockIndex + 1}, command ${entry.commandIndex + 1}: ${command}`,
+            description: `verify:cli block ${entry.blockIndex + 1}, command ${entry.commandIndex + 1}: ${command}${refused}`,
             evidenceHash,
           };
         }
@@ -717,6 +911,8 @@ export async function runVerifyStage(options: RunVerifyStageOptions): Promise<Ve
         evidenceDir,
         needsHuman: isReVerification,
         quotaResetAtMs: null,
+        acceptanceBase,
+        fence: fenceRecord(),
       };
       const resultPayload: Record<string, JsonValue> = {
         specId,
@@ -724,6 +920,7 @@ export async function runVerifyStage(options: RunVerifyStageOptions): Promise<Ve
         outcome: "failed",
         needsHuman: isReVerification,
         firstFailure: firstFailure.description,
+        fence: fencePayload(),
       };
       journal.append("stage.verify.result", resultPayload);
       return { outcome: "failed", evidence };
@@ -738,9 +935,11 @@ export async function runVerifyStage(options: RunVerifyStageOptions): Promise<Ve
       for (let i = 0; i < block.assertions.length; i++) {
         const assertion = block.assertions[i]!;
 
+        const before = tally();
         let assertResult: BrowserAssertResult;
         try {
-          assertResult = await browserVerifier.assert(block.url, assertion);
+          // 129 B-10: in the verify worktree, inside its fence.
+          assertResult = await browserVerifier.assert(block.url, assertion, { cwd: worktreePath, fenceDir });
         } catch (err) {
           if (err instanceof BrowserVerifierQuotaError) {
             const quotaPayload: Record<string, JsonValue> = {
@@ -765,13 +964,17 @@ export async function runVerifyStage(options: RunVerifyStageOptions): Promise<Ve
               evidenceDir,
               needsHuman: false,
               quotaResetAtMs: err.resetAtMs,
+              acceptanceBase,
+              fence: fenceRecord(),
             };
-            const resultPayload: Record<string, JsonValue> = { specId, sha, outcome: "quota", needsHuman: false };
+            const resultPayload: Record<string, JsonValue> = { specId, sha, outcome: "quota", needsHuman: false, fence: fencePayload() };
             journal.append("stage.verify.result", resultPayload);
             return { outcome: "quota", evidence };
           }
           throw err;
         }
+        const after = tally();
+        const fenceRefusals = after.refusals - before.refusals;
 
         const detailHash = writeTextEvidence(evidenceDir, assertResult.detail, DEFAULT_EVIDENCE_TEXT_BYTES);
         // B-3: whatever the verifier returns is stored honestly; a session
@@ -789,6 +992,7 @@ export async function runVerifyStage(options: RunVerifyStageOptions): Promise<Ve
           pass: assertResult.pass,
           detailHash,
           screenshotHash,
+          fenceRefusals,
         };
         browserEvidence.push(entry);
 
@@ -802,13 +1006,16 @@ export async function runVerifyStage(options: RunVerifyStageOptions): Promise<Ve
           pass: entry.pass,
           detailHash,
           screenshotHash,
+          fenceRefusals,
         };
         journal.append("stage.verify.browser", browserPayload);
 
-        if (!assertResult.pass && firstFailure === null) {
+        if ((!assertResult.pass || fenceRefusals > 0) && firstFailure === null) {
+          const refused =
+            fenceRefusals > 0 ? ` (gate-fence-refused: reached for ${toolsBetween(before, after).join(" and ")})` : "";
           firstFailure = {
             kind: "browser",
-            description: `verify:browser block ${entry.blockIndex + 1}, assertion ${entry.assertionIndex + 1} (${entry.url}): ${assertion}`,
+            description: `verify:browser block ${entry.blockIndex + 1}, assertion ${entry.assertionIndex + 1} (${entry.url}): ${assertion}${refused}`,
             evidenceHash: detailHash,
           };
         }
@@ -829,6 +1036,8 @@ export async function runVerifyStage(options: RunVerifyStageOptions): Promise<Ve
       evidenceDir,
       needsHuman,
       quotaResetAtMs: null,
+      acceptanceBase,
+      fence: fenceRecord(),
     };
     const resultPayload: Record<string, JsonValue> = {
       specId,
@@ -836,6 +1045,7 @@ export async function runVerifyStage(options: RunVerifyStageOptions): Promise<Ve
       outcome,
       needsHuman,
       firstFailure: firstFailure?.description ?? null,
+      fence: fencePayload(),
     };
     journal.append("stage.verify.result", resultPayload);
     return { outcome, evidence };

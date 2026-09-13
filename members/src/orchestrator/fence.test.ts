@@ -1,4 +1,5 @@
 // Spec 125 FR-001, FR-003, FR-004: the credential fence, proven from inside.
+// Spec 129 B-3 adds the supervisor's count, proven the same way.
 //
 // Every case here spawns a real process with the fenced environment and reads
 // what it did, rather than asserting over the object the engine built. An
@@ -19,7 +20,10 @@ import {
   fenceOverlay,
   fencePath,
   fenceRefusalLog,
+  gitConfigSource,
+  openFenceChannel,
   readFenceRefusals,
+  shimSource,
   FENCE_REFUSAL_EXIT,
 } from "./fence";
 
@@ -257,4 +261,98 @@ test("B-6: a fence beside a session does not reach a process the daemon spawns i
     const resolved = new TextDecoder().decode(realGh.stdout).trim();
     expect(resolved.startsWith(fenceBinDir(fence))).toBe(false);
   }
+});
+
+// --- 129 B-3: the supervisor's count ----------------------------------------
+
+// The count 129 moved out of the fenced process's reach. Every case spawns a
+// real shim through the fenced environment and reads the supervisor's tally.
+
+function fenceWithChannel(): { fence: string; channel: ReturnType<typeof openFenceChannel> } {
+  const channel = openFenceChannel();
+  const fence = buildFence(fencePath(mkdtempSync(join(tmpdir(), "fence-home-")), "p", "900-spec"), { channel });
+  return { fence, channel };
+}
+
+test("129 B-3: a refusal is counted by the supervisor before the shim exits, and no later act of the child withdraws it", () => {
+  const { fence, channel } = fenceWithChannel();
+  const repo = initRepo();
+  const erase = [
+    "gh pr create --fill || true",
+    `: > ${JSON.stringify(fenceRefusalLog(fence))}`,
+    `rm -f ${JSON.stringify(fenceRefusalLog(fence))}`,
+    // Rewriting the shim is an escape (125 §6): it loses the next report, never
+    // the one already made.
+    `printf '#!/bin/sh\\nexit 0\\n' > ${JSON.stringify(join(fenceBinDir(fence), "gh"))}`,
+    "gh pr create --fill",
+  ].join("; ");
+  const ran = inFence(fence, repo, ["sh", "-c", erase]);
+  expect(ran.exitCode).toBe(0);
+  expect(readFenceRefusals(fence)).toBe(0);
+  expect(channel.tally()).toEqual({ refusals: 1, byTool: { gh: 1, ssh: 0 } });
+  channel.close();
+});
+
+test("129 B-3: ssh is counted as ssh, the shim still names the broker, and a rebuild starts the round's count fresh", () => {
+  const { fence, channel } = fenceWithChannel();
+  const repo = initRepo();
+  const ran = inFence(fence, repo, ["git", "ls-remote", "git@github.com:statecrafting/statecraft-cli.git"]);
+  expect(ran.exitCode).not.toBe(0);
+  expect(channel.tally().byTool.ssh).toBeGreaterThan(0);
+  expect(inFence(fence, repo, ["gh", "api", "user"]).stderr).toContain("broker");
+  expect(channel.tally().byTool.gh).toBe(1);
+
+  buildFence(fence, { channel });
+  expect(channel.tally()).toEqual({ refusals: 0, byTool: { gh: 0, ssh: 0 } });
+  channel.close();
+});
+
+test("129 B-3: a report to another fence's slot, with the wrong secret, or to a closed slot counts nothing, and the shim still refuses promptly", () => {
+  const first = fenceWithChannel();
+  const second = fenceWithChannel();
+  const repo = initRepo();
+  const forged = `exec 9<>/dev/tcp/127.0.0.1/${second.channel.address.port} && printf 'refused ${second.channel.address.slot} ${"0".repeat(31)}1 gh\\n' >&9 && read -r -t 2 ack <&9; echo "ack=\${ack-}"`;
+  const lie = Bun.spawnSync(["/bin/bash", "-c", forged]);
+  expect(new TextDecoder().decode(lie.stdout).trim()).toBe("ack=");
+  expect(second.channel.tally().refusals).toBe(0);
+
+  inFence(first.fence, repo, ["gh", "auth", "token"]);
+  expect(first.channel.tally().refusals).toBe(1);
+  expect(second.channel.tally().refusals).toBe(0);
+
+  first.channel.close();
+  const started = Date.now();
+  const late = inFence(first.fence, repo, ["gh", "auth", "token"]);
+  expect(late.exitCode).toBe(FENCE_REFUSAL_EXIT);
+  // Unanswered, the shim waits out its acknowledgement bound and refuses.
+  expect(Date.now() - started).toBeLessThan(10_000);
+  second.channel.close();
+});
+
+test("129 B-3: without a channel the shim is 125's byte for byte; with one it reports under bash", () => {
+  const fence = freshFence();
+  expect(shimSource(fence, "gh")).toBe(readFileSync(join(fenceBinDir(fence), "gh"), "utf8"));
+  expect(shimSource(fence, "gh").startsWith("#!/bin/sh\n")).toBe(true);
+  expect(shimSource(fence, "gh")).not.toContain("/dev/tcp");
+  const withChannel = shimSource(fence, "gh", { port: 4242, slot: 7, secret: "ab".repeat(16) });
+  expect(withChannel.startsWith("#!/bin/bash\n")).toBe(true);
+  expect(withChannel).toContain("/dev/tcp/127.0.0.1/4242");
+  expect(withChannel).toContain(`printf 'refused %s %s %s\\n' 7 ${"ab".repeat(16)} gh`);
+});
+
+test("129 D-12: the fence's git config carries the operator's identity when there is one, and nothing else of the operator's", () => {
+  const fence = freshFence();
+  expect(gitConfigSource(fence)).not.toContain("[user]");
+  const withIdentity = gitConfigSource(fence, { name: "Operator Name", email: "operator@example.com" });
+  expect(withIdentity).toContain('[user]\n\tname = "Operator Name"\n\temail = "operator@example.com"');
+  expect(withIdentity).toContain("\thelper =");
+
+  // A commit inside the fence is made under that identity, not a guessed one.
+  const repo = mkdtempSync(join(tmpdir(), "fence-identity-"));
+  git(repo, ["init", "-q", "-b", "main"]);
+  const identified = buildFence(fence, { identity: { name: "Operator Name", email: "operator@example.com" } });
+  writeFileSync(join(repo, "a.txt"), "a\n");
+  expect(inFence(identified, repo, ["git", "add", "-A"]).exitCode).toBe(0);
+  expect(inFence(identified, repo, ["git", "-c", "commit.gpgsign=false", "commit", "-q", "-m", "one"]).exitCode).toBe(0);
+  expect(git(repo, ["log", "-1", "--format=%an <%ae>"])).toBe("Operator Name <operator@example.com>");
 });

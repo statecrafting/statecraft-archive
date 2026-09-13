@@ -47,6 +47,7 @@ function projectRow(name: string): ProjectView {
     profile: { mode: "bypass", legacy: false },
     gate: { commands: [], source: "probe", rule: "none", legacy: false },
     policy: { schedulable: { statuses: ["approved"], namedDraft: false }, merge: { method: "squash" }, sensitive: { prefixes: [], onTouch: "record" }, humanGate: null, source: "default", legacy: true },
+    verify: { allowance: "fenced", source: "default", setAt: null },
     driverQualified: null,
     budget: FIXTURE_NO_CEILING,
     run: null,
@@ -153,6 +154,7 @@ function gatedClient(): { client: ApiClient; release(name: string): void } {
     setProjectProfile: registryAnswer,
     setProjectGate: registryAnswer,
     setProjectPolicy: registryAnswer,
+    setProjectVerifyAllowance: registryAnswer,
     project: scoped,
   };
 

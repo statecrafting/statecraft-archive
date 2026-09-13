@@ -178,6 +178,8 @@ function buildResult(specId: string, outcome: BuildResult["outcome"], opts: { qu
       receipt: null,
       sensitivePaths: [],
       stalled: null,
+      gateFence: { applied: false, refusals: 0 },
+      fenceRefusal: null,
     },
   };
 }
@@ -233,6 +235,8 @@ function verifyResult(specId: string, sha: string, outcome: VerifyResult["outcom
       evidenceDir: "/dev/null",
       needsHuman: false,
       quotaResetAtMs: null,
+      acceptanceBase: "unrecorded",
+      fence: { applied: false, refusals: 0 },
     },
   };
 }

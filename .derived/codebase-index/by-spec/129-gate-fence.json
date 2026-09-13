@@ -1,14 +1,4 @@
 {
-  "diagnostics": {
-    "errors": [],
-    "warnings": [
-      {
-        "code": "W-001",
-        "message": "spec '129-gate-fence' file unit 'members/src/orchestrator/gate-fence.test.ts' does not exist",
-        "path": "members/src/orchestrator/gate-fence.test.ts"
-      }
-    ]
-  },
   "mapping": {
     "dependsOn": [
       "125-credential-fence",
@@ -20,6 +10,18 @@
     "implementingPaths": [
       {
         "path": "docs/design/",
+        "source": "spec-edge"
+      },
+      {
+        "path": "members/src/commands/orchestrator.ts",
+        "source": "spec-edge"
+      },
+      {
+        "path": "members/src/orchestrator/adopt/preflight.test.ts",
+        "source": "spec-edge"
+      },
+      {
+        "path": "members/src/orchestrator/api/",
         "source": "spec-edge"
       },
       {
@@ -39,11 +41,19 @@
         "source": "spec-edge"
       },
       {
+        "path": "members/src/orchestrator/daemon.ts",
+        "source": "spec-edge"
+      },
+      {
         "path": "members/src/orchestrator/fence.test.ts",
         "source": "spec-edge"
       },
       {
         "path": "members/src/orchestrator/fence.ts",
+        "source": "spec-edge"
+      },
+      {
+        "path": "members/src/orchestrator/gate-fence.test.ts",
         "source": "spec-edge"
       },
       {
@@ -59,6 +69,14 @@
         "source": "spec-edge"
       },
       {
+        "path": "members/src/orchestrator/stages/shepherd.ts",
+        "source": "spec-edge"
+      },
+      {
+        "path": "members/src/orchestrator/stages/ship.ts",
+        "source": "spec-edge"
+      },
+      {
         "path": "members/src/orchestrator/stages/verify.test.ts",
         "source": "spec-edge"
       },
@@ -69,11 +87,23 @@
       {
         "path": "members/src/orchestrator/standby.test.ts",
         "source": "spec-edge"
+      },
+      {
+        "path": "members/web/test/fixtures.ts",
+        "source": "spec-edge"
+      },
+      {
+        "path": "members/web/test/store.test.tsx",
+        "source": "spec-edge"
       }
     ],
     "resolvedUnits": [
       {
-        "locations": [],
+        "locations": [
+          {
+            "file": "members/src/orchestrator/gate-fence.test.ts"
+          }
+        ],
         "ownership": true,
         "sourceField": "establishes",
         "unit": {
@@ -92,6 +122,45 @@
         "unit": {
           "kind": "directory",
           "path": "docs/design/"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "members/src/orchestrator/api/"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "extends",
+        "unit": {
+          "kind": "directory",
+          "path": "members/src/orchestrator/api/"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "members/src/commands/orchestrator.ts"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "extends",
+        "unit": {
+          "kind": "file",
+          "path": "members/src/commands/orchestrator.ts"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "members/src/orchestrator/adopt/preflight.test.ts"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "extends",
+        "unit": {
+          "kind": "file",
+          "path": "members/src/orchestrator/adopt/preflight.test.ts"
         }
       },
       {
@@ -144,6 +213,19 @@
         "unit": {
           "kind": "file",
           "path": "members/src/orchestrator/daemon.test.ts"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "members/src/orchestrator/daemon.ts"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "extends",
+        "unit": {
+          "kind": "file",
+          "path": "members/src/orchestrator/daemon.ts"
         }
       },
       {
@@ -214,6 +296,32 @@
       {
         "locations": [
           {
+            "file": "members/src/orchestrator/stages/shepherd.ts"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "extends",
+        "unit": {
+          "kind": "file",
+          "path": "members/src/orchestrator/stages/shepherd.ts"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "members/src/orchestrator/stages/ship.ts"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "extends",
+        "unit": {
+          "kind": "file",
+          "path": "members/src/orchestrator/stages/ship.ts"
+        }
+      },
+      {
+        "locations": [
+          {
             "file": "members/src/orchestrator/stages/verify.test.ts"
           }
         ],
@@ -253,6 +361,32 @@
       {
         "locations": [
           {
+            "file": "members/web/test/fixtures.ts"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "extends",
+        "unit": {
+          "kind": "file",
+          "path": "members/web/test/fixtures.ts"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "members/web/test/store.test.tsx"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "extends",
+        "unit": {
+          "kind": "file",
+          "path": "members/web/test/store.test.tsx"
+        }
+      },
+      {
+        "locations": [
+          {
             "file": "docs/design/05-the-realignment-checked.md"
           }
         ],
@@ -281,5 +415,5 @@
     "specStatus": "approved"
   },
   "schemaVersion": "1.1.0",
-  "shardHash": "af32714dd9db8646eb90e1316644928a4170aad4ba80766ce740b12c1b0a295d"
+  "shardHash": "2b1e366474cf4a471c374c3b022cee67d15e8aae96bd663595327c5457be5fb7"
 }

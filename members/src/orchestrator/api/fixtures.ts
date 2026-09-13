@@ -30,6 +30,8 @@ import {
   setProjectCeiling,
   setProjectGate,
   setProjectPolicy,
+  setProjectVerifyAllowance,
+  type VerifyAllowance,
   setProjectProfile,
   type Project,
   type ProjectSource,
@@ -389,6 +391,9 @@ export function freshRegistry(prefix: string): FixtureRegistry {
     },
     setPolicy(name: string, policy: LifecyclePolicy, source: "cli" | "api"): void {
       setProjectPolicy({ chain, name, policy, source });
+    },
+    setVerifyAllowance(name: string, allowance: VerifyAllowance, source: ProjectSource): void {
+      setProjectVerifyAllowance({ chain, name, allowance, source });
     },
     requalify(name: string, source: ProjectSource): void {
       requalifyProject({ chain, name, qualification: fixtureQualification(true), source });
