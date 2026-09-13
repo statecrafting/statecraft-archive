@@ -3,14 +3,15 @@
 
 <div align="center">
 
-### Governed software delivery for the agentic era
+### Governed delivery for the repositories you already have
 
 **AI can write the code. The unsolved problem is trusting what it wrote.**
 
 We build the machinery that makes machine-generated change *auditable*: <br />
 the human authors the contract, agents do the work, and gates (not optimism) refuse a change
 that drifts from the spec that authorised it. <br />
-Stop reviewing output; start constraining intent.
+Stop reviewing output; start constraining intent. <br />
+Local use needs no account; a hosted team layer is planned.
 
 </div>
 
@@ -144,7 +145,9 @@ operational verbs for preflight, migrate, backup and restore, single-container
 packaging, and a dev substrate that boots the real binary in tests. An
 application composes the crates and declares a manifest. The name is the
 lineage: enrahitu was Encore, rauthy, hiqlite, Turso; drop Encore and Turso
-and this is what remains.
+and this is what remains. It is the planned substrate for Statecraft's hosted
+service. Applications built with anything else on this page do not need to
+adopt it.
 
 **Nothing else on this page requires it.**
 
