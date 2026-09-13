@@ -10,7 +10,18 @@ establishes:
   - "package.json"
   - "react-router.config.ts"
   - "vite.config.ts"
-  - { kind: directory, path: "app/" }
+  # Section 7: the files under app/ this spec defines, by name. The rest of
+  # app/ is claimed by the specs that define it (002, 003, 004).
+  - "app/root.tsx"
+  - "app/routes.ts"
+  - "app/app.css"
+  - "app/layouts/site.tsx"
+  - "app/components/site-chrome.tsx"
+  - "app/components/theme-toggle.tsx"
+  - "app/lib/registry.ts"
+  - "app/lib/registry.server.ts"
+  - "app/routes/registry.tsx"
+  - "app/routes/registry.$repo.$specId.tsx"
   - { kind: directory, path: "public/" }
   - { kind: directory, path: "scripts/" }
   - ".github/workflows/deploy.yml"
@@ -167,3 +178,37 @@ is wired via `prefers-color-scheme` plus a no-flash init script and the
 Optional follow-up (not required by acceptance): re-enable the
 Cloudflare proxy on the apex now that the GitHub certificate has
 issued (§3 step 3).
+
+## 7. Decision (2026-09-12): the `app/` claim narrows to the files this spec defines
+
+This spec claimed `app/` as a directory. That was right on 2026-07-14, when
+every file under it was scaffold, and it stopped being right as specs 002, 003
+and 004 each took files over. A directory claim makes this spec a co-owner of
+every file beneath it, including files it has never described, and that had
+two effects the corpus did not intend:
+
+- **The ownership ratchet never fired under `app/`.** A new file there counted
+  as specifically claimed, so `spec-spine index coverage --fail-on-untraced`
+  stayed at 100% and the coupling gate named this spec as the owner instead of
+  refusing an unclaimed file (spec 005 section 3.5 says the opposite happens).
+- **A copy change could couple against the scaffold.** The gate reported
+  `app/lib/products.ts` as owned by both this spec and spec 004, so an edit to
+  this spec satisfied coupling for a change to spec 004's content.
+
+Spec 005 section 8 records the measurements. On 2026-09-12 the owner adopted
+row WEB-05 of the family's revision-4 decision package: narrow the blanket
+`app/` claim under the governing specs, separately from any copy change.
+
+`establishes` now names the ten files under `app/` that section 3 defines: the
+root and route table, the stylesheet, the base layout, the site chrome and
+theme toggle (dark mode), and the registry viewer's two library modules and
+two routes. Every other file under `app/` is already claimed by name by the
+spec that defines it, so nothing becomes unclaimed: `index coverage` reads
+32/32 before and after. Spec 004's `extends` edges on `app/routes.ts` and
+`app/components/site-chrome.tsx` still resolve, because both stay claimed
+here by name.
+
+Unchanged: sections 3 and 4, and the `public/` and `scripts/` directory claims.
+Those two hold only files this spec defines today; WEB-05 names `app/`, and a
+directory claim there becomes the same problem only when another spec starts
+adding files to either.
