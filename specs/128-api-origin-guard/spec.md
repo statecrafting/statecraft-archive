@@ -3,7 +3,7 @@ id: "128-api-origin-guard"
 title: "The origin guard: the daemon answers its own page and its own clients, and never serves a credential"
 status: approved
 created: "2026-09-11"
-implementation: in-progress
+implementation: complete
 risk: medium
 depends_on:
   - "022-http-api-and-events"
@@ -13,6 +13,10 @@ depends_on:
 establishes:
   - "members/src/orchestrator/api/origin-guard.ts"
   - "members/src/orchestrator/api/origin-guard.test.ts"
+  # D-16: the policy payload builder with no run-time imports, and the walk of
+  # the web UI's import graph that holds it there.
+  - "members/src/orchestrator/policy-payload.ts"
+  - "members/web/test/browser-imports.test.ts"
 extends:
   # 022 owns the API directory: the guard runs first in the router, and the
   # envelope's error vocabulary gains `forbidden` (additive; no shape changes).
@@ -36,6 +40,9 @@ extends:
   # 123's policy module computed a path at load, which stopped the built UI
   # from rendering at all; §5's browser round needs the page to load (D-15).
   - { spec: "123-policy-kit-handoff", unit: "members/src/orchestrator/lifecycle-policy.ts", nature: additive }
+  # 022's typed client, which the web UI bundles, imports the payload builder
+  # from the module with no run-time imports (D-16).
+  - { spec: "022-http-api-and-events", unit: "members/src/orchestrator/api/api-client.ts", nature: additive }
   # 121 owns the candidate, where the origin URL is read before it is
   # journaled in a receipt or served as a project's origin.
   - { spec: "121-candidate-and-receipt", unit: "members/src/orchestrator/candidate.ts", nature: additive }
@@ -451,6 +458,39 @@ bundle in a browser. The literal is what `join` produced on every platform
 the members support (108 D-10), and 123's tests pass unchanged. The larger
 defect of the same cause, the dev server's, is recorded in the status below
 and not fixed here.
+
+D-16 (2026-09-12, the owner). The dev server's defect is fixed in this spec,
+on the owner's instruction after the status below reported it. `policyPayload`
+moves, unchanged, to `policy-payload.ts`, which imports nothing at run time;
+`lifecycle-policy.ts` re-exports it, so 123's callers are untouched, and
+`api-client.ts` imports it from the new module, so the client no longer
+reaches `lifecycle-policy.ts`, `receipt.ts` or `journal.ts`. A test walks the
+UI's run-time import graph from `web/src/main.tsx`, counting every import but
+an `import type` or `export type` as an edge, and fails on any Node or Bun
+built-in it reaches; its control walks `lifecycle-policy.ts` and finds `fs`
+and `crypto`. The alternative, a Vite alias stubbing the built-ins, was
+rejected: it would hide the next such import instead of refusing it.
+
+## Status (2026-09-12, complete)
+
+`implementation: complete`. With D-16 in place, the round the previous status
+recorded as blocked was rerun, in headless Chrome 152 against a daemon built
+from this branch on port 4631 (scratch home, unqualified scratch repository)
+and `bun run web:dev` on port 4633 with `STATECRAFT_DEV_DAEMON_URL` pointing
+at it (D-14):
+
+- the dev UI loaded and its Arm control, sent through the proxy, journaled
+  `project.armed` with source `ui` at seq 5, with `guardRefusals` at 0;
+- a POST sent to the dev server with `Origin: https://attacker.example` was
+  forwarded unchanged and refused by the daemon (`origin: "https://attacker.example"
+  is not this daemon's origin ...`), `guardRefusals` 1, no record appended;
+- the production build, rebuilt with D-16, loaded from the daemon and its
+  Disarm control journaled `project.disarmed` with source `ui` at seq 6.
+
+Every §5 criterion now holds: the suites and gate, the browser round (the
+previous status), the dev round (above), and the committed evidence bundle
+verifying under both verifiers. The processes, profile and scratch
+repository were throwaway; the operator's own daemon was not touched.
 
 ## Status (2026-09-12, in progress: one acceptance round blocked)
 

@@ -20,6 +20,10 @@
         "source": "spec-edge"
       },
       {
+        "path": "members/src/orchestrator/api/api-client.ts",
+        "source": "spec-edge"
+      },
+      {
         "path": "members/src/orchestrator/api/events.ts",
         "source": "spec-edge"
       },
@@ -72,11 +76,19 @@
         "source": "spec-edge"
       },
       {
+        "path": "members/src/orchestrator/policy-payload.ts",
+        "source": "spec-edge"
+      },
+      {
         "path": "members/src/orchestrator/projects.test.ts",
         "source": "spec-edge"
       },
       {
         "path": "members/src/orchestrator/projects.ts",
+        "source": "spec-edge"
+      },
+      {
+        "path": "members/web/test/browser-imports.test.ts",
         "source": "spec-edge"
       },
       {
@@ -122,6 +134,32 @@
       {
         "locations": [
           {
+            "file": "members/src/orchestrator/policy-payload.ts"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "file",
+          "path": "members/src/orchestrator/policy-payload.ts"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "members/web/test/browser-imports.test.ts"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "file",
+          "path": "members/web/test/browser-imports.test.ts"
+        }
+      },
+      {
+        "locations": [
+          {
             "file": "crates/statecraft-journal/"
           }
         ],
@@ -156,6 +194,19 @@
         "unit": {
           "kind": "file",
           "path": "members/src/members/journal-parity.test.ts"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "members/src/orchestrator/api/api-client.ts"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "extends",
+        "unit": {
+          "kind": "file",
+          "path": "members/src/orchestrator/api/api-client.ts"
         }
       },
       {
@@ -384,5 +435,5 @@
     "specStatus": "approved"
   },
   "schemaVersion": "1.1.0",
-  "shardHash": "4146888945762e8273c6c769722131c41a1b6c65b2c8b79850223b73365a23cb"
+  "shardHash": "b06cf6d49ed60bf433044fefddaf8d7031ee7ab696fd884eab28bb59b6e8d6df"
 }
