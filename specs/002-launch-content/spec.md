@@ -206,18 +206,69 @@ edit makes a sentence true again after a sibling moved. Sibling states read at
 3. **The control plane runs, and you still cannot install it.** The self-host
    stub said the plane was "spec-approved and on the milestone ladder, not yet
    a thing you deploy", which is wrong in one direction and right in the other.
-   `statecraft` spec 014 section 3.1 records a live deployment serving
-   `app.statecraft.ing`, reconciled to that repository's `main`, with tenants,
-   the gate and the attestation chain running. What does not exist is a
-   reproducible self-host path: `statecraft/009-control-plane-deploy` is still
-   `implementation: in-progress` and describes one specific cluster. The stub
-   now says both halves, and names the two limits a reader should carry into
-   the rest of the docs: the factory has not stamped an application in
-   production (014 section 3.3), and the plane's chain is unsigned (014
-   section 3.5).
+   A deployment serves `app.statecraft.ing`, and
+   `statecraft/009-control-plane-deploy` describes it. What does not exist is a
+   reproducible self-host path: 009 is still `implementation: in-progress` and
+   describes one specific cluster. The stub now says both halves, and names the
+   two limits a reader should carry into the rest of the docs: no production
+   stamp of an application is on a public record, and the plane's chain anchor
+   is unsigned until an operator key is configured
+   (`statecraft/008-governance-attestation`), a key 009 records as declared
+   with no delivery path. (Evidence re-pointed 2026-09-12; section 9.)
 
 Not changed here: the Stamp rung, the hero's factory sentence, and the ladder's
 M3 shape. Each is a change to what section 2 *requires*, motivated by a
-successor thesis (`statecraft` spec 014) that is still `status: draft`. Spec 006
+successor thesis that was then an unratified draft in `statecraft`. Spec 006
 records them as proposals P-1 to P-7 for review, with the evidence and the
 dependency named.
+
+## 9. Status note (2026-09-12): a chip reports the corpus, and says so
+
+The maturity chips on the loop blocks, the for-agents block and the ladder
+read `shipped`, `in progress` and `planned`. The first is the problem: it is
+derived from `implementation: complete`, and a complete spec is not a shipped
+product. On the live build of 2026-09-12 the M4 rung read "The fleet operates
+the result: shipped" and the Operate block read `shipped`, from
+`statecraft/006-fleet` alone, while no release of the plane exists and no
+placed application is on a public record.
+
+One rollup quirk is recorded and left alone: a constituent spec at
+`implementation: n-a` counts as incomplete, so M3, which includes the
+`statecraft` thesis record 001, cannot reach its top state however far the
+rest of the rung moves. Whether a record belongs on a rung at all is for the
+thesis-dependent amendment below to settle, since that amendment redraws the
+rungs.
+
+The derivation in section 0 is unchanged and stays the rule. Only the words
+change: `milestoneStateLabel` in `app/lib/milestones.ts` now reads
+`implemented`, `in progress` and `pending`, the corpus's own vocabulary. The
+loop and status introductions each gain one sentence saying that implemented is
+not released, exercised or hosted, and link to the availability matrix spec
+004 section 3.3.1 adds to `/products`, which is the one place those three axes
+are authored (spec 006 D-4).
+
+The docs stubs carry the same kind of chip, authored rather than derived, and
+it read `shipping` and `planned`. Those labels now read `implemented` and
+`pending`, so no chip on the site uses a release word for a spec state, and the
+self-host stub's "its specs are shipped" now says the spec that packages the
+chassis is implemented. The stubs' maturity values are unchanged.
+
+This lands on the owner's 2026-09-12 adoption of revision-4 row WEB-01, which
+chooses the matrix and chips together with the factual corrections and the
+spec-spine-first adoption path (spec 006 section 10).
+
+**Evidence that is not public (WEB-03).** Section 8 item 3 and the self-host
+stub it describes cited `statecraft` spec 014 for the live deployment, the
+factory never having run and the unsigned chain. That record is not on any
+public branch, and publication of drafts has not been authorized, so a reader
+could not check the citation. The item and the stub now rest on public
+evidence only: `statecraft` 009 for the deployment and for the anchor key it
+records as declared with no delivery path, 008 for the anchor being unsigned
+until a key is configured, and "no public record" where nothing public records
+a production stamp. The stub gains links to 008 and 009. What the limits say
+is unchanged; only what a stranger can open behind them is.
+
+Not changed here: the hero, the Stamp block, the ladder's M3 shape, and the
+rungs themselves. The owner adopted the successor thesis the same day (WEB-02),
+and those changes land as an explicit follow-on amendment, not inside this
+one, per spec 006 section 10.

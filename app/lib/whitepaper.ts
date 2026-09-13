@@ -32,7 +32,7 @@ export const paperMeta = {
   author: "Bartek Kus",
   date: "July 16, 2026",
   abstract:
-    "Statecraft is a governed control plane for agentic software delivery. It is built around one loop: intent becomes a governed spec, a contract stamps a complete application from an open template, a fleet operates the result, and a tamper-evident record makes the whole run checkable by someone who trusts none of it. This paper walks the mechanisms that make that loop honest, from the spec spine that governs every repo in the family (including this website) to the identity, decision, and attestation primitives that keep humans and agents on the same rails. Where a piece is designed but not yet shipped, it is marked as such: the status ladder on the home page rolls up from the specs, not from this paper.",
+    "Statecraft is a governed control plane for agentic software delivery. It is built around one loop: intent becomes a governed spec, a contract stamps a complete application from an open template, a fleet operates the result, and a tamper-evident record makes the whole run checkable by someone who trusts none of it. This paper walks the mechanisms that make that loop honest, from the spec spine that governs every repo in the family (including this website) to the identity, decision, and attestation primitives that keep humans and agents on the same rails. Where a piece is designed but not yet implemented, it is marked as such: the status ladder on the home page rolls up from the specs, not from this paper.",
 };
 
 export const sections: Section[] = [
@@ -101,7 +101,7 @@ export const sections: Section[] = [
         id: "append-only-ledger",
         title: "An append-only, hash-linked ledger",
         content: [
-          "Compliance in an agentic system needs evidence with stated limits, not promises. attest-ledger is an append-only, hash-linked record in which each entry commits to the one before it, so a silent edit anywhere in the history breaks the chain. It can sign entries with Ed25519; whether a given chain is signed is a property of the deployment, not of the library. The control plane's own governance chain is hash-linked and unsigned today, anchored to a root it declares for itself, so re-checking it establishes internal consistency and not who produced it. Issuer trust is a separate outcome and is reported separately. [ref:4]",
+          "Compliance in an agentic system needs evidence with stated limits, not promises. attest-ledger is an append-only, hash-linked record in which each entry commits to the one before it, so a silent edit anywhere in the history breaks the chain. It can sign a chain's genesis anchor with Ed25519, and its verifier checks that signature against the public key the anchor itself carries, so a valid signature says which key signed and not whose key it is; that takes a key pinned by someone other than the producer. Whether a given chain is signed at all is a property of the deployment, not of the library. The control plane's own governance chain starts from a fixed genesis root the plane declares for itself, and its governance spec leaves the anchor unsigned until an operator configures a signing key, a key its deploy spec records as declared with no delivery path. Re-checking that chain establishes internal consistency and not who produced it. Issuer trust is a separate outcome and is reported separately. [ref:4]",
           "Hashes only agree across parties if everyone serializes the same bytes. canonical-keysort-json does exactly that: a lexicographic key sort at the serialization boundary, so a record hashed on one machine hashes identically on another. [ref:9] The certificate and record shapes shown in the reader are illustrative schemas, not a real signed artifact; the real ones are produced by tenant-emit from a finished run.",
         ],
       },
@@ -109,7 +109,7 @@ export const sections: Section[] = [
         id: "independent-verification",
         title: "Independent verification",
         content: [
-          "The load-bearing property is that the verifier does not trust the producer. tenant-tail re-checks the run-side artifacts a factory asserted about its build, offline, identity-free, and read-only down to the package boundary. [ref:5] It is a library with that shape rather than a path anyone has exercised end to end: the control plane has not stamped an application in production, so no production certificate has been through it.",
+          "The load-bearing property is that the verifier does not trust the producer. tenant-tail re-checks the run-side artifacts a factory asserted about its build, offline, identity-free, and read-only down to the package boundary. [ref:5] It is a library with that shape rather than a path on a public record end to end: no production stamp of an application is recorded, so no production certificate is recorded as having been through it.",
           "If an artifact covered by the record has been altered, the verifier rejects it with a specific diagnostic pointing at the exact mismatch. What recomputation cannot catch is a chain rebuilt end to end from a fresh anchor, which is internally perfect and says nothing about its origin: integrity and issuer trust are two questions, and only the first is answered by arithmetic. The emit side (tenant-emit) and the verify side (tenant-tail) are deliberately separate binaries with no shared trust, so the paperwork can be re-checked by someone who ran none of it.",
         ],
       },
@@ -144,7 +144,7 @@ export const references: Reference[] = [
   { id: 1, label: "STATECRAFT", title: "Statecraft: the governed delivery control plane", url: "https://github.com/statecrafting/statecraft", accessed: "July 2026" },
   { id: 2, label: "SPEC-SPINE", title: "spec-spine: the spec-governance toolchain", url: "https://github.com/statecrafting/spec-spine", accessed: "July 2026" },
   { id: 3, label: "ENRAHITU", title: "enrahitu: the EnRaHiTu template chassis", url: "https://github.com/statecrafting/enrahitu", accessed: "July 2026" },
-  { id: 4, label: "ATTEST-LEDGER", title: "attest-ledger: append-only, hash-linked, Ed25519-signed record", url: "https://github.com/statecrafting/attest-ledger", accessed: "July 2026" },
+  { id: 4, label: "ATTEST-LEDGER", title: "attest-ledger: an append-only, hash-linked record with a signable genesis anchor", url: "https://github.com/statecrafting/attest-ledger", accessed: "July 2026" },
   { id: 5, label: "TENANT-TAIL", title: "tenant-tail: the independent certificate verifier", url: "https://github.com/statecrafting/tenant-tail", accessed: "July 2026" },
   { id: 6, label: "RAUTHY", title: "Rauthy: an OpenID Connect provider", url: "https://github.com/sebadob/rauthy", accessed: "July 2026" },
   { id: 7, label: "MCP", title: "Model Context Protocol specification", url: "https://modelcontextprotocol.io/specification", accessed: "July 2026" },

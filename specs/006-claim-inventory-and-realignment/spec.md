@@ -21,10 +21,11 @@ summary: >
   spec 002 section 8, spec 003 section 7 and spec 004 section 8. What is left
   is recorded here as proposals, because each one changes what spec 002 section
   2 or spec 004 section 3.3 requires the site to say, and the successor thesis
-  that would motivate them is statecraft spec 014, still draft. Also carries
-  the requests to sibling repositories and the vocabulary packet
-  statecrafting-profile asked for. This spec is a record, not a work order: it
-  amends no approved spec and authorizes no publication.
+  that would motivate them was then an unratified draft in statecraft. Also
+  carries the requests to sibling repositories and the vocabulary packet
+  statecrafting-profile asked for. Section 10 records the owner's 2026-09-12
+  decisions on all of it, and this record's errata. This spec is a record, not
+  a work order: it amends no approved spec and authorizes no publication.
 ---
 
 # 006: The claim inventory
@@ -47,8 +48,8 @@ section 7, spec 004 section 7).
 What it cannot catch is the failure this record exists for. A spec's
 `implementation: complete` says the code was written and its acceptance held.
 It does not say the capability has ever been exercised. `statecraft`
-spec 005-factory-service is `complete`; `statecraft` spec 014 section 3.3
-records that the factory has never run in production. Both are true. A chip
+spec 005-factory-service is `complete`; no production stamp of an application
+is on any public record. Both are true. A chip
 that reads `shipped` beside the word "stamp" is therefore accurate about the
 corpus and misleading about the product, and no amount of deriving it harder
 will fix that. The distinction the packet asks for is a second axis the chips
@@ -93,7 +94,7 @@ owns the fact. Sibling states read on 2026-09-11 at `statecraft` `afe31c3`,
 | spec-spine compiles a markdown corpus to a typed registry and refuses code that drifts from its owning spec | index, whitepaper 01, products | **available** | this repository is one of its corpora; `make gate` exits 0 on every commit; `spec-spine 0.18.0` on `PATH` |
 | The compiler is deterministic: same inputs, byte-identical output | whitepaper 01, figure 1 | **available** | the committed shards under `.derived/`; `spec-spine check` compiles in memory and compares without writing |
 | The coupling gate runs at pull-request time and refuses an unclaimed file | whitepaper 01, figure 1 | **available** | `spec-spine.toml` `[coupling] require_ownership = true`; `index coverage` reports 32/32 claimed |
-| A refusal rule stops an agent editing a spec to match the code it wrote | whitepaper 01, figure 1 | **available, and enforced by a prompt** | `.claude/rules/adversarial-prompt-refusal.md`; `statecraft` spec 014 section 6 records the same row as enforced by "nothing mechanical" |
+| A refusal rule stops an agent editing a spec to match the code it wrote | whitepaper 01, figure 1 | **available, and enforced by a prompt** | `.claude/rules/adversarial-prompt-refusal.md`, a prompt rule with nothing mechanical behind it |
 | Two agents on non-overlapping specs "cannot collide by construction" | whitepaper 01, figure 1, positioning table | **was unsupported; corrected in this change** | shared generated files, lockfiles, migrations, fixtures and external resources are outside a source-path claim; spec 004 section 8 item 2 |
 
 ### 3.2 The substrate
@@ -102,7 +103,7 @@ owns the fact. Sibling states read on 2026-09-11 at `statecraft` `afe31c3`,
 |---|---|---|---|
 | enrahitu runs as one container with one volume and no managed dependencies | index hero, products, docs, get-started | **available** | `enrahitu/007-single-container-packaging` complete; its README's `docker run` is the whole install |
 | The name is the stack: Encore.ts, rauthy, hiqlite, Turso | index hero, docs, whitepaper 02 | **available as the name's expansion** | `rahi/docs/design/00-lineage.md` states the same derivation; hiqlite is in-process via napi, CoreLedger is libSQL |
-| CoreLedger is a data layer over libSQL/Turso | docs, "What is EnRaHiTu" | **available, incomplete** | `enrahitu/011-coreledger-postgres-driver` added a Postgres driver, and the production plane runs Postgres (`statecraft` 014 section 3.2) |
+| CoreLedger is a data layer over libSQL/Turso | docs, "What is EnRaHiTu" | **available, incomplete** | `enrahitu/011-coreledger-postgres-driver` added a Postgres driver, and `statecraft/009-control-plane-deploy` runs the plane on that driver against its own database |
 | enrahitu is "the chassis every stamped app is built from" | docs, products Substrate layer, whitepaper 02 | **historical** | `enrahitu/035-chassis-boundary` (complete) makes it "a working application an organization extends rather than forks"; its 036 to 038 are a membership domain, not a template |
 | rahi, the Rust chassis, exists | absent from every surface | **available and unmentioned** | `rahi` 22 approved specs, all `complete` or `n-a`; six crates; Apache-2.0; proposal P-3 |
 
@@ -111,10 +112,10 @@ owns the fact. Sibling states read on 2026-09-11 at `statecraft` `afe31c3`,
 | Claim | Surface | Class | Evidence |
 |---|---|---|---|
 | Intent becomes a governed spec | index hero, loop, whitepaper 02 | **available** | as 3.1 |
-| A factory stamps a complete application from an open template | index hero, loop, ladder M3, products, whitepaper 02, figure 2 | **proposed, never exercised** | `statecraft/005-factory-service` is `complete` in the corpus and `statecraft` 014 section 3.3 records it has never run in production; 014 section 4.2 retires it in the successor thesis |
+| A factory stamps a complete application from an open template | index hero, loop, ladder M3, products, whitepaper 02, figure 2 | **proposed, with no public record of a run** | `statecraft/005-factory-service` is `complete` in the corpus, and no production stamp of an application is on a public record |
 | The stamped app is born with a certificate binding an agentic posture | loop, docs, whitepaper 02 | **available as a component, unexercised as a path** | `enrahitu/012-born-with-provenance` complete; the stamp that would issue one is `009`, in progress |
-| A fleet operates the result: one container, one volume, update and backup as governed verbs | index loop, ladder M4, products, whitepaper 02 | **available, currently empty** | `statecraft/006-fleet` complete; 014 section 3.4 records the fleet holds nothing |
-| Your code stays in your GitHub org the whole time | index hero, products | **available** | `statecraft/004-tenants-github-app` and `011-tenant-lifecycle`; 014 section 4.5 lists tenancy as implemented and running |
+| A fleet operates the result: one container, one volume, update and backup as governed verbs | index loop, ladder M4, products, whitepaper 02 | **available, with no public record of a placed application** | `statecraft/006-fleet` complete; no placed application is on a public record |
+| Your code stays in your GitHub org the whole time | index hero, products | **available** | `statecraft/004-tenants-github-app` and `011-tenant-lifecycle` |
 | A local, account-free governed run exists | absent from every surface | **available and unmentioned** | `statecraft-cli` 119 to 125 complete: candidate worktrees, capability negotiation, the credential fence, `acceptance.receipt` v1, the action broker; proposal P-4 |
 
 ### 3.4 The record and the verifier
@@ -122,9 +123,9 @@ owns the fact. Sibling states read on 2026-09-11 at `statecraft` `afe31c3`,
 | Claim | Surface | Class | Evidence |
 |---|---|---|---|
 | attest-ledger is append-only and hash-linked | whitepaper 03, figure 2, products, roster | **available** | `attest-ledger` README and `crates/core`; `statecraft/008-governance-attestation` complete |
-| The ledger is Ed25519-signed | whitepaper 03, figure 2, positioning table, delivery flow, layer blurb, papers stat | **library capability, not a deployment property; corrected in this change** | `attest-ledger/crates/core/src/signing.rs` exists; `statecraft` 014 section 3.5 reads the live anchor as `{"kind": "unsigned"}` with `GOVERNANCEANCHORKEY` absent from the live secret |
+| The ledger is Ed25519-signed | whitepaper 03, figure 2, positioning table, delivery flow, layer blurb, papers stat | **library capability, not a deployment property; corrected in this change** | `attest-ledger/crates/core/src/signing.rs` exists; `statecraft/008-governance-attestation` leaves the plane's anchor unsigned until an operator key is configured, and `009-control-plane-deploy` records that key as declared with no delivery path |
 | An independent verifier re-checks the record with no trust in the producer | whitepaper 03, figure 2, products | **available as a library; the path is unexercised** | `tenant-tail` exists; no production certificate has passed through it because the factory never ran |
-| Verification catches tampering | whitepaper 03, figure 2 | **available, with a stated hole; corrected in this change** | a chain rebuilt end to end from a fresh anchor verifies: `statecraft` 014 section 3.5 and `statecraft-cli` doc 05 F5 found this independently |
+| Verification catches tampering | whitepaper 03, figure 2 | **available, with a stated hole; corrected in this change** | a chain rebuilt end to end from a fresh anchor verifies: `statecraft-cli` doc 05 F5 |
 | Canonical JSON makes independent parties agree on a hash | whitepaper 03 | **available** | `canonical-keysort-json` |
 | The certificate shapes in the reader are illustrative, not real artifacts | whitepaper 03 | **available, correctly labelled** | already stated in the copy |
 
@@ -132,11 +133,11 @@ owns the fact. Sibling states read on 2026-09-11 at `statecraft` `afe31c3`,
 
 | Claim | Surface | Class | Evidence |
 |---|---|---|---|
-| rauthy is the sole OIDC session signer, federating GitHub | whitepaper 04, figure 3 | **available** | `enrahitu/005-rauthy-same-origin` complete; rauthy runs inside the plane's container (`statecraft` 014 section 3.6: 36M of `/data` is `rauthy/`) |
+| rauthy is the sole OIDC session signer, federating GitHub | whitepaper 04, figure 3 | **available** | `enrahitu/005-rauthy-same-origin` complete; rauthy is served same-origin below `https://app.statecraft.ing/auth/` (`statecraft/009-control-plane-deploy` section 2.4) |
 | The signer is live at `auth.statecraft.ing` | whitepaper 04, figure 3 | **was unsupported; corrected in this change** | `statecraft/009-control-plane-deploy` section 2.4 is titled "`auth.statecraft.ing` does not return"; its acceptance records the host as NXDOMAIN and the issuer as `https://app.statecraft.ing/auth/v1/`; spec 010 accepted the cost of stopping it |
-| Sign-in hands off to the plane's login initiator | site chrome | **available** | `app/components/sign-in-link.tsx`; `statecraft` 014 section 3.1 reports the deployment healthy |
+| Sign-in hands off to the plane's login initiator | site chrome | **available** | `app/components/sign-in-link.tsx`; the login initiator at `https://app.statecraft.ing/api/v1/auth/login` answers with a redirect into the plane's OIDC flow |
 | action-gate returns Allow, Deny or Degrade deterministically | whitepaper 04, figure 3, products | **available** | `action-gate`; `statecraft/008` complete |
-| Every mutating verb passes the gate | whitepaper 04, figure 3 | **available, with a stated exception** | `statecraft` 014 section 6: a soft verb (deploy, backup) warns and proceeds when the governance service is unreachable; proposal P-6 |
+| Every mutating verb passes the gate | whitepaper 04, figure 3 | **available as a design; the absolute is not established** | `statecraft/008-governance-attestation` complete; no public record establishes that every mutating verb passes the gate, so the absolute is not verified here; proposal P-6 |
 | trust-window scores a rolling window into a privilege level | whitepaper 04, figure 3, products | **available as a library; unwired** | `trust-window`; no surface in the running plane reads it |
 | An agent passes the same controls a person does | index for-agents, whitepaper 04 | **available, with an unknown** | `statecraft-cli/105-mcp-server` complete; no driver proves it observed every provider tool call, so coverage is `unknown` (its doc 05 section 12) |
 
@@ -159,8 +160,8 @@ acceptance is that a new visitor can answer four questions.
 | Question a visitor cannot answer today | Where the answer lives | Proposal |
 |---|---|---|
 | What can I install and run right now? | `spec-spine` installs and runs; `statecraft-cli`'s umbrella binary installs (its spec 107, complete); its local engine does not yet package cleanly (its draft 130, and doc 05 F4) | P-4 |
-| Do I need an account, or a runtime migration? | no: the local path is account-free (`statecraft-cli` 119 to 125) and Rahi is the service's own substrate, not a customer prerequisite (`statecraft` 014 section 4.4: "Nothing in it requires the customer's application to run on Rahi") | P-1, P-3 |
-| What is paid or shared? | undecided: `statecraft` 014 O-6 leaves entitlements, metering, retention and support open | not proposed; see section 7 |
+| Do I need an account, or a runtime migration? | no: the local path is account-free (`statecraft-cli` 119 to 125), and none of those specs names Rahi as a dependency | P-1, P-3 |
+| What is paid or shared? | undecided: no public record states entitlements, metering, retention or support, and spec 002 section 5 keeps pricing off this site | not proposed; see section 7 |
 | What is still only proposed? | scattered across five corpora | P-1 |
 
 ## 4. Proposals
@@ -424,6 +425,131 @@ copies. `statecrafting-profile` at `0ac33f9`. `spec-spine` at `85467be`, specs 0
 088 read for lifecycle only. Sibling lifecycle states were
 read through `spec-spine registry` and the specs' own frontmatter, never by
 parsing `.derived/`.
+
+## 10. Revision 4: the owner's decisions, and this record's errata (2026-09-12)
+
+On 2026-09-12 the owner adopted the statecraft.ing rows of the revision-4
+decision package, WEB-01 to WEB-05. They answer the decisions section 7 left
+open and five more the publishing proposal that followed this record raised.
+Recording them is execution of chosen answers, not another design round. The
+package is the owner's planning record and is not public, so each row is
+restated in full here and nothing below depends on opening it.
+
+### 10.1 The decisions, and where each lands
+
+The five decisions raised after section 7, one line each: **D-6**, which
+adoption path comes first, here and on the org profile. **D-7**, what to do
+about claims whose evidence is a draft a stranger cannot open. **D-8**, whether
+these errata land in PR 12 or after it. **D-9**, which of the three prepared
+copy tiers to publish. **D-10**, what to do about two governance limits the
+proposal's negative tests found: the ownership ratchet does not fire under
+`app/`, because spec 001 claims the whole directory, and the coupling gate
+accepts any edit to an owning spec, a comment included, as coupling.
+
+| Row | Answers | Adopted | Lands in |
+|---|---|---|---|
+| WEB-01 | D-2, D-4, D-6, D-9 | All three prepared tiers: factual corrections, the availability matrix with chips that report the corpus, and spec-spine-first adoption. The local engine stays not released until a tested release exists, and `install.sh` is not offered as an engine-install path. | this change: spec 002 section 9, spec 003 section 8, spec 004 sections 3.3.1, 3.5 and 9 |
+| WEB-02 | D-1, D-3, D-5 | Follow the adopted Statecraft thesis. Add `rahi` on this site and on the org profile together, and keep hqgit off both for now. Preserve the whitepaper as dated historical material with a clear superseded banner. Thesis-dependent copy is an explicit follow-on amendment, not part of the three tiers, and may be prepared in the same effort. | a follow-on amendment to specs 002, 003 and 004 (10.4) |
+| WEB-03 | D-7 | Prefer public, commit-pinned citations of drafts if publishing drafts is authorized; otherwise remove or replace public claims that rely on inaccessible drafts. Publishing a draft makes it accessible, not approved. Local development may cite central snapshots. | publishing drafts is not authorized, so the second branch applies: 10.3 |
+| WEB-04 | D-8 | These errata land after PR 12, and the combined tree is prepared and tested locally now. PR 12 sequences publication and blocks no preparation, and it is not edited to avoid a follow-on change. | this section, in the change after PR 12 |
+| WEB-05 | D-10 | Narrow the blanket `app/` ownership claim under the governing specs, separately from the copy change. Report that a comment-only spec edit passes coupling, and request semantic improvements upstream without making them a prerequisite for copy. Coupling presence is not proof of substantive specification review. | a separate change to specs 001 and 005 (10.4) |
+
+Where these rows settle section 7's questions they settle them as section 7
+recommended: the matrix as a section of `/products` (D-2), the
+declared-against-exercised axis authored in the matrix alone (D-4), `rahi`
+named (D-3), and the whitepaper superseded rather than re-authored (D-5). How
+`rahi` is framed follows the adopted thesis, in the follow-on amendment.
+
+### 10.2 Errata
+
+1. **hqgit's count** (section 4 P-5, section 5). "Its 68 implementation specs
+   are pending" is wrong. hqgit has 68 approved specs: 64 implementation specs
+   `pending`, `001-agentic-harness` `complete`, and three records at `n-a`
+   (000, 002, 003), read from frontmatter at `hqgit` `4d0f9c2`, its public
+   `main`. The substance stands: its product specs are pending, and WEB-02
+   keeps it off this site.
+2. **`install.sh` installs none of the local engine** (section 3.7, P-4). Both
+   call the `statecraft` binary from `install.sh` available as the local path.
+   `install.sh` installs the latest release, and the only release is
+   `statecraft-cli` v0.1.0 of 2026-07-22, which predates member dispatch (108)
+   and the local engine (119 to 125). The installable binary is the CLI and MCP
+   server; a governed session on your own machine is implemented and not
+   released. WEB-01 states the rule that follows.
+3. **The ledger signs its anchor, not its entries** (section 3.4). The row's
+   class stands, but the copy correction that landed with it ("can sign
+   entries") was itself wrong. `attest-ledger` signs only a chain's genesis
+   anchor (`crates/core/src/signing.rs`, `sign_anchor`), and `verify_anchor`
+   checks that signature against the public key the anchor itself carries, so a
+   valid signature says which key signed and not whose key it is. Spec 003's
+   role line still read "Ed25519-signed". Corrected in spec 003 section 8 and
+   spec 004 section 9.
+4. **spec-spine's drafts moved** (section 5). The four specs said to be
+   `status: draft` at `85467be` are, on `spec-spine` public `main` at
+   `59cba05`: 085 approved and implemented, 086 to 088 draft and pending. 089,
+   approved and implemented, has joined them. The latest release, v0.18.0 of
+   2026-09-09, predates 085, so its fix is in nothing a reader installs.
+5. **enrahitu's template contract and scaffold verb survived** (section 5,
+   T-12). T-12 asked. `enrahitu` spec 001 section 5.2, on its public `main`,
+   marks both "Amended, DONE (phase 1c)": 009 lost its frontend slot and 014 its
+   flavor selection. 009 is still `in-progress` and 014 `complete`.
+6. **"Available" is retired as a published verdict** (sections 3 and 6).
+   Section 3's five classes remain this record's reading of the 2026-09-11
+   copy. What the site publishes is read on the four axes of spec 004 section
+   3.3.1 (implemented, released, exercised, hosted), which replace section 6's
+   `available` row: nothing is called available in one word, and complete is
+   necessary for a positive reading, never sufficient.
+
+### 10.3 Evidence that is not public (WEB-03)
+
+Sections 1 and 3 cited `statecraft` spec 014, read at `afe31c3`, as evidence.
+Neither is on a public branch of `statecraft`, and publishing drafts has not
+been authorized, so a sentence resting on them cannot be checked by a
+stranger. Each such claim is replaced in place with public evidence, or
+restated as having no public record, and one is withdrawn. (Section 3's
+`statecrafting` read, `85db8fd`, is on no public branch either; the one fact
+this site still takes from that repository, its MPL-2.0 toolchain packages, is
+re-read at its public `main` `35126be` in spec 003 section 8.)
+
+| Where | Rested on | Now rests on |
+|---|---|---|
+| section 1 | 014 section 3.3 | no production stamp is on a public record |
+| 3.1, the refusal rule | 014 section 6 | the rule file itself |
+| 3.2, CoreLedger | 014 section 3.2 | `statecraft/009-control-plane-deploy` |
+| 3.3, the factory | 014 sections 3.3 and 4.2 | no public record of a run; the class is restated to match |
+| 3.3, the fleet | 014 section 3.4 | no public record of a placed application; the class is restated to match |
+| 3.3, tenancy | 014 section 4.5 | `statecraft` 004 and 011 alone |
+| 3.4, signing | 014 section 3.5 | `statecraft` 008 and 009 |
+| 3.4, tampering | 014 section 3.5 | `statecraft-cli` doc 05 F5 alone |
+| 3.5, rauthy | 014 section 3.6 | `statecraft` 009 section 2.4 |
+| 3.5, sign-in | 014 section 3.1 | the login initiator's own redirect |
+| 3.5, the gate | 014 section 6 | withdrawn: no public record establishes the absolute or its exception, and the class says so |
+| 3.7 | 014 section 4.4 and O-6 | the CLI's own specs; no public record of terms |
+
+The references to 014 that remain, in sections 4, 5, 7, 8 and 9, name it as the
+record of the successor thesis as filed on 2026-09-11. They are the history of
+what was proposed and requested, and none is evidence for a claim about a
+product. The same rule governs the copy: spec 002 section 9 and spec 004
+section 9 record the site copy and status notes re-pointed the same way.
+
+### 10.4 What is prepared elsewhere, and what stays a checkpoint
+
+- **The thesis-dependent follow-on** (WEB-02) is prepared as its own change
+  after this one: `rahi` on the roster, `enrahitu` described as the membership
+  platform its own corpus makes it with the chassis history second, the
+  whitepaper's superseded banner, and the hero, loop and ladder stated for the
+  adopted offer. Its evidence is the successor thesis, so under 10.3 it
+  publishes only once that thesis is on a public branch or its claims rest on
+  something that is, and `rahi` lands together with the org profile.
+- **P-5**, the explorer drawn as stages with owners, stays held: it depends on
+  `statecraft` 016, which is not approved.
+- **P-6**, guarantees stated with their exceptions, is carried in part by the
+  matrix's limits, which quote the exceptions the siblings publish. The
+  gate's exception waits on a public source, as 10.3 records.
+- **The `app/` ownership narrowing and the coupling finding** (WEB-05) land as
+  a separate change to specs 001 and 005, not in the copy change.
+- **Publication.** Section 8 still holds for this record: the authority for the
+  three tiers is WEB-01, not this record. Merging any of these changes to
+  `main` deploys the live apex and stays a human checkpoint.
 
 ## Verification
 

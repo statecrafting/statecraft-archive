@@ -73,17 +73,18 @@ Each URL is `https://github.com/statecrafting/<repo>`.
 | enrahitu | the EnRaHiTu template chassis (Encore.ts + rauthy + hiqlite + Turso) | Apache-2.0 |
 | statecraft-cli | the CLI, the MCP server, and the local delivery engine they drive | Apache-2.0 |
 | spec-spine | the spec-governance toolchain everything above is governed by | Apache-2.0 |
-| tenant-emit | the tenant certificate emitter | Apache-2.0 |
-| tenant-tail | the tenant certificate verifier | Apache-2.0 |
+| tenant-emit | the tenant certificate emitter, signing a certificate reconstructed from a finished run | Apache-2.0 |
+| tenant-tail | the tenant certificate verifier, re-checking a factory's run-side paperwork | Apache-2.0 |
 | action-gate | the deterministic decision gate (Allow / Deny / Degrade) | Apache-2.0 |
-| attest-ledger | the tamper-evident, hash-linked record ledger | Apache-2.0 |
+| attest-ledger | the tamper-evident, hash-linked record ledger with an Ed25519-signable genesis anchor | Apache-2.0 |
 | canonical-keysort-json | canonical JSON at the hash boundary | Apache-2.0 |
 | trust-window | the rolling-window trust scorer | Apache-2.0 |
 | statecrafting | the shared native packages (the @statecrafting/* napi addons and the Encore toolchain) | Apache-2.0 |
 
 The `statecrafting` repo's root LICENSE is Apache-2.0 (the org-scope
-default); two of its packages carry AGPL-3.0 per-package licenses, which
-the repo's own spec corpus documents.
+default); two of its addons carry AGPL-3.0 per-package licenses, and the
+three platform packages carrying the vendored Encore core carry MPL-2.0, all
+of which the repo's own spec corpus documents (its specs 001 and 002).
 
 `REPO_META` also carries a `statecraft.ing` entry (this site, unlicensed)
 as a lookup convenience; it is not part of the public roster above.
@@ -144,3 +145,26 @@ platform an organization extends rather than a chassis something is stamped
 from), which is a change to what spec 002 section 2 requires the index to
 say, not a phrasing fix. Spec 006 section 4 records it as proposal P-2 for
 review rather than settling it here.
+
+## 8. Status note (2026-09-12): three role lines stop overstating
+
+A re-description, not a roster change: the eleven repositories, their order and
+their root licenses are unchanged, and section 4 still holds. Read at
+`attest-ledger` `a9c3595`, `tenant-emit` `2d5b538`, `tenant-tail` `7855a65`,
+`statecrafting` `35126be`, each that repository's public `main`.
+
+These role lines render in the footer of every prerendered page, so a sentence
+here is the most-published sentence on the site.
+
+- `attest-ledger` said "Ed25519-signed". The library signs a chain's genesis
+  anchor and verifies that signature against the key the anchor carries; it
+  does not sign entries, and a chain is only signed if its deployment
+  configured a key. The line now says "an Ed25519-signable genesis anchor".
+- `tenant-emit` said it "signs a produced app's governance certificate", and
+  `tenant-tail` that it "re-checks the factory's paperwork". Both read as a
+  path that has run. Each now describes what the tool does, in its own README's
+  terms: the emitter reconstructs and signs a certificate from a run directory,
+  and the verifier re-checks a factory's run-side paperwork.
+- `statecrafting` names its three per-package licenses. The license column
+  keeps the root SPDX id, as section 3 defines it; the MPL-2.0 platform packages
+  were missing from the note beneath the table.

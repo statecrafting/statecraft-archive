@@ -74,7 +74,7 @@ export const ARCHITECTURE_LAYERS: ArchLayer[] = [
     name: "Verification primitives",
     icon: "verification",
     blurb:
-      "Small, single-purpose libraries that make the record checkable by someone who trusts none of it: certificates, a hash-linked ledger that can sign its entries, canonical hashing, a decision gate, and a trust score. What a chain establishes by recomputation is integrity; who issued it is a separate question a signature answers.",
+      "Small, single-purpose libraries that make the record checkable by someone who trusts none of it: certificates, a hash-linked ledger whose genesis anchor can be signed, canonical hashing, a decision gate, and a trust score. What a chain establishes by recomputation is integrity. Who issued it is a separate question, and a signature answers it only when the signing key was pinned by someone other than the producer.",
     repos: [
       "tenant-emit",
       "tenant-tail",
@@ -123,7 +123,7 @@ export const PRODUCT_DETAIL: Record<string, ProductDetail> = {
     highlights: [
       "Specify, stamp, operate, verify as one governed loop",
       "Your code lives in your GitHub org the whole time",
-      "AGPL-3.0: self-hostable, copyleft",
+      "AGPL-3.0: offering a modified version as a network service means offering its source",
     ],
   },
   enrahitu: {
@@ -156,15 +156,15 @@ export const PRODUCT_DETAIL: Record<string, ProductDetail> = {
   },
   "tenant-emit": {
     blurb:
-      "The tenant certificate emitter: signs a produced app's governance certificate from a finished run.",
+      "The tenant certificate emitter: reconstructs and signs a governance certificate from a finished run directory.",
     highlights: [
       "Emit-only by construction, separate from the verifier",
-      "Signs what the factory actually produced",
+      "Signs with an operator-supplied Ed25519 key, kept as a tenant secret",
     ],
   },
   "tenant-tail": {
     blurb:
-      "The tenant certificate verifier: re-checks the factory's paperwork with no trust in the producer.",
+      "The tenant certificate verifier: re-checks the run-side paperwork a factory asserts about its build, with no trust in the producer.",
     highlights: [
       "Offline, identity-free, read-only",
       "Fails with a specific diagnostic on any mismatch",
@@ -182,7 +182,7 @@ export const PRODUCT_DETAIL: Record<string, ProductDetail> = {
     blurb:
       "A tamper-evident record ledger: what the plane did, in a form a stranger can re-check.",
     highlights: [
-      "Append-only, hash-linked; can sign entries with Ed25519",
+      "Append-only, hash-linked; can sign the chain's genesis anchor with Ed25519",
       "Ships with an independent verifier",
     ],
   },
@@ -208,7 +208,7 @@ export const PRODUCT_DETAIL: Record<string, ProductDetail> = {
     highlights: [
       "The @statecrafting/* napi addons",
       "The Encore build toolchain enrahitu vendors",
-      "Apache-2.0 at the root; two packages are AGPL-3.0, recorded in its own corpus",
+      "Apache-2.0 at the root; two addons are AGPL-3.0 and the three platform packages carrying the vendored Encore core are MPL-2.0, per package, recorded in its own corpus",
     ],
   },
 };

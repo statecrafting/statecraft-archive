@@ -20,7 +20,7 @@ export function meta(_: Route.MetaArgs): Route.MetaDescriptors {
     {
       name: "description",
       content:
-        "What you can run today: govern a corpus with spec-spine, run the enrahitu substrate. And what is a milestone: stamping apps and self-hosting the control plane.",
+        "What you can run today: govern a repository you already have with spec-spine, run the enrahitu substrate. And what is not yet installable: a local governed session, stamping apps and self-hosting the control plane.",
     },
   ];
 }
@@ -39,7 +39,7 @@ function StepCard({ step, index, planned }: { step: Step; index: number; planned
             <h3 className="font-mono text-sm font-bold">{step.title}</h3>
             {planned && (
               <span className="rounded border border-border/50 px-1.5 py-0.5 font-mono text-[9px] uppercase text-muted-foreground">
-                planned
+                {step.badge ?? "planned"}
               </span>
             )}
           </div>
@@ -93,9 +93,10 @@ export default function GetStarted() {
       </h1>
       <p className="mb-8 leading-relaxed text-muted-foreground">
         Statecraft is built in the open, one milestone at a time. Two things run
-        today on their own: the governance toolchain and the substrate. The
-        control plane that ties them into one loop is landing rung by rung, and
-        every step below links to the spec that governs it.
+        today on their own: the governance toolchain and the substrate. Nothing
+        on this page needs an account. Every step below links to the spec that
+        governs it, and a step with no command is one that has not yet been
+        installed on a clean machine.
       </p>
 
       <div className="mb-10 rounded-md border border-border/30 bg-muted/40 px-4 py-3">
@@ -115,7 +116,7 @@ export default function GetStarted() {
       </div>
 
       <h2 className="mb-6 mt-6 font-mono text-xs font-bold uppercase tracking-wider text-muted-foreground">
-        On the ladder
+        Not yet something you can install
       </h2>
       <div>
         {PLANNED_STEPS.map((step, i) => (
@@ -131,8 +132,13 @@ export default function GetStarted() {
       <div className="mt-4 rounded-lg border border-primary/20 bg-primary/5 p-6">
         <h2 className="mb-3 font-mono text-base font-bold text-primary">Where next?</h2>
         <p className="mb-4 text-sm leading-relaxed text-muted-foreground">
-          The status ladder on the home page is authoritative for how far each
-          rung has come; it rolls up straight from the specs on every deploy.
+          The status ladder on the home page reports how far each rung is
+          implemented, rolled up from the specs on every deploy. Whether a
+          capability is released, has run, or is offered is in the{" "}
+          <Link to="/products#availability" className="text-primary hover:underline">
+            availability matrix
+          </Link>
+          .
         </p>
         <div className="flex flex-wrap gap-3">
           {NEXT_LINKS.map((l) => (

@@ -186,14 +186,17 @@ export function milestoneStateChip(state: MilestoneState): string {
   }
 }
 
-/** Human label for a milestone state. */
+/** Human label for a milestone state. The chip reports the corpus and nothing
+ *  more: "implemented" is what `implementation: complete` means, which is not
+ *  a release, a recorded run or a hosted offer (the /products availability
+ *  matrix carries those, spec 004 section 3.3.1). */
 export function milestoneStateLabel(state: MilestoneState): string {
   switch (state) {
     case "done":
-      return "shipped";
+      return "implemented";
     case "in-progress":
       return "in progress";
     default:
-      return "planned";
+      return "pending";
   }
 }

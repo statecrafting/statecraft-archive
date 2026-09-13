@@ -27,6 +27,10 @@
         "source": "spec-edge"
       },
       {
+        "path": "app/lib/availability.ts",
+        "source": "spec-edge"
+      },
+      {
         "path": "app/lib/explorer-diagrams.ts",
         "source": "spec-edge"
       },
@@ -122,6 +126,19 @@
         "unit": {
           "kind": "file",
           "path": "app/components/sign-in-link.tsx"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "app/lib/availability.ts"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "file",
+          "path": "app/lib/availability.ts"
         }
       },
       {
@@ -285,5 +302,5 @@
     "specStatus": "approved"
   },
   "schemaVersion": "1.1.0",
-  "shardHash": "45ad72c5afa30e052583efdc4528caee225e35f59cc4669a4dc057910c62c7d2"
+  "shardHash": "6394e6d26eb83f691b0306b11286f81e7698f4f7cd2be8b5e933993c1324497c"
 }

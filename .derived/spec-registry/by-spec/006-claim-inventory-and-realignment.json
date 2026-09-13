@@ -32,13 +32,18 @@
       "7. Open decisions for the owner",
       "8. Out of scope",
       "9. Sources",
+      "10. Revision 4: the owner's decisions, and this record's errata (2026-09-12)",
+      "10.1 The decisions, and where each lands",
+      "10.2 Errata",
+      "10.3 Evidence that is not public (WEB-03)",
+      "10.4 What is prepared elsewhere, and what stays a checkpoint",
       "Verification"
     ],
     "specPath": "specs/006-claim-inventory-and-realignment/spec.md",
     "status": "approved",
-    "summary": "statecraft.ing's half of the 2026-09-11 family realignment. Every claim the site publishes is inventoried and classified as verified available, current implementation work, proposed, historical or unsupported, with the evidence named. The corrections that needed no decision landed with this change, in spec 002 section 8, spec 003 section 7 and spec 004 section 8. What is left is recorded here as proposals, because each one changes what spec 002 section 2 or spec 004 section 3.3 requires the site to say, and the successor thesis that would motivate them is statecraft spec 014, still draft. Also carries the requests to sibling repositories and the vocabulary packet statecrafting-profile asked for. This spec is a record, not a work order: it amends no approved spec and authorizes no publication.\n",
+    "summary": "statecraft.ing's half of the 2026-09-11 family realignment. Every claim the site publishes is inventoried and classified as verified available, current implementation work, proposed, historical or unsupported, with the evidence named. The corrections that needed no decision landed with this change, in spec 002 section 8, spec 003 section 7 and spec 004 section 8. What is left is recorded here as proposals, because each one changes what spec 002 section 2 or spec 004 section 3.3 requires the site to say, and the successor thesis that would motivate them was then an unratified draft in statecraft. Also carries the requests to sibling repositories and the vocabulary packet statecrafting-profile asked for. Section 10 records the owner's 2026-09-12 decisions on all of it, and this record's errata. This spec is a record, not a work order: it amends no approved spec and authorizes no publication.\n",
     "title": "The claim inventory: what this site may say today, and what waits on a decision"
   },
-  "shardHash": "ee1f42cff385656f0b4286431d035c3856d99e03a30c996ec6cbe43714c61dfe",
+  "shardHash": "70275e96a498098e06ba628758ca0f5923067d44bc6269f57da3767406df5287",
   "specVersion": "1.2.0"
 }

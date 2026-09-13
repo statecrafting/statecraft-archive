@@ -18,10 +18,12 @@ export function meta(_: Route.MetaArgs): Route.MetaDescriptors {
   ];
 }
 
+// The corpus's own words, as on every other chip (spec 002 section 9): a stub's
+// subject being implemented says nothing about a release or a hosted offer.
 const MATURITY_LABEL: Record<DocStub["maturity"], string> = {
-  shipping: "shipping",
+  shipping: "implemented",
   "in-progress": "in progress",
-  planned: "planned",
+  planned: "pending",
 };
 
 function DocCard({ doc }: { doc: DocStub }) {

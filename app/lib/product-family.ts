@@ -53,14 +53,14 @@ export const REPO_META: Record<string, RepoMeta> = {
     repo: "tenant-emit",
     name: "tenant-emit",
     license: "Apache-2.0",
-    role: "the tenant certificate emitter: signs a produced app's governance certificate",
+    role: "the tenant certificate emitter: signs a governance certificate reconstructed from a finished run",
     url: `${ORG_URL}/tenant-emit`,
   },
   "tenant-tail": {
     repo: "tenant-tail",
     name: "tenant-tail",
     license: "Apache-2.0",
-    role: "the tenant certificate verifier: re-checks the factory's paperwork, no trust in the producer",
+    role: "the tenant certificate verifier: re-checks a factory's run-side paperwork, no trust in the producer",
     url: `${ORG_URL}/tenant-tail`,
   },
   "action-gate": {
@@ -74,7 +74,7 @@ export const REPO_META: Record<string, RepoMeta> = {
     repo: "attest-ledger",
     name: "attest-ledger",
     license: "Apache-2.0",
-    role: "a tamper-evident record ledger: append-only, hash-linked, Ed25519-signed, with an independent verifier",
+    role: "a tamper-evident record ledger: append-only, hash-linked, an Ed25519-signable genesis anchor, and an independent verifier",
     url: `${ORG_URL}/attest-ledger`,
   },
   "canonical-keysort-json": {
@@ -95,7 +95,7 @@ export const REPO_META: Record<string, RepoMeta> = {
     repo: "statecrafting",
     name: "statecrafting",
     license: "Apache-2.0",
-    role: "the shared native packages: the @statecrafting/* napi addons and the Encore build toolchain",
+    role: "the shared native packages: the @statecrafting/* napi addons and the Encore build toolchain (per-package Apache-2.0, AGPL-3.0 and MPL-2.0)",
     url: `${ORG_URL}/statecrafting`,
   },
   "statecraft.ing": {

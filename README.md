@@ -35,16 +35,17 @@ repo's own LICENSE file.
 - [spec-spine](https://github.com/statecrafting/spec-spine): the
   spec-governance toolchain everything above is governed by
 - [tenant-emit](https://github.com/statecrafting/tenant-emit): the tenant
-  certificate emitter, signing a produced app's governance certificate (Apache-2.0)
+  certificate emitter, signing a governance certificate reconstructed from a
+  finished run (Apache-2.0)
 - [tenant-tail](https://github.com/statecrafting/tenant-tail): the tenant
-  certificate verifier, re-checking the factory's paperwork with no trust in
-  the producer (Apache-2.0)
+  certificate verifier, re-checking a factory's run-side paperwork with no
+  trust in the producer (Apache-2.0)
 - [action-gate](https://github.com/statecrafting/action-gate): a pure,
   deterministic decision gate, evaluate(context, checks) returning Allow, Deny,
   or Degrade (Apache-2.0)
 - [attest-ledger](https://github.com/statecrafting/attest-ledger): a
-  tamper-evident record ledger, append-only, hash-linked, Ed25519-signed, with
-  an independent verifier (Apache-2.0)
+  tamper-evident record ledger, append-only, hash-linked, with an
+  Ed25519-signable genesis anchor and an independent verifier (Apache-2.0)
 - [canonical-keysort-json](https://github.com/statecrafting/canonical-keysort-json):
   deterministic canonical JSON, a lexicographic key sort at the serialization
   boundary so record hashes agree (Apache-2.0)
@@ -53,7 +54,8 @@ repo's own LICENSE file.
   level (Apache-2.0)
 - [statecrafting](https://github.com/statecrafting/statecrafting): the shared
   native packages, the `@statecrafting/*` napi addons and the Encore build
-  toolchain (Apache-2.0 at the root; two packages are AGPL-3.0)
+  toolchain (Apache-2.0 at the root; two addons are AGPL-3.0, and the three
+  platform packages carrying the vendored Encore core are MPL-2.0)
 
 ## Build
 
