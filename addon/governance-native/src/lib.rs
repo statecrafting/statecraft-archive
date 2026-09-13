@@ -8,6 +8,8 @@
 //! - [`ledger`] the tamper-evident record chain over a stateDir (attest-ledger)
 //! - [`gate`]   the deterministic action gate (action-gate)
 //! - [`trust`]  the rolling-window trust scorer (trust-window)
+//! - [`portable`] the portable admission rule over `canon` and `ledger`
+//!   (statecrafting spec 010 A-3), additive beside them
 //!
 //! The pure logic lives in the modules below and is unit-tested with
 //! `cargo test --no-default-features` (no Node C API linkage). The `#[napi]`
@@ -22,10 +24,14 @@
 mod canon;
 mod gate;
 mod ledger;
+mod portable;
 mod trust;
 
 #[cfg(feature = "node")]
 mod napi_api;
+
+#[cfg(test)]
+mod golden_tests;
 
 #[cfg(test)]
 mod flow_tests {
