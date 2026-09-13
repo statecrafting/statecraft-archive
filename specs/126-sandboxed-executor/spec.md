@@ -1,6 +1,6 @@
 ---
 id: "126-sandboxed-executor"
-title: "The sandboxed executor: the OS refuses what a shim could only discourage"
+title: "Credential protection: the OS refuses the credential reaches a shim could only discourage"
 status: draft
 created: "2026-09-10"
 implementation: pending
@@ -48,11 +48,14 @@ summary: >
   absolute-path exec outright, and closes the keyring only ergonomically,
   because the Claude provider authenticates out of that same keyring. The
   threat model is 125's: a capable session, not a hostile one, and the
-  property is a complete journal, not confinement of source authority; the
-  profile confines no writes and claims no capability token. Signing moves
-  to the engine rather than being abandoned, so the candidate holds no
+  property is credential protection for a complete journal, not hostile-code
+  isolation and not preventive confinement of territory or source authority;
+  the profile confines no writes and claims no capability token. Signing
+  moves to the engine rather than being abandoned, so the candidate holds no
   signing key and publication stays autonomous. Whether the profile must be
-  in force is an operator policy with a required setting, not a best effort.
+  in force is an operator policy with a required setting, and every run's
+  result says whether protection was applied, degraded or refused, with every
+  keychain and environment residual named in it.
 ---
 
 # 126: The sandboxed executor
@@ -117,7 +120,7 @@ B-7 exist to keep that true.
 - `members/src/orchestrator/driver.ts` (extends 043): argv is wrapped at the
   session spawn, where the fence is already overlaid on the environment.
 - `members/src/orchestrator/session.ts` (extends 014): `SessionEvidence`
-  gains `sandboxDenials` and `sandboxMode`.
+  gains `credentialDenials` and `credentialProtection` (B-6, B-8).
 - `members/src/orchestrator/broker.ts` (extends 122): signing joins push,
   openPr and merge as an act the engine performs on the candidate's behalf.
 - `members/src/orchestrator/stages/{build,ship,shepherd}.ts` (extends
@@ -211,7 +214,7 @@ If the signing service is unreachable, the run does not silently produce
 unsigned commits: the stage fails with the reason, which is the same
 posture 122 takes when a receipt or a lease is missing.
 
-### B-6. Containment is an operator policy, with a required setting
+### B-6. Protection is an operator policy, and its result is applied, degraded or refused
 
 `sandboxSupport()` reports `seatbelt` where `/usr/bin/sandbox-exec` is
 executable, `bwrap` where `bwrap` is on `PATH`, and `none` otherwise.
@@ -224,16 +227,33 @@ is expressed in the profile vocabulary 120 already established:
   the setting for unattended operation, where "Statecraft is running" must
   imply "the B-3 deny set is in force". It does not imply containment:
   §6's reaches stay open under `required` exactly as under `preferred`.
-- **`preferred`**: the session runs unsandboxed and the engine journals
-  `sandbox.unavailable` with the platform and the reason, exactly as 124
-  journals an unqualified binary and 120 journals a degraded capability.
+- **`preferred`**: the session runs without the profile and the engine
+  journals `sandbox.unavailable` with the platform and the reason, exactly as
+  124 journals an unqualified binary and 120 journals a degraded capability.
 
-`sandboxMode` on `SessionEvidence` records which of the two was in force,
-what was actually applied, and the SHA-256 of the profile text applied (null
-when none was), so a reader never has to infer the deny set from the absence
-of a complaint and can tell which deny set a run had. Declared (the policy)
-and enforced (the digest) are two fields, not one. D-7 records why
-`required` is not simply the only behavior.
+Every session and gate spawn this spec wraps reports its result as
+`credentialProtection` on `SessionEvidence` and on the gate's evidence, in
+120's outcome vocabulary so a reader has one set of words for what an
+executor protected:
+
+- `policy`: `required` or `preferred`, the setting in force (declared);
+- `outcome`: `applied` when the B-3 deny set was in force for the spawn,
+  `degraded` when the spawn ran with less than the policy asked for (under
+  `preferred`, no profile at all), `refused` when the policy refused the run
+  (under `required`, no profile available);
+- `platform` and `profileDigest`: the support `sandboxSupport()` reported and
+  the SHA-256 of the profile text applied, null when none was (enforced);
+- `residuals`: the reaches that stayed open for this spawn, by closed name,
+  never empty. On macOS it always holds `keychain-service` (the Security
+  framework reaches the keyring, D-6), `environment-unlisted` (a credential
+  in an environment variable outside the scrub's names reaches the child),
+  `home-readable` and `network`; under `degraded` or `refused` it also names
+  every B-3 reach the profile would have closed.
+
+A reader never has to infer the deny set from the absence of a complaint, and
+a residual is read from the result rather than from §6. D-7 records why
+`required` is not simply the only behavior, and D-11 why the outcome
+vocabulary is 120's.
 
 ### B-7. The blast radius is the candidate's processes, and only those
 
@@ -257,7 +277,7 @@ candidate's processes removes no capability from the engine.
 ### B-8. A denial is counted and reaches the evidence
 
 Seatbelt denials are reported on the child's stderr. The driver tallies
-them into `sandboxDenials` on `SessionEvidence`, required with an explicit
+them into `credentialDenials` on `SessionEvidence`, required with an explicit
 zero, which is 125 D-3's shape and for its reason: a missing tally must not
 read as "nothing was denied" to a consumer downstream.
 
@@ -276,13 +296,15 @@ read as "nothing was denied" to a consumer downstream.
   unwrapped (B-7), asserted beside the broker's own publish path; a gate
   command the build runs in the candidate is wrapped, and a gate command
   that reads `~/.ssh` fails.
-- **FR-005.** Evidence tests: `sandboxDenials` is present with an explicit
-  zero on a clean run, `sandboxMode` names the policy, what was applied and
-  the profile's digest (null when nothing was applied), and all three reach
-  each of the three stage results.
+- **FR-005.** Evidence tests: `credentialDenials` is present with an
+  explicit zero on a clean run; `credentialProtection` names the policy, the
+  outcome `applied`, the platform, the profile's digest and a `residuals` list
+  holding `keychain-service` and `environment-unlisted`; and both reach each
+  of the three stage results and the gate's evidence.
 - **FR-006.** Policy tests: with support forced to `none`, `required`
-  refuses the run and journals the refusal, and `preferred` runs and
-  journals `sandbox.unavailable` exactly once.
+  refuses the run with outcome `refused` and journals the refusal, and
+  `preferred` runs with outcome `degraded`, a null digest and every B-3 reach
+  among its residuals, and journals `sandbox.unavailable` exactly once.
 - **FR-007.** Signing tests: the helper carries no key material; a commit
   made through it verifies against the operator's public key; the daemon
   journals `broker.sign`; and an unreachable signing service fails the
@@ -354,8 +376,8 @@ as "contained":
   sessions the driver spawns and to the build's gate. An agent the operator
   starts directly is outside it, and this spec hardens no machine.
 - **The verify stage.** It runs a merged spec's declared acceptance after
-  publication, with the daemon's environment; 129 §6 records why, and this
-  spec does not wrap it either.
+  publication. 129 B-8 fences its environment; this spec does not add the
+  profile to it.
 - **Source authority.** The profile denies credential reads and execs. It
   does not confine writes to the candidate, to a spec's territory, to a work
   scope or to a set of symbols, and no reader of `sandboxMode` should take it
@@ -465,6 +487,30 @@ enforces, and `workspace-write` means writes confined to the candidate. A
 read and exec deny-list confines no writes, so it must not become the reason
 a driver claims that token, and a future token for "credential reads
 denied", if one is wanted, is a change to 120's vocabulary in its own spec.
+
+D-11 (2026-09-12, the owner). The adoption of revision 4's CLI-03 (doc 05
+§19) sets what this spec is: credential protection, reporting `applied`,
+`degraded` or `refused` with every keychain and environment residual visible
+in the result (B-6), and never a claim of hostile-code isolation or of
+preventive territory confinement. The outcome words are 120's because a
+reader already meets them for what a driver enforced, and one vocabulary for
+"what the executor protected" is harder to misread than two; B-6's result
+therefore replaces the draft's `sandboxMode` and `sandboxDenials` names,
+whose word "sandbox" read as isolation. CLI-09 confirms D-10: a capability
+token stays the name of what an executor protects, never a user's
+authorization. D-8 to D-10, proposed on 2026-09-11, are adopted with it. The
+spec's id keeps its original slug; the title no longer says "sandboxed
+executor". It is scheduled after 128 and 129, and it delays nothing in 132.
+D-7's "containment" is read as D-8 narrowed it: the B-3 deny set.
+
+## Status (2026-09-12)
+
+Amended on 2026-09-12 to the owner's adoption of revision 4 (doc 05 §19,
+CLI-03; D-11): the title, the summary, B-6's result (policy, outcome,
+platform, digest, residuals), B-8's tally name, FR-005, FR-006 and §6's
+verify-stage line, which 129's revision had made stale. Still `draft`,
+`implementation: pending`: the flip to `approved` is recorded in the change
+that dispatches it, after 128 and 129.
 
 ## Status (2026-09-11)
 

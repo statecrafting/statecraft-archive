@@ -1,7 +1,7 @@
 ---
 id: "128-api-origin-guard"
 title: "The origin guard: the daemon answers its own page and its own clients, and never serves a credential"
-status: draft
+status: approved
 created: "2026-09-11"
 implementation: pending
 risk: medium
@@ -19,10 +19,18 @@ extends:
   - { spec: "022-http-api-and-events", unit: "members/src/orchestrator/api/server.ts", nature: additive }
   - { spec: "022-http-api-and-events", unit: "members/src/orchestrator/api/types.ts", nature: additive }
   - { spec: "022-http-api-and-events", unit: "members/src/orchestrator/api/server.test.ts", nature: additive }
+  # The API view reduces userinfo in historical values it serves (B-8).
+  - { spec: "022-http-api-and-events", unit: "members/src/orchestrator/api/state.ts", nature: additive }
   # 121 owns the candidate, where the origin URL is read before it is
   # journaled in a receipt or served as a project's origin.
   - { spec: "121-candidate-and-receipt", unit: "members/src/orchestrator/candidate.ts", nature: additive }
   - { spec: "121-candidate-and-receipt", unit: "members/src/orchestrator/candidate.test.ts", nature: additive }
+  # 025 owns the project probe, which reads the origin a second time and
+  # journals it in a qualification check's detail.
+  - { spec: "025-project-registry", unit: "members/src/orchestrator/projects.ts", nature: additive }
+  - { spec: "025-project-registry", unit: "members/src/orchestrator/projects.test.ts", nature: additive }
+  # 024 owns the web UI, whose dev server proxies the API (B-9).
+  - { spec: "024-web-ui", unit: "members/web/vite.config.ts", nature: additive }
   # 031 owns the export policy; the value scan learns credential-shaped URLs
   # and the policy moves to version 6.
   - { spec: "031-journal-export", unit: "members/src/orchestrator/export.ts", nature: additive }
@@ -47,7 +55,11 @@ summary: >
   on every state-changing request a header a cross-origin page cannot send
   without a preflight the server never grants. It also stops a credential in
   the origin remote URL from being journaled, served or exported, which was
-  measured passing through a minted receipt and the export policy.
+  measured passing through a minted receipt and the export policy, and on
+  2026-09-12 through a second copy of the lookup into the daemon's project
+  registry. A credential already chained is never rewritten: the export
+  withholds it and the API reduces it where it serves it. The daemon's own
+  page, the engine CLI and the Vite dev UI keep working.
 ---
 
 # 128: The origin guard
@@ -92,6 +104,18 @@ string into every remediation prompt (`stages/build.ts:1122-1126`,
 `handoff.ts:172`), so the token is sent to the model provider. A journal is
 hash-chained, so a token that reaches one stays there.
 
+Both halves were measured again on 2026-09-12 at `874766b` (doc 05 §18.1,
+§18.2), and the second check widened each. `Origin: null` and an origin on
+another loopback port (`http://localhost:5173`) change state exactly as a
+foreign one does, and the rebinding-shaped read returns every project's
+`repoDir`. The project probe has its own `originUrl` (`projects.ts:716-720`)
+whose value becomes the detail `origin is <url>` of a qualification check,
+journaled in `project.registered` and `project.requalified` in the daemon's
+projects chain and served by the API (`api/state.ts:492`); measured, the
+token is in that chain's bytes. And the guard as first drafted would refuse
+the Vite dev UI, whose proxy forwards the dev server's `Host` and `Origin`
+(`web/vite.config.ts:30-34`).
+
 This spec is not an auth layer, and it is not a step toward binding anywhere
 but loopback. It makes loopback trust mean what 022 meant by it.
 
@@ -107,10 +131,15 @@ but loopback. It makes loopback trust mean what 022 meant by it.
 - `members/src/orchestrator/api/types.ts` (extends 022): `forbidden` joins the
   error kinds, answered as 403.
 - `members/src/orchestrator/candidate.ts` (extends 121): `originUrl` returns the
-  URL without userinfo.
+  URL without userinfo, through the one exported reduction B-6 defines.
+- `members/src/orchestrator/projects.ts` (extends 025): the probe's
+  `originUrl` uses the same reduction.
+- `members/src/orchestrator/api/state.ts` (extends 022): historical values are
+  reduced where they are served (B-8).
 - `members/src/orchestrator/export.ts` (extends 031) and the Rust journal crate
-  (extends 113): the value scan withholds a URL that carries userinfo, and the
-  policy moves to version 6 on both sides.
+  (extends 113): the value scan withholds a string that contains a URL with
+  userinfo, and the policy moves to version 6 on both sides.
+- `members/web/vite.config.ts` (extends 024): the dev proxy (B-9).
 
 ## 3. Behavior
 
@@ -158,7 +187,10 @@ and `/api/meta` reports the count since start.
 `originUrl` parses an `http` or `https` remote and returns it with the whole
 userinfo removed (user and password alike, because a token can sit in either),
 so a receipt, the capsule (and with it every remediation prompt) and the API
-all carry `https://github.com/...`. An `ssh://` or scp-style remote
+all carry `https://github.com/...`. The reduction is one exported function,
+and both lookups of the origin use it: `candidate.ts`'s, and the project
+probe's in `projects.ts`, so a registration or requalification journals `origin
+is https://github.com/...`. An `ssh://` or scp-style remote
 (`git@github.com:org/repo.git`) and a local path are returned unchanged: an
 SSH user part is not a secret, and 031 already withholds a private path on
 export. A remote that names `http` or `https` but does not parse as a URL is
@@ -166,12 +198,49 @@ returned as `null`, never guessed.
 
 ### B-7. The export withholds a credential-shaped URL it did not mint
 
-The export's value scan treats a string that parses as a URL with userinfo the
-way it treats a private path: the field holding it is stripped and named in
-`withheldFields`. A receipt minted before B-6, whose bytes stay in the journal
+The export's value scan treats a string that contains an `http` or `https` URL
+with userinfo the way it treats a private path: the leaf field holding it is
+stripped and named in `withheldFields` (for a receipt, `origin`, which is the
+key the scan removes; it does not name the enclosing `repo`). Containing, not
+only being: a gate command in a receipt's suite whose argument embeds a
+token-bearing URL is withheld the same way. (Output tails are already stripped
+by name.) A receipt minted before B-6, whose bytes stay in the journal
 unchanged, therefore exports as redacted rather than leaking. The redaction
 policy moves to version 6 on the TypeScript and Rust sides in the same change,
 and a version-6 bundle verifies under both.
+
+### B-8. Historical values are reduced where they are served, never rewritten
+
+The projects chain is never exported, but the API serves what it holds. Where
+the API serves a value read from an existing record (a qualification check's
+`detail`, a receipt's `repo.origin`, the capsule's origin), it applies B-6's
+reduction to any `http` or `https` URL with userinfo inside that string. The
+journal's bytes are not touched, no record is appended, and a verifier of the
+chain sees what was written. A requalification after this spec journals the
+reduced detail going forward.
+
+### B-9. The dev UI reaches the guard as the daemon's own page
+
+`web/vite.config.ts` proxies `/api` with `changeOrigin: true`, so the daemon
+sees its own `Host`, and rewrites `Origin` to the daemon's own origin only
+when the incoming `Origin` is exactly the dev server's own. A request that
+reaches the dev server from any other origin is forwarded with its `Origin`
+unchanged, and B-2 refuses it. The daemon carries no development exception.
+
+### B-10. Who must keep working
+
+| Client | What it sends | Under the guard |
+|---|---|---|
+| The daemon's own page | the typed client (`api-client.ts`): `X-Api-Version` on every request; its own `Origin` | admitted, when opened at a loopback name and the bound port |
+| Its event stream and evidence links | GETs, no custom header | admitted (B-3 applies to state changes only) |
+| The engine CLI | the typed client, no `Origin`, `Host` from `--url` | admitted |
+| `curl` | no `Origin`; a POST needs `-H 'X-Api-Version: 2'` | admitted with the header (D-2) |
+| The Vite dev UI | proxied through B-9 | admitted |
+| The umbrella, the Rust drivers and sensors | nothing: none speaks HTTP to the daemon | not a client |
+
+The API tests' raw non-GET requests (37 at `874766b`, most without the
+version header) gain it where they lack it; the typed client's tests change
+nothing.
 
 ## 4. Functional requirements
 
@@ -180,9 +249,10 @@ and a version-6 bundle verifies under both.
   for IPv4, `localhost` and IPv6.
 - **FR-002.** Over real HTTP (`server.test.ts`): a foreign-origin
   `text/plain` POST to a control route is refused with 403 and journals
-  nothing; a foreign `Host` GET is refused; the same POST with no `Origin` and
-  with `X-Api-Version` is applied; the typed client passes every existing
-  route test unchanged.
+  nothing; so are the same POST with `Origin: null` and with an origin on
+  another loopback port; a foreign `Host` GET is refused; the same POST with
+  no `Origin` and with `X-Api-Version` is applied; the typed client passes
+  every existing route test unchanged.
 - **FR-003.** No response in the server suite carries an
   `Access-Control-Allow-*` header.
 - **FR-004.** `/api/meta` reports the refusal count, and a refusal appends no
@@ -191,9 +261,23 @@ and a version-6 bundle verifies under both.
   token user, with `user:password`, and without userinfo all return the bare
   URL; an scp-style remote is unchanged.
 - **FR-006.** Export: a receipt payload whose `repo.origin` carries userinfo
-  exports with `repo` named in `withheldFields` and without the token anywhere
-  in the serialized bundle; the TypeScript and Rust exports of the same chains
-  are byte-identical at policy version 6.
+  exports with `origin` named in `withheldFields` and without the token
+  anywhere in the serialized bundle; a receipt whose suite holds a command
+  argument embedding a token-bearing URL is withheld the same way; the journal file's bytes are
+  identical before and after the export; the TypeScript and Rust exports of
+  the same chains are byte-identical at policy version 6.
+- **FR-007.** The project probe over a temporary repository with a
+  token-bearing `https` origin journals a registration whose `origin-remote`
+  detail carries the bare URL, and the token appears nowhere in the projects
+  chain's bytes.
+- **FR-008.** Historical values: a projects chain and a work chain written
+  before this spec (a registration detail and a receipt carrying a token) are
+  served by the API without the token, and both chains' bytes and hashes are
+  unchanged afterwards.
+- **FR-009.** The dev proxy (a function the Vite config exports and a unit
+  test drives): a proxied request whose `Origin` is the dev server's own
+  reaches the daemon with the daemon's `Host` and `Origin`; one carrying any
+  other `Origin` keeps it.
 
 ## 5. Acceptance
 
@@ -203,6 +287,8 @@ and a version-6 bundle verifies under both.
   applied from it is journaled, and a page served from another loopback port
   that posts to the same control is refused, with the refusal count on
   `/api/meta` incremented and no journal record.
+- The same round through `bun run web:dev`: the dev UI loads and a control
+  applied from it is journaled.
 - The committed evidence bundle and every bundle 132 fixes still verify.
 
 ## Verification
@@ -211,6 +297,7 @@ and a version-6 bundle verifies under both.
 cd members && bun test src/orchestrator/api/origin-guard.test.ts
 cd members && bun test src/orchestrator/api/server.test.ts
 cd members && bun test src/orchestrator/candidate.test.ts
+cd members && bun test src/orchestrator/projects.test.ts
 cd members && bun test src/orchestrator/export.test.ts
 cargo test -p statecraft-journal
 make gate
@@ -257,9 +344,56 @@ refusal would hand the thing being refused a way to write to the journal.
 D-5 (2026-09-11). Userinfo is dropped whole, not just the password. GitHub
 accepts a token as the user part of an `https` URL with no password at all.
 
-## Status (2026-09-11)
+D-6 (2026-09-12; adopted by the owner the same day, D-9). The dev UI is admitted by the
+proxy, not by the daemon (B-9). The alternative is a daemon flag admitting one
+extra origin, off by default. The proxy is recommended because the daemon then
+has one rule in every mode and no flag an operator can leave on. Its limit is
+stated: requests that reach the daemon through the dev proxy carry the
+daemon's `Host`, so in dev mode the rebinding defense is Vite's own host check
+(`server.allowedHosts`), not B-1. Dev mode is a contributor's tool, never how
+the product is run. Doc 05 D79.
 
-Authored `draft`, `implementation: pending`, from doc 05 §3 F1 and F3. The
-measurements it rests on were taken with throwaway probes against the API test
-fixtures and a temporary repository; nothing touched the operator's running
-daemon or a real remote. Approval is a human flip.
+D-7 (2026-09-12). Reduce where served, never rewrite (B-8). A journal is
+hash-chained and its verification is its value; rewriting a record to remove a
+token would break every later link and every exported bundle that named it.
+The token stays in the operator's own files, and leaves them through no
+interface this repository provides. Doc 05 D78.
+
+D-8 (2026-09-12). The export scan looks for a URL with userinfo inside a
+string, not only a string that is one. The registration detail (`origin is
+<url>`) puts a token-bearing URL inside prose, and a gate command can embed
+one in an argument (`git ls-remote https://user:token@host/...`); a scan that
+matched only whole values would pass both. Doc 05 D78.
+
+D-9 (2026-09-12, the owner). Approved by the adoption of revision 4's CLI-01
+(doc 05 §19): this spec is built first, the dev proxy of B-9 is kept (D-6),
+both origin lookups use the one reduction (B-6), and historical values are
+redacted where served without rewriting a journal (B-8, D-7). The attack
+probes that measured F1, F3 and F9 are promoted into regression tests, each
+written as the request or remote that was measured, so a test asserts the
+refusal or the absence where the probe saw success: FR-002 carries the
+foreign-origin, `Origin: null`, other-loopback-port and rebinding requests;
+FR-006 to FR-008 carry the token-bearing origin through a receipt, the
+export, the projects chain and a served historical record.
+
+## Status (2026-09-12, approved)
+
+Approved on 2026-09-12 by the owner's adoption of revision 4 (doc 05 §19,
+CLI-01; D-9), `implementation: pending`. It is the first of the revision-4
+builds.
+
+## Status (2026-09-12)
+
+Authored `draft`, `implementation: pending`, on 2026-09-11 from doc 05 §3 F1
+and F3. The measurements it rests on were taken with throwaway probes against
+the API test fixtures and a temporary repository; nothing touched the
+operator's running daemon or a real remote.
+
+Revised on 2026-09-12 from doc 05 §18 (F1 and F3 re-measured at `874766b`;
+F9, F10, F13; D78, D79): the project probe's second origin lookup, historical
+values served without rewriting, the substring scan, the dev proxy, the
+client table, and FR-006's field name corrected from `repo` to `origin`. The
+negative cases were run against today's code, where every one of them
+succeeds; they are the tests this spec would turn into refusals. Nothing is
+implemented, and approval is a human flip. D-6 is the choice most worth a look
+at approval.

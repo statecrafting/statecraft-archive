@@ -32,6 +32,11 @@ extends:
   # 023 owns the engine's CLI: `daemon start` re-spawns itself correctly when
   # compiled, and the daemon passes the resolved asset directory.
   - { spec: "023-orchestrator-cli", unit: "members/src/commands/orchestrator.ts", nature: additive }
+  # 026 owns the standby daemon's code-staleness freeze, and 022 the meta
+  # route that reports it; a packaged engine compares a build constant or
+  # reports the freeze unknown.
+  - { spec: "026-standby-daemon", unit: "members/src/orchestrator/standby.ts", nature: additive }
+  - { spec: "022-http-api-and-events", unit: "members/src/orchestrator/api/server.ts", nature: additive }
   # 124 owns qualification records, which a packaged engine must find.
   - { spec: "124-provider-conformance", unit: "members/src/orchestrator/qualification.ts", nature: additive }
   # 024 owns package.json's scripts section (042 extended it with the member
@@ -49,9 +54,12 @@ summary: >
   UI answers 503 with assets expected at /web/dist, and `daemon start` fails
   because it re-spawns itself as if it were a source file (042 D-10 recorded
   the cause and deferred the fix to here). A tag now also builds a member
-  archive per macOS and Linux triple holding the engine, the native sensor
-  and drivers, the built UI, the provider qualification records, and a
-  manifest of every file's digest, with the same checksum, SBOM and
+  archive per macOS and Linux triple holding the compiled engine and its
+  built UI, the provider qualification records, the Rust bundle verifier, the
+  Rust Codex driver and the compiled TypeScript Claude driver (the Claude
+  implementation a checkout runs today; the Rust sensors and the Rust Claude
+  driver wait for parity evidence), and a manifest of every file's digest,
+  with the same checksum, SBOM and
   provenance the umbrella's archives carry. The installer installs it into
   the managed member directory, verifying before it replaces, and keeps the
   previous set. A packaged engine finds its assets, its data and itself at
@@ -97,6 +105,18 @@ directory outside the checkout:
 042 D-10 recorded exactly this and assigned the fix to "the spec that makes a
 member binary the primary way its verbs are reached". This spec is that one.
 
+Measured again on 2026-09-12 at `874766b` (doc 05 §18.1, §18.2 F11): the 503
+and the 15-second `daemon start` failure both reproduce, and `daemon stop`
+works. Three more source-relative defaults were found. With no `--repo`, a
+compiled `daemon run` registers `/$bunfs`, the bundle's virtual root, as its
+first project (measured). The code-staleness freeze reads the engine's git
+head from `import.meta.dir`, which compiled is `/`, so the freeze is silently
+off (`orchestrator.ts:2814-2817`, read). And `daemon start` with port 0 waits
+on the literal `:0` URL (read). The umbrella's `members list` already finds a
+compiled engine placed in a managed member directory (measured), and `members
+doctor` does not exist yet. The engine reads no provider data from disk other
+than the qualification records: models and prompts are code constants.
+
 ## 2. Territory
 
 - `.github/workflows/release.yml` (extends 107): the member archives.
@@ -117,15 +137,29 @@ member binary the primary way its verbs are reached". This spec is that one.
 
 ### B-1. What ships
 
-The member set for a triple is: `statecraft-engine` (the TypeScript engine,
-compiled with `bun build --compile --target=<bun target>`); the Rust
-`statecraft-sensor-claude`, `statecraft-sensor-codex`,
-`statecraft-driver-claude` and `statecraft-driver-codex` (112, 114, 115, 116),
-built `--locked` for the triple; `statecraft-engine-web/`, the Vite build of
-the UI; `statecraft-engine-qualification/`, the qualification records the
-release was cut with (124); and `members.json`. The fixture driver (124) is a
-test instrument and does not ship. D-1 records why the Rust sensor and
-drivers ship rather than the TypeScript builds of the same names.
+The member set for a triple is:
+
+- `statecraft-engine`, the TypeScript engine, compiled with `bun build
+  --compile --target=<bun target>`, and `statecraft-engine-web/`, the Vite
+  build of the UI it serves on loopback;
+- `statecraft-engine-qualification/`, the provider qualification records the
+  release was cut with (124);
+- `statecraft-journal`, the Rust bundle verifier (113), built `--locked` for
+  the triple: a verifier the user did not get from the exporter's code path;
+- `statecraft-driver-codex`, the Rust Codex driver (116), built `--locked`;
+  Codex has no TypeScript driver, so shipping it changes no driver anyone
+  selects today;
+- `statecraft-driver-claude`, the TypeScript Claude driver (014, 042's
+  `build:member:driver`), compiled for the triple: the implementation a
+  source checkout runs today, so the packaged loop needs no adapter the user
+  supplies separately;
+- `members.json`.
+
+Not shipped: the Rust `statecraft-driver-claude` (114), until explicit parity
+evidence justifies installing or selecting it as a new default; the Rust
+sensors (112, 115), deferred with it; and the fixture driver (124), a test
+instrument. Provider software and its sign-in stay prerequisites: shipping a
+driver bundles neither. D-9 records the set and what installing it changes.
 
 Supported triples are the four macOS and Linux ones of 107. Windows receives
 the umbrella only, as today: the engine's signal handling (108 D-10) and the
@@ -181,6 +215,19 @@ The static handler's "not built" page (024 B-1's serving, which `static.ts`
 holds to B-7's honesty rule) names the resolved directory and the variable
 that overrides it.
 
+Three defaults that have no location to resolve change for a packaged engine
+only; the source checkout keeps each as it is:
+
+- **The default repository.** A packaged `daemon run` or `daemon start` with
+  no `--repo` registers nothing: an empty registry stays empty and says so,
+  rather than registering the bundle's virtual root.
+- **The code-staleness freeze.** A packaged engine carries its build's commit
+  as a compile-time constant and compares that; with no constant, the freeze
+  reports its state as `unknown` on `/api/meta`, never silently off.
+- **Port 0.** `daemon start` refuses `--url` with port 0 and says why (it
+  cannot wait on a port it does not know); `daemon run` keeps accepting it and
+  prints the bound URL, as today.
+
 ### B-5. `daemon start` re-spawns what is running
 
 When compiled, `daemon start` spawns `process.execPath` with the verb
@@ -196,6 +243,9 @@ A read-only umbrella verb that reports, in the 104 §5.2 envelope under
 - each member `members.json` expects: `ok`, `missing`, `refused` (contract
   outside the supported range, 108), `digest-mismatch`, or `shadowed` (an
   earlier `PATH` entry would win, which 108 already detects);
+- for each driver name, the location the engine would resolve it from
+  (`explicit`, `managed`, `path` or `source`, 043's order) and the
+  implementation there, so a reader can see which Claude driver runs;
 - the web and qualification directories: present and matching the manifest,
   or not;
 - provider prerequisites, each `found` with its path and version or `absent`:
@@ -222,16 +272,29 @@ prerequisite, not bundled), then:
 
 1. `install.sh` with `STATECRAFT_WITH_MEMBERS=1` and
    `STATECRAFT_ARCHIVE_DIR`;
-2. `statecraft members doctor --output json`: every member `ok`, providers
-   reported absent;
+2. `statecraft members doctor --output json`: every member `ok`, the web and
+   qualification directories matching the manifest, providers reported
+   absent, and the Claude and Codex drivers resolving from the managed
+   directory;
 3. `statecraft engine orchestrator daemon start` with a temporary daemon home
-   and port;
-4. `GET /` answers 200 with the UI's root element, and `GET /api/meta`
-   answers `ok`;
+   and port, run from a working directory that is neither a repository nor a
+   checkout, with no `--repo`;
+4. `GET /` answers 200 with the UI's root element (assets); `GET /api/meta`
+   answers `ok` and names the qualification directory resolved beside the
+   binary (provider data) and the daemon home under the temporary root, and
+   `GET /api/projects` is empty (working directory);
 5. a repository created with `git init` and `spec-spine init` is registered
    through `projects add`, and appears in `GET /api/projects` with its
    qualification verdict;
-6. `daemon stop`, and the job fails if any step did.
+6. one governed change: an approved fixture spec in that repository is built
+   by the engine with the fixture driver (124), which the build job hands to
+   this job as a separate CI artifact and never puts in the archive, pointed
+   at by `STATECRAFT_DRIVER_BIN`; the round mints a receipt;
+7. the run's bundle is exported by the installed engine and verified by the
+   installed Rust `statecraft-journal verify-bundle`, a second implementation
+   of the verifier, whose report (132 B-7, once 132 lands) reads `integrity:
+   pass`, `signature: unsigned`, `issuerTrust: unknown`;
+8. `daemon stop`, and the job fails if any step did.
 
 ## 4. Functional requirements
 
@@ -252,6 +315,13 @@ prerequisite, not bundled), then:
   absent.
 - **FR-006.** The release pipeline's publish step fails on a missing member
   archive exactly as it does on a missing umbrella archive (107 §3.5).
+- **FR-007.** A compiled engine run outside the checkout with no `--repo`
+  and an empty daemon home registers no project; with a build commit constant
+  the freeze compares it, and without one `/api/meta` reports the freeze
+  `unknown`; `daemon start` with port 0 exits non-zero naming the reason.
+- **FR-008.** The smoke job's governed change (B-7 steps 6 and 7) mints a
+  receipt, and the exported bundle verifies under the installed Rust
+  verifier.
 
 ## 5. Acceptance
 
@@ -266,8 +336,11 @@ prerequisite, not bundled), then:
 - A live check on a clean user account on a developer machine: install with
   members from that release, run `members doctor`, start the daemon, load the
   UI, register an existing repository and run one governed build with
-  whichever provider is signed in. The transcript goes in this spec's status
+  whichever provider is signed in, then export its bundle and verify it with
+  the installed Rust verifier. The transcript goes in this spec's status
   section, as 107's did.
+- Until the smoke job has passed for a tag, no document, page or view
+  describes the UI or the engine as available (D-7).
 
 ## Verification
 
@@ -292,12 +365,15 @@ make gate
 - **Flattening the engine's verbs.** 042 D-7's condition (a packaged member
   is the primary way its verbs are reached) becomes true with this spec;
   the flattening, with aliases, is doc 05 D73 and a later spec.
-- **Retiring the TypeScript sensor and driver.** They stay for the source
-  path; this spec only chooses what ships (D-1).
+- **Retiring the TypeScript sensor and driver, or shipping the Rust
+  replacements.** The TypeScript Claude driver ships and the TypeScript
+  sensor stays for the source path; the Rust Claude driver and sensors wait
+  for a spec that brings explicit parity evidence (D-9).
+- **A hosted dashboard.** The UI is served by the local engine (D-10).
 
 ## 7. Resolved decisions
 
-D-1 (2026-09-11). The Rust sensor and drivers ship; the TypeScript builds of
+D-1 (2026-09-11; superseded 2026-09-12 by D-9). The Rust sensor and drivers ship; the TypeScript builds of
 the same names do not. The names collide, so one of each must be chosen, and
 the Rust builds are native per triple, need no Bun runtime in the archive,
 and are held to the TypeScript ones by 112's and 114's parity tests. The
@@ -324,10 +400,83 @@ D-5 (2026-09-11). The smoke job proves "no checkout" by construction: its
 second job has no `actions/checkout` step at all, so a path that reaches
 into a source tree fails there rather than passing by accident.
 
-## Status (2026-09-11)
+D-6 (2026-09-12; proposed, and not adopted: superseded the same day by D-9). D-1 confirmed, with its
+consequences stated. The engine resolves a driver from an explicit variable,
+then the managed member directory, then `PATH`, then the source entry
+(`driver.ts:212-233`). So installing this member set changes the Claude driver
+a *source-checkout* engine runs, from the TypeScript build to the Rust one,
+not only a packaged engine's; 114's parity tests are the justification, and
+the release notes say it. Codex has only a Rust driver, so nothing changes for
+it. The engine never invokes a sensor, so the sensors ship for the umbrella's
+dispatch and could be left out of the first archive without changing anything
+the engine does; they are included because they are built and parity-tested.
+`statecraft-journal` ships because a verifier the user did not get from the
+same code path as the exporter is the point of "separately verified". Doc 05
+D83.
+
+D-7 (2026-09-12; proposed). "Available" means installed and verified. Each
+surface (the engine API, the UI, the drivers, the verifier) is described as
+`source-only`, `packaged` (built by CI, not released), `released` (in a tag's
+assets), `installed-verified` (this spec's smoke job passed for that tag) or
+`exercised` (a recorded live round), and nothing is called available below
+`installed-verified`. On 2026-09-12 the UI is `source-only`, the engine API and
+driver discovery are `packaged`, and nothing is `released`. Doc 05 D84.
+
+D-8 (2026-09-12). The smoke job's governed change uses the fixture driver,
+delivered as a CI artifact beside the archives. CI has no provider account,
+and a smoke job that depended on one would be skipped more often than run. The
+fixture driver is the conformance instrument 124 built for exactly this, and
+keeping it out of the archive keeps the shipped set free of a test double.
+
+D-9 (2026-09-12, the owner). The member set is B-1's, from the adoption of
+revision 4's CLI-05 and the owner's answer in the adopting session (doc 05
+§19): the Rust verifier ships; the Claude implementation a checkout runs
+today is kept, by shipping the compiled TypeScript Claude driver; the Rust
+Codex driver ships because Codex has no other; the Rust Claude driver and the
+Rust sensors wait for explicit parity evidence. Leaving the Claude driver out
+was rejected: the packaged loop would then depend on the user supplying its
+adapter. What installing the set changes, stated rather than discovered: 043
+resolves the managed directory before a checkout's source entry, so a
+source-checkout engine on a machine with the set installed runs the
+release's compiled TypeScript Claude driver, the same implementation as its
+own source entry at the release's revision; an operator changing the driver
+in a checkout points `STATECRAFT_DRIVER_BIN` at it, and `members doctor` shows
+which location each driver resolves from (B-6). The clean-machine proof
+covers what CLI-05 names: assets, provider data, the working directory,
+member discovery and the daemon lifecycle (B-7 steps 2 to 4 and 8). D-7's
+vocabulary stays this repository's internal packaging criterion (the
+package's G-12) and is not a family-wide or public label.
+
+D-10 (2026-09-12, the owner). The UI stays a local dashboard: the engine
+serves it on loopback and the operator opens it in a browser, with no
+account (D-2's assets beside the binary). A hosted dashboard controlling a
+local engine would add an authentication and browser-origin boundary, and
+connectivity and version-compatibility requirements; a later hosted
+Statecraft dashboard coordinates teams without becoming a prerequisite of the
+local loop.
+
+## Status (2026-09-12, amended)
+
+Amended on 2026-09-12 to the owner's adoption of revision 4 (doc 05 §19,
+CLI-05; D-9, D-10): the summary, B-1's member set, doctor's driver
+resolution, the smoke job's checks for provider data and the working
+directory, and §6. Still `draft`, `implementation: pending`: the flip to
+`approved` is recorded in the change that dispatches it, beside 126 and 127
+after 128 and 129. The smoke job's evidence steps (B-7 steps 6 and 7) wait
+for 132, and calling the engine ready for broad adoption waits for the safety
+slice (128, 129, 126).
+
+## Status (2026-09-12)
 
 Authored `draft`, `implementation: pending`, from doc 05 §3 F4 and D63 and
 D64. The measurements were taken on macOS with Bun 1.3.11, a compiled engine
 in a scratch directory, a throwaway daemon home and ports other than the
-operator's running daemon's. Approval is a human flip, and D-1 is the choice
-most worth a look at approval.
+operator's running daemon's.
+
+Revised on 2026-09-12 from doc 05 §18 (F4 re-measured, F11; D83, D84): the
+three further defaults, the verifier in the member set, the smoke job's
+governed change and separate verification, the availability vocabulary, and
+D-1's consequences. No clean machine was used and nothing was released; the
+re-measurement copied a locally compiled engine to a scratch directory.
+Nothing is implemented, and approval is a human flip. D-6 is the choice most
+worth a look at approval.

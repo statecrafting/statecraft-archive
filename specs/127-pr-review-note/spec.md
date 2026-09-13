@@ -358,6 +358,20 @@ body. The note carries a model's prose, which the export policy would strip
 anyway (031's free-text rule); its digest is enough to prove later which text
 was posted, by anyone who holds it.
 
+D-10 (2026-09-12, the owner). The adoption of revision 4's CLI-03 (doc 05
+§19) settles the revision: in a driven run the broker posts the note (B-7,
+B-8), and D-6 to D-9, proposed on 2026-09-11, are adopted as written. The
+note transports a review and claims nothing about isolation or confinement.
+It is scheduled after 128 and 129, and it delays nothing in 132.
+
+## Status (2026-09-12)
+
+Amended on 2026-09-12 to the owner's adoption of revision 4 (doc 05 §19,
+CLI-03; D-10): the 2026-09-11 revision is accepted, so the proposal caveat
+below no longer applies. Still `draft`, `implementation: pending`: the flip
+to `approved` is recorded in the change that dispatches it, after 128 and
+129.
+
 ## Status (2026-09-11)
 
 Still `draft`, `implementation: pending`. Revised on 2026-09-11 from doc 05

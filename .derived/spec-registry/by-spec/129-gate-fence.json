@@ -4,7 +4,9 @@
     "dependsOn": [
       "125-credential-fence",
       "121-candidate-and-receipt",
-      "016-stage-build"
+      "122-action-broker",
+      "016-stage-build",
+      "019-stage-verify"
     ],
     "establishes": [
       {
@@ -27,6 +29,70 @@
         "unit": {
           "kind": "file",
           "path": "members/src/orchestrator/stages/build.test.ts"
+        }
+      },
+      {
+        "nature": "additive",
+        "spec": "121-candidate-and-receipt",
+        "unit": {
+          "kind": "file",
+          "path": "members/src/orchestrator/candidate.ts"
+        }
+      },
+      {
+        "nature": "additive",
+        "spec": "125-credential-fence",
+        "unit": {
+          "kind": "file",
+          "path": "members/src/orchestrator/fence.ts"
+        }
+      },
+      {
+        "nature": "additive",
+        "spec": "125-credential-fence",
+        "unit": {
+          "kind": "file",
+          "path": "members/src/orchestrator/fence.test.ts"
+        }
+      },
+      {
+        "nature": "additive",
+        "spec": "122-action-broker",
+        "unit": {
+          "kind": "file",
+          "path": "members/src/orchestrator/broker.ts"
+        }
+      },
+      {
+        "nature": "additive",
+        "spec": "122-action-broker",
+        "unit": {
+          "kind": "file",
+          "path": "members/src/orchestrator/broker.test.ts"
+        }
+      },
+      {
+        "nature": "additive",
+        "spec": "019-stage-verify",
+        "unit": {
+          "kind": "file",
+          "path": "members/src/orchestrator/stages/verify.ts"
+        }
+      },
+      {
+        "nature": "additive",
+        "spec": "019-stage-verify",
+        "unit": {
+          "kind": "file",
+          "path": "members/src/orchestrator/stages/verify.test.ts"
+        }
+      },
+      {
+        "nature": "additive",
+        "spec": "025-project-registry",
+        "unit": {
+          "kind": "file",
+          "path": "members/src/orchestrator/projects.ts"
         }
       },
       {
@@ -80,21 +146,28 @@
       "3. Behavior",
       "B-1. The gate receives the session's environment",
       "B-2. In-place mode keeps its shape",
-      "B-3. A gate-time refusal is tallied apart from the session's",
-      "B-4. A refusal in the gate is a red gate, not a bypass",
+      "B-3. A refusal is counted by the supervisor, and a gate's apart from the session's",
+      "B-4. A refusal fails acceptance, whatever the gate's exit code",
       "B-5. The receipt is unchanged",
+      "B-6. The engine's git in the candidate runs fenced",
+      "B-7. Credentialed git runs without repository hooks",
+      "B-8. The verify stage reads acceptance at the base and runs it fenced",
+      "B-9. Live acceptance needs an operator allowance, never a spec's say-so",
+      "B-10. Browser verification sessions are fenced too",
+      "B-11. Every path, disposed",
       "4. Functional requirements",
       "5. Acceptance",
       "Verification",
       "6. Out of scope, and what stays open",
       "7. Resolved decisions",
-      "Status (2026-09-11)"
+      "Status (2026-09-12, approved)",
+      "Status (2026-09-12)"
     ],
     "specPath": "specs/129-gate-fence/spec.md",
-    "status": "draft",
-    "summary": "Spec 125 fenced the driven session so the broker is the only path that works and the journal is complete. The fence stops at the session. The build runner's runGate spawns every gate and bracket command with no env, so the gate inherits the daemon's whole environment: the model keys, the GitHub tokens, the SSH agent, the real gh on PATH and the operator's git credential helper. The gate runs the project's own commands in the candidate, and the candidate can edit every file those commands execute, so a test that publishes during the gate is an effect no receipt covers and no journal records. This spec runs the gate with exactly the environment the session receives, scrubbed and fenced, tallies a gate-time refusal apart from a session's, and records the fence on the build evidence. The broker keeps the daemon's environment, as 125 B-6 requires.\n",
+    "status": "approved",
+    "summary": "Spec 125 fenced the driven session so the broker is the only path that works and the journal is complete. The fence stops at the session. Every other place the engine runs code a repository controls inherits the daemon's whole environment: the gate suite in every round, the bracket, the engine's own git (whose hooks a tracked hooks directory supplies), the broker's push (whose pre-push hook runs beside the one credential the broker holds), and the verify stage's acceptance lines. Each was measured on 2026-09-12 seeing a fabricated token from the daemon's environment. This spec gives every such path a named disposition: gate, bracket and candidate git run with the session's fenced environment; credentialed git runs with no repository hooks; the verify stage reads acceptance at the base revision and runs it behind a fence unless the operator journals an allowance. A refusal fails the gate and acceptance even when a command swallows the exit code, and the refusal is counted by the supervisor, where the child that was refused cannot erase it. The property is credential protection, not hostile-code isolation.\n",
     "title": "The gate fence: acceptance runs in the world the session worked in, not in the daemon's"
   },
-  "shardHash": "d4bc7f9bd0fb5cf7cb49d59a53456e6b4b96ea79e7f966510155184c662a0a32",
+  "shardHash": "f20f49ee8cdeec7fd2ad17fec5ea78cda427c80fb7031961d86d356459bd58bc",
   "specVersion": "1.2.0"
 }

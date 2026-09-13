@@ -16,6 +16,16 @@
         "code": "W-001",
         "message": "spec '132-evidence-fixtures' file unit 'members/src/orchestrator/evidence-fixtures.test.ts' does not exist",
         "path": "members/src/orchestrator/evidence-fixtures.test.ts"
+      },
+      {
+        "code": "W-001",
+        "message": "spec '132-evidence-fixtures' file unit 'members/src/orchestrator/verification-report.ts' does not exist",
+        "path": "members/src/orchestrator/verification-report.ts"
+      },
+      {
+        "code": "W-001",
+        "message": "spec '132-evidence-fixtures' file unit 'members/src/orchestrator/verification-report.test.ts' does not exist",
+        "path": "members/src/orchestrator/verification-report.test.ts"
       }
     ]
   },
@@ -76,6 +86,24 @@
         "unit": {
           "kind": "file",
           "path": "members/src/orchestrator/evidence-fixtures.test.ts"
+        }
+      },
+      {
+        "locations": [],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "file",
+          "path": "members/src/orchestrator/verification-report.test.ts"
+        }
+      },
+      {
+        "locations": [],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "file",
+          "path": "members/src/orchestrator/verification-report.ts"
         }
       },
       {
@@ -174,5 +202,5 @@
     "specStatus": "draft"
   },
   "schemaVersion": "1.1.0",
-  "shardHash": "57c78ae26722913bf7cb37ebc507861bb9add3c6e3c1b4756c8554017dee2f9e"
+  "shardHash": "54685de72c5cf4412b2aff884379356f3d031ddf8be9bc340635b17fafc8d24a"
 }

@@ -44,6 +44,14 @@
       },
       {
         "nature": "additive",
+        "spec": "022-http-api-and-events",
+        "unit": {
+          "kind": "file",
+          "path": "members/src/orchestrator/api/state.ts"
+        }
+      },
+      {
+        "nature": "additive",
         "spec": "121-candidate-and-receipt",
         "unit": {
           "kind": "file",
@@ -56,6 +64,30 @@
         "unit": {
           "kind": "file",
           "path": "members/src/orchestrator/candidate.test.ts"
+        }
+      },
+      {
+        "nature": "additive",
+        "spec": "025-project-registry",
+        "unit": {
+          "kind": "file",
+          "path": "members/src/orchestrator/projects.ts"
+        }
+      },
+      {
+        "nature": "additive",
+        "spec": "025-project-registry",
+        "unit": {
+          "kind": "file",
+          "path": "members/src/orchestrator/projects.test.ts"
+        }
+      },
+      {
+        "nature": "additive",
+        "spec": "024-web-ui",
+        "unit": {
+          "kind": "file",
+          "path": "members/web/vite.config.ts"
         }
       },
       {
@@ -115,18 +147,22 @@
       "B-5. A refusal is the envelope, and says which rule",
       "B-6. The origin URL loses its userinfo before anyone reads it",
       "B-7. The export withholds a credential-shaped URL it did not mint",
+      "B-8. Historical values are reduced where they are served, never rewritten",
+      "B-9. The dev UI reaches the guard as the daemon's own page",
+      "B-10. Who must keep working",
       "4. Functional requirements",
       "5. Acceptance",
       "Verification",
       "6. Out of scope",
       "7. Resolved decisions",
-      "Status (2026-09-11)"
+      "Status (2026-09-12, approved)",
+      "Status (2026-09-12)"
     ],
     "specPath": "specs/128-api-origin-guard/spec.md",
-    "status": "draft",
-    "summary": "The daemon binds loopback because it has no auth layer (022), and loopback keeps other machines out. It does not keep out a web page open in the operator's own browser: the API checks neither Origin nor Host, the version header is optional, and a text/plain body is parsed as JSON, so any page can send a preflight-free POST that arms a project, changes its posture or gate, or approves a human gate, and a DNS-rebinding page can read every answer. Measured on 2026-09-11, a foreign-origin POST disarmed a fixture project. This spec refuses, before any route runs, a request whose Host is not a loopback name at the bound port or whose Origin is not the daemon's own, and requires on every state-changing request a header a cross-origin page cannot send without a preflight the server never grants. It also stops a credential in the origin remote URL from being journaled, served or exported, which was measured passing through a minted receipt and the export policy.\n",
+    "status": "approved",
+    "summary": "The daemon binds loopback because it has no auth layer (022), and loopback keeps other machines out. It does not keep out a web page open in the operator's own browser: the API checks neither Origin nor Host, the version header is optional, and a text/plain body is parsed as JSON, so any page can send a preflight-free POST that arms a project, changes its posture or gate, or approves a human gate, and a DNS-rebinding page can read every answer. Measured on 2026-09-11, a foreign-origin POST disarmed a fixture project. This spec refuses, before any route runs, a request whose Host is not a loopback name at the bound port or whose Origin is not the daemon's own, and requires on every state-changing request a header a cross-origin page cannot send without a preflight the server never grants. It also stops a credential in the origin remote URL from being journaled, served or exported, which was measured passing through a minted receipt and the export policy, and on 2026-09-12 through a second copy of the lookup into the daemon's project registry. A credential already chained is never rewritten: the export withholds it and the API reduces it where it serves it. The daemon's own page, the engine CLI and the Vite dev UI keep working.\n",
     "title": "The origin guard: the daemon answers its own page and its own clients, and never serves a credential"
   },
-  "shardHash": "236caa8a71aa395b5dc72a34dd05883cd1c53b93057eaa7757ef902385916070",
+  "shardHash": "e4ce38ae91d44ce6da8baed641299a647d6cddf47a852af96dc7a28710da6973",
   "specVersion": "1.2.0"
 }

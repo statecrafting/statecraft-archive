@@ -22,6 +22,7 @@
       "124-provider-conformance",
       "125-credential-fence",
       "129-gate-fence",
+      "132-evidence-fixtures",
       "027-api-projects"
     ],
     "implementingPaths": [
@@ -182,5 +183,5 @@
     "specStatus": "draft"
   },
   "schemaVersion": "1.1.0",
-  "shardHash": "998e7747b2d3f5b77bb8025c0afcce2b53fc058e79a334a05a9253b62b1c8a24"
+  "shardHash": "e951cd00a7aec27ccdcec994351a0b6e656124fb8602a2e01087c211bec7e7b8"
 }

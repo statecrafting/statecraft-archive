@@ -21,6 +21,14 @@
       {
         "kind": "file",
         "path": "members/src/orchestrator/evidence-fixtures.test.ts"
+      },
+      {
+        "kind": "file",
+        "path": "members/src/orchestrator/verification-report.ts"
+      },
+      {
+        "kind": "file",
+        "path": "members/src/orchestrator/verification-report.test.ts"
       }
     ],
     "extends": [
@@ -95,18 +103,23 @@
       "B-4. Two receipt checks, both pure",
       "B-5. Verification has an input cap, and executes nothing",
       "B-6. Schemas describe version 1 as the code reads it",
+      "B-7. Both verifiers emit one report, additively",
+      "B-8. Evidence is referenced by typed digests of bytes",
+      "B-9. The first acceptance is the admission pair",
+      "B-10. Input is portable, and statecrafting 010's vectors test it",
       "4. Functional requirements",
       "5. Acceptance",
       "Verification",
       "6. Out of scope",
       "7. Resolved decisions",
-      "Status (2026-09-11)"
+      "Status (2026-09-12, amended)",
+      "Status (2026-09-12)"
     ],
     "specPath": "specs/132-evidence-fixtures/spec.md",
     "status": "draft",
-    "summary": "Other repositories are about to read this repository's evidence: Statecraft to admit it, hqgit to reference it, a neutral verifier to check it. The only committed bundle is export policy version 1, predates the attestation block, and holds no acceptance receipt and no broker action, so there are no original bytes of the records they would read. This spec mints them once, through the real code paths, and freezes them: a journal and its export at policy version 5 carrying a receipt, the broker's intents, outcomes and refusals, and a fence refusal, with and without an attestation, beside the existing policy-1 bundle. It derives a negative set by stated mutations, and writes a manifest giving each fixture's expected outcome in four dimensions (integrity, subject binding, issuer trust, policy), each pass, fail, unknown or not-applicable. Both existing verifiers run the manifest. JSON Schemas describe version 1 exactly as the code parses it. A verifier never executes what a bundle carries, never takes the bundle's own anchor as its trust root, and today reports every issuer as unknown, because nothing is signed.\n",
+    "summary": "Other repositories are about to read this repository's evidence: Statecraft to admit it, hqgit to reference it, a neutral verifier to check it. The only committed bundle is export policy version 1, predates the attestation block, and holds no acceptance receipt and no broker action, so there are no original bytes of the records they would read. This spec mints them once, through the real code paths, and freezes them: a journal and its export at policy version 5 carrying a receipt, the broker's intents, outcomes and refusals, and a fence refusal, with and without an attestation, beside the existing policy-1 bundle. It derives a negative set by stated mutations, adds statecrafting 010's byte vectors, and writes a manifest giving each fixture's expected verification report: the four evidence dimensions the owner adopted with Statecraft (integrity, signature, issuer trust, subject binding), each with a closed set of values and a reason, and an admission result kept apart from them. Statecraft owns those semantics; this repository freezes their version and serialization. Both existing verifiers emit that report and run the manifest. The first acceptance is the admission pair: the same intact, unsigned evidence admitted under a local policy that allows unsigned evidence and refused under one that requires a trusted signature, neither implying the evidence is trusted. JSON Schemas describe version 1 exactly as the code parses it, and evidence is referenced by typed digests of its bytes. A verifier never executes what a bundle carries, never takes the bundle's own anchor as its trust root, and today reports every signature as unsigned and every issuer as unknown, because nothing is signed.\n",
     "title": "Evidence fixtures: the receipt and the bundle as frozen bytes, with a verdict manifest every verifier is held to"
   },
-  "shardHash": "15730bd64061cdb82812ed9218bff7d30fa8bf45e8f66a3fad296f3cb63e8d08",
+  "shardHash": "c44b3713ca2b675d091c9ed42c550ca4f895a34449635951f3be9dcd18274ae1",
   "specVersion": "1.2.0"
 }
