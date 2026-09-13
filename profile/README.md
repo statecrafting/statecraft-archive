@@ -212,11 +212,13 @@ binaries on each repository's GitHub releases.
 
 ### The primitives
 
-Rust libraries. `trust-window` and `canonical-keysort-json` are released on
-crates.io; `action-gate` and `attest-ledger` are tagged `v0.1.0` on GitHub
-and are not on crates.io. `action-gate`, `attest-ledger` and `trust-window`
-each carry only a draft bootstrap spec and run no coupling gate yet;
-`canonical-keysort-json` is governed like the rest of the family.
+Rust libraries, all released on crates.io: `trust-window` and
+`canonical-keysort-json` under those names, `action-gate` as
+`action-gate-core` and `action-gate-types`, and `attest-ledger` as
+`attest-ledger-core`, `attest-ledger-types` and `attest-ledger-cli`.
+`action-gate`, `attest-ledger` and `trust-window` each carry only a
+draft bootstrap spec and run no coupling gate yet; `canonical-keysort-json`
+is governed like the rest of the family.
 
 #### [action-gate](https://github.com/statecrafting/action-gate)
 ![License](https://img.shields.io/badge/license-Apache--2.0-green?style=flat-square)
@@ -231,8 +233,8 @@ config hash so the policy that decided is itself attestable.
 ![Rust](https://img.shields.io/badge/-Rust-000?style=flat-square&logo=rust)
 
 A tamper-evident record ledger library: append-only and hash-linked, with
-Ed25519 signing and an independent verifier that does not trust its
-producer.
+an Ed25519-signed genesis anchor and an independent verifier that does not
+trust its producer.
 
 #### [trust-window](https://github.com/statecrafting/trust-window)
 ![License](https://img.shields.io/badge/license-Apache--2.0-green?style=flat-square)

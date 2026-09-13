@@ -366,11 +366,13 @@ Append after `tenant-tail`'s paragraph, once for the group:
 
 Insert directly under `### The primitives`:
 
-> Rust libraries. `trust-window` and `canonical-keysort-json` are released on
-> crates.io; `action-gate` and `attest-ledger` are tagged `v0.1.0` on GitHub
-> and are not on crates.io. `action-gate`, `attest-ledger` and `trust-window`
-> each carry only a draft bootstrap spec and run no coupling gate yet;
-> `canonical-keysort-json` is governed like the rest of the family.
+> Rust libraries, all released on crates.io: `trust-window` and
+> `canonical-keysort-json` under those names, `action-gate` as
+> `action-gate-core` and `action-gate-types`, and `attest-ledger` as
+> `attest-ledger-core`, `attest-ledger-types` and `attest-ledger-cli`.
+> `action-gate`, `attest-ledger` and `trust-window` each carry only a
+> draft bootstrap spec and run no coupling gate yet; `canonical-keysort-json`
+> is governed like the rest of the family.
 
 In `attest-ledger`'s paragraph, replace:
 
@@ -380,8 +382,8 @@ In `attest-ledger`'s paragraph, replace:
 with:
 
 > A tamper-evident record ledger library: append-only and hash-linked, with
-> Ed25519 signing and an independent verifier that does not trust its
-> producer.
+> an Ed25519-signed genesis anchor and an independent verifier that does not
+> trust its producer.
 
 ### 4.8 statecrafting
 
@@ -711,9 +713,9 @@ touched). Neither move changes a claim on the page.
 | enrahitu: membership platform; `app/` boundary | enrahitu `README.md`; spec 035 |
 | enrahitu: no installable artifact to point to | GitHub release `v0.2.0`, its latest, has no assets; anonymous `ghcr.io` pull refused, with a positive control (C-1, section 11 run 5) |
 | tenant-emit, tenant-tail: npm, PyPI, release binaries | npm and PyPI APIs (0.3.0, 0.4.0); GitHub releases |
-| primitives: crates.io presence; tags | crates.io API; GitHub releases `v0.1.0` |
+| primitives: crates.io presence, by crate name | crates.io API on 2026-09-13: `trust-window`, `canonical-keysort-json`, `action-gate-core`, `action-gate-types`, `attest-ledger-core`, `attest-ledger-types` and `attest-ledger-cli` at 0.1.0; no crate named `action-gate` or `attest-ledger` |
 | primitives: draft bootstrap only, no gate | each repository's `specs/000-*` frontmatter; no `couple` in its workflows |
-| attest-ledger: signing is a library capability | attest-ledger `README.md`; statecraft.ing 006 section 3.4 |
+| attest-ledger: signing is a library capability, over the genesis anchor | attest-ledger `README.md` (the example signs the genesis anchor, and the verifier checks that signature first); statecraft.ing 006 section 3.4 |
 | statecrafting: per-package licenses | each package's `package.json` and `LICENSE`, statecrafting `844ac86` (no package file changed by `35126be`); npm registry `license` fields |
 | statecrafting: every package on npm | npm registry, all eight `@statecrafting/*` names |
 | rahi: responsibilities, lineage | rahi `c13cc70` `README.md`, spec 002 |
@@ -775,14 +777,17 @@ Every run below is in a scratch directory outside any checkout, on
    page.** The block must fail on today's `profile/README.md` and pass on the
    page after the corrections step and after the roster step, with 001's block
    passing on all three. Single-fault mutants of the proposed pages must each
-   fail this block at the command that guards the fault. Run at 23:07 UTC
-   through `spec-spine verify <id> --repo <dir> --json`, each page in its
-   own copy of the corpus:
+   fail this block at the command that guards the fault. First run at
+   23:07 UTC; re-run on 2026-09-13 at 17:19 UTC, after the erratum in
+   section 12, with the results below. Both runs went through
+   `spec-spine verify <id> --repo <dir> --json`, each page in its own copy of
+   the corpus:
    - Live page: 001 passes (14 of 14); 003 fails at its first command,
      `## Start here`.
    - Corrections step and roster step: 001 passes (14 of 14) and 003 passes
-     (33 of 33) on both.
-   - Fifteen mutants, each failing 003 at the command that guards its fault:
+     (34 of 34) on both.
+   - Sixteen mutants, each failing 003 at the command that guards its fault.
+     The newest says a primitive is missing from crates.io. The others:
      Start here moved below Projects (the ordering `awk`); the no-account
      sentence dropped; an **Available:** label; "refuse anything" restored;
      "signed by code" restored; the CLI's receipts called signed; a license
@@ -790,9 +795,11 @@ Every run below is in a scratch directory outside any checkout, on
      longer dated before the monorepo; enrahitu chassis-first again; the
      enrahitu image named as released; `hqgit` listed; rahi listed without
      its disclaimer; and rahi's disclaimer placed outside its own entry,
-     which the earlier whole-page check would have passed. The fifteenth
-     renames the license heading, and it fails 001 at the same heading as
-     well.
+     which the earlier whole-page check would have passed. One more renames
+     the license heading, and it fails 001 at the same heading as well.
+   The re-run also caught a line wrap in the first draft of the erratum
+   that split "draft bootstrap spec" across two lines, where the line-based
+   check could not see it. The page was rewrapped before commit.
 6. **Rendering and links.** Both proposed pages parsed with a GFM parser
    (`marked` 15, locally): the heading outline is the one section 3.1
    orders, with the mermaid and `sh` fences intact. Every link and image
@@ -870,6 +877,18 @@ Every run below is in a scratch directory outside any checkout, on
   8. Verification: `hqgit` must be absent, a listed rahi is checked inside
      its own entry, enrahitu leads with the membership platform, and the
      enrahitu image is not named.
+- **2026-09-13. Erratum, approved by the owner before merge.** An
+  independent re-check of every page claim before publication found 4.7
+  false in one sentence. `action-gate` and `attest-ledger` were said to be
+  "not on crates.io". They are there, under per-crate names:
+  `action-gate-core` and `action-gate-types`, and `attest-ledger-core`,
+  `attest-ledger-types` and `attest-ledger-cli`, all 0.1.0. The earlier
+  source looked only for crates named after the repositories. The same
+  re-check found attest-ledger's signing covers its genesis anchor, so
+  "with Ed25519 signing" is narrowed to "an Ed25519-signed genesis anchor",
+  which keeps signed and unsigned evidence apart (3.3). Changed: 4.7's copy,
+  two rows of section 10, and one new verification line. The other ten
+  groups of claims re-checked as stated.
 
 ## 13. Implementation notes
 
@@ -877,6 +896,10 @@ Every run below is in a scratch directory outside any checkout, on
   to `profile/README.md`. Every quoted block in them is present on the page
   word for word, and every block they replace is gone. Both verification
   blocks pass (section 11 runs 4 and 6).
+- **2026-09-13. Erratum applied before merge.** 4.7's primitives sentence
+  and attest-ledger's signing phrase are corrected on the page (section 12).
+  The copy check and both verification blocks pass again, and so does the
+  mutant matrix, now sixteen cases.
 - **2026-09-12. What remains.** `implementation` stays `in-progress` until
   both of these land:
   1. **Roster step (6.1).** Prepared as a separate change that lands only
@@ -920,6 +943,8 @@ grep -qF 'Apache-2.0' profile/README.md
 awk '/^#### \[statecraft-cli\]/{f=1;next} /^###/{f=0} f' profile/README.md | grep -qF 'predates the monorepo'
 # 4.7: the three primitives without a gate are not described as governed.
 awk '/^### The primitives/{f=1;next} /^### /{f=0} f' profile/README.md | grep -qF 'draft bootstrap spec'
+# 4.7, 2026-09-13 erratum: no primitive is said to be missing from crates.io.
+! grep -qF 'are not on crates.io' profile/README.md
 # 4.5, C-1: no public-availability claim for an image anonymous pull refused.
 ! grep -qF 'ghcr.io/statecrafting/enrahitu' profile/README.md
 # 6.1, D-2: before and after the roster step, a listed rahi says in its own entry that nothing needs it.
