@@ -1,0 +1,6 @@
+{
+  "repository": "statecrafting/claude-observatory",
+  "exists": false,
+  "refs": "",
+  "diagnostic": "remote: Repository not found.\nfatal: repository 'https://github.com/statecrafting/claude-observatory.wiki.git/' not found\n"
+}
