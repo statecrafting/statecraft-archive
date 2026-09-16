@@ -1,0 +1,122 @@
+[
+  {
+    "repository": "statecraft-cli",
+    "release": "v0.1.0",
+    "path": "release-assets/statecraft-cli/358368458/statecraft-v0.1.0-aarch64-apple-darwin.cdx.json",
+    "size": 317656,
+    "digest": "sha256:33692d09674602003f3a2992f223061d5348f6b5042fb66c2f2522dbc9d0161b",
+    "github_digest": "sha256:33692d09674602003f3a2992f223061d5348f6b5042fb66c2f2522dbc9d0161b"
+  },
+  {
+    "repository": "statecraft-cli",
+    "release": "v0.1.0",
+    "path": "release-assets/statecraft-cli/358368458/statecraft-v0.1.0-aarch64-apple-darwin.tar.gz",
+    "size": 2450391,
+    "digest": "sha256:d113c2df73c9ad9cb9583f8cc2af34ec6cd4cd8c4d3d54fd3da5091cf876e91f",
+    "github_digest": "sha256:d113c2df73c9ad9cb9583f8cc2af34ec6cd4cd8c4d3d54fd3da5091cf876e91f"
+  },
+  {
+    "repository": "statecraft-cli",
+    "release": "v0.1.0",
+    "path": "release-assets/statecraft-cli/358368458/statecraft-v0.1.0-aarch64-apple-darwin.tar.gz.sha256",
+    "size": 112,
+    "digest": "sha256:fd5d2eec2de1b2ce4c8ba1a0bcbe1e3011124f1deb1e7028dfa0252996b8f55e",
+    "github_digest": "sha256:fd5d2eec2de1b2ce4c8ba1a0bcbe1e3011124f1deb1e7028dfa0252996b8f55e"
+  },
+  {
+    "repository": "statecraft-cli",
+    "release": "v0.1.0",
+    "path": "release-assets/statecraft-cli/358368458/statecraft-v0.1.0-aarch64-unknown-linux-gnu.cdx.json",
+    "size": 317652,
+    "digest": "sha256:0f27b4576e503d0ac68c167ffca6c4dfe3587f16c60cc73cd1c672821d19647f",
+    "github_digest": "sha256:0f27b4576e503d0ac68c167ffca6c4dfe3587f16c60cc73cd1c672821d19647f"
+  },
+  {
+    "repository": "statecraft-cli",
+    "release": "v0.1.0",
+    "path": "release-assets/statecraft-cli/358368458/statecraft-v0.1.0-aarch64-unknown-linux-gnu.tar.gz",
+    "size": 2683343,
+    "digest": "sha256:3e47d5a31f6d68afe02d11a498c848d668556792983b90f844bb4f67e6950694",
+    "github_digest": "sha256:3e47d5a31f6d68afe02d11a498c848d668556792983b90f844bb4f67e6950694"
+  },
+  {
+    "repository": "statecraft-cli",
+    "release": "v0.1.0",
+    "path": "release-assets/statecraft-cli/358368458/statecraft-v0.1.0-aarch64-unknown-linux-gnu.tar.gz.sha256",
+    "size": 117,
+    "digest": "sha256:e441eb86ebaab4a6d1489e60a4cb12ded8e6f30751e4e4d95b3b304058d670e4",
+    "github_digest": "sha256:e441eb86ebaab4a6d1489e60a4cb12ded8e6f30751e4e4d95b3b304058d670e4"
+  },
+  {
+    "repository": "statecraft-cli",
+    "release": "v0.1.0",
+    "path": "release-assets/statecraft-cli/358368458/statecraft-v0.1.0-x86_64-apple-darwin.cdx.json",
+    "size": 317656,
+    "digest": "sha256:16272e91ba9a760c0e5c3c87a5c9cb84c624d7375035927a1f311cb59906a92f",
+    "github_digest": "sha256:16272e91ba9a760c0e5c3c87a5c9cb84c624d7375035927a1f311cb59906a92f"
+  },
+  {
+    "repository": "statecraft-cli",
+    "release": "v0.1.0",
+    "path": "release-assets/statecraft-cli/358368458/statecraft-v0.1.0-x86_64-apple-darwin.tar.gz",
+    "size": 2554238,
+    "digest": "sha256:c33a6d3273622af4a3fd003262d4b4be5d32a28f9f992e4071d4c5b67b1a7213",
+    "github_digest": "sha256:c33a6d3273622af4a3fd003262d4b4be5d32a28f9f992e4071d4c5b67b1a7213"
+  },
+  {
+    "repository": "statecraft-cli",
+    "release": "v0.1.0",
+    "path": "release-assets/statecraft-cli/358368458/statecraft-v0.1.0-x86_64-apple-darwin.tar.gz.sha256",
+    "size": 111,
+    "digest": "sha256:dda1512b7fcfd8ebfb031fe155ee5c74a2cdbc04cd7a2544a3b6e449dc57981a",
+    "github_digest": "sha256:dda1512b7fcfd8ebfb031fe155ee5c74a2cdbc04cd7a2544a3b6e449dc57981a"
+  },
+  {
+    "repository": "statecraft-cli",
+    "release": "v0.1.0",
+    "path": "release-assets/statecraft-cli/358368458/statecraft-v0.1.0-x86_64-pc-windows-msvc.cdx.json",
+    "size": 336096,
+    "digest": "sha256:787c0d8886e39198449dd1596d5e2753f5c6bffe36e0895b462a5c01bc2152d3",
+    "github_digest": "sha256:787c0d8886e39198449dd1596d5e2753f5c6bffe36e0895b462a5c01bc2152d3"
+  },
+  {
+    "repository": "statecraft-cli",
+    "release": "v0.1.0",
+    "path": "release-assets/statecraft-cli/358368458/statecraft-v0.1.0-x86_64-pc-windows-msvc.zip",
+    "size": 2376324,
+    "digest": "sha256:2ff7fe46b98b99d94a8bb3eb9948a1c80156093aff8b0841d0ca895f997d2c14",
+    "github_digest": "sha256:2ff7fe46b98b99d94a8bb3eb9948a1c80156093aff8b0841d0ca895f997d2c14"
+  },
+  {
+    "repository": "statecraft-cli",
+    "release": "v0.1.0",
+    "path": "release-assets/statecraft-cli/358368458/statecraft-v0.1.0-x86_64-pc-windows-msvc.zip.sha256",
+    "size": 110,
+    "digest": "sha256:c9833a71e3b84a24845dab67c383c6e74843cc1d81f1451e5b8a3b8f4928e750",
+    "github_digest": "sha256:c9833a71e3b84a24845dab67c383c6e74843cc1d81f1451e5b8a3b8f4928e750"
+  },
+  {
+    "repository": "statecraft-cli",
+    "release": "v0.1.0",
+    "path": "release-assets/statecraft-cli/358368458/statecraft-v0.1.0-x86_64-unknown-linux-gnu.cdx.json",
+    "size": 317652,
+    "digest": "sha256:d92103cbb1cb91ae9b4d687df1cb769ff22a7ef11b55a163f50f766a8f36909a",
+    "github_digest": "sha256:d92103cbb1cb91ae9b4d687df1cb769ff22a7ef11b55a163f50f766a8f36909a"
+  },
+  {
+    "repository": "statecraft-cli",
+    "release": "v0.1.0",
+    "path": "release-assets/statecraft-cli/358368458/statecraft-v0.1.0-x86_64-unknown-linux-gnu.tar.gz",
+    "size": 2697808,
+    "digest": "sha256:88a6ac774f6de37c78bed119d9dad14afa5549eba86e118005f4b550717763dc",
+    "github_digest": "sha256:88a6ac774f6de37c78bed119d9dad14afa5549eba86e118005f4b550717763dc"
+  },
+  {
+    "repository": "statecraft-cli",
+    "release": "v0.1.0",
+    "path": "release-assets/statecraft-cli/358368458/statecraft-v0.1.0-x86_64-unknown-linux-gnu.tar.gz.sha256",
+    "size": 116,
+    "digest": "sha256:90200d860e3f393116113da062335cb234b5571a88f8c5571f0a4376ae5aed1c",
+    "github_digest": "sha256:90200d860e3f393116113da062335cb234b5571a88f8c5571f0a4376ae5aed1c"
+  }
+]
