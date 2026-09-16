@@ -1,0 +1,29 @@
+{
+  "mapping": {
+    "implementingPaths": [
+      {
+        "path": "crates/orchestrator",
+        "source": "spec-edge"
+      }
+    ],
+    "resolvedUnits": [
+      {
+        "locations": [
+          {
+            "file": "crates/orchestrator"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "refines",
+        "unit": {
+          "id": "orchestrator",
+          "kind": "crate"
+        }
+      }
+    ],
+    "specId": "005-verification-reconciliation-mvp",
+    "specStatus": "approved"
+  },
+  "schemaVersion": "1.1.0",
+  "shardHash": "efdc1efaba0bbf6c14d52bb5d90ccb1ad888b3af685ab1f19189672d417bc224"
+}

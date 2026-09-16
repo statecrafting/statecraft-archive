@@ -1,0 +1,26 @@
+{
+  "name": "@statecrafting/toolchain-darwin-arm64",
+  "version": "0.4.0",
+  "license": "MPL-2.0",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/statecrafting/statecrafting.git",
+    "directory": "packages/toolchain-darwin-arm64"
+  },
+  "spec-spine": {
+    "spec": "002-toolchain"
+  },
+  "description": "Encore toolchain native binaries for macOS arm64: encore-runtime.node + tsparser-encore (encoredev/encore v1.57.9, MPL-2.0). Installed as an optional dependency of @statecrafting/toolchain on matching hosts.",
+  "os": [
+    "darwin"
+  ],
+  "cpu": [
+    "arm64"
+  ],
+  "files": [
+    "LICENSE",
+    "encore-runtime.node",
+    "tsparser-encore",
+    "README.md"
+  ]
+}

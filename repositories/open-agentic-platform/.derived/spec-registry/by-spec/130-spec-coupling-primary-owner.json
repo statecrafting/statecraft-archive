@@ -1,0 +1,68 @@
+{
+  "record": {
+    "amendmentRecord": "Amended 2026-05-20 by 153-invariant-freeze-additive-evolution.\nRe-amended 2026-06-14 by 216-spec-spine-library-grammar-adoption on two\nsections. §2.5: the 2026-06-14 bare-id `amends` clarification callout\n(PR #358) is formalised as a spec-recorded amendment; Phase 1 converges the\nspec-compiler onto the bare-id `amends` grammar, with a non-string `amends`\nentry now a hard V-033 compile error rather than a silent empty-list\ncollapse. §2.4: Phase 2a reconciles the `supersedes` doc-template `paths:` to\nthe canonical `unit:` form (spec 154 §6), and converges the compiler to emit\nthe structured partial form with a malformed entry rejected by V-034.\namended 2026-06-18 by spec 217 (engine-swap collapse): the in-tree spec-compiler and codebase-indexer that parsed and emitted the relationship graph were deleted; that logic is now in spec-spine-core. Both extends code-units are stripped (paths deleted); the establishes edges (spec-types overlay and registry.schema.json) and constrains edge (frozen schema) survive.\n",
+    "codeAliases": [
+      "SPEC_RELATIONSHIP_GRAPH"
+    ],
+    "constrains": [
+      {
+        "flavor": "invariant-freeze",
+        "unit": {
+          "kind": "file",
+          "path": "standards/schemas/spec-spine/registry.schema.json"
+        }
+      }
+    ],
+    "created": "2026-05-02",
+    "dependsOn": [
+      "000-bootstrap-spec-system",
+      "001-spec-compiler-mvp",
+      "101-codebase-index-mvp"
+    ],
+    "domain": "substrate",
+    "establishes": [
+      {
+        "kind": "file",
+        "path": "tools/shared/spec-types/src/lib.rs"
+      },
+      {
+        "kind": "file",
+        "path": "standards/schemas/spec-spine/registry.schema.json"
+      }
+    ],
+    "extraFrontmatter": {
+      "amended": "2026-06-18",
+      "approved": "2026-05-19",
+      "slug": "spec-relationship-graph"
+    },
+    "id": "130-spec-coupling-primary-owner",
+    "implementation": "complete",
+    "kind": "governance",
+    "owner": "bart",
+    "risk": "low",
+    "sectionHeadings": [
+      "130 — Spec Relationship Graph",
+      "1. Thesis",
+      "2. The eight relationship fields",
+      "2.1 `establishes:` — one-time creation",
+      "2.2 `extends:` — additive surface extension",
+      "2.3 `refines:` — behavior tightening across paths",
+      "2.4 `supersedes:` — replacement",
+      "2.5 `amends:` — non-replacing patch",
+      "2.6 `co_authority:` — section-scoped shared resource",
+      "2.7 `constrains:` — meta-authority",
+      "2.8 `origin:` — bootstrap marker",
+      "3. The derived `implements:` view",
+      "4. Well-formedness rules",
+      "5. Authority as a derived property",
+      "6. Constitutional declaration",
+      "7. Cross-references"
+    ],
+    "specPath": "specs/130-spec-coupling-primary-owner/spec.md",
+    "status": "approved",
+    "summary": "Spec governance operates over an explicit relationship graph. Eight frontmatter fields — establishes, extends, refines, supersedes, amends, co_authority, constrains, origin — encode how specs relate to code and to each other. Authority over each code path is derived from the graph; the coupling gate (spec 133) consumes the derivation; co-authority and named-anchor sectioning (spec 152) support shared resources. `implements:` is preserved as a *derived* view computed from the union of paths appearing in establishes, extends.paths, refines.paths, and co_authority.paths — authors no longer write `implements:` directly; the spec-compiler emits it for consumer compatibility.\n",
+    "title": "Spec Relationship Graph — eight first-class edges between specs and code"
+  },
+  "shardHash": "4b8ae0eae3cd65303765e507613b06989188d98ec746dfb9223d93018d0b4af5",
+  "specVersion": "1.1.0"
+}

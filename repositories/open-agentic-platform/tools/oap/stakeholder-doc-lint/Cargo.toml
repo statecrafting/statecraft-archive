@@ -1,0 +1,33 @@
+# SPDX-License-Identifier: AGPL-3.0-or-later
+# Copyright (C) 2026 Bartek Kus
+# Spec: specs/122-stakeholder-doc-inversion/spec.md — FR-005, FR-034, FR-035
+
+[package]
+name = "open_agentic_stakeholder_doc_lint"
+publish = false   # internal workspace crate; binaries ship via release workflows, not crates.io
+version = "0.1.0"
+edition = "2024"
+description = "Stakeholder-doc grammar lint (spec 122) — emits W-122-001..005"
+rust-version = "1.85"
+
+[[bin]]
+name = "stakeholder-doc-lint"
+path = "src/main.rs"
+
+[lib]
+name = "open_agentic_stakeholder_doc_lint"
+path = "src/lib.rs"
+
+[dependencies]
+clap = { version = "4", features = ["derive"] }
+factory-contracts = { path = "../../../crates/factory-contracts" }
+provenance-validator = { path = "../../../crates/provenance-validator" }
+serde = { version = "1", features = ["derive"] }
+serde_yaml = "0.9"
+walkdir = "2"
+
+[dev-dependencies]
+tempfile = "3"
+
+[package.metadata.oap]
+spec = "122-stakeholder-doc-inversion"

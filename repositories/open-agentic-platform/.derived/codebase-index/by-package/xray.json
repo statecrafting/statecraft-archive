@@ -1,0 +1,12 @@
+{
+  "package": {
+    "edition": "2024",
+    "kind": "rust-lib-bin",
+    "name": "xray",
+    "path": "crates/xray",
+    "specRef": "032-opc-inspect-governance-wiring-mvp",
+    "version": "0.1.0"
+  },
+  "schemaVersion": "1.1.0",
+  "shardHash": "21d65f15e3ca573bdb55ca7d991908a9c5268ac41765f75e831ae417ad2f6b7e"
+}

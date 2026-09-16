@@ -1,0 +1,67 @@
+{
+  "mapping": {
+    "implementingPaths": [
+      {
+        "path": "crates/orchestrator/src/artifact.rs",
+        "source": "spec-edge"
+      },
+      {
+        "path": "crates/orchestrator/src/effort.rs",
+        "source": "comment-header"
+      },
+      {
+        "path": "crates/orchestrator/src/lib.rs",
+        "source": "multiple"
+      },
+      {
+        "path": "crates/orchestrator/src/manifest.rs",
+        "source": "multiple"
+      }
+    ],
+    "resolvedUnits": [
+      {
+        "locations": [
+          {
+            "file": "crates/orchestrator/src/artifact.rs"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "file",
+          "path": "crates/orchestrator/src/artifact.rs"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "crates/orchestrator/src/lib.rs"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "file",
+          "path": "crates/orchestrator/src/lib.rs"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "crates/orchestrator/src/manifest.rs"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "file",
+          "path": "crates/orchestrator/src/manifest.rs"
+        }
+      }
+    ],
+    "specId": "044-multi-agent-orchestration",
+    "specStatus": "superseded"
+  },
+  "schemaVersion": "1.1.0",
+  "shardHash": "b431a367cbd34c280645a7ee5cff65709350c1aabcbdf14ff9714da31384c5b1"
+}

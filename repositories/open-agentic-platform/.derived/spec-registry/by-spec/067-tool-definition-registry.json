@@ -1,0 +1,66 @@
+{
+  "record": {
+    "authors": [
+      "open-agentic-platform"
+    ],
+    "codeAliases": [
+      "TOOL_DEFINITION_REGISTRY"
+    ],
+    "created": "2026-03-31",
+    "domain": "opc",
+    "extends": [
+      {
+        "nature": "additive",
+        "spec": "036-safety-tier-governance",
+        "unit": {
+          "id": "tool-registry",
+          "kind": "crate"
+        }
+      }
+    ],
+    "extraFrontmatter": {
+      "compliance": [
+        {
+          "controls": [
+            "ASI03",
+            "ASI09"
+          ],
+          "framework": "owasp-asi-2026"
+        }
+      ],
+      "language": "en",
+      "sources": [
+        "claude-code"
+      ]
+    },
+    "featureBranch": "067-tool-definition-registry",
+    "id": "067-tool-definition-registry",
+    "implementation": "complete",
+    "kind": "platform",
+    "sectionHeadings": [
+      "Feature Specification: Tool Definition Registry",
+      "Purpose",
+      "Scope",
+      "In scope",
+      "Out of scope",
+      "Requirements",
+      "Functional",
+      "Non-functional",
+      "Architecture",
+      "ToolDef trait",
+      "ToolRegistry",
+      "Registration flow",
+      "MCP bridge adapter",
+      "Implementation approach",
+      "Success criteria",
+      "Dependencies",
+      "Risk"
+    ],
+    "specPath": "specs/067-tool-definition-registry/spec.md",
+    "status": "approved",
+    "summary": "Introduces a unified ToolDef trait and registration pattern absorbed from Claude Code's buildTool() factory. Every tool in the platform — Rust crate tools, OPC Tauri commands, and MCP-bridged tools — registers through a single schema-driven interface with name, description, JSON Schema input, permission gate, and execute function. This replaces ad-hoc dispatch wiring with a discoverable, composable tool surface.\n",
+    "title": "Tool Definition Registry"
+  },
+  "shardHash": "6d62039ab0211e1465b0de663158a7ccda0829d0bc93614534e02ae084e45697",
+  "specVersion": "1.1.0"
+}

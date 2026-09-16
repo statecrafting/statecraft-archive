@@ -1,0 +1,35 @@
+{
+  "record": {
+    "authors": [
+      "open-agentic-platform"
+    ],
+    "created": "2026-03-22",
+    "domain": "tooling",
+    "extends": [
+      {
+        "nature": "additive",
+        "spec": "002-registry-consumer-mvp"
+      }
+    ],
+    "extraFrontmatter": {
+      "language": "en"
+    },
+    "featureBranch": "030-registry-consumer-internal-output-exit-refactor-mvp",
+    "id": "030-registry-consumer-internal-output-exit-refactor-mvp",
+    "implementation": "complete",
+    "kind": "platform-delivery",
+    "sectionHeadings": [
+      "Feature Specification: Internal output/exit refactor",
+      "Purpose",
+      "Requirements",
+      "Out of scope"
+    ],
+    "specPath": "specs/030-registry-consumer-internal-output-exit-refactor-mvp/spec.md",
+    "status": "superseded",
+    "summary": "Internal refactor only: centralize output/error/exit emission in helper paths while preserving all observable CLI behavior under existing contracts.\n",
+    "supersededBy": "217-spec-spine-engine-swap-collapse",
+    "title": "Registry consumer internal output/exit refactor MVP"
+  },
+  "shardHash": "d77ef29a52fed7159c5e610cb9fbf8ab962a699264334a7d7329f225e3cdfecc",
+  "specVersion": "1.1.0"
+}

@@ -1,0 +1,20 @@
+# SPDX-License-Identifier: AGPL-3.0-or-later
+# Copyright (C) 2026 Bartek Kus
+
+[package]
+name = "standards-loader"
+publish = false   # internal workspace crate; binaries ship via release workflows, not crates.io
+version = "0.1.0"
+edition = "2024"
+description = "Loads, resolves, and formats YAML coding standards for prompt injection (spec 055)"
+
+[dependencies]
+serde = { version = "1", features = ["derive"] }
+serde_yaml = "0.9"
+thiserror = "2"
+
+[dev-dependencies]
+tempfile = "3"
+
+[package.metadata.oap]
+spec = "055-yaml-standards-schema"

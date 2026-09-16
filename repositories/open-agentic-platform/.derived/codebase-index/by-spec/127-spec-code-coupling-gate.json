@@ -1,0 +1,58 @@
+{
+  "mapping": {
+    "dependsOn": [
+      "103-init-protocol-governed-reads",
+      "104-makefile-ci-parity-contract",
+      "118-workflow-spec-traceability",
+      "130-spec-coupling-primary-owner",
+      "133-amends-aware-coupling-gate"
+    ],
+    "implementingPaths": [
+      {
+        "path": ".github/workflows/ci-spec-code-coupling.yml",
+        "source": "spec-edge"
+      },
+      {
+        "path": "Makefile",
+        "source": "spec-edge"
+      }
+    ],
+    "resolvedUnits": [
+      {
+        "locations": [
+          {
+            "file": ".github/workflows/ci-spec-code-coupling.yml"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "file",
+          "path": ".github/workflows/ci-spec-code-coupling.yml"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "Makefile",
+            "span": {
+              "endLine": 682,
+              "startLine": 669
+            }
+          }
+        ],
+        "ownership": true,
+        "sourceField": "co_authority",
+        "unit": {
+          "anchor": "spec-code-coupling",
+          "file": "Makefile",
+          "kind": "section"
+        }
+      }
+    ],
+    "specId": "127-spec-code-coupling-gate",
+    "specStatus": "approved"
+  },
+  "schemaVersion": "1.1.0",
+  "shardHash": "54995be72a10b13532cbf94b5c0c02d7ecb31b17cb1c4ba7c98ec1c7bb923428"
+}

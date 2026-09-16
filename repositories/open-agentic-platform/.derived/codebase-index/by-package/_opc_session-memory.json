@@ -1,0 +1,11 @@
+{
+  "package": {
+    "kind": "npm-package",
+    "name": "@opc/session-memory",
+    "path": "product/packages/session-memory",
+    "specRef": "056-session-memory",
+    "version": "0.1.0"
+  },
+  "schemaVersion": "1.1.0",
+  "shardHash": "445c99aa36c26bc6b346b286b5bc9ff41de829bda1a198ac978167901f4347af"
+}

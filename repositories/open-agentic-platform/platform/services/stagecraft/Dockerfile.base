@@ -1,0 +1,41 @@
+# Statecraft runtime base image.
+#
+# Consumed by `encore build docker --base <this-image>`. Encore lays the
+# compiled main.mjs, the native runtime, and the bundled source tree
+# (bundle_source: true in encore.app) on top.
+#
+# Base must carry the `node` binary — Encore's overlay ships `main.mjs`
+# and `encore-runtime.node` (a native addon, not a runtime), and the API
+# CMD plus the migration Job's `command: ["node", ...]` both invoke it
+# directly. node:22-trixie-slim (Debian 13, glibc 2.41) is the minimal
+# Debian-based image that carries node AND clears the glibc 2.39 floor
+# the produced app's pinned `@spec-spine/cli-linux-x64` requires.
+# statecraft runs that binary in-container at scaffold time (spec 112
+# regenerate-index step, spec 220 AC-2); on the older node:22-slim
+# (bookworm, glibc 2.36) it aborted with `GLIBC_2.39 not found`.
+#
+# This base also carries:
+#   - git + ca-certificates: api/factory/clone.ts shells out to `git clone`
+#   - artifact-extract:      knowledge advance endpoint (crates/artifact-extract)
+#   - factory-project-detect: project import endpoint (crates/factory-project-detect)
+#
+# The two helper binaries are expected in the build context alongside this
+# Dockerfile. Build them for linux/amd64 and stage them before `docker build`:
+#
+#   cargo build --release --manifest-path crates/Cargo.toml \
+#       -p artifact-extract -p factory-project-detect
+#   cp crates/target/release/artifact-extract       platform/services/statecraft/
+#   cp crates/target/release/factory-project-detect platform/services/statecraft/
+
+FROM node:22-trixie-slim
+
+RUN apt-get update \
+    && apt-get install -y --no-install-recommends git ca-certificates \
+    && rm -rf /var/lib/apt/lists/*
+
+COPY artifact-extract        /usr/local/bin/artifact-extract
+COPY factory-project-detect  /usr/local/bin/factory-project-detect
+RUN chmod +x /usr/local/bin/artifact-extract /usr/local/bin/factory-project-detect
+
+ENV ARTIFACT_EXTRACT_BIN=/usr/local/bin/artifact-extract
+ENV FACTORY_PROJECT_DETECT_BIN=/usr/local/bin/factory-project-detect

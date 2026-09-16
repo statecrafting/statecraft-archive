@@ -1,0 +1,70 @@
+{
+  "mapping": {
+    "dependsOn": [
+      "001-module-manifest-schema",
+      "002-encore-generator-core",
+      "003-user-management-module",
+      "006-factory-schema-lockstep",
+      "008-data-redis-promotion-dual-composition"
+    ],
+    "implementingPaths": [
+      {
+        "path": "adapters/acme-vue-encore/modules/cron/",
+        "source": "spec-edge"
+      },
+      {
+        "path": "adapters/acme-vue-encore/scripts/lib/born-with.ts",
+        "source": "spec-edge"
+      },
+      {
+        "path": "adapters/acme-vue-encore/scripts/lockstep/baseline.lock.json",
+        "source": "spec-edge"
+      }
+    ],
+    "resolvedUnits": [
+      {
+        "locations": [
+          {
+            "file": "adapters/acme-vue-encore/modules/cron/"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "file",
+          "path": "adapters/acme-vue-encore/modules/cron/"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "adapters/acme-vue-encore/scripts/lib/born-with.ts"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "extends",
+        "unit": {
+          "kind": "file",
+          "path": "adapters/acme-vue-encore/scripts/lib/born-with.ts"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "adapters/acme-vue-encore/scripts/lockstep/baseline.lock.json"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "extends",
+        "unit": {
+          "kind": "file",
+          "path": "adapters/acme-vue-encore/scripts/lockstep/baseline.lock.json"
+        }
+      }
+    ],
+    "specId": "009-tenant-cron-scheduler-module",
+    "specStatus": "approved"
+  },
+  "schemaVersion": "1.1.0",
+  "shardHash": "4972d9969d7c3d9ccf0a2b61aaa016b2f4abb765537a4d9e67bbb873df0dd67c"
+}

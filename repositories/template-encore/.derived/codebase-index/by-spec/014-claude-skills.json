@@ -1,0 +1,84 @@
+{
+  "mapping": {
+    "dependsOn": [
+      "000-bootstrap",
+      "015-claude-config-governance"
+    ],
+    "implementingPaths": [
+      {
+        "path": ".claude/agents/",
+        "source": "spec-edge"
+      },
+      {
+        "path": ".claude/skills/",
+        "source": "spec-edge"
+      },
+      {
+        "path": "standards/schemas/frontmatter/agent-frontmatter.schema.json",
+        "source": "spec-edge"
+      },
+      {
+        "path": "standards/schemas/frontmatter/skill-frontmatter.schema.json",
+        "source": "spec-edge"
+      }
+    ],
+    "resolvedUnits": [
+      {
+        "locations": [
+          {
+            "file": ".claude/agents/"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "file",
+          "path": ".claude/agents/"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": ".claude/skills/"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "file",
+          "path": ".claude/skills/"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "standards/schemas/frontmatter/agent-frontmatter.schema.json"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "file",
+          "path": "standards/schemas/frontmatter/agent-frontmatter.schema.json"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "standards/schemas/frontmatter/skill-frontmatter.schema.json"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "file",
+          "path": "standards/schemas/frontmatter/skill-frontmatter.schema.json"
+        }
+      }
+    ],
+    "specId": "014-claude-skills",
+    "specStatus": "approved"
+  },
+  "schemaVersion": "1.1.0",
+  "shardHash": "2e156cef04d6835a2ef4f60fe49b2b5a4524d60dc2b4492adb75162790e0ac9e"
+}

@@ -1,0 +1,116 @@
+{
+  "diagnostics": {
+    "errors": [],
+    "warnings": [
+      {
+        "code": "W-002",
+        "message": "spec '197-factory-contract-open-standard-extensions' directory unit 'factory' is not a directory",
+        "path": "factory"
+      }
+    ]
+  },
+  "mapping": {
+    "implementingPaths": [
+      {
+        "path": "crates/factory-contracts",
+        "source": "spec-edge"
+      },
+      {
+        "path": "crates/factory-engine",
+        "source": "spec-edge"
+      },
+      {
+        "path": "crates/orchestrator",
+        "source": "spec-edge"
+      },
+      {
+        "path": "standards/schemas/factory/build-spec.schema.yaml",
+        "source": "spec-edge"
+      },
+      {
+        "path": "standards/schemas/factory/stage-outputs/audiences.schema.json",
+        "source": "spec-edge"
+      }
+    ],
+    "resolvedUnits": [
+      {
+        "locations": [
+          {
+            "file": "crates/factory-contracts"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "extends",
+        "unit": {
+          "id": "factory-contracts",
+          "kind": "crate"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "standards/schemas/factory/build-spec.schema.yaml"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "refines",
+        "unit": {
+          "kind": "file",
+          "path": "standards/schemas/factory/build-spec.schema.yaml"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "standards/schemas/factory/stage-outputs/audiences.schema.json"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "refines",
+        "unit": {
+          "kind": "file",
+          "path": "standards/schemas/factory/stage-outputs/audiences.schema.json"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "crates/factory-engine"
+          }
+        ],
+        "ownership": false,
+        "sourceField": "references",
+        "unit": {
+          "id": "factory-engine",
+          "kind": "crate"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "crates/orchestrator"
+          }
+        ],
+        "ownership": false,
+        "sourceField": "references",
+        "unit": {
+          "id": "orchestrator",
+          "kind": "crate"
+        }
+      },
+      {
+        "locations": [],
+        "ownership": false,
+        "sourceField": "references",
+        "unit": {
+          "kind": "directory",
+          "path": "factory"
+        }
+      }
+    ],
+    "specId": "197-factory-contract-open-standard-extensions",
+    "specStatus": "approved"
+  },
+  "schemaVersion": "1.1.0",
+  "shardHash": "d54fa2bbe60339772f39d101d985ba2217a3f919052b3c8d7a453fe10e81edd9"
+}

@@ -1,0 +1,172 @@
+{
+  "diagnostics": {
+    "errors": [],
+    "warnings": [
+      {
+        "code": "W-002",
+        "message": "spec '161-knowledge-requirements-provenance-emission' file unit 'docs/owasp/factory/AIDE-VELOCITY-OAP-INTENT.md' does not exist",
+        "path": "docs/owasp/factory/AIDE-VELOCITY-OAP-INTENT.md"
+      }
+    ]
+  },
+  "mapping": {
+    "dependsOn": [
+      "154-logical-unit-ownership-grammar",
+      "156-references-edge-provenance-grammar",
+      "120-factory-extraction-stage"
+    ],
+    "implementingPaths": [
+      {
+        "path": "crates/featuregraph/tests/golden/features_graph.json",
+        "source": "spec-edge"
+      },
+      {
+        "path": "specs/120-factory-extraction-stage/spec.md",
+        "source": "spec-edge"
+      },
+      {
+        "path": "specs/156-references-edge-provenance-grammar/spec.md",
+        "source": "spec-edge"
+      },
+      {
+        "path": "specs/163-statecraft-requirements-view/spec.md",
+        "source": "spec-edge"
+      },
+      {
+        "path": "tools/shared/spec-types/src/lib.rs",
+        "source": "spec-edge"
+      },
+      {
+        "path": "tools/spec-spine/spec-lint/src/lib.rs",
+        "source": "spec-edge"
+      },
+      {
+        "path": "tools/spec-spine/spec-lint/src/main.rs",
+        "source": "spec-edge"
+      },
+      {
+        "path": "tools/spec-spine/spec-lint/tests/lint.rs",
+        "source": "spec-edge"
+      }
+    ],
+    "resolvedUnits": [
+      {
+        "locations": [
+          {
+            "file": "crates/featuregraph/tests/golden/features_graph.json"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "extends",
+        "unit": {
+          "kind": "file",
+          "path": "crates/featuregraph/tests/golden/features_graph.json"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "tools/shared/spec-types/src/lib.rs"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "extends",
+        "unit": {
+          "kind": "file",
+          "path": "tools/shared/spec-types/src/lib.rs"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "tools/spec-spine/spec-lint/src/lib.rs"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "extends",
+        "unit": {
+          "kind": "file",
+          "path": "tools/spec-spine/spec-lint/src/lib.rs"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "tools/spec-spine/spec-lint/src/main.rs"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "extends",
+        "unit": {
+          "kind": "file",
+          "path": "tools/spec-spine/spec-lint/src/main.rs"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "tools/spec-spine/spec-lint/tests/lint.rs"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "extends",
+        "unit": {
+          "kind": "file",
+          "path": "tools/spec-spine/spec-lint/tests/lint.rs"
+        }
+      },
+      {
+        "locations": [],
+        "ownership": false,
+        "sourceField": "references",
+        "unit": {
+          "kind": "file",
+          "path": "docs/owasp/factory/AIDE-VELOCITY-OAP-INTENT.md"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "specs/120-factory-extraction-stage/spec.md"
+          }
+        ],
+        "ownership": false,
+        "sourceField": "references",
+        "unit": {
+          "kind": "file",
+          "path": "specs/120-factory-extraction-stage/spec.md"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "specs/156-references-edge-provenance-grammar/spec.md"
+          }
+        ],
+        "ownership": false,
+        "sourceField": "references",
+        "unit": {
+          "kind": "file",
+          "path": "specs/156-references-edge-provenance-grammar/spec.md"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "specs/163-statecraft-requirements-view/spec.md"
+          }
+        ],
+        "ownership": false,
+        "sourceField": "references",
+        "unit": {
+          "kind": "file",
+          "path": "specs/163-statecraft-requirements-view/spec.md"
+        }
+      }
+    ],
+    "specId": "161-knowledge-requirements-provenance-emission",
+    "specStatus": "approved"
+  },
+  "schemaVersion": "1.1.0",
+  "shardHash": "db02d6dd488eba0a0a88f817b6d4739631961e1b66fc7bb3802bb624ee86defe"
+}

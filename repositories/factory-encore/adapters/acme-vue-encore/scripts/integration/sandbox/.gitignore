@@ -1,0 +1,3 @@
+# Ignore all test-run directories created here, but keep this file tracked.
+*
+!.gitignore

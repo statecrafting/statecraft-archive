@@ -1,0 +1,40 @@
+{
+  "record": {
+    "authors": [
+      "open-agentic-platform"
+    ],
+    "created": "2026-03-22",
+    "domain": "tooling",
+    "extends": [
+      {
+        "nature": "additive",
+        "spec": "002-registry-consumer-mvp"
+      }
+    ],
+    "extraFrontmatter": {
+      "language": "en"
+    },
+    "featureBranch": "026-registry-consumer-allow-invalid-contract-mvp",
+    "id": "026-registry-consumer-allow-invalid-contract-mvp",
+    "implementation": "complete",
+    "kind": "platform-delivery",
+    "refines": [
+      {
+        "aspect": "contract-tests"
+      }
+    ],
+    "sectionHeadings": [
+      "Feature Specification: allow-invalid contract",
+      "Purpose",
+      "Requirements",
+      "Out of scope"
+    ],
+    "specPath": "specs/026-registry-consumer-allow-invalid-contract-mvp/spec.md",
+    "status": "superseded",
+    "summary": "Lock policy-override behavior for --allow-invalid by asserting exact outcomes with and without the flag, including boundaries where malformed registries remain hard failures.\n",
+    "supersededBy": "217-spec-spine-engine-swap-collapse",
+    "title": "Registry consumer allow-invalid contract MVP"
+  },
+  "shardHash": "c47ba83cbe7b0b62bd2217c04a2fb82656f634d644acaf72ba73f51e0cc1cd58",
+  "specVersion": "1.1.0"
+}

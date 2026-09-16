@@ -1,0 +1,43 @@
+{
+  "$schema": "https://json.schemastore.org/tsconfig",
+  "compilerOptions": {
+    "target": "ES2022",
+    "module": "ESNext",
+    "lib": ["ES2022"],
+    "moduleResolution": "bundler",
+    "resolveJsonModule": true,
+    "allowJs": false,
+    "checkJs": false,
+
+    "strict": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "noFallthroughCasesInSwitch": true,
+    // The moved generator predates noUncheckedIndexedAccess (template-encore
+    // never typechecked scripts/ under it); its behavior is covered by the
+    // vitest suite. Kept off here so the mechanism stays byte-faithful rather
+    // than churned with defensive guards its author never wrote.
+    "noUncheckedIndexedAccess": false,
+    "noImplicitOverride": true,
+    "allowUnusedLabels": false,
+    "allowUnreachableCode": false,
+
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true,
+    "isolatedModules": true,
+    "noEmit": true,
+
+    "types": ["node", "vitest/globals"]
+  },
+  "include": ["adapters/acme-vue-encore/scripts/**/*.ts"],
+  "exclude": [
+    "node_modules",
+    "**/node_modules",
+    "dist",
+    "build",
+    "**/dist",
+    "**/build",
+    "adapters/acme-vue-encore/modules/**"
+  ]
+}

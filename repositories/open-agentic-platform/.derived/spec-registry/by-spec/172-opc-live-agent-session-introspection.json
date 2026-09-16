@@ -1,0 +1,214 @@
+{
+  "record": {
+    "codeAliases": [
+      "OPC_AGENT_SESSION_PANEL",
+      "FORCE_DISCONNECT"
+    ],
+    "created": "2026-05-22",
+    "dependsOn": [
+      "032-opc-inspect-governance-wiring-mvp",
+      "043-agent-organizer",
+      "052-state-persistence",
+      "057-notification-system",
+      "067-tool-definition-registry",
+      "157-opc-session-model"
+    ],
+    "domain": "opc",
+    "establishes": [
+      {
+        "kind": "file",
+        "path": "product/apps/opc/src-tauri/src/process/activity.rs"
+      },
+      {
+        "kind": "file",
+        "path": "product/apps/opc/src-tauri/src/commands/live_sessions.rs"
+      },
+      {
+        "kind": "file",
+        "path": "product/apps/opc/src/components/LiveSessionsPanel.tsx"
+      },
+      {
+        "kind": "directory",
+        "path": "product/apps/opc/src/features/live-sessions"
+      }
+    ],
+    "extends": [
+      {
+        "nature": "additive",
+        "spec": "032-opc-inspect-governance-wiring-mvp",
+        "unit": {
+          "kind": "file",
+          "path": "product/apps/opc/src-tauri/src/process/mod.rs"
+        }
+      },
+      {
+        "nature": "additive",
+        "spec": "032-opc-inspect-governance-wiring-mvp",
+        "unit": {
+          "kind": "file",
+          "path": "product/apps/opc/src-tauri/src/process/registry.rs"
+        }
+      },
+      {
+        "nature": "additive",
+        "spec": "032-opc-inspect-governance-wiring-mvp",
+        "unit": {
+          "kind": "file",
+          "path": "product/apps/opc/src-tauri/src/commands/mod.rs"
+        }
+      },
+      {
+        "nature": "additive",
+        "spec": "032-opc-inspect-governance-wiring-mvp",
+        "unit": {
+          "kind": "file",
+          "path": "product/apps/opc/src-tauri/src/lib.rs"
+        }
+      },
+      {
+        "nature": "additive",
+        "spec": "032-opc-inspect-governance-wiring-mvp",
+        "unit": {
+          "kind": "file",
+          "path": "product/apps/opc/src-tauri/Cargo.toml"
+        }
+      },
+      {
+        "nature": "additive",
+        "spec": "032-opc-inspect-governance-wiring-mvp",
+        "unit": {
+          "kind": "file",
+          "path": "product/apps/opc/src/components/TabContent.tsx"
+        }
+      },
+      {
+        "nature": "additive",
+        "spec": "032-opc-inspect-governance-wiring-mvp",
+        "unit": {
+          "kind": "file",
+          "path": "product/apps/opc/src/components/ToolsPopover.tsx"
+        }
+      },
+      {
+        "nature": "additive",
+        "spec": "032-opc-inspect-governance-wiring-mvp",
+        "unit": {
+          "kind": "file",
+          "path": "product/apps/opc/src/contexts/TabContext.tsx"
+        }
+      },
+      {
+        "nature": "additive",
+        "spec": "032-opc-inspect-governance-wiring-mvp",
+        "unit": {
+          "kind": "file",
+          "path": "product/apps/opc/src/hooks/useTabState.ts"
+        }
+      },
+      {
+        "nature": "additive",
+        "spec": "032-opc-inspect-governance-wiring-mvp",
+        "unit": {
+          "kind": "file",
+          "path": "product/apps/opc/src/lib/api.ts"
+        }
+      },
+      {
+        "nature": "additive",
+        "spec": "052-state-persistence",
+        "unit": {
+          "kind": "file",
+          "path": "crates/orchestrator/src/sqlite_state.rs"
+        }
+      },
+      {
+        "nature": "additive",
+        "spec": "052-state-persistence",
+        "unit": {
+          "kind": "file",
+          "path": "crates/orchestrator/src/state.rs"
+        }
+      },
+      {
+        "nature": "additive",
+        "spec": "052-state-persistence",
+        "unit": {
+          "kind": "file",
+          "path": "crates/orchestrator/src/hiqlite_store.rs"
+        }
+      }
+    ],
+    "extraFrontmatter": {
+      "compliance": [
+        {
+          "controls": [
+            "ASI10",
+            "ASI08"
+          ],
+          "framework": "owasp-asi-2026"
+        }
+      ],
+      "slug": "opc-live-agent-session-introspection"
+    },
+    "id": "172-opc-live-agent-session-introspection",
+    "implementation": "complete",
+    "kind": "platform",
+    "owner": "bart",
+    "references": [
+      {
+        "role": "decomposition-source",
+        "unit": {
+          "kind": "file",
+          "path": "docs/owasp/factory/AIDE-VELOCITY-OAP-INTENT.md"
+        }
+      },
+      {
+        "role": "aide-analogue",
+        "unit": {
+          "kind": "file",
+          "path": "docs/owasp/factory/AIDE-VELOCITY-blueprint-spec.md"
+        }
+      },
+      {
+        "role": "opc-session-substrate",
+        "unit": {
+          "kind": "file",
+          "path": "specs/157-opc-session-model/spec.md"
+        }
+      },
+      {
+        "role": "orchestrator-substrate",
+        "unit": {
+          "kind": "file",
+          "path": "specs/052-state-persistence/spec.md"
+        }
+      }
+    ],
+    "risk": "medium",
+    "sectionHeadings": [
+      "172 — Live agent-session introspection in OPC",
+      "1. Problem",
+      "2. Decision",
+      "2.1 Panel content",
+      "2.2 Force-disconnect action",
+      "2.3 Resource-rate thresholds",
+      "2.4 Composition with spec 052 (orchestrator)",
+      "2.5 Composition with spec 157 (session model)",
+      "3. Functional Requirements",
+      "4. Success Criteria",
+      "5. Scope",
+      "In scope",
+      "Out of scope (deferred)",
+      "5.1 Implementation note — audit-chain emission",
+      "6. Compliance",
+      "7. Cross-references",
+      "Security hardening amendment (2026-07-02)"
+    ],
+    "specPath": "specs/172-opc-live-agent-session-introspection/spec.md",
+    "status": "approved",
+    "summary": "OWASP ASI10 (Rogue Agents) requires operator-visible agent activity and the ability to terminate misbehaving agents. AIDE-VELOCITY's `GET /admin/sse-sessions` endpoint surfaces a live snapshot of all connected SSE clients, grouped by API key / user / IP — the operational primitive that lets an admin identify and force-disconnect a runaway agent. OPC has no equivalent surface today.\nThis spec adds a Live Sessions panel to OPC's governance / inspect surface, showing every connected agent session (per spec 157 multi-session-per-project- path discipline, extended with the orchestrator's active workflows per spec 052) with per-session scope, event-rate, recent tool calls, and a force- disconnect control. The panel is the operator's defence against a runaway agent that consumes resources, makes excessive tool calls, or holds onto scopes beyond its intended lifetime.\nForce-disconnect is graceful — the agent's session is closed, its in-flight tool calls are cancelled, and the session checkpoint (per spec 095) preserves the conversational state for forensics. Force- disconnect is logged to the governance certificate chain for audit.\n",
+    "title": "Live agent-session introspection in OPC — connected-agent visibility and force-disconnect (ASI10)"
+  },
+  "shardHash": "496d6112c735248f3782d037700c71c43585ab183203ed6996ef9b0be190cc8e",
+  "specVersion": "1.1.0"
+}

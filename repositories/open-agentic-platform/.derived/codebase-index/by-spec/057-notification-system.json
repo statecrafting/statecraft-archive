@@ -1,0 +1,62 @@
+{
+  "diagnostics": {
+    "errors": [],
+    "warnings": [
+      {
+        "code": "W-002",
+        "message": "spec '057-notification-system' file unit 'product/apps/opc/src/lib/notificationOrchestrator.ts' does not exist",
+        "path": "product/apps/opc/src/lib/notificationOrchestrator.ts"
+      },
+      {
+        "code": "W-002",
+        "message": "spec '057-notification-system' file unit 'product/apps/opc/src/lib/notificationChannels.ts' does not exist",
+        "path": "product/apps/opc/src/lib/notificationChannels.ts"
+      }
+    ]
+  },
+  "mapping": {
+    "implementingPaths": [
+      {
+        "path": "product/packages/notification-orchestrator",
+        "source": "multiple"
+      }
+    ],
+    "resolvedUnits": [
+      {
+        "locations": [
+          {
+            "file": "product/packages/notification-orchestrator"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "directory",
+          "path": "product/packages/notification-orchestrator"
+        }
+      },
+      {
+        "locations": [],
+        "ownership": false,
+        "sourceField": "references",
+        "unit": {
+          "kind": "file",
+          "path": "product/apps/opc/src/lib/notificationChannels.ts"
+        }
+      },
+      {
+        "locations": [],
+        "ownership": false,
+        "sourceField": "references",
+        "unit": {
+          "kind": "file",
+          "path": "product/apps/opc/src/lib/notificationOrchestrator.ts"
+        }
+      }
+    ],
+    "specId": "057-notification-system",
+    "specStatus": "approved"
+  },
+  "schemaVersion": "1.1.0",
+  "shardHash": "64d54d833cab95cd76ff609789fd934e5d67563acad42e5e006261109de44745"
+}

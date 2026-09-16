@@ -1,0 +1,60 @@
+{
+  "_spec": "166-opc-stop-hook-gate-chain",
+  "_doc": "OPC's bundled Claude Code hook chain. Each command uses the ${OPC_HOOKS_DIR} placeholder; OPC sets that env var to the resolved resources/claude-hooks/ directory before launching the Claude Code subprocess. Entries flagged platform_mandatory: true cannot be removed by project-level overrides (FR-006). The platform-mandatory floor is the spec-spine index check and spec-spine couple at Stop time. The codification-gate entry composes with the chain per spec 174 FR-008; per-finding override lives in the project's .codification-override.yaml (FR-007), not in the hook config.",
+  "hooks": {
+    "PostToolUse": [
+      {
+        "matcher": "Edit|Write",
+        "hooks": [
+          {
+            "id": "post-edit-index",
+            "type": "command",
+            "command": "${OPC_HOOKS_DIR}/post-edit-index.sh",
+            "timeout": 5
+          },
+          {
+            "id": "post-edit-spec-lint",
+            "type": "command",
+            "command": "${OPC_HOOKS_DIR}/post-edit-spec-lint.sh",
+            "timeout": 5
+          }
+        ]
+      }
+    ],
+    "Stop": [
+      {
+        "id": "stop-index",
+        "type": "command",
+        "command": "${OPC_HOOKS_DIR}/stop-index.sh",
+        "timeout": 60,
+        "platform_mandatory": true
+      },
+      {
+        "id": "stop-spec-lint",
+        "type": "command",
+        "command": "${OPC_HOOKS_DIR}/stop-spec-lint.sh",
+        "timeout": 60
+      },
+      {
+        "id": "stop-coupling",
+        "type": "command",
+        "command": "${OPC_HOOKS_DIR}/stop-coupling.sh",
+        "timeout": 60,
+        "platform_mandatory": true
+      },
+      {
+        "id": "stop-workflow-pins",
+        "type": "command",
+        "command": "${OPC_HOOKS_DIR}/stop-workflow-pins.sh",
+        "timeout": 60
+      },
+      {
+        "_spec": "174-codification-gate",
+        "id": "stop-codification",
+        "type": "command",
+        "command": "${OPC_HOOKS_DIR}/stop-codification.sh",
+        "timeout": 60
+      }
+    ]
+  }
+}

@@ -1,0 +1,61 @@
+id: security-001
+category: security
+priority: critical
+context: >
+  Applies to all code that handles user input, constructs queries, or
+  renders output. These rules prevent the most common web application
+  vulnerabilities (OWASP Top 10).
+tags:
+  - typescript
+  - javascript
+  - security
+  - owasp
+
+rules:
+  - verb: NEVER
+    subject: "concatenate user input into SQL queries"
+    rationale: >
+      String concatenation in SQL queries enables SQL injection, the
+      most exploited class of web vulnerability. Always use parameterized
+      queries or an ORM's query builder.
+
+  - verb: NEVER
+    subject: "insert user input into HTML without escaping"
+    rationale: >
+      Unescaped user input in HTML enables cross-site scripting (XSS).
+      Use framework-provided escaping (React JSX, template literals with
+      tagged templates) or explicit sanitization.
+
+  - verb: NEVER
+    subject: "pass user input to shell commands without escaping"
+    rationale: >
+      Unsanitized shell arguments enable command injection. Use
+      execFile with argument arrays instead of exec with string interpolation.
+
+  - verb: ALWAYS
+    subject: "validate and sanitize all external input at system boundaries"
+    rationale: >
+      Trust boundaries exist where data enters your system (HTTP requests,
+      file uploads, message queues). Validate shape, type, and range at
+      these boundaries; trust internal code thereafter.
+
+anti_patterns:
+  - pattern: "db.query(`SELECT * FROM users WHERE id = '${userId}'`)"
+    correction: "db.query('SELECT * FROM users WHERE id = $1', [userId])"
+  - pattern: "exec(`git log ${userBranch}`)"
+    correction: "execFile('git', ['log', userBranch])"
+
+examples:
+  - bad: |
+      app.get('/search', (req, res) => {
+        res.send(`<h1>Results for: ${req.query.q}</h1>`);
+      });
+    good: |
+      import { escapeHtml } from './utils';
+      app.get('/search', (req, res) => {
+        res.send(`<h1>Results for: ${escapeHtml(req.query.q)}</h1>`);
+      });
+    explanation: >
+      The good example escapes user input before inserting it into HTML,
+      preventing XSS attacks where a malicious query parameter could
+      inject script tags.

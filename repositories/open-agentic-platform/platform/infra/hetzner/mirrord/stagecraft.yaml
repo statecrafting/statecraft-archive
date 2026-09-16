@@ -1,0 +1,80 @@
+# mirrord config — local statecraft (Encore.ts) against Hetzner cluster.
+#
+# Driven by `make dev-statecraft-hetzner` from platform/. The Makefile:
+#   1. runs statecraft-compile.sh, which produces a bundle bound to
+#      infra.config.json (cluster PostgreSQL + NSQ hosts).
+#   2. exports ENCORE_RUNTIME_LIB + ENCORE_INFRA_CONFIG_PATH from .statecraft.env
+#   3. runs `mirrord exec -f this-file -- node .encore/build/combined/combined/main.mjs`
+#
+# Do NOT use `encore run` here — it ignores infra.config.*.json and always
+# provisions ephemeral local PostgreSQL/NSQ, which defeats the purpose.
+#
+# Inbound HTTPS to https://${DOMAIN} flows through the cluster ingress, into
+# the statecraft-api pod, and is stolen to the local node process on :4000.
+# OAuth/OIDC callbacks and GitHub webhooks work unchanged — Rauthy and the
+# GitHub App point at the cluster's public URL, which is still the ingress.
+target:
+  path: deployment/statecraft-api
+  namespace: statecraft-system
+
+feature:
+  network:
+    # Steal only requests tagged with `x-statecraft-dev: 1`. Without this
+    # filter, mirrord diverts EVERY inbound request — including kubelet's
+    # GET /healthz liveness/readiness probes. If Encore's local boot is
+    # still in progress (<1s), the stolen probe fails, k8s terminates the
+    # pod, and the mirrord agent loses its target with
+    #   "agent unexpectedly closed connection"
+    # followed by an Abort trap on the mirrord exec process.
+    #
+    # Vite's proxy and the SSR loader inject this header on every request
+    # that should reach the laptop (see web/vite.config.ts and
+    # web/app/lib/encore.server.ts). Kubelet probes don't carry it and
+    # continue to hit the pod's own Encore, keeping the target alive.
+    #
+    # Consequence: direct browser hits to https://statecraft.ing no longer
+    # reach the laptop while this config is active — use localhost:3000
+    # for dev, or drop the filter for cluster-domain testing.
+    incoming:
+      mode: steal
+      http_filter:
+        header_filter: "x-statecraft-dev: 1"
+    # Outbound DNS + connections go through the pod's network, so
+    # postgresql.statecraft-system, nsqd.statecraft-system, and rauthy.*
+    # resolve exactly as they do in-cluster.
+    #
+    # ignore_localhost: Encore's gateway (0.0.0.0:4000) forwards every
+    # request to its own internal api server on 127.0.0.1:<ephemeral>.
+    # With remote outgoing on, mirrord tunnels that connect() into the
+    # pod, where that ephemeral port is obviously not listening → 502
+    # on every request (including /healthz). Keep loopback local.
+    outgoing:
+      tcp: true
+      udp: true
+      ignore_localhost: true
+    dns: true
+
+  fs:
+    # Local FS by default (node_modules, source tree, .encore cache stay
+    # on the laptop), but the secret-file mounts below are read from the pod.
+    mode: localwithoverrides
+    read_only:
+      - "^/mnt/secrets-store(/.*)?$"
+      - "^/var/run/secrets(/.*)?$"
+
+  # Pull the pod's env (statecraft-api-secrets: DB_PASSWORD, STATECRAFT_DB_URL,
+  # OIDC_*, GITHUB_*, SESSION_SECRET, DOMAIN, APP_BASE_URL, ...) into the
+  # local process. Exclude ENCORE_RUNTIME_LIB and ENCORE_INFRA_CONFIG_PATH —
+  # the pod's values point at in-container Linux paths (/encore/runtimes/...)
+  # that don't exist locally; we inject host-appropriate values via
+  # statecraft-compile.sh's .statecraft.env instead.
+  #
+  # APP_BASE_URL is also excluded so .statecraft.env can override it for the
+  # localhost:3000 HMR dev flow; when the override is unset the compile
+  # script falls back to the pod's value, preserving the cluster-domain flow.
+  env:
+    exclude: "ENCORE_RUNTIME_LIB;ENCORE_INFRA_CONFIG_PATH;ENCORE_APP_META_PATH;APP_BASE_URL"
+
+# Sidecar-style: keep the Encore compiler/dev server's noisy logs quiet,
+# surface only mirrord warnings.
+telemetry: false

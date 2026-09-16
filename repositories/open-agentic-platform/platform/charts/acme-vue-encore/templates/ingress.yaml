@@ -1,0 +1,45 @@
+{{- if .Values.ingress.enabled -}}
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: {{ include "acme-vue-encore.fullname" . }}
+  labels:
+    {{- include "acme-vue-encore.labels" . | nindent 4 }}
+  # region: access-gate
+  {{- if or .Values.gate.enabled .Values.ingress.annotations }}
+  annotations:
+    {{- /* Spec 137: chain to the per-env oauth2-proxy gate when enabled.
+           Ported from the prior chart's gate seam so the Stage 1 FR-011
+           render-parity check produced equivalent gate-relevant output.
+           Rendered first so user-supplied .Values.ingress.annotations can
+           override. */ -}}
+    {{- if .Values.gate.enabled }}
+    nginx.ingress.kubernetes.io/auth-url: "http://{{ required "gate.proxyServiceName is required when gate.enabled is true" .Values.gate.proxyServiceName }}.{{ .Release.Namespace }}.svc.cluster.local:{{ .Values.gate.proxyServicePort }}/oauth2/auth"
+    nginx.ingress.kubernetes.io/auth-signin: "https://$host/oauth2/start?rd=$escaped_request_uri"
+    nginx.ingress.kubernetes.io/auth-response-headers: "X-Auth-Request-User,X-Auth-Request-Email,X-Auth-Request-Preferred-Username"
+    {{- end }}
+    {{- with .Values.ingress.annotations }}
+    {{- toYaml . | nindent 4 }}
+    {{- end }}
+  {{- end }}
+  # endregion access-gate
+spec:
+  ingressClassName: {{ .Values.ingress.className }}
+  {{- if .Values.ingress.tls.enabled }}
+  tls:
+    - hosts:
+        - {{ .Values.ingress.host | quote }}
+      secretName: {{ .Values.ingress.tls.secretName | quote }}
+  {{- end }}
+  rules:
+    - host: {{ .Values.ingress.host | quote }}
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: {{ include "acme-vue-encore.fullname" . }}
+                port:
+                  name: http
+{{- end -}}

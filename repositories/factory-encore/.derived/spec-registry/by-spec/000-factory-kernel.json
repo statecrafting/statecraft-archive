@@ -1,0 +1,57 @@
+{
+  "record": {
+    "codeAliases": [
+      "FACTORY_KERNEL"
+    ],
+    "created": "2026-06-23",
+    "domain": "governance",
+    "establishes": [
+      {
+        "kind": "file",
+        "path": ".github/workflows/ci.yml"
+      },
+      {
+        "kind": "file",
+        "path": ".github/workflows/spec-spine.yml"
+      },
+      {
+        "kind": "file",
+        "path": ".github/workflows/ai-pr-review.yml"
+      },
+      {
+        "kind": "file",
+        "path": ".github/workflows/generator-ci.yml"
+      },
+      {
+        "kind": "file",
+        "path": "standards/"
+      }
+    ],
+    "id": "000-factory-kernel",
+    "implementation": "complete",
+    "kind": "governance",
+    "owner": "bart",
+    "risk": "medium",
+    "sectionHeadings": [
+      "000. Factory kernel: spec-spine governance and the resilient CI surface",
+      "1. Purpose",
+      "2. Territory",
+      "3. Behavior",
+      "3.1 spec-spine governance",
+      "FR-001: Governed corpus",
+      "FR-002: PR-time coupling gate",
+      "3.2 Resilient CI surface",
+      "FR-003: Terminal ci-gate",
+      "FR-004: Always-on governance, routed app checks",
+      "FR-005: AI review API-failure resilience, never silent",
+      "4. Acceptance criteria",
+      "5. Out of scope"
+    ],
+    "specPath": "specs/000-factory-kernel/spec.md",
+    "status": "approved",
+    "summary": "factory-encore now carries governed code (the create-time generator), so it earns a kernel. This spec adopts spec-spine over the corpus (compile, fail-on-warn lint, index staleness gate, PR-time coupling gate) and stands up the OAP resilient CI surface: a path-routed orchestrator whose terminal ci-gate aggregates the governance gate, the generator test gate, the lockstep gate, and an AI PR review that passes with a visible notice on a Claude API failure (never a silent green).\n",
+    "title": "Factory kernel: spec-spine governance and the resilient CI surface"
+  },
+  "shardHash": "29d57a3ce1a316526684b6fe4bdedc662a487001739b466a2ce52ca09e25a5e1",
+  "specVersion": "1.1.0"
+}

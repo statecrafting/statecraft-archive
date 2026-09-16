@@ -1,0 +1,36 @@
+{
+  "mapping": {
+    "dependsOn": [
+      "004-tenants-github-app"
+    ],
+    "implementingPaths": [
+      {
+        "path": "frontend",
+        "source": "manifest-metadata"
+      },
+      {
+        "path": "frontend/",
+        "source": "spec-edge"
+      }
+    ],
+    "resolvedUnits": [
+      {
+        "locations": [
+          {
+            "file": "frontend/"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "directory",
+          "path": "frontend/"
+        }
+      }
+    ],
+    "specId": "007-governance-webapp",
+    "specStatus": "approved"
+  },
+  "schemaVersion": "1.1.0",
+  "shardHash": "49b312f2f9aeb68cab975502ab61a3326898c65a7e8e71847bf63cc5b3334fd4"
+}

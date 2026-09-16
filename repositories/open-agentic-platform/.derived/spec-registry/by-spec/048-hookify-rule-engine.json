@@ -1,0 +1,50 @@
+{
+  "record": {
+    "authors": [
+      "open-agentic-platform"
+    ],
+    "codeAliases": [
+      "HOOKIFY_RULE_ENGINE"
+    ],
+    "created": "2026-03-29",
+    "domain": "opc",
+    "establishes": [
+      {
+        "id": "@opc/hookify-rule-engine",
+        "kind": "crate"
+      }
+    ],
+    "extraFrontmatter": {
+      "language": "en"
+    },
+    "featureBranch": "048-hookify-rule-engine",
+    "id": "048-hookify-rule-engine",
+    "implementation": "complete",
+    "kind": "platform",
+    "sectionHeadings": [
+      "Feature Specification: Declarative Hook Rule Engine",
+      "Purpose",
+      "Scope",
+      "In scope",
+      "Out of scope",
+      "Requirements",
+      "Functional",
+      "Non-functional",
+      "Architecture",
+      "Rule file format",
+      "Engine structure",
+      "Evaluation flow",
+      "hooks.json integration",
+      "Implementation approach",
+      "Success criteria",
+      "Dependencies",
+      "Risk"
+    ],
+    "specPath": "specs/048-hookify-rule-engine/spec.md",
+    "status": "approved",
+    "summary": "Declarative rule engine that intercepts Claude Code lifecycle events (PreToolUse, PostToolUse, UserPromptSubmit, Stop) using markdown-defined rules with YAML frontmatter. Rules specify matchers, conditions, and actions (block, warn, modify). Ships a hooks.json manifest for Claude Code plugin integration.\n",
+    "title": "Declarative Hook Rule Engine"
+  },
+  "shardHash": "1c666c27856828757f843b937f5b162ee48f704d213b387169ca5176cbc7443a",
+  "specVersion": "1.1.0"
+}

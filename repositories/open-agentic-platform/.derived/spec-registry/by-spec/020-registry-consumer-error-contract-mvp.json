@@ -1,0 +1,40 @@
+{
+  "record": {
+    "authors": [
+      "open-agentic-platform"
+    ],
+    "created": "2026-03-22",
+    "domain": "tooling",
+    "extends": [
+      {
+        "nature": "additive",
+        "spec": "002-registry-consumer-mvp"
+      }
+    ],
+    "extraFrontmatter": {
+      "language": "en"
+    },
+    "featureBranch": "020-registry-consumer-error-contract-mvp",
+    "id": "020-registry-consumer-error-contract-mvp",
+    "implementation": "complete",
+    "kind": "platform-delivery",
+    "refines": [
+      {
+        "aspect": "error-shape"
+      }
+    ],
+    "sectionHeadings": [
+      "Feature Specification: Error contract tests",
+      "Purpose",
+      "Requirements",
+      "Out of scope"
+    ],
+    "specPath": "specs/020-registry-consumer-error-contract-mvp/spec.md",
+    "status": "superseded",
+    "summary": "Lock key runtime failure-path contracts for registry-consumer by asserting exact stderr bytes and exit codes from deterministic fixtures, without changing CLI behavior.\n",
+    "supersededBy": "217-spec-spine-engine-swap-collapse",
+    "title": "Registry consumer error contract MVP"
+  },
+  "shardHash": "afe276a2e4985cb05ddedd3e123bb0f06c8af9404a28d6c2cbc63c9d8163b5ba",
+  "specVersion": "1.1.0"
+}

@@ -1,0 +1,111 @@
+{
+  "record": {
+    "codeAliases": [
+      "OPC_E2E_HARNESS"
+    ],
+    "created": "2026-05-26",
+    "dependsOn": [
+      "032-opc-inspect-governance-wiring-mvp",
+      "073-axiomregent-unification",
+      "087-unified-workspace-architecture",
+      "134-fast-local-ci-mode",
+      "147-spec-kind-grammar",
+      "177-ci-orchestrator-pr-gate",
+      "183-opc-boot-precondition-gate"
+    ],
+    "domain": "opc",
+    "establishes": [
+      {
+        "kind": "directory",
+        "path": "product/apps/opc/tests-e2e"
+      },
+      {
+        "kind": "directory",
+        "path": "product/apps/opc/tests-e2e/harness"
+      },
+      {
+        "kind": "directory",
+        "path": "product/apps/opc/tests-e2e/fixtures"
+      },
+      {
+        "kind": "file",
+        "path": ".github/workflows/opc-e2e-nightly.yml"
+      },
+      {
+        "kind": "file",
+        "path": "product/apps/opc/src-tauri/examples/e2e_seed_session.rs"
+      }
+    ],
+    "extends": [
+      {
+        "nature": "additive",
+        "spec": "034-featuregraph-registry-scanner-fix",
+        "unit": {
+          "kind": "file",
+          "path": "crates/featuregraph/tests/golden/features_graph.json"
+        }
+      },
+      {
+        "nature": "additive",
+        "spec": "183-opc-boot-precondition-gate",
+        "unit": {
+          "kind": "file",
+          "path": "product/apps/opc/src/App.tsx"
+        }
+      }
+    ],
+    "extraFrontmatter": {
+      "slug": "opc-e2e-test-harness"
+    },
+    "id": "187-opc-e2e-test-harness",
+    "implementation": "in-progress",
+    "kind": "capability",
+    "owner": "bart",
+    "references": [
+      {
+        "role": "deferral-source",
+        "unit": {
+          "kind": "file",
+          "path": "specs/183-opc-boot-precondition-gate/spec.md"
+        }
+      }
+    ],
+    "refines": [
+      {
+        "aspect": "e2e-seed-bin-registration",
+        "unit": {
+          "kind": "file",
+          "path": "product/apps/opc/src-tauri/Cargo.toml"
+        }
+      }
+    ],
+    "risk": "medium",
+    "sectionHeadings": [
+      "187 — OPC end-to-end test harness",
+      "1. Preamble",
+      "2. Authority enumeration",
+      "3. Tier 1 — Structural invariants",
+      "3.1 Built-binary driver (FR-T1)",
+      "3.2 Mock-statecraft duplex server (FR-T2)",
+      "3.3 Process-tree introspection (FR-T3)",
+      "3.4 Time-bounded UI-state assertions (FR-T4)",
+      "3.5 Nightly CI integration (FR-T5)",
+      "3.5.1 Seed helper is a cargo `[[example]]`, not a `[[bin]]` (2026-07-09)",
+      "3.5.2 WebDriver session + keyring bootstrap (first-green-nightly, 2026-07-09)",
+      "3.6 No implicit per-feature flake amnesty (FR-T6)",
+      "3.7 Co-authority on per-AC fixtures (FR-T7)",
+      "4. Non-goals (binding)",
+      "5. Tier 3 exclusion",
+      "6. Acceptance",
+      "7. Out of scope (and why)",
+      "8. Future work",
+      "9. Cross-references"
+    ],
+    "specPath": "specs/187-opc-e2e-test-harness/spec.md",
+    "status": "approved",
+    "summary": "Establishes the test infrastructure required to execute spec-bound end-to-end acceptance criteria against a built OPC desktop binary. The canonical motivating consumer is spec 183 AC-7/8/9 (boot-screen stickiness when statecraft is unreachable; mid-session restore on axiomregent kill; clean process-tree teardown on Quit) which were explicitly deferred to nightly/manual at spec-183 PR time because no e2e harness existed. The harness has three load-bearing components: a built-binary driver that launches the OPC Tauri executable and introspects WebView render state (the BootGate→Cockpit transition is the canonical assertion target); a mock-statecraft duplex server that can be made selectively unreachable (network-level deny vs. protocol-level reject) so AC-7-style \"substrate-unavailable\" cases are deterministic; and platform-portable process-tree introspection for AC-9-style \"no orphan sidecar\" assertions. The harness is not itself a gate — it is a capability other specs opt into by registering their AC against it. The non-goal section pins this: no per-PR runtime budget assumed, no implicit gating, no per-feature flake amnesty.\n",
+    "title": "OPC end-to-end test harness — built-binary driver, mock-statecraft, process-tree introspection"
+  },
+  "shardHash": "8d1d3cf2ea4f8a011ea6d906c97ce1136a7e5a2bd2f5909bf1e5b56e1b0aa037",
+  "specVersion": "1.1.0"
+}

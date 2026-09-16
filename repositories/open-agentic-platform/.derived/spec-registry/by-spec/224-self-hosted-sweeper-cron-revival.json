@@ -1,0 +1,125 @@
+{
+  "record": {
+    "amends": [
+      "124-opc-factory-run-platform-integration"
+    ],
+    "authors": [
+      "open-agentic-platform"
+    ],
+    "codeAliases": [
+      "SELF_HOSTED_SWEEPER_CRON_REVIVAL"
+    ],
+    "created": "2026-07-01",
+    "dependsOn": [
+      "124-opc-factory-run-platform-integration",
+      "143-presigned-upload-public-endpoint",
+      "087-unified-workspace-architecture",
+      "115-knowledge-extraction-pipeline",
+      "106-rauthy-native-oidc-and-membership"
+    ],
+    "domain": "platform",
+    "establishes": [
+      {
+        "kind": "file",
+        "path": "platform/charts/statecraft/templates/cronjob-factory-runs-sweeper.yaml"
+      },
+      {
+        "kind": "file",
+        "path": "platform/charts/statecraft/templates/external-secret-factory-sweeper.yaml"
+      }
+    ],
+    "extends": [
+      {
+        "nature": "additive",
+        "spec": "124-opc-factory-run-platform-integration",
+        "unit": {
+          "kind": "file",
+          "path": "platform/services/statecraft/api/factory/runsScheduler.ts"
+        }
+      },
+      {
+        "nature": "additive",
+        "spec": "034-featuregraph-registry-scanner-fix",
+        "unit": {
+          "kind": "file",
+          "path": "crates/featuregraph/tests/golden/features_graph.json"
+        }
+      }
+    ],
+    "extraFrontmatter": {
+      "language": "en"
+    },
+    "featureBranch": "224-self-hosted-sweeper-cron-revival",
+    "id": "224-self-hosted-sweeper-cron-revival",
+    "implementation": "in-progress",
+    "kind": "platform",
+    "references": [
+      {
+        "role": "pattern-source",
+        "unit": {
+          "kind": "file",
+          "path": "platform/charts/statecraft/templates/cronjob-orphan-sweeper.yaml"
+        }
+      },
+      {
+        "role": "pattern-source",
+        "unit": {
+          "kind": "file",
+          "path": "platform/charts/statecraft/templates/external-secret-knowledge-sweeper.yaml"
+        }
+      },
+      {
+        "role": "m2m-auth-precedent",
+        "unit": {
+          "kind": "file",
+          "path": "platform/services/statecraft/api/auth/m2mAuth.ts"
+        }
+      },
+      {
+        "role": "credential-plumbing",
+        "unit": {
+          "kind": "file",
+          "path": "platform/infra/terraform/envs/dev/core/variables.tf"
+        }
+      },
+      {
+        "role": "systemic-finding-authority",
+        "unit": {
+          "kind": "file",
+          "path": "specs/143-presigned-upload-public-endpoint/spec.md"
+        }
+      }
+    ],
+    "refines": [
+      {
+        "aspect": "self-hosted-sweeper-cron-revival",
+        "unit": {
+          "kind": "file",
+          "path": "platform/infra/hetzner/setup.sh"
+        }
+      }
+    ],
+    "sectionHeadings": [
+      "Feature Specification: Self-Hosted Sweeper Cron Revival",
+      "Context: the systemic finding",
+      "User Scenarios & Testing *(mandatory)*",
+      "User Story 1 - Stuck factory runs get recovered on self-hosted (Priority: P1)",
+      "Edge Cases",
+      "Requirements *(mandatory)*",
+      "Functional Requirements: delivered this PR",
+      "Functional Requirements: systemic rule",
+      "Functional Requirements: staged (NOT delivered this PR)",
+      "Key Entities",
+      "Success Criteria *(mandatory)*",
+      "Measurable Outcomes",
+      "Amendment: spec 124",
+      "Security hardening amendment (2026-07-02)"
+    ],
+    "specPath": "specs/224-self-hosted-sweeper-cron-revival/spec.md",
+    "status": "approved",
+    "summary": "Resolve spec 143 §12 FU-003: the systemic finding that Encore's `CronJob` primitive is a silent no-op on self-hosted deployments (no Encore Cloud scheduler), so every staleness sweeper declared only as an Encore CronJob has never fired in production. Spec 143 FR-010 fixed this for its own orphan-imported sweeper by adding an `expose:true` M2M-gated endpoint plus a sibling K8s CronJob that curls it on cadence; this spec lands the same revival for the spec 124 factory-runs staleness sweeper (the leg unblocked by the #480 gateway M2M-auth fix, spec 143 §step-7 empirical correction), under a new per-purpose Rauthy client and the `platform:factory:sweep` scope. It also codifies the general rule (any FR that relies on Encore's `CronJob` on a self-hosted target MUST provision a sibling K8s CronJob) and stages the remaining affected sweepers (spec 115 extraction-staleness, spec 087 connector-sync) as follow-on FRs so the systemic finding stays visible in one spec rather than fragmenting across three amendments.\n",
+    "title": "Self-Hosted Sweeper Cron Revival (K8s CronJobs for Encore no-op sweepers)"
+  },
+  "shardHash": "4f4c76a946df728ab1e5e5d51f6082059faa253c75c0526462c21e9f4e2cfcfb",
+  "specVersion": "1.1.0"
+}

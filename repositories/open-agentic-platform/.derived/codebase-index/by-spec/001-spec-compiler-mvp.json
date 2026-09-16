@@ -1,0 +1,9 @@
+{
+  "mapping": {
+    "implementingPaths": [],
+    "specId": "001-spec-compiler-mvp",
+    "specStatus": "superseded"
+  },
+  "schemaVersion": "1.1.0",
+  "shardHash": "bfd631bd65020bcc652445fa82237306aa6de3036e9992fcfc035caeb43f5291"
+}

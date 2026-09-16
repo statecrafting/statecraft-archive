@@ -1,0 +1,50 @@
+{
+  "mapping": {
+    "implementingPaths": [
+      {
+        "path": "product/apps/opc/src-tauri/src/web_server.rs",
+        "source": "spec-edge"
+      },
+      {
+        "path": "product/packages/oap-ctl",
+        "source": "manifest-metadata"
+      },
+      {
+        "path": "product/packages/oap-ctl/src/cli.js",
+        "source": "spec-edge"
+      }
+    ],
+    "resolvedUnits": [
+      {
+        "locations": [
+          {
+            "file": "product/packages/oap-ctl/src/cli.js"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "file",
+          "path": "product/packages/oap-ctl/src/cli.js"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "product/apps/opc/src-tauri/src/web_server.rs"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "extends",
+        "unit": {
+          "kind": "file",
+          "path": "product/apps/opc/src-tauri/src/web_server.rs"
+        }
+      }
+    ],
+    "specId": "085-remote-control-cli",
+    "specStatus": "approved"
+  },
+  "schemaVersion": "1.1.0",
+  "shardHash": "8330b0e0ae60f09bc105689c54245aa966d4029f48d58eaff60af49e3a3eec79"
+}

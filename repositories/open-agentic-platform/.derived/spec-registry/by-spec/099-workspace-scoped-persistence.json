@@ -1,0 +1,74 @@
+{
+  "record": {
+    "amendmentRecord": "119-project-as-unit-of-governance",
+    "codeAliases": [
+      "PROJECT_SCOPED_PERSISTENCE"
+    ],
+    "created": "2026-04-11",
+    "dependsOn": [
+      "092-workspace-runtime-threading",
+      "094-unified-artifact-store",
+      "097-promotion-grade-mirror"
+    ],
+    "domain": "opc",
+    "extends": [
+      {
+        "nature": "additive",
+        "spec": "052-state-persistence",
+        "unit": {
+          "kind": "file",
+          "path": "crates/orchestrator/src/sqlite_state.rs"
+        }
+      },
+      {
+        "nature": "additive",
+        "spec": "052-state-persistence",
+        "unit": {
+          "kind": "file",
+          "path": "crates/orchestrator/src/hiqlite_store.rs"
+        }
+      },
+      {
+        "nature": "additive",
+        "spec": "097-promotion-grade-mirror",
+        "unit": {
+          "kind": "file",
+          "path": "crates/orchestrator/src/promotion.rs"
+        }
+      },
+      {
+        "nature": "additive",
+        "spec": "097-promotion-grade-mirror",
+        "unit": {
+          "kind": "file",
+          "path": "crates/orchestrator/src/lib.rs"
+        }
+      }
+    ],
+    "extraFrontmatter": {
+      "amended": "2026-04-29"
+    },
+    "id": "099-workspace-scoped-persistence",
+    "implementation": "complete",
+    "kind": "platform",
+    "owner": "bart",
+    "risk": "medium",
+    "sectionHeadings": [
+      "099 — Project-Scoped Persistence",
+      "Problem",
+      "Solution",
+      "Slice 1: SyncTracker struct + factory integration",
+      "Slice 2: SyncStatus plumbing into promotion",
+      "Slice 3: project_id column in SQLite store",
+      "Slice 4: project_id column in Hiqlite store",
+      "Slice 5: list_workflows_by_project query + Tauri command",
+      "Acceptance Criteria"
+    ],
+    "specPath": "specs/099-workspace-scoped-persistence/spec.md",
+    "status": "approved",
+    "summary": "Make persistence project-native and sync-trackable. Replace fire-and-forget Statecraft calls with tracked acknowledgement, update SyncStatus in the promotion check, and add project_id columns to workflow persistence stores. Originally authored against workspace_id; amended by spec 119 when workspace was collapsed into project.\n",
+    "title": "Project-Scoped Persistence"
+  },
+  "shardHash": "0cb1a3226312a6119d7b63e9d6d5119dc105a766215c360d3416a4399f497196",
+  "specVersion": "1.1.0"
+}

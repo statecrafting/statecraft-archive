@@ -1,0 +1,45 @@
+{
+  "record": {
+    "authors": [
+      "open-agentic-platform"
+    ],
+    "codeAliases": [
+      "TASK_RUNNER"
+    ],
+    "created": "2026-03-22",
+    "domain": "substrate",
+    "establishes": [
+      {
+        "id": "orchestrator",
+        "kind": "crate"
+      }
+    ],
+    "extraFrontmatter": {
+      "language": "en"
+    },
+    "featureBranch": "004-spec-to-execution-bridge-mvp",
+    "id": "004-spec-to-execution-bridge-mvp",
+    "implementation": "complete",
+    "kind": "platform",
+    "sectionHeadings": [
+      "Feature Specification: Spec-to-execution bridge",
+      "Purpose and charter",
+      "Normative dependency",
+      "1. Execution unit",
+      "2. Relationship: `spec.md`, `plan.md`, `tasks.md`",
+      "3. Task lifecycle *(distinct from feature lifecycle)*",
+      "4. Approval / safety gates",
+      "5. Verification contract",
+      "6. Output artifacts",
+      "7. Non-goals *(orchestration boundary)*",
+      "Success Criteria *(mandatory)*",
+      "Clarifications"
+    ],
+    "specPath": "specs/004-spec-to-execution-bridge-mvp/spec.md",
+    "status": "approved",
+    "summary": "Protocol for turning authored feature artifacts into executable work: execution unit (changeset), roles of spec/plan/tasks, task lifecycle separate from feature lifecycle, approval gates, verification, and on-disk markdown outputs—without orchestration runtime, registry schema expansion, or mandatory product bindings.\n",
+    "title": "Spec-to-execution bridge (changeset / task execution protocol)"
+  },
+  "shardHash": "81e0d0e06cd5237d72d0f862c2cf075ef8bbdb469be5e5d18a94c518463f68ee",
+  "specVersion": "1.1.0"
+}

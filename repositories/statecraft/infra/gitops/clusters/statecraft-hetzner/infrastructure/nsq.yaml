@@ -1,0 +1,72 @@
+# NSQ (spec 010) - Encore's self-hosted pub/sub backend.
+#
+# Encore's self-host infra schema supports exactly three pub/sub backends
+# (gcp_pubsub, aws_sns_sqs, nsq); NSQ is the only self-hostable choice, so
+# `nsqd` was Encore's backend on the old cluster, not OAP cruft. A raw
+# manifest reconciled by Flux (NSQ has no maintained Helm chart).
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nsqd
+  namespace: statecraft-system
+  labels:
+    app: nsqd
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: nsqd
+  template:
+    metadata:
+      labels:
+        app: nsqd
+    spec:
+      containers:
+        - name: nsqd
+          image: nsqio/nsq:v1.3.0
+          command: ["/nsqd"]
+          args:
+            - "--broadcast-address=nsqd.statecraft-system.svc.cluster.local"
+          ports:
+            - name: tcp
+              containerPort: 4150
+            - name: http
+              containerPort: 4151
+          readinessProbe:
+            httpGet:
+              path: /ping
+              port: 4151
+            initialDelaySeconds: 5
+            periodSeconds: 10
+          livenessProbe:
+            httpGet:
+              path: /ping
+              port: 4151
+            initialDelaySeconds: 10
+            periodSeconds: 15
+          resources:
+            requests:
+              cpu: 50m
+              memory: 64Mi
+            limits:
+              cpu: 200m
+              memory: 128Mi
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: nsqd
+  namespace: statecraft-system
+  labels:
+    app: nsqd
+spec:
+  selector:
+    app: nsqd
+  ports:
+    - name: tcp
+      port: 4150
+      targetPort: 4150
+    - name: http
+      port: 4151
+      targetPort: 4151

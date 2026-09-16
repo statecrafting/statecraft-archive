@@ -1,0 +1,95 @@
+{
+  "record": {
+    "codeAliases": [
+      "ENCORE_GENERATOR_CORE"
+    ],
+    "created": "2026-06-10",
+    "dependsOn": [
+      "001-module-manifest-schema"
+    ],
+    "domain": "generator",
+    "establishes": [
+      {
+        "kind": "file",
+        "path": "adapters/acme-vue-encore/scripts/setup-app.ts"
+      },
+      {
+        "kind": "file",
+        "path": "adapters/acme-vue-encore/scripts/add-module.ts"
+      },
+      {
+        "kind": "file",
+        "path": "adapters/acme-vue-encore/scripts/remove-module.ts"
+      },
+      {
+        "kind": "file",
+        "path": "adapters/acme-vue-encore/scripts/validate-modules.ts"
+      },
+      {
+        "kind": "file",
+        "path": "adapters/acme-vue-encore/scripts/lib/env-merger.ts"
+      },
+      {
+        "kind": "file",
+        "path": "adapters/acme-vue-encore/scripts/lib/encore-composer.ts"
+      },
+      {
+        "kind": "file",
+        "path": "adapters/acme-vue-encore/scripts/lib/born-with.ts"
+      },
+      {
+        "kind": "file",
+        "path": "adapters/acme-vue-encore/scripts/lib/template-json.ts"
+      },
+      {
+        "kind": "file",
+        "path": "adapters/acme-vue-encore/scripts/lib/install-module.ts"
+      },
+      {
+        "kind": "file",
+        "path": "adapters/acme-vue-encore/scripts/lib/adapter-manifest.ts"
+      }
+    ],
+    "id": "002-encore-generator-core",
+    "implementation": "complete",
+    "kind": "architecture",
+    "owner": "bart",
+    "risk": "medium",
+    "sectionHeadings": [
+      "002. Encore generator core: copy-base + select-driver + merge-config",
+      "1. Purpose",
+      "2. Territory",
+      "3. Behavior",
+      "3.1 `setup-app` pipeline",
+      "FR-001 — Copy the base Encore app",
+      "FR-002 — Auth-driver selection by configuration",
+      "FR-003 — Three profiles",
+      "FR-004 — Compose service modules",
+      "FR-005 — Regenerate the typed client",
+      "3.2 `encore-composer.ts` — the composition engine",
+      "FR-006 — Service directory copy",
+      "FR-007 — Migration merge with renumbering",
+      "FR-008 — `infra.config.json` secret binding",
+      "FR-009 — JSONC-aware CORS merge",
+      "FR-010 — Decompose warning",
+      "FR-011 — Middleware and package dependency recording",
+      "3.3 `env-merger.ts`",
+      "FR-012 — Non-secret env management",
+      "3.4 `add-module.ts` / `remove-module.ts`",
+      "FR-013 — Incremental composition",
+      "3.5 Git initialization (developer-UX only)",
+      "FR-014 — `git init` skipped for machine-driven runs",
+      "3.6 Why composition happens at generation time",
+      "4. Acceptance criteria",
+      "5. Out of scope",
+      "Amendment (2026-07-09): drop the template website/ from produced apps",
+      "Amendment (2026-07-10): drop the docs-website's spec and deploy workflow too"
+    ],
+    "specPath": "specs/002-encore-generator-core/spec.md",
+    "status": "approved",
+    "summary": "The app generator: setup-app.ts scaffolds a new application by copying the base Encore app, selecting an auth driver by configuration, composing selected service modules (directory copy + declarative merge via encore-composer.ts, including a JSONC-aware CORS merge), merging env templates, and regenerating the typed client. add-module.ts / remove-module.ts apply the same composition incrementally. Three profiles: minimal, public, internal.\n",
+    "title": "Encore generator core: copy-base + select-driver + merge-config"
+  },
+  "shardHash": "1791594fef1697af04c3b6df9aff0c8f177c261db6bf3d83ce42919c0c2e1951",
+  "specVersion": "1.1.0"
+}

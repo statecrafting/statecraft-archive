@@ -1,0 +1,107 @@
+{
+  "record": {
+    "created": "2026-04-30",
+    "dependsOn": [
+      "075-factory-workflow-engine",
+      "087-unified-workspace-architecture",
+      "119-project-as-unit-of-governance",
+      "120-factory-extraction-stage",
+      "121-claim-provenance-enforcement"
+    ],
+    "domain": "platform",
+    "establishes": [
+      {
+        "kind": "file",
+        "path": "crates/factory-engine/src/stages/stage_cd_comparator.rs"
+      },
+      {
+        "kind": "file",
+        "path": "tools/oap/stakeholder-doc-lint/Cargo.toml"
+      },
+      {
+        "kind": "file",
+        "path": "product/apps/opc/src/components/factory/StageCdReview.tsx"
+      }
+    ],
+    "extends": [
+      {
+        "nature": "wrapping",
+        "spec": "075-factory-workflow-engine",
+        "unit": {
+          "kind": "file",
+          "path": "crates/factory-engine/src/stages/stage_cd.rs"
+        }
+      },
+      {
+        "nature": "additive",
+        "spec": "121-claim-provenance-enforcement",
+        "unit": {
+          "kind": "file",
+          "path": "crates/factory-contracts/src/stakeholder_docs.rs"
+        }
+      }
+    ],
+    "extraFrontmatter": {
+      "amended": "2026-05-01",
+      "slug": "stakeholder-doc-inversion"
+    },
+    "id": "122-stakeholder-doc-inversion",
+    "implementation": "complete",
+    "kind": "governance",
+    "owner": "bart",
+    "references": [
+      {
+        "role": "historical",
+        "unit": {
+          "kind": "file",
+          "path": "crates/factory-engine/skills/client-document-comparator.md"
+        }
+      },
+      {
+        "role": "historical",
+        "unit": {
+          "kind": "file",
+          "path": "crates/factory-engine/skills/project-charter-comparator.md"
+        }
+      }
+    ],
+    "risk": "critical",
+    "sectionHeadings": [
+      "122 — Stakeholder-Doc Inversion and Stage CD Comparator",
+      "1. Problem",
+      "2. Goals",
+      "3. Non-Goals",
+      "4. User Scenarios & Testing",
+      "User Story 1 — Scope inversion is blocked at the comparator gate (Priority: P1)",
+      "User Story 2 — Wording-only edit passes silently (Priority: P1)",
+      "User Story 3 — Bootstrap a fresh project in `seed-once` mode (Priority: P1)",
+      "User Story 4 - Reclassification migration on existing projects (Priority: P1)",
+      "User Story 5 — Authored citation that doesn't match the corpus is rejected (Priority: P2)",
+      "Edge Cases",
+      "5. Requirements",
+      "5.1 Functional Requirements",
+      "Stakeholder-doc grammar",
+      "Canonical paths and reclassification",
+      "Stage CD inversion",
+      "Comparator and diff classification",
+      "Comparator gate",
+      "Anchor stability and `anchorHash`",
+      "Operator UX",
+      "Schema parity and lint",
+      "No silent re-import",
+      "5.2 Key Entities",
+      "5.3 Permissions and audit",
+      "5.4 Out-of-process operations",
+      "6. Success Criteria",
+      "Measurable Outcomes",
+      "7. Open Decisions",
+      "8. Provenance"
+    ],
+    "specPath": "specs/122-stakeholder-doc-inversion/spec.md",
+    "status": "approved",
+    "summary": "Reclassify `requirements/client/project_charter.md` and `requirements/client/client-document.md` from Stage CD outputs to authored stakeholder inputs. Define a section-anchor and citation grammar (`OBJ-N`, `STAKEHOLDER-N`, `OUTCOME-N`, `IN-SCOPE-N`, `OUT-SCOPE-N`, `OWNER-N`) for those documents so the Factory can cite them and detect drift section-by-section. Invert Stage CD from generator to comparator: the stage takes the BRD as input, regenerates a `*.candidate.md` view of each stakeholder doc, and diffs it against the authored version. Diffs are classified (`wording | structural | scope | external-entity | ownership`); the comparator gate blocks on `scope`, `external-entity`, and `ownership` diffs. Authored citations inside stakeholder docs run through spec 121's validator on the same `FAC-S1-011 / QG-13` invariant. A `seed-once` bootstrap path produces initial templates for projects without authored docs; a one-shot reclassification migration moves existing projects' Stage CD outputs into the authored channel with provenance trail.\n",
+    "title": "Stakeholder-Doc Inversion and Stage CD Comparator"
+  },
+  "shardHash": "f4de4babf900f334b50fbe80375c06fe8e319b95c2ea273ce600483a08345dc7",
+  "specVersion": "1.1.0"
+}

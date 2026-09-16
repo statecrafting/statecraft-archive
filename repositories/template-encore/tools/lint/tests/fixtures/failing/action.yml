@@ -1,0 +1,24 @@
+# Composite-action fixture — five intentional violations the lint MUST
+# catch, plus three forms that MUST be silently skipped. Used by
+# workflow-pins-test.sh to assert classification correctness.
+#
+# Expected lint output (5 violations on stderr, exit 1):
+#   line 12: tag pin (@v4)
+#   line 13: branch pin (@main)
+#   line 14: named-ref pin (@stable)
+#   line 18: dynamic ref (env interpolation in @)
+#   line 19: dynamic ref (both name and ref interpolated)
+name: failing-fixture
+description: Five violations + three legitimate skips.
+
+runs:
+  using: composite
+  steps:
+    - uses: actions/checkout@v4
+    - uses: actions/setup-node@main
+    - uses: dtolnay/rust-toolchain@stable
+    - uses: ./.github/actions/local-helper
+    - uses: docker://nginx@sha256:abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789
+    - uses: actions/cache@27d5ce7f107fe9357f9df03efb73ab90386fccae # v5
+    - uses: actions/checkout@${{ env.SHA }}
+    - uses: ${{ matrix.action }}@${{ matrix.sha }}

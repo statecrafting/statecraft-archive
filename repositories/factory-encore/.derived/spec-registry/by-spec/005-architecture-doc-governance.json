@@ -1,0 +1,57 @@
+{
+  "record": {
+    "codeAliases": [
+      "DOC_GOVERNANCE"
+    ],
+    "created": "2026-06-10",
+    "dependsOn": [
+      "002-encore-generator-core"
+    ],
+    "domain": "docs",
+    "establishes": [
+      {
+        "kind": "file",
+        "path": "adapters/acme-vue-encore/orchestration/"
+      },
+      {
+        "kind": "file",
+        "path": "adapters/acme-vue-encore/scripts/codemaps/"
+      },
+      {
+        "kind": "file",
+        "path": "adapters/acme-vue-encore/scripts/readmes/"
+      }
+    ],
+    "id": "005-architecture-doc-governance",
+    "implementation": "complete",
+    "kind": "governance",
+    "owner": "bart",
+    "references": [
+      {
+        "role": "governed editorially; mechanically exempt via the gate's bypass floor",
+        "unit": {
+          "kind": "file",
+          "path": "docs/"
+        }
+      }
+    ],
+    "risk": "low",
+    "sectionHeadings": [
+      "005. Architecture documentation governance: human docs as derived views of the owning specs",
+      "1. Purpose",
+      "2. Territory",
+      "3. Behavior",
+      "3.1 Mechanically coupled surfaces",
+      "3.2 Editorially governed surfaces",
+      "3.3 Coupling gate geometry",
+      "4. Acceptance criteria",
+      "5. Out of scope"
+    ],
+    "specPath": "specs/005-architecture-doc-governance/spec.md",
+    "status": "approved",
+    "summary": "Human-facing architecture documentation is a derived view of the owning specs. factory-encore owns the codemap/readme generators (`scripts/codemaps/`, `scripts/readmes/`) and the `orchestration/` guides; these are mechanically coupled (an edit requires touching this spec). The `CODEMAP.md` those generators emit is a born-with product artifact, carried into the produced app and governed there, not established here. `docs/` and `README.md` sit inside the coupling gate's built-in bypass floor, so their fidelity is enforced editorially: each doc names the spec(s) it derives from, and a doc change that contradicts an owning spec is a review-blocking defect.\n",
+    "title": "Architecture documentation governance: human docs as derived views of the owning specs"
+  },
+  "shardHash": "3f0604c2ca97c7bb195c224439a6de9b46801da93b617247f9dcdfba7074c157",
+  "specVersion": "1.1.0"
+}

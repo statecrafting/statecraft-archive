@@ -1,0 +1,43 @@
+{
+  "record": {
+    "codeAliases": [
+      "SUPPLY_CHAIN"
+    ],
+    "created": "2026-06-10",
+    "dependsOn": [
+      "011-workflow-pins-lint"
+    ],
+    "domain": "ci-cd",
+    "establishes": [
+      {
+        "kind": "file",
+        "path": ".github/workflows/ci-supply-chain.yml"
+      }
+    ],
+    "id": "010-supply-chain-gates",
+    "implementation": "complete",
+    "kind": "governance",
+    "owner": "bart",
+    "risk": "medium",
+    "sectionHeadings": [
+      "010 — Supply-chain gates",
+      "1. Purpose",
+      "2. Territory",
+      "3. Behavior",
+      "3.1 Workflow topology",
+      "FR-01: npm audit covers every npm surface",
+      "FR-02: workflow-pins job is co-owned by spec 011",
+      "FR-03: Weekly cron is non-optional",
+      "FR-04: Triggered as constitutional gate",
+      "FR-05: All `uses:` refs SHA-pinned",
+      "4. Acceptance criteria",
+      "5. Out of scope"
+    ],
+    "specPath": "specs/010-supply-chain-gates/spec.md",
+    "status": "approved",
+    "summary": "One workflow, two gates: npm audit over every npm surface (root workspace and the standalone apps/api) with a high-severity failure bar, and the workflow-pins lint (spec 011) over .github/**. Runs on every PR and on a weekly Monday cron so new advisories surface on quiet weeks.\n",
+    "title": "Supply-chain gates: npm audit and workflow-pin enforcement"
+  },
+  "shardHash": "cbc4020c1144406dd54eec3f409d567c9edeb46edb79219b583cc76141db8944",
+  "specVersion": "1.1.0"
+}

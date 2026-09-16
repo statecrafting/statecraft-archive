@@ -1,0 +1,69 @@
+{
+  "record": {
+    "amendmentRecord": "amended by spec 199 (2026-06-11), editorial: the platform-client\nwire-format test mocks (adapter list envelope/id-default round-trip)\nuse the manifest-declared acme-vue-encore plus a neutral\nsecond-adapter instead of the upstream-retired acme-vue-node /\nnext-prisma. Pure fixture rename; no wire-contract change.\namended by spec 224 (2026-07-01): records that §6's factory-runs\nstaleness sweeper, declared as an Encore CronJob, was a silent no-op\non the self-hosted target (spec 143 §12 L-001) and is revived via\nspec 224's K8s CronJob plus expose:true M2M endpoint (scope\nplatform:factory:sweep). Sweep kernel unchanged; scheduling surface\nadded.\n",
+    "created": "2026-05-01",
+    "dependsOn": [
+      "087-unified-workspace-architecture",
+      "106-rauthy-native-oidc-and-membership",
+      "107-rauthy-client-redirect-convergence",
+      "108-factory-as-platform-feature",
+      "109-factory-pat-and-pubsub-sync",
+      "123-agent-catalog-org-rescope"
+    ],
+    "domain": "opc",
+    "establishes": [
+      {
+        "kind": "file",
+        "path": "platform/services/statecraft/api/factory/runs.ts"
+      }
+    ],
+    "extends": [
+      {
+        "nature": "additive",
+        "spec": "108-factory-as-platform-feature",
+        "unit": {
+          "kind": "file",
+          "path": "product/apps/opc/src-tauri/src/commands/factory.rs"
+        }
+      }
+    ],
+    "extraFrontmatter": {
+      "amended": "2026-07-01",
+      "approved": "2026-05-01",
+      "slug": "opc-factory-run-platform-integration"
+    },
+    "id": "124-opc-factory-run-platform-integration",
+    "implementation": "complete",
+    "kind": "platform",
+    "owner": "bart",
+    "risk": "high",
+    "sectionHeadings": [
+      "124 — OPC Factory-Run Platform Integration",
+      "1. Problem Statement",
+      "2. Decision",
+      "3. Data Model",
+      "4. Encore APIs",
+      "4.1 Agent definitions are out of band",
+      "5. OPC Migration — `commands/factory.rs`",
+      "6. Run Reservation + Streaming",
+      "6.1 Duplex envelope versioning",
+      "6.2 Default process resolution — the platform owns process naming",
+      "7. UI Surface",
+      "8. Non-Goals",
+      "9. Open Questions",
+      "10. Acceptance",
+      "11. Implementation Notes",
+      "Decisions and follow-ups",
+      "12. Post-approval hardening: adapter manifest validation (2026-06-05)",
+      "Security hardening amendment (2026-07-02)",
+      "Statecraft-web gate delivery + resume-path amendment (2026-07-09)",
+      "Correlation diagnostics + fail-loud amendment (2026-07-10)"
+    ],
+    "specPath": "specs/124-opc-factory-run-platform-integration/spec.md",
+    "status": "approved",
+    "summary": "Closes the spec 108 §7.1 punt and §7.4 deferral. OPC stops reading `factory/` from a developer's local checkout and instead pulls adapter manifests, contract schemas, and process definitions from the platform's `/api/factory/*` endpoints; runs are persisted as `factory_runs` rows and streamed back over the existing duplex channel so a run can be observed from the web UI in real time. Replaces the current `resolve_factory_root()` walk-up-from-CARGO_MANIFEST_DIR with an authenticated platform fetch + on-disk run cache.\n",
+    "title": "OPC Factory-Run Platform Integration"
+  },
+  "shardHash": "ac93a89f55ee7e0483c57510cb33958a68be946d4059f60c8a05a8d8a6781cf6",
+  "specVersion": "1.1.0"
+}

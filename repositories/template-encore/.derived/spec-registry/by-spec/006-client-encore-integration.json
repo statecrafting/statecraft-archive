@@ -1,0 +1,58 @@
+{
+  "record": {
+    "codeAliases": [
+      "CLIENT_ENCORE_INTEGRATION"
+    ],
+    "created": "2026-06-10",
+    "dependsOn": [
+      "001-encore-app-architecture",
+      "003-multi-driver-auth-service",
+      "004-bff-gateway-proxy"
+    ],
+    "domain": "app",
+    "establishes": [
+      {
+        "kind": "file",
+        "path": "apps/web/src/stores/auth.store.ts"
+      },
+      {
+        "kind": "file",
+        "path": "apps/web-internal/src/stores/auth.store.ts"
+      },
+      {
+        "kind": "file",
+        "path": "apps/web/src/lib/encore-client.ts"
+      }
+    ],
+    "id": "006-client-encore-integration",
+    "implementation": "complete",
+    "kind": "feature",
+    "owner": "bart",
+    "risk": "medium",
+    "sectionHeadings": [
+      "006 — Client Encore integration: SPA auth stores and the committed typed client",
+      "1. Purpose",
+      "2. Territory",
+      "3. Behavior",
+      "3.1 Encore-native response payloads",
+      "FR-001 — No envelope unwrapping",
+      "3.2 CSRF contract",
+      "FR-002 — Token fetch and replay",
+      "3.3 Security hardening in the auth stores",
+      "FR-003 — SLO redirect restriction",
+      "3.4 Vite dev proxy",
+      "FR-004 — Proxy target",
+      "3.5 Committed typed client",
+      "FR-005 — Generated artifact, committed",
+      "FR-006 — Auth-store isolation from the generated client",
+      "4. Acceptance criteria",
+      "5. Out of scope"
+    ],
+    "specPath": "specs/006-client-encore-integration/spec.md",
+    "status": "approved",
+    "summary": "Both Vue Pinia auth stores consume Encore-native response payloads directly (no envelope unwrapping), obtain the CSRF token from the endpoint body, and target the API on port 4000 via the Vite dev proxy. A generated typed Encore client is committed at apps/web/src/lib/encore-client.ts and kept fresh by the client-staleness CI job (spec 007).\n",
+    "title": "Client Encore integration: SPA auth stores and the committed typed client"
+  },
+  "shardHash": "9f573707291df5b0b8323087c348f7c89a1ec672213722b745634ec8a8b33734",
+  "specVersion": "1.1.0"
+}

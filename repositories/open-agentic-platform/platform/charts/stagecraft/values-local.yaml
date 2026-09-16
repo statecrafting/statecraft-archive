@@ -1,0 +1,14 @@
+image:
+  repository: localhost:5050/statecraft
+  tag: dev
+
+ingress:
+  host: statecraft.localhost
+
+secrets:
+  provider: "k8s"
+  create: true
+  data:
+    STATECRAFT_DB_URL: "postgres://postgres:postgres@host.k3d.internal:5432/statecraft"
+    OIDC_M2M_CLIENT_ID: "local-dev-client-id"
+    OIDC_M2M_CLIENT_SECRET: "local-dev-client-secret"

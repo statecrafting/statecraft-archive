@@ -1,0 +1,77 @@
+{
+  "record": {
+    "authors": [
+      "open-agentic-platform"
+    ],
+    "codeAliases": [
+      "PERMISSION_RUNTIME"
+    ],
+    "created": "2026-03-31",
+    "domain": "opc",
+    "extends": [
+      {
+        "nature": "additive",
+        "spec": "036-safety-tier-governance",
+        "unit": {
+          "id": "open_agentic_policy_kernel",
+          "kind": "crate"
+        }
+      },
+      {
+        "nature": "wrapping",
+        "spec": "049-permission-system",
+        "unit": {
+          "id": "open_agentic_policy_kernel",
+          "kind": "crate"
+        }
+      }
+    ],
+    "extraFrontmatter": {
+      "compliance": [
+        {
+          "controls": [
+            "ASI03",
+            "ASI05",
+            "ASI09",
+            "ASI10"
+          ],
+          "framework": "owasp-asi-2026"
+        }
+      ],
+      "language": "en",
+      "sources": [
+        "claude-code"
+      ]
+    },
+    "featureBranch": "068-permission-runtime",
+    "id": "068-permission-runtime",
+    "implementation": "complete",
+    "kind": "platform",
+    "sectionHeadings": [
+      "Feature Specification: Permission Runtime and Settings Layering",
+      "Purpose",
+      "Scope",
+      "In scope",
+      "Out of scope",
+      "Requirements",
+      "Functional",
+      "Non-functional",
+      "Architecture",
+      "Settings layering",
+      "Permission rule schema",
+      "Evaluation flow",
+      "Denial tracking",
+      "Settings watcher",
+      "Implementation approach",
+      "Success criteria",
+      "Dependencies",
+      "Risk"
+    ],
+    "specPath": "specs/068-permission-runtime/spec.md",
+    "status": "approved",
+    "summary": "Implements the runtime permission evaluation engine absorbed from Claude Code's multi-layer permission system. Introduces 5-tier settings layering (policy > env > user > project > defaults), glob-based permission rule matching on tool+path patterns, and denial tracking with escalation. Builds on the policy kernel (Feature 049) by adding the dynamic runtime loop that evaluates permissions at tool dispatch time.\n",
+    "title": "Permission Runtime and Settings Layering"
+  },
+  "shardHash": "2ce391087ec5b9f8bcf4b15b6df511eedbb8470270eef478d5ff8607099632b4",
+  "specVersion": "1.1.0"
+}

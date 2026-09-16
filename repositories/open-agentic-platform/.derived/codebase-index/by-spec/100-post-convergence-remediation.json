@@ -1,0 +1,151 @@
+{
+  "mapping": {
+    "dependsOn": [
+      "089-governed-convergence-plan"
+    ],
+    "implementingPaths": [
+      {
+        "path": "crates/factory-engine/src/artifact_store.rs",
+        "source": "spec-edge"
+      },
+      {
+        "path": "crates/orchestrator/src/artifact.rs",
+        "source": "spec-edge"
+      },
+      {
+        "path": "crates/policy-kernel/src/lib.rs",
+        "source": "spec-edge"
+      },
+      {
+        "path": "platform/charts/deployd-api/templates/deployment.yaml",
+        "source": "spec-edge"
+      },
+      {
+        "path": "platform/charts/statecraft/templates/deployment.yaml",
+        "source": "spec-edge"
+      },
+      {
+        "path": "platform/services/deployd-api-rs/src/auth.rs",
+        "source": "spec-edge"
+      },
+      {
+        "path": "platform/services/deployd-api-rs/src/config.rs",
+        "source": "spec-edge"
+      },
+      {
+        "path": "product/apps/opc/src-tauri/tauri.conf.json",
+        "source": "spec-edge"
+      }
+    ],
+    "resolvedUnits": [
+      {
+        "locations": [
+          {
+            "file": "crates/factory-engine/src/artifact_store.rs"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "refines",
+        "unit": {
+          "kind": "file",
+          "path": "crates/factory-engine/src/artifact_store.rs"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "crates/orchestrator/src/artifact.rs"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "refines",
+        "unit": {
+          "kind": "file",
+          "path": "crates/orchestrator/src/artifact.rs"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "crates/policy-kernel/src/lib.rs"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "refines",
+        "unit": {
+          "kind": "file",
+          "path": "crates/policy-kernel/src/lib.rs"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "platform/charts/deployd-api/templates/deployment.yaml"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "refines",
+        "unit": {
+          "kind": "file",
+          "path": "platform/charts/deployd-api/templates/deployment.yaml"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "platform/charts/statecraft/templates/deployment.yaml"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "refines",
+        "unit": {
+          "kind": "file",
+          "path": "platform/charts/statecraft/templates/deployment.yaml"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "platform/services/deployd-api-rs/src/auth.rs"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "refines",
+        "unit": {
+          "kind": "file",
+          "path": "platform/services/deployd-api-rs/src/auth.rs"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "platform/services/deployd-api-rs/src/config.rs"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "refines",
+        "unit": {
+          "kind": "file",
+          "path": "platform/services/deployd-api-rs/src/config.rs"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "product/apps/opc/src-tauri/tauri.conf.json"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "refines",
+        "unit": {
+          "kind": "file",
+          "path": "product/apps/opc/src-tauri/tauri.conf.json"
+        }
+      }
+    ],
+    "specId": "100-post-convergence-remediation",
+    "specStatus": "approved"
+  },
+  "schemaVersion": "1.1.0",
+  "shardHash": "f848283d7ac7499835669450f5f6c84cf47bf658dea2fa215c8dec89a16e8d81"
+}

@@ -1,0 +1,38 @@
+{
+  "name": "@statecrafting/kernel-native",
+  "version": "0.2.0",
+  "license": "Apache-2.0",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/statecrafting/statecrafting.git",
+    "directory": "addon/kernel-native"
+  },
+  "spec-spine": { "spec": "004-kernel-native" },
+  "description": "The governance kernel of the governed cell as a napi-rs native addon: app-model-driven effect adjudication (action-gate), a hash-linked Decision chain (attest-ledger), and a trust ladder (trust-window). Prebuilt per-platform binaries ship as optional dependencies (statecrafting spec 004).",
+  "type": "commonjs",
+  "main": "index.js",
+  "types": "index.d.ts",
+  "engines": { "node": ">=24" },
+  "files": [
+    "LICENSE",
+    "index.js",
+    "index.d.ts"
+  ],
+  "napi": {
+    "binaryName": "kernel-native",
+    "targets": [
+      "aarch64-apple-darwin",
+      "x86_64-unknown-linux-gnu",
+      "aarch64-unknown-linux-gnu"
+    ]
+  },
+  "scripts": {
+    "build": "napi build --platform --release --features napi",
+    "build:debug": "napi build --platform --features napi",
+    "create-npm-dirs": "napi create-npm-dirs",
+    "artifacts": "napi artifacts"
+  },
+  "devDependencies": {
+    "@napi-rs/cli": "3.1.5"
+  }
+}

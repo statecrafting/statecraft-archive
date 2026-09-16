@@ -1,0 +1,32 @@
+{
+  "record": {
+    "created": "2026-07-14",
+    "dependsOn": [
+      "002-app-shell",
+      "003-postgres-adoption"
+    ],
+    "establishes": [
+      {
+        "kind": "directory",
+        "path": "backend/tenants/"
+      }
+    ],
+    "id": "004-tenants-github-app",
+    "implementation": "complete",
+    "sectionHeadings": [
+      "004: Tenants + GitHub App",
+      "1. Operator prerequisites (SATISFIED 2026-07-14: the App exists)",
+      "2. Territory",
+      "3. Behavior",
+      "4. Acceptance",
+      "5. Out of scope",
+      "Amendment (2026-07-21): spec 011 tenant lifecycle"
+    ],
+    "specPath": "specs/004-tenants-github-app/spec.md",
+    "status": "approved",
+    "summary": "The tenancy spine of milestone M2: a user authenticates against the control plane (embedded rauthy, chassis auth), creates a tenant, and installs the statecraft GitHub App into their own GitHub org; from then on everything the platform does for them keys off the installation_id and happens inside their org. Nobody joins our org; code sovereignty is the product's first-class property. This spec owns the tenants service: tenant + installation records on CoreLedger, the App installation handshake, webhook receipt, and an installation-token mint helper the factory (spec 005) consumes.\n",
+    "title": "Tenants: OAuth login + per-org GitHub App installation"
+  },
+  "shardHash": "904b8829bd5d48a24c9a7eff007e20e57a0153524bacea3eaafe5fd4ae5dba47",
+  "specVersion": "1.2.0"
+}

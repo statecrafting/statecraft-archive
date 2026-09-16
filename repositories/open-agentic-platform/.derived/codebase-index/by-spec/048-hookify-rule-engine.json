@@ -1,0 +1,29 @@
+{
+  "mapping": {
+    "implementingPaths": [
+      {
+        "path": "product/packages/hookify-rule-engine",
+        "source": "multiple"
+      }
+    ],
+    "resolvedUnits": [
+      {
+        "locations": [
+          {
+            "file": "product/packages/hookify-rule-engine"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "id": "@opc/hookify-rule-engine",
+          "kind": "crate"
+        }
+      }
+    ],
+    "specId": "048-hookify-rule-engine",
+    "specStatus": "approved"
+  },
+  "schemaVersion": "1.1.0",
+  "shardHash": "f6a1f91be64e730b30d82a1d7667700f71e11cd1f02ffea514403fec9de17016"
+}

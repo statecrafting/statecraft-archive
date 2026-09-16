@@ -1,0 +1,7 @@
+# Pin the kernel-native toolchain to match the four family primitives
+# (action-gate, attest-ledger, trust-window, canonical-keysort-json), so
+# local `cargo fmt`/`clippy` produce the same output CI enforces. rustup
+# auto-installs this channel on the first cargo invocation.
+[toolchain]
+channel = "1.92.0"
+components = ["rustfmt", "clippy"]

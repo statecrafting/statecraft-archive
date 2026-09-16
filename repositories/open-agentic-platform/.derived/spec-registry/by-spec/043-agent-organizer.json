@@ -1,0 +1,79 @@
+{
+  "record": {
+    "authors": [
+      "open-agentic-platform"
+    ],
+    "codeAliases": [
+      "AGENT_ORGANIZER"
+    ],
+    "created": "2026-03-29",
+    "domain": "opc",
+    "extends": [
+      {
+        "nature": "additive",
+        "spec": "004-spec-to-execution-bridge-mvp",
+        "unit": {
+          "kind": "file",
+          "path": "crates/agent/src/complexity.rs"
+        }
+      },
+      {
+        "nature": "additive",
+        "spec": "004-spec-to-execution-bridge-mvp",
+        "unit": {
+          "kind": "file",
+          "path": "crates/agent/src/dispatch.rs"
+        }
+      },
+      {
+        "nature": "additive",
+        "spec": "004-spec-to-execution-bridge-mvp",
+        "unit": {
+          "kind": "file",
+          "path": "crates/agent/src/plan.rs"
+        }
+      },
+      {
+        "nature": "additive",
+        "spec": "004-spec-to-execution-bridge-mvp",
+        "unit": {
+          "id": "orchestrator",
+          "kind": "crate"
+        }
+      }
+    ],
+    "extraFrontmatter": {
+      "language": "en"
+    },
+    "featureBranch": "043-agent-organizer",
+    "id": "043-agent-organizer",
+    "implementation": "complete",
+    "kind": "platform",
+    "sectionHeadings": [
+      "Feature Specification: agent organizer and meta-orchestrator",
+      "Purpose",
+      "Scope",
+      "In scope",
+      "Out of scope",
+      "Requirements",
+      "Functional",
+      "Non-functional",
+      "Architecture",
+      "Complexity scoring algorithm",
+      "Dispatch protocol",
+      "Team assembly rules",
+      "Phased workflow definition",
+      "ExecutionPlan output schema",
+      "Key integration points",
+      "Success criteria",
+      "Contract notes",
+      "Risk"
+    ],
+    "specPath": "specs/043-agent-organizer/spec.md",
+    "status": "approved",
+    "summary": "A meta-orchestrator agent that triages incoming requests, scores complexity, decides whether to delegate or handle directly, assembles optimal agent teams with phased workflows and dependency management, and routes planning work to Haiku while reserving Sonnet/Opus for execution — replacing ad-hoc agent selection with governed dispatch.\n",
+    "title": "agent organizer and meta-orchestrator"
+  },
+  "shardHash": "24f5b78d70f73a6816952fb485e7d854e738ec76cfad559d11f2f5358769337d",
+  "specVersion": "1.1.0"
+}

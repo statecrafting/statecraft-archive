@@ -1,0 +1,120 @@
+{
+  "record": {
+    "amendmentRecord": "amended by spec 182 (2026-05-30) — the `validate-and-fix` file this\nspec extends (wrapping) moved verbatim to\n`.claude/skills/validate-and-fix/SKILL.md` in the spec-182\ndeprecation PR (legacy command file deleted); the `extends:` unit\npath is repointed from `.claude/commands/validate-and-fix.md`\naccordingly. No behavioral change.\nself-amended (2026-06-11), FR-05a: hosted-runner disk headroom for\nthe disk-heavy Rust CI jobs. A local composite action\n(.github/actions/free-disk-space, established by this spec) is wired\ninto ci-crates.yml and spec-conformance.yml after merge_group runs\n27355231139 (ci-crates, ENOSPC mid-test) and 27371047814\n(spec-conformance, rustc LLVM IO failure on output stream) both\nexhausted hosted-runner disk. Guarded to GitHub-hosted runners\ninside the action; no change to any validation surface.\n",
+    "amends": [
+      "104-makefile-ci-parity-contract"
+    ],
+    "coAuthority": [
+      {
+        "unit": {
+          "anchor": "ci-default-rename",
+          "file": "Makefile",
+          "kind": "section"
+        },
+        "with_specs": [
+          "102-governed-excellence",
+          "104-makefile-ci-parity-contract",
+          "116-supply-chain-policy-gates",
+          "127-spec-code-coupling-gate",
+          "128-spec-lint-default-fail-on-warn",
+          "134-fast-local-ci-mode"
+        ]
+      }
+    ],
+    "created": "2026-05-03",
+    "dependsOn": [
+      "104-makefile-ci-parity-contract",
+      "134-fast-local-ci-mode",
+      "130-spec-coupling-primary-owner"
+    ],
+    "domain": "tooling",
+    "establishes": [
+      {
+        "kind": "file",
+        "path": ".github/actions/free-disk-space/action.yml"
+      }
+    ],
+    "extends": [
+      {
+        "nature": "wrapping",
+        "spec": "104-makefile-ci-parity-contract",
+        "unit": {
+          "kind": "file",
+          "path": "tools/oap/ci-parity-check/src/lib.rs"
+        }
+      },
+      {
+        "nature": "wrapping",
+        "spec": "104-makefile-ci-parity-contract",
+        "unit": {
+          "kind": "file",
+          "path": ".github/workflows/ci-crates.yml"
+        }
+      },
+      {
+        "nature": "wrapping",
+        "spec": "104-makefile-ci-parity-contract",
+        "unit": {
+          "kind": "file",
+          "path": "specs/104-makefile-ci-parity-contract/spec.md"
+        }
+      },
+      {
+        "nature": "wrapping",
+        "spec": "134-fast-local-ci-mode",
+        "unit": {
+          "kind": "file",
+          "path": ".claude/skills/validate-and-fix/SKILL.md"
+        }
+      }
+    ],
+    "extraFrontmatter": {
+      "amended": "2026-06-11",
+      "approved": "2026-05-03",
+      "completed": "2026-05-03"
+    },
+    "id": "135-fast-ci-as-default",
+    "implementation": "complete",
+    "kind": "governance",
+    "owner": "bart",
+    "risk": "low",
+    "sectionHeadings": [
+      "135 — Fast CI as Default + Crates Workspace Convergence",
+      "1. Problem Statement",
+      "2. Solution",
+      "2.1 Workspace mode for `crates/*` in `ci-rust`",
+      "2.2 Target rename — `ci` ↔ `ci-fast`",
+      "2.3 `ci-parity-check` binds to `ci-strict`",
+      "2.4 `validate-and-fix` recommends `make ci`",
+      "2.5 `ci-crates.yml` workspace switch",
+      "2.6 Spec 134 narrative reframe",
+      "2.7 What does NOT change",
+      "3. Functional Requirements",
+      "FR-01: `ci-rust` uses `--workspace` for `crates/Cargo.toml`",
+      "FR-02: `make ci-strict` exists and matches previous `make ci`",
+      "FR-03: `make ci` is the previous `make ci-fast`; `ci-fast` removed",
+      "FR-04: `ci-parity-check` binds to `ci-strict`",
+      "FR-05: `ci-crates.yml` uses `--workspace`",
+      "FR-05a: Hosted-runner disk headroom (amendment 2026-06-11)",
+      "FR-06: `validate-and-fix` calls `make ci` as the dev-loop default",
+      "FR-07: Spec 134 editorial amendment",
+      "FR-08: Spec 104 §2.2 amendment",
+      "4. Success Criteria",
+      "SC-01: Ghost-crate coverage closed",
+      "SC-02: `make ci` wall-time matches previous `make ci-fast`",
+      "SC-03: `ci-parity-check` passes after the rename",
+      "SC-04: `validate-and-fix` recommends the new default",
+      "SC-05: Help discoverability",
+      "5. Out of Scope",
+      "6. Clarifications",
+      "7. Cross-references",
+      "Amendments received"
+    ],
+    "specPath": "specs/135-fast-ci-as-default/spec.md",
+    "status": "approved",
+    "summary": "Amend spec 104 to (a) collapse the per-manifest crates/* loop in `ci-rust` into a single `cargo --workspace` invocation, closing the ghost-crate validation gap permanently in the parity-bound recipe, and (b) reverse the semantic positions of `make ci` and `make ci-fast`. After this spec, `make ci` is the fast parallel local validation (≈ 5 min warm) used as the daily dev loop, and `make ci-strict` is the parity-mirror recipe (90+ min) used pre-merge for release verification or when investigating parity drift. The `ci-parity-check` binding follows the rename.\n",
+    "title": "Fast CI as Default — Crates Workspace Convergence + Target Rename"
+  },
+  "shardHash": "da475632e8d42c4b78ebc4ec4deae83d7efe58a049a52710cd67862a134e55bf",
+  "specVersion": "1.1.0"
+}

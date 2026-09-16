@@ -1,0 +1,223 @@
+# Spec: 187-opc-e2e-test-harness
+# Spec: 158-workflow-ref-sha-pinning-lint
+#
+# OPC end-to-end harness -- nightly (FR-T5). This is NOT a required per-PR
+# check: consuming specs opt their fixtures in; the default posture is
+# post-merge nightly so the per-PR runtime budget (spec 134) is not eroded.
+#
+# Target: Linux only. tauri-driver has a WebKitWebDriver (Linux) / Edge
+# (Windows) backend but NO macOS WebView backend, so the per-PR desktop/rust
+# matrix target (aarch64-apple-darwin) cannot run the WebView path. The harness
+# therefore runs on the WebDriver-capable subset of the release matrix; Windows
+# is future work (spec 187 FR-T5 note + §8). All `uses:` are SHA-pinned to the
+# same refs the rest of the repo uses (spec 158).
+name: OPC E2E Nightly
+
+on:
+  schedule:
+    # 06:23 UTC daily, offset from ci-opc-bench's 07:17 nightly report.
+    - cron: '23 6 * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  issues: write # FR-T5(e): file a regression issue on failure
+
+concurrency:
+  group: opc-e2e-nightly
+  cancel-in-progress: false
+
+env:
+  TARGET: x86_64-unknown-linux-gnu
+
+jobs:
+  e2e-linux:
+    name: e2e / linux (x86_64-unknown-linux-gnu)
+    runs-on: ubuntu-24.04
+    timeout-minutes: 90
+    steps:
+      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+
+      - name: Rust toolchain
+        uses: dtolnay/rust-toolchain@29eef336d9b2848a0b548edc03f92a220660cdb8 # toolchain 1.95.0 lockstep
+        with:
+          toolchain: '1.95.0'
+
+      - name: Cache Rust dependencies
+        uses: Swatinem/rust-cache@e18b497796c12c097a38f9edb9d0641fb99eee32 # v2
+        with:
+          workspaces: |
+            .
+            product/apps/opc/src-tauri
+          shared-key: opc-e2e-nightly-linux
+
+      - uses: pnpm/action-setup@4f4305e1fe60ad818b8ae6fc4a697cc47eab0b2d # v6
+        with:
+          package_json_file: product/package.json
+      - uses: actions/setup-node@48b55a011bda9f5d6aeb4c2d9c7362e8dae4041e # v6
+        with:
+          node-version: 22
+          cache: pnpm
+          cache-dependency-path: product/pnpm-lock.yaml
+
+      - name: Install Linux system dependencies (Tauri + WebKitWebDriver + xvfb + keyring)
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y \
+            libwebkit2gtk-4.1-dev \
+            libappindicator3-dev \
+            librsvg2-dev \
+            patchelf \
+            libgtk-3-dev \
+            webkit2gtk-driver \
+            xvfb \
+            gnome-keyring \
+            libsecret-tools \
+            dbus-x11
+          # gnome-keyring + dbus-x11 back the Secret Service the `keyring` crate
+          # uses on Linux (spec 187 [[opc-e2e-auth-state-seeding]]): both
+          # e2e_seed_session (the seed writer) and the OPC binary (the reader)
+          # need a running D-Bus session + Secret Service provider. The e2e step
+          # below runs inside `dbus-run-session` with an unlocked keyring.
+          # libsecret-tools provides `secret-tool`, the option-2 fallback that
+          # force-creates the default collection when the daemon bootstrap does
+          # not (spec 187 §3.5.2 contract 2).
+
+      # AC-8/AC-9 need a real, killable axiomregent sidecar; AC-7 needs it alive
+      # while statecraft is unreachable. Build it like release Stage 1 and drop
+      # it where the Tauri build.rs expects the per-target sidecar.
+      - name: Build axiomregent sidecar
+        run: |
+          cargo build --release --manifest-path crates/axiomregent/Cargo.toml
+          mkdir -p product/apps/opc/src-tauri/binaries
+          cp target/release/axiomregent \
+             "product/apps/opc/src-tauri/binaries/axiomregent-${TARGET}"
+          chmod +x "product/apps/opc/src-tauri/binaries/axiomregent-${TARGET}"
+
+      - name: Install frontend dependencies
+        working-directory: product
+        run: pnpm install --frozen-lockfile
+
+      # Build via tauri-action with the Linux conf -- the proven release recipe.
+      # The base tauri.conf.json enables macos-private-api unconditionally, so a
+      # raw `cargo build` on Linux trips build.rs; the Linux conf reconciles it.
+      - name: Build OPC binary (Linux conf)
+        uses: tauri-apps/tauri-action@1deb371b0cd8bd54025b384f1cd735e725c4060f # v1.0.0
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          projectPath: product/apps/opc
+          tauriScript: pnpm tauri
+          args: --config src-tauri/tauri.linux.conf.json
+
+      # Spec 187 [[opc-e2e-auth-state-seeding]]: the e2e-only keychain seed helper
+      # (feature-gated, never in a shipping build). It is a cargo `[[example]]`,
+      # not a `[[bin]]`, because Tauri's bundler copies every bin of the packaged
+      # crate and a required-features bin the release build skips broke the app
+      # build (Release Desktop + the `tauri build` step above). The
+      # seedSignedInSession harness helper shells out to it at
+      # target/release/examples/. Built into the same src-tauri/target the
+      # fixtures resolve the OPC binary from; deps are warm from the app build.
+      - name: Build e2e seed helper
+        run: |
+          cargo build --release \
+            --manifest-path product/apps/opc/src-tauri/Cargo.toml \
+            --example e2e_seed_session --features e2e-seed
+
+      # Pinned: an unpinned `cargo install` silently tracks the latest
+      # tauri-driver, and a tauri-driver bump is a known cause of
+      # "session not created: Failed to match capabilities" regressions
+      # (tauri-apps/tauri#8828). Pin so the WebDriver contract only moves on a
+      # deliberate bump.
+      - name: Install tauri-driver
+        run: cargo install tauri-driver@2.0.6 --locked
+
+      # The WebdriverIO client is installed here rather than pinned in the
+      # standalone package's lockfile, keeping it out of the per-PR install. The
+      # fixtures use standalone webdriverio.remote() under vitest (already a base
+      # dep), so only `webdriverio` itself is added here. Pinned to a v9 line so
+      # its capability negotiation (BiDi vs classic) does not drift under us; the
+      # fixtures force classic WebDriver explicitly (spec 187 §3.5.2).
+      - name: Install e2e harness dependencies
+        working-directory: product/apps/opc/tests-e2e
+        run: |
+          npm install --no-fund --no-audit
+          npm install --no-fund --no-audit --save-dev webdriverio@9
+
+      # Runs inside a D-Bus session with an unlocked gnome-keyring so the Secret
+      # Service backend the `keyring` crate uses is available to both the seed
+      # writer and the launched OPC binary (spec 187 [[opc-e2e-auth-state-seeding]]).
+      # `set -eo pipefail` preserves the pipefail semantics of the default GitHub
+      # `run:` shell through the inner `bash -c`, so a fixture failure still fails
+      # the step (the `tee` would otherwise mask it).
+      #
+      # Default-collection bootstrap (spec 187 §3.5.2 contract 2). The seed
+      # writer's keychain `set` needs a *default* Secret Service collection to
+      # write into; a fresh runner has none, so the earlier `echo -n "" |
+      # gnome-keyring-daemon --unlock` (zero bytes / immediate EOF) failed with
+      # "Secret Service: no result found". Two layers, tried in order:
+      #   1. Newline-terminated empty password (keyring-rs CI pattern): drives
+      #      gnome-keyring to create + unlock the login keyring AND register it
+      #      as the `default` collection.
+      #   2. Fallback: if the default alias still did not materialise, use
+      #      `secret-tool store` (libsecret-tools, installed above) to
+      #      force-create the default collection with a throwaway item.
+      - name: Run e2e fixtures (xvfb + tauri-driver + keyring)
+        id: e2e
+        working-directory: product/apps/opc/tests-e2e
+        run: |
+          dbus-run-session -- bash -c '
+            set -eo pipefail
+
+            # Fresh, clean keyrings dir (ephemeral runner; guards a cached lock).
+            rm -rf "${HOME}/.local/share/keyrings"
+            mkdir -p "${HOME}/.local/share/keyrings"
+
+            # Option 1: newline-terminated empty password so the daemon
+            # establishes the default collection (unlike zero-byte stdin).
+            export $(printf "\n" | gnome-keyring-daemon --daemonize --unlock --components=secrets)
+
+            # Option 2 fallback: force-create the default collection if absent.
+            if [ ! -e "${HOME}/.local/share/keyrings/default" ]; then
+              echo "default collection absent after daemon unlock; bootstrapping via secret-tool"
+              printf "bootstrap" | secret-tool store --label="oap-e2e bootstrap" oap-e2e bootstrap
+            fi
+
+            xvfb-run -a npm run test:e2e 2>&1 | tee e2e-output.log
+          '
+
+      # FR-T5(d): per-run summary on the CI orchestrator surface (spec 177). The
+      # nightly is non-gating, so it reports via the job summary + artifact
+      # rather than composing into ci-gate.
+      - name: Report summary
+        if: always()
+        run: |
+          {
+            echo "## OPC E2E nightly"
+            echo ""
+            echo "- target: \`${TARGET}\`"
+            echo "- commit: \`${{ github.sha }}\`"
+            echo "- result: ${{ steps.e2e.outcome }}"
+          } >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Upload e2e logs
+        if: always()
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7
+        with:
+          name: opc-e2e-nightly-logs
+          path: product/apps/opc/tests-e2e/e2e-output.log
+          if-no-files-found: ignore
+
+      # FR-T5(e) + FR-T6: capture the regression even when no one is watching.
+      # Scoped to the unattended `schedule` run: a manual `workflow_dispatch`
+      # (bring-up iteration) has someone watching, so auto-filing a regression
+      # issue on each failed dispatch would be noise (spec 187 §3.5.2).
+      - name: Open issue on failure
+        if: failure() && github.event_name == 'schedule'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh issue create \
+            --title "OPC E2E nightly failed ($(date -u +%F))" \
+            --body "OPC e2e nightly failed on ${{ github.sha }}. Run: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }} . Spec 187 FR-T6 forbids flake amnesty -- triage, fix, or move the fixture to manual-only via amendment." \
+            --label e2e || true

@@ -1,0 +1,63 @@
+name: Build and Push Encore Docker Image (GHCR)
+
+on:
+  push:
+    branches: [ main ]
+
+permissions:
+  contents: read
+  packages: write
+
+jobs:
+  build-push-image:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: "npm"
+
+      - name: Download Encore CLI script
+        run: curl -L https://encore.dev/install.sh -o install.sh
+
+      - name: Install Encore CLI
+        run: bash install.sh
+
+      - name: Disable Encore Telemetry
+        run: /home/runner/.encore/bin/encore telemetry disable
+
+      - name: Install dependencies
+        run: npm ci
+
+      # This uses the Encore CLI; that's why Encore install comes first.
+      - name: Generate Encore client
+        run: /home/runner/.encore/bin/encore gen client --output=./web/app/lib/client.ts
+
+      - name: Build frontend
+        run: npm run build:frontend
+
+      - name: Log in to GHCR
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Build Docker image (Encore)
+        run: /home/runner/.encore/bin/encore build docker --config ./infra.config.json ${{ github.repository }}
+        env:
+          DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
+
+      - name: Tag Docker image
+        run: |
+          docker tag ${{ github.repository }} ghcr.io/${{ github.repository }}:latest
+          docker tag ${{ github.repository }} ghcr.io/${{ github.repository }}:${{ github.sha }}
+
+      - name: Push Docker image
+        run: |
+          docker push ghcr.io/${{ github.repository }}:latest
+          docker push ghcr.io/${{ github.repository }}:${{ github.sha }}

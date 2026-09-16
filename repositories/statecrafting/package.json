@@ -1,0 +1,35 @@
+{
+  "name": "statecrafting",
+  "version": "0.0.0",
+  "private": true,
+  "license": "Apache-2.0",
+  "spec-spine": { "spec": "002-toolchain" },
+  "description": "Build harness for the @statecrafting packages (spec 002). Private and never published: it exists to cargo-build the vendored Encore core out of vendor/encore and link the results into the per-platform toolchain packages. The shipped artifacts are the packages under packages/.",
+  "type": "module",
+  "engines": { "node": ">=24" },
+  "scripts": {
+    "build:runtime": "ENCORE_VERSION=v1.57.9 cargo build --release --manifest-path vendor/encore/Cargo.toml -p encore-js-runtime -p encore-tsparser && node packages/toolchain/scripts/link-runtime.mjs",
+    "check:licenses": "node scripts/check-licenses.mjs",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run --passWithNoTests"
+  },
+  "statecrafting": {
+    "//": "The license tier of every governed package here, enforced by scripts/check-licenses.mjs (spec 005 section 3.3). Spec 001 section 3 splits these by customer reach: packages a stamped app touches stay unencumbered, control-plane internals keep the AGPL shield, and vendored upstream keeps its own license. The three toolchain platform packages are MPL-2.0 because they carry the vendored Encore binaries; the meta package that depends on them is Apache-2.0. No customer-reaching package may depend on an AGPL-3.0 one (spec 001 section 3.2). A package absent from this map fails the check; it does not pass silently.",
+    "licenseTiers": {
+      "packages/toolchain": "Apache-2.0",
+      "packages/toolchain-darwin-arm64": "MPL-2.0",
+      "packages/toolchain-linux-x64": "MPL-2.0",
+      "packages/toolchain-linux-arm64": "MPL-2.0",
+      "addon/hiqlite-native": "Apache-2.0",
+      "addon/kernel-native": "Apache-2.0",
+      "addon/governance-native": "AGPL-3.0",
+      "addon/fleet-native": "AGPL-3.0"
+    }
+  },
+  "devDependencies": {
+    "@types/node": "^26.0.1",
+    "protobufjs": "^7.5.4",
+    "typescript": "^6.0.3",
+    "vitest": "^4.0.18"
+  }
+}

@@ -1,0 +1,34 @@
+{
+  "record": {
+    "authors": [
+      "open-agentic-platform"
+    ],
+    "created": "2026-03-22",
+    "domain": "tooling",
+    "extends": [
+      {
+        "nature": "additive",
+        "spec": "012-registry-consumer-list-json-mvp"
+      }
+    ],
+    "extraFrontmatter": {
+      "language": "en"
+    },
+    "featureBranch": "015-registry-consumer-list-compact-json-mvp",
+    "id": "015-registry-consumer-list-compact-json-mvp",
+    "implementation": "complete",
+    "kind": "platform-delivery",
+    "sectionHeadings": [
+      "Feature Specification: Registry consumer list compact JSON",
+      "Requirements *(mandatory)*",
+      "Out of scope"
+    ],
+    "specPath": "specs/015-registry-consumer-list-compact-json-mvp/spec.md",
+    "status": "superseded",
+    "summary": "Add `list --compact` for single-line compact JSON array output, mutually exclusive with `list --json`, mirroring Feature 014 for `show`.\n",
+    "supersededBy": "217-spec-spine-engine-swap-collapse",
+    "title": "Registry consumer list compact JSON"
+  },
+  "shardHash": "83d1becc7ac78fef22817091a10fb0dbb81fff577f865016d0ba80294502050e",
+  "specVersion": "1.1.0"
+}

@@ -1,0 +1,98 @@
+# ============================================================================
+# Factory Governance Envelope Schema (process-layer half)
+# ============================================================================
+#
+# The governance envelope is the ADMISSION CONTRACT a factory files for OAP
+# to admit it (spec 198). It is OAP's encoding of OWASP ASI 2026 obligations:
+# the synthesis of the ASI01 m5 "intent capsule" and the ASI10 m5 "signed
+# behavioral manifest". Every field carries the ASI control id(s) it
+# satisfies inline (spec 198 FR-002 - the brief cites its statutes).
+#
+# This file describes the PROCESS envelope, authored by the factory at
+# `process/governance-envelope.yaml` in its own source tree. The ADAPTER
+# sub-envelope is the `governance:` section of each adapter's manifest.yaml -
+# see adapter-manifest.schema.yaml (1.1.0) in this directory.
+#
+# Shape discipline (spec 198 P-2): the envelope is PREDICATE-shaped, never
+# topology-shaped. It declares obligations that hold ("∃ a HITL gate before
+# the Build Spec freezes"), never pipeline structure ("stage 6 has gate G").
+# Stage ids, stage counts, and agent optionality are run topology, which OAP
+# does not model.
+#
+# Validation (spec 198 FR-003) is two-sided and fail-closed:
+#   1. ⊨ schema       - the instance conforms to this schema.
+#   2. ⊨ constituents - OAP independently recomputes the atomic aggregate
+#      from the factory's own agent frontmatter (tiers, mutations, scopes)
+#      and the declared ceilings must equal or bound it.
+# Rust twin: crates/factory-contracts/src/governance_envelope.rs
+# (GOVERNANCE_ENVELOPE_SCHEMA_VERSION).
+#
+# Schema version: 1.0.0
+# ============================================================================
+
+schema_version: "1.0.0"
+
+# ─────────────────────────────────────────────────────────────────────────────
+# PROCESS IDENTITY - the intent-capsule template            [ASI01 m5, m7]
+# ─────────────────────────────────────────────────────────────────────────────
+process:
+  id: string                        # Stable process identity (e.g., "factory-process")
+  objective_class: string           # The objective class every run's concrete
+                                    # intent capsule must instantiate; an
+                                    # out-of-class objective is inadmissible.   [ASI01 m5]
+  goal_identifier_scheme: string    # Stable goal-id scheme tracked across the
+                                    # run (e.g., "build-spec:<project>").       [ASI01 m7]
+
+# ─────────────────────────────────────────────────────────────────────────────
+# CEILINGS - recomputed-and-reconciled against agent frontmatter  [ASI02 m1]
+# ─────────────────────────────────────────────────────────────────────────────
+# A declared ceiling that any constituent agent exceeds is an admission
+# failure (spec 198 FR-003). Mutation lattice (FR-003 grammar):
+#   read-only < scoped-write < read-write < full
+ceilings:
+  max_tier: string                  # "tier1" | "tier2" | "tier3"               [ASI02, ASI03]
+  max_mutation: string              # "read-only" | "scoped-write" |
+                                    # "read-write" | "full"                     [ASI02 m1, ASI05]
+
+# ─────────────────────────────────────────────────────────────────────────────
+# GATES - HITL obligations as predicates                    [ASI09; principle 5]
+# ─────────────────────────────────────────────────────────────────────────────
+# Open vocabulary of predicate ids; each declares an obligation that holds
+# somewhere in the run. The binding of a predicate to a concrete stage is
+# resolved at run time by the engine, which OAP never models (P-2).
+gates:
+  - predicate: string               # e.g., "approval-before-build-spec-freeze",
+                                    # "checkpoint-before-any-scoped-write",
+                                    # "plain-language-summaries",               [ASI09]
+                                    # "preview-no-side-effects"                 [ASI09 m7]
+    description: string             # Optional human elaboration
+
+# ─────────────────────────────────────────────────────────────────────────────
+# EMITS - the run's artifact manifest, by kind              [ASI04 m1, ASI07]
+# ─────────────────────────────────────────────────────────────────────────────
+# Kinds, never paths (paths are run topology). Must be non-empty: a run that
+# emits nothing is not governable.
+emits:
+  - kind: string                    # e.g., "build-spec", "stage-output",
+                                    # "pipeline-state", "handoff-report"
+
+# ─────────────────────────────────────────────────────────────────────────────
+# CONSTITUENTS - referenced, never copied                   [P-4; ASI10 m5]
+# ─────────────────────────────────────────────────────────────────────────────
+# The atomic declarations the envelope composes. Per-agent safety_tier /
+# mutation / mutation_scope / tools live in agent frontmatter (spec 054
+# unified schema + spec 198 FR-003 grammar); the admitted set of agents IS
+# the run-time allowlist - anything off-list is rogue by definition (FR-006).
+constituents:
+  agents: string                    # Glob to the process agents' frontmatter
+                                    # (e.g., "process/agents/*.md")             [ASI10 m5]
+
+# ─────────────────────────────────────────────────────────────────────────────
+# OVERRIDES - per-org substrate user_body consumption policy  [ASI06 m3/m9]
+# ─────────────────────────────────────────────────────────────────────────────
+# The org's filed policy for consuming per-org content overrides (spec 198
+# FR-013 c). Overrides are a distinct trust class with provenance attached;
+# `require_verified: true` refuses runs that would consume an override no
+# privileged human has verified.
+overrides:
+  require_verified: boolean         #                                            [ASI06 m9]

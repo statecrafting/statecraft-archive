@@ -1,0 +1,204 @@
+{
+  "mapping": {
+    "dependsOn": [
+      "106-rauthy-native-oidc-and-membership",
+      "137-tenant-environment-access-gates",
+      "198-factory-governance-envelope"
+    ],
+    "implementingPaths": [
+      {
+        "path": "crates/featuregraph/tests/golden/features_graph.json",
+        "source": "spec-edge"
+      },
+      {
+        "path": "docs/owasp-agentic-top-10-2026.md",
+        "source": "spec-edge"
+      },
+      {
+        "path": "platform/services/statecraft/api/audit/audit.ts",
+        "source": "spec-edge"
+      },
+      {
+        "path": "platform/services/statecraft/api/audit/auditTwoPrincipal.test.ts",
+        "source": "spec-edge"
+      },
+      {
+        "path": "platform/services/statecraft/api/auth/rauthy.ts",
+        "source": "spec-edge"
+      },
+      {
+        "path": "platform/services/statecraft/api/auth/sessionMint.ts",
+        "source": "spec-edge"
+      },
+      {
+        "path": "platform/services/statecraft/api/db/schema.ts",
+        "source": "spec-edge"
+      },
+      {
+        "path": "platform/services/statecraft/api/factory/grantDuplexHandlers.ts",
+        "source": "spec-edge"
+      },
+      {
+        "path": "platform/services/statecraft/api/sync/service.ts",
+        "source": "spec-edge"
+      },
+      {
+        "path": "platform/services/statecraft/vite.config.ts",
+        "source": "spec-edge"
+      },
+      {
+        "path": "product/apps/opc/src-tauri/src/commands/live_sessions.rs",
+        "source": "spec-edge"
+      }
+    ],
+    "resolvedUnits": [
+      {
+        "locations": [
+          {
+            "file": "platform/services/statecraft/api/audit/auditTwoPrincipal.test.ts"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "file",
+          "path": "platform/services/statecraft/api/audit/auditTwoPrincipal.test.ts"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "crates/featuregraph/tests/golden/features_graph.json"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "extends",
+        "unit": {
+          "kind": "file",
+          "path": "crates/featuregraph/tests/golden/features_graph.json"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "platform/services/statecraft/api/audit/audit.ts"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "refines",
+        "unit": {
+          "kind": "file",
+          "path": "platform/services/statecraft/api/audit/audit.ts"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "platform/services/statecraft/api/auth/rauthy.ts"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "refines",
+        "unit": {
+          "kind": "file",
+          "path": "platform/services/statecraft/api/auth/rauthy.ts"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "platform/services/statecraft/api/auth/sessionMint.ts"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "refines",
+        "unit": {
+          "kind": "file",
+          "path": "platform/services/statecraft/api/auth/sessionMint.ts"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "platform/services/statecraft/api/db/schema.ts"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "refines",
+        "unit": {
+          "kind": "file",
+          "path": "platform/services/statecraft/api/db/schema.ts"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "platform/services/statecraft/api/factory/grantDuplexHandlers.ts"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "refines",
+        "unit": {
+          "kind": "file",
+          "path": "platform/services/statecraft/api/factory/grantDuplexHandlers.ts"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "platform/services/statecraft/api/sync/service.ts"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "refines",
+        "unit": {
+          "kind": "file",
+          "path": "platform/services/statecraft/api/sync/service.ts"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "platform/services/statecraft/vite.config.ts"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "refines",
+        "unit": {
+          "kind": "file",
+          "path": "platform/services/statecraft/vite.config.ts"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "docs/owasp-agentic-top-10-2026.md"
+          }
+        ],
+        "ownership": false,
+        "sourceField": "references",
+        "unit": {
+          "kind": "file",
+          "path": "docs/owasp-agentic-top-10-2026.md"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "product/apps/opc/src-tauri/src/commands/live_sessions.rs"
+          }
+        ],
+        "ownership": false,
+        "sourceField": "references",
+        "unit": {
+          "kind": "file",
+          "path": "product/apps/opc/src-tauri/src/commands/live_sessions.rs"
+        }
+      }
+    ],
+    "specId": "205-agent-nhi-identity",
+    "specStatus": "draft"
+  },
+  "schemaVersion": "1.1.0",
+  "shardHash": "2d00d2f8d95c5dbbb3c93540732c255b35bf39c571f76838a5e47f1817855b47"
+}

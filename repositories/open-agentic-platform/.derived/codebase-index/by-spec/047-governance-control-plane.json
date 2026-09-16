@@ -1,0 +1,18 @@
+{
+  "mapping": {
+    "implementingPaths": [
+      {
+        "path": "crates/policy-kernel",
+        "source": "manifest-metadata"
+      },
+      {
+        "path": "tools/oap/policy-compiler",
+        "source": "manifest-metadata"
+      }
+    ],
+    "specId": "047-governance-control-plane",
+    "specStatus": "approved"
+  },
+  "schemaVersion": "1.1.0",
+  "shardHash": "698868a261af0221deab536df5d7d441b5f7c8bfa0f4c78da141bad9289021b5"
+}

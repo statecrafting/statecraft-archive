@@ -1,0 +1,12 @@
+{
+  "package": {
+    "edition": "2024",
+    "kind": "rust-bin",
+    "name": "deployd-api",
+    "path": "platform/services/deployd-api-rs",
+    "specRef": "073-axiomregent-unification",
+    "version": "0.1.1"
+  },
+  "schemaVersion": "1.1.0",
+  "shardHash": "0d6bf9c37110751be99339fb82b95ecaaf5cfed91d441b8cfbc83f74a038d8af"
+}

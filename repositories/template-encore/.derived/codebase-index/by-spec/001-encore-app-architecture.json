@@ -1,0 +1,182 @@
+{
+  "mapping": {
+    "implementingPaths": [
+      {
+        "path": "CODEMAP.md",
+        "source": "spec-edge"
+      },
+      {
+        "path": "apps/api/.env.example",
+        "source": "spec-edge"
+      },
+      {
+        "path": "apps/api/Dockerfile.base",
+        "source": "spec-edge"
+      },
+      {
+        "path": "apps/api/Dockerfile.hotfix",
+        "source": "spec-edge"
+      },
+      {
+        "path": "apps/api/encore.app",
+        "source": "spec-edge"
+      },
+      {
+        "path": "apps/api/health/",
+        "source": "spec-edge"
+      },
+      {
+        "path": "apps/api/infra.config.json",
+        "source": "spec-edge"
+      },
+      {
+        "path": "apps/api/scripts/",
+        "source": "spec-edge"
+      },
+      {
+        "path": "apps/api/tsconfig.json",
+        "source": "spec-edge"
+      },
+      {
+        "path": "apps/api/vitest.config.ts",
+        "source": "spec-edge"
+      }
+    ],
+    "resolvedUnits": [
+      {
+        "locations": [
+          {
+            "file": "apps/api/.env.example"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "file",
+          "path": "apps/api/.env.example"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "apps/api/Dockerfile.base"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "file",
+          "path": "apps/api/Dockerfile.base"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "apps/api/Dockerfile.hotfix"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "file",
+          "path": "apps/api/Dockerfile.hotfix"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "apps/api/encore.app"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "file",
+          "path": "apps/api/encore.app"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "apps/api/health/"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "file",
+          "path": "apps/api/health/"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "apps/api/infra.config.json"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "file",
+          "path": "apps/api/infra.config.json"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "apps/api/scripts/"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "file",
+          "path": "apps/api/scripts/"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "apps/api/tsconfig.json"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "file",
+          "path": "apps/api/tsconfig.json"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "apps/api/vitest.config.ts"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "file",
+          "path": "apps/api/vitest.config.ts"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "CODEMAP.md"
+          }
+        ],
+        "ownership": false,
+        "sourceField": "references",
+        "unit": {
+          "kind": "file",
+          "path": "CODEMAP.md"
+        }
+      }
+    ],
+    "specId": "001-encore-app-architecture",
+    "specStatus": "approved"
+  },
+  "schemaVersion": "1.1.0",
+  "shardHash": "85f3b79253a26a51c371a5b9be1bb7e8fbcfe876cf69ac3bc1ed638f47d8e768"
+}

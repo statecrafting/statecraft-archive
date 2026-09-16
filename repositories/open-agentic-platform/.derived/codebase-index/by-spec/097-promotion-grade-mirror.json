@@ -1,0 +1,69 @@
+{
+  "mapping": {
+    "dependsOn": [
+      "080-github-identity-onboarding",
+      "082-artifact-integrity-platform-hardening",
+      "092-workspace-runtime-threading",
+      "094-unified-artifact-store"
+    ],
+    "implementingPaths": [
+      {
+        "path": "crates/orchestrator/src/lib.rs",
+        "source": "spec-edge"
+      },
+      {
+        "path": "crates/orchestrator/src/promotion.rs",
+        "source": "multiple"
+      },
+      {
+        "path": "crates/orchestrator/src/state.rs",
+        "source": "spec-edge"
+      }
+    ],
+    "resolvedUnits": [
+      {
+        "locations": [
+          {
+            "file": "crates/orchestrator/src/promotion.rs"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "file",
+          "path": "crates/orchestrator/src/promotion.rs"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "crates/orchestrator/src/lib.rs"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "extends",
+        "unit": {
+          "kind": "file",
+          "path": "crates/orchestrator/src/lib.rs"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "crates/orchestrator/src/state.rs"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "extends",
+        "unit": {
+          "kind": "file",
+          "path": "crates/orchestrator/src/state.rs"
+        }
+      }
+    ],
+    "specId": "097-promotion-grade-mirror",
+    "specStatus": "approved"
+  },
+  "schemaVersion": "1.1.0",
+  "shardHash": "a38beef123e04d5a0ea9edcda57a131549d9898f75c2f8dc2fc2a3433931d465"
+}

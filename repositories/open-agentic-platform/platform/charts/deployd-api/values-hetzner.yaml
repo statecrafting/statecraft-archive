@@ -1,0 +1,88 @@
+image:
+  repository: ghcr.io/statecrafting/open-agentic-platform/deployd-api
+  # tag is intentionally unset — CD owns the helm release and passes
+  # --set image.tag=sha-${SHA} on every deploy. Pinning a value here
+  # would clobber CD's authoritative tag. See spec 143 §12 L-003.
+  pullPolicy: Always
+
+imagePullSecrets:
+  - name: ghcr-pull-secret
+
+# Surface hiqlite internals at debug level so the next cold-start hang
+# reveals the stuck step — currently we only see "creating new file:
+# meta.hql" and then 5 minutes of silence before SIGKILL exit 137.
+rustLog: "info,hiqlite=debug,hiqlite_wal=debug"
+
+ingress:
+  enabled: true
+  className: nginx
+  # Injected by setup.sh via --set from $DOMAIN
+  host: ""
+  annotations:
+    cert-manager.io/cluster-issuer: "letsencrypt-prod"
+
+secrets:
+  provider: "k8s"
+  # create=false: this Secret (including HIQLITE_SECRET_RAFT /
+  # HIQLITE_SECRET_API) is materialised imperatively by
+  # infra/hetzner/setup.sh, not rendered by this chart's secrets-k8s.yaml
+  # template. See values.yaml's secrets.keys comment for the full
+  # per-provider provisioning map.
+  create: false
+
+oidc:
+  # Injected by CD workflow via --set from $DOMAIN (becomes https://auth.<domain>)
+  endpoint: ""
+  # The Rauthy client_id we authenticate as. Rauthy 0.35's client_credentials
+  # flow mints aud=<client_id> verbatim (no per-client audience override, no
+  # honour for RFC 8707 resource= at token-time). DEPLOYD_AUDIENCE is the
+  # validator: it MUST equal what Rauthy puts in the JWT's aud claim, which is
+  # the client_id of whichever M2M client called the token endpoint
+  # (`statecraft-m2m` today; future deployd-cli client would set this to
+  # itself). Spec 143 §12 L-006 captures the Default-Scopes-is-load-bearing
+  # quirk; this is the audience-side companion to that lesson.
+  audience: "statecraft-m2m"
+
+requiredScope: "deployd:deploy"
+
+# Self-provisioned per-namespace RBAC (deployd-api-rs/src/rbac.rs; spec 136
+# Phase 3 precedent). Enabled on Hetzner so deployd grants its own
+# ServiceAccount the deployd-controller-workloads ClusterRole (via a
+# RoleBinding it creates in each target namespace, right before helm runs
+# there). This is additive on its own: the cluster-wide workloads
+# ClusterRoleBinding fallback stays until rbac.namespaces is set to a scoped
+# allowlist. Flipping selfProvision on here is the real-cluster validation
+# step that gates that later namespaces flip.
+rbac:
+  selfProvision: true
+
+# Persistent deployment history required from spec 145; size pinned to 10Gi
+# (the hcloud CSI minimum — T002 verification 2026-05-10) and storage class
+# pinned to `hcloud-volumes` rather than the cluster default to avoid silent
+# re-binding if cluster StorageClass priorities are reordered.
+persistence:
+  enabled: true
+  size: 10Gi
+  storageClass: hcloud-volumes
+
+# Spec 145 S3 backup config for Hetzner Object Storage. The chart's
+# deployment.yaml gates backup env projection on `if and .Values.backup.endpoint
+# .Values.backup.bucket`. Both are EMPTY below, so the whole backup block
+# (including the four non-optional DEPLOYD_BACKUP_* secret-key refs) does not
+# project; deployd-api's BackupConfig::from_env() then returns Ok(None) and the
+# pod starts cleanly with backups OFF.
+#
+# Backups are intentionally DISABLED here for now. Leaving endpoint+bucket
+# non-empty WITHOUT the four backup secret keys present in `deployd-api-secrets`
+# makes the kubelet fail to create the container (non-optional secretKeyRef):
+# that was the fresh-install start blocker this avoids.
+#
+# To RE-ENABLE (tracked in the datastore-durability work): set endpoint+bucket,
+# provision a Hetzner Object Storage bucket + S3 access keys, generate the cryptr
+# keyring, materialize backup-s3-access-key / backup-s3-secret-key /
+# backup-cryptr-keyring / backup-cryptr-active-key into `deployd-api-secrets`
+# (infra/hetzner/setup.sh), and write docs/runbooks/deployd-api-durability.md.
+backup:
+  endpoint: ""
+  bucket: ""
+  region: "nbg1"

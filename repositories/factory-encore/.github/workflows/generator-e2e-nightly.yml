@@ -1,0 +1,132 @@
+# Spec: 007-generator-e2e-harness
+#
+# Generator e2e -- build-matrix nightly against the pinned ref (FR-005). The full
+# matrix (22 produced apps) with the real compile gate: root npm install +
+# apps/api install + encore check + typecheck + build (both sub-apps for dual).
+# This is the layer the lockstep gate (spec 006) cannot reach: lockstep pins the
+# baseline's invariant hashes but never compiles the composed module payloads, so
+# a module-vs-baseline drift (an audit-API rename, a renamed user_account column)
+# only surfaces here.
+#
+# Posture (mirrors OAP opc-e2e-nightly): NOT a required per-PR check and NOT in
+# ci-gate -- it runs post-merge on a schedule so the per-PR runtime budget is not
+# eroded. Deterministic: it builds against the SAME pinned ref the lockstep gate
+# uses. Non-gating, but never silent: it uploads results + logs and opens a
+# tracking issue on failure. The against-main companion (catching baseline drift
+# before the pin moves) is generator-e2e-drift.yml.
+#
+# Runner: ubuntu-latest ships Docker, which encore check needs to provision the
+# local Postgres for the composed migrations.
+
+name: generator-e2e-nightly
+
+on:
+  schedule:
+    # 04:41 UTC daily, off-peak and offset from the other repo crons.
+    - cron: '41 4 * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  issues: write # open a regression issue on failure
+
+concurrency:
+  group: generator-e2e-nightly
+  cancel-in-progress: false
+
+jobs:
+  build-matrix:
+    runs-on: ubuntu-latest
+    name: generator-e2e / build matrix (pinned ref)
+    timeout-minutes: 90
+    env:
+      LOCKFILE: adapters/acme-vue-encore/scripts/lockstep/baseline.lock.json
+    steps:
+      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+
+      - uses: actions/setup-node@48b55a011bda9f5d6aeb4c2d9c7362e8dae4041e # v6.4.0
+        with:
+          node-version: 24
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Install Encore CLI
+        run: |
+          set -euo pipefail
+          curl -fsSL https://encore.dev/install.sh | bash
+          echo "$HOME/.encore/bin" >> "$GITHUB_PATH"
+
+      - name: Read the pinned baseline ref + remote
+        id: pin
+        run: |
+          set -euo pipefail
+          ref="$(node -p "require('./${LOCKFILE}').pinnedRef")"
+          src="$(node -p "require('./${LOCKFILE}').upstreamSource")"
+          if [ -z "$ref" ] || [ -z "$src" ]; then
+            echo "::error::could not read pinnedRef/upstreamSource from ${LOCKFILE}"
+            exit 1
+          fi
+          echo "ref=$ref" >> "$GITHUB_OUTPUT"
+          echo "src=$src" >> "$GITHUB_OUTPUT"
+          echo "pinned baseline: $src @ $ref"
+
+      - name: Fetch template-encore baseline at the pinned ref (full tree)
+        run: |
+          set -euo pipefail
+          rm -rf .baseline
+          mkdir .baseline
+          cd .baseline
+          git init -q
+          git remote add origin "https://${{ steps.pin.outputs.src }}.git"
+          if ! git fetch --depth 1 origin "${{ steps.pin.outputs.ref }}" 2> fetch.err; then
+            cat fetch.err >&2
+            echo "::error::cannot fetch template-encore at the pinned ref"
+            exit 1
+          fi
+          git checkout -q FETCH_HEAD
+          test -d apps || { echo "::error::baseline apps/ absent at the pinned ref"; exit 1; }
+
+      - name: Build matrix
+        id: e2e
+        env:
+          TEMPLATE_ENCORE: ${{ github.workspace }}/.baseline
+        run: npm run e2e:build
+
+      - name: Report summary
+        if: always()
+        run: |
+          {
+            echo "## Generator e2e nightly (pinned ref)"
+            echo ""
+            echo "- baseline: \`${{ steps.pin.outputs.src }} @ ${{ steps.pin.outputs.ref }}\`"
+            echo "- commit: \`${{ github.sha }}\`"
+            echo "- result: ${{ steps.e2e.outcome }}"
+            echo ""
+            if [ -f adapters/acme-vue-encore/e2e/.out/results.tsv ]; then
+              echo '```'
+              cat adapters/acme-vue-encore/e2e/.out/results.tsv
+              echo '```'
+            fi
+          } >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Upload e2e results + logs
+        if: always()
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7
+        with:
+          name: generator-e2e-nightly
+          path: |
+            adapters/acme-vue-encore/e2e/.out/results.tsv
+            adapters/acme-vue-encore/e2e/.out/logs
+          if-no-files-found: ignore
+
+      - name: Open issue on failure
+        if: failure()
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh issue create \
+            --title "Generator e2e nightly failed ($(date -u +%F))" \
+            --body "The generator e2e build matrix failed against the pinned template-encore ref on ${{ github.sha }}. Run: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }} . This is the compile gate the lockstep (spec 006) cannot reach; triage the failing combo(s) in the results artifact." \
+            --label generator-e2e || true

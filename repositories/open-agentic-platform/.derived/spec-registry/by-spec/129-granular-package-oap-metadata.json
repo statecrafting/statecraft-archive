@@ -1,0 +1,53 @@
+{
+  "record": {
+    "amendmentRecord": "amended 2026-06-18 by spec 217 (engine-swap collapse): the in-tree codebase-indexer that parsed file-level `// Spec:` headers was deleted; that logic is now in spec-spine-core. The codebase-indexer crate-unit is stripped (path deleted); the spec re-anchors onto the surviving OAP overlay schema codebase-index-oap.schema.json (the in-tree codebase-index.schema.json was dropped by Workstream D).\n",
+    "codeAliases": [
+      "GRANULAR_OAP_METADATA"
+    ],
+    "created": "2026-05-02",
+    "dependsOn": [
+      "101-codebase-index-mvp",
+      "118-workflow-spec-traceability"
+    ],
+    "domain": "tooling",
+    "extends": [
+      {
+        "nature": "additive",
+        "spec": "101-codebase-index-mvp",
+        "unit": {
+          "kind": "file",
+          "path": "standards/schemas/spec-spine/codebase-index-oap.schema.json"
+        }
+      }
+    ],
+    "extraFrontmatter": {
+      "amended": "2026-06-18",
+      "approved": "2026-05-02",
+      "slug": "granular-package-oap-metadata"
+    },
+    "id": "129-granular-package-oap-metadata",
+    "implementation": "complete",
+    "kind": "governance",
+    "owner": "bart",
+    "risk": "medium",
+    "sectionHeadings": [
+      "129 — Granular `[package.metadata.oap]`",
+      "1. Problem Statement",
+      "2. Goals",
+      "3. Scope",
+      "In scope",
+      "Out of scope",
+      "4. Functional Requirements",
+      "5. Acceptance",
+      "7. Halt finding — gate over-fires on multi-claim paths",
+      "6. Risks and Mitigations",
+      "Amendments received"
+    ],
+    "specPath": "specs/129-granular-package-oap-metadata/spec.md",
+    "status": "approved",
+    "summary": "Crate-level `[package.metadata.oap].spec` is too coarse — adding a 500- line module to an already-tagged crate carries no traceability friction. This spec adds file-level annotation via `// Spec: specs/NNN-slug/spec.md` comment headers (matching the existing convention used in 50+ files), parsed by `codebase-indexer` at compile time. Precedence is file > module (reserved) > crate. Schema bumps `1.1.0` → `1.2.0`; `TraceSource` is extended with `cargo-metadata-crate` (renamed from `cargo-metadata`), `cargo-metadata-module` (reserved), `comment-header` (new), and `multiple` (replacing the legacy `both`).\n",
+    "title": "Granular [package.metadata.oap] — file-level spec annotation via comment headers"
+  },
+  "shardHash": "03f07a80de7cfc4b40f1ff5586ed08d03f1ac90ddfee9f7b941a6473bb1eba6a",
+  "specVersion": "1.1.0"
+}

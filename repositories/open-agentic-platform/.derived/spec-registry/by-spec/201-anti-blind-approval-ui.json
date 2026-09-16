@@ -1,0 +1,162 @@
+{
+  "record": {
+    "authors": [
+      "open-agentic-platform"
+    ],
+    "codeAliases": [
+      "ANTI_BLIND_APPROVAL_UI"
+    ],
+    "created": "2026-06-10",
+    "dependsOn": [
+      "198-factory-governance-envelope",
+      "166-opc-stop-hook-gate-chain"
+    ],
+    "domain": "platform",
+    "establishes": [
+      {
+        "kind": "file",
+        "path": "platform/services/statecraft/api/factory/approvalSummary.ts"
+      },
+      {
+        "kind": "file",
+        "path": "platform/services/statecraft/api/factory/approvalSummary-pure.ts"
+      },
+      {
+        "kind": "file",
+        "path": "platform/services/statecraft/api/factory/approvalSummary.test.ts"
+      },
+      {
+        "kind": "file",
+        "path": "platform/services/statecraft/api/factory/approvalSummaryEndpoint.test.ts"
+      },
+      {
+        "kind": "file",
+        "path": "platform/services/statecraft/web/app/lib/approval-basis-helpers.ts"
+      },
+      {
+        "kind": "file",
+        "path": "platform/services/statecraft/web/app/lib/approval-basis-helpers.test.ts"
+      }
+    ],
+    "extends": [
+      {
+        "nature": "additive",
+        "spec": "034-featuregraph-registry-scanner-fix",
+        "unit": {
+          "kind": "file",
+          "path": "crates/featuregraph/tests/golden/features_graph.json"
+        }
+      }
+    ],
+    "extraFrontmatter": {
+      "language": "en"
+    },
+    "featureBranch": "feat/201-anti-blind-approval-ui",
+    "id": "201-anti-blind-approval-ui",
+    "implementation": "complete",
+    "kind": "platform",
+    "references": [
+      {
+        "role": "context",
+        "unit": {
+          "kind": "file",
+          "path": "docs/owasp-agentic-top-10-2026.md"
+        }
+      },
+      {
+        "role": "gate-declaration",
+        "unit": {
+          "kind": "file",
+          "path": "standards/schemas/factory/governance-envelope.schema.yaml"
+        }
+      },
+      {
+        "role": "override-trust-class",
+        "unit": {
+          "kind": "file",
+          "path": "platform/services/statecraft/api/factory/overrideGate.ts"
+        }
+      },
+      {
+        "role": "run-schema",
+        "unit": {
+          "kind": "file",
+          "path": "platform/services/statecraft/api/db/schema.ts"
+        }
+      }
+    ],
+    "refines": [
+      {
+        "aspect": "hitl-approval-presentation",
+        "unit": {
+          "kind": "file",
+          "path": "platform/services/statecraft/web/app/routes/app.factory.runs.$runId.tsx"
+        }
+      },
+      {
+        "aspect": "hitl-approval-presentation",
+        "unit": {
+          "kind": "file",
+          "path": "platform/services/statecraft/web/app/routes/app.factory.artifacts.tsx"
+        }
+      },
+      {
+        "aspect": "hitl-approval-presentation",
+        "unit": {
+          "kind": "file",
+          "path": "platform/services/statecraft/web/app/lib/factory-api.server.ts"
+        }
+      },
+      {
+        "aspect": "encore-test-gating",
+        "unit": {
+          "kind": "file",
+          "path": "platform/services/statecraft/vite.config.ts"
+        }
+      },
+      {
+        "aspect": "hitl-approval-policy-read",
+        "unit": {
+          "kind": "file",
+          "path": "platform/services/statecraft/api/factory/factory.ts"
+        }
+      },
+      {
+        "aspect": "hitl-approval-audit",
+        "unit": {
+          "kind": "file",
+          "path": "platform/services/statecraft/api/factory/auditActions.ts"
+        }
+      },
+      {
+        "aspect": "hitl-approval-audit",
+        "unit": {
+          "kind": "file",
+          "path": "platform/services/statecraft/api/factory/artifacts.ts"
+        }
+      }
+    ],
+    "sectionHeadings": [
+      "Feature Specification: Anti-Blind-Approval UI",
+      "Purpose",
+      "Problem statement",
+      "Requirements",
+      "FR-001 — Approval summary contract (server-side assembly, typed shape)",
+      "FR-002 — Fail-closed approve-control rendering",
+      "FR-003 — Preview purity (GET semantics; separate POST for approve)",
+      "FR-004 — Approval evidence (summary hash in the audit row)",
+      "FR-005 — Untrusted-content segregation",
+      "Acceptance criteria",
+      "Out of scope",
+      "Phasing",
+      "Sequencing",
+      "Amendment log"
+    ],
+    "specPath": "specs/201-anti-blind-approval-ui/spec.md",
+    "status": "approved",
+    "summary": "Close the declared ASI09 gap in the spec 198 all-ten analysis: the approval surfaces where a human ratifies agent work (HITL gates declared in the governance envelope, factory run approvals, override verification) must present plain-language risk summaries grounded in provenance — what changes, with what blast radius, traceable to which content hashes — and must never present model-generated rationale as the basis for approval. Preview is never effect: every approval surface renders from recorded facts (diffs, scopes, hashes, gate predicates), and the act of previewing cannot mutate state. This spec owns the presentation contract; the gates themselves are declared by the envelope (spec 198 FR-008) and enforced by the existing HITL machinery (spec 166).\n",
+    "title": "Anti-Blind-Approval UI (ASI09 human-agent trust surfaces)"
+  },
+  "shardHash": "4f978c9a69afa68fa27df5ede75f2b312285b4f75548448ff6086300a0475010",
+  "specVersion": "1.1.0"
+}

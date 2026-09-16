@@ -1,0 +1,60 @@
+{
+  "record": {
+    "authors": [
+      "open-agentic-platform"
+    ],
+    "codeAliases": [
+      "GIT_PANEL"
+    ],
+    "created": "2026-03-29",
+    "domain": "opc",
+    "establishes": [
+      {
+        "kind": "file",
+        "path": "product/apps/opc/src-tauri/src/commands/git.rs"
+      }
+    ],
+    "extraFrontmatter": {
+      "language": "en"
+    },
+    "featureBranch": "059-git-panel",
+    "id": "059-git-panel",
+    "implementation": "complete",
+    "kind": "ui",
+    "references": [
+      {
+        "role": "historical",
+        "unit": {
+          "kind": "file",
+          "path": "product/apps/opc/src/components/GitPanel.tsx"
+        }
+      }
+    ],
+    "sectionHeadings": [
+      "Feature Specification: Comprehensive Git Panel",
+      "Purpose",
+      "Scope",
+      "In scope",
+      "Out of scope",
+      "Requirements",
+      "Functional",
+      "Non-functional",
+      "Architecture",
+      "Git status model",
+      "Git plumbing backend",
+      "Plumbing command mapping",
+      "Package structure",
+      "Data flow",
+      "Implementation approach",
+      "Success criteria",
+      "Dependencies",
+      "Risk"
+    ],
+    "specPath": "specs/059-git-panel/spec.md",
+    "status": "approved",
+    "summary": "Full-featured git panel showing staged/unstaged files, branch management, commit history with expandable inline diffs, and AI-generated commit messages. Uses optimized git plumbing commands (diff-files, diff-index, ls-files) for fast status retrieval instead of porcelain commands.\n",
+    "title": "Comprehensive Git Panel"
+  },
+  "shardHash": "f70a6f5f43996610785210273bbfbdf282bc0540a7d3011cefa01375ab4c1b3c",
+  "specVersion": "1.1.0"
+}

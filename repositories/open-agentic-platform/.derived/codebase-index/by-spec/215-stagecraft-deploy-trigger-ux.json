@@ -1,0 +1,307 @@
+{
+  "mapping": {
+    "dependsOn": [
+      "213-tenant-repo-image-build",
+      "214-tenant-app-chart-supersession",
+      "112-factory-project-lifecycle",
+      "137-tenant-environment-access-gates"
+    ],
+    "implementingPaths": [
+      {
+        "path": "crates/featuregraph/tests/golden/features_graph.json",
+        "source": "spec-edge"
+      },
+      {
+        "path": "platform/services/statecraft/api/db/schema.ts",
+        "source": "spec-edge"
+      },
+      {
+        "path": "platform/services/statecraft/api/deploy/deploy.ts",
+        "source": "spec-edge"
+      },
+      {
+        "path": "platform/services/statecraft/api/deploy/deploydClient.ts",
+        "source": "spec-edge"
+      },
+      {
+        "path": "platform/services/statecraft/api/deploy/deployments.test.ts",
+        "source": "spec-edge"
+      },
+      {
+        "path": "platform/services/statecraft/api/deploy/deployments.ts",
+        "source": "spec-edge"
+      },
+      {
+        "path": "platform/services/statecraft/api/deploy/oidcM2m.ts",
+        "source": "spec-edge"
+      },
+      {
+        "path": "platform/services/statecraft/api/github/webhook.ts",
+        "source": "spec-edge"
+      },
+      {
+        "path": "platform/services/statecraft/vite.config.ts",
+        "source": "spec-edge"
+      },
+      {
+        "path": "platform/services/statecraft/web/app/lib/projects-api.server.ts",
+        "source": "spec-edge"
+      },
+      {
+        "path": "platform/services/statecraft/web/app/routes.ts",
+        "source": "spec-edge"
+      },
+      {
+        "path": "platform/services/statecraft/web/app/routes/app.project.$projectId._index.tsx",
+        "source": "spec-edge"
+      },
+      {
+        "path": "platform/services/statecraft/web/app/routes/app.project.$projectId.deploys.$envId.tsx",
+        "source": "spec-edge"
+      },
+      {
+        "path": "platform/services/statecraft/web/app/routes/app.project.$projectId.deploys.tsx",
+        "source": "spec-edge"
+      },
+      {
+        "path": "platform/services/statecraft/web/app/routes/app.projects.new.tsx",
+        "source": "spec-edge"
+      },
+      {
+        "path": "specs/087-unified-workspace-architecture/spec.md",
+        "source": "spec-edge"
+      },
+      {
+        "path": "specs/112-factory-project-lifecycle/spec.md",
+        "source": "spec-edge"
+      }
+    ],
+    "resolvedUnits": [
+      {
+        "locations": [
+          {
+            "file": "platform/services/statecraft/api/deploy/deployments.test.ts"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "file",
+          "path": "platform/services/statecraft/api/deploy/deployments.test.ts"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "platform/services/statecraft/api/deploy/deployments.ts"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "file",
+          "path": "platform/services/statecraft/api/deploy/deployments.ts"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "crates/featuregraph/tests/golden/features_graph.json"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "extends",
+        "unit": {
+          "kind": "file",
+          "path": "crates/featuregraph/tests/golden/features_graph.json"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "platform/services/statecraft/api/db/schema.ts"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "extends",
+        "unit": {
+          "kind": "file",
+          "path": "platform/services/statecraft/api/db/schema.ts"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "platform/services/statecraft/web/app/lib/projects-api.server.ts"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "extends",
+        "unit": {
+          "kind": "file",
+          "path": "platform/services/statecraft/web/app/lib/projects-api.server.ts"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "platform/services/statecraft/web/app/routes.ts"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "extends",
+        "unit": {
+          "kind": "file",
+          "path": "platform/services/statecraft/web/app/routes.ts"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "platform/services/statecraft/web/app/routes/app.project.$projectId.deploys.$envId.tsx"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "extends",
+        "unit": {
+          "kind": "file",
+          "path": "platform/services/statecraft/web/app/routes/app.project.$projectId.deploys.$envId.tsx"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "platform/services/statecraft/web/app/routes/app.project.$projectId.deploys.tsx"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "extends",
+        "unit": {
+          "kind": "file",
+          "path": "platform/services/statecraft/web/app/routes/app.project.$projectId.deploys.tsx"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "platform/services/statecraft/web/app/routes/app.projects.new.tsx"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "extends",
+        "unit": {
+          "kind": "file",
+          "path": "platform/services/statecraft/web/app/routes/app.projects.new.tsx"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "platform/services/statecraft/api/deploy/deploy.ts"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "refines",
+        "unit": {
+          "kind": "file",
+          "path": "platform/services/statecraft/api/deploy/deploy.ts"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "platform/services/statecraft/api/deploy/deploydClient.ts"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "refines",
+        "unit": {
+          "kind": "file",
+          "path": "platform/services/statecraft/api/deploy/deploydClient.ts"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "platform/services/statecraft/api/deploy/oidcM2m.ts"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "refines",
+        "unit": {
+          "kind": "file",
+          "path": "platform/services/statecraft/api/deploy/oidcM2m.ts"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "platform/services/statecraft/api/github/webhook.ts"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "refines",
+        "unit": {
+          "kind": "file",
+          "path": "platform/services/statecraft/api/github/webhook.ts"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "platform/services/statecraft/vite.config.ts"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "refines",
+        "unit": {
+          "kind": "file",
+          "path": "platform/services/statecraft/vite.config.ts"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "platform/services/statecraft/web/app/routes/app.project.$projectId._index.tsx"
+          }
+        ],
+        "ownership": false,
+        "sourceField": "references",
+        "unit": {
+          "kind": "file",
+          "path": "platform/services/statecraft/web/app/routes/app.project.$projectId._index.tsx"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "specs/087-unified-workspace-architecture/spec.md"
+          }
+        ],
+        "ownership": false,
+        "sourceField": "references",
+        "unit": {
+          "kind": "file",
+          "path": "specs/087-unified-workspace-architecture/spec.md"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "specs/112-factory-project-lifecycle/spec.md"
+          }
+        ],
+        "ownership": false,
+        "sourceField": "references",
+        "unit": {
+          "kind": "file",
+          "path": "specs/112-factory-project-lifecycle/spec.md"
+        }
+      }
+    ],
+    "specId": "215-statecraft-deploy-trigger-ux",
+    "specStatus": "approved"
+  },
+  "schemaVersion": "1.1.0",
+  "shardHash": "76006d450367aea644f7994e0a34d54de98b639187544d9db081c5bec01e82f8"
+}

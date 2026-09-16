@@ -1,0 +1,40 @@
+{
+  "audiences": [
+    {
+      "name": "attendee",
+      "description": "People who browse events and manage their own registrations.",
+      "auth_method": "oidc",
+      "auth_provider": "keycloak",
+      "provisioning_model": "open-authenticated",
+      "roles": [
+        {
+          "role_code": "attendee",
+          "display_name": "Attendee",
+          "description": "Browses events and manages their own registrations.",
+          "permissions": ["registration:write:own", "registration:read:own"]
+        }
+      ]
+    },
+    {
+      "name": "organizer",
+      "description": "Staff who publish events and review registrations from the internal surface.",
+      "auth_method": "oidc",
+      "auth_provider": "keycloak",
+      "provisioning_model": "admin-only",
+      "roles": [
+        {
+          "role_code": "organizer",
+          "display_name": "Organizer",
+          "description": "Publishes and manages events and reviews registrations.",
+          "permissions": ["event:write", "registration:read", "registration:decision"]
+        },
+        {
+          "role_code": "admin",
+          "display_name": "Administrator",
+          "description": "Manages organizer accounts and all events.",
+          "permissions": ["event:write", "registration:read", "registration:decision", "user:write"]
+        }
+      ]
+    }
+  ]
+}

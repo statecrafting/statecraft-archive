@@ -1,0 +1,87 @@
+{
+  "mapping": {
+    "dependsOn": [
+      "087-unified-workspace-architecture",
+      "119-project-as-unit-of-governance",
+      "120-factory-extraction-stage",
+      "125-schema-parity-walker-rebuild",
+      "183-opc-boot-precondition-gate"
+    ],
+    "implementingPaths": [
+      {
+        "path": "crates/featuregraph/tests/golden/features_graph.json",
+        "source": "spec-edge"
+      },
+      {
+        "path": "tools/oap/schema-parity-check/envelope-version.mjs",
+        "source": "spec-edge"
+      },
+      {
+        "path": "tools/oap/schema-parity-check/envelope-version.test.mjs",
+        "source": "spec-edge"
+      },
+      {
+        "path": "tools/oap/schema-parity-check/index.mjs",
+        "source": "spec-edge"
+      }
+    ],
+    "resolvedUnits": [
+      {
+        "locations": [
+          {
+            "file": "tools/oap/schema-parity-check/envelope-version.mjs"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "file",
+          "path": "tools/oap/schema-parity-check/envelope-version.mjs"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "tools/oap/schema-parity-check/envelope-version.test.mjs"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "file",
+          "path": "tools/oap/schema-parity-check/envelope-version.test.mjs"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "crates/featuregraph/tests/golden/features_graph.json"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "extends",
+        "unit": {
+          "kind": "file",
+          "path": "crates/featuregraph/tests/golden/features_graph.json"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "tools/oap/schema-parity-check/index.mjs"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "extends",
+        "unit": {
+          "kind": "file",
+          "path": "tools/oap/schema-parity-check/index.mjs"
+        }
+      }
+    ],
+    "specId": "189-duplex-envelope-version-parity",
+    "specStatus": "approved"
+  },
+  "schemaVersion": "1.1.0",
+  "shardHash": "2f3bf6b2126f51ab362d38a9f22df4ff95d20cffa56660b8d6cb27addc56927e"
+}

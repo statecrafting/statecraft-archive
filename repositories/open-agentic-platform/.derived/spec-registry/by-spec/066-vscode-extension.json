@@ -1,0 +1,57 @@
+{
+  "record": {
+    "authors": [
+      "open-agentic-platform"
+    ],
+    "codeAliases": [
+      "VSCODE_EXT"
+    ],
+    "created": "2026-03-31",
+    "domain": "opc",
+    "extraFrontmatter": {
+      "language": "en",
+      "sources": [
+        "claudepal"
+      ]
+    },
+    "featureBranch": "066-vscode-extension",
+    "id": "066-vscode-extension",
+    "implementation": "deferred",
+    "kind": "platform",
+    "references": [
+      {
+        "role": "deferred",
+        "unit": {
+          "kind": "directory",
+          "path": "product/packages/vscode-extension"
+        }
+      }
+    ],
+    "sectionHeadings": [
+      "Feature Specification: VS Code Extension (Sidebar Webview)",
+      "Purpose",
+      "Scope",
+      "In scope",
+      "Out of scope",
+      "Requirements",
+      "Functional",
+      "Non-functional",
+      "Architecture",
+      "Extension structure",
+      "Lockfile-based service discovery",
+      "REST API contract (backend must implement)",
+      "Webview-extension message protocol",
+      "Theme integration",
+      "Implementation approach",
+      "Success criteria",
+      "Dependencies",
+      "Risk"
+    ],
+    "specPath": "specs/066-vscode-extension/spec.md",
+    "status": "approved",
+    "summary": "VS Code extension that embeds an OAP panel as a sidebar webview. Uses a lockfile-based REST API for lightweight communication with the desktop app or a local agent server. Provides governance status, session management, and spec context directly in the IDE without requiring the full desktop app.\n",
+    "title": "VS Code Extension (Sidebar Webview)"
+  },
+  "shardHash": "c982356256f3f0ca737c58b03c320d8cd8da89b13dbafbbbd67c1dcb868d4634",
+  "specVersion": "1.1.0"
+}

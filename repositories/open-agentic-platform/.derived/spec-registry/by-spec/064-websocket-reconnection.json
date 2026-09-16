@@ -1,0 +1,67 @@
+{
+  "record": {
+    "authors": [
+      "open-agentic-platform"
+    ],
+    "codeAliases": [
+      "WS_RECONNECT"
+    ],
+    "created": "2026-03-31",
+    "domain": "opc",
+    "extends": [
+      {
+        "nature": "additive",
+        "spec": "032-opc-inspect-governance-wiring-mvp",
+        "unit": {
+          "id": "@opc/desktop",
+          "kind": "crate"
+        }
+      }
+    ],
+    "extraFrontmatter": {
+      "language": "en",
+      "sources": [
+        "claudecodeui"
+      ]
+    },
+    "featureBranch": "064-websocket-reconnection",
+    "id": "064-websocket-reconnection",
+    "implementation": "complete",
+    "kind": "desktop",
+    "references": [
+      {
+        "role": "historical",
+        "unit": {
+          "kind": "file",
+          "path": "product/apps/opc/src/lib/wsReconnection.ts"
+        }
+      }
+    ],
+    "sectionHeadings": [
+      "Feature Specification: WebSocket Session Reconnection",
+      "Purpose",
+      "Scope",
+      "In scope",
+      "Out of scope",
+      "Requirements",
+      "Functional",
+      "Non-functional",
+      "Architecture",
+      "Protocol messages",
+      "Client reconnection state machine",
+      "Server session lifecycle",
+      "WebSocketWriter hot-swap",
+      "Integration with existing apiAdapter",
+      "Implementation approach",
+      "Success criteria",
+      "Dependencies",
+      "Risk"
+    ],
+    "specPath": "specs/064-websocket-reconnection/spec.md",
+    "status": "approved",
+    "summary": "Hot-swap WebSocket reconnection for in-flight SDK streams. When a WebSocket connection drops during a long-running agent session, the client transparently reconnects and the server swaps the new connection into the existing session's writer, preserving session state and replaying missed events. No user intervention required.\n",
+    "title": "WebSocket Session Reconnection"
+  },
+  "shardHash": "eb6738302acb44c187e2d0533b01d5a1aa5beccbc1b288f304a8892df2d58cb2",
+  "specVersion": "1.1.0"
+}

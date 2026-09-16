@@ -1,0 +1,102 @@
+{
+  "record": {
+    "codeAliases": [
+      "ASYNC_PROJECT_CLONE"
+    ],
+    "created": "2026-04-27",
+    "dependsOn": [
+      "109-factory-pat-and-pubsub-sync",
+      "112-factory-project-lifecycle",
+      "113-statecraft-projects-rename-and-clone"
+    ],
+    "domain": "platform",
+    "establishes": [
+      {
+        "kind": "file",
+        "path": "platform/services/statecraft/api/db/schema.ts"
+      },
+      {
+        "kind": "file",
+        "path": "platform/services/statecraft/api/projects/cloneCore.ts"
+      },
+      {
+        "kind": "file",
+        "path": "platform/services/statecraft/api/projects/cloneEvents.ts"
+      },
+      {
+        "kind": "file",
+        "path": "platform/services/statecraft/api/projects/cloneWorker.ts"
+      },
+      {
+        "kind": "file",
+        "path": "platform/services/statecraft/api/projects/cloneRunStatus.ts"
+      },
+      {
+        "kind": "file",
+        "path": "platform/services/statecraft/web/app/routes/app.projects.$sourceProjectId.clone.tsx"
+      },
+      {
+        "kind": "file",
+        "path": "platform/services/statecraft/web/app/routes/app.projects.clone-runs.$cloneJobId.tsx"
+      }
+    ],
+    "extends": [
+      {
+        "nature": "wrapping",
+        "spec": "113-statecraft-projects-rename-and-clone",
+        "unit": {
+          "kind": "file",
+          "path": "platform/services/statecraft/web/app/components/CloneProjectDialog.tsx"
+        }
+      },
+      {
+        "nature": "wrapping",
+        "spec": "113-statecraft-projects-rename-and-clone",
+        "unit": {
+          "kind": "file",
+          "path": "platform/services/statecraft/web/app/lib/projects-api.server.ts"
+        }
+      }
+    ],
+    "featureBranch": "feat/114-async-project-clone-pipeline",
+    "id": "114-async-project-clone-pipeline",
+    "implementation": "complete",
+    "kind": "platform",
+    "owner": "bart",
+    "risk": "medium",
+    "sectionHeadings": [
+      "114 — Async Project Clone Pipeline",
+      "1. Problem",
+      "2. Goals",
+      "3. Non-Goals",
+      "4. User Scenarios & Testing",
+      "User Story 1 — Clone a legal-sized repo without timing out (Priority: P1)",
+      "Edge Cases",
+      "5. Requirements",
+      "5.1 Sync endpoint behaviour",
+      "5.2 Worker behaviour",
+      "5.3 Polling endpoint",
+      "5.4 Dialog behaviour",
+      "5.5 Schema + migration",
+      "5.6 Backward compatibility",
+      "6. Open Questions",
+      "7. Risks"
+    ],
+    "specPath": "specs/114-async-project-clone-pipeline/spec.md",
+    "status": "approved",
+    "summary": "Spec 113's `POST /api/projects/:id/clone` does the full mirror-clone + mirror-push + raw-artifact hydration synchronously inside the HTTP request. For non-trivial source repos this exceeds the statecraft ingress's default ~60s read timeout (no `proxy-read-timeout` annotation on the chart) and the SSR proxy translates the upstream cut-off into a 502 in the browser — the symptom users hit on 2026-04-27. This spec splits the endpoint into a thin synchronous queue step and a PubSub worker that owns the heavy work, mirroring the pattern spec 109 already uses for `factory_sync_runs`. The dialog learns to poll a new `GET /api/projects/clone/runs/:cloneJobId` until the run reaches a terminal state, then navigates with the worker-resolved final names.\n",
+    "supersedes": [
+      {
+        "scope": "partial",
+        "spec": "113-statecraft-projects-rename-and-clone",
+        "unit": {
+          "kind": "file",
+          "path": "platform/services/statecraft/api/projects/clone.ts"
+        }
+      }
+    ],
+    "title": "Async Project Clone Pipeline"
+  },
+  "shardHash": "ed0988ad45832b3076b2dfa1a7162a9ed2aa0b92b10e123733e386969e88135d",
+  "specVersion": "1.1.0"
+}

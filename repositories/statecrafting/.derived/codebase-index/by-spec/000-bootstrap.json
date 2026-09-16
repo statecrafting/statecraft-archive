@@ -1,0 +1,29 @@
+{
+  "mapping": {
+    "implementingPaths": [
+      {
+        "path": "spec-spine.toml",
+        "source": "spec-edge"
+      }
+    ],
+    "resolvedUnits": [
+      {
+        "locations": [
+          {
+            "file": "spec-spine.toml"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "file",
+          "path": "spec-spine.toml"
+        }
+      }
+    ],
+    "specId": "000-bootstrap",
+    "specStatus": "approved"
+  },
+  "schemaVersion": "1.1.0",
+  "shardHash": "d2f902eb8b1e9665a71d2e3ffc4a2374f91e8d47cf3e578c0dcf4fd433d71c9b"
+}

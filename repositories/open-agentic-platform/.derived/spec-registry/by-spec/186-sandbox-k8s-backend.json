@@ -1,0 +1,111 @@
+{
+  "record": {
+    "codeAliases": [
+      "SANDBOX_K8S_BACKEND",
+      "K8S_SANDBOX_CLIENT"
+    ],
+    "created": "2026-05-26",
+    "dependsOn": [
+      "162-sandbox-execution-contract",
+      "075-factory-workflow-engine",
+      "102-governed-excellence"
+    ],
+    "domain": "platform",
+    "establishes": [
+      {
+        "kind": "directory",
+        "path": "crates/sandbox-k8s"
+      }
+    ],
+    "extraFrontmatter": {
+      "compliance": [
+        {
+          "controls": [
+            "ASI05",
+            "ASI10"
+          ],
+          "framework": "owasp-asi-2026"
+        }
+      ],
+      "slug": "sandbox-k8s-backend"
+    },
+    "id": "186-sandbox-k8s-backend",
+    "implementation": "complete",
+    "kind": "capability",
+    "owner": "bart",
+    "references": [
+      {
+        "role": "contract-spec",
+        "unit": {
+          "kind": "file",
+          "path": "specs/162-sandbox-execution-contract/spec.md"
+        }
+      },
+      {
+        "role": "peer-backend-spec",
+        "unit": {
+          "kind": "file",
+          "path": "specs/185-sandbox-local-container-backend/spec.md"
+        }
+      },
+      {
+        "role": "producer-spec",
+        "unit": {
+          "kind": "file",
+          "path": "specs/075-factory-workflow-engine/spec.md"
+        }
+      },
+      {
+        "role": "governance-receipt",
+        "unit": {
+          "kind": "file",
+          "path": "specs/102-governed-excellence/spec.md"
+        }
+      },
+      {
+        "role": "doctrine-source",
+        "unit": {
+          "kind": "file",
+          "path": "docs/owasp/owasp_top_10_agentic_applications_summary.md"
+        }
+      },
+      {
+        "role": "existing-k8s-baseline",
+        "unit": {
+          "kind": "directory",
+          "path": "platform/k8s/policies/namespace-baseline"
+        }
+      }
+    ],
+    "risk": "medium",
+    "sectionHeadings": [
+      "186 — K8s sandbox backend (companion to 162)",
+      "1. Problem",
+      "2. Decision",
+      "2.1 Substrate — kube-rs against the operator's cluster",
+      "2.2 Per-execution Pod synthesis",
+      "2.3 Per-execution NetworkPolicy",
+      "2.4 RuntimeClass selection",
+      "2.5 Phase boundaries — Phase 1 admission constraints",
+      "2.6 Backend lifecycle (per `execute` call)",
+      "2.7 Default backend identity",
+      "3. Functional Requirements",
+      "Backend behaviour",
+      "Backend admission rules (Phase 1)",
+      "4. Success Criteria",
+      "5. Scope",
+      "In scope (this spec)",
+      "Deferred to follow-up units in this spec",
+      "Out of scope (separate spec)",
+      "6. Compliance — extends spec 162's ASI05 / ASI10 coverage",
+      "7. Cross-references",
+      "Security hardening amendment (2026-07-02)"
+    ],
+    "specPath": "specs/186-sandbox-k8s-backend/spec.md",
+    "status": "approved",
+    "summary": "Concrete K8s backend that satisfies the `SandboxClient` contract established by spec 162. Targets the CI / control-plane execution surface (Surface B in spec 162 §1): the same factory-engine pipeline that runs on a developer laptop runs against a cluster, and every adapter-emitted-code exercise step routes through this backend rather than the host runner.\nThe backend uses `kube-rs` against the operator's kubeconfig (in-cluster service account when deployed inside a Pod, `KUBECONFIG` otherwise). It synthesises a per-execution Pod manifest carrying every spec 162 §2.1 invariant (non-root, read-only rootfs, seccomp default, capabilities drop ALL, no host*, automountServiceAccountToken=false, activeDeadlineSeconds=ttl, resource ceilings) and a per-execution NetworkPolicy that default-denies egress. It probes installed `RuntimeClass` resources to pick the strongest available isolation (gVisor / Kata / Firecracker → Tier 1; default runc → Tier 2). Backend identity, kube version, and selected `RuntimeClass` are emitted into the certificate's opaque `runtime_descriptor`.\nThis is the second of the two backends spec 162 §5 deferred. The local-container backend (spec 185) covers the OPC-laptop / developer workstation surface; this spec covers the cluster surface. Both are peers under one trait surface.\n",
+    "title": "K8s sandbox backend — kube-rs + PodSecurity + RuntimeClass selection (companion to spec 162 ASI05)"
+  },
+  "shardHash": "25000dd05193c806393e58143c3165dec8b2b4d7b2686e65207ac59861811577",
+  "specVersion": "1.1.0"
+}

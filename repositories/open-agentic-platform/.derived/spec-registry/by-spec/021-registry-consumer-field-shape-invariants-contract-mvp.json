@@ -1,0 +1,40 @@
+{
+  "record": {
+    "authors": [
+      "open-agentic-platform"
+    ],
+    "created": "2026-03-22",
+    "domain": "tooling",
+    "extends": [
+      {
+        "nature": "additive",
+        "spec": "002-registry-consumer-mvp"
+      }
+    ],
+    "extraFrontmatter": {
+      "language": "en"
+    },
+    "featureBranch": "021-registry-consumer-field-shape-invariants-contract-mvp",
+    "id": "021-registry-consumer-field-shape-invariants-contract-mvp",
+    "implementation": "complete",
+    "kind": "platform-delivery",
+    "refines": [
+      {
+        "aspect": "contract-tests"
+      }
+    ],
+    "sectionHeadings": [
+      "Feature Specification: Field-shape invariants contract",
+      "Purpose",
+      "Requirements",
+      "Out of scope"
+    ],
+    "specPath": "specs/021-registry-consumer-field-shape-invariants-contract-mvp/spec.md",
+    "status": "superseded",
+    "summary": "Lock object-shape invariants for list/show/status-report JSON outputs: required keys, no unexpected keys, null omission behavior, and stable key ordering where current serialization implies it.\n",
+    "supersededBy": "217-spec-spine-engine-swap-collapse",
+    "title": "Registry consumer field-shape invariants contract MVP"
+  },
+  "shardHash": "d730a390cc0da2c7db21f41a955bfd37bd1242a813266dd524435c6a29fd7946",
+  "specVersion": "1.1.0"
+}

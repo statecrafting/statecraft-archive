@@ -1,0 +1,94 @@
+{
+  "record": {
+    "codeAliases": [
+      "SANDBOX_LOCAL_CONTAINER_BACKEND",
+      "LOCAL_CONTAINER_SANDBOX_CLIENT"
+    ],
+    "created": "2026-05-26",
+    "dependsOn": [
+      "162-sandbox-execution-contract",
+      "075-factory-workflow-engine",
+      "102-governed-excellence"
+    ],
+    "domain": "platform",
+    "establishes": [
+      {
+        "kind": "directory",
+        "path": "crates/sandbox-local-container"
+      }
+    ],
+    "extraFrontmatter": {
+      "compliance": [
+        {
+          "controls": [
+            "ASI05",
+            "ASI10"
+          ],
+          "framework": "owasp-asi-2026"
+        }
+      ],
+      "slug": "sandbox-local-container-backend"
+    },
+    "id": "185-sandbox-local-container-backend",
+    "implementation": "complete",
+    "kind": "capability",
+    "owner": "bart",
+    "references": [
+      {
+        "role": "contract-spec",
+        "unit": {
+          "kind": "file",
+          "path": "specs/162-sandbox-execution-contract/spec.md"
+        }
+      },
+      {
+        "role": "producer-spec",
+        "unit": {
+          "kind": "file",
+          "path": "specs/075-factory-workflow-engine/spec.md"
+        }
+      },
+      {
+        "role": "governance-receipt",
+        "unit": {
+          "kind": "file",
+          "path": "specs/102-governed-excellence/spec.md"
+        }
+      },
+      {
+        "role": "doctrine-source",
+        "unit": {
+          "kind": "file",
+          "path": "docs/owasp/owasp_top_10_agentic_applications_summary.md"
+        }
+      }
+    ],
+    "risk": "medium",
+    "sectionHeadings": [
+      "185 — Local-container sandbox backend",
+      "1. Problem",
+      "2. Decision",
+      "2.1 Runtime — bollard against a Docker-compatible socket",
+      "2.2 Image",
+      "2.3 Per-execution lifecycle",
+      "2.4 Egress posture (Phase 1)",
+      "3. Functional Requirements",
+      "Backend behaviour",
+      "Backend admission rules",
+      "4. Success Criteria",
+      "5. Scope",
+      "In scope (this spec)",
+      "Deferred to follow-up units in this spec",
+      "Out of scope (separate spec)",
+      "6. Compliance — extends spec 162's ASI05 / ASI10 coverage",
+      "7. Cross-references",
+      "Security hardening amendment (2026-07-02)"
+    ],
+    "specPath": "specs/185-sandbox-local-container-backend/spec.md",
+    "status": "approved",
+    "summary": "Concrete local-container backend that satisfies the `SandboxClient` contract established by spec 162. Targets the OPC-laptop / developer- workstation execution surface (Surface A in spec 162 §1): a developer runs OPC, OPC drives a factory-engine pipeline, an adapter emits code, the pipeline exercises that code, and *every* exercise step routes through this backend rather than the host.\nThe backend uses `bollard` (typed Docker Engine API client) against either a Docker daemon socket OR a rootless Podman socket (Podman exposes a Docker-compatible API surface). Podman is the AGPL-friendly default per spec 162 §2.4; Docker is supported for organisations already standardised on it. Backend identity, version, and selected runtime are emitted into the certificate's opaque `runtime_descriptor`.\nThis is the first of the two backends spec 162 §5 deferred. The K8s backend (kube-rs + PodSecurity + RuntimeClass selection) remains a separate companion draft.\n",
+    "title": "Local-container sandbox backend — rootless Podman / Docker via bollard (companion to spec 162 ASI05)"
+  },
+  "shardHash": "25b511120d74497334d19e3736dde6c328a5a18518163e573ecd75e4a5da1df4",
+  "specVersion": "1.1.0"
+}

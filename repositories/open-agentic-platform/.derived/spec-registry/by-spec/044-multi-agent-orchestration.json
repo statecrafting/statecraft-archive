@@ -1,0 +1,61 @@
+{
+  "record": {
+    "authors": [
+      "open-agentic-platform"
+    ],
+    "codeAliases": [
+      "MULTI_AGENT_ORCHESTRATION"
+    ],
+    "created": "2026-03-29",
+    "domain": "opc",
+    "establishes": [
+      {
+        "kind": "file",
+        "path": "crates/orchestrator/src/lib.rs"
+      },
+      {
+        "kind": "file",
+        "path": "crates/orchestrator/src/artifact.rs"
+      },
+      {
+        "kind": "file",
+        "path": "crates/orchestrator/src/manifest.rs"
+      }
+    ],
+    "extraFrontmatter": {
+      "language": "en"
+    },
+    "featureBranch": "044-multi-agent-orchestration",
+    "id": "044-multi-agent-orchestration",
+    "implementation": "n-a",
+    "kind": "platform",
+    "sectionHeadings": [
+      "Feature Specification: multi-agent orchestration with file-based artifact passing",
+      "Supersession",
+      "Purpose",
+      "Scope",
+      "In scope",
+      "Out of scope",
+      "Requirements",
+      "Functional",
+      "Non-functional",
+      "Architecture",
+      "Orchestrator dispatch flow",
+      "Artifact directory layout",
+      "Step dependency graph model",
+      "Trigger phrase classification",
+      "Orchestrator contract",
+      "Key integration points",
+      "Success criteria",
+      "Contract notes",
+      "Risk"
+    ],
+    "specPath": "specs/044-multi-agent-orchestration/spec.md",
+    "status": "superseded",
+    "summary": "Introduce an orchestrator that decomposes complex tasks into discrete steps, assigns each to a specialized agent, and passes intermediate results via filesystem artifacts instead of conversation context — achieving ~90% token reduction in multi-agent workflows while maintaining full auditability through a dependency graph and artifact lifecycle protocol.\n",
+    "supersededBy": "089-governed-convergence-plan",
+    "title": "multi-agent orchestration with file-based artifact passing"
+  },
+  "shardHash": "db1fc5909eed6e3e8bf36443528f298b7625e091341fc35c14f49e3a66c36deb",
+  "specVersion": "1.1.0"
+}

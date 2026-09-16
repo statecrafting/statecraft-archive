@@ -1,0 +1,45 @@
+# Spec: 033-axiomregent-activation
+# Spec: 073-axiomregent-unification
+# Spec: 135-fast-ci-as-default
+# Spec: 177-ci-orchestrator-pr-gate
+#
+# CI for axiomregent MCP server: check, clippy, and test.
+# Dispatched from `.github/workflows/ci.yml` on PRs that touch the
+# axiomregent crate or its supporting workspace members (spec 177);
+# manual via workflow_dispatch.
+
+name: CI axiomregent
+
+on:
+  workflow_call:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+env:
+  CARGO_TERM_COLOR: always
+
+jobs:
+  check-and-test:
+    runs-on: ubuntu-latest
+    name: check + clippy + test
+    timeout-minutes: 45
+
+    steps:
+      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+
+      - name: CI axiomregent
+        uses: ./.github/actions/rust-ci
+        with:
+          manifest-path: crates/axiomregent/Cargo.toml
+          cache-workspaces: crates/axiomregent
+          cache-shared-key: axiomregent
+
+      # The previous `cargo test --manifest-path crates/policy-kernel/Cargo.toml`
+      # post-step was removed by spec 135: policy-kernel has its own enforcing
+      # workflow (ci-policy-kernel.yml) that runs the same check+clippy+test
+      # via the rust-ci composite. Both workflows trigger on
+      # crates/policy-kernel/** path changes, so coverage is unchanged. Removing
+      # the redundancy lets `ci-rust` switch to `--workspace` mode without
+      # leaving a per-member token unmirrored in the parity check.

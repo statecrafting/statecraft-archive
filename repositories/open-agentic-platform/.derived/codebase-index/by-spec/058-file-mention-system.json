@@ -1,0 +1,62 @@
+{
+  "diagnostics": {
+    "errors": [],
+    "warnings": [
+      {
+        "code": "W-002",
+        "message": "spec '058-file-mention-system' file unit 'product/apps/opc/src/components/FileMentionAutocomplete.tsx' does not exist",
+        "path": "product/apps/opc/src/components/FileMentionAutocomplete.tsx"
+      },
+      {
+        "code": "W-002",
+        "message": "spec '058-file-mention-system' file unit 'product/apps/opc/src/lib/fileMentionSystem.ts' does not exist",
+        "path": "product/apps/opc/src/lib/fileMentionSystem.ts"
+      }
+    ]
+  },
+  "mapping": {
+    "implementingPaths": [
+      {
+        "path": "product/packages/file-mention",
+        "source": "multiple"
+      }
+    ],
+    "resolvedUnits": [
+      {
+        "locations": [
+          {
+            "file": "product/packages/file-mention"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "directory",
+          "path": "product/packages/file-mention"
+        }
+      },
+      {
+        "locations": [],
+        "ownership": false,
+        "sourceField": "references",
+        "unit": {
+          "kind": "file",
+          "path": "product/apps/opc/src/components/FileMentionAutocomplete.tsx"
+        }
+      },
+      {
+        "locations": [],
+        "ownership": false,
+        "sourceField": "references",
+        "unit": {
+          "kind": "file",
+          "path": "product/apps/opc/src/lib/fileMentionSystem.ts"
+        }
+      }
+    ],
+    "specId": "058-file-mention-system",
+    "specStatus": "approved"
+  },
+  "schemaVersion": "1.1.0",
+  "shardHash": "4bf48f276b003c482a8ab86361dc994554dd406d90c9722e327858164a7d3578"
+}

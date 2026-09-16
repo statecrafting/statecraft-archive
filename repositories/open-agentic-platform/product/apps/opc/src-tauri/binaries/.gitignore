@@ -1,0 +1,5 @@
+# Sidecar binaries fetched via `make fetch-axiomregent` or built locally.
+# Do not commit — they inflate the repo by ~10 MB per platform.
+axiomregent-*
+gitctx-*
+!.gitignore

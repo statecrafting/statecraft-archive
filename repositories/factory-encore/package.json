@@ -1,0 +1,42 @@
+{
+  "name": "factory-encore",
+  "version": "0.1.0",
+  "description": "Create-time home of the OAP factory: the deterministic acme-vue-encore generator, its module catalog, the from-Build-Spec orchestration, and the spec-spine kernel + cross-repo lockstep that govern them.",
+  "private": true,
+  "type": "module",
+  "author": "Bartek Kus",
+  "license": "Apache-2.0",
+  "engines": {
+    "node": ">=24.0.0",
+    "npm": ">=10.0.0"
+  },
+  "scripts": {
+    "test": "vitest run",
+    "test:modules": "vitest run adapters/acme-vue-encore/scripts",
+    "test:lockstep": "vitest run adapters/acme-vue-encore/scripts/lockstep",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "lockstep": "tsx adapters/acme-vue-encore/scripts/lockstep/check.ts",
+    "e2e:struct": "bash adapters/acme-vue-encore/e2e/run-e2e.sh matrix --no-build",
+    "e2e:build": "bash adapters/acme-vue-encore/e2e/run-e2e.sh all",
+    "spec:compile": "spec-spine compile",
+    "spec:lint": "spec-spine lint --fail-on-warn",
+    "spec:index": "spec-spine index",
+    "spec:check": "spec-spine index check",
+    "spec:all": "spec-spine compile && spec-spine lint --fail-on-warn && spec-spine index check"
+  },
+  "dependencies": {
+    "jsonc-parser": "^3.3.1",
+    "zod": "^4.4.3"
+  },
+  "devDependencies": {
+    "@types/node": "^26.1.0",
+    "spec-spine": "0.10.0",
+    "tsx": "^4.23.0",
+    "typescript": "^6.0.3",
+    "vitest": "^4.0.18",
+    "yaml": "^2.9.0"
+  },
+  "spec-spine": {
+    "spec": "000-factory-kernel"
+  }
+}

@@ -1,0 +1,264 @@
+{
+  "record": {
+    "amends": [
+      "034-featuregraph-registry-scanner-fix"
+    ],
+    "codeAliases": [
+      "OPC_SHELL_CODIFICATION",
+      "OPC_TAB_RECONCILIATION_DISCIPLINE",
+      "OPC_FS_HANDLER_DISCIPLINE",
+      "OPC_BENCH_PRESENCE"
+    ],
+    "created": "2026-05-24",
+    "dependsOn": [
+      "032-opc-inspect-governance-wiring-mvp",
+      "132-constitutional-invariant-freeze",
+      "133-amends-aware-coupling-gate",
+      "147-spec-kind-grammar",
+      "152-path-co-authority",
+      "153-invariant-freeze-additive-evolution",
+      "154-logical-unit-ownership-grammar",
+      "156-references-edge-provenance-grammar",
+      "166-opc-stop-hook-gate-chain",
+      "172-opc-live-agent-session-introspection",
+      "174-codification-gate",
+      "177-ci-orchestrator-pr-gate"
+    ],
+    "domain": "opc",
+    "establishes": [
+      {
+        "kind": "directory",
+        "path": "product/apps/opc/src/lib"
+      },
+      {
+        "kind": "directory",
+        "path": "product/apps/opc/src/services"
+      },
+      {
+        "kind": "directory",
+        "path": "product/apps/opc/src/stores"
+      },
+      {
+        "kind": "directory",
+        "path": "product/apps/opc/src/routes"
+      },
+      {
+        "kind": "directory",
+        "path": "product/apps/opc/src/components/factory"
+      },
+      {
+        "kind": "directory",
+        "path": "product/apps/opc/src/components"
+      },
+      {
+        "kind": "directory",
+        "path": "product/apps/opc/src/contexts"
+      },
+      {
+        "kind": "directory",
+        "path": "product/apps/opc/src/hooks"
+      },
+      {
+        "kind": "directory",
+        "path": "product/apps/opc/src-tauri/src/commands"
+      },
+      {
+        "kind": "directory",
+        "path": "product/apps/opc/src-tauri/src"
+      },
+      {
+        "kind": "file",
+        "path": "product/apps/opc/vite.config.ts"
+      },
+      {
+        "kind": "file",
+        "path": "product/apps/opc/tsconfig.json"
+      },
+      {
+        "kind": "file",
+        "path": "product/apps/opc/src/components/UsageDashboard.tsx"
+      },
+      {
+        "kind": "file",
+        "path": "product/apps/opc/src/components/TabManager.tsx"
+      },
+      {
+        "kind": "file",
+        "path": "product/apps/opc/src-tauri/src/commands/usage.rs"
+      },
+      {
+        "kind": "directory",
+        "path": "product/apps/opc/src-tauri/benches"
+      },
+      {
+        "kind": "file",
+        "path": ".github/workflows/ci-opc-bench.yml"
+      }
+    ],
+    "extends": [
+      {
+        "nature": "additive",
+        "spec": "177-ci-orchestrator-pr-gate",
+        "unit": {
+          "kind": "file",
+          "path": ".github/workflows/ci.yml"
+        }
+      },
+      {
+        "nature": "additive",
+        "spec": "032-opc-inspect-governance-wiring-mvp",
+        "unit": {
+          "kind": "file",
+          "path": "product/apps/opc/src-tauri/Cargo.toml"
+        }
+      },
+      {
+        "nature": "additive",
+        "spec": "034-featuregraph-registry-scanner-fix",
+        "unit": {
+          "kind": "file",
+          "path": "crates/featuregraph/tests/golden/features_graph.json"
+        }
+      }
+    ],
+    "extraFrontmatter": {
+      "slug": "opc-shell-codification"
+    },
+    "id": "180-opc-shell-codification",
+    "implementation": "complete",
+    "kind": "governance",
+    "origin": {
+      "retroactive": true
+    },
+    "owner": "bart",
+    "references": [
+      {
+        "role": "invariant-freeze-precedent",
+        "unit": {
+          "kind": "file",
+          "path": "specs/132-constitutional-invariant-freeze/spec.md"
+        }
+      },
+      {
+        "role": "invariant-freeze-precedent",
+        "unit": {
+          "kind": "file",
+          "path": "specs/153-invariant-freeze-additive-evolution/spec.md"
+        }
+      },
+      {
+        "role": "bench-precedent",
+        "unit": {
+          "kind": "file",
+          "path": "crates/policy-kernel/benches/kernel_eval.rs"
+        }
+      },
+      {
+        "role": "bench-precedent",
+        "unit": {
+          "kind": "file",
+          "path": "tools/oap/policy-compiler/benches/compile_many.rs"
+        }
+      },
+      {
+        "role": "bench-precedent",
+        "unit": {
+          "kind": "file",
+          "path": "tools/spec-spine/codebase-indexer/benches/resolver.rs"
+        }
+      },
+      {
+        "role": "ci-gate-orchestrator",
+        "unit": {
+          "kind": "file",
+          "path": "specs/177-ci-orchestrator-pr-gate/spec.md"
+        }
+      },
+      {
+        "role": "parallel-claim",
+        "unit": {
+          "kind": "file",
+          "path": "specs/165-opc-decomposition-pipeline/spec.md"
+        }
+      },
+      {
+        "role": "codification-gate-self-check",
+        "unit": {
+          "kind": "file",
+          "path": "specs/174-codification-gate/spec.md"
+        }
+      }
+    ],
+    "refines": [
+      {
+        "aspect": "tab-list-reconciliation-discipline",
+        "refines_specs": [
+          "172-opc-live-agent-session-introspection"
+        ],
+        "unit": {
+          "kind": "file",
+          "path": "product/apps/opc/src/components/TabContent.tsx"
+        }
+      },
+      {
+        "aspect": "tab-list-reconciliation-discipline",
+        "refines_specs": [
+          "172-opc-live-agent-session-introspection"
+        ],
+        "unit": {
+          "kind": "file",
+          "path": "product/apps/opc/src/contexts/TabContext.tsx"
+        }
+      },
+      {
+        "aspect": "tab-list-reconciliation-discipline",
+        "refines_specs": [
+          "172-opc-live-agent-session-introspection"
+        ],
+        "unit": {
+          "kind": "file",
+          "path": "product/apps/opc/src/hooks/useTabState.ts"
+        }
+      }
+    ],
+    "risk": "medium",
+    "sectionHeadings": [
+      "180 — OPC shell codification",
+      "1. Preamble",
+      "2. Authority enumeration",
+      "2.1 Relationship-graph posture",
+      "2.2 Composition with active drafts and recently-approved specs",
+      "3. Tier 1 — Structural invariants",
+      "3.1 Tab-list reconciliation (refines spec 172)",
+      "3.2 Filesystem-scanning IPC handlers",
+      "3.3 Files the invariants bind on, today",
+      "4. Tier 3 exclusion",
+      "5. Tier 2 — Bench-presence + relative regression",
+      "5.1 The contract",
+      "5.2 Inaugural posture (honest framing)",
+      "5.3 CI wiring under spec 177",
+      "5.4 Section 6 — Operational ownership",
+      "6. Self-check against spec 174",
+      "7. Out of scope (and why)",
+      "8. Future work",
+      "9. Acceptance",
+      "10. Manifest posture (no `oap.spec` displacement)",
+      "11. Cross-references",
+      "12. Profile alignment for build reuse (completion, 2026-06-03)",
+      "12.1 Why the workspace split exists (the libsqlite3-sys isolation)",
+      "12.2 The merge is rejected (and stays rejected)",
+      "12.3 How shared-crate reuse is actually delivered",
+      "12.4 The corrected profile decision: reuse-over-size",
+      "12.5 Why `panic = \"unwind\"` — behavioral, not size",
+      "12.6 The `[profile.bench]` carve-out is retired (FR-T8 persists)",
+      "12.7 Standing obligation: the SQLite drift-guard",
+      "12.8 What this completion changed"
+    ],
+    "specPath": "specs/180-opc-shell-codification/spec.md",
+    "status": "approved",
+    "summary": "Codifies the previously un-bound OPC desktop shell. Establishes broad authority over every authority-empty OPC subsystem root surfaced by the Phase 0 seam map (`src/lib/`, `src/services/`, `src/stores/`, `src/routes/`, `src/components/factory/`, the top-level `components/`, `contexts/`, `hooks/`, the unclaimed subset of `src-tauri/src/commands/`, and the build-tooling surface) so that a future `registry-consumer by-authority` query against any of these paths returns a named door, not silence. Binds Tier 1 structural invariants only on the bug-adjacent surface — the tab-list reconciliation files refined from spec 172 (`TabContent.tsx`, `TabContext.tsx`, `useTabState.ts`), the `UsageDashboard.tsx` / `TabManager.tsx` view shells, and the filesystem-scanning IPC handlers (canonical case: `commands/usage.rs`). Inaugurates a Tier 2 bench-presence + relative-regression gate for filesystem-scanning Tauri handlers (criterion at `product/apps/opc/src-tauri/benches/`, N=200 PR / N=2000 nightly, 25% regression threshold, amendable). Excludes Tier 3 absolute latency budgets explicitly. The Tier 2 gate is operationally owned by the OPC subsystem maintainer per §6.\n",
+    "title": "OPC shell codification — broad authority on the un-bound desktop shell, narrow Tier 1 invariants on the tab/IPC seam"
+  },
+  "shardHash": "52075425639c6f8b39711c548ca07c64bcf20d71e9f24285dbf684711b3a0a90",
+  "specVersion": "1.1.0"
+}

@@ -1,0 +1,9 @@
+{
+  "mapping": {
+    "implementingPaths": [],
+    "specId": "029-registry-consumer-contract-governance-gate-mvp",
+    "specStatus": "superseded"
+  },
+  "schemaVersion": "1.1.0",
+  "shardHash": "26ed64c0bbe93b0d42a85166fd257c1031037e7fe245bde25d81812a93e301dd"
+}

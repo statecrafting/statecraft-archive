@@ -1,0 +1,194 @@
+{
+  "mapping": {
+    "dependsOn": [
+      "074-factory-ingestion",
+      "075-factory-workflow-engine",
+      "077-statecraft-factory-api",
+      "094-unified-artifact-store",
+      "110-statecraft-to-opc-factory-trigger",
+      "115-knowledge-extraction-pipeline"
+    ],
+    "implementingPaths": [
+      {
+        "path": "crates/artifact-extract",
+        "source": "manifest-metadata"
+      },
+      {
+        "path": "crates/artifact-extract/Cargo.toml",
+        "source": "spec-edge"
+      },
+      {
+        "path": "crates/artifact-extract/src/lib.rs",
+        "source": "spec-edge"
+      },
+      {
+        "path": "crates/factory-contracts/src/knowledge.rs",
+        "source": "spec-edge"
+      },
+      {
+        "path": "crates/factory-engine/src/manifest_gen.rs",
+        "source": "spec-edge"
+      },
+      {
+        "path": "crates/factory-engine/src/stages/s_minus_1_extract.rs",
+        "source": "spec-edge"
+      },
+      {
+        "path": "platform/services/statecraft/api/knowledge/extractionExternal.ts",
+        "source": "spec-edge"
+      },
+      {
+        "path": "platform/services/statecraft/api/knowledge/extractionOutput.ts",
+        "source": "spec-edge"
+      },
+      {
+        "path": "product/apps/opc/src-tauri/src/commands/factory.rs",
+        "source": "spec-edge"
+      },
+      {
+        "path": "product/apps/opc/src-tauri/src/commands/statecraft_client.rs",
+        "source": "spec-edge"
+      },
+      {
+        "path": "product/apps/opc/src/components/factory/ArtifactInspector.tsx",
+        "source": "spec-edge"
+      }
+    ],
+    "resolvedUnits": [
+      {
+        "locations": [
+          {
+            "file": "crates/factory-contracts/src/knowledge.rs"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "file",
+          "path": "crates/factory-contracts/src/knowledge.rs"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "crates/factory-engine/src/stages/s_minus_1_extract.rs"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "file",
+          "path": "crates/factory-engine/src/stages/s_minus_1_extract.rs"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "platform/services/statecraft/api/knowledge/extractionExternal.ts"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "file",
+          "path": "platform/services/statecraft/api/knowledge/extractionExternal.ts"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "product/apps/opc/src/components/factory/ArtifactInspector.tsx"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "file",
+          "path": "product/apps/opc/src/components/factory/ArtifactInspector.tsx"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "crates/artifact-extract/Cargo.toml"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "extends",
+        "unit": {
+          "kind": "file",
+          "path": "crates/artifact-extract/Cargo.toml"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "crates/artifact-extract/src/lib.rs"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "extends",
+        "unit": {
+          "kind": "file",
+          "path": "crates/artifact-extract/src/lib.rs"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "crates/factory-engine/src/manifest_gen.rs"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "extends",
+        "unit": {
+          "kind": "file",
+          "path": "crates/factory-engine/src/manifest_gen.rs"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "platform/services/statecraft/api/knowledge/extractionOutput.ts"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "extends",
+        "unit": {
+          "kind": "file",
+          "path": "platform/services/statecraft/api/knowledge/extractionOutput.ts"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "product/apps/opc/src-tauri/src/commands/factory.rs"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "extends",
+        "unit": {
+          "kind": "file",
+          "path": "product/apps/opc/src-tauri/src/commands/factory.rs"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "product/apps/opc/src-tauri/src/commands/statecraft_client.rs"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "extends",
+        "unit": {
+          "kind": "file",
+          "path": "product/apps/opc/src-tauri/src/commands/statecraft_client.rs"
+        }
+      }
+    ],
+    "specId": "120-factory-extraction-stage",
+    "specStatus": "approved"
+  },
+  "schemaVersion": "1.1.0",
+  "shardHash": "d1a09243a16019810c8ad6a8687a4f6cac31ddb646b28002098bb712bde7c360"
+}

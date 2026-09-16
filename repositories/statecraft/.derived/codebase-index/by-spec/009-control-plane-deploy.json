@@ -1,0 +1,119 @@
+{
+  "mapping": {
+    "dependsOn": [
+      "002-app-shell",
+      "008-governance-attestation",
+      "010-statecraft-cluster"
+    ],
+    "implementingPaths": [
+      {
+        "path": ".dockerignore",
+        "source": "spec-edge"
+      },
+      {
+        "path": ".github/workflows/ai-changelog.yml",
+        "source": "spec-edge"
+      },
+      {
+        "path": ".github/workflows/ai-pr-review.yml",
+        "source": "spec-edge"
+      },
+      {
+        "path": ".github/workflows/image.yml",
+        "source": "spec-edge"
+      },
+      {
+        "path": "infra/gitops/clusters/statecraft-hetzner/statecraft-kustomization.yaml",
+        "source": "spec-edge"
+      },
+      {
+        "path": "infra/gitops/clusters/statecraft-hetzner/statecraft/",
+        "source": "spec-edge"
+      }
+    ],
+    "resolvedUnits": [
+      {
+        "locations": [
+          {
+            "file": "infra/gitops/clusters/statecraft-hetzner/statecraft/"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "directory",
+          "path": "infra/gitops/clusters/statecraft-hetzner/statecraft/"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": ".dockerignore"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "file",
+          "path": ".dockerignore"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": ".github/workflows/ai-changelog.yml"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "file",
+          "path": ".github/workflows/ai-changelog.yml"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": ".github/workflows/ai-pr-review.yml"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "file",
+          "path": ".github/workflows/ai-pr-review.yml"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": ".github/workflows/image.yml"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "file",
+          "path": ".github/workflows/image.yml"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "infra/gitops/clusters/statecraft-hetzner/statecraft-kustomization.yaml"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "file",
+          "path": "infra/gitops/clusters/statecraft-hetzner/statecraft-kustomization.yaml"
+        }
+      }
+    ],
+    "specId": "009-control-plane-deploy",
+    "specStatus": "approved"
+  },
+  "schemaVersion": "1.1.0",
+  "shardHash": "6c7fecb9123df778f374ef68b659492f81db9ee5ad26a918e1d08df64619e3d3"
+}

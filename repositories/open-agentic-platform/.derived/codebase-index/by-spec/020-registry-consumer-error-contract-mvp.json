@@ -1,0 +1,9 @@
+{
+  "mapping": {
+    "implementingPaths": [],
+    "specId": "020-registry-consumer-error-contract-mvp",
+    "specStatus": "superseded"
+  },
+  "schemaVersion": "1.1.0",
+  "shardHash": "9dfcd1335bad9b9d84e2124d5af18572d759f0850949c37506f1d88194c20ff4"
+}

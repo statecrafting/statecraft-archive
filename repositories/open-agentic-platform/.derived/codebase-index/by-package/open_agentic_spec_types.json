@@ -1,0 +1,12 @@
+{
+  "package": {
+    "edition": "2024",
+    "kind": "rust-lib",
+    "name": "open_agentic_spec_types",
+    "path": "tools/shared/spec-types",
+    "specRef": "000-bootstrap-spec-system",
+    "version": "0.1.0"
+  },
+  "schemaVersion": "1.1.0",
+  "shardHash": "05627402a91b46732cd5b696bc42ba1d7212026e5ce864ff6dd4d79e247cd29b"
+}

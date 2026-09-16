@@ -1,0 +1,35 @@
+# Spec 218 FR-002 (read, never recompute). The governance-cert crate may call
+# the reader-side `spec_spine_core::attest::attestation_hash` (a pure payload
+# hash over a SUPPLIED attestation), but must NEVER call the corpus-recompute /
+# emit functions. clippy resolves these by path, so this is a compile-time fact,
+# not a review convention. It is the symbol-level layer of the FR-002 boundary;
+# the crate-level layer is the cargo-deny ban on `spec-spine-cli` (deny.toml).
+#
+# Workspace-wide on purpose: no OAP crate should ever recompute a corpus. The
+# warn-by-default `clippy::disallowed_methods` lint is promoted to a hard error
+# by the existing `-D warnings` clippy gate (`.github/actions/rust-ci`,
+# `make ci-rust`), so this needs no separate CI step.
+# FR-002 names two forbidden surfaces: "attestation-emit" and "corpus-compile".
+# This config is WORKSPACE-WIDE (clippy.toml is per-workspace, not per-crate), so
+# it can only ban functions that no workspace member legitimately calls.
+#
+# The attestation-emit functions are used by no crate other than factory-engine
+# (the cert crate), so banning them workspace-wide effectively constrains the
+# cert crate to "read, never emit/recompute an attestation". clippy matches by
+# resolved DefId, so the canonical path catches every re-export alias.
+# `attest`/`verify_recompute` live in the `attest` module; `attest_json`/
+# `verify_attestation_json` are crate-root wrappers. The reader seam
+# (`attestation_hash`) is deliberately permitted.
+#
+# The corpus-compile functions (`compile`/`compile_json`) are NOT banned here:
+# `crates/opc-decomposition-pipeline` legitimately compiles the corpus
+# (promotion.rs), so a workspace-wide ban is impossible. factory-engine's
+# non-recompute of the corpus is assured architecturally instead (it reads via
+# `load_committed_registry` and never calls compile) plus the cargo-deny crate
+# ban on `spec-spine-cli`. See spec 218 FR-002 (accepted residual).
+disallowed-methods = [
+    { path = "spec_spine_core::attest::attest", reason = "spec 218 FR-002: read the attestation hash, never recompute the corpus" },
+    { path = "spec_spine_core::attest::verify_recompute", reason = "spec 218 FR-002: corpus recompute belongs to spec-spine verify-attestation, not the cert crate" },
+    { path = "spec_spine_core::attest_json", reason = "spec 218 FR-002: read, never emit an attestation" },
+    { path = "spec_spine_core::verify_attestation_json", reason = "spec 218 FR-002: corpus recompute belongs to spec-spine verify-attestation, not the cert crate" },
+]

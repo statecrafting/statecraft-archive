@@ -1,0 +1,78 @@
+# The ingress that makes app.statecraft.ing real (spec 009 section 4.2).
+#
+# TLS via the DNS-01 Cloudflare issuer, which is the default every platform
+# host uses: certificates issue before DNS is cut over, where HTTP-01 cannot
+# solve an unreachable host on a greenfield cluster (spec 010 section 4).
+#
+# DNS is an A record to the WORKER node, not the control plane: ingress-nginx
+# runs as a DaemonSet with hostPort and does not tolerate the control-plane
+# taint, so only the worker serves 80/443. That record, and the Hetzner
+# firewall allowing inbound 80/443, are both out-of-band operator steps that
+# no manifest in this tree manages (spec 010 section 4).
+#
+# There is deliberately no auth.statecraft.ing. The whole rauthy surface
+# (discovery, authorize, token, JWKS, account UI, admin UI) is served
+# same-origin below /auth/ by the app's own proxy, so a second host could only
+# mint a second issuer identity for one IdP (spec 009 section 2.4).
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: statecraft
+  namespace: statecraft-system
+  labels:
+    statecraft.spec: "009-control-plane-deploy"
+  annotations:
+    cert-manager.io/cluster-issuer: letsencrypt-prod-dns01-cloudflare
+    # The governance UI posts spec and stamp payloads; the nginx default of 1m
+    # is tight for those, and a 413 on a stamp submission is an unhelpful
+    # failure mode.
+    nginx.ingress.kubernetes.io/proxy-body-size: "16m"
+spec:
+  ingressClassName: nginx
+  tls:
+    - hosts:
+        - app.statecraft.ing
+      secretName: statecraft-tls
+  rules:
+    - host: app.statecraft.ing
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: statecraft
+                port:
+                  name: http
+---
+# /metrics stays off the public origin (spec 012; enrahitu spec 022 makes the
+# endpoint always-on and unauthenticated at the app layer, so the deployment
+# guidance is what keeps it private). A separate Ingress carries the Exact
+# /metrics location with an unsatisfiable allowlist: nginx merges rules per
+# host, the exact match beats the / prefix above, and every public request
+# gets 403 while the in-cluster Prometheus scrapes the pod directly
+# (deployment.yaml annotations), never through the ingress. A separate
+# resource because annotations apply per-Ingress, and the allowlist must not
+# touch the / paths.
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: statecraft-metrics-deny
+  namespace: statecraft-system
+  labels:
+    statecraft.spec: "012-frontend-admin-adoption"
+  annotations:
+    nginx.ingress.kubernetes.io/whitelist-source-range: "127.0.0.1/32"
+spec:
+  ingressClassName: nginx
+  rules:
+    - host: app.statecraft.ing
+      http:
+        paths:
+          - path: /metrics
+            pathType: Exact
+            backend:
+              service:
+                name: statecraft
+                port:
+                  name: http

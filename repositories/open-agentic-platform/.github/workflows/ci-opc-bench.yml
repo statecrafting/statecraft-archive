@@ -1,0 +1,259 @@
+# Spec: 180-opc-shell-codification
+#
+# Tier 2 bench gate for the filesystem-scanning OPC usage handler
+# (spec 180 §5 / FR-T8..FR-T10). Reusable workflow dispatched from ci.yml on
+# PRs/pushes touching product/apps/opc/src-tauri/** (spec 177 §2.4 needs +
+# if: always() aggregator pattern), plus an independent nightly schedule.
+#
+# Modes (selected by github.event_name):
+#   pull_request / merge_group → GATE: N=200, SAME-RUNNER base-vs-head. Measures
+#       the base (main) commit AND the head commit on this one runner, then FAILs
+#       on >25% relative-mean regression of head vs that same-runner base
+#       (FR-T9, amended 2026-06-06). Same-runner cancels the macos-latest fleet's
+#       ±~80% inter-runner I/O variance, which dwarfed the +25% threshold under
+#       the old cross-runner cached baseline and produced spurious regressions.
+#       An in-job path guard (FR-T9, amended 2026-06-10; narrowed 2026-06-25)
+#       skips the measurement when base..head touches neither the benched
+#       source (product/apps/opc/src-tauri/src/**), the bench harness
+#       (product/apps/opc/src-tauri/benches/**), nor this workflow. merge_group
+#       forces all route outputs true (spec 188 Phase 2); on pull_request the
+#       route layer still dispatches on src-tauri/**, so this narrower in-job
+#       filter is what actually excludes deps/config-only diffs (e.g. a
+#       Cargo.lock bump) from the noise-prone same-runner measurement.
+#   push (to main, via ci.yml) → BASELINE: N=200, --save-baseline main, cache it
+#       (informational / feeds the workflow_dispatch diagnostic). Non-gating.
+#   workflow_dispatch          → manual diagnostic: compare to the cached `main`
+#       baseline (lenient), non-gating.
+#   schedule                   → NIGHTLY REPORT: N=2000, non-gating; compares
+#       to the previous nightly and surfaces the delta to the maintainer.
+#
+# FR-T10 / Tier 3 exclusion: this gate asserts NO absolute latency value —
+# only relative delta vs a saved baseline.
+#
+# Parity posture (spec 104/135): intentionally NOT in ci-parity-check's
+# ENFORCING_WORKFLOWS. The gate is CI-stateful (its baseline lives in the
+# Actions cache, refreshed on merge to main) and cannot be faithfully mirrored
+# by a local `make ci-strict` recipe — the same parity-exempt shape as
+# cd-index-staleness-report.yml.
+#
+# macОС runner: the opc crate's macos-private-api / cocoa features can't build
+# on Linux (ci-desktop.yml's cross-target matrix was removed for this reason),
+# so the bench runs on the same aarch64-apple-darwin target as ci-desktop.
+
+name: CI OPC Bench
+
+on:
+  workflow_call:
+  workflow_dispatch:
+  schedule:
+    # Nightly N=2000 report (non-gating). Off-peak, offset from the hour.
+    - cron: '17 7 * * *'
+
+permissions:
+  contents: read
+
+env:
+  CARGO_TERM_COLOR: always
+  MANIFEST: product/apps/opc/src-tauri/Cargo.toml
+  BENCH_DIR: product/apps/opc/src-tauri/target/criterion
+
+jobs:
+  bench:
+    runs-on: macos-latest
+    name: opc-bench / usage scan (relative regression)
+    timeout-minutes: 45
+
+    steps:
+      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+        with:
+          # Full history so the same-runner baseline (PR/merge_group) can check
+          # out the base (main) commit alongside the head in the bench step.
+          fetch-depth: 0
+
+      - name: Rust toolchain
+        uses: dtolnay/rust-toolchain@29eef336d9b2848a0b548edc03f92a220660cdb8 # pinned for rust-toolchain.toml lockstep
+        with:
+          toolchain: '1.95.0'
+
+      - name: Cache Rust dependencies
+        uses: Swatinem/rust-cache@e18b497796c12c097a38f9edb9d0641fb99eee32 # v2
+        with:
+          workspaces: product/apps/opc/src-tauri
+          shared-key: ci-opc-bench-aarch64-apple-darwin
+
+      - name: Create dist stub for web_server include_str!
+        run: |
+          mkdir -p product/apps/opc/dist
+          echo '<!doctype html><html><body>stub</body></html>' > product/apps/opc/dist/index.html
+
+      - name: Create sidecar binary stub for Tauri build.rs
+        run: |
+          mkdir -p product/apps/opc/src-tauri/binaries
+          touch product/apps/opc/src-tauri/binaries/axiomregent-aarch64-apple-darwin
+          chmod +x product/apps/opc/src-tauri/binaries/axiomregent-aarch64-apple-darwin
+
+      # workflow_dispatch (manual diagnostic) still compares against the most
+      # recent cached `main` baseline. PR/merge_group no longer use a cached
+      # baseline — they measure base-vs-head on the same runner (bench step).
+      - name: Restore main bench baseline (workflow_dispatch diagnostic)
+        if: github.event_name == 'workflow_dispatch'
+        uses: actions/cache/restore@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v5
+        with:
+          path: ${{ env.BENCH_DIR }}
+          key: opc-usage-bench-main-${{ github.sha }}
+          restore-keys: |
+            opc-usage-bench-main-
+
+      # Nightly compares against the previous nightly baseline.
+      - name: Restore nightly bench baseline (schedule)
+        if: github.event_name == 'schedule'
+        uses: actions/cache/restore@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v5
+        with:
+          path: ${{ env.BENCH_DIR }}
+          key: opc-usage-bench-nightly-${{ github.run_id }}
+          restore-keys: |
+            opc-usage-bench-nightly-
+
+      - name: Run usage-scan bench + evaluate relative regression
+        shell: bash
+        run: |
+          set -euo pipefail
+          EVENT="${{ github.event_name }}"
+          case "$EVENT" in
+            push)                      N=200;  MODE=cached;     BL=main;    GATE=0; SAVE=1 ;;
+            schedule)                  N=2000; MODE=cached;     BL=nightly; GATE=0; SAVE=1 ;;
+            pull_request|merge_group)  N=200;  MODE=samerunner; BL=main;    GATE=1; SAVE=0 ;;
+            *)                         N=200;  MODE=cached;     BL=main;    GATE=0; SAVE=0 ;;
+          esac
+          BENCH_ID="usage_scan_cold_n${N}"
+          echo "event=$EVENT N=$N mode=$MODE baseline=$BL gate=$GATE save=$SAVE bench_id=$BENCH_ID"
+
+          # Tauri build.rs + web_server's include_str! need these stubs on every
+          # checked-out tree; re-assert after each git checkout in same-runner mode.
+          # Idempotent on purpose (FR-T9 amendment 2026-06-10): the stubs are
+          # untracked, so checkouts never touch them — but rewriting/touching
+          # them here bumps their mtimes and invalidates cargo's fingerprint
+          # (include_str! dep-info + tauri-build's externalBin tracking),
+          # forcing a multi-minute opc recompile between the base and head
+          # measurements even when no opc source changed.
+          ensure_stubs() {
+            if [ ! -f product/apps/opc/dist/index.html ]; then
+              mkdir -p product/apps/opc/dist
+              echo '<!doctype html><html><body>stub</body></html>' > product/apps/opc/dist/index.html
+            fi
+            if [ ! -f product/apps/opc/src-tauri/binaries/axiomregent-aarch64-apple-darwin ]; then
+              mkdir -p product/apps/opc/src-tauri/binaries
+              touch product/apps/opc/src-tauri/binaries/axiomregent-aarch64-apple-darwin
+              chmod +x product/apps/opc/src-tauri/binaries/axiomregent-aarch64-apple-darwin
+            fi
+          }
+
+          if [ "$MODE" = "samerunner" ]; then
+            # Same-runner base-vs-head (spec 180 §5.1 FR-T9, amended 2026-06-06):
+            # measure the base (main) commit AND the head commit on THIS runner so
+            # the macos-latest fleet's ±~80% inter-runner I/O variance cancels and
+            # the +25% gate reflects a real code delta — not which shared runner the
+            # job happened to land on. (This replaces a cross-runner cached `main`
+            # baseline whose variance dwarfed the threshold; still relative-only per
+            # FR-T10, still +25%.)
+            PR_BASE="${{ github.event.pull_request.base.sha }}"
+            MG_BASE="${{ github.event.merge_group.base_sha }}"
+            BASE_SHA="${PR_BASE:-$MG_BASE}"
+            HEAD_SHA="$(git rev-parse HEAD)"
+            git fetch --no-tags origin "$BASE_SHA" 2>/dev/null || true
+            if [ -z "$BASE_SHA" ] || ! git cat-file -e "${BASE_SHA}^{commit}" 2>/dev/null; then
+              echo "::error::same-runner baseline: could not resolve base commit (base='$BASE_SHA')"
+              exit 1
+            fi
+            echo "same-runner: base=$BASE_SHA head=$HEAD_SHA"
+
+            # In-job path guard (FR-T9 amendment 2026-06-10; narrowed
+            # 2026-06-25). A ~7 ms I/O-bound microbench retains intra-runner
+            # temporal variance (proven: +28.2% on a zero-opc diff, run
+            # 27305255507), so running it on a diff that cannot change the
+            # benched runtime is a pure false-positive vector. The 2026-06-10
+            # guard mirrored ci.yml's route filter (product/apps/opc/src-tauri/**),
+            # but that still ran the measurement for deps/config-only diffs: a
+            # Cargo.lock bump (PR #441), a Cargo.toml / build.rs / tauri.conf
+            # edit, none of which alter the usage_scan handler's measured
+            # runtime. Narrow the benchable set to the actual benched source
+            # and harness so those diffs skip the same-runner measurement; the
+            # nightly N=2000 trend (non-gating) stays the safety net for a
+            # genuine dependency-driven regression. On merge_group the route
+            # layer cannot diff at all (spec 188 Phase 2 forces every output
+            # true), so this in-job filter is the only path filter applied.
+            if git diff --quiet "$BASE_SHA" "$HEAD_SHA" -- \
+                 product/apps/opc/src-tauri/src \
+                 product/apps/opc/src-tauri/benches \
+                 .github/workflows/ci-opc-bench.yml; then
+              echo "::notice::same-runner gate skipped: base..head touches none of product/apps/opc/src-tauri/{src,benches} or ci-opc-bench.yml; a deps/config-only diff cannot change the benched runtime (FR-T9 narrowed 2026-06-25; nightly N=2000 trend remains the safety net)."
+              { echo "### OPC usage bench — $BENCH_ID"
+                echo "Skipped: diff touches no benched source or harness (deps/config-only); nightly trend remains the safety net."; } >> "$GITHUB_STEP_SUMMARY"
+              exit 0
+            fi
+
+            # 1) Base measurement on this runner → criterion baseline.
+            # --force: `cargo bench` below can rewrite Cargo.lock when the
+            # checked-out commit's lock is bench-incomplete, leaving a dirty
+            # working tree; without --force the *next* checkout aborts with
+            # "local changes would be overwritten". See spec 180 FR-T9
+            # amendment 2026-06-24.
+            git checkout --quiet --force --detach "$BASE_SHA"
+            ensure_stubs
+            OPC_BENCH_N=$N cargo bench --manifest-path "$MANIFEST" --bench usage_scan -- --save-baseline samerunner_base
+
+            # 2) Head measurement on this runner, compared to the base baseline.
+            # --force for the same reason as the base checkout above: discard
+            # any lockfile churn the base `cargo bench` left behind.
+            git checkout --quiet --force --detach "$HEAD_SHA"
+            ensure_stubs
+            OPC_BENCH_N=$N cargo bench --manifest-path "$MANIFEST" --bench usage_scan -- --baseline samerunner_base
+            BL="same-runner main (${BASE_SHA:0:12})"
+          else
+            ensure_stubs
+            # --save-baseline reports the change vs the existing same-named
+            # baseline (if any) and then overwrites it; --baseline-lenient
+            # compares without erroring when the baseline is absent (inaugural).
+            if [ "$SAVE" = "1" ]; then
+              OPC_BENCH_N=$N cargo bench --manifest-path "$MANIFEST" --bench usage_scan -- --save-baseline "$BL"
+            else
+              OPC_BENCH_N=$N cargo bench --manifest-path "$MANIFEST" --bench usage_scan -- --baseline-lenient "$BL"
+            fi
+          fi
+
+          CHANGE="$BENCH_DIR/$BENCH_ID/change/estimates.json"
+          if [ ! -f "$CHANGE" ]; then
+            echo "::notice::No baseline to compare against yet (inaugural run) — regression gate not applied."
+            { echo "### OPC usage bench — $BENCH_ID"; echo "No baseline yet → no regression evaluated (inaugural)."; } >> "$GITHUB_STEP_SUMMARY"
+            exit 0
+          fi
+
+          # mean.point_estimate is the relative change vs baseline (0.25 = +25%).
+          MEAN=$(jq -r '.mean.point_estimate' "$CHANGE")
+          PCT=$(awk -v m="$MEAN" 'BEGIN { printf "%+.1f", m * 100 }')
+          OVER=$(awk -v m="$MEAN" 'BEGIN { print (m > 0.25) ? 1 : 0 }')
+          { echo "### OPC usage bench — $BENCH_ID"; echo "Relative mean change vs ${BL} baseline: ${PCT}% (threshold: +25.0%)"; } >> "$GITHUB_STEP_SUMMARY"
+
+          if [ "$OVER" = "1" ]; then
+            if [ "$GATE" = "1" ]; then
+              echo "::error::usage_scan regressed ${PCT}% (> +25%) vs ${BL}"
+              exit 1
+            fi
+            echo "::warning::usage_scan regressed ${PCT}% vs ${BL} (non-gating — maintainer review per spec 180 §5.4)"
+          fi
+
+      # Persist the fresh baseline (immutable per-key cache; restore-keys picks
+      # the latest by prefix). Save runs inline, before Swatinem's post step.
+      - name: Save main bench baseline (push to main)
+        if: github.event_name == 'push'
+        uses: actions/cache/save@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v5
+        with:
+          path: ${{ env.BENCH_DIR }}
+          key: opc-usage-bench-main-${{ github.sha }}
+
+      - name: Save nightly bench baseline (schedule)
+        if: github.event_name == 'schedule'
+        uses: actions/cache/save@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v5
+        with:
+          path: ${{ env.BENCH_DIR }}
+          key: opc-usage-bench-nightly-${{ github.run_id }}

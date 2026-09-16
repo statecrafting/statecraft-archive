@@ -1,0 +1,187 @@
+{
+  "mapping": {
+    "dependsOn": [
+      "109-factory-pat-and-pubsub-sync",
+      "112-factory-project-lifecycle",
+      "113-statecraft-projects-rename-and-clone"
+    ],
+    "implementingPaths": [
+      {
+        "path": "platform/services/statecraft/api/db/schema.ts",
+        "source": "spec-edge"
+      },
+      {
+        "path": "platform/services/statecraft/api/projects/clone.ts",
+        "source": "spec-edge"
+      },
+      {
+        "path": "platform/services/statecraft/api/projects/cloneCore.ts",
+        "source": "spec-edge"
+      },
+      {
+        "path": "platform/services/statecraft/api/projects/cloneEvents.ts",
+        "source": "spec-edge"
+      },
+      {
+        "path": "platform/services/statecraft/api/projects/cloneRunStatus.ts",
+        "source": "spec-edge"
+      },
+      {
+        "path": "platform/services/statecraft/api/projects/cloneWorker.ts",
+        "source": "spec-edge"
+      },
+      {
+        "path": "platform/services/statecraft/web/app/components/CloneProjectDialog.tsx",
+        "source": "spec-edge"
+      },
+      {
+        "path": "platform/services/statecraft/web/app/lib/projects-api.server.ts",
+        "source": "spec-edge"
+      },
+      {
+        "path": "platform/services/statecraft/web/app/routes/app.projects.$sourceProjectId.clone.tsx",
+        "source": "spec-edge"
+      },
+      {
+        "path": "platform/services/statecraft/web/app/routes/app.projects.clone-runs.$cloneJobId.tsx",
+        "source": "spec-edge"
+      }
+    ],
+    "resolvedUnits": [
+      {
+        "locations": [
+          {
+            "file": "platform/services/statecraft/api/db/schema.ts"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "file",
+          "path": "platform/services/statecraft/api/db/schema.ts"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "platform/services/statecraft/api/projects/cloneCore.ts"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "file",
+          "path": "platform/services/statecraft/api/projects/cloneCore.ts"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "platform/services/statecraft/api/projects/cloneEvents.ts"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "file",
+          "path": "platform/services/statecraft/api/projects/cloneEvents.ts"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "platform/services/statecraft/api/projects/cloneRunStatus.ts"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "file",
+          "path": "platform/services/statecraft/api/projects/cloneRunStatus.ts"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "platform/services/statecraft/api/projects/cloneWorker.ts"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "file",
+          "path": "platform/services/statecraft/api/projects/cloneWorker.ts"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "platform/services/statecraft/web/app/routes/app.projects.$sourceProjectId.clone.tsx"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "file",
+          "path": "platform/services/statecraft/web/app/routes/app.projects.$sourceProjectId.clone.tsx"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "platform/services/statecraft/web/app/routes/app.projects.clone-runs.$cloneJobId.tsx"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "file",
+          "path": "platform/services/statecraft/web/app/routes/app.projects.clone-runs.$cloneJobId.tsx"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "platform/services/statecraft/web/app/components/CloneProjectDialog.tsx"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "extends",
+        "unit": {
+          "kind": "file",
+          "path": "platform/services/statecraft/web/app/components/CloneProjectDialog.tsx"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "platform/services/statecraft/web/app/lib/projects-api.server.ts"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "extends",
+        "unit": {
+          "kind": "file",
+          "path": "platform/services/statecraft/web/app/lib/projects-api.server.ts"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "platform/services/statecraft/api/projects/clone.ts"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "supersedes",
+        "unit": {
+          "kind": "file",
+          "path": "platform/services/statecraft/api/projects/clone.ts"
+        }
+      }
+    ],
+    "specId": "114-async-project-clone-pipeline",
+    "specStatus": "approved"
+  },
+  "schemaVersion": "1.1.0",
+  "shardHash": "ef145db4815113d106f463a9ecd1cf64499d01673ba0db8eb905c996c9d9537b"
+}

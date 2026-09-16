@@ -1,0 +1,50 @@
+{
+  "record": {
+    "authors": [
+      "open-agentic-platform"
+    ],
+    "codeAliases": [
+      "PERMISSION_SYSTEM"
+    ],
+    "created": "2026-03-29",
+    "domain": "opc",
+    "establishes": [
+      {
+        "id": "@opc/permission-system",
+        "kind": "crate"
+      }
+    ],
+    "extraFrontmatter": {
+      "language": "en"
+    },
+    "featureBranch": "049-permission-system",
+    "id": "049-permission-system",
+    "implementation": "complete",
+    "kind": "platform",
+    "sectionHeadings": [
+      "Feature Specification: Permission Request System with Memory and Wildcards",
+      "Purpose",
+      "Scope",
+      "In scope",
+      "Out of scope",
+      "Requirements",
+      "Functional",
+      "Non-functional",
+      "Architecture",
+      "Layered evaluation model",
+      "Wildcard pattern syntax",
+      "Package structure",
+      "Permission store schema",
+      "Implementation approach",
+      "Success criteria",
+      "Dependencies",
+      "Risk"
+    ],
+    "specPath": "specs/049-permission-system/spec.md",
+    "status": "approved",
+    "summary": "SDK-level permission request system built on the canUseTool hook with a layered decision model (interactive, bypass, disallowed, allowed, prompt). Supports wildcard patterns like Bash(git commit:*) for granular tool authorization. \"Allow & remember\" persists decisions across sessions. UI surfaces Allow once / Allow & remember / Deny choices.\n",
+    "title": "Permission Request System with Memory and Wildcards"
+  },
+  "shardHash": "6cde976681d4622ea595fd922d7606d01844712d7af68ac73005a88b83f42f65",
+  "specVersion": "1.1.0"
+}

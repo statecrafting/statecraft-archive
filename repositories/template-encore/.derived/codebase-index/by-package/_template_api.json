@@ -1,0 +1,10 @@
+{
+  "package": {
+    "kind": "npm-package",
+    "name": "@template/api",
+    "path": "apps/api",
+    "version": "0.1.0"
+  },
+  "schemaVersion": "1.1.0",
+  "shardHash": "f630b496353c0b31e0ba4536a1b4530144782a739e9f564345923211b01da6c0"
+}

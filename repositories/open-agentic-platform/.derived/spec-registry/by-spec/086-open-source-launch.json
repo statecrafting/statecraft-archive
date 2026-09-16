@@ -1,0 +1,74 @@
+{
+  "record": {
+    "amendmentRecord": "193-paired-release-cadence",
+    "authors": [
+      "open-agentic-platform"
+    ],
+    "codeAliases": [
+      "OPEN_SOURCE",
+      "OSS_LAUNCH"
+    ],
+    "created": "2026-04-08",
+    "domain": "substrate",
+    "establishes": [
+      {
+        "kind": "file",
+        "path": "docs/ARCHITECTURE.md"
+      }
+    ],
+    "extraFrontmatter": {
+      "amended": "2026-06-01",
+      "language": "en"
+    },
+    "featureBranch": "feat/086-open-source-launch",
+    "id": "086-open-source-launch",
+    "implementation": "deferred",
+    "kind": "process",
+    "references": [
+      {
+        "role": "planned",
+        "unit": {
+          "kind": "file",
+          "path": "CONTRIBUTING.md"
+        }
+      },
+      {
+        "role": "planned",
+        "unit": {
+          "kind": "file",
+          "path": "SECURITY.md"
+        }
+      },
+      {
+        "role": "planned",
+        "unit": {
+          "kind": "file",
+          "path": "CODE_OF_CONDUCT.md"
+        }
+      },
+      {
+        "role": "planned",
+        "unit": {
+          "kind": "file",
+          "path": "CHANGELOG.md"
+        }
+      }
+    ],
+    "sectionHeadings": [
+      "086 — Open Source Launch Readiness",
+      "Purpose",
+      "Scope",
+      "In Scope",
+      "Out of Scope",
+      "Functional Requirements",
+      "Non-Functional Requirements",
+      "Verification"
+    ],
+    "specPath": "specs/086-open-source-launch/spec.md",
+    "status": "approved",
+    "summary": "Prepares the repository for public open source release with governance documents (CONTRIBUTING, SECURITY, CODE_OF_CONDUCT), a comprehensive architecture guide, a changelog, and a v0.1.0 release tag. Establishes the narrative that OAP is a governed AI delivery platform built with its own spec-first methodology.\n",
+    "title": "Open Source Launch Readiness"
+  },
+  "shardHash": "5ce1d265b8c7ea6004470554532d096f197b1208f73c46faf0c7ee394390e575",
+  "specVersion": "1.1.0"
+}

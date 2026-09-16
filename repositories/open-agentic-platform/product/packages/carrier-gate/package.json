@@ -1,0 +1,34 @@
+{
+  "name": "@opc/carrier-gate",
+  "version": "0.1.0",
+  "description": "Canonical carrier-class write-gate rules shared by the factory substrate gate and session-memory (spec 204 FR-001)",
+  "private": true,
+  "type": "module",
+  "main": "src/index.js",
+  "types": "src/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./src/index.d.ts",
+      "default": "./src/index.js"
+    }
+  },
+  "files": [
+    "src/rules.js",
+    "src/fixture.js",
+    "src/index.js",
+    "src/index.d.ts"
+  ],
+  "scripts": {
+    "typecheck": "tsc --noEmit -p tsconfig.json",
+    "test": "vitest run",
+    "lint": "eslint src/"
+  },
+  "devDependencies": {
+    "@types/node": "^24.5.0",
+    "typescript": "^6.0.3",
+    "vitest": "^4.1.5"
+  },
+  "oap": {
+    "spec": "204-session-memory-write-contract"
+  }
+}

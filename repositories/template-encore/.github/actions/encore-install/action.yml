@@ -1,0 +1,42 @@
+name: Install Encore CLI
+description: >
+  Download, install, and configure the Encore CLI on a GitHub Actions runner.
+  Disables telemetry. Exposes the CLI at /home/runner/.encore/bin/encore on
+  Linux runners — composite actions cannot mutate $PATH for the calling job,
+  so the absolute path is the contract.
+
+inputs:
+  version:
+    description: >
+      Encore CLI version pin. Defaults to the encore.dev runtime version this
+      template pins (apps/api package.json). Keeping the CLI in lockstep with the
+      runtime is what makes the typed client the scaffold generates byte-for-byte
+      structurally identical to the one this CI regenerates and checks (the
+      `Typed client up-to-date` gate / OAP spec 220 AC-2). Bump this in lockstep
+      when bumping encore.dev.
+    required: false
+    default: "1.57.9"
+
+outputs:
+  cli-path:
+    description: Absolute path to the installed encore binary.
+    value: /home/runner/.encore/bin/encore
+
+runs:
+  using: composite
+  steps:
+    - name: Download Encore install script
+      shell: bash
+      run: curl -fsSL https://encore.dev/install.sh -o install-encore.sh
+
+    - name: Install Encore CLI
+      shell: bash
+      run: ENCORE_INSTALL_VERSION="${{ inputs.version }}" bash install-encore.sh
+
+    - name: Disable Encore telemetry
+      shell: bash
+      run: /home/runner/.encore/bin/encore telemetry disable
+
+    - name: Verify install
+      shell: bash
+      run: /home/runner/.encore/bin/encore version

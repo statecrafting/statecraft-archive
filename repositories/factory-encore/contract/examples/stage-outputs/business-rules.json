@@ -1,0 +1,44 @@
+{
+  "rules": [
+    {
+      "id": "BR-001",
+      "name": "Registration State Machine",
+      "type": "state-machine",
+      "description": "A registration moves through draft, submitted, then confirmed or waitlisted, and may be cancelled.",
+      "entities": ["Registration"],
+      "states": ["draft", "submitted", "confirmed", "waitlisted", "cancelled"],
+      "transitions": [
+        { "from": "draft", "to": ["submitted", "cancelled"], "requires_role": ["attendee"] },
+        { "from": "submitted", "to": ["confirmed", "waitlisted", "cancelled"], "requires_role": ["organizer"] },
+        { "from": "waitlisted", "to": ["confirmed", "cancelled"], "requires_role": ["organizer"] },
+        { "from": "confirmed", "to": ["cancelled"], "requires_role": ["attendee", "organizer"] }
+      ],
+      "terminal_states": ["cancelled"]
+    },
+    {
+      "id": "BR-002",
+      "name": "Event Capacity Enforcement",
+      "type": "constraint",
+      "description": "A registration is confirmed only while confirmed registrations are below event capacity; otherwise it is waitlisted.",
+      "entities": ["Registration", "Event"],
+      "condition": "count(confirmed registrations for event) < event.capacity",
+      "message": "Event is at capacity; registration was waitlisted."
+    },
+    {
+      "id": "BR-003",
+      "name": "One Registration Per Attendee Per Event",
+      "type": "validation",
+      "description": "An attendee may hold at most one non-cancelled registration for a given event.",
+      "entities": ["Registration"],
+      "condition": "no existing non-cancelled registration for (eventId, attendeeId)",
+      "message": "You already have a registration for this event."
+    },
+    {
+      "id": "BR-004",
+      "name": "Only Organizers Publish Events",
+      "type": "authorization",
+      "description": "Transitioning an event to published or closed requires the organizer or admin role.",
+      "entities": ["Event"]
+    }
+  ]
+}

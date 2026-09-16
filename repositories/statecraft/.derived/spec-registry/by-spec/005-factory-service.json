@@ -1,0 +1,33 @@
+{
+  "record": {
+    "created": "2026-07-14",
+    "dependsOn": [
+      "004-tenants-github-app"
+    ],
+    "establishes": [
+      {
+        "kind": "directory",
+        "path": "backend/factory/"
+      }
+    ],
+    "id": "005-factory-service",
+    "implementation": "complete",
+    "sectionHeadings": [
+      "005: Factory service",
+      "1. Cross-repo dependencies (read first)",
+      "2. Territory",
+      "3. Behavior",
+      "3.1 Stamp modes: create and adopt",
+      "4. Acceptance",
+      "5. Out of scope",
+      "Amendment (2026-07-21): spec 011 tenant lifecycle",
+      "Amendment (2026-07-22): spec 012, the contract 0.6.0 fixture"
+    ],
+    "specPath": "specs/005-factory-service/spec.md",
+    "status": "approved",
+    "summary": "The factory turns \"customer wants an app named X\" into a born-green repo in the customer's GitHub org: clone the pinned enrahitu template, read its template.toml contract (and nothing else), run the scaffold verb with the slot values, emit the born-with certificate and anchor it in the governance ledger, then land it: create a new repo and push (create mode) or open a pull request onto an existing repo (adopt mode), and watch the born-with verify workflow until green. Completes milestone M2 together with spec 004. The contract boundary is absolute: any factory behavior that depends on template internals beyond template.toml is a defect.\n",
+    "title": "Factory: stamp EnRaHiTu apps into customer orgs"
+  },
+  "shardHash": "b986c75a72b265730ccc43af1030c4ea6c84dd832b3472b4036018d9e37e279c",
+  "specVersion": "1.2.0"
+}

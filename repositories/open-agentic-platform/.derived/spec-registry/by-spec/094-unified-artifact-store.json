@@ -1,0 +1,72 @@
+{
+  "record": {
+    "amendmentRecord": "119-project-as-unit-of-governance",
+    "codeAliases": [
+      "UNIFIED_ARTIFACT_STORE"
+    ],
+    "created": "2026-04-11",
+    "dependsOn": [
+      "082-artifact-integrity-platform-hardening",
+      "092-workspace-runtime-threading"
+    ],
+    "domain": "opc",
+    "establishes": [
+      {
+        "kind": "file",
+        "path": "crates/orchestrator/src/promotion.rs"
+      }
+    ],
+    "extends": [
+      {
+        "nature": "additive",
+        "spec": "052-state-persistence",
+        "unit": {
+          "kind": "file",
+          "path": "crates/orchestrator/src/artifact.rs"
+        }
+      },
+      {
+        "nature": "additive",
+        "spec": "052-state-persistence",
+        "unit": {
+          "kind": "file",
+          "path": "crates/orchestrator/src/lib.rs"
+        }
+      },
+      {
+        "nature": "additive",
+        "spec": "075-factory-workflow-engine",
+        "unit": {
+          "kind": "file",
+          "path": "crates/factory-engine/src/artifact_store.rs"
+        }
+      }
+    ],
+    "extraFrontmatter": {
+      "amended": "2026-04-29"
+    },
+    "id": "094-unified-artifact-store",
+    "implementation": "complete",
+    "kind": "platform",
+    "owner": "bart",
+    "risk": "high",
+    "sectionHeadings": [
+      "094 — Unified Artifact Store with Provenance",
+      "Problem",
+      "Solution",
+      "Implementation Slices",
+      "Slice 1: Fix hash-chain in persisted dispatch path",
+      "Slice 2: Consolidate artifact stores (ephemeral -> CAS)",
+      "Slice 3: Add artifact metadata (SQLite artifact_records)",
+      "Slice 4: Add provenance lineage (produced_by / consumed_by)",
+      "Slice 5: Platform artifact recording (Statecraft endpoint)",
+      "Acceptance Criteria"
+    ],
+    "specPath": "specs/094-unified-artifact-store/spec.md",
+    "status": "approved",
+    "summary": "Consolidate the two disconnected artifact stores (orchestrator ephemeral + factory CAS) into a unified content-addressed store with metadata, provenance lineage, and platform recording. Fixes hash-chain verification gap in the persisted dispatch path.\n",
+    "title": "Unified Artifact Store with Provenance"
+  },
+  "shardHash": "667893b820faa2d34356e19a371a57727775d68f2606b1ea9ff7a6099f8baf89",
+  "specVersion": "1.1.0"
+}

@@ -1,0 +1,35 @@
+name: Linux ARM64 cross-compilation setup
+description: >
+  Install aarch64-linux-gnu cross-compilation toolchain and OpenSSL for ARM64.
+  Wipes existing apt source definitions and writes clean arch-explicit sources
+  using $VERSION_CODENAME from /etc/os-release (not hardcoded).
+
+runs:
+  using: composite
+  steps:
+    - name: Install cross-compilation tools and OpenSSL for ARM64
+      shell: bash
+      run: |
+        sudo dpkg --add-architecture arm64
+
+        # Wipe all existing source definitions (traditional + DEB822)
+        sudo rm -f /etc/apt/sources.list.d/*.sources /etc/apt/sources.list.d/*.list
+        : | sudo tee /etc/apt/sources.list > /dev/null
+
+        # Source os-release to get $VERSION_CODENAME (e.g. jammy, noble)
+        . /etc/os-release
+
+        # Write clean arch-explicit sources
+        printf '%s\n' \
+          "deb [arch=amd64] http://archive.ubuntu.com/ubuntu/ ${VERSION_CODENAME} main restricted universe multiverse" \
+          "deb [arch=amd64] http://archive.ubuntu.com/ubuntu/ ${VERSION_CODENAME}-updates main restricted universe multiverse" \
+          "deb [arch=amd64] http://archive.ubuntu.com/ubuntu/ ${VERSION_CODENAME}-backports main restricted universe multiverse" \
+          "deb [arch=amd64] http://security.ubuntu.com/ubuntu/ ${VERSION_CODENAME}-security main restricted universe multiverse" \
+          "deb [arch=arm64] http://ports.ubuntu.com/ubuntu-ports/ ${VERSION_CODENAME} main restricted universe multiverse" \
+          "deb [arch=arm64] http://ports.ubuntu.com/ubuntu-ports/ ${VERSION_CODENAME}-updates main restricted universe multiverse" \
+          "deb [arch=arm64] http://ports.ubuntu.com/ubuntu-ports/ ${VERSION_CODENAME}-security main restricted universe multiverse" \
+          "deb [arch=arm64] http://ports.ubuntu.com/ubuntu-ports/ ${VERSION_CODENAME}-backports main restricted universe multiverse" \
+          | sudo tee /etc/apt/sources.list > /dev/null
+
+        sudo apt-get update
+        sudo apt-get install -y gcc-aarch64-linux-gnu g++-aarch64-linux-gnu libssl-dev:arm64

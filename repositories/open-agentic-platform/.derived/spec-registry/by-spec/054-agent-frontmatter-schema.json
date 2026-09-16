@@ -1,0 +1,70 @@
+{
+  "record": {
+    "authors": [
+      "open-agentic-platform"
+    ],
+    "codeAliases": [
+      "AGENT_FRONTMATTER",
+      "SKILL_SCHEMA"
+    ],
+    "created": "2026-03-29",
+    "dependsOn": [
+      "035-agent-governed-execution",
+      "036-safety-tier-governance",
+      "067-tool-definition-registry",
+      "068-permission-runtime",
+      "071-skill-command-factory",
+      "093-spec-driven-preflight",
+      "098-governance-enforcement-stitching"
+    ],
+    "domain": "opc",
+    "establishes": [
+      {
+        "id": "agent-frontmatter",
+        "kind": "crate"
+      },
+      {
+        "kind": "file",
+        "path": "standards/schemas/frontmatter/agent-frontmatter.schema.json"
+      }
+    ],
+    "extraFrontmatter": {
+      "language": "en"
+    },
+    "featureBranch": "054-agent-frontmatter-schema",
+    "id": "054-agent-frontmatter-schema",
+    "implementation": "complete",
+    "kind": "platform",
+    "risk": "medium",
+    "sectionHeadings": [
+      "Feature Specification: Unified Agent and Skill Frontmatter Schema",
+      "Purpose",
+      "Scope",
+      "In scope",
+      "Out of scope",
+      "Requirements",
+      "Functional",
+      "Non-functional",
+      "Architecture",
+      "Unified schema",
+      "Tier 1: Identity (always parsed)",
+      "Tier 2: Capabilities (parsed on activation)",
+      "Tier 3: Metadata (for tooling, never gates execution)",
+      "Derivation rules",
+      "Progressive disclosure flow",
+      "Rust type mapping",
+      "Backward compatibility through aliases",
+      "Key integration points",
+      "Implementation approach",
+      "Success criteria",
+      "Dependencies",
+      "Risk"
+    ],
+    "specPath": "specs/054-agent-frontmatter-schema/spec.md",
+    "status": "approved",
+    "summary": "Unified YAML frontmatter schema that formalizes and merges the three divergent agent/skill definition formats (Claude Code agents, skill-factory skills, factory pipeline agents) into one canonical schema. Progressive disclosure loads metadata eagerly, instructions on activation, and resources on demand. Governance-aware fields connect agent declarations to safety tiers, spec-driven preflight, and enforcement stitching.\n",
+    "title": "Unified Agent and Skill Frontmatter Schema"
+  },
+  "shardHash": "c2095e8a191df3c462804f5aa1fe673ed835da7a8dd215d01f63c7d09746fef9",
+  "specVersion": "1.1.0"
+}

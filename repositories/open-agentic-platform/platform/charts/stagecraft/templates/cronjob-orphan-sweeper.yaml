@@ -1,0 +1,141 @@
+{{/*
+Spec 143 FR-010 — orphan-imported sweeper, K8s CronJob.
+
+Helm-owned successor to the `post-create.sh` heredoc that bootstrapped
+this CronJob during cluster setup. The heredoc was a single-writer
+violation in waiting (same shape as §12 L-003): two systems claiming
+ownership of the same K8s object diverge silently. Helm is the sole
+writer going forward; `post-create.sh` deletes the legacy bootstrap
+once and steps back.
+
+Self-hosted scheduler context (§4.5b amendment, 2026-05-08): Encore's
+CronJob primitive is a no-op without Encore Cloud, so this K8s
+CronJob IS the production scheduler. The Encore declaration in
+`scheduler.ts` is local-dev / future-Encore-Cloud only.
+
+Per-purpose credential mount discipline (§FR-010 amendment,
+2026-05-09): the pod mounts only `statecraft-knowledge-sweeper-credentials`
+(materialised by `setup.sh` directly on Hetzner, by ESO on cloud
+deployments). It carries exactly the knowledge-sweeper Rauthy client's
+`CLIENT_ID` + `CLIENT_SECRET`. No cross-purpose mounts. FU-003 will
+add sibling CronJobs for spec 115 / 087 / 124 sweepers, each with its
+own separate Secret — same shape, no shared credentials.
+
+Auth path: pod fetches a `client_credentials` JWT from Rauthy, then
+POSTs the sweep endpoint with `Authorization: Bearer <jwt>`. The
+handler validates the JWT and the `platform:knowledge:sweep` scope
+(load-bearing per §12 L-006: must be in *Default Scopes*, not just
+*Allowed Scopes*).
+*/}}
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: knowledge-orphan-imported-sweeper
+  labels:
+    app.kubernetes.io/name: knowledge-orphan-imported-sweeper
+    app.kubernetes.io/part-of: statecraft
+    spec.oap/id: "143-presigned-upload-public-endpoint"
+    spec.oap/fr: "FR-010"
+spec:
+  # FR-010 cadence — every 30 minutes. Cleanup latency = grace
+  # (3600s default) + cadence (1800s) = 90min worst case. Tighter is
+  # wasted polling at current scale; loosen only if observability
+  # shows the sweep is meaningfully load-burning.
+  schedule: "*/30 * * * *"
+  concurrencyPolicy: Forbid
+  successfulJobsHistoryLimit: 3
+  failedJobsHistoryLimit: 3
+  startingDeadlineSeconds: 300
+  jobTemplate:
+    spec:
+      backoffLimit: 0
+      template:
+        metadata:
+          labels:
+            app.kubernetes.io/name: knowledge-orphan-imported-sweeper
+            app.kubernetes.io/part-of: statecraft
+        spec:
+          restartPolicy: Never
+          # curl-only sweep pod; never calls the K8s API.
+          automountServiceAccountToken: false
+          containers:
+            - name: sweep
+              image: curlimages/curl:8.10.1
+              # Only the per-purpose Secret. The discipline is enforced
+              # at this line: cross-purpose env injection is the failure
+              # mode this template structurally prevents.
+              envFrom:
+                - secretRef:
+                    name: statecraft-knowledge-sweeper-credentials
+              env:
+                - name: RAUTHY_URL
+                  value: {{ .Values.oidc.endpoint | quote }}
+              command:
+                - sh
+                - -c
+                - |
+                  set -eu
+
+                  # 1. Fetch a client_credentials JWT from Rauthy.
+                  #
+                  #    Two Rauthy-0.35 invariants apply here:
+                  #    - §12 L-006 (scope inertia): the `scope=` param
+                  #      is documented-inert under client_credentials;
+                  #      the JWT carries whatever is in the client's
+                  #      Default Scopes regardless. We send `scope=`
+                  #      only for forward-compat with stricter IDPs.
+                  #    - §12 L-007 (client-auth-method invariant):
+                  #      Rauthy 0.35 has narrowed RFC 6749 §2.3.1 to
+                  #      `client_secret_post` only and rejects HTTP
+                  #      Basic (`client_secret_basic`) with HTTP 400
+                  #      `'client_secret' is missing`. Credentials go
+                  #      in the body, not the Authorization header.
+                  TOKEN_JSON=$(
+                    curl --fail --silent --show-error \
+                      --max-time 30 \
+                      --request POST \
+                      --header 'Content-Type: application/x-www-form-urlencoded' \
+                      --data-urlencode 'grant_type=client_credentials' \
+                      --data-urlencode 'scope=platform:knowledge:sweep' \
+                      --data-urlencode "client_id=${CLIENT_ID}" \
+                      --data-urlencode "client_secret=${CLIENT_SECRET}" \
+                      "${RAUTHY_URL}/auth/v1/oidc/token"
+                  )
+
+                  # Stable extraction: Rauthy's response is RFC-6749 JSON;
+                  # access_token is a base64url string with no quotes
+                  # internally, so this sed pattern is deterministic.
+                  ACCESS_TOKEN=$(
+                    printf '%s' "$TOKEN_JSON" \
+                      | sed -n 's/.*"access_token"[[:space:]]*:[[:space:]]*"\([^"]*\)".*/\1/p'
+                  )
+                  if [ -z "$ACCESS_TOKEN" ]; then
+                    echo "ERROR: failed to extract access_token from Rauthy response" >&2
+                    exit 1
+                  fi
+
+                  # 2. Invoke the sweep endpoint. --fail makes any 4xx/5xx
+                  #    a non-zero exit, which the §13 evidence ledger and
+                  #    validate/spec-143.sh rely on as the contract signal.
+                  curl --fail --silent --show-error \
+                    --max-time 280 \
+                    --request POST \
+                    --header 'Content-Type: application/json' \
+                    --header "Authorization: Bearer ${ACCESS_TOKEN}" \
+                    http://statecraft-api.statecraft-system.svc.cluster.local:80/internal/knowledge/orphan-imported-sweep
+              resources:
+                requests:
+                  memory: "16Mi"
+                  cpu: "10m"
+                limits:
+                  memory: "32Mi"
+                  cpu: "100m"
+              securityContext:
+                allowPrivilegeEscalation: false
+                readOnlyRootFilesystem: true
+                runAsNonRoot: true
+                runAsUser: 65534
+                runAsGroup: 65534
+                capabilities:
+                  drop:
+                    - ALL

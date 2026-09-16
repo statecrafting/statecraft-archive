@@ -1,0 +1,99 @@
+{
+  "record": {
+    "authors": [
+      "open-agentic-platform"
+    ],
+    "codeAliases": [
+      "ARTIFACT_INTEGRITY",
+      "SEAM_OIDC",
+      "CROSS_RUN"
+    ],
+    "created": "2026-04-07",
+    "domain": "platform",
+    "extends": [
+      {
+        "nature": "additive",
+        "spec": "074-factory-ingestion",
+        "unit": {
+          "id": "factory-contracts",
+          "kind": "crate"
+        }
+      },
+      {
+        "nature": "additive",
+        "spec": "004-spec-to-execution-bridge-mvp",
+        "unit": {
+          "id": "orchestrator",
+          "kind": "crate"
+        }
+      }
+    ],
+    "extraFrontmatter": {
+      "language": "en"
+    },
+    "featureBranch": "feat/082-artifact-integrity-platform-hardening",
+    "id": "082-artifact-integrity-platform-hardening",
+    "implementation": "complete",
+    "kind": "platform",
+    "owner": "bart",
+    "risk": "high",
+    "sectionHeadings": [
+      "Feature Specification: Artifact Integrity and Platform Hardening",
+      "Phases",
+      "Purpose",
+      "Current State",
+      "Design Principles",
+      "Phase 1: Artifact Integrity",
+      "Scope",
+      "FR-001: Artifact Hashing in ArtifactManager",
+      "FR-002: Hash Propagation in Dispatch Types",
+      "FR-003: Post-Dispatch Hashing",
+      "FR-004: Pre-Dispatch Verification",
+      "FR-005: Factory StageArtifact Hash Population",
+      "NF-001: Hashing Performance",
+      "Success Criteria",
+      "Phase 2: Seam Auth OIDC Upgrade",
+      "Scope",
+      "Current Auth Analysis",
+      "FR-010: Rust OIDC Client for axiomregent",
+      "FR-011: PlatformConfig OIDC Extension",
+      "FR-012: Auth Provider Abstraction",
+      "FR-013: Seam B Upgrade (Audit Forwarding)",
+      "FR-014: Seam A Upgrade (Policy Refresh)",
+      "FR-015: Seam C Upgrade (Grants)",
+      "FR-016: Shared Validation Middleware",
+      "FR-017: Router Wiring",
+      "NF-010: Token Caching",
+      "NF-011: Backward Compatibility",
+      "Success Criteria",
+      "Phase 3: Cross-Run Artifact Persistence",
+      "Scope",
+      "FR-020: Content-Addressable Artifact Store",
+      "FR-021: Database Schema Extension",
+      "FR-022: Previous Pipeline Linkage",
+      "FR-023: Artifact Recording After Stage Completion",
+      "FR-024: Cache-Hit Detection",
+      "FR-025: Platform Artifact API",
+      "NF-020: Storage Cleanup",
+      "Success Criteria",
+      "Phase 4: Namespaced Contract IDs",
+      "Scope",
+      "FR-030: Namespace Convention",
+      "FR-031: Validation Utility",
+      "NF-030: No Breaking Changes",
+      "Success Criteria",
+      "Architecture",
+      "Phase Dependency Graph",
+      "Design Decisions",
+      "Key Files",
+      "Dependencies",
+      "Risks"
+    ],
+    "specPath": "specs/082-artifact-integrity-platform-hardening/spec.md",
+    "status": "approved",
+    "summary": "Closes four architectural gaps identified through AT Protocol pattern analysis: SHA-256 artifact integrity across pipeline stages, cross-run artifact persistence for incremental pipelines, OIDC replacement of static M2M tokens on all platform seams, and a namespaced contract ID convention for future extensibility.\n",
+    "title": "Artifact Integrity, Cross-Run Persistence, and Seam Auth Hardening"
+  },
+  "shardHash": "6769f725902192a8146e57d6e974722b130d39179a04115101d585318f0dfb4e",
+  "specVersion": "1.1.0"
+}

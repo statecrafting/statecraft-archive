@@ -1,0 +1,38 @@
+id: error-handling-002
+category: error-handling
+priority: medium
+context: >
+  Applies to error boundaries, logging middleware, and any code that
+  serializes or transmits error information.
+tags:
+  - typescript
+  - javascript
+  - error-handling
+  - logging
+
+rules:
+  - verb: ALWAYS
+    subject: "preserve the original error via the cause property"
+    rationale: >
+      Wrapping errors without preserving the original loses the root-cause
+      stack trace. The standard `cause` property chains errors without
+      discarding diagnostic information.
+
+  - verb: NEVER
+    subject: "log sensitive data in error messages"
+    rationale: >
+      Error messages may end up in logs, monitoring dashboards, or user-facing
+      responses. Including tokens, passwords, or PII in error messages creates
+      a data-leak vector.
+
+  - verb: AVOID
+    subject: "string-only error throws"
+    rationale: >
+      Throwing a raw string instead of an Error instance loses the stack trace
+      and makes it impossible to attach structured metadata.
+
+anti_patterns:
+  - pattern: "throw 'something went wrong';"
+    correction: "throw new Error('something went wrong');"
+  - pattern: "throw new Error(`Auth failed for token ${token}`);"
+    correction: "throw new AuthError('Auth failed', { userId });"

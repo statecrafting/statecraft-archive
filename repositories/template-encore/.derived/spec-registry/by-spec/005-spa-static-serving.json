@@ -1,0 +1,43 @@
+{
+  "record": {
+    "codeAliases": [
+      "SPA_STATIC",
+      "WEB_SERVICE"
+    ],
+    "created": "2026-06-10",
+    "dependsOn": [
+      "001-encore-app-architecture"
+    ],
+    "domain": "app",
+    "establishes": [
+      {
+        "kind": "file",
+        "path": "apps/api/web/"
+      }
+    ],
+    "id": "005-spa-static-serving",
+    "implementation": "complete",
+    "kind": "feature",
+    "owner": "bart",
+    "risk": "low",
+    "sectionHeadings": [
+      "005 — SPA static serving: Encore api.static serves the Vue bundles with history fallback",
+      "1. Purpose",
+      "2. Territory",
+      "3. Behavior",
+      "FR-001 — `web` Encore service registration",
+      "FR-002 — `api.static` catch-all handler",
+      "FR-003 — build-output wiring",
+      "FR-004 — dual-app layout wiring",
+      "FR-005 — development workflow",
+      "4. Acceptance criteria",
+      "5. Out of scope"
+    ],
+    "specPath": "specs/005-spa-static-serving/spec.md",
+    "status": "approved",
+    "summary": "The web service serves the built Vue SPA via api.static at /!path over ./build with history-API fallback to index.html and no auth middleware (static assets must cache normally). apps/web builds into apps/api/web/build; in the dual-app layout the staff SPA (apps/web-internal) builds into the internal app's web service the same way.\n",
+    "title": "SPA static serving: Encore api.static serves the Vue bundles with history fallback"
+  },
+  "shardHash": "db7b4bc97f991dab9c67420e7f5591e55e067abd26b0d40fa1b048ab5134f05f",
+  "specVersion": "1.1.0"
+}

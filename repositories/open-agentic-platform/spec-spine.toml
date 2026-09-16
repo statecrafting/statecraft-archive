@@ -1,0 +1,166 @@
+# spec-spine.toml: governs the open-agentic-platform repository.
+#
+# OAP is governed by the published `spec-spine` library (crates.io / npm):
+# the spec corpus under specs/ compiles to a deterministic registry, the
+# codebase index maps every spec to the code it owns, and the PR-time
+# coupling gate refuses code that drifts from its owning spec. The generic
+# governance engine is no longer vendored in-tree (spec 217 collapse); it
+# is the published `spec-spine` package. OAP keeps only its overlay: the
+# compliance/factory/OWASP machinery, the 16-value `kind` enum +
+# shape/category, capability/registry/profile, the `statecraft://`
+# provenance scheme, and the domain lens.
+#
+# All keys are optional; this file writes out OAP's deviations from the
+# spec-spine defaults explicitly.
+
+[manifest]
+# Cargo `[package.metadata.oap].spec` / package.json `"oap".spec`.
+metadata_namespace = "oap"
+
+[domains]
+# Spec 179 universal tract-authority lens. Closed enum; L-002 / V-030
+# enforced via `lint --fail-on-warn`.
+allowed = ["opc", "platform", "substrate", "tooling"]
+
+[kind]
+# Spec 147 closed `kind` taxonomy (was VALID_KINDS in the vendored
+# spec-types). L-003 / V-012 enforced via `lint --fail-on-warn`.
+allowed = [
+  "platform",
+  "platform-delivery",
+  "governance",
+  "product",
+  "amendment",
+  "tooling",
+  "desktop",
+  "process",
+  "ui",
+  "architecture",
+  "constitutional-bootstrap",
+  "migration",
+  "product-consolidation",
+  "capability",
+  "registry",
+  "profile",
+]
+
+[layout]
+specs_dir     = "specs"
+derived_dir   = ".derived"
+standards_dir = "standards/spec"
+schemas_dir   = "standards/schemas"
+# The root Cargo workspace (22 library crates + the OAP overlay tools).
+cargo_workspace = "Cargo.toml"
+# Two crates are deliberately excluded from the root workspace (rusqlite /
+# libsqlite3-sys native-link isolation) and declared standalone for manifest
+# discovery: the OPC desktop crate and the deployd-api orchestrator. These are
+# DIRECTORY paths: the library joins `<member>/Cargo.toml`, so a Cargo.toml
+# suffix here would yield `.../Cargo.toml/Cargo.toml` and discover nothing
+# (spec 217 section 1.5 Track 1).
+standalone_rust_workspaces = [
+  "product/apps/opc/src-tauri",
+  "platform/services/deployd-api-rs",
+]
+# npm packages under product/ are enumerated directly via repo-root-relative
+# globs in standalone_npm_packages below, NOT via product/pnpm-workspace.yaml:
+# the library resolves a workspace file's globs against repo-root rather than the
+# file's own directory, so pnpm-workspace.yaml's ["apps/*","packages/*"] would
+# expand to /apps/* and /packages/* and discover nothing (spec 217 section 1.5
+# Track 1; upstream library fix tracked for spec-spine 0.5.1).
+npm_workspaces = ["product/package.json"]
+# statecraft is an Encore.ts service deliberately outside the pnpm workspace
+# (npm, not pnpm). product/packages/* and product/apps/* enumerate the @opc/*
+# packages and the OPC desktop app.
+standalone_npm_packages = [
+  "product/packages/*",
+  "product/apps/*",
+  "platform/services/statecraft/package.json",
+]
+
+[index]
+# Hashed governance inputs beyond the always-hashed core (Cargo/npm
+# manifests, specs/*/spec.md, this file). Mirrors the in-tree indexer's
+# collect_input_files (specs 184/188): `.claude/**` + settings.json + .mcp.json
+# keep quiet edits to the agentic config visible in the staleness gate; the
+# adapter-scopes snapshot is a hashed factory input (spec 160).
+extra_hashed_inputs = [
+  "standards/schemas/**",
+  ".github/workflows/**",
+  ".claude/agents/**",
+  ".claude/commands/**",
+  ".claude/rules/**",
+  ".claude/skills/**",
+  ".claude/settings.json",
+  ".mcp.json",
+  "platform/services/statecraft/api/factory/adapter-scopes.json",
+]
+resolver_exclusions = ["target", "node_modules", ".derived", "dist", "build", ".next"]
+
+# Spec 184/188 narrow Claude shared-config staleness slice. `spec-spine index
+# check --slice claude-config` gates this glob group independently of the global
+# index contentHash, replacing the deleted in-tree `codebase-indexer check-config`
+# (spec 217 Phase 4). Hashes are emitted to .derived/codebase-index/slices.json
+# by `spec-spine index`. Mirrors the spec 188 Phase 4 config-hash.json slice
+# (.claude/settings.json + .mcp.json) so a quiet edit to the agentic config still
+# trips a PR-time gate after the broad index-freshness check became report-only.
+[index.slices]
+claude-config = [".claude/settings.json", ".mcp.json"]
+
+[coupling]
+# Additions to the built-in bypass floor (which already covers .github/,
+# docs/, README.md, CODEOWNERS, lockfiles, .derived/, etc.).
+bypass_prefixes = []
+# Dependabot-class PRs (whose non-bypassed changes are only version strings
+# inside dependency tables) self-waive, fail-closed on anything else.
+auto_waive_dependency_only = true
+waiver_keyword = "Spec-Drift-Waiver:"
+
+[branding]
+compiler_id = "spec-spine"
+indexer_id  = "spec-spine"
+
+[provenance.uri_schemes]
+# Spec 156 references-edge provenance. OAP's knowledge URIs are
+# `statecraft://project/<uuid>/knowledge/<uuid>`; code fingerprints are
+# `xray-fingerprint://<sha256>`.
+knowledge        = "statecraft://"
+code-fingerprint = "xray-fingerprint://"
+
+[frontmatter]
+# OAP overlay frontmatter keys beyond the generic spec-spine grammar.
+# Declared so the compiler carries them in extra_frontmatter rather than
+# rejecting them as unknown (library spec 013). The OAP enrichers
+# (oap-registry-enrich / oap-code-index-enrich) are the canonical readers.
+extra_known_keys = [
+  # Spec 147 universal dimensions + per-kind structural fields.
+  "shape",
+  "category",
+  "retirement_rationale",
+  "provides",
+  "composition",
+  "selectable_by",
+  "selector",
+  "default",
+  "production_forbidden",
+  "member_contract",
+  "identity",
+  "selects",
+  "policy",
+  # Spec 132 invariant freeze.
+  "unamendable",
+  # OAP compliance overlay (nested map; read by oap-registry-enrich).
+  "compliance",
+  # Lifecycle / bookkeeping keys.
+  "owner",
+  "risk",
+  "amended",
+  "amendment_record",
+  "approved",
+  "completed",
+  "ratified",
+  "closed",
+  "consolidation_date",
+  "consolidated_from",
+  "language",
+  "slug",
+]

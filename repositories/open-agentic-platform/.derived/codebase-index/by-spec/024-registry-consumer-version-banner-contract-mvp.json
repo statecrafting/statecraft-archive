@@ -1,0 +1,9 @@
+{
+  "mapping": {
+    "implementingPaths": [],
+    "specId": "024-registry-consumer-version-banner-contract-mvp",
+    "specStatus": "superseded"
+  },
+  "schemaVersion": "1.1.0",
+  "shardHash": "04970dae5c60ed67ffa7cd2a4b0129ea3827903dec74d828a6833d0e335b41b9"
+}

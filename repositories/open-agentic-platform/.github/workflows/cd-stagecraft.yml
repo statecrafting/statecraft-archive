@@ -1,0 +1,127 @@
+# Spec: 077-statecraft-factory-api
+# Spec: 078-platform-completion-plan
+#
+# CD for statecraft: build Docker image, push to GHCR, deploy to Hetzner K3s.
+#
+# Required GitHub secrets:
+#   KUBECONFIG_HETZNER  — contents of platform/infra/hetzner/kubeconfig (base64-encoded)
+#
+# Required GitHub environment:
+#   "production"         — create with protection rules for manual approval on deploy
+
+name: CD statecraft
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'platform/services/statecraft/**'
+      - 'platform/charts/statecraft/**'
+  workflow_dispatch:
+    inputs:
+      deploy:
+        description: 'Deploy after build (true/false)'
+        required: false
+        default: 'true'
+        type: choice
+        options: ['true', 'false']
+
+concurrency:
+  group: cd-statecraft-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  # ghcr.io repo path is derived from github.repository (lowercased per OCI
+  # registry rules) so a repo rename doesn't require a workflow edit.
+  IMAGE: ghcr.io/${{ github.repository }}/statecraft
+  ENCORE_VERSION: '1.57.9'
+
+jobs:
+  # ── CI gate ────────────────────────────────────────────────
+  ci:
+    uses: ./.github/workflows/ci-statecraft.yml
+
+  # ── Build & push Docker image ─────────────────────────────
+  build-and-push:
+    needs: ci
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+    outputs:
+      image-tag: ${{ steps.meta.outputs.sha-tag }}
+
+    steps:
+      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+
+      - uses: actions/setup-node@48b55a011bda9f5d6aeb4c2d9c7362e8dae4041e # v6
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: platform/services/statecraft/package-lock.json
+
+      - name: Install dependencies
+        run: npm ci
+        working-directory: platform/services/statecraft
+
+      - name: Compute image tags
+        id: meta
+        run: |
+          SHA_SHORT=$(git rev-parse --short HEAD)
+          echo "sha-tag=sha-${SHA_SHORT}" >> "$GITHUB_OUTPUT"
+          echo "Building tags: sha-${SHA_SHORT}, latest"
+
+      - name: Encore build
+        uses: ./.github/actions/encore-build
+        with:
+          encore-version: ${{ env.ENCORE_VERSION }}
+          config: ./infra.config.json
+          image-tag: ${{ env.IMAGE }}:${{ steps.meta.outputs.sha-tag }}
+
+      - name: Tag as latest
+        run: docker tag ${{ env.IMAGE }}:${{ steps.meta.outputs.sha-tag }} ${{ env.IMAGE }}:latest
+
+      - name: Log in to GHCR
+        uses: docker/login-action@af1e73f918a031802d376d3c8bbc3fe56130a9b0 # v4
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Push to GHCR
+        run: |
+          docker push ${{ env.IMAGE }}:${{ steps.meta.outputs.sha-tag }}
+          docker push ${{ env.IMAGE }}:latest
+
+  # ── Deploy to Hetzner K3s ─────────────────────────────────
+  deploy-hetzner:
+    needs: build-and-push
+    if: github.event_name == 'push' || github.event.inputs.deploy == 'true'
+    runs-on: ubuntu-latest
+    environment: production
+
+    steps:
+      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+
+      - name: Install Helm
+        uses: azure/setup-helm@9bc31f4ebc9c6b171d7bfbaa5d006ae7abdb4310 # v5
+
+      - name: Deploy to Hetzner
+        uses: ./.github/actions/helm-deploy
+        with:
+          namespace: statecraft-system
+          release-name: statecraft
+          chart-path: platform/charts/statecraft
+          values-files: platform/charts/statecraft/values.yaml,platform/charts/statecraft/values-hetzner.yaml
+          helm-set-args: >-
+            --set image.repository=${{ env.IMAGE }}
+            --set image.tag=${{ needs.build-and-push.outputs.image-tag }}
+            --set "ingress.host=${{ vars.DOMAIN }}"
+            --set "oidc.endpoint=https://auth.${{ vars.DOMAIN }}"
+            --set "oidc.deploydAudience=https://deploy.${{ vars.DOMAIN }}"
+          app-label: statecraft-api
+          kubeconfig-b64: ${{ secrets.KUBECONFIG_HETZNER }}
+          ghcr-pat: ${{ secrets.GHCR_PAT }}
+          ghcr-username: ${{ github.actor }}
+          pull-secret-name: ghcr-credentials
+          timeout: '600s'

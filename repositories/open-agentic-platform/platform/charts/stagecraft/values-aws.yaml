@@ -1,0 +1,12 @@
+image:
+  repository: ""  # Set to ECR URL
+
+serviceAccount:
+  annotations:
+    eks.amazonaws.com/role-arn: ""
+
+secrets:
+  provider: "eso"
+  storeRef:
+    name: aws-secrets-manager
+    kind: ClusterSecretStore

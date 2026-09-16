@@ -1,0 +1,155 @@
+{
+  "record": {
+    "amendmentRecord": "amended 2026-06-18 by spec 217 (engine-swap collapse): the in-tree spec-compiler that provided the registry-freshness seam this spec extended was deleted; that logic is now in spec-spine-core. The spec-compiler edge is stripped (path deleted); all other extends edges (factory-engine, tool-registry, policy-kernel, orchestrator) survive.\n",
+    "coAuthority": [
+      {
+        "unit": {
+          "anchor": "registry",
+          "file": "Makefile",
+          "kind": "section"
+        },
+        "with_specs": [
+          "102-governed-excellence",
+          "104-makefile-ci-parity-contract",
+          "127-spec-code-coupling-gate",
+          "134-fast-local-ci-mode",
+          "135-fast-ci-as-default"
+        ]
+      }
+    ],
+    "codeAliases": [
+      "GOVERNED_EXCELLENCE",
+      "GOV_CERT",
+      "OWASP_ASI_COVERAGE"
+    ],
+    "created": "2026-04-14",
+    "dependsOn": [
+      "089-governed-convergence-plan",
+      "100-post-convergence-remediation",
+      "101-codebase-index-mvp"
+    ],
+    "domain": "platform",
+    "establishes": [
+      {
+        "kind": "file",
+        "path": "crates/factory-engine/src/governance_certificate.rs"
+      }
+    ],
+    "extends": [
+      {
+        "nature": "additive",
+        "spec": "075-factory-workflow-engine",
+        "unit": {
+          "kind": "file",
+          "path": "crates/factory-engine/src/lib.rs"
+        }
+      },
+      {
+        "nature": "additive",
+        "spec": "075-factory-workflow-engine",
+        "unit": {
+          "kind": "file",
+          "path": "crates/factory-engine/src/bin/factory_run.rs"
+        }
+      },
+      {
+        "nature": "additive",
+        "spec": "067-tool-definition-registry",
+        "unit": {
+          "id": "tool-registry",
+          "kind": "crate"
+        }
+      },
+      {
+        "nature": "additive",
+        "spec": "068-permission-runtime",
+        "unit": {
+          "kind": "file",
+          "path": "crates/policy-kernel/src/lib.rs"
+        }
+      },
+      {
+        "nature": "additive",
+        "spec": "052-state-persistence",
+        "unit": {
+          "kind": "file",
+          "path": "crates/orchestrator/src/lib.rs"
+        }
+      }
+    ],
+    "extraFrontmatter": {
+      "amended": "2026-06-18",
+      "compliance": [
+        {
+          "controls": [
+            "ASI01",
+            "ASI03",
+            "ASI05",
+            "ASI07",
+            "ASI09",
+            "ASI10"
+          ],
+          "framework": "owasp-asi-2026"
+        }
+      ]
+    },
+    "id": "102-governed-excellence",
+    "implementation": "complete",
+    "kind": "process",
+    "owner": "bart",
+    "references": [
+      {
+        "role": "planned",
+        "unit": {
+          "kind": "file",
+          "path": "factory/contract/schemas/governance-certificate.schema.json"
+        }
+      },
+      {
+        "role": "planned",
+        "unit": {
+          "kind": "directory",
+          "path": "factory/contract/checks"
+        }
+      }
+    ],
+    "risk": "high",
+    "sectionHeadings": [
+      "102 — Governed Excellence",
+      "Purpose",
+      "Competitive Context",
+      "Central Deliverable: The Governance Certificate",
+      "Content Model",
+      "Generation Pipeline",
+      "Verification",
+      "Requirements *(mandatory)*",
+      "Phase A — Factory Fix + Certificate Foundation (FR-001 to FR-010)",
+      "Phase B — Governance Plumbing Completion (FR-011 to FR-020)",
+      "Phase C — Traceability Unification + Compliance (FR-021 to FR-030)",
+      "Phase D — OWASP ASI 2026 + Security Hardening (FR-031 to FR-040)",
+      "Non-Functional Requirements",
+      "Success Criteria *(mandatory)*",
+      "Measurable Outcomes",
+      "User Scenarios & Testing *(mandatory)*",
+      "Scenario 1 — Factory Pipeline Produces Governance Certificate (Priority: P1)",
+      "Scenario 2 — Certificate Independently Verifiable (Priority: P1)",
+      "Scenario 3 — Tool Dispatch Enforced via Policy Bridge (Priority: P1)",
+      "Scenario 4 — Stage Gates Block Non-Compliant Artifacts (Priority: P2)",
+      "Scenario 5 — Compliance Mapping in Spec Compiler Output (Priority: P2)",
+      "Scenario 6 — Unified Traceability Query (Priority: P2)",
+      "Scenario 7 — OWASP ASI Agent Identity Enforcement (Priority: P3)",
+      "Scenario 8 — Circuit Breaker Halts Runaway Agent (Priority: P3)",
+      "Phasing and Dependencies",
+      "Phase Dependencies",
+      "Out of Scope",
+      "Closure record — Phase A pipeline emission (G-2)",
+      "Follow-ups"
+    ],
+    "specPath": "specs/102-governed-excellence/spec.md",
+    "status": "approved",
+    "summary": "Meta-spec that formalises the refinement of OAP from a working governed platform into the definitive governed operating system for AI-native delivery. Central deliverable: a Governance Certificate — a single JSON artifact proving the full intent-to-spec-to-code-to-audit chain. Closes ten validated gaps across factory compilation, certificate output, stage gate configs, tool-registry policy bridge, compliance mapping, traceability unification, OWASP ASI 2026 coverage, policy composition, registry freshness, and platform policy seams.\n",
+    "title": "Governed Excellence — Production Hardening for the Best Governed OS for AI-Native Delivery"
+  },
+  "shardHash": "c710cdb07199f13a2b38126b9c2da90cff6e7ebd5124995607ab77bc0b7c46d9",
+  "specVersion": "1.1.0"
+}

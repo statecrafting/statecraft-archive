@@ -1,0 +1,52 @@
+{
+  "name": "@statecrafting/toolchain",
+  "version": "0.4.0",
+  "license": "Apache-2.0",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/statecrafting/statecrafting.git",
+    "directory": "packages/toolchain"
+  },
+  "spec-spine": {
+    "spec": "002-toolchain"
+  },
+  "description": "The Encore build toolchain: the vendored Encore build drivers (dev/build/bundle), the app-model extractor (enrahitu-extract), and the encore-runtime.node and tsparser-encore binaries delivered as per-platform packages. Pins upstream encoredev/encore v1.57.9. No encore CLI.",
+  "type": "module",
+  "engines": {
+    "node": ">=24"
+  },
+  "bin": {
+    "enrahitu-dev": "bin/dev.mjs",
+    "enrahitu-build": "bin/build.mjs",
+    "enrahitu-extract": "bin/extract.mjs",
+    "enrahitu-toolchain": "bin/version.mjs"
+  },
+  "exports": {
+    "./augment-infra": {
+      "types": "./lib/augment-infra.d.mts",
+      "default": "./lib/augment-infra.mjs"
+    },
+    "./resolve": "./lib/resolve.mjs",
+    "./package.json": "./package.json"
+  },
+  "files": [
+    "LICENSE",
+    "bin",
+    "lib",
+    "proto",
+    "scripts",
+    "README.md"
+  ],
+  "dependencies": {
+    "@statecrafting/kernel-native": "^0.1.0",
+    "ajv": "^8.17.1",
+    "esbuild": "^0.27.3",
+    "protobufjs": "^7.5.4",
+    "typescript": "^6.0.3"
+  },
+  "optionalDependencies": {
+    "@statecrafting/toolchain-darwin-arm64": "0.4.0",
+    "@statecrafting/toolchain-linux-x64": "0.4.0",
+    "@statecrafting/toolchain-linux-arm64": "0.4.0"
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "package": {
+    "kind": "npm-package",
+    "name": "@opc/panel-event-bus",
+    "path": "product/packages/panel-event-bus",
+    "specRef": "060-panel-event-bus",
+    "version": "0.1.0"
+  },
+  "schemaVersion": "1.1.0",
+  "shardHash": "68f4e69367ee6c96d037474692b842df52b64f5ea0d9db33fbc4085e1af56534"
+}

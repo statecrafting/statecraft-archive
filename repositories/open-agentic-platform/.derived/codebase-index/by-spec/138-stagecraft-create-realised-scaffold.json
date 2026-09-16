@@ -1,0 +1,275 @@
+{
+  "mapping": {
+    "amends": [
+      "112-factory-project-lifecycle"
+    ],
+    "dependsOn": [
+      "112-factory-project-lifecycle",
+      "108-factory-as-platform-feature",
+      "109-factory-pat-and-pubsub-sync"
+    ],
+    "implementingPaths": [
+      {
+        "path": "platform/charts/statecraft/templates/workspace-pvc.yaml",
+        "source": "spec-edge"
+      },
+      {
+        "path": "platform/services/statecraft/CLAUDE.md",
+        "source": "spec-edge"
+      },
+      {
+        "path": "platform/services/statecraft/api/factory/syncPipeline.ts",
+        "source": "spec-edge"
+      },
+      {
+        "path": "platform/services/statecraft/api/factory/syncWorker.ts",
+        "source": "spec-edge"
+      },
+      {
+        "path": "platform/services/statecraft/api/factory/translator.test.ts",
+        "source": "spec-edge"
+      },
+      {
+        "path": "platform/services/statecraft/api/github/repoInit.ts",
+        "source": "spec-edge"
+      },
+      {
+        "path": "platform/services/statecraft/api/projects/create.ts",
+        "source": "spec-edge"
+      },
+      {
+        "path": "platform/services/statecraft/api/projects/scaffold/gitInitAndPush.ts",
+        "source": "spec-edge"
+      },
+      {
+        "path": "platform/services/statecraft/api/projects/scaffold/moduleCatalog.ts",
+        "source": "spec-edge"
+      },
+      {
+        "path": "platform/services/statecraft/api/projects/scaffold/perRequestScaffold.ts",
+        "source": "spec-edge"
+      },
+      {
+        "path": "platform/services/statecraft/api/projects/scaffold/scheduler.ts",
+        "source": "spec-edge"
+      },
+      {
+        "path": "platform/services/statecraft/api/projects/scaffold/templateCache.ts",
+        "source": "spec-edge"
+      },
+      {
+        "path": "platform/services/statecraft/api/projects/scaffoldReadiness.ts",
+        "source": "spec-edge"
+      },
+      {
+        "path": "platform/services/statecraft/web/app/lib/projects-api.server.ts",
+        "source": "spec-edge"
+      },
+      {
+        "path": "platform/services/statecraft/web/app/routes/app.projects.new.tsx",
+        "source": "spec-edge"
+      }
+    ],
+    "resolvedUnits": [
+      {
+        "locations": [
+          {
+            "file": "platform/charts/statecraft/templates/workspace-pvc.yaml"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "extends",
+        "unit": {
+          "kind": "file",
+          "path": "platform/charts/statecraft/templates/workspace-pvc.yaml"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "platform/services/statecraft/CLAUDE.md"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "extends",
+        "unit": {
+          "kind": "file",
+          "path": "platform/services/statecraft/CLAUDE.md"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "platform/services/statecraft/api/factory/syncPipeline.ts"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "extends",
+        "unit": {
+          "kind": "file",
+          "path": "platform/services/statecraft/api/factory/syncPipeline.ts"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "platform/services/statecraft/api/factory/syncWorker.ts"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "extends",
+        "unit": {
+          "kind": "file",
+          "path": "platform/services/statecraft/api/factory/syncWorker.ts"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "platform/services/statecraft/api/factory/translator.test.ts"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "extends",
+        "unit": {
+          "kind": "file",
+          "path": "platform/services/statecraft/api/factory/translator.test.ts"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "platform/services/statecraft/api/github/repoInit.ts"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "extends",
+        "unit": {
+          "kind": "file",
+          "path": "platform/services/statecraft/api/github/repoInit.ts"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "platform/services/statecraft/api/projects/create.ts"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "extends",
+        "unit": {
+          "kind": "file",
+          "path": "platform/services/statecraft/api/projects/create.ts"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "platform/services/statecraft/api/projects/scaffold/gitInitAndPush.ts"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "extends",
+        "unit": {
+          "kind": "file",
+          "path": "platform/services/statecraft/api/projects/scaffold/gitInitAndPush.ts"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "platform/services/statecraft/api/projects/scaffold/moduleCatalog.ts"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "extends",
+        "unit": {
+          "kind": "file",
+          "path": "platform/services/statecraft/api/projects/scaffold/moduleCatalog.ts"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "platform/services/statecraft/api/projects/scaffold/perRequestScaffold.ts"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "extends",
+        "unit": {
+          "kind": "file",
+          "path": "platform/services/statecraft/api/projects/scaffold/perRequestScaffold.ts"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "platform/services/statecraft/api/projects/scaffold/scheduler.ts"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "extends",
+        "unit": {
+          "kind": "file",
+          "path": "platform/services/statecraft/api/projects/scaffold/scheduler.ts"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "platform/services/statecraft/api/projects/scaffold/templateCache.ts"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "extends",
+        "unit": {
+          "kind": "file",
+          "path": "platform/services/statecraft/api/projects/scaffold/templateCache.ts"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "platform/services/statecraft/api/projects/scaffoldReadiness.ts"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "extends",
+        "unit": {
+          "kind": "file",
+          "path": "platform/services/statecraft/api/projects/scaffoldReadiness.ts"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "platform/services/statecraft/web/app/lib/projects-api.server.ts"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "extends",
+        "unit": {
+          "kind": "file",
+          "path": "platform/services/statecraft/web/app/lib/projects-api.server.ts"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "platform/services/statecraft/web/app/routes/app.projects.new.tsx"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "extends",
+        "unit": {
+          "kind": "file",
+          "path": "platform/services/statecraft/web/app/routes/app.projects.new.tsx"
+        }
+      }
+    ],
+    "specId": "138-statecraft-create-realised-scaffold",
+    "specStatus": "approved"
+  },
+  "schemaVersion": "1.1.0",
+  "shardHash": "20d50a423956e0f3f60eadfcbc34f8610a22f6ab871077fe804de994f7d37491"
+}

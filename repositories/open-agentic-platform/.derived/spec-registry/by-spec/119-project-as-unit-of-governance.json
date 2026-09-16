@@ -1,0 +1,179 @@
+{
+  "record": {
+    "amendmentRecord": "123-agent-catalog-org-rescope",
+    "amends": [
+      "000-bootstrap-spec-system",
+      "087-unified-workspace-architecture",
+      "092-workspace-runtime-threading",
+      "094-unified-artifact-store",
+      "099-workspace-scoped-persistence"
+    ],
+    "codeAliases": [
+      "PROJECT_AS_GOVERNANCE_UNIT"
+    ],
+    "created": "2026-04-29",
+    "dependsOn": [
+      "000-bootstrap-spec-system",
+      "087-unified-workspace-architecture",
+      "092-workspace-runtime-threading",
+      "094-unified-artifact-store",
+      "099-workspace-scoped-persistence",
+      "113-statecraft-projects-rename-and-clone",
+      "114-async-project-clone-pipeline",
+      "115-knowledge-extraction-pipeline"
+    ],
+    "domain": "platform",
+    "establishes": [
+      {
+        "kind": "directory",
+        "path": "platform/services/statecraft/api/db"
+      },
+      {
+        "kind": "directory",
+        "path": "platform/services/statecraft/api/projects"
+      },
+      {
+        "kind": "directory",
+        "path": "platform/services/statecraft/api/knowledge"
+      },
+      {
+        "kind": "directory",
+        "path": "platform/services/statecraft/api/sync"
+      },
+      {
+        "kind": "file",
+        "path": "standards/spec/contract.md"
+      }
+    ],
+    "extends": [
+      {
+        "nature": "wrapping",
+        "spec": "087-unified-workspace-architecture",
+        "unit": {
+          "kind": "directory",
+          "path": "specs/087-unified-workspace-architecture"
+        }
+      },
+      {
+        "nature": "wrapping",
+        "spec": "092-workspace-runtime-threading",
+        "unit": {
+          "id": "orchestrator",
+          "kind": "crate"
+        }
+      },
+      {
+        "nature": "wrapping",
+        "spec": "092-workspace-runtime-threading",
+        "unit": {
+          "kind": "directory",
+          "path": "specs/092-workspace-runtime-threading"
+        }
+      },
+      {
+        "nature": "wrapping",
+        "spec": "094-unified-artifact-store",
+        "unit": {
+          "id": "factory-contracts",
+          "kind": "crate"
+        }
+      },
+      {
+        "nature": "wrapping",
+        "spec": "094-unified-artifact-store",
+        "unit": {
+          "kind": "directory",
+          "path": "specs/094-unified-artifact-store"
+        }
+      },
+      {
+        "nature": "wrapping",
+        "spec": "099-workspace-scoped-persistence",
+        "unit": {
+          "id": "run",
+          "kind": "crate"
+        }
+      },
+      {
+        "nature": "wrapping",
+        "spec": "099-workspace-scoped-persistence",
+        "unit": {
+          "kind": "directory",
+          "path": "specs/099-workspace-scoped-persistence"
+        }
+      }
+    ],
+    "extraFrontmatter": {
+      "amended": "2026-05-01",
+      "closed": "2026-05-05",
+      "slug": "project-as-unit-of-governance"
+    },
+    "id": "119-project-as-unit-of-governance",
+    "implementation": "complete",
+    "kind": "governance",
+    "owner": "bart",
+    "references": [
+      {
+        "role": "historical",
+        "unit": {
+          "kind": "directory",
+          "path": "platform/services/statecraft/api/workspaces"
+        }
+      }
+    ],
+    "refines": [
+      {
+        "aspect": "project-scoped-governance",
+        "unit": {
+          "id": "@opc/desktop",
+          "kind": "crate"
+        }
+      },
+      {
+        "aspect": "project-scoped-governance",
+        "unit": {
+          "kind": "directory",
+          "path": "specs/000-bootstrap-spec-system"
+        }
+      }
+    ],
+    "risk": "high",
+    "sectionHeadings": [
+      "119 — Project as Unit of Governance",
+      "1. Problem Statement",
+      "2. Decision",
+      "3. Affected Specs",
+      "4. Schema Diff",
+      "4.1 Tables dropped",
+      "4.2 Columns moved to `projects`",
+      "4.3 `workspace_id` column renames",
+      "4.4 Constraint changes",
+      "4.5 Compiled-policy paths",
+      "5. Code-Alias Migration",
+      "6. Migration Order and Invariants",
+      "6.1 Pre-flight",
+      "6.2 Backfill (per-workspace, may be skipped if zero rows)",
+      "6.3 Cutover",
+      "6.4 Permission-grant merge",
+      "6.5 Invariants",
+      "7. Frontmatter Convention Introduced",
+      "7.1 `amends`",
+      "7.2 `amendment_record`",
+      "7.3 Compiler treatment",
+      "8. Out of Scope",
+      "9. Acceptance Criteria",
+      "10. Open Questions — Resolutions (2026-05-05 close-out)",
+      "Close-out invariant verification (2026-05-05)",
+      "Residual lexical references (acknowledged, not blocking)",
+      "Close-out cleanups landed in this commit",
+      "11. References",
+      "12. Release Markers"
+    ],
+    "specPath": "specs/119-project-as-unit-of-governance/spec.md",
+    "status": "approved",
+    "summary": "Collapse the workspace abstraction into project. Workspace was introduced (spec 087) as a multi-project governance container with a shared knowledge corpus, but the cross-project knowledge-sharing case has been displaced by the clone pipeline (specs 113, 114) which copies knowledge into the destination project at clone time. The workspace layer no longer earns its keep. Promote project to be the top-level unit under organization, owning the S3 bucket, knowledge corpus, source connectors, sync runs, runtime threading, and permission grants. Amend specs 087, 092, 094, 099 in place using the `amends:` and `amendment_record:` frontmatter fields formally introduced by this spec into the bootstrap (spec 000).\n",
+    "title": "Project as Unit of Governance — Workspace Collapse"
+  },
+  "shardHash": "8cf74340365f880471703232a8090e48ba558339b69bd696c1f8e08f1485da9b",
+  "specVersion": "1.1.0"
+}

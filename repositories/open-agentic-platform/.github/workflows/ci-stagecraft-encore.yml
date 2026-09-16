@@ -1,0 +1,106 @@
+# Spec: 211-encore-test-ci-job
+#
+# DB-bound encore-test lane for statecraft (ASI09 — verification integrity).
+#
+# vite.config.ts splits the statecraft suite into two lanes: pure suites run
+# under bare vitest (the `ci-statecraft.yml` job), DB-bound suites — excluded
+# under bare vitest — run only under `encore test`, which provisions per-test
+# Postgres databases via the Encore daemon + Docker. Before this lane existed
+# no CI job ran `encore test`, so DB-bound acceptance suites could rot
+# invisibly (spec 198 FR-013 records the proven instance; the spec 211
+# implementation log records eleven more found on first run).
+#
+# Three steps carry the contract:
+#   1. `encore-test-lane.mjs list` derives the DB-bound file set from the
+#      vite.config.ts exclude list (phantom entries fail, naming the glob).
+#   2. `encore test --run <files>` executes exactly that set against
+#      Encore-provisioned databases, with a JSON reporter capture. Any
+#      provisioning failure (daemon, image pull, migration error) fails the
+#      job with its cause — never skipped-green (FR-004).
+#   3. `encore-test-lane.mjs check` cross-checks the reporter output against
+#      the exclude list: a DB-bound file that did not execute at least one
+#      non-skipped test fails the job naming the file (FR-003).
+#
+# Dispatched from `.github/workflows/ci.yml` on PRs touching the statecraft
+# service (spec 177) and in merge_group with identical blocking semantics
+# (AC-5); manual via workflow_dispatch. Mirrored locally by
+# `make ci-statecraft-encore` (spec 104 parity contract).
+
+name: CI statecraft encore
+
+on:
+  workflow_call:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+env:
+  ENCORE_VERSION: '1.57.9'
+
+jobs:
+  encore-test:
+    runs-on: ubuntu-latest
+    name: encore test (DB-bound lane)
+    timeout-minutes: 25
+
+    steps:
+      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+
+      - uses: actions/setup-node@48b55a011bda9f5d6aeb4c2d9c7362e8dae4041e # v6
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: platform/services/statecraft/package-lock.json
+
+      - name: Install dependencies
+        run: npm ci
+        working-directory: platform/services/statecraft
+
+      - name: Install Encore CLI
+        uses: ./.github/actions/encore-install
+        with:
+          encore-version: ${{ env.ENCORE_VERSION }}
+
+      # Encore parses every service before running tests, and
+      # `web/api.gateway.ts` registers `api.static({ dir: "./build/client/assets" })`
+      # — the parser fails fast if that directory is missing. Same first step
+      # as ci-statecraft.yml's typecheck job and the encore-build action.
+      - name: Build frontend
+        shell: bash
+        working-directory: platform/services/statecraft
+        run: cd web && npx react-router build
+
+      # `encore test` on an app linked to Encore Cloud fetches development
+      # secret values from api.encore.cloud at startup and hard-fails when
+      # unauthenticated. This lane must not depend on Encore's platform
+      # (FR-004: no external network reliance beyond pinned tool installs),
+      # so the runner's checkout is UNLINKED before the run: with no app id
+      # the CLI stays fully local, secrets resolve unset, and no DB-bound
+      # suite reads real secret values (the spec-198 suites inject throwaway
+      # signing keypairs via process.env). The grep keeps this fail-visible:
+      # if encore.app's shape changes and the strip stops matching, the job
+      # fails here, not with a misleading auth error downstream.
+      - name: Unlink app from Encore Cloud (keep the lane platform-free)
+        working-directory: platform/services/statecraft
+        run: |
+          sed -i 's/"id":[[:space:]]*"[^"]*"/"id": ""/' encore.app
+          grep -q '"id": ""' encore.app
+
+      - name: Resolve DB-bound lane (exclude-list derivation)
+        working-directory: platform/services/statecraft
+        run: node scripts/encore-test-lane.mjs list > /tmp/encore-lane-files.txt
+
+      # --fileParallelism=false: the DB-bound suites share one database and
+      # are not parallel-safe by design — the migration-replay suites (36/40/41)
+      # mutate corpus-wide state (e.g. migration 36 inserts a synthetic row per
+      # org), so concurrent files see each other's seeds. Sequential execution
+      # is the lane's correctness posture, not an optimisation knob.
+      - name: Encore test (DB-bound suites, per-test databases)
+        shell: bash
+        working-directory: platform/services/statecraft
+        run: CI=true encore test --run $(cat /tmp/encore-lane-files.txt) --fileParallelism=false --reporter=default --reporter=json --outputFile=/tmp/encore-test-report.json
+
+      - name: Lane-coverage guard (skip-as-pass forbidden)
+        working-directory: platform/services/statecraft
+        run: node scripts/encore-test-lane.mjs check --report /tmp/encore-test-report.json

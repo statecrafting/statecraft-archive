@@ -1,0 +1,33 @@
+{
+  "mapping": {
+    "dependsOn": [
+      "002-app-shell",
+      "003-postgres-adoption"
+    ],
+    "implementingPaths": [
+      {
+        "path": "backend/tenants/",
+        "source": "spec-edge"
+      }
+    ],
+    "resolvedUnits": [
+      {
+        "locations": [
+          {
+            "file": "backend/tenants/"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "directory",
+          "path": "backend/tenants/"
+        }
+      }
+    ],
+    "specId": "004-tenants-github-app",
+    "specStatus": "approved"
+  },
+  "schemaVersion": "1.1.0",
+  "shardHash": "17bd34f70ce093cfd31f5269ed46dd08e8df59fa08f8a09ff25fa352eeec8411"
+}

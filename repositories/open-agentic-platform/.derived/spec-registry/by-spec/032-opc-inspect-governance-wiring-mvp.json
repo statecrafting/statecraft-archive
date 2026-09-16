@@ -1,0 +1,39 @@
+{
+  "record": {
+    "authors": [
+      "open-agentic-platform"
+    ],
+    "codeAliases": [
+      "XRAY_ANALYSIS",
+      "XRAY_SCAN_POLICY"
+    ],
+    "created": "2026-03-23",
+    "domain": "opc",
+    "extraFrontmatter": {
+      "language": "en"
+    },
+    "featureBranch": "032-opc-inspect-governance-wiring-mvp",
+    "id": "032-opc-inspect-governance-wiring-mvp",
+    "implementation": "complete",
+    "kind": "product-consolidation",
+    "origin": {
+      "retroactive": true
+    },
+    "sectionHeadings": [
+      "Feature Specification: OPC inspect + governance wiring",
+      "Purpose",
+      "Scope",
+      "Requirements",
+      "Contract notes",
+      "Success criteria",
+      "Delivery record *(non-normative)*",
+      "Security hardening amendment (2026-07-02)"
+    ],
+    "specPath": "specs/032-opc-inspect-governance-wiring-mvp/spec.md",
+    "status": "approved",
+    "summary": "First product-facing OAP vertical slice: wire OPC inspect and governance UI surfaces to existing sidecar and local analysis capabilities so one end-to-end user journey works without placeholders.\n",
+    "title": "OPC inspect + governance wiring MVP"
+  },
+  "shardHash": "427c1df0d721f5abafb8ce2a1b80d9f052e99169731d4ad1a4188c178d8283b8",
+  "specVersion": "1.1.0"
+}

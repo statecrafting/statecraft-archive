@@ -1,0 +1,60 @@
+{
+  "record": {
+    "authors": [
+      "open-agentic-platform"
+    ],
+    "codeAliases": [
+      "SESSION_MEMORY"
+    ],
+    "created": "2026-03-29",
+    "domain": "opc",
+    "establishes": [
+      {
+        "kind": "directory",
+        "path": "product/packages/session-memory"
+      }
+    ],
+    "extraFrontmatter": {
+      "language": "en"
+    },
+    "featureBranch": "056-session-memory",
+    "id": "056-session-memory",
+    "implementation": "complete",
+    "kind": "platform",
+    "references": [
+      {
+        "role": "historical",
+        "unit": {
+          "kind": "directory",
+          "path": "product/packages/memory-mcp"
+        }
+      }
+    ],
+    "sectionHeadings": [
+      "Feature Specification: Session Memory / Project-Object Persistence",
+      "Purpose",
+      "Scope",
+      "In scope",
+      "Out of scope",
+      "Requirements",
+      "Functional",
+      "Non-functional",
+      "Architecture",
+      "Memory entry schema",
+      "Harvesting signal rules",
+      "MCP tool interface",
+      "Package structure",
+      "Data flow",
+      "Implementation approach",
+      "Success criteria",
+      "Dependencies",
+      "Risk"
+    ],
+    "specPath": "specs/056-session-memory/spec.md",
+    "status": "approved",
+    "summary": "Persistent context across AI sessions that stores decisions, patterns, corrections, and notes. A harvesting engine detects signals in conversation (\"let's go with\" = decision, \"actually/no\" = correction) and writes them to a Memory MCP server with importance levels (ephemeral to permanent), expiry policies, and project scoping.\n",
+    "title": "Session Memory / Project-Object Persistence"
+  },
+  "shardHash": "8f87ca1eb449a0306908e86e92d6bfb3c1f9857a450dfcd7910cbdaaf0269f65",
+  "specVersion": "1.1.0"
+}

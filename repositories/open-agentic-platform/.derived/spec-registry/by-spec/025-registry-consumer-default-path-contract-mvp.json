@@ -1,0 +1,40 @@
+{
+  "record": {
+    "authors": [
+      "open-agentic-platform"
+    ],
+    "created": "2026-03-22",
+    "domain": "tooling",
+    "extends": [
+      {
+        "nature": "additive",
+        "spec": "002-registry-consumer-mvp"
+      }
+    ],
+    "extraFrontmatter": {
+      "language": "en"
+    },
+    "featureBranch": "025-registry-consumer-default-path-contract-mvp",
+    "id": "025-registry-consumer-default-path-contract-mvp",
+    "implementation": "complete",
+    "kind": "platform-delivery",
+    "refines": [
+      {
+        "aspect": "contract-tests"
+      }
+    ],
+    "sectionHeadings": [
+      "Feature Specification: Default-path contract",
+      "Purpose",
+      "Requirements",
+      "Out of scope"
+    ],
+    "specPath": "specs/025-registry-consumer-default-path-contract-mvp/spec.md",
+    "status": "superseded",
+    "summary": "Lock behavior when --registry-path is omitted by asserting default-path success and missing-path failure semantics from controlled current working directories.\n",
+    "supersededBy": "217-spec-spine-engine-swap-collapse",
+    "title": "Registry consumer default-path contract MVP"
+  },
+  "shardHash": "63f39eb29d295188de42bedde2a7261ccbb40234b447364218c599ad5633504a",
+  "specVersion": "1.1.0"
+}

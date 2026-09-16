@@ -1,0 +1,295 @@
+{
+  "diagnostics": {
+    "errors": [],
+    "warnings": [
+      {
+        "code": "W-002",
+        "message": "spec '177-ci-orchestrator-pr-gate' file unit '.github/workflows/ci-config-hash.yml' does not exist",
+        "path": ".github/workflows/ci-config-hash.yml"
+      },
+      {
+        "code": "W-002",
+        "message": "spec '177-ci-orchestrator-pr-gate' file unit '.github/workflows/ci-tenant-hello.yml' does not exist",
+        "path": ".github/workflows/ci-tenant-hello.yml"
+      }
+    ]
+  },
+  "mapping": {
+    "amends": [
+      "104-makefile-ci-parity-contract"
+    ],
+    "dependsOn": [
+      "104-makefile-ci-parity-contract",
+      "116-supply-chain-policy-gates",
+      "118-workflow-spec-traceability",
+      "127-spec-code-coupling-gate",
+      "135-fast-ci-as-default",
+      "152-path-co-authority",
+      "158-workflow-ref-sha-pinning-lint"
+    ],
+    "implementingPaths": [
+      {
+        "path": ".github/workflows/ai-pr-review.yml",
+        "source": "spec-edge"
+      },
+      {
+        "path": ".github/workflows/ci-axiomregent.yml",
+        "source": "spec-edge"
+      },
+      {
+        "path": ".github/workflows/ci-crates.yml",
+        "source": "spec-edge"
+      },
+      {
+        "path": ".github/workflows/ci-deployd-api-rs.yml",
+        "source": "spec-edge"
+      },
+      {
+        "path": ".github/workflows/ci-desktop.yml",
+        "source": "spec-edge"
+      },
+      {
+        "path": ".github/workflows/ci-featuregraph-golden.yml",
+        "source": "spec-edge"
+      },
+      {
+        "path": ".github/workflows/ci-orchestrator.yml",
+        "source": "spec-edge"
+      },
+      {
+        "path": ".github/workflows/ci-parity.yml",
+        "source": "spec-edge"
+      },
+      {
+        "path": ".github/workflows/ci-policy-kernel.yml",
+        "source": "spec-edge"
+      },
+      {
+        "path": ".github/workflows/ci-spec-code-coupling.yml",
+        "source": "spec-edge"
+      },
+      {
+        "path": ".github/workflows/ci-statecraft.yml",
+        "source": "spec-edge"
+      },
+      {
+        "path": ".github/workflows/ci-supply-chain.yml",
+        "source": "spec-edge"
+      },
+      {
+        "path": ".github/workflows/ci.yml",
+        "source": "spec-edge"
+      },
+      {
+        "path": ".github/workflows/spec-conformance.yml",
+        "source": "spec-edge"
+      }
+    ],
+    "resolvedUnits": [
+      {
+        "locations": [
+          {
+            "file": ".github/workflows/ci.yml"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "file",
+          "path": ".github/workflows/ci.yml"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": ".github/workflows/ai-pr-review.yml"
+          }
+        ],
+        "ownership": false,
+        "sourceField": "references",
+        "unit": {
+          "kind": "file",
+          "path": ".github/workflows/ai-pr-review.yml"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": ".github/workflows/ci-axiomregent.yml"
+          }
+        ],
+        "ownership": false,
+        "sourceField": "references",
+        "unit": {
+          "kind": "file",
+          "path": ".github/workflows/ci-axiomregent.yml"
+        }
+      },
+      {
+        "locations": [],
+        "ownership": false,
+        "sourceField": "references",
+        "unit": {
+          "kind": "file",
+          "path": ".github/workflows/ci-config-hash.yml"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": ".github/workflows/ci-crates.yml"
+          }
+        ],
+        "ownership": false,
+        "sourceField": "references",
+        "unit": {
+          "kind": "file",
+          "path": ".github/workflows/ci-crates.yml"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": ".github/workflows/ci-deployd-api-rs.yml"
+          }
+        ],
+        "ownership": false,
+        "sourceField": "references",
+        "unit": {
+          "kind": "file",
+          "path": ".github/workflows/ci-deployd-api-rs.yml"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": ".github/workflows/ci-desktop.yml"
+          }
+        ],
+        "ownership": false,
+        "sourceField": "references",
+        "unit": {
+          "kind": "file",
+          "path": ".github/workflows/ci-desktop.yml"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": ".github/workflows/ci-featuregraph-golden.yml"
+          }
+        ],
+        "ownership": false,
+        "sourceField": "references",
+        "unit": {
+          "kind": "file",
+          "path": ".github/workflows/ci-featuregraph-golden.yml"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": ".github/workflows/ci-orchestrator.yml"
+          }
+        ],
+        "ownership": false,
+        "sourceField": "references",
+        "unit": {
+          "kind": "file",
+          "path": ".github/workflows/ci-orchestrator.yml"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": ".github/workflows/ci-parity.yml"
+          }
+        ],
+        "ownership": false,
+        "sourceField": "references",
+        "unit": {
+          "kind": "file",
+          "path": ".github/workflows/ci-parity.yml"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": ".github/workflows/ci-policy-kernel.yml"
+          }
+        ],
+        "ownership": false,
+        "sourceField": "references",
+        "unit": {
+          "kind": "file",
+          "path": ".github/workflows/ci-policy-kernel.yml"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": ".github/workflows/ci-spec-code-coupling.yml"
+          }
+        ],
+        "ownership": false,
+        "sourceField": "references",
+        "unit": {
+          "kind": "file",
+          "path": ".github/workflows/ci-spec-code-coupling.yml"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": ".github/workflows/ci-statecraft.yml"
+          }
+        ],
+        "ownership": false,
+        "sourceField": "references",
+        "unit": {
+          "kind": "file",
+          "path": ".github/workflows/ci-statecraft.yml"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": ".github/workflows/ci-supply-chain.yml"
+          }
+        ],
+        "ownership": false,
+        "sourceField": "references",
+        "unit": {
+          "kind": "file",
+          "path": ".github/workflows/ci-supply-chain.yml"
+        }
+      },
+      {
+        "locations": [],
+        "ownership": false,
+        "sourceField": "references",
+        "unit": {
+          "kind": "file",
+          "path": ".github/workflows/ci-tenant-hello.yml"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": ".github/workflows/spec-conformance.yml"
+          }
+        ],
+        "ownership": false,
+        "sourceField": "references",
+        "unit": {
+          "kind": "file",
+          "path": ".github/workflows/spec-conformance.yml"
+        }
+      }
+    ],
+    "specId": "177-ci-orchestrator-pr-gate",
+    "specStatus": "approved"
+  },
+  "schemaVersion": "1.1.0",
+  "shardHash": "c92bced0f27e3a008b4bab21439408b72334c3de98ee33f676798af11e3e548e"
+}

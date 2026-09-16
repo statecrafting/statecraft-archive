@@ -1,0 +1,113 @@
+# Dependabot configuration — keeps the strict SHA pins fresh.
+# See spec L10 in the ci-hardening branch plan for context.
+version: 2
+updates:
+  # GitHub Actions: every workflow + composite action pins to a full commit SHA.
+  # Dependabot rewrites the SHA + version comment in lockstep.
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: weekly
+      day: monday
+      time: "09:00"
+      timezone: America/Edmonton
+    open-pull-requests-limit: 5
+    groups:
+      actions-minor-patch:
+        update-types: [minor, patch]
+    labels:
+      - dependencies
+      - github-actions
+
+  # Cargo: each manifest in CI_RUST_MANIFESTS is its own dependency tree.
+  # Listed individually so Dependabot can group per-crate.
+  - package-ecosystem: cargo
+    directory: /crates/axiomregent
+    schedule:
+      interval: weekly
+    open-pull-requests-limit: 3
+    groups:
+      cargo-minor-patch:
+        update-types: [minor, patch]
+    labels: [dependencies, rust]
+
+  - package-ecosystem: cargo
+    directory: /crates/orchestrator
+    schedule:
+      interval: weekly
+    open-pull-requests-limit: 3
+    groups:
+      cargo-minor-patch:
+        update-types: [minor, patch]
+    labels: [dependencies, rust]
+
+  - package-ecosystem: cargo
+    directory: /crates/policy-kernel
+    schedule:
+      interval: weekly
+    open-pull-requests-limit: 3
+    groups:
+      cargo-minor-patch:
+        update-types: [minor, patch]
+    labels: [dependencies, rust]
+
+  - package-ecosystem: cargo
+    directory: /crates/factory-engine
+    schedule:
+      interval: weekly
+    open-pull-requests-limit: 3
+    groups:
+      cargo-minor-patch:
+        update-types: [minor, patch]
+    labels: [dependencies, rust]
+
+  - package-ecosystem: cargo
+    directory: /platform/services/deployd-api-rs
+    schedule:
+      interval: weekly
+    open-pull-requests-limit: 3
+    groups:
+      cargo-minor-patch:
+        update-types: [minor, patch]
+    labels: [dependencies, rust]
+
+  - package-ecosystem: cargo
+    directory: /product/apps/opc/src-tauri
+    schedule:
+      interval: weekly
+    open-pull-requests-limit: 3
+    groups:
+      cargo-minor-patch:
+        update-types: [minor, patch]
+    labels: [dependencies, rust, desktop]
+
+  - package-ecosystem: cargo
+    directory: /tools/spec-spine/spec-compiler
+    schedule:
+      interval: weekly
+    open-pull-requests-limit: 3
+    groups:
+      cargo-minor-patch:
+        update-types: [minor, patch]
+    labels: [dependencies, rust, tools]
+
+  # NPM: pnpm workspace root + standalone npm package (statecraft).
+  - package-ecosystem: npm
+    directory: /
+    schedule:
+      interval: weekly
+    open-pull-requests-limit: 5
+    groups:
+      npm-minor-patch:
+        update-types: [minor, patch]
+    labels: [dependencies, javascript]
+
+  - package-ecosystem: npm
+    directory: /platform/services/statecraft
+    schedule:
+      interval: weekly
+    open-pull-requests-limit: 5
+    groups:
+      npm-minor-patch:
+        update-types: [minor, patch]
+    labels: [dependencies, javascript, statecraft]

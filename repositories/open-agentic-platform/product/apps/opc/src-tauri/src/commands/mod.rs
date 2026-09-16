@@ -1,0 +1,38 @@
+pub mod agent_catalog_publish;
+pub mod agent_catalog_sync;
+pub mod agents;
+pub mod analysis;
+pub mod auth;
+pub mod claude;
+pub mod decomposition;
+pub mod factory;
+pub mod factory_platform;
+pub mod factory_project;
+pub mod git;
+pub mod keychain;
+pub mod live_sessions;
+pub mod mcp;
+pub mod orchestrator;
+pub mod project_catalog_sync;
+pub mod project_open;
+pub mod provenance;
+pub mod proxy;
+pub mod quick_pane;
+pub mod recovery;
+pub mod result;
+pub mod run_governance;
+pub mod sandbox;
+pub mod settings;
+pub mod slash_commands;
+pub mod stage_cd;
+pub mod statecraft_client;
+pub mod storage;
+pub mod sync_client;
+pub mod updater;
+pub mod usage;
+pub mod window_ctrl;
+pub mod worktree_agents;
+pub mod wsl;
+
+#[allow(unused_imports)]
+pub use result::{AppResult, IntoAppResult};

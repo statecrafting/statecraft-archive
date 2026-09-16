@@ -1,0 +1,66 @@
+{
+  "record": {
+    "amendmentRecord": "131-adversarial-prompt-refusal-policy",
+    "authors": [
+      "open-agentic-platform"
+    ],
+    "codeAliases": [
+      "GOVERNANCE_CONTROL_PLANE",
+      "POLICY_COMPILER"
+    ],
+    "created": "2026-03-29",
+    "domain": "tooling",
+    "extraFrontmatter": {
+      "amended": "2026-05-02",
+      "compliance": [
+        {
+          "controls": [
+            "ASI01",
+            "ASI03",
+            "ASI05",
+            "ASI10"
+          ],
+          "framework": "owasp-asi-2026"
+        }
+      ],
+      "language": "en"
+    },
+    "featureBranch": "047-governance-control-plane",
+    "id": "047-governance-control-plane",
+    "implementation": "complete",
+    "kind": "platform",
+    "origin": {
+      "retroactive": true
+    },
+    "sectionHeadings": [
+      "Feature Specification: governance control plane (policy compiler)",
+      "Purpose",
+      "Relationship to existing spec-compiler (Feature 001)",
+      "Scope",
+      "In scope",
+      "Out of scope",
+      "Requirements",
+      "Functional",
+      "Non-functional",
+      "Architecture",
+      "Policy compilation pipeline",
+      "Constitution vs shard model",
+      "Enforcement gate detail",
+      "Coherence scoring",
+      "Privilege degradation levels",
+      "Proof chain structure",
+      "WASM kernel role",
+      "Integration with existing components",
+      "Success criteria",
+      "Contract notes",
+      "Risk",
+      "Amendment record"
+    ],
+    "specPath": "specs/047-governance-control-plane/spec.md",
+    "status": "approved",
+    "summary": "Compile CLAUDE.md policy files into structured policy bundles containing a constitution (always-loaded core rules) and task-scoped shards (retrieved by intent/domain). Includes a Rust WASM kernel for deterministic policy enforcement, enforcement gates (destructive ops, secrets scanning, tool allowlist, diff size), coherence scheduler with privilege degradation (full/restricted/read-only/suspended based on drift), and cryptographic proof chains for audit trails.\n",
+    "title": "governance control plane (policy compiler)"
+  },
+  "shardHash": "9e0be22f8774fd8da913934c9325edf11b3ce3ae2c2e7ee1d7e27475a5464a5a",
+  "specVersion": "1.1.0"
+}

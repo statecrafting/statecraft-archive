@@ -1,0 +1,132 @@
+# Spec 151 Phase 4 — rauthy HelmRelease (T-019).
+#
+# Replaces the imperative `helm upgrade --install rauthy` block in
+# `platform/infra/hetzner/setup.sh` (and the parallel block in
+# `platform/Makefile`'s `deploy-hetzner` target). Operational parity:
+# same in-tree chart, same release name + namespace, same value set —
+# only the install mechanism shifts from imperative to helm-controller.
+#
+# Identity-critical: rauthy is the OIDC identity provider; the cutover
+# lands in a maintenance window per tasks.md T-020.
+#
+# Cutover identity (zero-downtime pattern from Phases 2 + 3):
+#
+#   release name + namespace = `rauthy` / `rauthy-system`
+#   chart                    = in-tree `platform/charts/rauthy/` (Chart.yaml v0.1.0,
+#                              appVersion 0.27.2; image tag pinned to "0.35.0"
+#                              via the chart's values.yaml)
+#   values                   = hetzner-prod overrides inlined below
+#
+# helm-controller adopts the existing release in-place; the rendered
+# manifests are identical to the imperative apply, so the StatefulSet
+# does not roll. Expect `helm list -A` to show `rauthy.v2` after the
+# adoption cycle (the durable `.v2` signature recorded in spec.md's
+# Phase 3 operational-landing section).
+#
+# Chart source: HelmRelease references the cluster's bootstrap
+# `flux-system` GitRepository directly (the chart is in-tree at
+# `platform/charts/rauthy/`, not a remote helm repo). `reconcileStrategy:
+# Revision` triggers a reconcile on every git commit that touches the
+# chart, matching the imperative semantic where any chart template
+# change applied on the next setup.sh run.
+#
+# Secret dependencies (deferred to spec 153 / SOPS migration):
+#
+#   - `rauthy-secrets` (raft-secret, api-secret, admin-password,
+#     enc-keys, enc-key-active) — still materialised imperatively by
+#     `setup.sh`'s `kubectl create secret` block. Spec 153 territory.
+#   - `rauthy-smtp-secret` (from, url, port, username, password,
+#     starttls_only, danger_insecure) — same. Still imperative until
+#     spec 153. Operator MUST confirm `rauthy-smtp-secret` exists in
+#     `rauthy-system` namespace BEFORE the Phase 4 cutover; with
+#     `smtp.enabled: true` below, the chart references the Secret and
+#     the StatefulSet will crash-loop if it is absent.
+#
+# SMTP enablement: spec 106 §12.1 amendments (PRs #152 + #155 + #156)
+# wired SMTP into production via `setup.sh`'s SMTP_USERNAME-conditional
+# Secret creation + `--set smtp.enabled=true`. With Phase 4 the chart
+# values move into this HelmRelease; `smtp.enabled: true` hardcodes the
+# production reality for hetzner-prod. If a future cluster doesn't run
+# SMTP, that cluster gets its own gitops subtree with its own values
+# (per the FUTURE-clusters/<name>/ pattern recorded in
+# `manifests/tenants-wildcard-certificate.yaml`).
+---
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: rauthy
+  namespace: rauthy-system
+spec:
+  interval: 1h
+  chart:
+    spec:
+      chart: ./platform/charts/rauthy
+      sourceRef:
+        kind: GitRepository
+        name: flux-system
+        namespace: flux-system
+      # Re-reconcile on every git revision so chart template edits land
+      # without a Chart.yaml version bump (the in-tree chart pins
+      # version: 0.1.0 and rarely bumps; appVersion + values changes
+      # are the live signal).
+      reconcileStrategy: Revision
+  install:
+    timeout: 5m
+    remediation:
+      retries: 3
+  upgrade:
+    timeout: 5m
+    remediation:
+      retries: 3
+  values:
+    # ---- Hetzner-prod overrides (formerly platform/charts/rauthy/values-hetzner.yaml) ----
+    replicas: 1
+
+    proxyMode: true
+    # Pod CIDR + Cloudflare IPv4 ranges (https://www.cloudflare.com/ips-v4/)
+    # Cloudflare edge IPs must be trusted so Rauthy reads the real
+    # client IP from X-Forwarded-For, preventing session IP mismatch
+    # on rotating edges.
+    trustedProxies:
+      - "10.244.0.0/16"
+      - "173.245.48.0/20"
+      - "103.21.244.0/22"
+      - "103.22.200.0/22"
+      - "103.31.4.0/22"
+      - "141.101.64.0/18"
+      - "108.162.192.0/18"
+      - "190.93.240.0/20"
+      - "188.114.96.0/20"
+      - "197.234.240.0/22"
+      - "198.41.128.0/17"
+      - "162.158.0.0/15"
+      - "104.16.0.0/13"
+      - "104.24.0.0/14"
+      - "172.64.0.0/13"
+      - "131.0.72.0/22"
+
+    persistence:
+      size: 2Gi
+
+    # ---- DOMAIN-pinned overrides (formerly setup.sh's --set flags) ----
+    # Hardcoded to `statecraft.ing` because this manifest lives under
+    # `clusters/hetzner-prod/` — by gitops-tree convention the subtree
+    # is cluster-specific. Future clusters get their own subtree with
+    # their own pinned domain (same pattern as
+    # `manifests/tenants-wildcard-certificate.yaml`).
+    oidc:
+      issuer: "https://auth.statecraft.ing/auth/v1/"
+
+    ingress:
+      host: "auth.statecraft.ing"
+
+    bootstrap:
+      adminEmail: "admin@statecraft.ing"
+
+    # ---- SMTP for magic-link login (spec 106 §12.1 amendments) ----
+    # Reads SMTP_FROM / URL / PORT / USERNAME / PASSWORD /
+    # STARTTLS_ONLY / DANGER_INSECURE from `rauthy-smtp-secret` —
+    # materialised imperatively by setup.sh until spec 153 SOPS-migrates
+    # it. See the Secret-dependency note in the header comment.
+    smtp:
+      enabled: true

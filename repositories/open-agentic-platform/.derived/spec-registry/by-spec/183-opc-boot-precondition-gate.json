@@ -1,0 +1,197 @@
+{
+  "record": {
+    "codeAliases": [
+      "OPC_BOOT_PRECONDITION_GATE"
+    ],
+    "created": "2026-05-25",
+    "dependsOn": [
+      "032-opc-inspect-governance-wiring-mvp",
+      "073-axiomregent-unification",
+      "087-unified-workspace-architecture",
+      "106-rauthy-native-oidc-and-membership",
+      "112-factory-project-lifecycle",
+      "133-amends-aware-coupling-gate",
+      "147-spec-kind-grammar",
+      "180-opc-shell-codification"
+    ],
+    "domain": "opc",
+    "extends": [
+      {
+        "nature": "additive",
+        "spec": "034-featuregraph-registry-scanner-fix",
+        "unit": {
+          "kind": "file",
+          "path": "crates/featuregraph/tests/golden/features_graph.json"
+        }
+      }
+    ],
+    "extraFrontmatter": {
+      "slug": "opc-boot-precondition-gate"
+    },
+    "id": "183-opc-boot-precondition-gate",
+    "implementation": "complete",
+    "kind": "governance",
+    "owner": "bart",
+    "references": [
+      {
+        "role": "parent-authority",
+        "unit": {
+          "kind": "file",
+          "path": "specs/180-opc-shell-codification/spec.md"
+        }
+      }
+    ],
+    "refines": [
+      {
+        "aspect": "boot-state-precondition-discipline",
+        "refines_specs": [
+          "180-opc-shell-codification"
+        ],
+        "unit": {
+          "kind": "file",
+          "path": "product/apps/opc/src/App.tsx"
+        }
+      },
+      {
+        "aspect": "sidecar-liveness-observation",
+        "refines_specs": [
+          "073-axiomregent-unification"
+        ],
+        "unit": {
+          "kind": "file",
+          "path": "product/apps/opc/src-tauri/src/sidecars.rs"
+        }
+      },
+      {
+        "aspect": "org-session-materialisation-observation",
+        "refines_specs": [
+          "087-unified-workspace-architecture"
+        ],
+        "unit": {
+          "kind": "file",
+          "path": "product/apps/opc/src-tauri/src/commands/statecraft_client.rs"
+        }
+      },
+      {
+        "aspect": "boot-gate-org-claim-decoding-on-restore",
+        "refines_specs": [
+          "106-rauthy-native-oidc-and-membership"
+        ],
+        "unit": {
+          "kind": "file",
+          "path": "product/apps/opc/src-tauri/src/commands/auth.rs"
+        }
+      },
+      {
+        "aspect": "boot-gate-auth-callback-coupling",
+        "refines_specs": [
+          "106-rauthy-native-oidc-and-membership"
+        ],
+        "unit": {
+          "kind": "file",
+          "path": "product/apps/opc/src/contexts/AuthContext.tsx"
+        }
+      },
+      {
+        "aspect": "sync-hello-observer-and-duplex-give-up-signal",
+        "refines_specs": [
+          "110-statecraft-to-opc-factory-trigger"
+        ],
+        "unit": {
+          "kind": "file",
+          "path": "product/apps/opc/src-tauri/src/commands/sync_client.rs"
+        }
+      },
+      {
+        "aspect": "boot-gate-command-registration-and-quit-handler",
+        "refines_specs": [
+          "180-opc-shell-codification"
+        ],
+        "unit": {
+          "kind": "file",
+          "path": "product/apps/opc/src-tauri/src/lib.rs"
+        }
+      },
+      {
+        "aspect": "boot-gate-component-affordances",
+        "refines_specs": [
+          "180-opc-shell-codification"
+        ],
+        "unit": {
+          "kind": "file",
+          "path": "product/apps/opc/src/components/boot/BootGate.tsx"
+        }
+      },
+      {
+        "aspect": "boot-gate-frontend-tauri-bindings",
+        "refines_specs": [
+          "180-opc-shell-codification"
+        ],
+        "unit": {
+          "kind": "file",
+          "path": "product/apps/opc/src/lib/api.ts"
+        }
+      },
+      {
+        "aspect": "boot-recovery-duplex-reconnect-command",
+        "refines_specs": [
+          "180-opc-shell-codification"
+        ],
+        "unit": {
+          "kind": "file",
+          "path": "product/apps/opc/src-tauri/src/commands/settings.rs"
+        }
+      },
+      {
+        "aspect": "boot-gate-command-registration-bindings",
+        "refines_specs": [
+          "180-opc-shell-codification"
+        ],
+        "unit": {
+          "kind": "file",
+          "path": "product/apps/opc/src-tauri/src/bindings.rs"
+        }
+      },
+      {
+        "aspect": "sidecar-hiqlite-stable-ports-and-membership-self-heal",
+        "refines_specs": [
+          "073-axiomregent-unification"
+        ],
+        "unit": {
+          "kind": "file",
+          "path": "crates/axiomregent/src/db/mod.rs"
+        }
+      }
+    ],
+    "risk": "medium",
+    "sectionHeadings": [
+      "183 — OPC boot precondition gate",
+      "1. Preamble",
+      "2. Authority enumeration",
+      "2.1 Why `refines:`, not `establishes:`",
+      "3. Tier 1 — Structural invariants",
+      "3.1 Sidecar liveness gate (FR-T1)",
+      "3.2 Org-session gate (FR-T2)",
+      "3.2.1 Session continuity (no re-prompt while a valid token exists)",
+      "3.3 Observational boot state (FR-T3)",
+      "3.4 Bounded explicit retry (FR-T4)",
+      "3.5 Precondition-loss restore to boot (FR-T5)",
+      "3.6 Quit affordance — clean sidecar teardown (FR-T6)",
+      "3.7 Post-approval hardening: consumer-spawn ordering (2026-06-05)",
+      "3.8 Post-approval hardening: explicit reconnect, sign-in budget reset, and port-0 self-heal (2026-06-05)",
+      "3.9 Post-approval hardening: org-claim decoding on keychain restore (2026-06-08)",
+      "4. Non-goals (binding)",
+      "5. Tier 3 exclusion",
+      "6. Acceptance",
+      "7. Out of scope (and why)",
+      "8. Future work",
+      "9. Cross-references"
+    ],
+    "specPath": "specs/183-opc-boot-precondition-gate/spec.md",
+    "status": "approved",
+    "summary": "Codifies the runtime preconditions that gate the OPC boot→cockpit transition and the precondition-loss semantics that keep the cockpit honest mid-session. The shell occupies a single observational *boot* state until two preconditions both green-light: the bundled axiomregent sidecar's probe port has been observed AND a TCP connection to that port succeeds (the diagnostic listener accepts the connection before closing it); and the desktop holds a materialised org session (`org_id` populated on the Rust-side `StatecraftState` AND a `sync.hello` envelope received from statecraft over the duplex stream, which proves the org was accepted by the server for this client). While in boot, the only affordances are precondition status, retry bound to those preconditions, a logs entrypoint, and a Quit action that tears down spawned sidecars cleanly. Retry is user-initiated, not a silent reconnect loop. If either precondition is lost mid-session (sidecar crash, duplex disconnect with no reconnect, org session expiry), the shell restores to the boot state rather than running degraded. Non-goals are written down explicitly: no offline mode, no sidecar-optional mode, no \"skip for now\" bypass, no per-feature degraded paths. The gate is the constitutional answer to a 2026-05-25 session in which Issues 3a/6/7/8/9 surfaced as five symptoms of one drift — the cockpit rendered before its substrate was ready.\n",
+    "title": "OPC boot precondition gate — sidecar liveness + materialised org session, with precondition-loss restore"
+  },
+  "shardHash": "084b447520c7ed1cb289dba3dcdabb4ea78cffa51b4ed0889df7a5178fd97282",
+  "specVersion": "1.1.0"
+}

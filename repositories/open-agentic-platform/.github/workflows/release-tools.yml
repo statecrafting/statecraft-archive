@@ -1,0 +1,286 @@
+# Spec: 086-open-source-launch
+# Spec: 117-release-artifact-attestations
+#
+# Release standalone CLI tools alongside the desktop app.
+# Attaches the surviving OAP overlay binary spec-lint to the same GitHub
+# Release created by release-desktop.yml. The generic governance engine is
+# the published spec-spine CLI (crates.io: cargo install spec-spine-cli),
+# not bundled here, after spec 217 deleted the in-tree engine crates.
+#
+# M8 sequencing fix: triggered by `workflow_run` on Release Desktop's
+# successful completion (rather than by tag push) so the release object
+# always exists when this workflow uploads assets — eliminating the prior
+# 10-min poll-then-create race.
+#
+# Each archive ships with a CycloneDX SBOM and SLSA build-provenance
+# attestation per spec 117. workflow_dispatch retains the manual entry
+# point for backfill; on that path the tools build from a commit SHA
+# (the `ref` input, defaulting to the dispatch commit github.sha), never
+# the release tag — a draft release has no tag yet, and the tools must
+# share the desktop build commit for coherent provenance (spec 195).
+
+name: Release Tools
+
+on:
+  workflow_run:
+    workflows: ['Release Desktop']
+    types: [completed]
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: 'Tag to attach assets to (e.g. opc-v0.4.0)'
+        required: true
+      ref:
+        description: 'Commit SHA to build tools from. Defaults to the dispatch commit (github.sha — HEAD of the branch this run is dispatched against). On the draft-backfill path the tag does not exist yet, so tools build from a commit, never the tag, and should match the commit the desktop release was built from for coherent SLSA provenance (spec 117/195).'
+        required: false
+
+permissions:
+  contents: write
+
+env:
+  CARGO_TERM_COLOR: always
+
+jobs:
+  # Resolve the tag once — for workflow_run we read the upstream's head_branch
+  # (which is the tag for tag-triggered runs); for workflow_dispatch we read
+  # the input. All downstream jobs gate on this and read the resolved value.
+  resolve-tag:
+    runs-on: ubuntu-latest
+    name: resolve / tag
+    timeout-minutes: 5
+    if: >-
+      github.event_name == 'workflow_dispatch' ||
+      (github.event_name == 'workflow_run' &&
+       github.event.workflow_run.conclusion == 'success' &&
+       startsWith(github.event.workflow_run.head_branch, 'opc-v'))
+    outputs:
+      tag: ${{ steps.tag.outputs.tag }}
+      ref: ${{ steps.tag.outputs.ref }}
+    steps:
+      - id: tag
+        env:
+          INPUT_TAG: ${{ github.event.inputs.tag }}
+          INPUT_REF: ${{ github.event.inputs.ref }}
+          DISPATCH_SHA: ${{ github.sha }}
+          UPSTREAM_BRANCH: ${{ github.event.workflow_run.head_branch }}
+          UPSTREAM_SHA: ${{ github.event.workflow_run.head_sha }}
+        run: |
+          set -euo pipefail
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+            TAG="$INPUT_TAG"
+            # spec 195 — build the tools from a COMMIT, never a tag. On the
+            # draft-backfill path the release tag does not exist yet (drafts
+            # don't tag until publish), so `refs/tags/$TAG` is an invalid
+            # checkout ref. The tools must also build from the same commit as
+            # the desktop binaries for coherent SLSA provenance (spec 117), so
+            # default REF to the dispatch commit (github.sha); the operator can
+            # pin an explicit commit via the `ref` input when main has advanced
+            # past the commit the desktop release was built from.
+            REF="${INPUT_REF:-$DISPATCH_SHA}"
+          else
+            TAG="$UPSTREAM_BRANCH"
+            REF="$UPSTREAM_SHA"
+          fi
+          if [ -z "$TAG" ]; then
+            echo "::error::No release tag resolved."
+            exit 1
+          fi
+          echo "tag=$TAG" >> "$GITHUB_OUTPUT"
+          echo "ref=$REF" >> "$GITHUB_OUTPUT"
+
+  build:
+    needs: resolve-tag
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - os: macos-latest
+            target: aarch64-apple-darwin
+          - os: ubuntu-24.04
+            target: x86_64-unknown-linux-gnu
+          - os: windows-latest
+            target: x86_64-pc-windows-msvc
+
+    runs-on: ${{ matrix.os }}
+    name: tools / ${{ matrix.target }}
+    timeout-minutes: 30
+
+    steps:
+      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+        with:
+          ref: ${{ needs.resolve-tag.outputs.ref }}
+
+      - name: Rust toolchain
+        uses: dtolnay/rust-toolchain@29eef336d9b2848a0b548edc03f92a220660cdb8 # pinned for rust-toolchain.toml lockstep
+        with:
+          toolchain: '1.95.0'
+          targets: ${{ matrix.target }}
+
+      - name: Cache Rust dependencies
+        uses: Swatinem/rust-cache@e18b497796c12c097a38f9edb9d0641fb99eee32 # v2
+        with:
+          shared-key: tools-${{ matrix.target }}
+
+      - name: Build spec-lint
+        run: cargo build --release --target ${{ matrix.target }} --manifest-path tools/spec-spine/spec-lint/Cargo.toml
+
+      # The generic engine binaries were dropped from the release bundle in
+      # spec 217 (deleted in-tree; published as the spec-spine CLI on
+      # crates.io). policy-compiler was dropped earlier in Cut D W-09; both
+      # it and the spec-spine CLI are obtained via cargo install / source.
+
+      - name: Determine extension
+        id: ext
+        shell: bash
+        run: |
+          if [ "${{ matrix.target }}" = "x86_64-pc-windows-msvc" ]; then
+            echo "ext=.exe" >> "$GITHUB_OUTPUT"
+          else
+            echo "ext=" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Stage and strip binaries
+        shell: bash
+        run: |
+          mkdir -p dist
+          EXT="${{ steps.ext.outputs.ext }}"
+          TARGET="${{ matrix.target }}"
+
+          # Binary-name to artifact-name invariant: release artifacts are
+          # named after each tool's [[bin]] name, not its [package] name.
+          for tool in spec-lint; do
+            # Workspace root target dir (post-Epic-2 root Cargo.toml).
+            SRC="target/${TARGET}/release/${tool}${EXT}"
+            DEST="dist/${tool}-${TARGET}${EXT}"
+            cp "$SRC" "$DEST"
+            if [ "${{ runner.os }}" != "Windows" ]; then
+              strip "$DEST" || true
+            fi
+          done
+
+          ls -lh dist/
+
+      - name: Upload tool artifacts
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7
+        with:
+          name: tools-${{ matrix.target }}
+          path: dist/
+          retention-days: 5
+
+  # ── Attach all tool binaries to the GitHub Release ─────────────────
+  publish:
+    needs: [resolve-tag, build]
+    runs-on: ubuntu-latest
+    name: publish to release
+    timeout-minutes: 15
+    permissions:
+      contents: write
+      id-token: write       # spec 117 — Sigstore identity
+      attestations: write   # spec 117 — provenance upload
+
+    steps:
+      - name: Download all tool artifacts
+        uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8
+        with:
+          pattern: tools-*
+          merge-multiple: true
+          path: dist/
+
+      - name: List artifacts
+        run: ls -lhR dist/
+
+      # Create archives per platform for cleaner downloads
+      - name: Package archives
+        shell: bash
+        run: |
+          mkdir -p release
+          cd dist
+
+          for target in aarch64-apple-darwin x86_64-unknown-linux-gnu; do
+            tar czf "../release/oap-tools-${target}.tar.gz" *-${target}
+          done
+
+          # Windows gets a zip
+          if ls *-x86_64-pc-windows-msvc* 1>/dev/null 2>&1; then
+            zip "../release/oap-tools-x86_64-pc-windows-msvc.zip" *-x86_64-pc-windows-msvc*
+          fi
+
+          ls -lh ../release/
+
+      # Spec 117 — SBOM scoped to the tools/ source tree so syft reads each
+      # tool's Cargo.toml + the shared frontmatter Cargo.toml for crate-level
+      # component data. Scanning the staged dist/ binaries (the prior scope)
+      # produces an empty SBOM because release binaries are stripped.
+      - name: Checkout source for SBOM scan
+        uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+        with:
+          ref: ${{ needs.resolve-tag.outputs.ref }}
+          path: src
+
+      - name: Generate tools SBOM (CycloneDX)
+        uses: anchore/sbom-action@e22c389904149dbc22b58101806040fa8d37a610 # v0.24.0 (ships syft 1.30+; v0.17.8's syft 1.11 returned 0 rust components)
+        with:
+          path: src/tools
+          format: cyclonedx-json
+          output-file: release/sbom-tools.cdx.json
+
+      # Spec 117 — provenance attestation per archive. Each archive gets its
+      # own attestation step so the action's `bundle-path` output names a
+      # single-subject bundle that we can stage as `<archive>.intoto.jsonl`
+      # per AC-3.
+      - name: Attest aarch64-apple-darwin archive provenance
+        id: attest-tools-darwin
+        uses: actions/attest-build-provenance@0f67c3f4856b2e3261c31976d6725780e5e4c373 # v4.1.1
+        with:
+          subject-path: release/oap-tools-aarch64-apple-darwin.tar.gz
+
+      - name: Attest x86_64-unknown-linux-gnu archive provenance
+        id: attest-tools-linux
+        uses: actions/attest-build-provenance@0f67c3f4856b2e3261c31976d6725780e5e4c373 # v4.1.1
+        with:
+          subject-path: release/oap-tools-x86_64-unknown-linux-gnu.tar.gz
+
+      - name: Attest x86_64-pc-windows-msvc archive provenance
+        id: attest-tools-windows
+        uses: actions/attest-build-provenance@0f67c3f4856b2e3261c31976d6725780e5e4c373 # v4.1.1
+        with:
+          subject-path: release/oap-tools-x86_64-pc-windows-msvc.zip
+
+      - name: Stage per-archive attestation bundles
+        run: |
+          set -euo pipefail
+          cp "${{ steps.attest-tools-darwin.outputs.bundle-path }}" \
+            release/oap-tools-aarch64-apple-darwin.tar.gz.intoto.jsonl
+          cp "${{ steps.attest-tools-linux.outputs.bundle-path }}" \
+            release/oap-tools-x86_64-unknown-linux-gnu.tar.gz.intoto.jsonl
+          cp "${{ steps.attest-tools-windows.outputs.bundle-path }}" \
+            release/oap-tools-x86_64-pc-windows-msvc.zip.intoto.jsonl
+          ls -lh release/*.intoto.jsonl
+
+      # M8 fix: with workflow_run gating on Release Desktop completion the
+      # release is guaranteed to exist; the prior 10-minute poll-then-create
+      # fallback is removed. workflow_dispatch users still get the upload —
+      # they must have created the release themselves first.
+      - name: Upload tool archives + SBOM + attestations to release
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          TAG: ${{ needs.resolve-tag.outputs.tag }}
+        run: |
+          set -euo pipefail
+          # spec 194 — publish-boundary guard (reactive workflow_run chain off
+          # Release Desktop). Three states, three messages: gh-lookup-failed /
+          # published / draft. Check gh's exit code FIRST so a gone/auth failure
+          # is not mislabeled "published"; gh's stderr is left to surface in the log.
+          if state="$(gh release view "$TAG" --repo "$GITHUB_REPOSITORY" --json isDraft -q .isDraft)"; then :; else
+            rc=$?
+            echo "::error::publish-boundary (spec 194): 'gh release view $TAG' failed (exit $rc; see gh error above) — failing closed, not uploading tool archives. Release may be gone or gh failed to authenticate; resolve manually."
+            exit 1
+          fi
+          if [ "$state" != "true" ]; then
+            echo "::error::publish-boundary (spec 194): release '$TAG' is published (isDraft='$state') — refusing to upload tool archives. Automation mutates drafts only; publish after Release Tools is green, or attach manually."
+            exit 1
+          fi
+          gh release upload "$TAG" \
+            release/* \
+            --repo "$GITHUB_REPOSITORY" \
+            --clobber

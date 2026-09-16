@@ -1,0 +1,11 @@
+{
+  "package": {
+    "kind": "npm-package",
+    "name": "@opc/skill-command-factory",
+    "path": "product/packages/skill-command-factory",
+    "specRef": "071-skill-command-factory",
+    "version": "0.1.0"
+  },
+  "schemaVersion": "1.1.0",
+  "shardHash": "f9fad2d4b7d4a064cf24f72daa9248686758decc485debfb8f7120080257ba26"
+}

@@ -1,0 +1,51 @@
+{
+  "mapping": {
+    "dependsOn": [
+      "111-org-agent-catalog-sync",
+      "123-agent-catalog-org-rescope",
+      "124-opc-factory-run-platform-integration"
+    ],
+    "implementingPaths": [
+      {
+        "path": "product/apps/opc/src/components/AgentPicker.tsx",
+        "source": "spec-edge"
+      },
+      {
+        "path": "product/apps/opc/src/lib/agentPicker.ts",
+        "source": "spec-edge"
+      }
+    ],
+    "resolvedUnits": [
+      {
+        "locations": [
+          {
+            "file": "product/apps/opc/src/components/AgentPicker.tsx"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "extends",
+        "unit": {
+          "kind": "file",
+          "path": "product/apps/opc/src/components/AgentPicker.tsx"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "product/apps/opc/src/lib/agentPicker.ts"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "extends",
+        "unit": {
+          "kind": "file",
+          "path": "product/apps/opc/src/lib/agentPicker.ts"
+        }
+      }
+    ],
+    "specId": "126-desktop-agent-picker-ui",
+    "specStatus": "approved"
+  },
+  "schemaVersion": "1.1.0",
+  "shardHash": "941f3d80e74ff87ba50a761282162a774d02133938083d3d1b1afa23dd38250f"
+}

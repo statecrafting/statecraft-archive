@@ -1,0 +1,123 @@
+{{- if .Values.previewDatabase.enabled -}}
+{{- /* Spec 214 FR-006: preview-grade Postgres. Single replica, no HA, no
+       backups. The password is generated once and reused across upgrades via
+       `lookup` so app pods keep authenticating after a redeploy. Explicitly
+       NOT production-grade (production DB provisioning is a named deferral). */ -}}
+{{- $pgName := include "acme-vue-encore.postgresName" . -}}
+{{- $existing := lookup "v1" "Secret" .Release.Namespace $pgName -}}
+{{- $password := "" -}}
+{{- if and $existing $existing.data (hasKey $existing.data "POSTGRES_PASSWORD") -}}
+{{- $password = index $existing.data "POSTGRES_PASSWORD" | b64dec -}}
+{{- else -}}
+{{- $password = randAlphaNum 24 -}}
+{{- end -}}
+apiVersion: v1
+kind: Secret
+metadata:
+  name: {{ $pgName }}
+  labels:
+    {{- include "acme-vue-encore.labels" . | nindent 4 }}
+    app.kubernetes.io/component: postgres
+type: Opaque
+stringData:
+  POSTGRES_DB: {{ .Values.previewDatabase.database | quote }}
+  POSTGRES_USER: {{ .Values.previewDatabase.user | quote }}
+  POSTGRES_PASSWORD: {{ $password | quote }}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ $pgName }}
+  labels:
+    {{- include "acme-vue-encore.labels" . | nindent 4 }}
+    app.kubernetes.io/component: postgres
+spec:
+  type: ClusterIP
+  ports:
+    - port: 5432
+      targetPort: postgres
+      protocol: TCP
+      name: postgres
+  selector:
+    {{- include "acme-vue-encore.selectorLabels" . | nindent 4 }}
+    app.kubernetes.io/component: postgres
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: {{ $pgName }}
+  labels:
+    {{- include "acme-vue-encore.labels" . | nindent 4 }}
+    app.kubernetes.io/component: postgres
+spec:
+  serviceName: {{ $pgName }}
+  replicas: 1
+  selector:
+    matchLabels:
+      {{- include "acme-vue-encore.selectorLabels" . | nindent 6 }}
+      app.kubernetes.io/component: postgres
+  template:
+    metadata:
+      labels:
+        {{- include "acme-vue-encore.selectorLabels" . | nindent 8 }}
+        app.kubernetes.io/component: postgres
+    spec:
+      # No K8s API access needed for a plain Postgres pod.
+      automountServiceAccountToken: false
+      securityContext:
+        fsGroup: 70
+        runAsNonRoot: true
+        # postgres:*-alpine images run as the built-in "postgres" user,
+        # uid/gid 70 (matches the existing fsGroup above).
+        runAsUser: 70
+        runAsGroup: 70
+        seccompProfile:
+          type: RuntimeDefault
+      containers:
+        - name: postgres
+          image: {{ .Values.previewDatabase.image | quote }}
+          imagePullPolicy: IfNotPresent
+          securityContext:
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop:
+                - ALL
+          ports:
+            - name: postgres
+              containerPort: 5432
+              protocol: TCP
+          envFrom:
+            - secretRef:
+                name: {{ $pgName }}
+          env:
+            - name: PGDATA
+              value: /var/lib/postgresql/data/pgdata
+          {{- with .Values.previewDatabase.resources }}
+          resources:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          readinessProbe:
+            exec:
+              command:
+                - pg_isready
+                - -U
+                - {{ .Values.previewDatabase.user | quote }}
+                - -d
+                - {{ .Values.previewDatabase.database | quote }}
+            initialDelaySeconds: 5
+            periodSeconds: 10
+            timeoutSeconds: 3
+            failureThreshold: 6
+          volumeMounts:
+            - name: data
+              mountPath: /var/lib/postgresql/data
+  volumeClaimTemplates:
+    - metadata:
+        name: data
+      spec:
+        accessModes:
+          - ReadWriteOnce
+        resources:
+          requests:
+            storage: {{ .Values.previewDatabase.storage | quote }}
+{{- end -}}

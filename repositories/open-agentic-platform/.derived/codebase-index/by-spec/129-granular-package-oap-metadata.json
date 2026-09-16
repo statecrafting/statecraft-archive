@@ -1,0 +1,33 @@
+{
+  "mapping": {
+    "dependsOn": [
+      "101-codebase-index-mvp",
+      "118-workflow-spec-traceability"
+    ],
+    "implementingPaths": [
+      {
+        "path": "standards/schemas/spec-spine/codebase-index-oap.schema.json",
+        "source": "spec-edge"
+      }
+    ],
+    "resolvedUnits": [
+      {
+        "locations": [
+          {
+            "file": "standards/schemas/spec-spine/codebase-index-oap.schema.json"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "extends",
+        "unit": {
+          "kind": "file",
+          "path": "standards/schemas/spec-spine/codebase-index-oap.schema.json"
+        }
+      }
+    ],
+    "specId": "129-granular-package-oap-metadata",
+    "specStatus": "approved"
+  },
+  "schemaVersion": "1.1.0",
+  "shardHash": "decdbab347ec2e40bac31c6ed80181270805e7a90f941c08bba0b062c5e5701b"
+}

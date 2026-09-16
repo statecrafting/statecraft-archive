@@ -1,0 +1,11 @@
+{
+  "package": {
+    "kind": "npm-package",
+    "name": "@opc/file-mention",
+    "path": "product/packages/file-mention",
+    "specRef": "058-file-mention-system",
+    "version": "0.1.0"
+  },
+  "schemaVersion": "1.1.0",
+  "shardHash": "ec7d344673b601619538e711b8603f9592e818745d4d79dd64c2d0a5b39d1c64"
+}

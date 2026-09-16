@@ -1,0 +1,70 @@
+# SPDX-License-Identifier: AGPL-3.0-or-later
+# Copyright (C) 2026 Bartek Kus
+
+[package]
+name = "opc-decomposition-pipeline"
+publish = false   # internal workspace crate; deployment via OPC desktop.
+version = "0.1.0"
+edition = "2024"
+license = "AGPL-3.0-or-later"
+description = "OPC decomposition pipeline (spec 165). Six-stage producer that turns project evidence (knowledge bundle + code + git) into draft specs satisfying the spec 161 emission contract."
+
+[lib]
+name = "opc_decomposition_pipeline"
+path = "src/lib.rs"
+
+[dependencies]
+factory-contracts = { path = "../factory-contracts" }
+factory-engine    = { path = "../factory-engine" }
+artifact-extract  = { path = "../artifact-extract" }
+xray              = { path = "../xray", features = ["analysis-call-graph"] }
+# Promotion (FR-008) recompiles the project's spec registry in-process. Spec
+# 217 engine swap: via the published spec-spine library `compile` (caller writes
+# the shard tree). default-features=false drops the symbol-resolution tree-sitter
+# dep, which clashes with xray's 0.26 under the `links` rule.
+spec-spine-core = { version = "0.10.0", default-features = false }
+spec-spine-types = "0.10.0"
+
+# LLM-backed stage-6 synthesiser substrate (spec 042). Optional + default
+# features off: this crate uses only the `ProviderAdapter` trait + types;
+# the concrete adapter (and the tokio io driver it needs) are supplied by
+# the OPC binary's full dependency graph. Gated behind `llm-synthesis` so
+# the default build (and CI) never pulls reqwest or touches the network.
+provider-registry = { path = "../provider-registry", optional = true, default-features = false }
+tokio             = { version = "1", optional = true, features = ["rt", "time"] }
+
+serde       = { version = "1", features = ["derive"] }
+serde_json  = { version = "1", features = ["preserve_order"] }
+serde_yaml  = "0.9"
+sha2        = "0.10"
+hex         = "0.4"
+thiserror   = "2"
+walkdir     = "2.4"
+chrono      = { version = "0.4", default-features = false, features = ["clock", "serde"] }
+
+[dev-dependencies]
+tempfile = "3"
+# Used by the spec-lint integration test (SC-002) — the emitted draft
+# spec must lint clean. Calling the library directly avoids depending
+# on a pre-built binary path in CI.
+open_agentic_spec_lint = { path = "../../tools/spec-spine/spec-lint" }
+# Used only by the `llm-synthesis` mock-adapter test (a hand-rolled
+# ProviderAdapter double + empty event stream). Dev-only; not in the
+# default runtime graph.
+async-trait  = "0.1"
+futures-util = "0.3"
+futures-core = "0.3"
+
+[features]
+# Default build is light: stage 3 falls back to directory-based clustering
+# (FR-010 "missing semantic search index -> xray-only" is the default path).
+# Enable embeddings to pull in fastembed + kd-tree via xray's
+# analysis-embeddings feature; clusters then use vector similarity.
+default    = []
+embeddings = ["xray/analysis-embeddings"]
+# Compiles the LLM-backed ProviderSynthesiser (stage 6). Off by default so
+# CI is network-free; the OPC binary enables it and injects the adapter.
+llm-synthesis = ["dep:provider-registry", "dep:tokio"]
+
+[package.metadata.oap]
+spec = "165-opc-decomposition-pipeline"

@@ -1,0 +1,124 @@
+{
+  "mapping": {
+    "dependsOn": [
+      "075-factory-workflow-engine",
+      "076-factory-desktop-panel",
+      "077-statecraft-factory-api",
+      "087-unified-workspace-architecture",
+      "092-workspace-runtime-threading",
+      "094-unified-artifact-store",
+      "108-factory-as-platform-feature",
+      "109-factory-pat-and-pubsub-sync"
+    ],
+    "implementingPaths": [
+      {
+        "path": "crates/factory-engine/src/bin/factory_run.rs",
+        "source": "spec-edge"
+      },
+      {
+        "path": "platform/services/statecraft/api/factory/factory.ts",
+        "source": "spec-edge"
+      },
+      {
+        "path": "platform/services/statecraft/api/sync/relay.ts",
+        "source": "spec-edge"
+      },
+      {
+        "path": "platform/services/statecraft/api/sync/types.ts",
+        "source": "spec-edge"
+      },
+      {
+        "path": "product/apps/opc/src-tauri/src/commands/sync_client.rs",
+        "source": "spec-edge"
+      },
+      {
+        "path": "product/packages/oap-ctl/src/cli.js",
+        "source": "spec-edge"
+      }
+    ],
+    "resolvedUnits": [
+      {
+        "locations": [
+          {
+            "file": "product/apps/opc/src-tauri/src/commands/sync_client.rs"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "file",
+          "path": "product/apps/opc/src-tauri/src/commands/sync_client.rs"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "crates/factory-engine/src/bin/factory_run.rs"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "extends",
+        "unit": {
+          "kind": "file",
+          "path": "crates/factory-engine/src/bin/factory_run.rs"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "platform/services/statecraft/api/factory/factory.ts"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "extends",
+        "unit": {
+          "kind": "file",
+          "path": "platform/services/statecraft/api/factory/factory.ts"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "platform/services/statecraft/api/sync/relay.ts"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "extends",
+        "unit": {
+          "kind": "file",
+          "path": "platform/services/statecraft/api/sync/relay.ts"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "platform/services/statecraft/api/sync/types.ts"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "extends",
+        "unit": {
+          "kind": "file",
+          "path": "platform/services/statecraft/api/sync/types.ts"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "product/packages/oap-ctl/src/cli.js"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "extends",
+        "unit": {
+          "kind": "file",
+          "path": "product/packages/oap-ctl/src/cli.js"
+        }
+      }
+    ],
+    "specId": "110-statecraft-to-opc-factory-trigger",
+    "specStatus": "approved"
+  },
+  "schemaVersion": "1.1.0",
+  "shardHash": "3e58a35730311af5aad94e76156c744a92774cb8ff3c24dc6896322162cf0a73"
+}

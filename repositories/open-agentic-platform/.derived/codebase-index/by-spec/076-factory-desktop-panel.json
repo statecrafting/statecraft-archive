@@ -1,0 +1,96 @@
+{
+  "diagnostics": {
+    "errors": [],
+    "warnings": [
+      {
+        "code": "W-002",
+        "message": "spec '076-factory-desktop-panel' file unit 'product/apps/opc/src/components/FactoryPipelinePanel.tsx' does not exist",
+        "path": "product/apps/opc/src/components/FactoryPipelinePanel.tsx"
+      }
+    ]
+  },
+  "mapping": {
+    "implementingPaths": [
+      {
+        "path": "product/apps/opc",
+        "source": "spec-edge"
+      },
+      {
+        "path": "product/apps/opc/src/components/factory/ArtifactInspector.tsx",
+        "source": "comment-header"
+      },
+      {
+        "path": "product/apps/opc/src/components/factory/BuildSpecStructuredView.tsx",
+        "source": "comment-header"
+      },
+      {
+        "path": "product/apps/opc/src/components/factory/FactoryPipelineContext.tsx",
+        "source": "comment-header"
+      },
+      {
+        "path": "product/apps/opc/src/components/factory/FactoryPipelinePanel.tsx",
+        "source": "comment-header"
+      },
+      {
+        "path": "product/apps/opc/src/components/factory/GateDialog.tsx",
+        "source": "comment-header"
+      },
+      {
+        "path": "product/apps/opc/src/components/factory/PipelineDAG.tsx",
+        "source": "comment-header"
+      },
+      {
+        "path": "product/apps/opc/src/components/factory/PipelineHistory.tsx",
+        "source": "comment-header"
+      },
+      {
+        "path": "product/apps/opc/src/components/factory/PipelineSelector.tsx",
+        "source": "comment-header"
+      },
+      {
+        "path": "product/apps/opc/src/components/factory/ScaffoldMonitor.tsx",
+        "source": "comment-header"
+      },
+      {
+        "path": "product/apps/opc/src/components/factory/TokenDashboard.tsx",
+        "source": "comment-header"
+      },
+      {
+        "path": "product/apps/opc/src/components/factory/__tests__/stageLabelParity.test.ts",
+        "source": "comment-header"
+      },
+      {
+        "path": "product/apps/opc/src/components/factory/types.ts",
+        "source": "comment-header"
+      }
+    ],
+    "resolvedUnits": [
+      {
+        "locations": [
+          {
+            "file": "product/apps/opc"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "extends",
+        "unit": {
+          "id": "@opc/desktop",
+          "kind": "crate"
+        }
+      },
+      {
+        "locations": [],
+        "ownership": false,
+        "sourceField": "references",
+        "unit": {
+          "kind": "file",
+          "path": "product/apps/opc/src/components/FactoryPipelinePanel.tsx"
+        }
+      }
+    ],
+    "specId": "076-factory-desktop-panel",
+    "specStatus": "approved"
+  },
+  "schemaVersion": "1.1.0",
+  "shardHash": "e40ea2191ed2009b56d09e101f0e50ec5e45451063b7cde2ff42003ee8c0a737"
+}

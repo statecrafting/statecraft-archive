@@ -1,0 +1,22 @@
+[package]
+name = "open_agentic_spec_unit_migrate"
+publish = false
+version = "0.1.0"
+edition = "2024"
+description = "One-shot Segment 5 migrator: rewrites spec frontmatter relationship-field path strings into typed logical-unit declarations (spec 154 §2)."
+rust-version = "1.85"
+
+[package.metadata.oap]
+spec = "154-logical-unit-ownership-grammar"
+
+[[bin]]
+name = "spec-unit-migrate"
+path = "src/main.rs"
+
+[dependencies]
+clap = { version = "4", features = ["derive"] }
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+serde_yaml = "0.9"
+toml = "0.8"
+walkdir = "2"

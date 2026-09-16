@@ -1,0 +1,96 @@
+{
+  "record": {
+    "authors": [
+      "open-agentic-platform"
+    ],
+    "codeAliases": [
+      "RUN_CERT_CORPUS_BINDING"
+    ],
+    "created": "2026-06-16",
+    "dependsOn": [
+      "102-governed-excellence",
+      "168-per-project-governance-certificate"
+    ],
+    "domain": "platform",
+    "establishes": [
+      {
+        "kind": "file",
+        "path": "clippy.toml"
+      }
+    ],
+    "extends": [
+      {
+        "nature": "additive",
+        "spec": "168-per-project-governance-certificate",
+        "unit": {
+          "kind": "file",
+          "path": "crates/factory-engine/src/governance_certificate.rs"
+        }
+      },
+      {
+        "nature": "additive",
+        "spec": "034-featuregraph-registry-scanner-fix",
+        "unit": {
+          "kind": "file",
+          "path": "crates/featuregraph/tests/golden/features_graph.json"
+        }
+      },
+      {
+        "nature": "additive",
+        "spec": "116-supply-chain-policy-gates",
+        "unit": {
+          "kind": "file",
+          "path": "deny.toml"
+        }
+      }
+    ],
+    "extraFrontmatter": {
+      "language": "en"
+    },
+    "featureBranch": "feat/218-run-cert-corpus-binding",
+    "id": "218-run-cert-corpus-binding",
+    "implementation": "complete",
+    "kind": "capability",
+    "references": [
+      {
+        "role": "context",
+        "unit": {
+          "kind": "file",
+          "path": "docs/adr/0002-governance-certificate-vended-distributable.md"
+        }
+      }
+    ],
+    "refines": [
+      {
+        "aspect": "corpus-binding-verify",
+        "unit": {
+          "kind": "file",
+          "path": "crates/factory-engine/src/bin/verify_certificate.rs"
+        }
+      },
+      {
+        "aspect": "corpus-binding-read-path",
+        "unit": {
+          "kind": "file",
+          "path": "crates/factory-engine/src/bin/factory_run.rs"
+        }
+      }
+    ],
+    "sectionHeadings": [
+      "Feature Specification: Run Certificate Corpus Binding",
+      "Cross-corpus dependency (prose, not a registry edge)",
+      "Purpose",
+      "The invariant (the load-bearing part)",
+      "Functional requirements",
+      "Acceptance criteria",
+      "Out of scope",
+      "Sequencing"
+    ],
+    "specPath": "specs/218-run-cert-corpus-binding/spec.md",
+    "status": "approved",
+    "summary": "The governance run certificate (specs 102/168) already embeds spec-state hashes computed by re-reading the registry. The spec-spine ledger-seal capability (its own corpus, spec 023-ledger-seal) produces a reproducible, independently-verifiable CorpusAttestation over the spec corpus, with its own attestation_hash. This spec adds the chain edge: an additive, optional corpus_binding block on the run certificate that references that attestation_hash by value, forming a two-link audit chain. The corpus link is reproducible by any third party (spec-spine, per commit); the run link is signed but not reproducible (factory-engine, per run). The load-bearing requirement is structural, not a field: the cert builder populates the binding from a hash it is GIVEN (read from an upstream attestation artifact) and the cert crate is forbidden from depending on any corpus-compile or attestation-emit path. Read, never recompute. The boundary is enforced as a dependency-graph deny-rule, so it is a compile-time fact rather than a review convention.\n",
+    "title": "Run Certificate Corpus Binding (chain edge to the ledger seal)"
+  },
+  "shardHash": "f56b33a65a2fedfb1ed7ee035fe8d0f6cfb32672b6197c42e2fe81daedfc8175",
+  "specVersion": "1.1.0"
+}

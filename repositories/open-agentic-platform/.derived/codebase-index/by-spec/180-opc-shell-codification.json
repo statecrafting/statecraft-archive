@@ -1,0 +1,558 @@
+{
+  "diagnostics": {
+    "errors": [],
+    "warnings": [
+      {
+        "code": "W-002",
+        "message": "spec '180-opc-shell-codification' file unit 'tools/spec-spine/codebase-indexer/benches/resolver.rs' does not exist",
+        "path": "tools/spec-spine/codebase-indexer/benches/resolver.rs"
+      }
+    ]
+  },
+  "mapping": {
+    "amends": [
+      "034-featuregraph-registry-scanner-fix"
+    ],
+    "dependsOn": [
+      "032-opc-inspect-governance-wiring-mvp",
+      "132-constitutional-invariant-freeze",
+      "133-amends-aware-coupling-gate",
+      "147-spec-kind-grammar",
+      "152-path-co-authority",
+      "153-invariant-freeze-additive-evolution",
+      "154-logical-unit-ownership-grammar",
+      "156-references-edge-provenance-grammar",
+      "166-opc-stop-hook-gate-chain",
+      "172-opc-live-agent-session-introspection",
+      "174-codification-gate",
+      "177-ci-orchestrator-pr-gate"
+    ],
+    "implementingPaths": [
+      {
+        "path": ".github/workflows/ci-opc-bench.yml",
+        "source": "spec-edge"
+      },
+      {
+        "path": ".github/workflows/ci.yml",
+        "source": "spec-edge"
+      },
+      {
+        "path": "crates/featuregraph/tests/golden/features_graph.json",
+        "source": "spec-edge"
+      },
+      {
+        "path": "crates/policy-kernel/benches/kernel_eval.rs",
+        "source": "spec-edge"
+      },
+      {
+        "path": "product/apps/opc/src-tauri/Cargo.toml",
+        "source": "spec-edge"
+      },
+      {
+        "path": "product/apps/opc/src-tauri/benches",
+        "source": "spec-edge"
+      },
+      {
+        "path": "product/apps/opc/src-tauri/src",
+        "source": "spec-edge"
+      },
+      {
+        "path": "product/apps/opc/src-tauri/src/commands",
+        "source": "spec-edge"
+      },
+      {
+        "path": "product/apps/opc/src-tauri/src/commands/usage.rs",
+        "source": "spec-edge"
+      },
+      {
+        "path": "product/apps/opc/src/components",
+        "source": "spec-edge"
+      },
+      {
+        "path": "product/apps/opc/src/components/TabContent.tsx",
+        "source": "spec-edge"
+      },
+      {
+        "path": "product/apps/opc/src/components/TabManager.tsx",
+        "source": "spec-edge"
+      },
+      {
+        "path": "product/apps/opc/src/components/UsageDashboard.tsx",
+        "source": "spec-edge"
+      },
+      {
+        "path": "product/apps/opc/src/components/factory",
+        "source": "spec-edge"
+      },
+      {
+        "path": "product/apps/opc/src/contexts",
+        "source": "spec-edge"
+      },
+      {
+        "path": "product/apps/opc/src/contexts/TabContext.tsx",
+        "source": "spec-edge"
+      },
+      {
+        "path": "product/apps/opc/src/hooks",
+        "source": "spec-edge"
+      },
+      {
+        "path": "product/apps/opc/src/hooks/useTabState.ts",
+        "source": "spec-edge"
+      },
+      {
+        "path": "product/apps/opc/src/lib",
+        "source": "spec-edge"
+      },
+      {
+        "path": "product/apps/opc/src/routes",
+        "source": "spec-edge"
+      },
+      {
+        "path": "product/apps/opc/src/services",
+        "source": "spec-edge"
+      },
+      {
+        "path": "product/apps/opc/src/stores",
+        "source": "spec-edge"
+      },
+      {
+        "path": "product/apps/opc/tsconfig.json",
+        "source": "spec-edge"
+      },
+      {
+        "path": "product/apps/opc/vite.config.ts",
+        "source": "spec-edge"
+      },
+      {
+        "path": "specs/132-constitutional-invariant-freeze/spec.md",
+        "source": "spec-edge"
+      },
+      {
+        "path": "specs/153-invariant-freeze-additive-evolution/spec.md",
+        "source": "spec-edge"
+      },
+      {
+        "path": "specs/165-opc-decomposition-pipeline/spec.md",
+        "source": "spec-edge"
+      },
+      {
+        "path": "specs/174-codification-gate/spec.md",
+        "source": "spec-edge"
+      },
+      {
+        "path": "specs/177-ci-orchestrator-pr-gate/spec.md",
+        "source": "spec-edge"
+      },
+      {
+        "path": "tools/oap/policy-compiler/benches/compile_many.rs",
+        "source": "spec-edge"
+      }
+    ],
+    "resolvedUnits": [
+      {
+        "locations": [
+          {
+            "file": "product/apps/opc/src-tauri/benches"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "directory",
+          "path": "product/apps/opc/src-tauri/benches"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "product/apps/opc/src-tauri/src"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "directory",
+          "path": "product/apps/opc/src-tauri/src"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "product/apps/opc/src-tauri/src/commands"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "directory",
+          "path": "product/apps/opc/src-tauri/src/commands"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "product/apps/opc/src/components"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "directory",
+          "path": "product/apps/opc/src/components"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "product/apps/opc/src/components/factory"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "directory",
+          "path": "product/apps/opc/src/components/factory"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "product/apps/opc/src/contexts"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "directory",
+          "path": "product/apps/opc/src/contexts"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "product/apps/opc/src/hooks"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "directory",
+          "path": "product/apps/opc/src/hooks"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "product/apps/opc/src/lib"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "directory",
+          "path": "product/apps/opc/src/lib"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "product/apps/opc/src/routes"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "directory",
+          "path": "product/apps/opc/src/routes"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "product/apps/opc/src/services"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "directory",
+          "path": "product/apps/opc/src/services"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "product/apps/opc/src/stores"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "directory",
+          "path": "product/apps/opc/src/stores"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": ".github/workflows/ci-opc-bench.yml"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "file",
+          "path": ".github/workflows/ci-opc-bench.yml"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "product/apps/opc/src-tauri/src/commands/usage.rs"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "file",
+          "path": "product/apps/opc/src-tauri/src/commands/usage.rs"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "product/apps/opc/src/components/TabManager.tsx"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "file",
+          "path": "product/apps/opc/src/components/TabManager.tsx"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "product/apps/opc/src/components/UsageDashboard.tsx"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "file",
+          "path": "product/apps/opc/src/components/UsageDashboard.tsx"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "product/apps/opc/tsconfig.json"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "file",
+          "path": "product/apps/opc/tsconfig.json"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "product/apps/opc/vite.config.ts"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "file",
+          "path": "product/apps/opc/vite.config.ts"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": ".github/workflows/ci.yml"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "extends",
+        "unit": {
+          "kind": "file",
+          "path": ".github/workflows/ci.yml"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "crates/featuregraph/tests/golden/features_graph.json"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "extends",
+        "unit": {
+          "kind": "file",
+          "path": "crates/featuregraph/tests/golden/features_graph.json"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "product/apps/opc/src-tauri/Cargo.toml"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "extends",
+        "unit": {
+          "kind": "file",
+          "path": "product/apps/opc/src-tauri/Cargo.toml"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "product/apps/opc/src/components/TabContent.tsx"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "refines",
+        "unit": {
+          "kind": "file",
+          "path": "product/apps/opc/src/components/TabContent.tsx"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "product/apps/opc/src/contexts/TabContext.tsx"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "refines",
+        "unit": {
+          "kind": "file",
+          "path": "product/apps/opc/src/contexts/TabContext.tsx"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "product/apps/opc/src/hooks/useTabState.ts"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "refines",
+        "unit": {
+          "kind": "file",
+          "path": "product/apps/opc/src/hooks/useTabState.ts"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "crates/policy-kernel/benches/kernel_eval.rs"
+          }
+        ],
+        "ownership": false,
+        "sourceField": "references",
+        "unit": {
+          "kind": "file",
+          "path": "crates/policy-kernel/benches/kernel_eval.rs"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "specs/132-constitutional-invariant-freeze/spec.md"
+          }
+        ],
+        "ownership": false,
+        "sourceField": "references",
+        "unit": {
+          "kind": "file",
+          "path": "specs/132-constitutional-invariant-freeze/spec.md"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "specs/153-invariant-freeze-additive-evolution/spec.md"
+          }
+        ],
+        "ownership": false,
+        "sourceField": "references",
+        "unit": {
+          "kind": "file",
+          "path": "specs/153-invariant-freeze-additive-evolution/spec.md"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "specs/165-opc-decomposition-pipeline/spec.md"
+          }
+        ],
+        "ownership": false,
+        "sourceField": "references",
+        "unit": {
+          "kind": "file",
+          "path": "specs/165-opc-decomposition-pipeline/spec.md"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "specs/174-codification-gate/spec.md"
+          }
+        ],
+        "ownership": false,
+        "sourceField": "references",
+        "unit": {
+          "kind": "file",
+          "path": "specs/174-codification-gate/spec.md"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "specs/177-ci-orchestrator-pr-gate/spec.md"
+          }
+        ],
+        "ownership": false,
+        "sourceField": "references",
+        "unit": {
+          "kind": "file",
+          "path": "specs/177-ci-orchestrator-pr-gate/spec.md"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "tools/oap/policy-compiler/benches/compile_many.rs"
+          }
+        ],
+        "ownership": false,
+        "sourceField": "references",
+        "unit": {
+          "kind": "file",
+          "path": "tools/oap/policy-compiler/benches/compile_many.rs"
+        }
+      },
+      {
+        "locations": [],
+        "ownership": false,
+        "sourceField": "references",
+        "unit": {
+          "kind": "file",
+          "path": "tools/spec-spine/codebase-indexer/benches/resolver.rs"
+        }
+      }
+    ],
+    "specId": "180-opc-shell-codification",
+    "specStatus": "approved"
+  },
+  "schemaVersion": "1.1.0",
+  "shardHash": "d1116b6c6c87996ae47a3f6a3cba21aa259bb508f75766de8dcb1bb04b643565"
+}

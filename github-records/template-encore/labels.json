@@ -1,0 +1,101 @@
+[
+  {
+    "id": 11297835459,
+    "node_id": "LA_kwDOTBKLgc8AAAACoWdJww",
+    "url": "https://api.github.com/repos/statecrafting/template-encore/labels/bug",
+    "name": "bug",
+    "color": "d73a4a",
+    "default": true,
+    "description": "Something isn't working",
+    "archived_at": null,
+    "archived_by": null
+  },
+  {
+    "id": 11297835461,
+    "node_id": "LA_kwDOTBKLgc8AAAACoWdJxQ",
+    "url": "https://api.github.com/repos/statecrafting/template-encore/labels/documentation",
+    "name": "documentation",
+    "color": "0075ca",
+    "default": true,
+    "description": "Improvements or additions to documentation",
+    "archived_at": null,
+    "archived_by": null
+  },
+  {
+    "id": 11297835463,
+    "node_id": "LA_kwDOTBKLgc8AAAACoWdJxw",
+    "url": "https://api.github.com/repos/statecrafting/template-encore/labels/duplicate",
+    "name": "duplicate",
+    "color": "cfd3d7",
+    "default": true,
+    "description": "This issue or pull request already exists",
+    "archived_at": null,
+    "archived_by": null
+  },
+  {
+    "id": 11297835466,
+    "node_id": "LA_kwDOTBKLgc8AAAACoWdJyg",
+    "url": "https://api.github.com/repos/statecrafting/template-encore/labels/enhancement",
+    "name": "enhancement",
+    "color": "a2eeef",
+    "default": true,
+    "description": "New feature or request",
+    "archived_at": null,
+    "archived_by": null
+  },
+  {
+    "id": 11297835469,
+    "node_id": "LA_kwDOTBKLgc8AAAACoWdJzQ",
+    "url": "https://api.github.com/repos/statecrafting/template-encore/labels/good%20first%20issue",
+    "name": "good first issue",
+    "color": "7057ff",
+    "default": true,
+    "description": "Good for newcomers",
+    "archived_at": null,
+    "archived_by": null
+  },
+  {
+    "id": 11297835471,
+    "node_id": "LA_kwDOTBKLgc8AAAACoWdJzw",
+    "url": "https://api.github.com/repos/statecrafting/template-encore/labels/help%20wanted",
+    "name": "help wanted",
+    "color": "008672",
+    "default": true,
+    "description": "Extra attention is needed",
+    "archived_at": null,
+    "archived_by": null
+  },
+  {
+    "id": 11297835473,
+    "node_id": "LA_kwDOTBKLgc8AAAACoWdJ0Q",
+    "url": "https://api.github.com/repos/statecrafting/template-encore/labels/invalid",
+    "name": "invalid",
+    "color": "e4e669",
+    "default": true,
+    "description": "This doesn't seem right",
+    "archived_at": null,
+    "archived_by": null
+  },
+  {
+    "id": 11297835475,
+    "node_id": "LA_kwDOTBKLgc8AAAACoWdJ0w",
+    "url": "https://api.github.com/repos/statecrafting/template-encore/labels/question",
+    "name": "question",
+    "color": "d876e3",
+    "default": true,
+    "description": "Further information is requested",
+    "archived_at": null,
+    "archived_by": null
+  },
+  {
+    "id": 11297835477,
+    "node_id": "LA_kwDOTBKLgc8AAAACoWdJ1Q",
+    "url": "https://api.github.com/repos/statecrafting/template-encore/labels/wontfix",
+    "name": "wontfix",
+    "color": "ffffff",
+    "default": true,
+    "description": "This will not be worked on",
+    "archived_at": null,
+    "archived_by": null
+  }
+]

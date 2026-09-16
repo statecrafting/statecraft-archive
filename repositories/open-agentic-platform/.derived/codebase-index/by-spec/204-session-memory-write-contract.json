@@ -1,0 +1,482 @@
+{
+  "mapping": {
+    "amends": [
+      "198-factory-governance-envelope"
+    ],
+    "dependsOn": [
+      "056-session-memory",
+      "198-factory-governance-envelope"
+    ],
+    "implementingPaths": [
+      {
+        "path": "crates/featuregraph/tests/golden/features_graph.json",
+        "source": "spec-edge"
+      },
+      {
+        "path": "docs/owasp-agentic-top-10-2026.md",
+        "source": "spec-edge"
+      },
+      {
+        "path": "platform/services/statecraft/api/factory/overrideGate.ts",
+        "source": "spec-edge"
+      },
+      {
+        "path": "product/packages/carrier-gate",
+        "source": "manifest-metadata"
+      },
+      {
+        "path": "product/packages/carrier-gate/package.json",
+        "source": "spec-edge"
+      },
+      {
+        "path": "product/packages/carrier-gate/src/fixture.js",
+        "source": "spec-edge"
+      },
+      {
+        "path": "product/packages/carrier-gate/src/index.d.ts",
+        "source": "spec-edge"
+      },
+      {
+        "path": "product/packages/carrier-gate/src/index.js",
+        "source": "spec-edge"
+      },
+      {
+        "path": "product/packages/carrier-gate/src/rules.js",
+        "source": "spec-edge"
+      },
+      {
+        "path": "product/packages/carrier-gate/src/rules.test.ts",
+        "source": "spec-edge"
+      },
+      {
+        "path": "product/packages/carrier-gate/tsconfig.json",
+        "source": "spec-edge"
+      },
+      {
+        "path": "product/packages/session-memory/package.json",
+        "source": "spec-edge"
+      },
+      {
+        "path": "product/packages/session-memory/src/expiry/decay.ts",
+        "source": "spec-edge"
+      },
+      {
+        "path": "product/packages/session-memory/src/expiry/promotion.ts",
+        "source": "spec-edge"
+      },
+      {
+        "path": "product/packages/session-memory/src/expiry/retention.test.ts",
+        "source": "spec-edge"
+      },
+      {
+        "path": "product/packages/session-memory/src/gate.test.ts",
+        "source": "spec-edge"
+      },
+      {
+        "path": "product/packages/session-memory/src/gate.ts",
+        "source": "spec-edge"
+      },
+      {
+        "path": "product/packages/session-memory/src/harvesting/engine.ts",
+        "source": "spec-edge"
+      },
+      {
+        "path": "product/packages/session-memory/src/index.ts",
+        "source": "spec-edge"
+      },
+      {
+        "path": "product/packages/session-memory/src/integration.test.ts",
+        "source": "spec-edge"
+      },
+      {
+        "path": "product/packages/session-memory/src/provenance.test.ts",
+        "source": "spec-edge"
+      },
+      {
+        "path": "product/packages/session-memory/src/quarantine.test.ts",
+        "source": "spec-edge"
+      },
+      {
+        "path": "product/packages/session-memory/src/server.ts",
+        "source": "spec-edge"
+      },
+      {
+        "path": "product/packages/session-memory/src/storage/migrations.ts",
+        "source": "spec-edge"
+      },
+      {
+        "path": "product/packages/session-memory/src/storage/sqlite.test.ts",
+        "source": "spec-edge"
+      },
+      {
+        "path": "product/packages/session-memory/src/storage/sqlite.ts",
+        "source": "spec-edge"
+      },
+      {
+        "path": "product/packages/session-memory/src/tools/store.ts",
+        "source": "spec-edge"
+      },
+      {
+        "path": "product/packages/session-memory/src/types.ts",
+        "source": "spec-edge"
+      }
+    ],
+    "resolvedUnits": [
+      {
+        "locations": [
+          {
+            "file": "product/packages/carrier-gate/package.json"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "file",
+          "path": "product/packages/carrier-gate/package.json"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "product/packages/carrier-gate/src/fixture.js"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "file",
+          "path": "product/packages/carrier-gate/src/fixture.js"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "product/packages/carrier-gate/src/index.d.ts"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "file",
+          "path": "product/packages/carrier-gate/src/index.d.ts"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "product/packages/carrier-gate/src/index.js"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "file",
+          "path": "product/packages/carrier-gate/src/index.js"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "product/packages/carrier-gate/src/rules.js"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "file",
+          "path": "product/packages/carrier-gate/src/rules.js"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "product/packages/carrier-gate/src/rules.test.ts"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "file",
+          "path": "product/packages/carrier-gate/src/rules.test.ts"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "product/packages/carrier-gate/tsconfig.json"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "file",
+          "path": "product/packages/carrier-gate/tsconfig.json"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "product/packages/session-memory/src/expiry/decay.ts"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "file",
+          "path": "product/packages/session-memory/src/expiry/decay.ts"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "product/packages/session-memory/src/expiry/retention.test.ts"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "file",
+          "path": "product/packages/session-memory/src/expiry/retention.test.ts"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "product/packages/session-memory/src/gate.test.ts"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "file",
+          "path": "product/packages/session-memory/src/gate.test.ts"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "product/packages/session-memory/src/gate.ts"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "file",
+          "path": "product/packages/session-memory/src/gate.ts"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "product/packages/session-memory/src/provenance.test.ts"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "file",
+          "path": "product/packages/session-memory/src/provenance.test.ts"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "product/packages/session-memory/src/quarantine.test.ts"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "file",
+          "path": "product/packages/session-memory/src/quarantine.test.ts"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "crates/featuregraph/tests/golden/features_graph.json"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "extends",
+        "unit": {
+          "kind": "file",
+          "path": "crates/featuregraph/tests/golden/features_graph.json"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "platform/services/statecraft/api/factory/overrideGate.ts"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "refines",
+        "unit": {
+          "kind": "file",
+          "path": "platform/services/statecraft/api/factory/overrideGate.ts"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "product/packages/session-memory/package.json"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "refines",
+        "unit": {
+          "kind": "file",
+          "path": "product/packages/session-memory/package.json"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "product/packages/session-memory/src/expiry/promotion.ts"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "refines",
+        "unit": {
+          "kind": "file",
+          "path": "product/packages/session-memory/src/expiry/promotion.ts"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "product/packages/session-memory/src/harvesting/engine.ts"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "refines",
+        "unit": {
+          "kind": "file",
+          "path": "product/packages/session-memory/src/harvesting/engine.ts"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "product/packages/session-memory/src/index.ts"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "refines",
+        "unit": {
+          "kind": "file",
+          "path": "product/packages/session-memory/src/index.ts"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "product/packages/session-memory/src/integration.test.ts"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "refines",
+        "unit": {
+          "kind": "file",
+          "path": "product/packages/session-memory/src/integration.test.ts"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "product/packages/session-memory/src/server.ts"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "refines",
+        "unit": {
+          "kind": "file",
+          "path": "product/packages/session-memory/src/server.ts"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "product/packages/session-memory/src/storage/migrations.ts"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "refines",
+        "unit": {
+          "kind": "file",
+          "path": "product/packages/session-memory/src/storage/migrations.ts"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "product/packages/session-memory/src/storage/sqlite.test.ts"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "refines",
+        "unit": {
+          "kind": "file",
+          "path": "product/packages/session-memory/src/storage/sqlite.test.ts"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "product/packages/session-memory/src/storage/sqlite.ts"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "refines",
+        "unit": {
+          "kind": "file",
+          "path": "product/packages/session-memory/src/storage/sqlite.ts"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "product/packages/session-memory/src/tools/store.ts"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "refines",
+        "unit": {
+          "kind": "file",
+          "path": "product/packages/session-memory/src/tools/store.ts"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "product/packages/session-memory/src/types.ts"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "refines",
+        "unit": {
+          "kind": "file",
+          "path": "product/packages/session-memory/src/types.ts"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "docs/owasp-agentic-top-10-2026.md"
+          }
+        ],
+        "ownership": false,
+        "sourceField": "references",
+        "unit": {
+          "kind": "file",
+          "path": "docs/owasp-agentic-top-10-2026.md"
+        }
+      }
+    ],
+    "specId": "204-session-memory-write-contract",
+    "specStatus": "approved"
+  },
+  "schemaVersion": "1.1.0",
+  "shardHash": "af973f4972bbc2b02ca23a1cef53b9b967c421ac982e9e9472a80cc0f6078149"
+}

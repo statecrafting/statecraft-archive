@@ -1,0 +1,55 @@
+{
+  "record": {
+    "amendmentRecord": "amended 2026-06-18 by spec 217 (engine-swap collapse): the in-tree spec-compiler that enforced V-004 was deleted; that enforcement is now in spec-spine-core. The implementation code-unit is stripped (path deleted); this spec's authority is its amends-000 refinement of the V-004 scan-path policy, which persists in the library.\n",
+    "amends": [
+      "000-bootstrap-spec-system"
+    ],
+    "codeAliases": [
+      "V004_FIXTURE_EXEMPTION"
+    ],
+    "created": "2026-05-22",
+    "dependsOn": [
+      "000-bootstrap-spec-system",
+      "001-spec-compiler-mvp",
+      "158-workflow-ref-sha-pinning-lint"
+    ],
+    "domain": "substrate",
+    "extraFrontmatter": {
+      "amended": "2026-06-18",
+      "approved": "2026-05-22",
+      "closed": "2026-05-22",
+      "slug": "v004-lint-fixture-exemption"
+    },
+    "id": "159-v004-lint-fixture-exemption",
+    "implementation": "complete",
+    "kind": "governance",
+    "owner": "bart",
+    "refines": [
+      {
+        "aspect": "v004-scan-path-policy",
+        "refines_specs": [
+          "000-bootstrap-spec-system"
+        ]
+      }
+    ],
+    "risk": "low",
+    "sectionHeadings": [
+      "159 — V-004 carve-out for lint test fixtures",
+      "1. Problem Statement",
+      "2. Decision",
+      "3. Functional Requirements",
+      "4. Invariants",
+      "5. Acceptance criteria",
+      "6. Non-goals",
+      "7. Rationale",
+      "8. Compiler check sequencing",
+      "9. Open questions"
+    ],
+    "specPath": "specs/159-v004-lint-fixture-exemption/spec.md",
+    "status": "approved",
+    "summary": "Refine V-004's scan-path policy (defined in spec 000) to exempt lint test fixtures under `tools/*/tests/fixtures/**`. The exemption rests on a single principle: these fixtures derive their authority from the spec that establishes the consuming lint, not from themselves; they are not \"standalone authored YAML\" in the constitutional sense of V-004. The motivating case is spec 158 (workflow-ref SHA-pinning lint), whose `tools/lint/tests/fixtures/{passing,failing}/action.yml` files act as the lint's own spec. The exemption generalises to future spec-established lints whose test corpus is non-markdown by necessity (YAML linters need YAML fixtures, JSON-schema validators need JSON fixtures, TOML parsers need TOML fixtures). V-004's *definition* — the frozen anchor on spec 000 — is unchanged; only the scan-path policy explicitly designated as extensible by spec 000 line 217 (\"explicitly listed third-party vendored paths in a later amendment\") is extended.\n",
+    "title": "V-004 carve-out for lint test fixtures (amends 000)"
+  },
+  "shardHash": "7675accb5e710053433394e939fd63af5a9e5a1be3a35491c7bd8b08f3dd1820",
+  "specVersion": "1.1.0"
+}

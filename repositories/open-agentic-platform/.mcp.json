@@ -1,0 +1,8 @@
+{
+  "mcpServers": {
+    "axiomregent": {
+      "command": "./crates/axiomregent/target/release/axiomregent",
+      "args": []
+    }
+  }
+}

@@ -1,0 +1,566 @@
+{
+  "diagnostics": {
+    "errors": [],
+    "warnings": [
+      {
+        "code": "W-002",
+        "message": "spec '139-factory-artifact-substrate' file unit 'platform/services/statecraft/api/factory/oapNativeIngest.ts' does not exist",
+        "path": "platform/services/statecraft/api/factory/oapNativeIngest.ts"
+      },
+      {
+        "code": "W-002",
+        "message": "spec '139-factory-artifact-substrate' file unit 'platform/services/statecraft/api/factory/oapNativeSanitise.ts' does not exist",
+        "path": "platform/services/statecraft/api/factory/oapNativeSanitise.ts"
+      },
+      {
+        "code": "W-002",
+        "message": "spec '139-factory-artifact-substrate' file unit 'platform/services/statecraft/api/factory/projection.ts' does not exist",
+        "path": "platform/services/statecraft/api/factory/projection.ts"
+      }
+    ]
+  },
+  "mapping": {
+    "amends": [
+      "108-factory-as-platform-feature",
+      "111-org-agent-catalog-sync",
+      "123-agent-catalog-org-rescope"
+    ],
+    "dependsOn": [
+      "082-artifact-integrity-platform-hardening",
+      "094-unified-artifact-store",
+      "108-factory-as-platform-feature",
+      "111-org-agent-catalog-sync",
+      "112-factory-project-lifecycle",
+      "123-agent-catalog-org-rescope",
+      "124-opc-factory-run-platform-integration"
+    ],
+    "implementingPaths": [
+      {
+        "path": "crates/factory-engine/src/engine.rs",
+        "source": "spec-edge"
+      },
+      {
+        "path": "crates/factory-engine/src/factory_root.rs",
+        "source": "multiple"
+      },
+      {
+        "path": "crates/factory-engine/src/substrate_version.rs",
+        "source": "multiple"
+      },
+      {
+        "path": "crates/factory-engine/src/virtual_root.rs",
+        "source": "multiple"
+      },
+      {
+        "path": "platform/services/statecraft/api/agents/bindings.ts",
+        "source": "spec-edge"
+      },
+      {
+        "path": "platform/services/statecraft/api/agents/catalog.ts",
+        "source": "spec-edge"
+      },
+      {
+        "path": "platform/services/statecraft/api/agents/relay.ts",
+        "source": "spec-edge"
+      },
+      {
+        "path": "platform/services/statecraft/api/db/schema.ts",
+        "source": "spec-edge"
+      },
+      {
+        "path": "platform/services/statecraft/api/factory/agentCatalogMigration.ts",
+        "source": "spec-edge"
+      },
+      {
+        "path": "platform/services/statecraft/api/factory/artifacts.ts",
+        "source": "spec-edge"
+      },
+      {
+        "path": "platform/services/statecraft/api/factory/bindings.ts",
+        "source": "spec-edge"
+      },
+      {
+        "path": "platform/services/statecraft/api/factory/browse.ts",
+        "source": "spec-edge"
+      },
+      {
+        "path": "platform/services/statecraft/api/factory/conflicts.ts",
+        "source": "spec-edge"
+      },
+      {
+        "path": "platform/services/statecraft/api/factory/oapContracts.ts",
+        "source": "spec-edge"
+      },
+      {
+        "path": "platform/services/statecraft/api/factory/runAgentRefs.ts",
+        "source": "spec-edge"
+      },
+      {
+        "path": "platform/services/statecraft/api/factory/substrate.ts",
+        "source": "spec-edge"
+      },
+      {
+        "path": "platform/services/statecraft/api/factory/substrateBrowser.ts",
+        "source": "spec-edge"
+      },
+      {
+        "path": "platform/services/statecraft/api/factory/syncPipeline.ts",
+        "source": "spec-edge"
+      },
+      {
+        "path": "platform/services/statecraft/api/factory/syncWorker.ts",
+        "source": "spec-edge"
+      },
+      {
+        "path": "platform/services/statecraft/api/factory/translator.ts",
+        "source": "spec-edge"
+      },
+      {
+        "path": "platform/services/statecraft/api/factory/upstreams.ts",
+        "source": "spec-edge"
+      },
+      {
+        "path": "platform/services/statecraft/api/projects/create.ts",
+        "source": "spec-edge"
+      },
+      {
+        "path": "platform/services/statecraft/api/projects/import.ts",
+        "source": "spec-edge"
+      },
+      {
+        "path": "platform/services/statecraft/api/projects/opcBundle.ts",
+        "source": "spec-edge"
+      },
+      {
+        "path": "platform/services/statecraft/api/projects/scaffoldReadiness.ts",
+        "source": "spec-edge"
+      },
+      {
+        "path": "platform/services/statecraft/api/sync/service.ts",
+        "source": "spec-edge"
+      },
+      {
+        "path": "platform/services/statecraft/web/app/components/artifact-merge-editor.tsx",
+        "source": "spec-edge"
+      },
+      {
+        "path": "platform/services/statecraft/web/app/routes/app.factory.artifacts.tsx",
+        "source": "spec-edge"
+      },
+      {
+        "path": "product/apps/opc/src-tauri/src/commands/factory.rs",
+        "source": "spec-edge"
+      }
+    ],
+    "resolvedUnits": [
+      {
+        "locations": [
+          {
+            "file": "crates/factory-engine/src/factory_root.rs"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "file",
+          "path": "crates/factory-engine/src/factory_root.rs"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "crates/factory-engine/src/substrate_version.rs"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "file",
+          "path": "crates/factory-engine/src/substrate_version.rs"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "crates/factory-engine/src/virtual_root.rs"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "file",
+          "path": "crates/factory-engine/src/virtual_root.rs"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "platform/services/statecraft/api/factory/agentCatalogMigration.ts"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "file",
+          "path": "platform/services/statecraft/api/factory/agentCatalogMigration.ts"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "platform/services/statecraft/api/factory/oapContracts.ts"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "file",
+          "path": "platform/services/statecraft/api/factory/oapContracts.ts"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "platform/services/statecraft/api/factory/runAgentRefs.ts"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "file",
+          "path": "platform/services/statecraft/api/factory/runAgentRefs.ts"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "platform/services/statecraft/api/factory/substrate.ts"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "file",
+          "path": "platform/services/statecraft/api/factory/substrate.ts"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "platform/services/statecraft/api/factory/substrateBrowser.ts"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "file",
+          "path": "platform/services/statecraft/api/factory/substrateBrowser.ts"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "platform/services/statecraft/api/agents/bindings.ts"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "extends",
+        "unit": {
+          "kind": "file",
+          "path": "platform/services/statecraft/api/agents/bindings.ts"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "platform/services/statecraft/api/agents/catalog.ts"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "extends",
+        "unit": {
+          "kind": "file",
+          "path": "platform/services/statecraft/api/agents/catalog.ts"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "platform/services/statecraft/api/agents/relay.ts"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "extends",
+        "unit": {
+          "kind": "file",
+          "path": "platform/services/statecraft/api/agents/relay.ts"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "platform/services/statecraft/api/factory/artifacts.ts"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "extends",
+        "unit": {
+          "kind": "file",
+          "path": "platform/services/statecraft/api/factory/artifacts.ts"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "platform/services/statecraft/api/factory/bindings.ts"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "extends",
+        "unit": {
+          "kind": "file",
+          "path": "platform/services/statecraft/api/factory/bindings.ts"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "platform/services/statecraft/api/factory/browse.ts"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "extends",
+        "unit": {
+          "kind": "file",
+          "path": "platform/services/statecraft/api/factory/browse.ts"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "platform/services/statecraft/api/factory/conflicts.ts"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "extends",
+        "unit": {
+          "kind": "file",
+          "path": "platform/services/statecraft/api/factory/conflicts.ts"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "platform/services/statecraft/api/factory/syncPipeline.ts"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "extends",
+        "unit": {
+          "kind": "file",
+          "path": "platform/services/statecraft/api/factory/syncPipeline.ts"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "platform/services/statecraft/api/factory/syncWorker.ts"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "extends",
+        "unit": {
+          "kind": "file",
+          "path": "platform/services/statecraft/api/factory/syncWorker.ts"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "platform/services/statecraft/api/factory/translator.ts"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "extends",
+        "unit": {
+          "kind": "file",
+          "path": "platform/services/statecraft/api/factory/translator.ts"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "platform/services/statecraft/api/factory/upstreams.ts"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "extends",
+        "unit": {
+          "kind": "file",
+          "path": "platform/services/statecraft/api/factory/upstreams.ts"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "platform/services/statecraft/api/sync/service.ts"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "extends",
+        "unit": {
+          "kind": "file",
+          "path": "platform/services/statecraft/api/sync/service.ts"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "platform/services/statecraft/web/app/components/artifact-merge-editor.tsx"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "extends",
+        "unit": {
+          "kind": "file",
+          "path": "platform/services/statecraft/web/app/components/artifact-merge-editor.tsx"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "platform/services/statecraft/web/app/routes/app.factory.artifacts.tsx"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "extends",
+        "unit": {
+          "kind": "file",
+          "path": "platform/services/statecraft/web/app/routes/app.factory.artifacts.tsx"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "crates/factory-engine/src/engine.rs"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "refines",
+        "unit": {
+          "kind": "file",
+          "path": "crates/factory-engine/src/engine.rs"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "platform/services/statecraft/api/db/schema.ts"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "refines",
+        "unit": {
+          "kind": "file",
+          "path": "platform/services/statecraft/api/db/schema.ts"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "platform/services/statecraft/api/projects/create.ts"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "refines",
+        "unit": {
+          "kind": "file",
+          "path": "platform/services/statecraft/api/projects/create.ts"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "platform/services/statecraft/api/projects/import.ts"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "refines",
+        "unit": {
+          "kind": "file",
+          "path": "platform/services/statecraft/api/projects/import.ts"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "platform/services/statecraft/api/projects/opcBundle.ts"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "refines",
+        "unit": {
+          "kind": "file",
+          "path": "platform/services/statecraft/api/projects/opcBundle.ts"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "platform/services/statecraft/api/projects/scaffoldReadiness.ts"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "refines",
+        "unit": {
+          "kind": "file",
+          "path": "platform/services/statecraft/api/projects/scaffoldReadiness.ts"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "product/apps/opc/src-tauri/src/commands/factory.rs"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "refines",
+        "unit": {
+          "kind": "file",
+          "path": "product/apps/opc/src-tauri/src/commands/factory.rs"
+        }
+      },
+      {
+        "locations": [],
+        "ownership": false,
+        "sourceField": "references",
+        "unit": {
+          "kind": "file",
+          "path": "platform/services/statecraft/api/factory/oapNativeIngest.ts"
+        }
+      },
+      {
+        "locations": [],
+        "ownership": false,
+        "sourceField": "references",
+        "unit": {
+          "kind": "file",
+          "path": "platform/services/statecraft/api/factory/oapNativeSanitise.ts"
+        }
+      },
+      {
+        "locations": [],
+        "ownership": false,
+        "sourceField": "references",
+        "unit": {
+          "kind": "file",
+          "path": "platform/services/statecraft/api/factory/projection.ts"
+        }
+      }
+    ],
+    "specId": "139-factory-artifact-substrate",
+    "specStatus": "approved"
+  },
+  "schemaVersion": "1.1.0",
+  "shardHash": "05fb20b7325b6bf3d446f9d977c30ea88d63e4d174b386135e0fa63fc58f1a18"
+}

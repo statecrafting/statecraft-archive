@@ -1,0 +1,51 @@
+{
+  "mapping": {
+    "dependsOn": [
+      "086-open-source-launch",
+      "117-release-artifact-attestations",
+      "194-release-publish-boundary-guard"
+    ],
+    "implementingPaths": [
+      {
+        "path": ".github/workflows/release-tools.yml",
+        "source": "spec-edge"
+      },
+      {
+        "path": "crates/featuregraph/tests/golden/features_graph.json",
+        "source": "spec-edge"
+      }
+    ],
+    "resolvedUnits": [
+      {
+        "locations": [
+          {
+            "file": "crates/featuregraph/tests/golden/features_graph.json"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "extends",
+        "unit": {
+          "kind": "file",
+          "path": "crates/featuregraph/tests/golden/features_graph.json"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": ".github/workflows/release-tools.yml"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "refines",
+        "unit": {
+          "kind": "file",
+          "path": ".github/workflows/release-tools.yml"
+        }
+      }
+    ],
+    "specId": "195-release-tools-dispatch-build-ref",
+    "specStatus": "approved"
+  },
+  "schemaVersion": "1.1.0",
+  "shardHash": "473d02a5b6130b10814f8e0c502f9009e82a826602018329f597893a4e624f3f"
+}

@@ -1,0 +1,244 @@
+{
+  "mapping": {
+    "amends": [
+      "101-codebase-index-mvp",
+      "177-ci-orchestrator-pr-gate",
+      "184-claude-shared-config-governance"
+    ],
+    "implementingPaths": [
+      {
+        "path": ".githooks/enable-merge-driver.sh",
+        "source": "spec-edge"
+      },
+      {
+        "path": ".githooks/merge-derived-index.sh",
+        "source": "spec-edge"
+      },
+      {
+        "path": "Makefile",
+        "source": "spec-edge"
+      },
+      {
+        "path": "crates/featuregraph/tests/golden/features_graph.json",
+        "source": "spec-edge"
+      },
+      {
+        "path": "specs/127-spec-code-coupling-gate/spec.md",
+        "source": "spec-edge"
+      },
+      {
+        "path": "specs/158-workflow-ref-sha-pinning-lint/spec.md",
+        "source": "spec-edge"
+      },
+      {
+        "path": "specs/184-claude-shared-config-governance/spec.md",
+        "source": "spec-edge"
+      },
+      {
+        "path": "standards/schemas/spec-spine/config-hash.schema.json",
+        "source": "spec-edge"
+      },
+      {
+        "path": "tools/oap/ci-parity-check/src/lib.rs",
+        "source": "spec-edge"
+      },
+      {
+        "path": "tools/oap/ci-parity-check/tests/fixtures/aligned/.github/workflows/ci-config-hash.yml",
+        "source": "spec-edge"
+      },
+      {
+        "path": "tools/oap/ci-parity-check/tests/fixtures/divergent/.github/workflows/ci-config-hash.yml",
+        "source": "spec-edge"
+      },
+      {
+        "path": "tools/shared/spec-types/src/lib.rs",
+        "source": "spec-edge"
+      }
+    ],
+    "resolvedUnits": [
+      {
+        "locations": [
+          {
+            "file": ".githooks/enable-merge-driver.sh"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "file",
+          "path": ".githooks/enable-merge-driver.sh"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": ".githooks/merge-derived-index.sh"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "file",
+          "path": ".githooks/merge-derived-index.sh"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "standards/schemas/spec-spine/config-hash.schema.json"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "file",
+          "path": "standards/schemas/spec-spine/config-hash.schema.json"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "tools/oap/ci-parity-check/tests/fixtures/aligned/.github/workflows/ci-config-hash.yml"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "file",
+          "path": "tools/oap/ci-parity-check/tests/fixtures/aligned/.github/workflows/ci-config-hash.yml"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "tools/oap/ci-parity-check/tests/fixtures/divergent/.github/workflows/ci-config-hash.yml"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "file",
+          "path": "tools/oap/ci-parity-check/tests/fixtures/divergent/.github/workflows/ci-config-hash.yml"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "crates/featuregraph/tests/golden/features_graph.json"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "extends",
+        "unit": {
+          "kind": "file",
+          "path": "crates/featuregraph/tests/golden/features_graph.json"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "tools/oap/ci-parity-check/src/lib.rs"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "extends",
+        "unit": {
+          "kind": "file",
+          "path": "tools/oap/ci-parity-check/src/lib.rs"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "tools/shared/spec-types/src/lib.rs"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "extends",
+        "unit": {
+          "kind": "file",
+          "path": "tools/shared/spec-types/src/lib.rs"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "Makefile",
+            "span": {
+              "endLine": 477,
+              "startLine": 474
+            }
+          }
+        ],
+        "ownership": true,
+        "sourceField": "co_authority",
+        "unit": {
+          "anchor": "ci-config-hash",
+          "file": "Makefile",
+          "kind": "section"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "Makefile",
+            "span": {
+              "endLine": 83,
+              "startLine": 82
+            }
+          }
+        ],
+        "ownership": true,
+        "sourceField": "co_authority",
+        "unit": {
+          "anchor": "merge-driver",
+          "file": "Makefile",
+          "kind": "section"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "specs/127-spec-code-coupling-gate/spec.md"
+          }
+        ],
+        "ownership": false,
+        "sourceField": "references",
+        "unit": {
+          "kind": "file",
+          "path": "specs/127-spec-code-coupling-gate/spec.md"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "specs/158-workflow-ref-sha-pinning-lint/spec.md"
+          }
+        ],
+        "ownership": false,
+        "sourceField": "references",
+        "unit": {
+          "kind": "file",
+          "path": "specs/158-workflow-ref-sha-pinning-lint/spec.md"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "specs/184-claude-shared-config-governance/spec.md"
+          }
+        ],
+        "ownership": false,
+        "sourceField": "references",
+        "unit": {
+          "kind": "file",
+          "path": "specs/184-claude-shared-config-governance/spec.md"
+        }
+      }
+    ],
+    "specId": "188-derived-index-merge-serialization",
+    "specStatus": "approved"
+  },
+  "schemaVersion": "1.1.0",
+  "shardHash": "7793352efafacfb2396e368454c78f92d1bcf0e4337bc3007c2100bdd1b10c79"
+}

@@ -1,0 +1,29 @@
+{
+  "mapping": {
+    "implementingPaths": [
+      {
+        "path": "product/packages/tool-renderer",
+        "source": "multiple"
+      }
+    ],
+    "resolvedUnits": [
+      {
+        "locations": [
+          {
+            "file": "product/packages/tool-renderer"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "id": "@opc/tool-renderer",
+          "kind": "crate"
+        }
+      }
+    ],
+    "specId": "050-tool-renderer-system",
+    "specStatus": "approved"
+  },
+  "schemaVersion": "1.1.0",
+  "shardHash": "8f55482ddc11b50e5b835453d7aa65499179b35b7a657b0a3e930c81e72ab437"
+}

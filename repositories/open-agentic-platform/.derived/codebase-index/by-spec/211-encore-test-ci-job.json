@@ -1,0 +1,228 @@
+{
+  "mapping": {
+    "dependsOn": [
+      "104-makefile-ci-parity-contract",
+      "135-fast-ci-as-default",
+      "177-ci-orchestrator-pr-gate",
+      "198-factory-governance-envelope",
+      "201-anti-blind-approval-ui"
+    ],
+    "implementingPaths": [
+      {
+        "path": ".github/workflows/ci-statecraft-encore.yml",
+        "source": "spec-edge"
+      },
+      {
+        "path": ".github/workflows/ci-statecraft.yml",
+        "source": "spec-edge"
+      },
+      {
+        "path": ".github/workflows/ci.yml",
+        "source": "spec-edge"
+      },
+      {
+        "path": "Makefile",
+        "source": "spec-edge"
+      },
+      {
+        "path": "crates/featuregraph/tests/golden/features_graph.json",
+        "source": "spec-edge"
+      },
+      {
+        "path": "docs/owasp-agentic-top-10-2026.md",
+        "source": "spec-edge"
+      },
+      {
+        "path": "platform/services/statecraft/scripts/encore-test-lane.mjs",
+        "source": "spec-edge"
+      },
+      {
+        "path": "platform/services/statecraft/vite.config.ts",
+        "source": "spec-edge"
+      },
+      {
+        "path": "tools/oap/ci-parity-check/src/lib.rs",
+        "source": "spec-edge"
+      },
+      {
+        "path": "tools/oap/ci-parity-check/tests/fixtures/aligned/.github/workflows/ci-statecraft-encore.yml",
+        "source": "spec-edge"
+      },
+      {
+        "path": "tools/oap/ci-parity-check/tests/fixtures/aligned/Makefile",
+        "source": "spec-edge"
+      },
+      {
+        "path": "tools/oap/ci-parity-check/tests/fixtures/divergent/.github/workflows/ci-statecraft-encore.yml",
+        "source": "spec-edge"
+      }
+    ],
+    "resolvedUnits": [
+      {
+        "locations": [
+          {
+            "file": ".github/workflows/ci-statecraft-encore.yml"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "file",
+          "path": ".github/workflows/ci-statecraft-encore.yml"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "platform/services/statecraft/scripts/encore-test-lane.mjs"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "file",
+          "path": "platform/services/statecraft/scripts/encore-test-lane.mjs"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "tools/oap/ci-parity-check/tests/fixtures/aligned/.github/workflows/ci-statecraft-encore.yml"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "file",
+          "path": "tools/oap/ci-parity-check/tests/fixtures/aligned/.github/workflows/ci-statecraft-encore.yml"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "tools/oap/ci-parity-check/tests/fixtures/divergent/.github/workflows/ci-statecraft-encore.yml"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "file",
+          "path": "tools/oap/ci-parity-check/tests/fixtures/divergent/.github/workflows/ci-statecraft-encore.yml"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": ".github/workflows/ci.yml"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "extends",
+        "unit": {
+          "kind": "file",
+          "path": ".github/workflows/ci.yml"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "crates/featuregraph/tests/golden/features_graph.json"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "extends",
+        "unit": {
+          "kind": "file",
+          "path": "crates/featuregraph/tests/golden/features_graph.json"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "tools/oap/ci-parity-check/src/lib.rs"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "extends",
+        "unit": {
+          "kind": "file",
+          "path": "tools/oap/ci-parity-check/src/lib.rs"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "tools/oap/ci-parity-check/tests/fixtures/aligned/Makefile"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "extends",
+        "unit": {
+          "kind": "file",
+          "path": "tools/oap/ci-parity-check/tests/fixtures/aligned/Makefile"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "Makefile",
+            "span": {
+              "endLine": 592,
+              "startLine": 585
+            }
+          }
+        ],
+        "ownership": true,
+        "sourceField": "co_authority",
+        "unit": {
+          "anchor": "ci-statecraft-encore",
+          "file": "Makefile",
+          "kind": "section"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": ".github/workflows/ci-statecraft.yml"
+          }
+        ],
+        "ownership": false,
+        "sourceField": "references",
+        "unit": {
+          "kind": "file",
+          "path": ".github/workflows/ci-statecraft.yml"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "docs/owasp-agentic-top-10-2026.md"
+          }
+        ],
+        "ownership": false,
+        "sourceField": "references",
+        "unit": {
+          "kind": "file",
+          "path": "docs/owasp-agentic-top-10-2026.md"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "platform/services/statecraft/vite.config.ts"
+          }
+        ],
+        "ownership": false,
+        "sourceField": "references",
+        "unit": {
+          "kind": "file",
+          "path": "platform/services/statecraft/vite.config.ts"
+        }
+      }
+    ],
+    "specId": "211-encore-test-ci-job",
+    "specStatus": "approved"
+  },
+  "schemaVersion": "1.1.0",
+  "shardHash": "e0c5010ec42451cca150a346267e2f9ad0fba4cbe9a4ea6d20428889e503e2d8"
+}

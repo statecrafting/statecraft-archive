@@ -1,0 +1,69 @@
+# Node
+node_modules/
+npm-debug.log*
+*.tsbuildinfo
+dist
+
+# Rust
+target/
+**/*.rs.bk
+
+# env / secrets
+.env
+.env.*
+!.env.example
+keys/
+# SOPS age private keys never enter the repo (they live under ~/.config);
+# ignore them defensively. Encrypted *.sops.yaml and the public recipient
+# are committed.
+*.agekey
+age.agekey
+*.pem
+
+# macOS
+.DS_Store
+
+# IDE
+.idea/
+.vscode/
+
+# Local runtime state
+.data/
+data/
+
+# spec-spine derived output: committed shards only
+.derived/spec-registry/*
+!.derived/spec-registry/by-spec/
+.derived/codebase-index/*
+!.derived/codebase-index/by-spec/
+!.derived/codebase-index/by-package/
+!.derived/codebase-index/config-hash.json
+!.derived/codebase-index/slices.json
+
+# Claude Code local state
+.claude/settings.local.json
+.claude/agent-memory/
+
+.worktrees/
+
+# --- EnRaHiTu app shell (spec 002): app/runtime build artifacts ---
+# Encore build output + generated code (single-container app core)
+.encore/
+/.encore
+encore.gen/
+/encore.gen
+encore.gen.go
+encore.gen.cue
+
+# Built SPA bundle: frontend/ builds into backend/web/dist. The `dist` rule
+# above excludes that directory wholesale, so re-include the directory itself
+# and the dev placeholder; real hashed builds (npm run build:web) stay ignored.
+!backend/web/dist/
+backend/web/dist/*
+!backend/web/dist/index.html
+# Same pattern for the admin dashboard bundle (frontend-admin/ builds here,
+# spec 012): track only the dev placeholder.
+!backend/web/dist-admin/
+backend/web/dist-admin/*
+!backend/web/dist-admin/index.html
+

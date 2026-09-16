@@ -1,0 +1,29 @@
+# Spec: 009-repo-ci-orchestrator
+#
+# CODEOWNERS: required-reviewer routing.
+#
+# Format: <path-glob> <@owner1> <@owner2>
+# GitHub auto-requests owners as reviewers on PRs touching the matching
+# paths.
+#
+# Ownership: @bartekus is the project maintainer. Forks should replace this
+# handle (and the per-path entries below) with their own maintainers.
+#
+# Single-owner default for the template; downstream projects with
+# multiple maintainers add ownership splits per path category.
+
+# Default: every PR gets the maintainer as a reviewer.
+*                                       @bartekus
+
+# Spec spine + constitution: review these for contract drift.
+/specs/                                 @bartekus
+/standards/spec/                        @bartekus
+/spec-spine.toml                        @bartekus
+
+# CI + release plumbing: touching these affects every PR.
+/.github/                               @bartekus
+/Makefile                               @bartekus
+
+# Application surface.
+/apps/                                  @bartekus
+/packages/                              @bartekus

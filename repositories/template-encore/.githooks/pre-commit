@@ -1,0 +1,52 @@
+#!/usr/bin/env bash
+# Opt-in pre-commit hook: refuses commits when the codebase index has
+# drifted relative to current inputs, and when a workflow ref is unpinned.
+#
+# Enable in this clone:
+#   git config core.hooksPath .githooks
+#
+# Disable:
+#   git config --unset core.hooksPath
+#
+# Why this exists
+# ---------------
+# The index content hash covers more than spec.md edits: package manifests,
+# spec-spine.toml, standards/**, .github/workflows/**, .github/actions/**,
+# .claude/**, .mcp.json, .githooks/**, and tools/lint/** (see
+# `[index] extra_hashed_inputs` in spec-spine.toml). Most non-trivial PRs
+# touch at least one of these and need a fresh
+# .derived/codebase-index/ shards in the diff.
+#
+# Behaviour: read-only — never mutates the working tree or staging area.
+# Bypass for emergencies: `git commit --no-verify`.
+# Spec: specs/000-bootstrap/spec.md (FR-08)
+
+set -eu
+
+SPINE="npx --no-install spec-spine"
+
+if ! $SPINE --version >/dev/null 2>&1; then
+  cat >&2 <<'EOF'
+[pre-commit] spec-spine CLI not installed.
+            Run `npm install` (or `make setup`) once in this clone.
+            To bypass for this commit only: git commit --no-verify
+EOF
+  exit 1
+fi
+
+if ! $SPINE index check >/dev/null 2>&1; then
+  cat >&2 <<'EOF'
+[pre-commit] codebase index is stale relative to current inputs.
+
+  Fix:
+    make spine-index     # regenerate .derived/codebase-index/ shards
+    git add .derived/codebase-index/
+
+  Bypass for this commit only: git commit --no-verify
+EOF
+  exit 1
+fi
+
+# Workflow-ref SHA-pinning lint (spec 011) — every `uses:` in .github/**
+# must be pinned to a full commit SHA.
+bash tools/lint/workflow-pins.sh

@@ -1,0 +1,115 @@
+{
+  "record": {
+    "authors": [
+      "open-agentic-platform"
+    ],
+    "codeAliases": [
+      "PRODUCED_APP_SBOM_ATTESTATION"
+    ],
+    "created": "2026-06-11",
+    "dependsOn": [
+      "167-born-with-spec-spine-kernel",
+      "168-per-project-governance-certificate",
+      "112-factory-project-lifecycle",
+      "116-supply-chain-policy-gates"
+    ],
+    "domain": "platform",
+    "extends": [
+      {
+        "nature": "additive",
+        "spec": "034-featuregraph-registry-scanner-fix",
+        "unit": {
+          "kind": "file",
+          "path": "crates/featuregraph/tests/golden/features_graph.json"
+        }
+      },
+      {
+        "nature": "additive",
+        "spec": "168-per-project-governance-certificate",
+        "unit": {
+          "kind": "file",
+          "path": "crates/factory-engine/tests/tenant_emission_integration.rs"
+        }
+      }
+    ],
+    "extraFrontmatter": {
+      "compliance": [
+        {
+          "controls": [
+            "ASI04"
+          ],
+          "framework": "owasp-asi-2026"
+        }
+      ],
+      "language": "en"
+    },
+    "featureBranch": "feat/203-produced-app-sbom-attestation",
+    "id": "203-produced-app-sbom-attestation",
+    "implementation": "in-progress",
+    "kind": "capability",
+    "references": [
+      {
+        "role": "context",
+        "unit": {
+          "kind": "file",
+          "path": "platform/services/statecraft/api/factory/translator.ts"
+        }
+      },
+      {
+        "role": "context",
+        "unit": {
+          "kind": "file",
+          "path": "docs/owasp-agentic-top-10-2026.md"
+        }
+      }
+    ],
+    "refines": [
+      {
+        "aspect": "kernel-sbom-vending",
+        "unit": {
+          "kind": "file",
+          "path": "crates/factory-engine/src/kernel_emission/emit.rs"
+        }
+      },
+      {
+        "aspect": "sbom-artifact-binding",
+        "unit": {
+          "kind": "file",
+          "path": "crates/factory-engine/src/governance_certificate.rs"
+        }
+      },
+      {
+        "aspect": "sbom-verify-path",
+        "unit": {
+          "kind": "file",
+          "path": "crates/factory-engine/src/bin/verify_certificate.rs"
+        }
+      },
+      {
+        "aspect": "sbom-emitter-read-path",
+        "unit": {
+          "kind": "file",
+          "path": "crates/factory-engine/src/bin/build_certificate.rs"
+        }
+      }
+    ],
+    "sectionHeadings": [
+      "Feature Specification: Produced-App SBOM and Dependency-Audit Attestation",
+      "Purpose",
+      "Functional requirements (sketch — refine before implementation)",
+      "Acceptance criteria (sketch)",
+      "Out of scope",
+      "Sequencing",
+      "Implementation status (2026-07-01)",
+      "Gate contract (FR-004)",
+      "CI-author note: committed-sidecar reframe (2026-07-01)",
+      "Residuals"
+    ],
+    "specPath": "specs/203-produced-app-sbom-attestation/spec.md",
+    "status": "approved",
+    "summary": "Apply OAP's own supply-chain discipline forward to what the factory produces. OAP ships per-target CycloneDX SBOMs and an aggregate release BOM for itself (specs 116/117), but a scaffolded application receives only a pinned lockfile — no SBOM, no dependency-vulnerability scan artifact, no lockfile-parity gate. An auditor holding a produced app's governance certificate (spec 168) cannot answer \"what is in this application and was it scanned?\" — the exact ASI04 question. This spec emits a CycloneDX BOM and a dependency-audit artifact at scaffold completion, binds their content hashes into the per-project governance certificate, and adds a lockfile/BOM parity gate to the tenant CI the born-with kernel (spec 167) seeds. Absence of a scanner is recorded visibly, never silently (the spec 200 FR-004 posture).\n",
+    "title": "Produced-App SBOM and Dependency-Audit Attestation (ASI04 forward)"
+  },
+  "shardHash": "30742d3604c2ec5d72bfe920aaf08d2302af0341bc806605dec1de1fdf26a5b4",
+  "specVersion": "1.1.0"
+}

@@ -1,0 +1,37 @@
+{
+  "mapping": {
+    "dependsOn": [
+      "000-bootstrap",
+      "001-packages-thesis"
+    ],
+    "implementingPaths": [
+      {
+        "path": "addon/kernel-native",
+        "source": "manifest-metadata"
+      },
+      {
+        "path": "addon/kernel-native/",
+        "source": "spec-edge"
+      }
+    ],
+    "resolvedUnits": [
+      {
+        "locations": [
+          {
+            "file": "addon/kernel-native/"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "directory",
+          "path": "addon/kernel-native/"
+        }
+      }
+    ],
+    "specId": "004-kernel-native",
+    "specStatus": "approved"
+  },
+  "schemaVersion": "1.1.0",
+  "shardHash": "c3489c85a01a285c6ab65477750ada83a1e38fa78aef3a316a6bdb9698bb6027"
+}

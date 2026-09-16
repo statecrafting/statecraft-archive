@@ -1,0 +1,67 @@
+{
+  "mapping": {
+    "dependsOn": [
+      "091-registry-enrichment",
+      "092-workspace-runtime-threading"
+    ],
+    "implementingPaths": [
+      {
+        "path": "crates/agent/src/safety.rs",
+        "source": "spec-edge"
+      },
+      {
+        "path": "crates/featuregraph/src/preflight.rs",
+        "source": "spec-edge"
+      },
+      {
+        "path": "crates/policy-kernel/src/lib.rs",
+        "source": "spec-edge"
+      }
+    ],
+    "resolvedUnits": [
+      {
+        "locations": [
+          {
+            "file": "crates/agent/src/safety.rs"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "extends",
+        "unit": {
+          "kind": "file",
+          "path": "crates/agent/src/safety.rs"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "crates/featuregraph/src/preflight.rs"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "extends",
+        "unit": {
+          "kind": "file",
+          "path": "crates/featuregraph/src/preflight.rs"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "crates/policy-kernel/src/lib.rs"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "extends",
+        "unit": {
+          "kind": "file",
+          "path": "crates/policy-kernel/src/lib.rs"
+        }
+      }
+    ],
+    "specId": "093-spec-driven-preflight",
+    "specStatus": "approved"
+  },
+  "schemaVersion": "1.1.0",
+  "shardHash": "e20e597560998dbc6ce514642b7db2c72dbb8ffbaa02e024de74a8cf485187fb"
+}

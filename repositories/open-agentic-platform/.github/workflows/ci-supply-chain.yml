@@ -1,0 +1,158 @@
+# Spec: 116-supply-chain-policy-gates
+# Spec: 158-workflow-ref-sha-pinning-lint (amends 116)
+# Spec: 177-ci-orchestrator-pr-gate
+#
+# Supply-chain gates: cargo-deny across every Rust manifest, pnpm/npm
+# audit at the package-manager layer, and workflow-ref SHA-pinning
+# enforcement across `.github/workflows/**` and `.github/actions/**`.
+# Mirrored in Makefile `ci-supply-chain`.
+#
+# Posture: blocking from day 0. The 30-day warn-only window planned in the
+# original spec was collapsed on 2026-05-02 after a clean dry-run (zero
+# `--audit-level=high` findings across all three audits). See spec 116 §9.
+#
+# Dispatched unconditionally from `.github/workflows/ci.yml` (spec 177
+# §2.2 constitutional carve-out). Retains its own `schedule:` trigger so
+# the Monday 12:00 UTC advisory-db refresh fires independent of PR
+# activity.
+
+name: CI supply-chain
+
+on:
+  workflow_call:
+  schedule:
+    - cron: '0 12 * * 1'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+env:
+  CARGO_TERM_COLOR: always
+
+jobs:
+  cargo-deny:
+    runs-on: ubuntu-latest
+    name: cargo-deny / advisories + bans + licenses + sources
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+
+      - name: Rust toolchain
+        uses: dtolnay/rust-toolchain@29eef336d9b2848a0b548edc03f92a220660cdb8 # pinned for rust-toolchain.toml lockstep
+        with:
+          toolchain: '1.95.0'
+
+      - name: Cache advisory-db
+        uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v5
+        with:
+          path: ~/.cargo/advisory-db
+          key: advisory-db-${{ github.run_id }}
+          restore-keys: advisory-db-
+
+      - name: Install cargo-deny
+        # 0.19 added support for CVSS v4.0 advisories (now common in
+        # RustSec); 0.16 fails to parse the advisory-db on first hit.
+        run: cargo install cargo-deny --locked --version '^0.19'
+
+      # Three Rust roots cover the whole codebase: the root workspace
+      # `Cargo.toml` (crates/* + tools/spec-spine/* + tools/oap/* +
+      # tools/shared/*), plus the two single-member workspaces that the
+      # root explicitly `exclude`s (deployd-api-rs for libsqlite3-sys
+      # isolation; desktop src-tauri to avoid the same linking conflict).
+      - name: Run cargo-deny
+        run: |
+          set -u
+          manifests=(
+            Cargo.toml
+            platform/services/deployd-api-rs/Cargo.toml
+            product/apps/opc/src-tauri/Cargo.toml
+          )
+          rc=0
+          for m in "${manifests[@]}"; do
+            echo "::group::cargo deny check ($m)"
+            if ! cargo deny --manifest-path "$m" check; then
+              rc=1
+            fi
+            echo "::endgroup::"
+          done
+          exit $rc
+
+  pnpm-audit:
+    runs-on: ubuntu-latest
+    name: pnpm-audit / desktop + packages
+    timeout-minutes: 10
+    defaults:
+      run:
+        working-directory: product
+    steps:
+      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+
+      - uses: pnpm/action-setup@4f4305e1fe60ad818b8ae6fc4a697cc47eab0b2d # v6
+        with:
+          package_json_file: product/package.json
+      - uses: actions/setup-node@48b55a011bda9f5d6aeb4c2d9c7362e8dae4041e # v6
+        with:
+          node-version: 22
+          cache: pnpm
+          cache-dependency-path: product/pnpm-lock.yaml
+
+      - name: pnpm install
+        run: pnpm install --frozen-lockfile
+
+      - name: pnpm audit
+        run: pnpm audit --audit-level=high
+
+  npm-audit-statecraft:
+    runs-on: ubuntu-latest
+    name: npm-audit / statecraft
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+
+      - uses: actions/setup-node@48b55a011bda9f5d6aeb4c2d9c7362e8dae4041e # v6
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: platform/services/statecraft/package-lock.json
+
+      - name: npm ci
+        run: npm ci
+        working-directory: platform/services/statecraft
+
+      - name: npm audit
+        working-directory: platform/services/statecraft
+        run: npm audit --audit-level=high
+
+  workflow-pins:
+    runs-on: ubuntu-latest
+    name: workflow-pins / SHA-pin enforcement
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+
+      - name: Run workflow-pins lint (tree-wide scan)
+        run: tools/lint/workflow-pins.sh
+
+      - name: Run workflow-pins regression tests (fixtures)
+        run: tools/lint/workflow-pins-test.sh
+
+  release-version-consistency:
+    runs-on: ubuntu-latest
+    name: release-version-guard / version source consistency
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+
+      # spec 193 — assert OPC's committed version sources agree with one another
+      # (tauri.conf.json / package.json / Cargo.toml / Cargo.lock). Catches a
+      # half-done bump on a PR before it can reach a release tag. release-desktop.yml
+      # runs this same guard with the resolved tag as the expected version — the
+      # "gh release verify" gate wired into the supply-chain lane.
+      # (Amended 2026-06-04: the axiomregent guard step is removed — axiomregent is
+      # a bundled sidecar with no product version; spec 037/193, amended.)
+      - name: Guard opc version sources
+        run: tools/lint/release-version-guard.sh opc
+
+      - name: Run release-version-guard regression tests (fixtures)
+        run: tools/lint/release-version-guard-test.sh

@@ -1,0 +1,44 @@
+id: security-002
+category: security
+priority: critical
+context: >
+  Applies to all code that handles secrets, credentials, API keys, or
+  authentication tokens.
+tags:
+  - typescript
+  - javascript
+  - security
+  - secrets
+
+rules:
+  - verb: NEVER
+    subject: "hardcode secrets, API keys, or credentials in source code"
+    rationale: >
+      Hardcoded secrets are trivially extractable from version control
+      history, build artifacts, and client bundles. Use environment
+      variables or a secret manager.
+
+  - verb: NEVER
+    subject: "log authentication tokens or session identifiers"
+    rationale: >
+      Logged tokens can be harvested from log aggregation systems.
+      Log a truncated fingerprint or hash if correlation is needed.
+
+  - verb: ALWAYS
+    subject: "load secrets from environment variables or a secret manager"
+    rationale: >
+      Environment-based secret loading separates configuration from code,
+      supports rotation without redeployment, and prevents accidental
+      exposure in source control.
+
+  - verb: USE
+    subject: "constant-time comparison for secret values"
+    rationale: >
+      Timing attacks can leak secret values byte-by-byte when using
+      standard string equality. Use crypto.timingSafeEqual or equivalent.
+
+anti_patterns:
+  - pattern: "const API_KEY = 'sk-abc123...';"
+    correction: "const API_KEY = process.env.API_KEY;"
+  - pattern: "console.log('Token:', authToken);"
+    correction: "console.log('Token: [REDACTED]');"

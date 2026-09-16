@@ -1,0 +1,27 @@
+[package]
+name = "open_agentic_factory_schema_lockstep"
+publish = false   # internal workspace crate; runs in CI + `make`, not crates.io
+version = "0.1.0"
+edition = "2024"
+description = "Cross-repo factory contract lockstep: standards/schemas/factory/** vs factory contract/schemas/** under a three-mode structural compare + spec-197 FR-005 GoA-concept guard (spec 212)"
+rust-version = "1.85"
+
+[[bin]]
+name = "factory-schema-lockstep"
+path = "src/main.rs"
+
+[lib]
+name = "open_agentic_factory_schema_lockstep"
+path = "src/lib.rs"
+
+[dependencies]
+clap = { version = "4", features = ["derive"] }
+serde = { version = "1", features = ["derive"] }
+serde_yaml = "0.9"
+serde_json = "1"
+
+[dev-dependencies]
+tempfile = "3"
+
+[package.metadata.oap]
+spec = "212-factory-schema-lockstep-ci"

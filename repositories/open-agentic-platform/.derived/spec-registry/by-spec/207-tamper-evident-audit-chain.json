@@ -1,0 +1,215 @@
+{
+  "record": {
+    "authors": [
+      "open-agentic-platform"
+    ],
+    "codeAliases": [
+      "TAMPER_EVIDENT_AUDIT_CHAIN"
+    ],
+    "created": "2026-06-11",
+    "dependsOn": [
+      "047-governance-control-plane",
+      "068-permission-runtime",
+      "102-governed-excellence",
+      "198-factory-governance-envelope"
+    ],
+    "domain": "tooling",
+    "establishes": [
+      {
+        "kind": "file",
+        "path": "crates/policy-kernel/src/bin/verify_audit_chain.rs"
+      },
+      {
+        "kind": "file",
+        "path": "crates/policy-kernel/tests/verify_audit_chain_cli.rs"
+      },
+      {
+        "kind": "file",
+        "path": "crates/factory-engine/src/run_audit_chain.rs"
+      },
+      {
+        "kind": "file",
+        "path": "crates/factory-engine/tests/run_audit_anchoring.rs"
+      },
+      {
+        "kind": "file",
+        "path": "platform/services/statecraft/api/factory/auditSegmentHandlers.ts"
+      },
+      {
+        "kind": "file",
+        "path": "platform/services/statecraft/api/factory/auditSegmentHandlers.test.ts"
+      },
+      {
+        "kind": "file",
+        "path": "crates/axiomregent/tests/session_audit_chain_test.rs"
+      }
+    ],
+    "extends": [
+      {
+        "nature": "additive",
+        "spec": "034-featuregraph-registry-scanner-fix",
+        "unit": {
+          "kind": "file",
+          "path": "crates/featuregraph/tests/golden/features_graph.json"
+        }
+      },
+      {
+        "nature": "additive",
+        "spec": "047-governance-control-plane",
+        "unit": {
+          "kind": "file",
+          "path": "crates/policy-kernel/Cargo.toml"
+        }
+      },
+      {
+        "nature": "additive",
+        "spec": "198-factory-governance-envelope",
+        "unit": {
+          "kind": "file",
+          "path": "platform/services/statecraft/api/factory/signing-pure.ts"
+        }
+      }
+    ],
+    "extraFrontmatter": {
+      "compliance": [
+        {
+          "controls": [
+            "ASI08",
+            "ASI10"
+          ],
+          "framework": "owasp-asi-2026"
+        }
+      ],
+      "language": "en"
+    },
+    "featureBranch": "feat/207-tamper-evident-audit-chain",
+    "id": "207-tamper-evident-audit-chain",
+    "implementation": "complete",
+    "kind": "governance",
+    "references": [
+      {
+        "role": "machinery",
+        "unit": {
+          "kind": "file",
+          "path": "platform/services/statecraft/api/factory/signing.ts"
+        }
+      },
+      {
+        "role": "context",
+        "unit": {
+          "kind": "file",
+          "path": "docs/owasp-agentic-top-10-2026.md"
+        }
+      }
+    ],
+    "refines": [
+      {
+        "aspect": "hash-chained-audit-records",
+        "unit": {
+          "kind": "file",
+          "path": "crates/policy-kernel/src/audit.rs"
+        }
+      },
+      {
+        "aspect": "chain-reuse-for-audit",
+        "unit": {
+          "kind": "file",
+          "path": "crates/policy-kernel/src/proof_chain.rs"
+        }
+      },
+      {
+        "aspect": "run-audit-emission-and-anchoring",
+        "unit": {
+          "kind": "file",
+          "path": "crates/factory-engine/src/bin/factory_run.rs"
+        }
+      },
+      {
+        "aspect": "run-audit-module-registration",
+        "unit": {
+          "kind": "file",
+          "path": "crates/factory-engine/src/lib.rs"
+        }
+      },
+      {
+        "aspect": "audit-segment-countersign-contract",
+        "unit": {
+          "kind": "file",
+          "path": "platform/services/statecraft/api/sync/types.ts"
+        }
+      },
+      {
+        "aspect": "audit-segment-countersign-dispatch",
+        "unit": {
+          "kind": "file",
+          "path": "platform/services/statecraft/api/sync/service.ts"
+        }
+      },
+      {
+        "aspect": "session-audit-seal-table",
+        "unit": {
+          "kind": "file",
+          "path": "platform/services/statecraft/api/db/schema.ts"
+        }
+      },
+      {
+        "aspect": "audit-segment-countersign-action",
+        "unit": {
+          "kind": "file",
+          "path": "platform/services/statecraft/api/factory/auditActions.ts"
+        }
+      },
+      {
+        "aspect": "encore-test-lane-assignment",
+        "unit": {
+          "kind": "file",
+          "path": "platform/services/statecraft/vite.config.ts"
+        }
+      },
+      {
+        "aspect": "session-audit-chain-producer",
+        "unit": {
+          "kind": "file",
+          "path": "crates/axiomregent/src/router/mod.rs"
+        }
+      },
+      {
+        "aspect": "session-audit-chain-wiring",
+        "unit": {
+          "kind": "file",
+          "path": "crates/axiomregent/src/main.rs"
+        }
+      },
+      {
+        "aspect": "audit-segment-countersign-client",
+        "unit": {
+          "kind": "file",
+          "path": "product/apps/opc/src-tauri/src/commands/sync_client.rs"
+        }
+      },
+      {
+        "aspect": "audit-segment-countersign-command-registration",
+        "unit": {
+          "kind": "file",
+          "path": "product/apps/opc/src-tauri/src/lib.rs"
+        }
+      }
+    ],
+    "sectionHeadings": [
+      "Feature Specification: Tamper-Evident Audit Log Chain",
+      "Purpose",
+      "Functional requirements",
+      "Acceptance criteria",
+      "Out of scope",
+      "Sequencing",
+      "Implementation log",
+      "Security hardening amendment (2026-07-02)"
+    ],
+    "specPath": "specs/207-tamper-evident-audit-chain/spec.md",
+    "status": "approved",
+    "summary": "Extend the proof-chain discipline from policy decisions to the audit surfaces themselves. Spec 047 hash-chains policy decision proofs, but the JSONL audit logs the platform actually accumulates (permission decisions per spec 068 NF-003, session activity, factory run logs) are plain append-only files: deletable, editable, and unanchored — failing the cross-cutting ASI 2026 observability principle (\"immutable, signed, tamper-evident logs\") and the ASI08/ASI10 logging mitigations that every incident reconstruction depends on. This spec chains audit records (each record carries the previous record's hash), anchors segment heads at rotation — run-scoped logs into the governance certificate's artifact list, session-scoped logs via the spec 198 FR-014 platform countersign when connected, locally chained when offline — and ships an independent verifier that does not trust the producer. Honest scope: a chain makes tampering EVIDENT, not impossible; anchoring bounds (not eliminates) silent-truncation.\n",
+    "title": "Tamper-Evident Audit Log Chain (ASI observability principle)"
+  },
+  "shardHash": "729a790c63227a15dee8eb367d4fd43cb4c1c48c27089fac4b871352adc89cf9",
+  "specVersion": "1.1.0"
+}

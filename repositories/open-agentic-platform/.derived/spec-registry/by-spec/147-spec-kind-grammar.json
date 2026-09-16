@@ -1,0 +1,95 @@
+{
+  "record": {
+    "amendmentRecord": "amended 2026-06-18 by spec 217 (engine-swap collapse): the in-tree spec-compiler and codebase-indexer that implemented the kind-grammar parse (V-012..V-019) and scanner were deleted; those checks moved to spec-spine-core. The spec-compiler, codebase-indexer spec_scanner, and codebase-indexer lib edges are stripped (paths deleted); the surviving spec-lint overlay edge (W-130/131/132) and the registry.schema.json edge are retained.\n",
+    "amends": [
+      "000-bootstrap-spec-system",
+      "128-spec-lint-default-fail-on-warn",
+      "001-spec-compiler-mvp",
+      "006-conformance-lint-mvp",
+      "101-codebase-index-mvp",
+      "132-constitutional-invariant-freeze",
+      "133-amends-aware-coupling-gate"
+    ],
+    "authors": [
+      "open-agentic-platform"
+    ],
+    "created": "2026-05-13",
+    "domain": "substrate",
+    "extends": [
+      {
+        "nature": "additive",
+        "spec": "006-conformance-lint-mvp",
+        "unit": {
+          "kind": "file",
+          "path": "tools/spec-spine/spec-lint/src/lib.rs"
+        }
+      },
+      {
+        "nature": "additive",
+        "spec": "132-constitutional-invariant-freeze",
+        "unit": {
+          "kind": "file",
+          "path": "standards/schemas/spec-spine/registry.schema.json"
+        }
+      }
+    ],
+    "extraFrontmatter": {
+      "amended": "2026-06-18",
+      "approved": "2026-05-17",
+      "compliance": [
+        {
+          "controls": [
+            "ASI01",
+            "ASI03"
+          ],
+          "framework": "owasp-asi-2026"
+        }
+      ],
+      "shape": "mechanism-add"
+    },
+    "id": "147-spec-kind-grammar",
+    "implementation": "complete",
+    "kind": "amendment",
+    "owner": "open-agentic-platform",
+    "refines": [
+      {
+        "aspect": "kind-grammar-corpus-backfill",
+        "unit": {
+          "kind": "file",
+          "path": "tools/shared/spec-types/src/lib.rs"
+        }
+      }
+    ],
+    "risk": "high",
+    "sectionHeadings": [
+      "Constitutional positioning — option (a) eligibility",
+      "Motivation",
+      "Grammar additions",
+      "`kind` — promoted to validated enum",
+      "`shape` — kind-refinement",
+      "`category` — cross-cutting tags",
+      "Governance-lifecycle fields",
+      "New kinds — per-kind structural contracts",
+      "`kind: capability`",
+      "`composition:` namespace",
+      "`kind: registry`",
+      "`kind: profile`",
+      "`implements:` promotion",
+      "`primary` flag on implements items",
+      "Validation rules",
+      "Lint changes",
+      "Migration",
+      "Tooling impact",
+      "Out of scope",
+      "Acceptance criteria",
+      "Code aliases",
+      "Compliance"
+    ],
+    "specPath": "specs/147-spec-kind-grammar/spec.md",
+    "status": "approved",
+    "summary": "Third amendment to spec 000. Promotes `kind` from inert metadata to a\nvalidated enum. Adds `shape` (kind-refinement) and `category` (cross-cutting\ntags) as new universal frontmatter dimensions. Introduces three new kinds —\ncapability, registry, profile — with per-kind structural fields, enabling\nthe spec spine to absorb capability-and-profile composition (the model\nsurfaced by surveys of legacy-factory and acme-vue-node). Promotes\n`implements:` to registry-serialized output and adds a `primary` flag to\nimplements claims, resolving spec 130 OQ-1. Introduces governance-lifecycle\nfields (`supersedes`, `superseded_by`, `retirement_rationale`) that\nretire the prose-scan workarounds W-002 and W-003.\n",
+    "title": "Spec-kind grammar: typed kinds, shape and category dimensions, governance-lifecycle fields, and primary-owner promotion"
+  },
+  "shardHash": "5fbe5872da35fdbb8263851bdb3460e8ac839bd947903e3efdd1ef0dc23fc544",
+  "specVersion": "1.1.0"
+}

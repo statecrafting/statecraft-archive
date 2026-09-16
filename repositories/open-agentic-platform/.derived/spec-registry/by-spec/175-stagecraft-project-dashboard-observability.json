@@ -1,0 +1,174 @@
+{
+  "record": {
+    "amendmentRecord": "175 (self): implementation-time `establishes:` and `extends:` fill-in.\namended 2026-06-18 by spec 217 (engine-swap collapse): projectDashboard/dashboard.ts\nwas updated to pass the project root to spec 163's spec-registry reader after the\nreader's API moved from `--registry-path <file>` to `--repo <projectRoot>` in the\nengine swap. The dashboard's observability contract is unchanged; only the\nreader-call argument shape moved.\n",
+    "codeAliases": [
+      "STATECRAFT_PROJECT_DASHBOARD",
+      "PROJECT_DETAIL_OBSERVABILITY"
+    ],
+    "created": "2026-05-23",
+    "dependsOn": [
+      "087-unified-workspace-architecture",
+      "102-governed-excellence",
+      "115-knowledge-extraction-pipeline",
+      "124-opc-factory-run-platform-integration",
+      "127-spec-code-coupling-gate",
+      "147-spec-kind-grammar",
+      "163-statecraft-requirements-view",
+      "164-statecraft-development-lifecycle-board",
+      "168-per-project-governance-certificate"
+    ],
+    "domain": "platform",
+    "establishes": [
+      {
+        "kind": "file",
+        "path": "platform/services/statecraft/api/projectDashboard/encore.service.ts"
+      },
+      {
+        "kind": "file",
+        "path": "platform/services/statecraft/api/projectDashboard/dashboard.ts"
+      },
+      {
+        "kind": "file",
+        "path": "platform/services/statecraft/api/projectDashboard/dashboardHelpers.ts"
+      },
+      {
+        "kind": "file",
+        "path": "platform/services/statecraft/api/projectDashboard/dashboard.test.ts"
+      },
+      {
+        "kind": "file",
+        "path": "platform/services/statecraft/api/projectDashboard/riskAssessor.ts"
+      },
+      {
+        "kind": "file",
+        "path": "platform/services/statecraft/api/projectDashboard/riskAssessor.test.ts"
+      },
+      {
+        "kind": "file",
+        "path": "platform/services/statecraft/api/projectDashboard/types.ts"
+      },
+      {
+        "kind": "file",
+        "path": "platform/services/statecraft/web/app/lib/project-dashboard-api.server.ts"
+      },
+      {
+        "kind": "file",
+        "path": "platform/services/statecraft/web/app/components/ProjectDashboardLifecycle.tsx"
+      },
+      {
+        "kind": "file",
+        "path": "platform/services/statecraft/web/app/components/ProjectDashboardCertificate.tsx"
+      },
+      {
+        "kind": "file",
+        "path": "platform/services/statecraft/web/app/components/ProjectDashboardRuns.tsx"
+      },
+      {
+        "kind": "file",
+        "path": "platform/services/statecraft/web/app/components/ProjectDashboardRiskBanner.tsx"
+      },
+      {
+        "kind": "file",
+        "path": "platform/services/statecraft/web/app/components/ProjectDashboardAudit.tsx"
+      }
+    ],
+    "extends": [
+      {
+        "nature": "additive",
+        "spec": "163-statecraft-requirements-view",
+        "unit": {
+          "kind": "file",
+          "path": "platform/services/statecraft/api/audit/audit.ts"
+        }
+      },
+      {
+        "nature": "additive",
+        "spec": "034-featuregraph-registry-scanner-fix",
+        "unit": {
+          "kind": "file",
+          "path": "crates/featuregraph/tests/golden/features_graph.json"
+        }
+      }
+    ],
+    "extraFrontmatter": {
+      "amended": "2026-06-18",
+      "slug": "statecraft-project-dashboard-observability"
+    },
+    "id": "175-statecraft-project-dashboard-observability",
+    "implementation": "complete",
+    "kind": "platform",
+    "owner": "bart",
+    "references": [
+      {
+        "role": "decomposition-source",
+        "unit": {
+          "kind": "file",
+          "path": "docs/owasp/factory/AIDE-VELOCITY-OAP-INTENT.md"
+        }
+      },
+      {
+        "role": "aide-analogue",
+        "unit": {
+          "kind": "file",
+          "path": "docs/owasp/factory/AIDE-VELOCITY-blueprint-spec.md"
+        }
+      },
+      {
+        "role": "pair-spec",
+        "unit": {
+          "kind": "file",
+          "path": "specs/163-statecraft-requirements-view/spec.md"
+        }
+      },
+      {
+        "role": "pair-spec",
+        "unit": {
+          "kind": "file",
+          "path": "specs/164-statecraft-development-lifecycle-board/spec.md"
+        }
+      },
+      {
+        "role": "governed-read-discipline",
+        "unit": {
+          "kind": "file",
+          "path": "specs/103-init-protocol-governed-reads/spec.md"
+        }
+      }
+    ],
+    "refines": [
+      {
+        "aspect": "project-dashboard-landing-surface",
+        "unit": {
+          "kind": "file",
+          "path": "platform/services/statecraft/web/app/routes/app.project.$projectId._index.tsx"
+        }
+      }
+    ],
+    "risk": "medium",
+    "sectionHeadings": [
+      "175 — Statecraft project dashboard — observability refinement of `_index`",
+      "1. Problem",
+      "2. Decision",
+      "2.1 Six panels",
+      "2.2 Footer nav — compact tile strip",
+      "2.3 The bundled dashboard endpoint",
+      "2.4 Governed-read discipline (spec 103)",
+      "2.5 Implementation layout (landed)",
+      "2.5.1 Certificate panel — surface-area gap (deferred follow-up)",
+      "2.6 Read-shaped — no edit surface",
+      "3. Functional Requirements",
+      "4. Success Criteria",
+      "5. Scope",
+      "In scope",
+      "Out of scope (deferred)",
+      "6. Edge cases",
+      "7. Cross-references"
+    ],
+    "specPath": "specs/175-statecraft-project-dashboard-observability/spec.md",
+    "status": "approved",
+    "summary": "Refine `app.project.$projectId._index.tsx` from a six-tile navigation grid into the project's observability surface — the AIDE `ProjectDetailView` analogue named in AIDE-VELOCITY-OAP-INTENT.md §3.3 that was committed in intent but never scheduled in the §9 decomposition list.\nSix concrete panels, all backed by data already in statecraft (no new tables): (1) project identity rendered by the parent layout; (2) current lifecycle posture — counts by spec status + implementation state from the project's own spec spine, reusing spec 163's `specRegistry/registryReader`; (3) recent governance certificate per spec 102 / 168, with hash prefix + emission timestamp + verifier exit code; (4) recent factory runs — last N rows from `factory_runs` (spec 124) filtered to this project, with status / stage / age; (5) risk banner — derived from stale extraction runs (spec 115), failed factory runs (spec 124), and coupling-gate audit entries (spec 127); (6) audit summary — last N rows from `audit_log` scoped to the project.\nThis spec is **observability-only**: panels render current state and link to the owning tabs for action. No editing, no CRUD, no lifecycle transitions on this surface — those live in Requirements (spec 163), Development (spec 164), Settings, and the underlying authoring layer (git + markdown).\nOne small additive endpoint — `GET /api/projects/:projectId/ dashboard` — bundles the six panels into a single typed `ProjectDashboardSnapshot` so the route loads in one server-side round-trip rather than fanning out from the client. All reads honour spec 103 (governed-artifact-reads): spec-spine state flows through `registryReader`, never via ad-hoc `registry.json` parsing.\n",
+    "title": "Statecraft project dashboard — observability refinement of `_index`"
+  },
+  "shardHash": "0cf2bba350a0ed43b19626a01d378c30d2aaa24a60805be3226564134bafff37",
+  "specVersion": "1.1.0"
+}

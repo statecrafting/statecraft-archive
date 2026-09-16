@@ -1,0 +1,101 @@
+[
+  {
+    "id": 11300442147,
+    "node_id": "LA_kwDOTBbfNM8AAAACoY8QIw",
+    "url": "https://api.github.com/repos/statecrafting/factory-encore/labels/bug",
+    "name": "bug",
+    "color": "d73a4a",
+    "default": true,
+    "description": "Something isn't working",
+    "archived_at": null,
+    "archived_by": null
+  },
+  {
+    "id": 11300442156,
+    "node_id": "LA_kwDOTBbfNM8AAAACoY8QLA",
+    "url": "https://api.github.com/repos/statecrafting/factory-encore/labels/documentation",
+    "name": "documentation",
+    "color": "0075ca",
+    "default": true,
+    "description": "Improvements or additions to documentation",
+    "archived_at": null,
+    "archived_by": null
+  },
+  {
+    "id": 11300442161,
+    "node_id": "LA_kwDOTBbfNM8AAAACoY8QMQ",
+    "url": "https://api.github.com/repos/statecrafting/factory-encore/labels/duplicate",
+    "name": "duplicate",
+    "color": "cfd3d7",
+    "default": true,
+    "description": "This issue or pull request already exists",
+    "archived_at": null,
+    "archived_by": null
+  },
+  {
+    "id": 11300442166,
+    "node_id": "LA_kwDOTBbfNM8AAAACoY8QNg",
+    "url": "https://api.github.com/repos/statecrafting/factory-encore/labels/enhancement",
+    "name": "enhancement",
+    "color": "a2eeef",
+    "default": true,
+    "description": "New feature or request",
+    "archived_at": null,
+    "archived_by": null
+  },
+  {
+    "id": 11300442169,
+    "node_id": "LA_kwDOTBbfNM8AAAACoY8QOQ",
+    "url": "https://api.github.com/repos/statecrafting/factory-encore/labels/good%20first%20issue",
+    "name": "good first issue",
+    "color": "7057ff",
+    "default": true,
+    "description": "Good for newcomers",
+    "archived_at": null,
+    "archived_by": null
+  },
+  {
+    "id": 11300442178,
+    "node_id": "LA_kwDOTBbfNM8AAAACoY8QQg",
+    "url": "https://api.github.com/repos/statecrafting/factory-encore/labels/help%20wanted",
+    "name": "help wanted",
+    "color": "008672",
+    "default": true,
+    "description": "Extra attention is needed",
+    "archived_at": null,
+    "archived_by": null
+  },
+  {
+    "id": 11300442183,
+    "node_id": "LA_kwDOTBbfNM8AAAACoY8QRw",
+    "url": "https://api.github.com/repos/statecrafting/factory-encore/labels/invalid",
+    "name": "invalid",
+    "color": "e4e669",
+    "default": true,
+    "description": "This doesn't seem right",
+    "archived_at": null,
+    "archived_by": null
+  },
+  {
+    "id": 11300442189,
+    "node_id": "LA_kwDOTBbfNM8AAAACoY8QTQ",
+    "url": "https://api.github.com/repos/statecrafting/factory-encore/labels/question",
+    "name": "question",
+    "color": "d876e3",
+    "default": true,
+    "description": "Further information is requested",
+    "archived_at": null,
+    "archived_by": null
+  },
+  {
+    "id": 11300442195,
+    "node_id": "LA_kwDOTBbfNM8AAAACoY8QUw",
+    "url": "https://api.github.com/repos/statecrafting/factory-encore/labels/wontfix",
+    "name": "wontfix",
+    "color": "ffffff",
+    "default": true,
+    "description": "This will not be worked on",
+    "archived_at": null,
+    "archived_by": null
+  }
+]

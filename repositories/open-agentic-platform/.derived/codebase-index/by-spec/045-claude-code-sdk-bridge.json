@@ -1,0 +1,46 @@
+{
+  "mapping": {
+    "implementingPaths": [
+      {
+        "path": "product/apps/opc/src-tauri/src/commands/claude.rs",
+        "source": "spec-edge"
+      },
+      {
+        "path": "product/packages/claude-code-bridge",
+        "source": "multiple"
+      }
+    ],
+    "resolvedUnits": [
+      {
+        "locations": [
+          {
+            "file": "product/packages/claude-code-bridge"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "id": "@opc/claude-code-bridge",
+          "kind": "crate"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "product/apps/opc/src-tauri/src/commands/claude.rs"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "extends",
+        "unit": {
+          "kind": "file",
+          "path": "product/apps/opc/src-tauri/src/commands/claude.rs"
+        }
+      }
+    ],
+    "specId": "045-claude-code-sdk-bridge",
+    "specStatus": "approved"
+  },
+  "schemaVersion": "1.1.0",
+  "shardHash": "309aec01d43fb4a9ce1d5d1c97348b5ae2ce16e3e42f27d56b83a0358998c4c9"
+}

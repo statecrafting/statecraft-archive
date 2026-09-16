@@ -1,0 +1,6 @@
+{
+  "repository": "statecrafting/statecraft-cli",
+  "exists": false,
+  "refs": "",
+  "diagnostic": "remote: Repository not found.\nfatal: repository 'https://github.com/statecrafting/statecraft-cli.wiki.git/' not found\n"
+}

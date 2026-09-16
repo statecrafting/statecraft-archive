@@ -1,0 +1,30 @@
+{
+  "diagnostics": {
+    "errors": [],
+    "warnings": [
+      {
+        "code": "W-002",
+        "message": "spec '066-vscode-extension' directory unit 'product/packages/vscode-extension' is not a directory",
+        "path": "product/packages/vscode-extension"
+      }
+    ]
+  },
+  "mapping": {
+    "implementingPaths": [],
+    "resolvedUnits": [
+      {
+        "locations": [],
+        "ownership": false,
+        "sourceField": "references",
+        "unit": {
+          "kind": "directory",
+          "path": "product/packages/vscode-extension"
+        }
+      }
+    ],
+    "specId": "066-vscode-extension",
+    "specStatus": "approved"
+  },
+  "schemaVersion": "1.1.0",
+  "shardHash": "13c7667bb8013ba8042a442fa7fb0a0a67ac15cce4d5d5bc618d533f40c3bb01"
+}

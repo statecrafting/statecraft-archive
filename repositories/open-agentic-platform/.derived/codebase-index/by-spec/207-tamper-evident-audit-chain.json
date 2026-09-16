@@ -1,0 +1,443 @@
+{
+  "mapping": {
+    "dependsOn": [
+      "047-governance-control-plane",
+      "068-permission-runtime",
+      "102-governed-excellence",
+      "198-factory-governance-envelope"
+    ],
+    "implementingPaths": [
+      {
+        "path": "crates/axiomregent/src/main.rs",
+        "source": "spec-edge"
+      },
+      {
+        "path": "crates/axiomregent/src/router/mod.rs",
+        "source": "spec-edge"
+      },
+      {
+        "path": "crates/axiomregent/tests/session_audit_chain_test.rs",
+        "source": "spec-edge"
+      },
+      {
+        "path": "crates/factory-engine/src/bin/factory_run.rs",
+        "source": "spec-edge"
+      },
+      {
+        "path": "crates/factory-engine/src/lib.rs",
+        "source": "spec-edge"
+      },
+      {
+        "path": "crates/factory-engine/src/run_audit_chain.rs",
+        "source": "spec-edge"
+      },
+      {
+        "path": "crates/factory-engine/tests/run_audit_anchoring.rs",
+        "source": "spec-edge"
+      },
+      {
+        "path": "crates/featuregraph/tests/golden/features_graph.json",
+        "source": "spec-edge"
+      },
+      {
+        "path": "crates/policy-kernel/Cargo.toml",
+        "source": "spec-edge"
+      },
+      {
+        "path": "crates/policy-kernel/src/audit.rs",
+        "source": "spec-edge"
+      },
+      {
+        "path": "crates/policy-kernel/src/bin/verify_audit_chain.rs",
+        "source": "spec-edge"
+      },
+      {
+        "path": "crates/policy-kernel/src/proof_chain.rs",
+        "source": "spec-edge"
+      },
+      {
+        "path": "crates/policy-kernel/tests/verify_audit_chain_cli.rs",
+        "source": "spec-edge"
+      },
+      {
+        "path": "docs/owasp-agentic-top-10-2026.md",
+        "source": "spec-edge"
+      },
+      {
+        "path": "platform/services/statecraft/api/db/schema.ts",
+        "source": "spec-edge"
+      },
+      {
+        "path": "platform/services/statecraft/api/factory/auditActions.ts",
+        "source": "spec-edge"
+      },
+      {
+        "path": "platform/services/statecraft/api/factory/auditSegmentHandlers.test.ts",
+        "source": "spec-edge"
+      },
+      {
+        "path": "platform/services/statecraft/api/factory/auditSegmentHandlers.ts",
+        "source": "spec-edge"
+      },
+      {
+        "path": "platform/services/statecraft/api/factory/signing-pure.ts",
+        "source": "spec-edge"
+      },
+      {
+        "path": "platform/services/statecraft/api/factory/signing.ts",
+        "source": "spec-edge"
+      },
+      {
+        "path": "platform/services/statecraft/api/sync/service.ts",
+        "source": "spec-edge"
+      },
+      {
+        "path": "platform/services/statecraft/api/sync/types.ts",
+        "source": "spec-edge"
+      },
+      {
+        "path": "platform/services/statecraft/vite.config.ts",
+        "source": "spec-edge"
+      },
+      {
+        "path": "product/apps/opc/src-tauri/src/commands/sync_client.rs",
+        "source": "spec-edge"
+      },
+      {
+        "path": "product/apps/opc/src-tauri/src/lib.rs",
+        "source": "spec-edge"
+      }
+    ],
+    "resolvedUnits": [
+      {
+        "locations": [
+          {
+            "file": "crates/axiomregent/tests/session_audit_chain_test.rs"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "file",
+          "path": "crates/axiomregent/tests/session_audit_chain_test.rs"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "crates/factory-engine/src/run_audit_chain.rs"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "file",
+          "path": "crates/factory-engine/src/run_audit_chain.rs"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "crates/factory-engine/tests/run_audit_anchoring.rs"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "file",
+          "path": "crates/factory-engine/tests/run_audit_anchoring.rs"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "crates/policy-kernel/src/bin/verify_audit_chain.rs"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "file",
+          "path": "crates/policy-kernel/src/bin/verify_audit_chain.rs"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "crates/policy-kernel/tests/verify_audit_chain_cli.rs"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "file",
+          "path": "crates/policy-kernel/tests/verify_audit_chain_cli.rs"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "platform/services/statecraft/api/factory/auditSegmentHandlers.test.ts"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "file",
+          "path": "platform/services/statecraft/api/factory/auditSegmentHandlers.test.ts"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "platform/services/statecraft/api/factory/auditSegmentHandlers.ts"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "file",
+          "path": "platform/services/statecraft/api/factory/auditSegmentHandlers.ts"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "crates/featuregraph/tests/golden/features_graph.json"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "extends",
+        "unit": {
+          "kind": "file",
+          "path": "crates/featuregraph/tests/golden/features_graph.json"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "crates/policy-kernel/Cargo.toml"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "extends",
+        "unit": {
+          "kind": "file",
+          "path": "crates/policy-kernel/Cargo.toml"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "platform/services/statecraft/api/factory/signing-pure.ts"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "extends",
+        "unit": {
+          "kind": "file",
+          "path": "platform/services/statecraft/api/factory/signing-pure.ts"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "crates/axiomregent/src/main.rs"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "refines",
+        "unit": {
+          "kind": "file",
+          "path": "crates/axiomregent/src/main.rs"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "crates/axiomregent/src/router/mod.rs"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "refines",
+        "unit": {
+          "kind": "file",
+          "path": "crates/axiomregent/src/router/mod.rs"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "crates/factory-engine/src/bin/factory_run.rs"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "refines",
+        "unit": {
+          "kind": "file",
+          "path": "crates/factory-engine/src/bin/factory_run.rs"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "crates/factory-engine/src/lib.rs"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "refines",
+        "unit": {
+          "kind": "file",
+          "path": "crates/factory-engine/src/lib.rs"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "crates/policy-kernel/src/audit.rs"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "refines",
+        "unit": {
+          "kind": "file",
+          "path": "crates/policy-kernel/src/audit.rs"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "crates/policy-kernel/src/proof_chain.rs"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "refines",
+        "unit": {
+          "kind": "file",
+          "path": "crates/policy-kernel/src/proof_chain.rs"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "platform/services/statecraft/api/db/schema.ts"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "refines",
+        "unit": {
+          "kind": "file",
+          "path": "platform/services/statecraft/api/db/schema.ts"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "platform/services/statecraft/api/factory/auditActions.ts"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "refines",
+        "unit": {
+          "kind": "file",
+          "path": "platform/services/statecraft/api/factory/auditActions.ts"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "platform/services/statecraft/api/sync/service.ts"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "refines",
+        "unit": {
+          "kind": "file",
+          "path": "platform/services/statecraft/api/sync/service.ts"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "platform/services/statecraft/api/sync/types.ts"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "refines",
+        "unit": {
+          "kind": "file",
+          "path": "platform/services/statecraft/api/sync/types.ts"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "platform/services/statecraft/vite.config.ts"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "refines",
+        "unit": {
+          "kind": "file",
+          "path": "platform/services/statecraft/vite.config.ts"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "product/apps/opc/src-tauri/src/commands/sync_client.rs"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "refines",
+        "unit": {
+          "kind": "file",
+          "path": "product/apps/opc/src-tauri/src/commands/sync_client.rs"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "product/apps/opc/src-tauri/src/lib.rs"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "refines",
+        "unit": {
+          "kind": "file",
+          "path": "product/apps/opc/src-tauri/src/lib.rs"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "docs/owasp-agentic-top-10-2026.md"
+          }
+        ],
+        "ownership": false,
+        "sourceField": "references",
+        "unit": {
+          "kind": "file",
+          "path": "docs/owasp-agentic-top-10-2026.md"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "platform/services/statecraft/api/factory/signing.ts"
+          }
+        ],
+        "ownership": false,
+        "sourceField": "references",
+        "unit": {
+          "kind": "file",
+          "path": "platform/services/statecraft/api/factory/signing.ts"
+        }
+      }
+    ],
+    "specId": "207-tamper-evident-audit-chain",
+    "specStatus": "approved"
+  },
+  "schemaVersion": "1.1.0",
+  "shardHash": "69488d5bcd0fa07697aaf3cfe8079c108c71c266aedcb6b85b5d42914f6a0986"
+}

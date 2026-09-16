@@ -1,0 +1,81 @@
+# Encore.ts CD (EXAMPLE): build the API Docker image and push to a registry.
+#
+# This is the container half of the deploy strategy: the Encore-supported,
+# robust deploy unit is an OCI image (`encore build docker`). The active
+# pipeline that tests, scans, builds, pushes, and deploys per environment is
+# deploy-reusable.yml (called by deploy-dev/staging/prod.yml); this standalone
+# example shows the minimal build-and-push shape for adapting to your own CD.
+#
+# Rename to `encore-cd.yml` (strip `.example`) and wire the deploy step to your
+# target once chosen (Kubernetes, a managed container service, OpenShift,
+# Encore Cloud, a Docker host, etc.). On activation, SHA-pin every
+# third-party `uses:` (spec 011); this `.example` keeps version tags for
+# readability and is not linted.
+#
+# Pipeline:
+#   1. Build the public SPA into apps/api/web/build (bundled into the image).
+#   2. Install the Encore CLI, npm ci in apps/api.
+#   3. Build the base image + `encore build docker --base` and push to GHCR.
+#   4. Deploy the pushed image to your runtime (see the commented step below).
+
+name: Encore CD (example)
+
+on:
+  workflow_dispatch:
+  # push:
+  #   branches: [main]
+
+permissions:
+  contents: read
+  packages: write
+
+jobs:
+  build-and-push:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "24"
+          cache: npm
+
+      - name: Install dependencies (root workspaces)
+        run: npm ci
+
+      - name: Build shared packages + public SPA
+        run: |
+          npm run build:packages
+          npm run build:web        # writes apps/api/web/build
+
+      - name: Install Encore CLI
+        uses: ./.github/actions/encore-install
+
+      - name: Install API dependencies
+        working-directory: ./apps/api
+        run: npm ci
+
+      - name: Log in to GHCR
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Build + push Encore image
+        uses: ./.github/actions/encore-build
+        with:
+          image-name: ${{ github.repository }}
+          registry: ghcr.io
+
+      # ---------------------------------------------------------------------
+      # Deploy the pushed image. The deploy step is host-specific; point your
+      # runtime at ghcr.io/${{ github.repository }}:${{ github.sha }}. Example
+      # shapes (uncomment and adapt one):
+      #   - kubectl set image deployment/api api=ghcr.io/${{ github.repository }}:${{ github.sha }}
+      #   - a Container Apps / App Service for Containers "update image" call
+      #   - an OpenShift `oc set image`, or a Docker host `docker pull` + restart
+      # On activation, SHA-pin any third-party action you add (spec 016).
+      # ---------------------------------------------------------------------
+      # - name: Deploy
+      #   run: echo "wire your runtime deploy here"

@@ -1,0 +1,231 @@
+{
+  "record": {
+    "amends": [
+      "136-tenant-hello-demo-service",
+      "137-tenant-environment-access-gates",
+      "213-tenant-repo-image-build",
+      "151-declarative-cluster-reconciliation"
+    ],
+    "authors": [
+      "open-agentic-platform"
+    ],
+    "codeAliases": [
+      "TENANT_APP_CHART_SUPERSESSION"
+    ],
+    "created": "2026-06-12",
+    "dependsOn": [
+      "136-tenant-hello-demo-service",
+      "137-tenant-environment-access-gates",
+      "138-statecraft-create-realised-scaffold",
+      "119-project-as-unit-of-governance",
+      "199-factory-thin-consumer-sync"
+    ],
+    "domain": "platform",
+    "establishes": [
+      {
+        "kind": "file",
+        "path": ".github/workflows/cd-tenant-app.yml"
+      },
+      {
+        "kind": "directory",
+        "path": "platform/charts/acme-vue-encore"
+      },
+      {
+        "kind": "file",
+        "path": "platform/services/statecraft/api/deploy/hostname.ts"
+      },
+      {
+        "kind": "file",
+        "path": "platform/services/statecraft/api/deploy/hostname.test.ts"
+      },
+      {
+        "kind": "file",
+        "path": "platform/services/statecraft/api/deploy/deployResolve.ts"
+      },
+      {
+        "kind": "file",
+        "path": "platform/services/statecraft/api/deploy/deployResolve.test.ts"
+      },
+      {
+        "kind": "file",
+        "path": ".github/workflows/ci-tenant-app.yml"
+      },
+      {
+        "kind": "file",
+        "path": "platform/infra/hetzner/manifests/ghcr-pull-secret.yaml"
+      }
+    ],
+    "extends": [
+      {
+        "nature": "additive",
+        "spec": "136-tenant-hello-demo-service",
+        "unit": {
+          "kind": "file",
+          "path": "platform/services/statecraft/api/deploy/chartSelector.ts"
+        }
+      },
+      {
+        "nature": "additive",
+        "spec": "136-tenant-hello-demo-service",
+        "unit": {
+          "kind": "file",
+          "path": "platform/services/statecraft/api/deploy/chartSelector.test.ts"
+        }
+      },
+      {
+        "nature": "additive",
+        "spec": "136-tenant-hello-demo-service",
+        "unit": {
+          "kind": "file",
+          "path": "platform/services/deployd-api-rs/src/helm.rs"
+        }
+      },
+      {
+        "nature": "additive",
+        "spec": "136-tenant-hello-demo-service",
+        "unit": {
+          "kind": "file",
+          "path": "platform/services/deployd-api-rs/src/routes.rs"
+        }
+      },
+      {
+        "nature": "additive",
+        "spec": "136-tenant-hello-demo-service",
+        "unit": {
+          "kind": "file",
+          "path": "platform/services/deployd-api-rs/src/store.rs"
+        }
+      },
+      {
+        "nature": "additive",
+        "spec": "077-statecraft-factory-api",
+        "unit": {
+          "kind": "file",
+          "path": "platform/services/statecraft/api/deploy/deploy.ts"
+        }
+      },
+      {
+        "nature": "additive",
+        "spec": "177-ci-orchestrator-pr-gate",
+        "unit": {
+          "kind": "file",
+          "path": ".github/workflows/ci.yml"
+        }
+      },
+      {
+        "nature": "additive",
+        "spec": "034-featuregraph-registry-scanner-fix",
+        "unit": {
+          "kind": "file",
+          "path": "crates/featuregraph/tests/golden/features_graph.json"
+        }
+      },
+      {
+        "nature": "additive",
+        "spec": "138-statecraft-create-realised-scaffold",
+        "unit": {
+          "kind": "file",
+          "path": "platform/services/statecraft/CLAUDE.md"
+        }
+      }
+    ],
+    "extraFrontmatter": {
+      "language": "en"
+    },
+    "featureBranch": "feat/214-tenant-app-chart-supersession",
+    "id": "214-tenant-app-chart-supersession",
+    "implementation": "complete",
+    "kind": "platform",
+    "references": [
+      {
+        "role": "superseded-removed",
+        "unit": {
+          "kind": "directory",
+          "path": "platform/services/tenant-hello"
+        }
+      },
+      {
+        "role": "superseded-removed",
+        "unit": {
+          "kind": "directory",
+          "path": "platform/charts/tenant-hello"
+        }
+      },
+      {
+        "role": "superseded-removed",
+        "unit": {
+          "kind": "file",
+          "path": ".github/workflows/ci-tenant-hello.yml"
+        }
+      },
+      {
+        "role": "superseded-removed",
+        "unit": {
+          "kind": "file",
+          "path": ".github/workflows/cd-tenant-hello.yml"
+        }
+      },
+      {
+        "role": "scaffold-fixture-source",
+        "unit": {
+          "kind": "file",
+          "path": "platform/services/statecraft/api/projects/scaffold/templateCache.ts"
+        }
+      },
+      {
+        "role": "variant-model-authority",
+        "unit": {
+          "id": "factory-contracts",
+          "kind": "crate"
+        }
+      },
+      {
+        "role": "wildcard-tls-surface",
+        "unit": {
+          "kind": "file",
+          "path": "platform/infra/hetzner/manifests/tenants-wildcard-certificate.yaml"
+        }
+      },
+      {
+        "role": "clarification-resolved",
+        "unit": {
+          "kind": "file",
+          "path": "specs/137-tenant-environment-access-gates/spec.md"
+        }
+      },
+      {
+        "role": "lockstep-philosophy-precedent",
+        "unit": {
+          "kind": "file",
+          "path": "specs/212-factory-schema-lockstep-ci/spec.md"
+        }
+      }
+    ],
+    "sectionHeadings": [
+      "Feature Specification: Tenant App Chart Supersession",
+      "Purpose",
+      "Code reality (2026-06-12 survey)",
+      "User Scenarios & Testing *(mandatory)*",
+      "User Story 1 - Deploy the scaffolded app and reach it (Priority: P1)",
+      "User Story 2 - Runtime config and a database reach the pod (Priority: P1)",
+      "User Story 3 - The platform owns the hostname (Priority: P2)",
+      "User Story 4 - The synthetic tenant retires without regressing the mechanism (Priority: P1)",
+      "Edge Cases",
+      "Requirements *(mandatory)*",
+      "Functional Requirements",
+      "Key Entities",
+      "Success Criteria *(mandatory)*",
+      "Measurable Outcomes",
+      "Out of scope",
+      "Dependencies and sequencing",
+      "Clarifications",
+      "Security hardening amendment (2026-07-02)"
+    ],
+    "specPath": "specs/214-tenant-app-chart-supersession/spec.md",
+    "status": "approved",
+    "summary": "Supersede tenant-hello as the platform's reference tenant: the canonical deployable shape becomes the factory's own template scaffold (acme-vue-encore), so the surface CI proves and the surface tenants run are the same artifact. Today the chart registry has exactly one synthetic shape, the dispatch wire cannot carry application config, a pull secret, or the stored namespace, and an Encore.ts app deployed as-is would have no runtime infra config and no database. This spec adds the acme-vue-encore chart (single image serving the Encore API and bundled SPA, ConfigMap-mounted runtime config, opt-in preview-grade Postgres), extends the deployd dispatch contract (config_refs semantics, image_pull_secret_name, namespace forwarding), locks the tenant hostname convention as a single DNS label under tenants.{base}, ports the spec 137 access-gate seam to the new chart with identical semantics, and retires the tenant-hello service, chart, and workflows once render parity on the gate seam is proven. The 2026-06-12 dual_stack manifest skew is the motivating incident: two surfaces that only meet at runtime drift; spec 212 closed that for the manifest contract, this spec closes it for the deploy path.\n",
+    "title": "Tenant App Chart Supersession (template scaffold becomes the reference tenant)"
+  },
+  "shardHash": "5e536abb4c6872b70606ee974c432ee54d7dfb13408db59840b9813c133880cb",
+  "specVersion": "1.1.0"
+}

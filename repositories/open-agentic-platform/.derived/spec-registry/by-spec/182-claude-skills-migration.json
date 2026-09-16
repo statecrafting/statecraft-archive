@@ -1,0 +1,151 @@
+{
+  "record": {
+    "amendmentRecord": "amended 2026-06-18 by spec 217 (engine-swap collapse): the in-tree codebase-indexer that hashed the skills surface this spec extended was deleted; that hashing is now in spec-spine-core. The codebase-indexer edge is stripped (path deleted); this spec's authority is the .claude/skills/** surface it establishes.\n",
+    "amends": [
+      "071-skill-command-factory",
+      "101-codebase-index-mvp",
+      "061-conductor-track-lifecycle",
+      "134-fast-local-ci-mode",
+      "135-fast-ci-as-default",
+      "104-makefile-ci-parity-contract",
+      "103-init-protocol-governed-reads"
+    ],
+    "authors": [
+      "bart"
+    ],
+    "codeAliases": [
+      "CLAUDE_SKILLS_DIR"
+    ],
+    "created": "2026-05-25",
+    "domain": "tooling",
+    "establishes": [
+      {
+        "kind": "directory",
+        "path": ".claude/skills/init"
+      },
+      {
+        "kind": "file",
+        "path": ".claude/skills/init/SKILL.md"
+      },
+      {
+        "kind": "directory",
+        "path": ".claude/skills/setup"
+      },
+      {
+        "kind": "file",
+        "path": ".claude/skills/setup/SKILL.md"
+      },
+      {
+        "kind": "directory",
+        "path": ".claude/skills/commit"
+      },
+      {
+        "kind": "file",
+        "path": ".claude/skills/commit/SKILL.md"
+      },
+      {
+        "kind": "directory",
+        "path": ".claude/skills/code-review"
+      },
+      {
+        "kind": "file",
+        "path": ".claude/skills/code-review/SKILL.md"
+      },
+      {
+        "kind": "directory",
+        "path": ".claude/skills/implement-plan"
+      },
+      {
+        "kind": "file",
+        "path": ".claude/skills/implement-plan/SKILL.md"
+      },
+      {
+        "kind": "directory",
+        "path": ".claude/skills/research"
+      },
+      {
+        "kind": "file",
+        "path": ".claude/skills/research/SKILL.md"
+      },
+      {
+        "kind": "directory",
+        "path": ".claude/skills/validate-and-fix"
+      },
+      {
+        "kind": "file",
+        "path": ".claude/skills/validate-and-fix/SKILL.md"
+      },
+      {
+        "kind": "directory",
+        "path": ".claude/skills/cleanup"
+      },
+      {
+        "kind": "file",
+        "path": ".claude/skills/cleanup/SKILL.md"
+      },
+      {
+        "kind": "directory",
+        "path": ".claude/skills/refactor-claude-md"
+      },
+      {
+        "kind": "file",
+        "path": ".claude/skills/refactor-claude-md/SKILL.md"
+      },
+      {
+        "kind": "file",
+        "path": "specs/182-claude-skills-migration/baseline-init.txt"
+      }
+    ],
+    "extraFrontmatter": {
+      "amended": "2026-06-18",
+      "approved": "2026-05-26",
+      "language": "en",
+      "slug": "claude-skills-migration"
+    },
+    "id": "182-claude-skills-migration",
+    "implementation": "complete",
+    "kind": "migration",
+    "owner": "bart",
+    "references": [
+      {
+        "role": "precedent",
+        "unit": {
+          "kind": "file",
+          "path": "specs/178-opc-directory-rename/spec.md"
+        }
+      },
+      {
+        "role": "precedent",
+        "unit": {
+          "kind": "file",
+          "path": "specs/105-scripts-to-binaries-migration/spec.md"
+        }
+      }
+    ],
+    "risk": "low",
+    "sectionHeadings": [
+      "Feature Specification: Migrate `.claude/commands/` to `.claude/skills/`",
+      "Purpose",
+      "Why AGENTS.md is preserved (not relocated, not deleted)",
+      "Scope",
+      "Mechanical change list (migration PR)",
+      "Acceptance criteria — ordered prerequisites",
+      "Risk and mitigation",
+      "Migration plan",
+      "PR 1 — migration (this spec)",
+      "Transition window",
+      "PR 2 — deprecation (follow-up)",
+      "Post-migration evolution",
+      "2026-06-10 — `/review-branch` retired, absorbed into `/code-review` v2",
+      "2026-06-16: setup + validate-and-fix skills updated for spec 188 Phase 4b",
+      "References",
+      "Drift cleanup amendment (2026-07-02)"
+    ],
+    "specPath": "specs/182-claude-skills-migration/spec.md",
+    "status": "approved",
+    "summary": "Mechanical migration of the ten single-file commands under `.claude/commands/` to the modern Claude Code skills surface at `.claude/skills/<name>/SKILL.md`. Per the current Claude Code docs, \"commands and skills are now the same mechanism\" and skills are the recommended successor because they support bundling supporting files alongside the SKILL.md entrypoint. Today the ten OAP commands (`init`, `setup`, `commit`, `code-review`, `review-branch`, `implement-plan`, `research`, `validate-and-fix`, `cleanup`, `refactor-claude-md`) are inline single-file prompts; migrating to the folder-per-skill form is the precondition for splitting their inline checklists, fixture references, and protocol bodies out as sibling files where it makes the prompt clearer. Behavior is unchanged: each `/name` invocation continues to resolve to the same prompt body. The migration touches two other specs: 101 (indexer's hashed-input set adds `.claude/skills/`) and 071 (acknowledges skills as the primary surface). AGENTS.md is **preserved unchanged** as the canonical cross-agent session-init protocol authority — it is now an open standard stewarded by the Linux Foundation's Agentic AI Foundation (AAIF) and is read by OpenAI Codex, Cursor, GitHub Copilot, and other agents in addition to Claude Code. Spec 103's `establishes:` over AGENTS.md stays unmodified. The new `.claude/skills/init/SKILL.md` is a thin Claude-Code-specific dispatcher that reads AGENTS.md and executes the protocol described there; the protocol body's canonical location does not change.\n",
+    "title": "Migrate .claude/commands/ to .claude/skills/ (modern Claude Code surface)"
+  },
+  "shardHash": "1ee363aa3754a20f7fa228a13c1dd349996734f5fa2cca6d0c3059eb4c1a1414",
+  "specVersion": "1.1.0"
+}

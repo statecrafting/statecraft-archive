@@ -1,0 +1,111 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "acme-vue-encore.fullname" . }}
+  labels:
+    {{- include "acme-vue-encore.labels" . | nindent 4 }}
+spec:
+  replicas: {{ .Values.replicaCount }}
+  strategy:
+    type: RollingUpdate
+  selector:
+    matchLabels:
+      {{- include "acme-vue-encore.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      labels:
+        {{- include "acme-vue-encore.selectorLabels" . | nindent 8 }}
+        {{- with .Values.podLabels }}
+        {{- toYaml . | nindent 8 }}
+        {{- end }}
+      {{- with .Values.podAnnotations }}
+      annotations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+    spec:
+      serviceAccountName: {{ include "acme-vue-encore.serviceAccountName" . }}
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      securityContext:
+        {{- toYaml .Values.podSecurityContext | nindent 8 }}
+      containers:
+        - name: acme-vue-encore
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          securityContext:
+            {{- toYaml .Values.containerSecurityContext | nindent 12 }}
+          ports:
+            - name: http
+              containerPort: {{ .Values.service.port }}
+              protocol: TCP
+          # Spec 214 FR-003/FR-004: runtime config reaches the app as env
+          # vars (Encore resolves the $env markers in its baked
+          # infra.config.json at start; no mounted Encore config). The DB
+          # connection env targets the in-namespace preview Postgres (FR-006)
+          # whose host matches the baked config; secrets ride in via
+          # config_refs (extraEnv) or the external secret below.
+          env:
+            - name: PORT
+              value: {{ .Values.service.port | quote }}
+            {{- if .Values.previewDatabase.enabled }}
+            # Spec 227: the tenant app's baked infra.config.json resolves its
+            # SQLDatabase("app") from ${SQL_HOST} (host:port), ${SQL_USERNAME},
+            # and $env:SQL_PASSWORD. Inject those exact names. The preview
+            # Postgres Secret carries POSTGRES_* keys (the postgres image's own
+            # env contract); map POSTGRES_PASSWORD onto the SQL_PASSWORD name
+            # Encore actually reads. (Previously injected POSTGRES_*, which the
+            # app never reads, so the preview DB was unreachable.)
+            - name: SQL_HOST
+              value: "{{ include "acme-vue-encore.postgresName" . }}:5432"
+            - name: SQL_USERNAME
+              value: {{ .Values.previewDatabase.user | quote }}
+            - name: SQL_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "acme-vue-encore.postgresName" . }}
+                  key: POSTGRES_PASSWORD
+            {{- end }}
+            {{- if .Values.previewRedis.enabled }}
+            # Spec 227 FR-004/FR-005: opt-in preview Redis. The app's baked
+            # infra.config `redis` block (factory-encore 008 promotes data-redis
+            # to a native Encore `redis` resource) resolves ${REDIS_HOST}
+            # (host:port), ${REDIS_USER}, and $env:REDIS_PASSWORD; inject those
+            # exact names against the in-namespace preview Redis
+            # (templates/redis.yaml). Mirrors the SQL_HOST/SQL_USERNAME/
+            # SQL_PASSWORD triple above.
+            - name: REDIS_HOST
+              value: "{{ include "acme-vue-encore.redisName" . }}:6379"
+            - name: REDIS_USER
+              value: {{ .Values.previewRedis.user | quote }}
+            - name: REDIS_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "acme-vue-encore.redisName" . }}
+                  key: REDIS_PASSWORD
+            {{- end }}
+            {{- with .Values.extraEnv }}
+            {{- toYaml . | nindent 12 }}
+            {{- end }}
+          {{- if and (not .Values.previewDatabase.enabled) .Values.database.externalSecretName }}
+          envFrom:
+            - secretRef:
+                name: {{ .Values.database.externalSecretName }}
+          {{- end }}
+          # Clarification 1: split probes on the scaffold's /health/* surface.
+          readinessProbe:
+            {{- toYaml .Values.readinessProbe | nindent 12 }}
+          livenessProbe:
+            {{- toYaml .Values.livenessProbe | nindent 12 }}
+          {{- with .Values.resources }}
+          resources:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          # readOnlyRootFilesystem needs a writable /tmp for node's tmpdir.
+          volumeMounts:
+            - name: tmp
+              mountPath: /tmp
+      volumes:
+        - name: tmp
+          emptyDir: {}

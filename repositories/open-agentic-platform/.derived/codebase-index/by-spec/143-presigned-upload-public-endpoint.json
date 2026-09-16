@@ -1,0 +1,649 @@
+{
+  "mapping": {
+    "amends": [
+      "087-unified-workspace-architecture",
+      "115-knowledge-extraction-pipeline"
+    ],
+    "dependsOn": [
+      "087-unified-workspace-architecture",
+      "115-knowledge-extraction-pipeline"
+    ],
+    "implementingPaths": [
+      {
+        "path": "platform/charts/deployd-api/templates/deployment.yaml",
+        "source": "spec-edge"
+      },
+      {
+        "path": "platform/charts/deployd-api/values-hetzner.yaml",
+        "source": "spec-edge"
+      },
+      {
+        "path": "platform/charts/statecraft/templates/cronjob-orphan-sweeper.yaml",
+        "source": "spec-edge"
+      },
+      {
+        "path": "platform/charts/statecraft/templates/deployment.yaml",
+        "source": "spec-edge"
+      },
+      {
+        "path": "platform/charts/statecraft/templates/external-secret-knowledge-sweeper.yaml",
+        "source": "spec-edge"
+      },
+      {
+        "path": "platform/charts/statecraft/values-hetzner.yaml",
+        "source": "spec-edge"
+      },
+      {
+        "path": "platform/charts/statecraft/values.yaml",
+        "source": "spec-edge"
+      },
+      {
+        "path": "platform/infra/hetzner/.env.example",
+        "source": "spec-edge"
+      },
+      {
+        "path": "platform/infra/hetzner/post-create.sh",
+        "source": "spec-edge"
+      },
+      {
+        "path": "platform/infra/hetzner/setup.sh",
+        "source": "spec-edge"
+      },
+      {
+        "path": "platform/infra/hetzner/validate/spec-143.sh",
+        "source": "spec-edge"
+      },
+      {
+        "path": "platform/services/statecraft/api/auth/refreshCookie-pure.test.ts",
+        "source": "spec-edge"
+      },
+      {
+        "path": "platform/services/statecraft/api/auth/refreshCookie-pure.ts",
+        "source": "spec-edge"
+      },
+      {
+        "path": "platform/services/statecraft/api/auth/refreshCookie.test.ts",
+        "source": "spec-edge"
+      },
+      {
+        "path": "platform/services/statecraft/api/auth/refreshCookie.ts",
+        "source": "spec-edge"
+      },
+      {
+        "path": "platform/services/statecraft/api/db/schema.ts",
+        "source": "spec-edge"
+      },
+      {
+        "path": "platform/services/statecraft/api/knowledge/auditActions.ts",
+        "source": "spec-edge"
+      },
+      {
+        "path": "platform/services/statecraft/api/knowledge/extractionCore.ts",
+        "source": "spec-edge"
+      },
+      {
+        "path": "platform/services/statecraft/api/knowledge/extractionWorker.ts",
+        "source": "spec-edge"
+      },
+      {
+        "path": "platform/services/statecraft/api/knowledge/knowledge.ts",
+        "source": "spec-edge"
+      },
+      {
+        "path": "platform/services/statecraft/api/knowledge/orphanSweeper.integration.test.ts",
+        "source": "spec-edge"
+      },
+      {
+        "path": "platform/services/statecraft/api/knowledge/orphanSweeper.ts",
+        "source": "spec-edge"
+      },
+      {
+        "path": "platform/services/statecraft/api/knowledge/requestUpload.integration.test.ts",
+        "source": "spec-edge"
+      },
+      {
+        "path": "platform/services/statecraft/api/knowledge/scheduler.ts",
+        "source": "spec-edge"
+      },
+      {
+        "path": "platform/services/statecraft/api/knowledge/storage.dualClient.test.ts",
+        "source": "spec-edge"
+      },
+      {
+        "path": "platform/services/statecraft/api/knowledge/storage.ts",
+        "source": "spec-edge"
+      },
+      {
+        "path": "platform/services/statecraft/api/knowledge/uploadLimits.test.ts",
+        "source": "spec-edge"
+      },
+      {
+        "path": "platform/services/statecraft/api/knowledge/uploadLimits.ts",
+        "source": "spec-edge"
+      },
+      {
+        "path": "platform/services/statecraft/infra.config.json",
+        "source": "spec-edge"
+      },
+      {
+        "path": "platform/services/statecraft/test/__mocks__/encore-config.ts",
+        "source": "spec-edge"
+      },
+      {
+        "path": "platform/services/statecraft/test/spec143-fu015.config.test.ts",
+        "source": "spec-edge"
+      },
+      {
+        "path": "platform/services/statecraft/vite.config.ts",
+        "source": "spec-edge"
+      },
+      {
+        "path": "platform/services/statecraft/web/app/components/ExtractionView.tsx",
+        "source": "spec-edge"
+      },
+      {
+        "path": "platform/services/statecraft/web/app/lib/fetchWithRefresh.test.ts",
+        "source": "spec-edge"
+      },
+      {
+        "path": "platform/services/statecraft/web/app/lib/fetchWithRefresh.ts",
+        "source": "spec-edge"
+      },
+      {
+        "path": "platform/services/statecraft/web/app/routes/app.project.$projectId.knowledge.$id.tsx",
+        "source": "spec-edge"
+      },
+      {
+        "path": "platform/services/statecraft/web/app/routes/app.project.$projectId.knowledge.tsx",
+        "source": "spec-edge"
+      }
+    ],
+    "resolvedUnits": [
+      {
+        "locations": [
+          {
+            "file": "platform/charts/statecraft/templates/cronjob-orphan-sweeper.yaml"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "file",
+          "path": "platform/charts/statecraft/templates/cronjob-orphan-sweeper.yaml"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "platform/charts/statecraft/templates/external-secret-knowledge-sweeper.yaml"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "file",
+          "path": "platform/charts/statecraft/templates/external-secret-knowledge-sweeper.yaml"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "platform/infra/hetzner/validate/spec-143.sh"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "file",
+          "path": "platform/infra/hetzner/validate/spec-143.sh"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "platform/services/statecraft/api/auth/refreshCookie-pure.test.ts"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "file",
+          "path": "platform/services/statecraft/api/auth/refreshCookie-pure.test.ts"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "platform/services/statecraft/api/auth/refreshCookie-pure.ts"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "file",
+          "path": "platform/services/statecraft/api/auth/refreshCookie-pure.ts"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "platform/services/statecraft/api/auth/refreshCookie.test.ts"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "file",
+          "path": "platform/services/statecraft/api/auth/refreshCookie.test.ts"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "platform/services/statecraft/api/auth/refreshCookie.ts"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "file",
+          "path": "platform/services/statecraft/api/auth/refreshCookie.ts"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "platform/services/statecraft/api/knowledge/requestUpload.integration.test.ts"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "file",
+          "path": "platform/services/statecraft/api/knowledge/requestUpload.integration.test.ts"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "platform/services/statecraft/api/knowledge/storage.ts"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "file",
+          "path": "platform/services/statecraft/api/knowledge/storage.ts"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "platform/services/statecraft/api/knowledge/uploadLimits.test.ts"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "file",
+          "path": "platform/services/statecraft/api/knowledge/uploadLimits.test.ts"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "platform/services/statecraft/api/knowledge/uploadLimits.ts"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "file",
+          "path": "platform/services/statecraft/api/knowledge/uploadLimits.ts"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "platform/services/statecraft/web/app/components/ExtractionView.tsx"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "file",
+          "path": "platform/services/statecraft/web/app/components/ExtractionView.tsx"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "platform/services/statecraft/web/app/lib/fetchWithRefresh.test.ts"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "file",
+          "path": "platform/services/statecraft/web/app/lib/fetchWithRefresh.test.ts"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "platform/services/statecraft/web/app/lib/fetchWithRefresh.ts"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "file",
+          "path": "platform/services/statecraft/web/app/lib/fetchWithRefresh.ts"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "platform/charts/statecraft/templates/deployment.yaml"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "extends",
+        "unit": {
+          "kind": "file",
+          "path": "platform/charts/statecraft/templates/deployment.yaml"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "platform/charts/statecraft/values-hetzner.yaml"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "extends",
+        "unit": {
+          "kind": "file",
+          "path": "platform/charts/statecraft/values-hetzner.yaml"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "platform/charts/statecraft/values.yaml"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "extends",
+        "unit": {
+          "kind": "file",
+          "path": "platform/charts/statecraft/values.yaml"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "platform/services/statecraft/api/knowledge/auditActions.ts"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "extends",
+        "unit": {
+          "kind": "file",
+          "path": "platform/services/statecraft/api/knowledge/auditActions.ts"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "platform/services/statecraft/api/knowledge/extractionCore.ts"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "extends",
+        "unit": {
+          "kind": "file",
+          "path": "platform/services/statecraft/api/knowledge/extractionCore.ts"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "platform/services/statecraft/api/knowledge/extractionWorker.ts"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "extends",
+        "unit": {
+          "kind": "file",
+          "path": "platform/services/statecraft/api/knowledge/extractionWorker.ts"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "platform/services/statecraft/api/knowledge/knowledge.ts"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "extends",
+        "unit": {
+          "kind": "file",
+          "path": "platform/services/statecraft/api/knowledge/knowledge.ts"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "platform/services/statecraft/api/knowledge/orphanSweeper.integration.test.ts"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "extends",
+        "unit": {
+          "kind": "file",
+          "path": "platform/services/statecraft/api/knowledge/orphanSweeper.integration.test.ts"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "platform/services/statecraft/api/knowledge/orphanSweeper.ts"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "extends",
+        "unit": {
+          "kind": "file",
+          "path": "platform/services/statecraft/api/knowledge/orphanSweeper.ts"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "platform/services/statecraft/api/knowledge/scheduler.ts"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "extends",
+        "unit": {
+          "kind": "file",
+          "path": "platform/services/statecraft/api/knowledge/scheduler.ts"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "platform/services/statecraft/web/app/routes/app.project.$projectId.knowledge.tsx"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "extends",
+        "unit": {
+          "kind": "file",
+          "path": "platform/services/statecraft/web/app/routes/app.project.$projectId.knowledge.tsx"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "platform/charts/deployd-api/templates/deployment.yaml"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "refines",
+        "unit": {
+          "kind": "file",
+          "path": "platform/charts/deployd-api/templates/deployment.yaml"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "platform/charts/deployd-api/values-hetzner.yaml"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "refines",
+        "unit": {
+          "kind": "file",
+          "path": "platform/charts/deployd-api/values-hetzner.yaml"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "platform/infra/hetzner/.env.example"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "refines",
+        "unit": {
+          "kind": "file",
+          "path": "platform/infra/hetzner/.env.example"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "platform/infra/hetzner/post-create.sh"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "refines",
+        "unit": {
+          "kind": "file",
+          "path": "platform/infra/hetzner/post-create.sh"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "platform/infra/hetzner/setup.sh"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "refines",
+        "unit": {
+          "kind": "file",
+          "path": "platform/infra/hetzner/setup.sh"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "platform/services/statecraft/api/db/schema.ts"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "refines",
+        "unit": {
+          "kind": "file",
+          "path": "platform/services/statecraft/api/db/schema.ts"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "platform/services/statecraft/api/knowledge/storage.dualClient.test.ts"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "refines",
+        "unit": {
+          "kind": "file",
+          "path": "platform/services/statecraft/api/knowledge/storage.dualClient.test.ts"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "platform/services/statecraft/infra.config.json"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "refines",
+        "unit": {
+          "kind": "file",
+          "path": "platform/services/statecraft/infra.config.json"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "platform/services/statecraft/test/__mocks__/encore-config.ts"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "refines",
+        "unit": {
+          "kind": "file",
+          "path": "platform/services/statecraft/test/__mocks__/encore-config.ts"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "platform/services/statecraft/test/spec143-fu015.config.test.ts"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "refines",
+        "unit": {
+          "kind": "file",
+          "path": "platform/services/statecraft/test/spec143-fu015.config.test.ts"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "platform/services/statecraft/vite.config.ts"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "refines",
+        "unit": {
+          "kind": "file",
+          "path": "platform/services/statecraft/vite.config.ts"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "platform/services/statecraft/web/app/routes/app.project.$projectId.knowledge.$id.tsx"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "refines",
+        "unit": {
+          "kind": "file",
+          "path": "platform/services/statecraft/web/app/routes/app.project.$projectId.knowledge.$id.tsx"
+        }
+      }
+    ],
+    "specId": "143-presigned-upload-public-endpoint",
+    "specStatus": "draft"
+  },
+  "schemaVersion": "1.1.0",
+  "shardHash": "d824e47de861c61af506b5ec70888af7267becba88f40461d5d47811addc0a65"
+}

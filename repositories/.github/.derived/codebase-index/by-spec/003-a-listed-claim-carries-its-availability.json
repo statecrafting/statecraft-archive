@@ -1,0 +1,35 @@
+{
+  "mapping": {
+    "amends": [
+      "001-the-profile-is-the-org-front-door"
+    ],
+    "dependsOn": [
+      "001-the-profile-is-the-org-front-door"
+    ],
+    "implementingPaths": [
+      {
+        "path": "profile/README.md",
+        "source": "spec-edge"
+      }
+    ],
+    "resolvedUnits": [
+      {
+        "locations": [
+          {
+            "file": "profile/README.md"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "extends",
+        "unit": {
+          "kind": "file",
+          "path": "profile/README.md"
+        }
+      }
+    ],
+    "specId": "003-a-listed-claim-carries-its-availability",
+    "specStatus": "approved"
+  },
+  "schemaVersion": "1.1.0",
+  "shardHash": "50f1ec452824c0dc8c2f251406d737d8bdf1d4835716ccb6081ea3a222eab183"
+}

@@ -1,0 +1,40 @@
+{
+  "record": {
+    "authors": [
+      "open-agentic-platform"
+    ],
+    "created": "2026-03-22",
+    "domain": "tooling",
+    "extends": [
+      {
+        "nature": "additive",
+        "spec": "002-registry-consumer-mvp"
+      }
+    ],
+    "extraFrontmatter": {
+      "language": "en"
+    },
+    "featureBranch": "018-registry-consumer-list-show-json-contract-mvp",
+    "id": "018-registry-consumer-list-show-json-contract-mvp",
+    "implementation": "complete",
+    "kind": "platform-delivery",
+    "refines": [
+      {
+        "aspect": "contract-tests"
+      }
+    ],
+    "sectionHeadings": [
+      "Feature Specification: List/show JSON contract tests",
+      "Purpose",
+      "Requirements",
+      "Out of scope"
+    ],
+    "specPath": "specs/018-registry-consumer-list-show-json-contract-mvp/spec.md",
+    "status": "superseded",
+    "summary": "Lock stable automation contracts for list and show JSON modes (pretty and compact) with fixture-based tests, mirroring Feature 010 for status-report.\n",
+    "supersededBy": "217-spec-spine-engine-swap-collapse",
+    "title": "Registry consumer list/show JSON contract tests"
+  },
+  "shardHash": "5f835d01dc1bbd6b66474e12b81089abbc485ea6360497005a48d3f9d2016a04",
+  "specVersion": "1.1.0"
+}

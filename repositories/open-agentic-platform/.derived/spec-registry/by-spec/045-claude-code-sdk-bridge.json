@@ -1,0 +1,58 @@
+{
+  "record": {
+    "authors": [
+      "open-agentic-platform"
+    ],
+    "created": "2026-03-29",
+    "domain": "opc",
+    "establishes": [
+      {
+        "id": "@opc/claude-code-bridge",
+        "kind": "crate"
+      }
+    ],
+    "extends": [
+      {
+        "nature": "wrapping",
+        "spec": "035-agent-governed-execution",
+        "unit": {
+          "kind": "file",
+          "path": "product/apps/opc/src-tauri/src/commands/claude.rs"
+        }
+      }
+    ],
+    "extraFrontmatter": {
+      "language": "en"
+    },
+    "featureBranch": "045-claude-code-sdk-bridge",
+    "id": "045-claude-code-sdk-bridge",
+    "implementation": "complete",
+    "kind": "platform",
+    "sectionHeadings": [
+      "Feature Specification: Claude Code SDK bridge",
+      "Purpose",
+      "Scope",
+      "In scope",
+      "Out of scope",
+      "Requirements",
+      "Functional",
+      "Non-functional",
+      "Architecture",
+      "Package structure",
+      "Message protocol types",
+      "Integration with Tauri backend",
+      "Session resumption model",
+      "CLI fallback mode",
+      "Key integration points",
+      "Success criteria",
+      "Contract notes",
+      "Risk"
+    ],
+    "specPath": "specs/045-claude-code-sdk-bridge/spec.md",
+    "status": "approved",
+    "summary": "Replace the current CLI-subprocess integration with a first-class bridge to the @anthropic-ai/claude-code SDK, providing typed message streaming, session resumption, programmatic permission control, cost tracking, and an AbortController-based cancellation model, while retaining the existing stream-JSON CLI path as a fallback for environments where the SDK is unavailable.\n",
+    "title": "Claude Code SDK bridge"
+  },
+  "shardHash": "fb0eae4cd214801cb632e57de5a8685390cd2d6b45823f2b6098cc9207bf637a",
+  "specVersion": "1.1.0"
+}

@@ -1,0 +1,40 @@
+{
+  "record": {
+    "authors": [
+      "open-agentic-platform"
+    ],
+    "created": "2026-03-22",
+    "domain": "tooling",
+    "extends": [
+      {
+        "nature": "additive",
+        "spec": "002-registry-consumer-mvp"
+      }
+    ],
+    "extraFrontmatter": {
+      "language": "en"
+    },
+    "featureBranch": "028-registry-consumer-channel-discipline-contract-mvp",
+    "id": "028-registry-consumer-channel-discipline-contract-mvp",
+    "implementation": "complete",
+    "kind": "platform-delivery",
+    "refines": [
+      {
+        "aspect": "contract-tests"
+      }
+    ],
+    "sectionHeadings": [
+      "Feature Specification: Channel discipline contract",
+      "Purpose",
+      "Requirements",
+      "Out of scope"
+    ],
+    "specPath": "specs/028-registry-consumer-channel-discipline-contract-mvp/spec.md",
+    "status": "superseded",
+    "summary": "Lock channel discipline invariants so success-path data/help/version output is emitted on stdout while diagnostics remain on stderr for argument and runtime failures.\n",
+    "supersededBy": "217-spec-spine-engine-swap-collapse",
+    "title": "Registry consumer stderr/stdout channel discipline contract MVP"
+  },
+  "shardHash": "93cb59c5260c57cbb53917d02d438bf181bedc3cd8544367b10b3b096ab2f63d",
+  "specVersion": "1.1.0"
+}

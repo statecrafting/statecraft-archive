@@ -1,0 +1,685 @@
+{
+  "agents": [],
+  "app": {
+    "name": "statecraft",
+    "org": "statecrafting"
+  },
+  "auth": {
+    "idp": "rauthy-embedded",
+    "operatorRole": "statecraft_operator"
+  },
+  "capabilities": [],
+  "contract": {
+    "name": "app-model",
+    "version": "0.1.0"
+  },
+  "extraction": {
+    "producers": [
+      {
+        "tier": "ts",
+        "tool": "statecraft-extract-model",
+        "version": "0.3.0"
+      }
+    ],
+    "verified": true
+  },
+  "gate": {
+    "checks": [
+      "actor-authenticated",
+      "confirm-name-required",
+      "posture-required",
+      "tenant-active"
+    ],
+    "configHash": "sha256:a0356df3a1d2ca95a030e1d9329a7ceb20a54fc1ed1834dd0b158047c306f107"
+  },
+  "integrity": {
+    "algorithm": "sha256-canonical-keysort-v1",
+    "hash": "sha256:8a26480d32663685fc45a6645597fad93c3a1573086230aac95659250e106532"
+  },
+  "ledger": {
+    "recordSchema": "attestation/v1",
+    "signing": {
+      "algorithm": "ed25519",
+      "keyRef": "GovernanceAnchorKey"
+    }
+  },
+  "observability": {
+    "metricsPath": "/metrics",
+    "otel": true
+  },
+  "resources": {
+    "counters": [
+      {
+        "name": "counters"
+      }
+    ],
+    "databases": [
+      {
+        "engine": "coreledger-postgres",
+        "name": "app"
+      }
+    ],
+    "kv": [
+      {
+        "name": "cache"
+      }
+    ],
+    "secrets": [
+      {
+        "name": "fleet_s3_access_key_id"
+      },
+      {
+        "name": "fleet_s3_restic_password"
+      },
+      {
+        "name": "fleet_s3_secret_access_key"
+      },
+      {
+        "name": "github_app_id"
+      },
+      {
+        "name": "github_app_private_key_b64"
+      },
+      {
+        "name": "github_webhook_secret"
+      },
+      {
+        "name": "governanceanchorkey"
+      },
+      {
+        "name": "jwt_private_key"
+      },
+      {
+        "name": "jwt_public_key"
+      },
+      {
+        "name": "jwt_refresh_private_key"
+      },
+      {
+        "name": "jwt_refresh_public_key"
+      },
+      {
+        "name": "rauthy_api_key"
+      },
+      {
+        "name": "rauthy_client_secret"
+      }
+    ]
+  },
+  "services": [
+    {
+      "capabilities": [],
+      "endpoints": [
+        {
+          "access": "public",
+          "methods": [
+            "GET"
+          ],
+          "name": "adminAssets",
+          "path": "/admin/*rest",
+          "raw": true
+        },
+        {
+          "access": "public",
+          "methods": [
+            "GET"
+          ],
+          "name": "adminIndex",
+          "path": "/admin",
+          "raw": true
+        },
+        {
+          "access": "auth",
+          "methods": [
+            "GET"
+          ],
+          "name": "catalog",
+          "path": "/api/admin/catalog"
+        },
+        {
+          "access": "auth",
+          "methods": [
+            "GET"
+          ],
+          "name": "overview",
+          "path": "/api/admin/overview"
+        },
+        {
+          "access": "auth",
+          "methods": [
+            "GET"
+          ],
+          "name": "traceDetail",
+          "path": "/api/admin/traces/:id"
+        },
+        {
+          "access": "auth",
+          "methods": [
+            "GET"
+          ],
+          "name": "traceStream",
+          "path": "/api/admin/traces/stream/live",
+          "raw": true
+        },
+        {
+          "access": "auth",
+          "methods": [
+            "GET"
+          ],
+          "name": "traces",
+          "path": "/api/admin/traces"
+        }
+      ],
+      "name": "admin",
+      "tier": "ts"
+    },
+    {
+      "capabilities": [],
+      "endpoints": [
+        {
+          "access": "public",
+          "methods": [
+            "GET"
+          ],
+          "name": "csrfToken",
+          "path": "/api/v1/auth/csrf-token",
+          "raw": true
+        },
+        {
+          "access": "public",
+          "methods": [
+            "GET"
+          ],
+          "name": "drivers",
+          "path": "/api/v1/auth/drivers"
+        },
+        {
+          "access": "public",
+          "methods": [
+            "GET"
+          ],
+          "name": "login",
+          "path": "/api/v1/auth/login",
+          "raw": true
+        },
+        {
+          "access": "auth",
+          "methods": [
+            "POST"
+          ],
+          "name": "logout",
+          "path": "/api/v1/auth/logout",
+          "raw": true
+        },
+        {
+          "access": "auth",
+          "methods": [
+            "GET"
+          ],
+          "name": "me",
+          "path": "/api/v1/auth/me"
+        },
+        {
+          "access": "public",
+          "methods": [
+            "GET"
+          ],
+          "name": "mockLogin",
+          "path": "/api/v1/auth/mock/login",
+          "raw": true
+        },
+        {
+          "access": "public",
+          "methods": [
+            "GET"
+          ],
+          "name": "rauthyCallback",
+          "path": "/api/v1/auth/rauthy/callback",
+          "raw": true
+        },
+        {
+          "access": "public",
+          "methods": [
+            "GET"
+          ],
+          "name": "rauthyLogin",
+          "path": "/api/v1/auth/rauthy/login",
+          "raw": true
+        },
+        {
+          "access": "auth",
+          "methods": [
+            "POST"
+          ],
+          "name": "reconcile",
+          "path": "/api/v1/auth/reconcile"
+        },
+        {
+          "access": "public",
+          "methods": [
+            "POST"
+          ],
+          "name": "refresh",
+          "path": "/api/v1/auth/refresh",
+          "raw": true
+        },
+        {
+          "access": "public",
+          "methods": [
+            "GET"
+          ],
+          "name": "status",
+          "path": "/api/v1/auth/status",
+          "raw": true
+        }
+      ],
+      "name": "auth",
+      "tier": "ts"
+    },
+    {
+      "capabilities": [],
+      "endpoints": [
+        {
+          "access": "auth",
+          "methods": [
+            "POST"
+          ],
+          "name": "createStamp",
+          "path": "/api/v1/tenants/:id/stamps"
+        },
+        {
+          "access": "auth",
+          "methods": [
+            "GET"
+          ],
+          "name": "getStamp",
+          "path": "/api/v1/stamps/:jobId"
+        },
+        {
+          "access": "auth",
+          "methods": [
+            "GET"
+          ],
+          "name": "listStamps",
+          "path": "/api/v1/tenants/:id/stamps"
+        }
+      ],
+      "name": "factory",
+      "tier": "ts"
+    },
+    {
+      "capabilities": [],
+      "endpoints": [
+        {
+          "access": "auth",
+          "methods": [
+            "POST"
+          ],
+          "name": "backup",
+          "path": "/api/v1/fleet/:appId/backup"
+        },
+        {
+          "access": "auth",
+          "methods": [
+            "POST"
+          ],
+          "name": "deploy",
+          "path": "/api/v1/tenants/:id/fleet"
+        },
+        {
+          "access": "auth",
+          "methods": [
+            "GET"
+          ],
+          "name": "listFleet",
+          "path": "/api/v1/tenants/:id/fleet"
+        },
+        {
+          "access": "auth",
+          "methods": [
+            "DELETE"
+          ],
+          "name": "remove",
+          "path": "/api/v1/fleet/:appId"
+        },
+        {
+          "access": "auth",
+          "methods": [
+            "GET"
+          ],
+          "name": "status",
+          "path": "/api/v1/fleet/:appId"
+        },
+        {
+          "access": "private",
+          "methods": [
+            "GET"
+          ],
+          "name": "tenantAppSummary",
+          "path": "/fleet/internal/tenants/:tenantId/summary"
+        },
+        {
+          "access": "auth",
+          "methods": [
+            "POST"
+          ],
+          "name": "update",
+          "path": "/api/v1/fleet/:appId/update"
+        }
+      ],
+      "name": "fleet",
+      "tier": "ts"
+    },
+    {
+      "capabilities": [],
+      "endpoints": [
+        {
+          "access": "private",
+          "methods": [
+            "POST"
+          ],
+          "name": "gate",
+          "path": "/governance/gate"
+        },
+        {
+          "access": "public",
+          "methods": [
+            "GET"
+          ],
+          "name": "level",
+          "path": "/governance/trust/:actor"
+        },
+        {
+          "access": "public",
+          "methods": [
+            "GET"
+          ],
+          "name": "list",
+          "path": "/governance/records"
+        },
+        {
+          "access": "private",
+          "methods": [
+            "POST"
+          ],
+          "name": "record",
+          "path": "/governance/records"
+        },
+        {
+          "access": "private",
+          "methods": [
+            "POST"
+          ],
+          "name": "sample",
+          "path": "/governance/trust/sample"
+        },
+        {
+          "access": "public",
+          "methods": [
+            "GET"
+          ],
+          "name": "verify",
+          "path": "/governance/verify"
+        }
+      ],
+      "name": "governance",
+      "tier": "ts"
+    },
+    {
+      "capabilities": [],
+      "endpoints": [
+        {
+          "access": "public",
+          "methods": [
+            "GET"
+          ],
+          "name": "health",
+          "path": "/health"
+        }
+      ],
+      "name": "health",
+      "tier": "ts"
+    },
+    {
+      "capabilities": [],
+      "endpoints": [
+        {
+          "access": "public",
+          "methods": [
+            "POST"
+          ],
+          "name": "counterAdd",
+          "path": "/hiq/counter/:key/add"
+        },
+        {
+          "access": "public",
+          "methods": [
+            "GET"
+          ],
+          "name": "counterGet",
+          "path": "/hiq/counter/:key"
+        },
+        {
+          "access": "public",
+          "methods": [
+            "GET"
+          ],
+          "name": "health",
+          "path": "/hiq/health"
+        },
+        {
+          "access": "public",
+          "methods": [
+            "DELETE"
+          ],
+          "name": "kvDel",
+          "path": "/hiq/kv/:key"
+        },
+        {
+          "access": "public",
+          "methods": [
+            "GET"
+          ],
+          "name": "kvGet",
+          "path": "/hiq/kv/:key"
+        },
+        {
+          "access": "public",
+          "methods": [
+            "POST"
+          ],
+          "name": "kvPut",
+          "path": "/hiq/kv"
+        }
+      ],
+      "name": "hiq",
+      "tier": "ts"
+    },
+    {
+      "capabilities": [],
+      "endpoints": [
+        {
+          "access": "public",
+          "methods": [
+            "DELETE",
+            "GET",
+            "HEAD",
+            "OPTIONS",
+            "PATCH",
+            "POST",
+            "PUT"
+          ],
+          "name": "proxy",
+          "path": "/auth/*rest",
+          "raw": true
+        }
+      ],
+      "name": "idp",
+      "tier": "ts"
+    },
+    {
+      "capabilities": [],
+      "endpoints": [],
+      "name": "lib",
+      "tier": "ts"
+    },
+    {
+      "capabilities": [],
+      "endpoints": [
+        {
+          "access": "public",
+          "methods": [
+            "GET"
+          ],
+          "name": "metrics",
+          "path": "/metrics",
+          "raw": true
+        }
+      ],
+      "name": "obs",
+      "tier": "ts"
+    },
+    {
+      "capabilities": [],
+      "endpoints": [
+        {
+          "access": "auth",
+          "methods": [
+            "POST"
+          ],
+          "name": "create",
+          "path": "/api/v1/tenants"
+        },
+        {
+          "access": "auth",
+          "methods": [
+            "GET"
+          ],
+          "name": "detail",
+          "path": "/api/v1/tenants/:id"
+        },
+        {
+          "access": "auth",
+          "methods": [
+            "GET"
+          ],
+          "name": "installUrl",
+          "path": "/api/v1/tenants/:id/github/install-url"
+        },
+        {
+          "access": "auth",
+          "methods": [
+            "GET"
+          ],
+          "name": "installUrlForUser",
+          "path": "/api/v1/github/install-url"
+        },
+        {
+          "access": "auth",
+          "methods": [
+            "GET"
+          ],
+          "name": "list",
+          "path": "/api/v1/tenants"
+        },
+        {
+          "access": "auth",
+          "methods": [
+            "POST"
+          ],
+          "name": "operatorGrantMembership",
+          "path": "/api/v1/operator/tenants/:id/memberships"
+        },
+        {
+          "access": "auth",
+          "methods": [
+            "GET"
+          ],
+          "name": "operatorListTenants",
+          "path": "/api/v1/operator/tenants"
+        },
+        {
+          "access": "auth",
+          "methods": [
+            "DELETE"
+          ],
+          "name": "operatorRevokeMembership",
+          "path": "/api/v1/operator/tenants/:id/memberships"
+        },
+        {
+          "access": "auth",
+          "methods": [
+            "DELETE"
+          ],
+          "name": "removeTenant",
+          "path": "/api/v1/tenants/:id"
+        },
+        {
+          "access": "auth",
+          "methods": [
+            "GET"
+          ],
+          "name": "repos",
+          "path": "/api/v1/tenants/:id/repos"
+        },
+        {
+          "access": "public",
+          "methods": [
+            "GET"
+          ],
+          "name": "setup",
+          "path": "/github/setup",
+          "raw": true
+        },
+        {
+          "access": "auth",
+          "methods": [
+            "DELETE"
+          ],
+          "name": "uninstall",
+          "path": "/api/v1/tenants/:id/github/installation"
+        },
+        {
+          "access": "public",
+          "methods": [
+            "POST"
+          ],
+          "name": "webhook",
+          "path": "/github/webhook",
+          "raw": true
+        }
+      ],
+      "name": "tenants",
+      "tier": "ts"
+    },
+    {
+      "capabilities": [],
+      "endpoints": [
+        {
+          "access": "public",
+          "methods": [
+            "GET",
+            "HEAD"
+          ],
+          "name": "spa",
+          "path": "/!path"
+        }
+      ],
+      "name": "web",
+      "tier": "ts"
+    }
+  ],
+  "source": {
+    "revision": "e04edc092fe255576fcf30562ea44ffed9b9fad3",
+    "uncommittedChanges": true
+  },
+  "trust": {
+    "levels": [
+      "full",
+      "restricted",
+      "read-only",
+      "suspended"
+    ]
+  },
+  "types": []
+}

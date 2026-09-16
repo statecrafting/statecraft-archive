@@ -1,0 +1,379 @@
+{
+  "diagnostics": {
+    "errors": [],
+    "warnings": [
+      {
+        "code": "W-002",
+        "message": "spec '175-statecraft-project-dashboard-observability' file unit 'docs/owasp/factory/AIDE-VELOCITY-OAP-INTENT.md' does not exist",
+        "path": "docs/owasp/factory/AIDE-VELOCITY-OAP-INTENT.md"
+      },
+      {
+        "code": "W-002",
+        "message": "spec '175-statecraft-project-dashboard-observability' file unit 'docs/owasp/factory/AIDE-VELOCITY-blueprint-spec.md' does not exist",
+        "path": "docs/owasp/factory/AIDE-VELOCITY-blueprint-spec.md"
+      }
+    ]
+  },
+  "mapping": {
+    "dependsOn": [
+      "087-unified-workspace-architecture",
+      "102-governed-excellence",
+      "115-knowledge-extraction-pipeline",
+      "124-opc-factory-run-platform-integration",
+      "127-spec-code-coupling-gate",
+      "147-spec-kind-grammar",
+      "163-statecraft-requirements-view",
+      "164-statecraft-development-lifecycle-board",
+      "168-per-project-governance-certificate"
+    ],
+    "implementingPaths": [
+      {
+        "path": "crates/featuregraph/tests/golden/features_graph.json",
+        "source": "spec-edge"
+      },
+      {
+        "path": "platform/services/statecraft/api/audit/audit.ts",
+        "source": "spec-edge"
+      },
+      {
+        "path": "platform/services/statecraft/api/projectDashboard/dashboard.test.ts",
+        "source": "spec-edge"
+      },
+      {
+        "path": "platform/services/statecraft/api/projectDashboard/dashboard.ts",
+        "source": "spec-edge"
+      },
+      {
+        "path": "platform/services/statecraft/api/projectDashboard/dashboardHelpers.ts",
+        "source": "spec-edge"
+      },
+      {
+        "path": "platform/services/statecraft/api/projectDashboard/encore.service.ts",
+        "source": "spec-edge"
+      },
+      {
+        "path": "platform/services/statecraft/api/projectDashboard/riskAssessor.test.ts",
+        "source": "spec-edge"
+      },
+      {
+        "path": "platform/services/statecraft/api/projectDashboard/riskAssessor.ts",
+        "source": "spec-edge"
+      },
+      {
+        "path": "platform/services/statecraft/api/projectDashboard/types.ts",
+        "source": "spec-edge"
+      },
+      {
+        "path": "platform/services/statecraft/web/app/components/ProjectDashboardAudit.tsx",
+        "source": "spec-edge"
+      },
+      {
+        "path": "platform/services/statecraft/web/app/components/ProjectDashboardCertificate.tsx",
+        "source": "spec-edge"
+      },
+      {
+        "path": "platform/services/statecraft/web/app/components/ProjectDashboardLifecycle.tsx",
+        "source": "spec-edge"
+      },
+      {
+        "path": "platform/services/statecraft/web/app/components/ProjectDashboardRiskBanner.tsx",
+        "source": "spec-edge"
+      },
+      {
+        "path": "platform/services/statecraft/web/app/components/ProjectDashboardRuns.tsx",
+        "source": "spec-edge"
+      },
+      {
+        "path": "platform/services/statecraft/web/app/lib/project-dashboard-api.server.ts",
+        "source": "spec-edge"
+      },
+      {
+        "path": "platform/services/statecraft/web/app/routes/app.project.$projectId._index.tsx",
+        "source": "spec-edge"
+      },
+      {
+        "path": "specs/103-init-protocol-governed-reads/spec.md",
+        "source": "spec-edge"
+      },
+      {
+        "path": "specs/163-statecraft-requirements-view/spec.md",
+        "source": "spec-edge"
+      },
+      {
+        "path": "specs/164-statecraft-development-lifecycle-board/spec.md",
+        "source": "spec-edge"
+      }
+    ],
+    "resolvedUnits": [
+      {
+        "locations": [
+          {
+            "file": "platform/services/statecraft/api/projectDashboard/dashboard.test.ts"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "file",
+          "path": "platform/services/statecraft/api/projectDashboard/dashboard.test.ts"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "platform/services/statecraft/api/projectDashboard/dashboard.ts"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "file",
+          "path": "platform/services/statecraft/api/projectDashboard/dashboard.ts"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "platform/services/statecraft/api/projectDashboard/dashboardHelpers.ts"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "file",
+          "path": "platform/services/statecraft/api/projectDashboard/dashboardHelpers.ts"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "platform/services/statecraft/api/projectDashboard/encore.service.ts"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "file",
+          "path": "platform/services/statecraft/api/projectDashboard/encore.service.ts"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "platform/services/statecraft/api/projectDashboard/riskAssessor.test.ts"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "file",
+          "path": "platform/services/statecraft/api/projectDashboard/riskAssessor.test.ts"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "platform/services/statecraft/api/projectDashboard/riskAssessor.ts"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "file",
+          "path": "platform/services/statecraft/api/projectDashboard/riskAssessor.ts"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "platform/services/statecraft/api/projectDashboard/types.ts"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "file",
+          "path": "platform/services/statecraft/api/projectDashboard/types.ts"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "platform/services/statecraft/web/app/components/ProjectDashboardAudit.tsx"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "file",
+          "path": "platform/services/statecraft/web/app/components/ProjectDashboardAudit.tsx"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "platform/services/statecraft/web/app/components/ProjectDashboardCertificate.tsx"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "file",
+          "path": "platform/services/statecraft/web/app/components/ProjectDashboardCertificate.tsx"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "platform/services/statecraft/web/app/components/ProjectDashboardLifecycle.tsx"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "file",
+          "path": "platform/services/statecraft/web/app/components/ProjectDashboardLifecycle.tsx"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "platform/services/statecraft/web/app/components/ProjectDashboardRiskBanner.tsx"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "file",
+          "path": "platform/services/statecraft/web/app/components/ProjectDashboardRiskBanner.tsx"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "platform/services/statecraft/web/app/components/ProjectDashboardRuns.tsx"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "file",
+          "path": "platform/services/statecraft/web/app/components/ProjectDashboardRuns.tsx"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "platform/services/statecraft/web/app/lib/project-dashboard-api.server.ts"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "file",
+          "path": "platform/services/statecraft/web/app/lib/project-dashboard-api.server.ts"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "crates/featuregraph/tests/golden/features_graph.json"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "extends",
+        "unit": {
+          "kind": "file",
+          "path": "crates/featuregraph/tests/golden/features_graph.json"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "platform/services/statecraft/api/audit/audit.ts"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "extends",
+        "unit": {
+          "kind": "file",
+          "path": "platform/services/statecraft/api/audit/audit.ts"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "platform/services/statecraft/web/app/routes/app.project.$projectId._index.tsx"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "refines",
+        "unit": {
+          "kind": "file",
+          "path": "platform/services/statecraft/web/app/routes/app.project.$projectId._index.tsx"
+        }
+      },
+      {
+        "locations": [],
+        "ownership": false,
+        "sourceField": "references",
+        "unit": {
+          "kind": "file",
+          "path": "docs/owasp/factory/AIDE-VELOCITY-OAP-INTENT.md"
+        }
+      },
+      {
+        "locations": [],
+        "ownership": false,
+        "sourceField": "references",
+        "unit": {
+          "kind": "file",
+          "path": "docs/owasp/factory/AIDE-VELOCITY-blueprint-spec.md"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "specs/103-init-protocol-governed-reads/spec.md"
+          }
+        ],
+        "ownership": false,
+        "sourceField": "references",
+        "unit": {
+          "kind": "file",
+          "path": "specs/103-init-protocol-governed-reads/spec.md"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "specs/163-statecraft-requirements-view/spec.md"
+          }
+        ],
+        "ownership": false,
+        "sourceField": "references",
+        "unit": {
+          "kind": "file",
+          "path": "specs/163-statecraft-requirements-view/spec.md"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "specs/164-statecraft-development-lifecycle-board/spec.md"
+          }
+        ],
+        "ownership": false,
+        "sourceField": "references",
+        "unit": {
+          "kind": "file",
+          "path": "specs/164-statecraft-development-lifecycle-board/spec.md"
+        }
+      }
+    ],
+    "specId": "175-statecraft-project-dashboard-observability",
+    "specStatus": "approved"
+  },
+  "schemaVersion": "1.1.0",
+  "shardHash": "3881f65eca90815fb8f60d19879e6ad4c8b02675d54b553071ea33038dfe1d29"
+}

@@ -1,0 +1,22 @@
+image:
+  repository: localhost:5050/deployd-api
+  tag: dev
+
+ingress:
+  host: deployd.localhost
+
+# Dev loop only — emptyDir is fine; restore-on-startup is opt-in via
+# env-supplied BackupConfig which is unset in this profile (spec 145 §2.1).
+persistence:
+  enabled: false
+
+secrets:
+  provider: "k8s"
+  create: true
+  data:
+    DEPLOYD_DB_URL: "postgres://postgres:postgres@host.k3d.internal:5432/deployd"
+    # Dev-only placeholders so the local k3d profile satisfies the
+    # (soon-to-be-required) HIQLITE_SECRET_RAFT / HIQLITE_SECRET_API env
+    # vars without an operator manual step. Not production secrets.
+    HIQLITE_SECRET_RAFT: "dev-local-hiqlite-raft-secret-not-for-prod"
+    HIQLITE_SECRET_API: "dev-local-hiqlite-api-secret-not-for-prod"

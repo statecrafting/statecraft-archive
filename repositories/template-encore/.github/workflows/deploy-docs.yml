@@ -1,0 +1,83 @@
+name: Deploy docs to GitHub Pages
+on:
+  push:
+    branches: [main]
+    paths: ['website/**', '.github/workflows/deploy-docs.yml']
+  workflow_dispatch:
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+concurrency:
+  group: pages
+  cancel-in-progress: false
+jobs:
+  # Spec 016 FR-04: the workflow is inert until a repo admin enables Pages.
+  # A freshly produced repo has Pages disabled, so `configure-pages` would
+  # 404. This preflight reads the Pages API HTTP status and skips the
+  # build/deploy jobs ONLY on a 404 (Pages not configured), so the run
+  # concludes green rather than failing at `configure-pages`. Any other status
+  # (or a transport failure) fails loudly instead of masquerading as "Pages
+  # off". Enabling Pages stays a repo-admin action (FR-04, out of scope).
+  preflight:
+    runs-on: ubuntu-latest
+    # Least privilege: preflight only reads the Pages API. This job-level block
+    # narrows the inherited workflow permissions (which grant pages: write +
+    # id-token: write for the build/deploy jobs) down to a single read scope.
+    permissions:
+      pages: read
+    outputs:
+      enabled: ${{ steps.check.outputs.enabled }}
+    steps:
+      - id: check
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          http_code=$(curl -sS -o /dev/null -w '%{http_code}' \
+            -H "Authorization: Bearer ${GH_TOKEN}" \
+            -H "Accept: application/vnd.github+json" \
+            -H "X-GitHub-Api-Version: 2022-11-28" \
+            "${GITHUB_API_URL}/repos/${GITHUB_REPOSITORY}/pages")
+          if [ "$http_code" = "200" ]; then
+            echo "enabled=true" >> "$GITHUB_OUTPUT"
+          elif [ "$http_code" = "404" ]; then
+            echo "enabled=false" >> "$GITHUB_OUTPUT"
+            echo "::notice title=GitHub Pages not enabled::Skipping docs publish. A repo admin can enable Pages (Settings -> Pages -> Source: GitHub Actions) to activate this workflow (spec 016 FR-04)."
+          else
+            echo "::error title=Pages preflight failed::Unexpected HTTP ${http_code} from the Pages API"
+            exit 1
+          fi
+  build:
+    needs: preflight
+    # Require preflight to have succeeded: a custom job-level `if` overrides the
+    # implicit success() needs-guard, so check preflight's result explicitly.
+    if: ${{ needs.preflight.result == 'success' && needs.preflight.outputs.enabled == 'true' }}
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: website
+    steps:
+      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+      - uses: actions/setup-node@48b55a011bda9f5d6aeb4c2d9c7362e8dae4041e # v6.4.0
+        with:
+          node-version: 24
+          cache: npm
+          cache-dependency-path: website/package-lock.json
+      - run: npm ci
+      - run: npm run build
+      - uses: actions/configure-pages@45bfe0192ca1faeb007ade9deae92b16b8254a0d # v6.0.0
+      - uses: actions/upload-pages-artifact@fc324d3547104276b827a68afc52ff2a11cc49c9 # v5.0.0
+        with:
+          path: website/build
+  deploy:
+    # No custom `if`: the default success() guard runs deploy only when build
+    # succeeded. When build is skipped (Pages disabled) or fails, deploy is
+    # skipped too, so a failed build never publishes.
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@cd2ce8fcbc39b97be8ca5fce6e763baed58fa128 # v5.0.0

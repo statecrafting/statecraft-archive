@@ -1,0 +1,10 @@
+{
+  "package": {
+    "kind": "npm-package",
+    "name": "@template/web-internal",
+    "path": "apps/web-internal",
+    "version": "1.0.0"
+  },
+  "schemaVersion": "1.1.0",
+  "shardHash": "943cb8b775307feb97f99e0db60bba37c0db339d86121ad32e5452afdc7dc3be"
+}

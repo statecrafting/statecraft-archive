@@ -1,0 +1,117 @@
+# spec-spine.toml governs this repository. All keys are optional; an
+# absent file behaves as the defaults for a single-Cargo-workspace repo.
+
+# Spec 008: the floor the session harness needs. The kit's hooks and skills
+# call `spec-spine check` and `spec-spine verify`, which arrived in 0.18.0 and
+# 0.15.0; below the floor the CLI would answer those calls with an exit code
+# that means something else, and a session told its shards are stale when they
+# are not will regenerate and commit artifacts that were already correct.
+#
+# A FLOOR, not an exact pin. The failure guarded is one-directional (a binary
+# older than the corpus it judges), so `>=` catches what matters and nothing
+# else. `Config` derives `deny_unknown_fields`, so a binary predating this key
+# exits 3 with a config error rather than 2, and the signal is unambiguous in
+# both directions. `.github/workflows/govern.yml` installs an exact version;
+# this is the floor a contributor's local binary must clear.
+[meta]
+required_version = ">=0.18.0"
+
+[manifest]
+metadata_namespace = "spec-spine"
+
+[domains]
+allowed = []   # empty: the `domain` field is free-text / disabled
+
+[kind]
+allowed = []   # empty: the `kind` field is free-text / disabled
+
+[layout]
+specs_dir     = "specs"
+derived_dir   = ".derived"
+standards_dir = "standards/spec"
+# Each package is appended as its own spec lands it (spec 001 section 5, the
+# migration ladder). The toolchain (spec 002) is the first to arrive: its meta
+# package plus three per-platform binary packages. It is npm-only here; the
+# Rust it builds lives in vendor/encore, which is upstream Encore's own cargo
+# workspace (MPL-2.0) and is not a package we publish. The napi-rs crates
+# arrive with specs 003 through 006, the last two (governance-native,
+# fleet-native) AGPL-3.0.
+#
+# These two lists are the repository's declared package inventory, and
+# scripts/check-licenses.mjs checks them against the licenseTiers map in the
+# root package.json in both directions: a package listed here without a
+# declared license tier fails the gate, and so does a tier row for a package
+# not listed here (spec 005 section 3.3).
+standalone_rust_workspaces = [
+  "addon/hiqlite-native",
+  "addon/kernel-native",
+  "addon/governance-native",
+  "addon/fleet-native",
+]
+standalone_npm_packages    = [
+  "packages/toolchain",
+  "packages/toolchain-darwin-arm64",
+  "packages/toolchain-linux-x64",
+  "packages/toolchain-linux-arm64",
+  "addon/hiqlite-native",
+  "addon/kernel-native",
+  "addon/governance-native",
+  "addon/fleet-native",
+]
+
+[index]
+# Governance surfaces beyond the always-hashed core: files folded into the
+# global-inputs scalar, so a change to one stales EVERY shard until the trees
+# are regenerated and committed.
+#
+# Every pattern below is narrow on purpose, for three reasons spec 008 records.
+#
+# First, `dir/**` matches directories only in the `glob` crate, so it can
+# contribute no bytes to any content hash. The three patterns this list used to
+# carry (`standards/**`, `.github/workflows/**`, `.claude/rules/**`) each
+# matched exactly zero files, which meant the constitution, the contract, every
+# workflow and every agent rule had never entered a single hash. `lint` reports
+# that as L-010; the files under a directory need `dir/**/*` or a narrower
+# extension glob.
+#
+# Second, this list hashes whatever is on disk, tracked or not, so a bare
+# `.claude/**/*` would fold in `.DS_Store`, `settings.local.json` and
+# `agent-memory/` and make the shard hashes machine-dependent. The harness
+# patterns name the committed files and nothing else.
+#
+# Third, an entry here restales all nine shards when it changes, so it earns
+# its place by being a governance file some spec claims. Every path matched
+# below is claimed by exactly one spec, which is what makes the coupling gate
+# total rather than partial: a file that stales the ledger but no spec claims
+# is one the gate cannot refuse an edit to.
+extra_hashed_inputs = [
+  # Claimed by spec 001 (the thesis holds the package and license table).
+  "README.md",
+  # Claimed by spec 008 as a directory unit.
+  "standards/**/*.md",
+  # publish.yml is spec 002's, build.yml is spec 007's, govern.yml is spec
+  # 008's. Spec-spine 073's workflow projection keeps a bare `uses:` version
+  # bump from staling the ledger, so this does not make Dependabot unmergeable.
+  ".github/workflows/*.yml",
+  # The session harness, all of it spec 008's territory.
+  "AGENTS.md",
+  "CLAUDE.md",
+  "Makefile",
+  ".mcp.json",
+  ".gitattributes",
+  ".claude/settings.json",
+  ".claude/rules/*.md",
+  ".claude/agents/*.md",
+  ".claude/skills/*/*.md",
+]
+
+[coupling]
+waiver_keyword = "Spec-Drift-Waiver:"
+bypass_prefixes = ["**/README.md"]
+# Spec 008: refuse a changed source file that no spec specifically claims
+# (C-002). Safe to turn on because the ratchet is already met:
+# `index coverage --fail-on-untraced` reports every source file in the tree
+# specifically claimed, so this knob defends a property that holds today
+# rather than creating a backlog. It is the pull-request half of the same
+# check `make gate` runs locally.
+require_ownership = true

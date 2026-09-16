@@ -1,0 +1,47 @@
+{
+  "record": {
+    "authors": [
+      "open-agentic-platform"
+    ],
+    "codeAliases": [
+      "XRAY_UI",
+      "INSPECT_SURFACE"
+    ],
+    "created": "2026-04-08",
+    "domain": "opc",
+    "extends": [
+      {
+        "nature": "additive",
+        "spec": "032-opc-inspect-governance-wiring-mvp",
+        "unit": {
+          "id": "@opc/desktop",
+          "kind": "crate"
+        }
+      }
+    ],
+    "extraFrontmatter": {
+      "language": "en"
+    },
+    "featureBranch": "feat/083-xray-ui-upgrade",
+    "id": "083-xray-ui-upgrade",
+    "implementation": "complete",
+    "kind": "product",
+    "sectionHeadings": [
+      "083 — Xray v1.2.0 UI Surface",
+      "Purpose",
+      "Scope",
+      "In Scope",
+      "Out of Scope",
+      "Functional Requirements",
+      "Non-Functional Requirements",
+      "Key Files",
+      "Verification"
+    ],
+    "specPath": "specs/083-xray-ui-upgrade/spec.md",
+    "status": "approved",
+    "summary": "Surfaces the full xray v1.2.0 schema in the OPC desktop InspectSurface panel. The Tauri backend already returns the complete XrayIndex (fingerprint, languages, dependencies, call graph, directory structure, incremental scan data), but the React UI only renders 4 stat cards, a digest, and a basic file table. This spec decomposes the monolithic InspectSurface into focused sub-components and wires all v1.2.0 fields into the desktop experience.\n",
+    "title": "Xray v1.2.0 UI Surface"
+  },
+  "shardHash": "550c4a3f4836b5393c12de73c0ba950c3c294ef85a392cb48db586fa0e13e9e2",
+  "specVersion": "1.1.0"
+}

@@ -1,0 +1,55 @@
+{
+  "mapping": {
+    "dependsOn": [
+      "054-agent-frontmatter-schema",
+      "053-verification-profiles",
+      "035-agent-governed-execution"
+    ],
+    "implementingPaths": [
+      {
+        "path": "crates/standards-loader",
+        "source": "multiple"
+      },
+      {
+        "path": "product/packages/yaml-standards-schema",
+        "source": "manifest-metadata"
+      },
+      {
+        "path": "product/packages/yaml-standards-schema/schemas/coding-standard.schema.json",
+        "source": "spec-edge"
+      }
+    ],
+    "resolvedUnits": [
+      {
+        "locations": [
+          {
+            "file": "crates/standards-loader"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "id": "standards-loader",
+          "kind": "crate"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "product/packages/yaml-standards-schema/schemas/coding-standard.schema.json"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "file",
+          "path": "product/packages/yaml-standards-schema/schemas/coding-standard.schema.json"
+        }
+      }
+    ],
+    "specId": "055-yaml-standards-schema",
+    "specStatus": "approved"
+  },
+  "schemaVersion": "1.1.0",
+  "shardHash": "b679337d9bff0bcbc67cd9b5771e873a496fd9f556d69db25da81c9f6aa7cd7e"
+}

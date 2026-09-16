@@ -1,0 +1,134 @@
+{
+  "mapping": {
+    "dependsOn": [
+      "000-bootstrap"
+    ],
+    "implementingPaths": [
+      {
+        "path": ".github/workflows/deploy.yml",
+        "source": "spec-edge"
+      },
+      {
+        "path": "app/",
+        "source": "spec-edge"
+      },
+      {
+        "path": "package.json",
+        "source": "spec-edge"
+      },
+      {
+        "path": "public/",
+        "source": "spec-edge"
+      },
+      {
+        "path": "react-router.config.ts",
+        "source": "spec-edge"
+      },
+      {
+        "path": "scripts/",
+        "source": "spec-edge"
+      },
+      {
+        "path": "vite.config.ts",
+        "source": "spec-edge"
+      }
+    ],
+    "resolvedUnits": [
+      {
+        "locations": [
+          {
+            "file": "app/"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "directory",
+          "path": "app/"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "public/"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "directory",
+          "path": "public/"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "scripts/"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "directory",
+          "path": "scripts/"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": ".github/workflows/deploy.yml"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "file",
+          "path": ".github/workflows/deploy.yml"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "package.json"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "file",
+          "path": "package.json"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "react-router.config.ts"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "file",
+          "path": "react-router.config.ts"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "vite.config.ts"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "file",
+          "path": "vite.config.ts"
+        }
+      }
+    ],
+    "specId": "001-site-scaffold",
+    "specStatus": "approved"
+  },
+  "schemaVersion": "1.1.0",
+  "shardHash": "268bcd40a19907832f02694a5220351bfeed1f66ca9201379b446a77a7c7f990"
+}

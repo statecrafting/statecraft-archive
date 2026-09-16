@@ -1,0 +1,114 @@
+{
+  "record": {
+    "authors": [
+      "open-agentic-platform"
+    ],
+    "coAuthority": [
+      {
+        "unit": {
+          "anchor": "bootstrap",
+          "file": "platform/infra/hetzner/setup.sh",
+          "kind": "section"
+        },
+        "with_specs": [
+          "072-multi-cloud-k8s-portability",
+          "106-rauthy-native-oidc-and-membership",
+          "137-tenant-environment-access-gates",
+          "143-presigned-upload-public-endpoint",
+          "151-declarative-cluster-reconciliation"
+        ]
+      }
+    ],
+    "codeAliases": [
+      "OAP_BOOTSTRAP",
+      "OAP_FORK_PARAMETERIZATION"
+    ],
+    "created": "2026-06-21",
+    "dependsOn": [
+      "106-rauthy-native-oidc-and-membership",
+      "151-declarative-cluster-reconciliation",
+      "137-tenant-environment-access-gates",
+      "143-presigned-upload-public-endpoint",
+      "072-multi-cloud-k8s-portability",
+      "116-supply-chain-policy-gates"
+    ],
+    "domain": "platform",
+    "extends": [
+      {
+        "nature": "additive",
+        "spec": "034-featuregraph-registry-scanner-fix",
+        "unit": {
+          "kind": "file",
+          "path": "crates/featuregraph/tests/golden/features_graph.json"
+        }
+      }
+    ],
+    "extraFrontmatter": {
+      "compliance": [
+        {
+          "controls": [
+            "ASI06",
+            "ASI04"
+          ],
+          "framework": "owasp-asi-2026"
+        }
+      ],
+      "language": "en"
+    },
+    "featureBranch": "feat/221-oap-instance-bootstrap-cli",
+    "id": "221-oap-instance-bootstrap-cli",
+    "implementation": "complete",
+    "kind": "capability",
+    "references": [
+      {
+        "role": "context",
+        "unit": {
+          "kind": "file",
+          "path": "platform/services/statecraft/api/github/webhook.ts"
+        }
+      },
+      {
+        "role": "context",
+        "unit": {
+          "kind": "file",
+          "path": "platform/services/statecraft/scripts/seed-rauthy.mjs"
+        }
+      },
+      {
+        "role": "context",
+        "unit": {
+          "kind": "file",
+          "path": "platform/charts/statecraft/values-hetzner.yaml"
+        }
+      },
+      {
+        "role": "context",
+        "unit": {
+          "kind": "file",
+          "path": "platform/charts/deployd-api/values-hetzner.yaml"
+        }
+      },
+      {
+        "role": "context",
+        "unit": {
+          "kind": "file",
+          "path": "specs/219-tenant-tail-verifier-toolkit/spec.md"
+        }
+      }
+    ],
+    "risk": "medium",
+    "sectionHeadings": [
+      "Feature Specification: OAP fork-parameterization + oap-bootstrap pointer",
+      "Where the CLI design lives",
+      "Requirements",
+      "FR-040: a fork needs zero source edits (fork-parameterization)",
+      "Non-Goals"
+    ],
+    "specPath": "specs/221-oap-instance-bootstrap-cli/spec.md",
+    "status": "approved",
+    "summary": "The oap-bootstrap CLI (a Go tool that forks open-agentic-platform into a new GitHub org and stands up its Hetzner K3s estate) lives in its OWN repository, mirroring the spec-spine engine (217) and tenant-tail (219) separate-repo precedent. Its authoritative design is authored there. THIS spec is the OAP-side residue: (1) a pointer to that repo, and (2) FR-040, the small \"make a fork need zero source edits\" parameterization that necessarily lands in the OAP tree. The CLI design was first drafted here (full spec.md) while the implementation details were fresh; that body has been relocated to the oap-bootstrap repo and this entry slimmed to the pointer + footprint. The `references:` context edges remain so the contract surface the CLI consumes (env vars, K8s secret shapes, the GitHub webhook permission/event set, the Rauthy client shapes) stays visible to OAP-side drift review.\n",
+    "title": "OAP fork-parameterization + oap-bootstrap pointer (FR-040)"
+  },
+  "shardHash": "f7010f266097f39a40c1959abeb40c1fac589ecd2bb0a851ef76e280528c4e0c",
+  "specVersion": "1.1.0"
+}

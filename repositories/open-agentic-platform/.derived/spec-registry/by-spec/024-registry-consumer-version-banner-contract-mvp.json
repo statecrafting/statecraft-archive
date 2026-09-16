@@ -1,0 +1,40 @@
+{
+  "record": {
+    "authors": [
+      "open-agentic-platform"
+    ],
+    "created": "2026-03-22",
+    "domain": "tooling",
+    "extends": [
+      {
+        "nature": "additive",
+        "spec": "002-registry-consumer-mvp"
+      }
+    ],
+    "extraFrontmatter": {
+      "language": "en"
+    },
+    "featureBranch": "024-registry-consumer-version-banner-contract-mvp",
+    "id": "024-registry-consumer-version-banner-contract-mvp",
+    "implementation": "complete",
+    "kind": "platform-delivery",
+    "refines": [
+      {
+        "aspect": "contract-tests"
+      }
+    ],
+    "sectionHeadings": [
+      "Feature Specification: Version/banner contract",
+      "Purpose",
+      "Requirements",
+      "Out of scope"
+    ],
+    "specPath": "specs/024-registry-consumer-version-banner-contract-mvp/spec.md",
+    "status": "superseded",
+    "summary": "Lock top-level `--version` output for registry-consumer with fixture-backed transcript tests, including exit code and stderr expectations.\n",
+    "supersededBy": "217-spec-spine-engine-swap-collapse",
+    "title": "Registry consumer version/banner contract MVP"
+  },
+  "shardHash": "b85ddbc7405142242d0805a9a27435c52a41c08672b337a354963322dbcb7dcc",
+  "specVersion": "1.1.0"
+}

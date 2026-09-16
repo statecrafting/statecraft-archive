@@ -1,0 +1,45 @@
+# hetzner-k3s cluster definition for the statecraft platform cluster (spec 010).
+#
+# Provision:  HCLOUD_TOKEN=... hetzner-k3s create --config infra/hetzner/cluster.yaml
+# Tear down:  HCLOUD_TOKEN=... hetzner-k3s delete --config infra/hetzner/cluster.yaml
+#
+# Node types match the proven prior cluster (operator-confirmed cost and
+# performance): cx23 master, cx43 worker, both in nbg1. k3s is the latest
+# stable patch of the minor that ran before (v1.33.x); a patch bump on a
+# greenfield build is the responsible default.
+#
+# The HCLOUD_TOKEN is never stored here; it is read from the environment
+# (sourced from ~/.config/statecrafting/infra/hetzner/.env) at provision time.
+cluster_name: statecraft-hetzner
+kubeconfig_path: "~/.config/statecrafting/infra/hetzner/kubeconfig"
+k3s_version: v1.33.13+k3s1
+
+networking:
+  ssh:
+    port: 22
+    use_agent: false
+    public_key_path: "~/.ssh/id_ed25519_github.pub"
+    private_key_path: "~/.ssh/id_ed25519_github"
+  allowed_networks:
+    # Open SSH and API to the internet, as the prior cluster did; both are
+    # protected by key/token auth. Tighten to an operator CIDR later if
+    # desired (a config-only change, no reprovision).
+    ssh:
+      - 0.0.0.0/0
+    api:
+      - 0.0.0.0/0
+  public_network:
+    ipv4: true
+    ipv6: true
+
+masters_pool:
+  instance_type: cx23
+  instance_count: 1
+  locations:
+    - nbg1
+
+worker_node_pools:
+  - name: worker
+    instance_type: cx43
+    instance_count: 1
+    location: nbg1

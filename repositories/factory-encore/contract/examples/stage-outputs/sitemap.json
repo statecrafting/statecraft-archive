@@ -1,0 +1,82 @@
+{
+  "variant": "dual",
+  "pages": [
+    {
+      "id": "landing",
+      "title": "Welcome",
+      "path": "/",
+      "page_type": "landing",
+      "audience": "attendee",
+      "view_type": "public",
+      "requires_auth": false
+    },
+    {
+      "id": "events-list",
+      "title": "Events",
+      "path": "/events",
+      "page_type": "list",
+      "audience": "attendee",
+      "view_type": "public",
+      "requires_auth": false,
+      "data_sources": ["list-events"]
+    },
+    {
+      "id": "event-detail",
+      "title": "Event",
+      "path": "/events/:id",
+      "page_type": "detail",
+      "audience": "attendee",
+      "view_type": "public",
+      "requires_auth": false,
+      "data_sources": ["get-event"]
+    },
+    {
+      "id": "register-form",
+      "title": "Register",
+      "path": "/events/:id/register",
+      "page_type": "form",
+      "audience": "attendee",
+      "view_type": "public-authenticated",
+      "requires_auth": true,
+      "data_sources": ["create-registration"]
+    },
+    {
+      "id": "my-registrations",
+      "title": "My Registrations",
+      "path": "/my/registrations",
+      "page_type": "list",
+      "audience": "attendee",
+      "view_type": "public-authenticated",
+      "requires_auth": true,
+      "data_sources": ["list-my-registrations"]
+    },
+    {
+      "id": "organizer-dashboard",
+      "title": "Organizer Dashboard",
+      "path": "/admin",
+      "page_type": "dashboard",
+      "audience": "organizer",
+      "view_type": "private-authenticated",
+      "requires_auth": true
+    },
+    {
+      "id": "registrations-review",
+      "title": "Review Registrations",
+      "path": "/admin/registrations",
+      "page_type": "list",
+      "audience": "organizer",
+      "view_type": "private-authenticated",
+      "requires_auth": true,
+      "data_sources": ["decide-registration"]
+    },
+    {
+      "id": "login",
+      "title": "Sign In",
+      "path": "/login",
+      "page_type": "login",
+      "audience": "attendee",
+      "view_type": "public",
+      "requires_auth": false
+    }
+  ]
+}

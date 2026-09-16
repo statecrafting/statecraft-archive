@@ -1,0 +1,42 @@
+{
+  "record": {
+    "authors": [
+      "open-agentic-platform"
+    ],
+    "created": "2026-03-29",
+    "domain": "opc",
+    "extraFrontmatter": {
+      "language": "en"
+    },
+    "featureBranch": "038-titor-tauri-command-wiring",
+    "id": "038-titor-tauri-command-wiring",
+    "implementation": "n-a",
+    "kind": "platform",
+    "sectionHeadings": [
+      "Feature Specification: titor Tauri command wiring",
+      "Purpose",
+      "Scope",
+      "In scope",
+      "Out of scope",
+      "Requirements",
+      "Functional",
+      "Non-functional",
+      "Architecture",
+      "TitorState design",
+      "Command flow",
+      "Key integration points",
+      "Reference: existing CheckpointState pattern",
+      "Success criteria",
+      "Contract notes",
+      "Risk",
+      "Supersession"
+    ],
+    "specPath": "specs/038-titor-tauri-command-wiring/spec.md",
+    "status": "superseded",
+    "summary": "Wire the five stubbed titor Tauri commands (checkpoint, list, restore, diff, verify) to the production-ready titor library crate via a new TitorState in Tauri AppState, enabling checkpoint/restore from the desktop UI.\n",
+    "supersededBy": "073-axiomregent-unification",
+    "title": "titor Tauri command wiring"
+  },
+  "shardHash": "2d231426a798587ea1fc20ddf195f6a6de3d6dd574b93ff5787700be5f43aed8",
+  "specVersion": "1.1.0"
+}

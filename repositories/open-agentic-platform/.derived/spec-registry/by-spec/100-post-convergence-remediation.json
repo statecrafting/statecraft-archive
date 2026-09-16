@@ -1,0 +1,92 @@
+{
+  "record": {
+    "codeAliases": [
+      "POST_CONVERGENCE_REMEDIATION"
+    ],
+    "created": "2026-04-12",
+    "dependsOn": [
+      "089-governed-convergence-plan"
+    ],
+    "domain": "substrate",
+    "id": "100-post-convergence-remediation",
+    "implementation": "complete",
+    "kind": "process",
+    "owner": "bart",
+    "refines": [
+      {
+        "aspect": "security-hardening",
+        "unit": {
+          "kind": "file",
+          "path": "product/apps/opc/src-tauri/tauri.conf.json"
+        }
+      },
+      {
+        "aspect": "security-hardening",
+        "unit": {
+          "kind": "file",
+          "path": "crates/factory-engine/src/artifact_store.rs"
+        }
+      },
+      {
+        "aspect": "security-hardening",
+        "unit": {
+          "kind": "file",
+          "path": "crates/orchestrator/src/artifact.rs"
+        }
+      },
+      {
+        "aspect": "security-hardening",
+        "unit": {
+          "kind": "file",
+          "path": "crates/policy-kernel/src/lib.rs"
+        }
+      },
+      {
+        "aspect": "security-hardening",
+        "unit": {
+          "kind": "file",
+          "path": "platform/charts/statecraft/templates/deployment.yaml"
+        }
+      },
+      {
+        "aspect": "security-hardening",
+        "unit": {
+          "kind": "file",
+          "path": "platform/charts/deployd-api/templates/deployment.yaml"
+        }
+      },
+      {
+        "aspect": "security-hardening",
+        "unit": {
+          "kind": "file",
+          "path": "platform/services/deployd-api-rs/src/config.rs"
+        }
+      },
+      {
+        "aspect": "security-hardening",
+        "unit": {
+          "kind": "file",
+          "path": "platform/services/deployd-api-rs/src/auth.rs"
+        }
+      }
+    ],
+    "risk": "high",
+    "sectionHeadings": [
+      "100 — Post-Convergence Remediation",
+      "Problem",
+      "Solution",
+      "Phase 1 — Critical Security",
+      "Phase 2 — High Security + Platform Hardening",
+      "Phase 3 — Integrity & Consistency",
+      "Phase 4 — Orphaned Code Feature Catalog",
+      "Acceptance Criteria",
+      "Implementation Status"
+    ],
+    "specPath": "specs/100-post-convergence-remediation/spec.md",
+    "status": "approved",
+    "summary": "Remediate security vulnerabilities, integrity gaps, and technical debt surfaced during codebase analysis after the governed convergence plan (089) completed. Four phases: critical security, high security and platform hardening, integrity and consistency, orphaned code feature catalog for UI reintegration.\n",
+    "title": "Post-Convergence Remediation"
+  },
+  "shardHash": "0c53fcb5c75f7980d47cac8c0d7418a23561c23834955f39e2ef567c74fac3c4",
+  "specVersion": "1.1.0"
+}

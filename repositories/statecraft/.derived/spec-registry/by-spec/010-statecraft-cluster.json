@@ -1,0 +1,44 @@
+{
+  "record": {
+    "created": "2026-07-16",
+    "dependsOn": [
+      "001-statecraft-thesis"
+    ],
+    "establishes": [
+      {
+        "kind": "directory",
+        "path": "infra/"
+      }
+    ],
+    "id": "010-statecraft-cluster",
+    "implementation": "in-progress",
+    "sectionHeadings": [
+      "010: The statecraft cluster",
+      "1. Purpose",
+      "2. What the realignment retires",
+      "2.1 The cluster rauthy is retired",
+      "2.2 Grafana is dropped; Prometheus is kept, demoted",
+      "2.3 What stands",
+      "3. Territory",
+      "4. Behavior",
+      "Cluster",
+      "GitOps",
+      "Secrets: one documented source, two outputs",
+      "Platform services",
+      "Object storage",
+      "DNS",
+      "5. Acceptance",
+      "6. Human checkpoints",
+      "7. Out of scope",
+      "Amendment (2026-07-22): the RAUTHY_API_KEY catalog delta",
+      "Amendment (2026-07-22): spec 012 frontend-admin adoption, the scrape lands",
+      "Amendment (2026-07-23): FLEET_IMAGE_PULL_SECRET is a name, not a credential"
+    ],
+    "specPath": "specs/010-statecraft-cluster/spec.md",
+    "status": "approved",
+    "summary": "The statecraft-owned hetzner-k3s cluster, reconciled by Flux from an in-repo GitOps tree, with one documented secret source that generates the operator `.env.example` and the SOPS-encrypted secrets Flux decrypts in-cluster. Rewritten ground-up 2026-07-19 to the two-plane thesis (001 §3): identity and observability moved inside the control-plane container, so the cluster keeps only what a container cannot do for itself. The standalone cluster rauthy is retired (embedded rauthy is THE platform IdP) and cluster Grafana is dropped with its OIDC client (platform observability is the in-substrate flag-gated admin dashboard); Prometheus is kept, demoted to an unexposed in-cluster metrics sink. What stands: the Flux tree, SOPS, cert-manager, ingress-nginx, reflector, Postgres, NSQ, and Hetzner Object Storage. The cluster is live (PRs #27-#29); this rewrite is the first change that prunes services from it. Amended 2026-07-20 on explicit operator authorization, closing spec 009 checkpoint 1: the claim that every `RAUTHY_*` key survives the move into the container is corrected to the verified image behavior, which self-seeds its own identity. The catalog goes from 47 keys to 33, `auth.<DOMAIN>` is settled as not returning, and the keys a deploy genuinely owes the container are named.\n",
+    "title": "The statecraft cluster: the substrate beneath the control-plane container"
+  },
+  "shardHash": "c169aeed543fd75420f2d4e95ee6272b4b04142778bf8e0b4654f272c25c0ba2",
+  "specVersion": "1.2.0"
+}

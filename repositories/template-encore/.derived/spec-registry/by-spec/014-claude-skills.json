@@ -1,0 +1,55 @@
+{
+  "record": {
+    "codeAliases": [
+      "CLAUDE_SKILLS"
+    ],
+    "created": "2026-06-10",
+    "dependsOn": [
+      "000-bootstrap",
+      "015-claude-config-governance"
+    ],
+    "domain": "agentic",
+    "establishes": [
+      {
+        "kind": "file",
+        "path": ".claude/skills/"
+      },
+      {
+        "kind": "file",
+        "path": ".claude/agents/"
+      },
+      {
+        "kind": "file",
+        "path": "standards/schemas/frontmatter/agent-frontmatter.schema.json"
+      },
+      {
+        "kind": "file",
+        "path": "standards/schemas/frontmatter/skill-frontmatter.schema.json"
+      }
+    ],
+    "id": "014-claude-skills",
+    "implementation": "complete",
+    "kind": "governance",
+    "owner": "bart",
+    "risk": "low",
+    "sectionHeadings": [
+      "014 — Claude Code skills and agents: the agentic surface",
+      "1. Purpose",
+      "2. Territory",
+      "3. Behavior",
+      "3.1 Skill surface",
+      "3.2 Agent surface",
+      "3.3 Frontmatter schemas",
+      "3.4 Staleness gate",
+      "3.5 Feature-spec materialization",
+      "4. Acceptance criteria",
+      "5. Out of scope"
+    ],
+    "specPath": "specs/014-claude-skills/spec.md",
+    "status": "approved",
+    "summary": "The agentic surface: nine skills under .claude/skills/ (init, setup, commit, implement-plan, research, validate-and-fix, cleanup, scaffold-feature, code-quality), four pipeline agents under .claude/agents/ (architect, explorer, implementer, reviewer) plus the encore-expert domain specialist, and the frontmatter schemas that govern their shape. Skills perform all governed reads through the spec-spine CLI; the whole surface is a hashed index input, so quiet edits trip the staleness gate.\n",
+    "title": "Claude Code skills and agents: the agentic surface"
+  },
+  "shardHash": "8475e689f4466f18fe3fcc7d6766c0f7c1dbaf507fb05bb92112f8e325edf77b",
+  "specVersion": "1.1.0"
+}

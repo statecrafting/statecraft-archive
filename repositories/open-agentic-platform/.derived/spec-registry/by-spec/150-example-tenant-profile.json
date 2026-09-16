@@ -1,0 +1,63 @@
+{
+  "record": {
+    "amendmentRecord": "amended 2026-07-08 by spec 229 (auth-driver model correction): reaffirmed\nas a synthetic proving-ground profile. Its selected SAML capability (149)\nis now explicitly a grammar fixture, not a separate SAML driver. selects:\nand composition.requires: unchanged, keeping V-017 green.\n",
+    "authors": [
+      "open-agentic-platform"
+    ],
+    "created": "2026-05-17",
+    "dependsOn": [
+      "147-spec-kind-grammar"
+    ],
+    "domain": "platform",
+    "extraFrontmatter": {
+      "amended": "2026-07-08",
+      "approved": "2026-05-22",
+      "category": [
+        "identity",
+        "policy"
+      ],
+      "composition": {
+        "requires": [
+          "149-saml-auth-driver"
+        ]
+      },
+      "identity": {
+        "citizen_term": "user",
+        "contacts": [
+          {
+            "email": "maintainer@example.invalid",
+            "role": "maintainer"
+          }
+        ],
+        "jurisdiction": "XX",
+        "name": "Example Tenant",
+        "urls": {
+          "public": "https://example.invalid/"
+        }
+      },
+      "selects": {
+        "148-auth-driver-registry": "149-saml-auth-driver"
+      }
+    },
+    "id": "150-example-tenant-profile",
+    "implementation": "complete",
+    "kind": "profile",
+    "owner": "open-agentic-platform",
+    "risk": "low",
+    "sectionHeadings": [
+      "150 — Example tenant profile",
+      "§1 Motivation",
+      "§2 Constraint resolution",
+      "§3 Foundational requirements",
+      "§4 Why no `policy:` block",
+      "§5 Acceptance criteria",
+      "§6 Out of scope"
+    ],
+    "specPath": "specs/150-example-tenant-profile/spec.md",
+    "status": "approved",
+    "summary": "Proving-ground tenant profile. Selects the SAML auth driver capability (149) as the auth-driver registry (148) member for this tenant. No jurisdictional commitments — the `XX` jurisdiction and `example.invalid` domains are placeholders. This spec exists to exercise the spec-kind grammar V-013 and V-017 validators end-to-end against the `profile` kind. Real tenant profiles (GoA, partner orgs) will be authored as separate specs once the contract is exercised in production.\nAuthored as part of spec 147 §Migration Phase 3 — the proving-ground spec triplet exercising V-013/V-014/V-015/V-017 against the new `profile` kind.\n",
+    "title": "Example tenant profile — proving-ground tenant for spec-kind grammar"
+  },
+  "shardHash": "cb65c67cb03727fda3d0686f5e36bc0363115c5a072bb2cf4d16d89463cd09f7",
+  "specVersion": "1.1.0"
+}

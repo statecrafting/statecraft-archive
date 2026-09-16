@@ -1,0 +1,192 @@
+{
+  "mapping": {
+    "amends": [
+      "124-opc-factory-run-platform-integration"
+    ],
+    "dependsOn": [
+      "124-opc-factory-run-platform-integration",
+      "143-presigned-upload-public-endpoint",
+      "087-unified-workspace-architecture",
+      "115-knowledge-extraction-pipeline",
+      "106-rauthy-native-oidc-and-membership"
+    ],
+    "implementingPaths": [
+      {
+        "path": "crates/featuregraph/tests/golden/features_graph.json",
+        "source": "spec-edge"
+      },
+      {
+        "path": "platform/charts/statecraft/templates/cronjob-factory-runs-sweeper.yaml",
+        "source": "spec-edge"
+      },
+      {
+        "path": "platform/charts/statecraft/templates/cronjob-orphan-sweeper.yaml",
+        "source": "spec-edge"
+      },
+      {
+        "path": "platform/charts/statecraft/templates/external-secret-factory-sweeper.yaml",
+        "source": "spec-edge"
+      },
+      {
+        "path": "platform/charts/statecraft/templates/external-secret-knowledge-sweeper.yaml",
+        "source": "spec-edge"
+      },
+      {
+        "path": "platform/infra/hetzner/setup.sh",
+        "source": "spec-edge"
+      },
+      {
+        "path": "platform/infra/terraform/envs/dev/core/variables.tf",
+        "source": "spec-edge"
+      },
+      {
+        "path": "platform/services/statecraft/api/auth/m2mAuth.ts",
+        "source": "spec-edge"
+      },
+      {
+        "path": "platform/services/statecraft/api/factory/runsScheduler.ts",
+        "source": "spec-edge"
+      },
+      {
+        "path": "specs/143-presigned-upload-public-endpoint/spec.md",
+        "source": "spec-edge"
+      }
+    ],
+    "resolvedUnits": [
+      {
+        "locations": [
+          {
+            "file": "platform/charts/statecraft/templates/cronjob-factory-runs-sweeper.yaml"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "file",
+          "path": "platform/charts/statecraft/templates/cronjob-factory-runs-sweeper.yaml"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "platform/charts/statecraft/templates/external-secret-factory-sweeper.yaml"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "file",
+          "path": "platform/charts/statecraft/templates/external-secret-factory-sweeper.yaml"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "crates/featuregraph/tests/golden/features_graph.json"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "extends",
+        "unit": {
+          "kind": "file",
+          "path": "crates/featuregraph/tests/golden/features_graph.json"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "platform/services/statecraft/api/factory/runsScheduler.ts"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "extends",
+        "unit": {
+          "kind": "file",
+          "path": "platform/services/statecraft/api/factory/runsScheduler.ts"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "platform/infra/hetzner/setup.sh"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "refines",
+        "unit": {
+          "kind": "file",
+          "path": "platform/infra/hetzner/setup.sh"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "platform/charts/statecraft/templates/cronjob-orphan-sweeper.yaml"
+          }
+        ],
+        "ownership": false,
+        "sourceField": "references",
+        "unit": {
+          "kind": "file",
+          "path": "platform/charts/statecraft/templates/cronjob-orphan-sweeper.yaml"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "platform/charts/statecraft/templates/external-secret-knowledge-sweeper.yaml"
+          }
+        ],
+        "ownership": false,
+        "sourceField": "references",
+        "unit": {
+          "kind": "file",
+          "path": "platform/charts/statecraft/templates/external-secret-knowledge-sweeper.yaml"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "platform/infra/terraform/envs/dev/core/variables.tf"
+          }
+        ],
+        "ownership": false,
+        "sourceField": "references",
+        "unit": {
+          "kind": "file",
+          "path": "platform/infra/terraform/envs/dev/core/variables.tf"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "platform/services/statecraft/api/auth/m2mAuth.ts"
+          }
+        ],
+        "ownership": false,
+        "sourceField": "references",
+        "unit": {
+          "kind": "file",
+          "path": "platform/services/statecraft/api/auth/m2mAuth.ts"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "specs/143-presigned-upload-public-endpoint/spec.md"
+          }
+        ],
+        "ownership": false,
+        "sourceField": "references",
+        "unit": {
+          "kind": "file",
+          "path": "specs/143-presigned-upload-public-endpoint/spec.md"
+        }
+      }
+    ],
+    "specId": "224-self-hosted-sweeper-cron-revival",
+    "specStatus": "approved"
+  },
+  "schemaVersion": "1.1.0",
+  "shardHash": "d3dcd6359776c368ed7cd7b3dcee8397204654462c014686f3167683e7e8c44a"
+}

@@ -1,0 +1,33 @@
+{
+  "name": "@opc/permission-system",
+  "version": "0.1.0",
+  "description": "Tool permission matcher and evaluator contracts",
+  "private": true,
+  "type": "module",
+  "main": "src/index.ts",
+  "types": "src/index.ts",
+  "exports": {
+    ".": "./src/index.ts",
+    "./types": "./src/types.ts",
+    "./pattern": "./src/pattern.ts",
+    "./store": "./src/store.ts",
+    "./defaults": "./src/defaults.ts",
+    "./prompt": "./src/prompt.ts",
+    "./evaluator": "./src/evaluator.ts",
+    "./handler": "./src/handler.ts",
+    "./cli": "./src/cli.ts"
+  },
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "test": "vitest run",
+    "lint": "eslint src/"
+  },
+  "devDependencies": {
+    "@types/node": "^24.5.0",
+    "typescript": "^6.0.3",
+    "vitest": "^4.1.5"
+  },
+  "oap": {
+    "spec": "049-permission-system"
+  }
+}

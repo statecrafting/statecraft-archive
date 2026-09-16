@@ -1,0 +1,62 @@
+{
+  "record": {
+    "authors": [
+      "open-agentic-platform"
+    ],
+    "codeAliases": [
+      "PANEL_EVENT_BUS"
+    ],
+    "created": "2026-03-29",
+    "domain": "opc",
+    "establishes": [
+      {
+        "kind": "directory",
+        "path": "product/packages/panel-event-bus"
+      }
+    ],
+    "extraFrontmatter": {
+      "language": "en",
+      "sources": [
+        "crystal"
+      ]
+    },
+    "featureBranch": "060-panel-event-bus",
+    "id": "060-panel-event-bus",
+    "implementation": "complete",
+    "kind": "platform",
+    "references": [
+      {
+        "role": "historical",
+        "unit": {
+          "kind": "file",
+          "path": "product/apps/opc/src/lib/panelEventBus.ts"
+        }
+      }
+    ],
+    "sectionHeadings": [
+      "Feature Specification: Typed Inter-Panel Event Bus",
+      "Purpose",
+      "Scope",
+      "In scope",
+      "Out of scope",
+      "Requirements",
+      "Functional",
+      "Non-functional",
+      "Architecture",
+      "Event type definitions",
+      "Core event types",
+      "Event bus interface",
+      "Delivery flow",
+      "Implementation approach",
+      "Success criteria",
+      "Dependencies",
+      "Risk"
+    ],
+    "specPath": "specs/060-panel-event-bus/spec.md",
+    "status": "approved",
+    "summary": "Typed inter-panel event bus enabling loose coupling between UI panels. Each panel type declares the events it can emit and the events it subscribes to. The bus maintains an event history, enforces type safety via declared capability contracts, and automatically excludes the source panel from receiving its own events. Typed event namespaces (terminal:command_executed, files:changed, git:operation_*) replace ad-hoc cross-panel communication.\n",
+    "title": "Typed Inter-Panel Event Bus"
+  },
+  "shardHash": "06a8469607f7cdc5462824dfaa3c9e18c49c78f99f8c37bffdab127973badb46",
+  "specVersion": "1.1.0"
+}

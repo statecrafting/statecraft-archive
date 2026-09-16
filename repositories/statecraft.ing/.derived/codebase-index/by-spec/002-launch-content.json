@@ -1,0 +1,100 @@
+{
+  "mapping": {
+    "dependsOn": [
+      "001-site-scaffold"
+    ],
+    "implementingPaths": [
+      {
+        "path": "app/lib/docs.ts",
+        "source": "spec-edge"
+      },
+      {
+        "path": "app/lib/milestones.ts",
+        "source": "spec-edge"
+      },
+      {
+        "path": "app/routes/_index.tsx",
+        "source": "spec-edge"
+      },
+      {
+        "path": "app/routes/docs.$slug.tsx",
+        "source": "spec-edge"
+      },
+      {
+        "path": "app/routes/docs.tsx",
+        "source": "spec-edge"
+      }
+    ],
+    "resolvedUnits": [
+      {
+        "locations": [
+          {
+            "file": "app/lib/docs.ts"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "file",
+          "path": "app/lib/docs.ts"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "app/lib/milestones.ts"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "file",
+          "path": "app/lib/milestones.ts"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "app/routes/_index.tsx"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "file",
+          "path": "app/routes/_index.tsx"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "app/routes/docs.$slug.tsx"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "file",
+          "path": "app/routes/docs.$slug.tsx"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "app/routes/docs.tsx"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "file",
+          "path": "app/routes/docs.tsx"
+        }
+      }
+    ],
+    "specId": "002-launch-content",
+    "specStatus": "approved"
+  },
+  "schemaVersion": "1.1.0",
+  "shardHash": "c9f76d492af60ebf40d2e37360f0eabaa5c4887391894734f4b85488e11d9015"
+}

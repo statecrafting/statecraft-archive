@@ -1,0 +1,296 @@
+# Spec: 000-bootstrap
+#
+# (The OAP spec IDs cited below, 209/219/121/168/203/220, are external
+#  OAP-corpus specs governing the run-side evidence + verification legs; they
+#  are not resolvable in this template's local `specs/` registry. The local
+#  owning spec is 000-bootstrap, which `establishes:` this workflow file.)
+#
+# The constitutional governance gate: compile the spec registry, lint the
+# corpus at --fail-on-warn, verify the committed codebase index is fresh,
+# and (on PRs) run the spec/code coupling gate against the PR base. Then,
+# for a born-with produced app, produce and re-check the factory's run-side
+# paperwork with no trust in the producer:
+#   - the born-with toolchain pin (OAP spec 209 FR-004) and claim provenance
+#     (OAP spec 121), via the vended `tenant-tail` npm pin (OAP spec 219);
+#   - a reproducible CycloneDX BOM + dependency-audit artifact and the
+#     BOM/lockfile parity gate (OAP spec 203 FR-001/FR-002/FR-004), via the
+#     pinned `@cyclonedx/cyclonedx-npm`;
+#   - the certificate emission itself (OAP spec 220 FR-002): the emitter
+#     (`tenant-emit`) fires as the terminal step, signing with the platform-
+#     provisioned OAP_SIGNING_KEY (spec 220 FR-003) and binding the corpus
+#     attestation (FR-007) and SBOM (spec 203 FR-003);
+#   - the governance certificate verify (OAP spec 168), which now re-checks
+#     the SBOM and corpus bindings of the just-emitted certificate.
+#
+# Dispatched unconditionally from `.github/workflows/ci.yml` (spec 009):
+# governance is always-on, never path-filtered. The CLIs come from the
+# `spec-spine`, `tenant-tail`, `tenant-emit`, and `@cyclonedx/cyclonedx-npm`
+# npm devDependencies (prebuilt binaries; no extra toolchain).
+
+name: spec-spine
+
+on:
+  workflow_call:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  spec-spine:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-node@48b55a011bda9f5d6aeb4c2d9c7362e8dae4041e # v6.4.0
+        with:
+          node-version: 24
+          cache: npm
+
+      - name: Install dependencies (root workspace)
+        run: npm ci
+
+      - name: Compile spec registry
+        run: npx --no-install spec-spine compile
+
+      - name: Corpus conformance lint (fail on warnings)
+        run: npx --no-install spec-spine lint --fail-on-warn
+
+      - name: Codebase index staleness gate
+        run: npx --no-install spec-spine index check
+
+      # PR-only: the coupling gate diffs against the PR base. The PR body
+      # is passed for the `Spec-Drift-Waiver:` escape hatch (visible,
+      # auditable). Exit 2 means a stale index — fixed by the gate above.
+      - name: Spec/code coupling gate
+        if: github.event_name == 'pull_request'
+        env:
+          PR_BODY: ${{ github.event.pull_request.body }}
+          BASE_REF: ${{ github.event.pull_request.base.ref }}
+        run: |
+          set -euo pipefail
+          printf '%s' "$PR_BODY" > /tmp/pr-body.txt
+          npx --no-install spec-spine couple \
+            --base "origin/${BASE_REF}" \
+            --head HEAD \
+            --pr-body /tmp/pr-body.txt
+
+      # Tenant run-side verification (OAP spec 209: tenant kernel CI enforcement).
+      # The verifiers are the vended `tenant-tail` npm pin (OAP spec 219); `npm ci`
+      # above already gates their sha512 lockfile integrity (OAP spec 209 FR-004).
+      # A born-with produced app carries the run-side paperwork these verbs
+      # read; this template does not, so each step is conditional on
+      # `.kernel-version` (the born-with marker) and emits a visible notice
+      # when the subject is absent. Skip-as-pass is never used (OAP spec 209
+      # FR-005): a gate that should run and cannot fails the build.
+
+      - name: Born-with toolchain pin check (OAP spec 209 FR-004)
+        run: |
+          set -euo pipefail
+          if [ ! -f .kernel-version ]; then
+            echo "::notice::no .kernel-version (template or non-produced repo); born-with pin check activates in produced apps"
+            exit 0
+          fi
+          installed="$(node -p "require('spec-spine/package.json').version")"
+          # `|| true`: grep exits 1 when the field is absent (e.g. the non-npm
+          # engine-fallback kernel emits spec_spine_version: None, omitted);
+          # without it, set -e + pipefail would kill the step before the guard
+          # below ever reports the cause. tr strips quotes and all whitespace
+          # (incl. CRLF) so a Windows-authored stamp still compares equal.
+          born="$(grep -E '^[[:space:]]*spec_spine_version:' .kernel-version | head -1 || true)"
+          born="$(printf '%s' "${born#*:}" | tr -d "[:space:]\"'")"
+          if [ -z "${born}" ]; then
+            echo "::error::.kernel-version present but kernel.spec_spine_version is missing or empty"
+            exit 1
+          fi
+          if [ "${installed}" != "${born}" ]; then
+            echo "::error::spec-spine drift: installed ${installed} != born-with ${born} (.kernel-version). The governance toolchain drifted from birth; restore the born-with pin or re-baseline the kernel."
+            exit 1
+          fi
+          echo "::notice::spec-spine pin matches born-with kernel (${born})"
+
+      - name: Claim provenance verify (OAP spec 209 FR-001, OAP spec 121)
+        run: |
+          set -euo pipefail
+          if [ ! -f .kernel-version ]; then
+            echo "::notice::no .kernel-version; claim-provenance verification activates in produced apps"
+            exit 0
+          fi
+          # --fail-on-rejected: a rejected claim fails the PR (FR-001). The
+          # default exit 0 is diagnostic only and would not enforce.
+          npx --no-install tenant-tail verify-provenance --project . --fail-on-rejected
+
+      # ── Produced-app SBOM + audit + certificate emission (OAP specs 203/220) ─
+      # A born-with app generates its dependency evidence, fires the emitter to
+      # produce a signed governance certificate, and the verify step below then
+      # re-checks that certificate green (activating spec 209's dormant verify).
+      # Every step is gated on `.kernel-version`, so in this template (which has
+      # none) they are visible no-ops, exactly like the verify legs above.
+
+      - name: Produced-app SBOM + audit generation (OAP spec 203 FR-001/FR-002)
+        id: sbom
+        run: |
+          set -euo pipefail
+          if [ ! -f .kernel-version ]; then
+            echo "::notice::no .kernel-version; SBOM/audit generation activates in produced apps"
+            echo "active=false" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+          echo "active=true" >> "$GITHUB_OUTPUT"
+          mkdir -p .factory
+          # Reproducible CycloneDX BOM derived purely from the committed lockfile
+          # (spec 203 AC-4: same lockfile + pinned tool => byte-identical BOM).
+          # --ignore-npm-errors: the app's package.json `overrides` force some
+          # transitive deps (e.g. glob, editorconfig) outside a dependent's
+          # declared range, so cyclonedx-npm's internal `npm ls` exits
+          # ELSPROBLEMS under node-24 and aborts. The BOM is derived from the
+          # lockfile (--package-lock-only), so the tree range-validity warnings
+          # change neither its content nor its reproducibility; both this
+          # invocation and the parity re-check below carry the flag so their
+          # output hashes still compare like-for-like.
+          npx --no-install @cyclonedx/cyclonedx-npm \
+            --ignore-npm-errors \
+            --output-format JSON --output-reproducible --package-lock-only \
+            --output-file .factory/sbom.cdx.json
+          # Dependency audit (spec 203 FR-002). `npm audit` exits non-zero when
+          # it finds vulnerabilities; that is evidence, not a failure, so `|| true`
+          # keeps the record. A registry/DB outage leaves an explicit error body
+          # in the artifact, visible-gap evidence, never a silent skip (AC-3).
+          npm audit --json > .factory/audit.json || true
+          if [ ! -s .factory/audit.json ]; then
+            echo '{"error":"npm audit produced no output (registry or advisory DB unavailable)"}' > .factory/audit.json
+          fi
+
+      - name: BOM/lockfile parity gate (OAP spec 203 FR-004)
+        if: steps.sbom.outputs.active == 'true'
+        run: |
+          set -euo pipefail
+          # Point 2 (lockfile-satisfies-manifest) is already enforced by the
+          # `npm ci` step above: npm ci refuses to run when package-lock.json
+          # does not satisfy package.json. Point 1 (regenerable BOM): regenerate
+          # a second copy and assert byte-identical reproduction from the same
+          # lockfile + pinned @cyclonedx/cyclonedx-npm (constitution Principle IV,
+          # spec 203 AC-4). Point 3 (attributable failure): the diagnostic names
+          # which artifact drifted.
+          # --ignore-npm-errors mirrors the generation step above so the
+          # regenerated BOM is byte-identical (same lockfile, same flags).
+          npx --no-install @cyclonedx/cyclonedx-npm \
+            --ignore-npm-errors \
+            --output-format JSON --output-reproducible --package-lock-only \
+            --output-file /tmp/sbom.recheck.json
+          a="$(sha256sum .factory/sbom.cdx.json | cut -d' ' -f1)"
+          b="$(sha256sum /tmp/sbom.recheck.json | cut -d' ' -f1)"
+          if [ "$a" != "$b" ]; then
+            echo "::error::BOM is not reproducible from the lockfile ($a != $b); regenerate .factory/sbom.cdx.json with the pinned @cyclonedx/cyclonedx-npm"
+            exit 1
+          fi
+          # If the tenant commits .factory/sbom.cdx.json as a tracked sidecar,
+          # the committed copy must match the lockfile-regenerated one (drift
+          # gate). A tenant that does not commit it relies on the per-run
+          # certificate binding as the durable, tamper-evident BOM record.
+          if git cat-file -e HEAD:.factory/sbom.cdx.json 2>/dev/null; then
+            committed="$(git show HEAD:.factory/sbom.cdx.json | sha256sum | cut -d' ' -f1)"
+            if [ "$committed" != "$a" ]; then
+              echo "::error::committed .factory/sbom.cdx.json drifted from the lockfile ($committed != $a); regenerate and commit it"
+              exit 1
+            fi
+          fi
+          echo "::notice::BOM reproducible from lockfile (sha ${a})"
+
+      - name: Tenant corpus attestation (OAP spec 220 FR-007)
+        if: steps.sbom.outputs.active == 'true'
+        run: |
+          set -euo pipefail
+          # spec-spine attest writes .derived/attestation/attestation.json over
+          # the produced app's OWN specs/ corpus. The emitter binds it by hash
+          # (read, never recompute); the verify step re-derives the link.
+          npx --no-install spec-spine attest --repo .
+          test -f .derived/attestation/attestation.json
+
+      - name: Emit governance certificate (OAP spec 220 FR-002 firing)
+        if: steps.sbom.outputs.active == 'true'
+        env:
+          OAP_SIGNING_KEY: ${{ secrets.OAP_SIGNING_KEY }}
+        run: |
+          set -euo pipefail
+          if [ -z "${OAP_SIGNING_KEY:-}" ]; then
+            # The platform provisions OAP_SIGNING_KEY at project creation (spec
+            # 220 FR-003). Fork PRs cannot read repo secrets; surface the gap
+            # visibly instead of emitting an untrusted (ephemeral) certificate.
+            echo "::warning::OAP_SIGNING_KEY unavailable (fork PR or unprovisioned tenant); certificate emission skipped this run"
+            exit 0
+          fi
+          RUN_DIR=".factory/runs/ci-${GITHUB_RUN_ID}"
+          mkdir -p "${RUN_DIR}/s0-ci-run"
+          # A minimal, attributable CI-run stage for the certificate proof chain.
+          RUN_DIR="${RUN_DIR}" node -e "require('fs').writeFileSync(process.env.RUN_DIR+'/s0-ci-run/ci-run.json', JSON.stringify({runId:process.env.GITHUB_RUN_ID,repository:process.env.GITHUB_REPOSITORY,ref:process.env.GITHUB_REF,sha:process.env.GITHUB_SHA,event:process.env.GITHUB_EVENT_NAME})+'\n')"
+          # Born-with agentic-posture declaration (OAP spec 210 FR-001/FR-002).
+          # The acme-vue-encore scaffold produces a conventional web application
+          # with no model calls, agent loops, tool surfaces, or persistent agent
+          # memory. This is a POSITIVE, falsifiable declaration (authored `none`,
+          # not defaulted): tenant-emit reads it off this frozen Build Spec and
+          # binds `agenticPostureBinding: {posture:none, defaulted:false}`, and the
+          # verify step below cross-checks it against the produced app's SBOM, so
+          # adding an LLM/agent SDK later flips the certificate to Contradicted
+          # until the posture is re-declared (agentic_posture: declared|governed).
+          mkdir -p "${RUN_DIR}/s5-ui-specification"
+          printf 'agentic_posture:\n  posture: none\n' > "${RUN_DIR}/s5-ui-specification/build-spec.yaml"
+          # FR-002 firing with FR-003 operator-key rigor, FR-007 corpus binding,
+          # the spec 203 SBOM/audit binding (--sbom-dir reads .factory/), and the
+          # spec 210 agentic-posture binding (read off the frozen Build Spec above).
+          npx --no-install tenant-emit build-certificate "${RUN_DIR}" \
+            --tenant-mode --require-operator-key \
+            --stage-ids auto \
+            --adapter acme-vue-encore \
+            --sbom-dir . \
+            --corpus-attestation .derived/attestation/attestation.json \
+            --signer-subject "github-actions[bot]" \
+            --signer-identity-provider "github-actions@${GITHUB_REPOSITORY}" \
+            --signer-session-id "${GITHUB_RUN_ID}"
+          echo "::notice::emitted ${RUN_DIR}/governance-certificate.json"
+
+      - name: Governance certificate verify (OAP spec 209 FR-001, OAP spec 168)
+        run: |
+          set -euo pipefail
+          if [ ! -f .kernel-version ]; then
+            echo "::notice::no .kernel-version; certificate verification activates in produced apps"
+            exit 0
+          fi
+          # Shell glob (nullglob) instead of parsing `ls`: robust to paths with
+          # spaces and free of lexicographic-vs-numeric ordering surprises. We
+          # verify EVERY certificate present rather than guessing the latest, so
+          # there is no ordering to get wrong; set -e fails the step on the first
+          # invalid one.
+          shopt -s nullglob
+          certs=( .factory/runs/*/governance-certificate.json )
+          [ -f governance-certificate.json ] && certs+=( governance-certificate.json )
+          shopt -u nullglob
+          if [ "${#certs[@]}" -eq 0 ]; then
+            # The firing step above emits a certificate whenever OAP_SIGNING_KEY
+            # is provisioned (spec 220 FR-002/FR-003). Reaching here with none
+            # means emission was skipped this run (no signing key: a fork PR or
+            # an unprovisioned tenant), surfaced as a visible notice rather than
+            # a masked gate.
+            echo "::notice::no governance certificate found (emission skipped: OAP_SIGNING_KEY unavailable this run); verify-certificate enforces once a key-provisioned run emits"
+            exit 0
+          fi
+          for cert in "${certs[@]}"; do
+            echo "verifying ${cert}"
+            # A born-with app is a tenant run: its certificate is unsealed by
+            # design (no platform countersign -- OAP spec 220 FR-004, spec 198
+            # FR-014). tenant-tail 0.3.0 rejects an unsealed certificate by
+            # default (seal required), so pass --allow-unsealed here to accept
+            # the offline-verifiable-but-unsealed posture. Drop this flag once
+            # the deferred tenant-to-OAP countersign uplink (spec 168) lands and
+            # a real platform seal is available to adjudicate.
+            verify_args=( "${cert}" --artifact-dir "$(dirname "${cert}")" --allow-unsealed )
+            # Spec 203 FR-003: re-hash the produced app's BOM + audit against the
+            # certificate's SBOM binding. Spec 220 FR-007: re-derive the corpus
+            # binding link. Both artifacts were produced above in the same run.
+            [ -f .factory/sbom.cdx.json ] && verify_args+=( --sbom-dir . )
+            [ -f .derived/attestation/attestation.json ] && verify_args+=( --corpus-attestation .derived/attestation/attestation.json )
+            npx --no-install tenant-tail verify-certificate "${verify_args[@]}"
+          done

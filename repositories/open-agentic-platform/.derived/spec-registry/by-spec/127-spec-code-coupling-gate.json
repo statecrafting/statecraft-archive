@@ -1,0 +1,71 @@
+{
+  "record": {
+    "amendmentRecord": "amended 2026-06-18 by spec 217 (engine-swap collapse): the in-tree spec-code-coupling-check binary was deleted; the gate algorithm is now spec-spine-core::couple_with, invoked as `spec-spine couple`. The crate-unit is stripped (path deleted); the CI workflow and Makefile coupling section this spec governs survive, with only the binary invocation changed.\n",
+    "coAuthority": [
+      {
+        "unit": {
+          "anchor": "spec-code-coupling",
+          "file": "Makefile",
+          "kind": "section"
+        },
+        "with_specs": [
+          "102-governed-excellence",
+          "104-makefile-ci-parity-contract",
+          "116-supply-chain-policy-gates",
+          "128-spec-lint-default-fail-on-warn",
+          "134-fast-local-ci-mode",
+          "135-fast-ci-as-default"
+        ]
+      }
+    ],
+    "codeAliases": [
+      "SPEC_CODE_COUPLING_WORKFLOW"
+    ],
+    "created": "2026-05-02",
+    "dependsOn": [
+      "103-init-protocol-governed-reads",
+      "104-makefile-ci-parity-contract",
+      "118-workflow-spec-traceability",
+      "130-spec-coupling-primary-owner",
+      "133-amends-aware-coupling-gate"
+    ],
+    "domain": "tooling",
+    "establishes": [
+      {
+        "kind": "file",
+        "path": ".github/workflows/ci-spec-code-coupling.yml"
+      }
+    ],
+    "extraFrontmatter": {
+      "amended": "2026-06-18",
+      "approved": "2026-05-19",
+      "slug": "spec-code-coupling-workflow"
+    },
+    "id": "127-spec-code-coupling-gate",
+    "implementation": "complete",
+    "kind": "governance",
+    "owner": "bart",
+    "risk": "medium",
+    "sectionHeadings": [
+      "127 — Spec/Code Coupling Workflow",
+      "1. The workflow contract",
+      "2. Make targets",
+      "2.1 `make pr-prep`",
+      "2.2 `make ci-spec-code-coupling`",
+      "3. The CI workflow",
+      "4. Exit codes",
+      "5. Output format",
+      "6. Contributor flow",
+      "7. PR-body waiver mechanism",
+      "8. Governed-read discipline (spec 103)",
+      "9. Relationship to other workflow gates",
+      "10. Cross-references"
+    ],
+    "specPath": "specs/127-spec-code-coupling-gate/spec.md",
+    "status": "approved",
+    "summary": "The CI job, make target, exit-code contract, and contributor-facing affordances of the spec/code coupling check. Defines what `make pr-prep` does, what the gate's exit codes mean, how PRs interact with the gate, and what the operator sees when the gate fails or passes. The derivation logic lives in spec 133 (coupling-gate); the relationship-field semantics live in spec 130 (spec-relationship-graph); section matching lives in spec 152 (path-co-authority).\n",
+    "title": "Spec/Code Coupling Workflow — CI job, make target, contributor flow"
+  },
+  "shardHash": "129ff43f1595ab3e0d6dc9eab5a1e87560f39b10923322cb243d92f2a83fa658",
+  "specVersion": "1.1.0"
+}

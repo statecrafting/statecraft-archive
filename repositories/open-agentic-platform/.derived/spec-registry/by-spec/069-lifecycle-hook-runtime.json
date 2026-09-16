@@ -1,0 +1,67 @@
+{
+  "record": {
+    "authors": [
+      "open-agentic-platform"
+    ],
+    "codeAliases": [
+      "LIFECYCLE_HOOK_RUNTIME"
+    ],
+    "created": "2026-03-31",
+    "domain": "opc",
+    "extends": [
+      {
+        "nature": "wrapping",
+        "spec": "048-hookify-rule-engine",
+        "unit": {
+          "id": "@opc/hookify-rule-engine",
+          "kind": "crate"
+        }
+      }
+    ],
+    "extraFrontmatter": {
+      "compliance": [
+        {
+          "controls": [
+            "ASI05",
+            "ASI09"
+          ],
+          "framework": "owasp-asi-2026"
+        }
+      ],
+      "language": "en",
+      "sources": [
+        "claude-code"
+      ]
+    },
+    "featureBranch": "069-lifecycle-hook-runtime",
+    "id": "069-lifecycle-hook-runtime",
+    "implementation": "complete",
+    "kind": "platform",
+    "sectionHeadings": [
+      "Feature Specification: Lifecycle Hook Runtime",
+      "Purpose",
+      "Scope",
+      "In scope",
+      "Out of scope",
+      "Requirements",
+      "Functional",
+      "Non-functional",
+      "Architecture",
+      "Event taxonomy",
+      "Hook definition schema",
+      "Hook registry",
+      "Execution engine",
+      "Environment variables passed to bash handlers",
+      "Implementation approach",
+      "Success criteria",
+      "Dependencies",
+      "Risk"
+    ],
+    "specPath": "specs/069-lifecycle-hook-runtime/spec.md",
+    "status": "approved",
+    "summary": "Wires the hookify rule engine (Feature 048) into a production runtime with the 6-event lifecycle taxonomy proven by Claude Code. Adds hook execution for SessionStart, SessionStop, PreToolUse, PostToolUse, UserPromptSubmit, and FileChanged events. Supports bash, agent, and prompt handler types with multi-source registration from settings, hook rule files, and orchestrator manifests.\n",
+    "title": "Lifecycle Hook Runtime"
+  },
+  "shardHash": "a05c896d88ae8297e30bfca42c6c413b24836ef2195dfd7071de9f943dd3bb96",
+  "specVersion": "1.1.0"
+}

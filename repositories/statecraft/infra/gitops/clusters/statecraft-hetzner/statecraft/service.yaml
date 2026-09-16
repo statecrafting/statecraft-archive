@@ -1,0 +1,19 @@
+# ClusterIP only. The public entrypoint is the Ingress; nothing reaches the
+# control plane except through it. The embedded rauthy is not exposed here at
+# all: it binds 127.0.0.1:8081 inside the pod and is reachable only through the
+# app's own /auth/* proxy (spec 009 section 2.4).
+apiVersion: v1
+kind: Service
+metadata:
+  name: statecraft
+  namespace: statecraft-system
+  labels:
+    statecraft.spec: "009-control-plane-deploy"
+spec:
+  type: ClusterIP
+  selector:
+    app: statecraft
+  ports:
+    - name: http
+      port: 8080
+      targetPort: http

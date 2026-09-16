@@ -1,0 +1,37 @@
+# Spec: 104-makefile-ci-parity-contract
+# Spec: 177-ci-orchestrator-pr-gate
+#
+# CI Parity Check: asserts the root Makefile's `ci` targets mirror the `run:`
+# blocks in every enforcing GitHub Actions workflow. Additive to, not a
+# replacement for, the per-workflow validation gates.
+#
+# Dispatched from `.github/workflows/ci.yml` on PRs touching workflow
+# files, the Makefile, or the parity-check tool (spec 177); manual via
+# workflow_dispatch.
+
+name: CI Parity
+
+on:
+  workflow_call:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  parity:
+    runs-on: ubuntu-latest
+    name: parity / lint + test + drift check
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+
+      - uses: ./.github/actions/rust-ci
+        with:
+          manifest-path: tools/oap/ci-parity-check/Cargo.toml
+
+      - name: Build ci-parity-check
+        run: cargo build --release --manifest-path tools/oap/ci-parity-check/Cargo.toml --target-dir tools/oap/ci-parity-check/target
+
+      - name: Drift check (workflow -> Makefile)
+        run: ./tools/oap/ci-parity-check/target/release/ci-parity-check

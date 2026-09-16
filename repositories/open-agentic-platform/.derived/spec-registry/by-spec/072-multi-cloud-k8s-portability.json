@@ -1,0 +1,58 @@
+{
+  "record": {
+    "authors": [
+      "open-agentic-platform"
+    ],
+    "codeAliases": [
+      "MULTI_CLOUD_K8S"
+    ],
+    "created": "2026-04-01",
+    "domain": "platform",
+    "establishes": [
+      {
+        "kind": "directory",
+        "path": "platform/infra"
+      }
+    ],
+    "extraFrontmatter": {
+      "language": "en",
+      "sources": [
+        "platform-infra"
+      ]
+    },
+    "featureBranch": "072-multi-cloud-k8s-portability",
+    "id": "072-multi-cloud-k8s-portability",
+    "implementation": "complete",
+    "kind": "platform",
+    "sectionHeadings": [
+      "Feature Specification: Multi-Cloud Kubernetes Portability",
+      "Purpose",
+      "Deployment Targets",
+      "Tier 1: Managed Cloud Kubernetes",
+      "Tier 2: Bare Kubernetes",
+      "Architecture",
+      "Provider-Agnostic Output Contract",
+      "Secrets Strategy: External Secrets Operator (ESO)",
+      "Helm Chart Parameterization",
+      "Removed from templates",
+      "Added to templates",
+      "Values overlay structure",
+      "Cluster Addons Refactoring",
+      "Terraform Environment Structure",
+      "Hetzner K3s Provisioning",
+      "Local Development Provisioning",
+      "Makefile Multi-Target Support",
+      "Invariants",
+      "Migration Path",
+      "Dependencies",
+      "Amendment 2026-06-29 (reset-prep housekeeping)",
+      "Security hardening amendment (2026-07-02)"
+    ],
+    "specPath": "specs/072-multi-cloud-k8s-portability/spec.md",
+    "status": "approved",
+    "summary": "Generalizes the platform's Kubernetes infrastructure from Azure-only to a portable two-tier model supporting managed cloud K8s (Azure AKS, AWS EKS, GCP GKE, DigitalOcean DOKS), bare K8s (Hetzner K3s via hetzner-k3s), and local development (k3d). Introduces a provider-agnostic output contract for Terraform modules, replaces Azure CSI secrets + workload identity with external-secrets-operator, and parameterizes Helm charts with per-environment values overlays.\n",
+    "title": "Multi-Cloud Kubernetes Portability"
+  },
+  "shardHash": "d0caf4ef90fd0bf619e0d01a78bc31903ae051c45918758a25566de0f41dbf17",
+  "specVersion": "1.1.0"
+}

@@ -1,0 +1,141 @@
+{
+  "diagnostics": {
+    "errors": [],
+    "warnings": [
+      {
+        "code": "W-002",
+        "message": "spec '122-stakeholder-doc-inversion' file unit 'crates/factory-engine/skills/client-document-comparator.md' does not exist",
+        "path": "crates/factory-engine/skills/client-document-comparator.md"
+      },
+      {
+        "code": "W-002",
+        "message": "spec '122-stakeholder-doc-inversion' file unit 'crates/factory-engine/skills/project-charter-comparator.md' does not exist",
+        "path": "crates/factory-engine/skills/project-charter-comparator.md"
+      }
+    ]
+  },
+  "mapping": {
+    "dependsOn": [
+      "075-factory-workflow-engine",
+      "087-unified-workspace-architecture",
+      "119-project-as-unit-of-governance",
+      "120-factory-extraction-stage",
+      "121-claim-provenance-enforcement"
+    ],
+    "implementingPaths": [
+      {
+        "path": "crates/factory-contracts/src/stakeholder_docs.rs",
+        "source": "spec-edge"
+      },
+      {
+        "path": "crates/factory-engine/src/stages/stage_cd.rs",
+        "source": "spec-edge"
+      },
+      {
+        "path": "crates/factory-engine/src/stages/stage_cd_comparator.rs",
+        "source": "spec-edge"
+      },
+      {
+        "path": "product/apps/opc/src/components/factory/StageCdReview.tsx",
+        "source": "spec-edge"
+      },
+      {
+        "path": "tools/oap/stakeholder-doc-lint",
+        "source": "manifest-metadata"
+      },
+      {
+        "path": "tools/oap/stakeholder-doc-lint/Cargo.toml",
+        "source": "spec-edge"
+      }
+    ],
+    "resolvedUnits": [
+      {
+        "locations": [
+          {
+            "file": "crates/factory-engine/src/stages/stage_cd_comparator.rs"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "file",
+          "path": "crates/factory-engine/src/stages/stage_cd_comparator.rs"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "product/apps/opc/src/components/factory/StageCdReview.tsx"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "file",
+          "path": "product/apps/opc/src/components/factory/StageCdReview.tsx"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "tools/oap/stakeholder-doc-lint/Cargo.toml"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "file",
+          "path": "tools/oap/stakeholder-doc-lint/Cargo.toml"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "crates/factory-contracts/src/stakeholder_docs.rs"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "extends",
+        "unit": {
+          "kind": "file",
+          "path": "crates/factory-contracts/src/stakeholder_docs.rs"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "crates/factory-engine/src/stages/stage_cd.rs"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "extends",
+        "unit": {
+          "kind": "file",
+          "path": "crates/factory-engine/src/stages/stage_cd.rs"
+        }
+      },
+      {
+        "locations": [],
+        "ownership": false,
+        "sourceField": "references",
+        "unit": {
+          "kind": "file",
+          "path": "crates/factory-engine/skills/client-document-comparator.md"
+        }
+      },
+      {
+        "locations": [],
+        "ownership": false,
+        "sourceField": "references",
+        "unit": {
+          "kind": "file",
+          "path": "crates/factory-engine/skills/project-charter-comparator.md"
+        }
+      }
+    ],
+    "specId": "122-stakeholder-doc-inversion",
+    "specStatus": "approved"
+  },
+  "schemaVersion": "1.1.0",
+  "shardHash": "c9479631e704ae71c0014813b6398a9ba0345a64a9078c0f3f36ee3344ba9e95"
+}

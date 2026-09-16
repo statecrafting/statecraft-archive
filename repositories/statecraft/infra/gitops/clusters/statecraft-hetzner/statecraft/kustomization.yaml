@@ -1,0 +1,31 @@
+# The control-plane tier's resources (spec 009).
+#
+# Explicit list, matching the convention of the other tiers in this tree.
+#
+# TWO OBJECTS ARE DELIBERATELY ABSENT.
+#
+# 1. The Secrets. `statecraft-secrets` (the seven keys of spec 009 section 2.2)
+#    and `statecraft-platform-backup` (the PLATFORM_S3_* group) are SOPS
+#    ciphertext and live in the `secrets` tier alongside the other encrypted
+#    material, not here. Until the operator encrypts them the Deployment will
+#    not start, which is the intended fail-loud behavior: with metadata.cloud
+#    now off "local" a missing secret crashes the pod rather than resolving to
+#    the empty string.
+#
+# 2. The seeder Job of spec 009 section 4.5. It authenticates to rauthy's
+#    admin API with RAUTHY_ADMIN_TOKEN, which first boot cannot yet mint:
+#    first-boot.mjs composes only clients.json, not api_keys.json (spec 009
+#    section 4.8 item 3). Shipping a Job that cannot authenticate would be
+#    worse than shipping none, so the GitHub upstream provider is created
+#    through the admin UI with the break-glass account, which is exactly the
+#    fallback section 4.5 names. The same gap means the statecraft_operator
+#    role is created by hand rather than from roles.json.
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+resources:
+  - rbac.yaml
+  - pvc.yaml
+  - deployment.yaml
+  - service.yaml
+  - ingress.yaml
+  - backup-cronjob.yaml

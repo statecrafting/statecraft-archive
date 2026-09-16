@@ -1,0 +1,12 @@
+{
+  "package": {
+    "edition": "2024",
+    "kind": "rust-lib",
+    "name": "factory-platform-client",
+    "path": "crates/factory-platform-client",
+    "specRef": "124-opc-factory-run-platform-integration",
+    "version": "0.1.0"
+  },
+  "schemaVersion": "1.1.0",
+  "shardHash": "90d15a9f50a6c2feecfec0ad30375f78d201cf95b8b2edc02ff6a02472d30429"
+}

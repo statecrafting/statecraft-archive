@@ -1,0 +1,64 @@
+{
+  "record": {
+    "authors": [
+      "open-agentic-platform"
+    ],
+    "codeAliases": [
+      "YAML_STANDARDS",
+      "CODING_STANDARDS_SCHEMA"
+    ],
+    "created": "2026-03-29",
+    "dependsOn": [
+      "054-agent-frontmatter-schema",
+      "053-verification-profiles",
+      "035-agent-governed-execution"
+    ],
+    "domain": "opc",
+    "establishes": [
+      {
+        "id": "standards-loader",
+        "kind": "crate"
+      },
+      {
+        "kind": "file",
+        "path": "product/packages/yaml-standards-schema/schemas/coding-standard.schema.json"
+      }
+    ],
+    "extraFrontmatter": {
+      "language": "en",
+      "sources": [
+        "equilateral-agents"
+      ]
+    },
+    "featureBranch": "055-yaml-standards-schema",
+    "id": "055-yaml-standards-schema",
+    "implementation": "complete",
+    "kind": "platform",
+    "risk": "low",
+    "sectionHeadings": [
+      "Feature Specification: YAML Standards Schema",
+      "Purpose",
+      "Scope",
+      "In scope",
+      "Out of scope",
+      "Requirements",
+      "Functional",
+      "Non-functional",
+      "Architecture",
+      "Standard YAML schema",
+      "Three-tier override resolution",
+      "Standards contributor pipeline",
+      "Directory structure",
+      "Implementation approach",
+      "Success criteria",
+      "Dependencies",
+      "Risk"
+    ],
+    "specPath": "specs/055-yaml-standards-schema/spec.md",
+    "status": "approved",
+    "summary": "Machine-readable coding standards defined in YAML with structured fields: id, category, priority, rules (ALWAYS/NEVER/USE/PREFER/AVOID), anti-patterns, examples, context, and tags. A three-tier override system (official, community, project-local) layers standards from broad to specific. A standards contributor pipeline auto-generates candidate standards from execution findings, enabling continuous improvement of the standards library.\n",
+    "title": "YAML Standards Schema"
+  },
+  "shardHash": "c7e796b6cb4d6f582faac49a131b623d4fec49890ee3646bf99b05d04c0b6913",
+  "specVersion": "1.1.0"
+}

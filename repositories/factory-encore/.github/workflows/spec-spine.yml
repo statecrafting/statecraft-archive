@@ -1,0 +1,63 @@
+# Spec: 000-factory-kernel
+#
+# The constitutional governance gate: compile the spec registry, lint the
+# corpus at --fail-on-warn, verify the committed codebase index is fresh, and
+# (on PRs) run the spec/code coupling gate against the PR base. Dispatched
+# unconditionally from ci.yml (governance is always-on, never path-filtered).
+# The CLI comes from the spec-spine npm devDependency (a prebuilt binary; no
+# extra toolchain).
+#
+# factory-encore is the create-time generator home, not a produced app, so the
+# run-side / born-with verifiers (tenant-tail provenance + certificate) are
+# deliberately absent here; they belong to the produced apps the generator
+# emits.
+
+name: spec-spine
+
+on:
+  workflow_call:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  spec-spine:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-node@48b55a011bda9f5d6aeb4c2d9c7362e8dae4041e # v6.4.0
+        with:
+          node-version: 24
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Compile spec registry
+        run: npx --no-install spec-spine compile
+
+      - name: Corpus conformance lint (fail on warnings)
+        run: npx --no-install spec-spine lint --fail-on-warn
+
+      - name: Codebase index staleness gate
+        run: npx --no-install spec-spine index check
+
+      # PR-only: the coupling gate diffs against the PR base. The PR body is
+      # passed for the Spec-Drift-Waiver escape hatch (visible, auditable).
+      - name: Spec/code coupling gate
+        if: github.event_name == 'pull_request'
+        env:
+          PR_BODY: ${{ github.event.pull_request.body }}
+          BASE_REF: ${{ github.event.pull_request.base.ref }}
+        run: |
+          set -euo pipefail
+          printf '%s' "$PR_BODY" > /tmp/pr-body.txt
+          npx --no-install spec-spine couple \
+            --base "origin/${BASE_REF}" \
+            --head HEAD \
+            --pr-body /tmp/pr-body.txt

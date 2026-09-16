@@ -1,0 +1,34 @@
+{
+  "name": "@opc/multi-model-chaining",
+  "version": "0.1.0",
+  "description": "Multi-model chaining pipeline: sequential model phases with thinking-tag injection, SSE streaming, token aggregation, and configurable pricing (spec 062)",
+  "private": true,
+  "type": "module",
+  "main": "src/index.ts",
+  "types": "src/index.ts",
+  "exports": {
+    ".": "./src/index.ts",
+    "./types": "./src/types.ts",
+    "./transforms": "./src/transforms.ts",
+    "./streaming": "./src/streaming.ts",
+    "./usage": "./src/usage.ts",
+    "./pricing": "./src/pricing.ts",
+    "./engine": "./src/engine.ts"
+  },
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "test": "vitest run",
+    "lint": "eslint src/"
+  },
+  "devDependencies": {
+    "@types/node": "^24.5.0",
+    "typescript": "^6.0.3",
+    "vitest": "^4.1.5"
+  },
+  "dependencies": {
+    "@opc/provider-registry": "workspace:*"
+  },
+  "oap": {
+    "spec": "062-multi-model-chaining"
+  }
+}

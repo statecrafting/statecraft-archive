@@ -1,0 +1,17 @@
+[package]
+name = "open_agentic_spec_types"
+publish = false   # internal workspace crate; binaries ship via release workflows, not crates.io
+version = "0.1.0"
+edition = "2024"
+description = "OAP overlay types: frontmatter parsing + canonical OAP vocabularies (spec 217; generic engine types now live in the spec-spine library)"
+rust-version = "1.85"
+
+[lib]
+name = "open_agentic_spec_types"
+path = "src/lib.rs"
+
+[dependencies]
+serde_yaml = "0.9"
+
+[package.metadata.oap]
+spec = "000-bootstrap-spec-system"

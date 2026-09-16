@@ -1,0 +1,124 @@
+{
+  "mapping": {
+    "amends": [
+      "000-bootstrap-spec-system"
+    ],
+    "dependsOn": [
+      "000-bootstrap-spec-system",
+      "001-spec-compiler-mvp",
+      "002-registry-consumer-mvp",
+      "006-conformance-lint-mvp",
+      "147-spec-kind-grammar"
+    ],
+    "implementingPaths": [
+      {
+        "path": "specs/147-spec-kind-grammar/spec.md",
+        "source": "spec-edge"
+      },
+      {
+        "path": "specs/156-references-edge-provenance-grammar/spec.md",
+        "source": "spec-edge"
+      },
+      {
+        "path": "standards/schemas/spec-spine/registry.schema.json",
+        "source": "spec-edge"
+      },
+      {
+        "path": "tools/shared/spec-types/src/lib.rs",
+        "source": "spec-edge"
+      },
+      {
+        "path": "tools/spec-spine/spec-lint/src/lib.rs",
+        "source": "spec-edge"
+      },
+      {
+        "path": "tools/spec-spine/spec-lint/tests/spec179_domain_presence.rs",
+        "source": "spec-edge"
+      }
+    ],
+    "resolvedUnits": [
+      {
+        "locations": [
+          {
+            "file": "tools/spec-spine/spec-lint/tests/spec179_domain_presence.rs"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "file",
+          "path": "tools/spec-spine/spec-lint/tests/spec179_domain_presence.rs"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "standards/schemas/spec-spine/registry.schema.json"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "extends",
+        "unit": {
+          "kind": "file",
+          "path": "standards/schemas/spec-spine/registry.schema.json"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "tools/shared/spec-types/src/lib.rs"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "extends",
+        "unit": {
+          "kind": "file",
+          "path": "tools/shared/spec-types/src/lib.rs"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "tools/spec-spine/spec-lint/src/lib.rs"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "extends",
+        "unit": {
+          "kind": "file",
+          "path": "tools/spec-spine/spec-lint/src/lib.rs"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "specs/147-spec-kind-grammar/spec.md"
+          }
+        ],
+        "ownership": false,
+        "sourceField": "references",
+        "unit": {
+          "kind": "file",
+          "path": "specs/147-spec-kind-grammar/spec.md"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "specs/156-references-edge-provenance-grammar/spec.md"
+          }
+        ],
+        "ownership": false,
+        "sourceField": "references",
+        "unit": {
+          "kind": "file",
+          "path": "specs/156-references-edge-provenance-grammar/spec.md"
+        }
+      }
+    ],
+    "specId": "179-domain-frontmatter-field",
+    "specStatus": "approved"
+  },
+  "schemaVersion": "1.1.0",
+  "shardHash": "17a666569a7db63cf806daecf4db6433866630014f4607dd242b6474b9f6da47"
+}

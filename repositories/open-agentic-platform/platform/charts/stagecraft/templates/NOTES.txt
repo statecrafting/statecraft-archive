@@ -1,0 +1,52 @@
+statecraft-api deployed to namespace {{ .Release.Namespace }} as release {{ .Release.Name }}.
+
+Image:  {{ .Values.image.repository }}:{{ .Values.image.tag }}
+Host:   https://{{ .Values.ingress.host }}
+
+{{- if and .Values.secrets.enabled (eq (default "k8s" .Values.secrets.provider) "k8s") (not .Values.secrets.create) }}
+
+IMPORTANT — externally managed secret
+=====================================
+
+secrets.create=false, so the chart does NOT create `statecraft-api-secrets`.
+The deployment expects that Secret to already exist in the namespace (the pod
+loads env vars via envFrom). Keys REQUIRED for the service to start and
+function end-to-end:
+
+  Core
+    STATECRAFT_DB_URL                postgres connection string
+    SESSION_SECRET                   random bytes, signs session cookies
+    APP_BASE_URL                     public origin (e.g. https://statecraft.ing)
+    DOMAIN                           apex domain for Rauthy / ingress
+
+  Auth (Rauthy OIDC)
+    RAUTHY_URL
+    RAUTHY_CLIENT_ID
+    RAUTHY_CLIENT_SECRET
+    RAUTHY_ADMIN_TOKEN
+    OIDC_SPA_CLIENT_ID
+    OIDC_M2M_CLIENT_ID
+    OIDC_M2M_CLIENT_SECRET
+
+  GitHub App (webhook ingestion, token brokering)
+    GITHUB_APP_ID
+    GITHUB_APP_PRIVATE_KEY           PEM-formatted private key
+    GITHUB_WEBHOOK_SECRET
+    GITHUB_UPSTREAM_CLIENT_ID        OAuth app for upstream PAT flow
+    GITHUB_UPSTREAM_CLIENT_SECRET
+
+  PAT encryption (factory upstream + project PATs)
+    PAT_ENCRYPTION_KEY               base64-encoded 32 bytes. Generate once:
+                                       openssl rand -base64 32
+                                     Persist out-of-cluster (password manager
+                                     or vault). Rotating invalidates every
+                                     stored PAT in factory_upstream_pats and
+                                     project_pats.
+
+  Optional
+    SLACK_WEBHOOK_URL                uptime/factory notifications
+
+Verify the secret has all required keys:
+  kubectl get secret statecraft-api-secrets -n {{ .Release.Namespace }} \
+    -o jsonpath='{.data}' | jq -r 'keys[]'
+{{- end }}

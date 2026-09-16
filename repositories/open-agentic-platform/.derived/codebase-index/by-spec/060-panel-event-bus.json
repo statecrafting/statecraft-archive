@@ -1,0 +1,48 @@
+{
+  "diagnostics": {
+    "errors": [],
+    "warnings": [
+      {
+        "code": "W-002",
+        "message": "spec '060-panel-event-bus' file unit 'product/apps/opc/src/lib/panelEventBus.ts' does not exist",
+        "path": "product/apps/opc/src/lib/panelEventBus.ts"
+      }
+    ]
+  },
+  "mapping": {
+    "implementingPaths": [
+      {
+        "path": "product/packages/panel-event-bus",
+        "source": "multiple"
+      }
+    ],
+    "resolvedUnits": [
+      {
+        "locations": [
+          {
+            "file": "product/packages/panel-event-bus"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "directory",
+          "path": "product/packages/panel-event-bus"
+        }
+      },
+      {
+        "locations": [],
+        "ownership": false,
+        "sourceField": "references",
+        "unit": {
+          "kind": "file",
+          "path": "product/apps/opc/src/lib/panelEventBus.ts"
+        }
+      }
+    ],
+    "specId": "060-panel-event-bus",
+    "specStatus": "approved"
+  },
+  "schemaVersion": "1.1.0",
+  "shardHash": "876ed9d0505dcc2d3cd388bdfa934dd86e945939d330a719def0fca168c64f6a"
+}

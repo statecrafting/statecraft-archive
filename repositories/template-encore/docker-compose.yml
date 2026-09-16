@@ -1,0 +1,76 @@
+# Encore self-host compose: runs the pre-built Encore image + Postgres + optional Redis.
+# The API image is built separately via `npm run build:api` (encore build docker).
+# Primary local development uses `npm run dev` (encore run + Vite; auto-provisions Postgres).
+# Use this file for local containerised self-host or staging validation of the built image.
+#
+# Container names are scoped by COMPOSE_PROJECT_NAME (defaults to directory name).
+# Override with: COMPOSE_PROJECT_NAME=myapp docker compose up
+# Or set COMPOSE_PROJECT_NAME in .env
+
+services:
+  postgres:
+    image: postgres:16-alpine
+    # Always-on: the Encore app's SQLDatabase requires it (api depends_on it).
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-appuser}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?Set POSTGRES_PASSWORD in .env}
+      POSTGRES_DB: ${POSTGRES_DB:-app_dev}
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-appuser}"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    networks:
+      - app-network
+
+  redis:
+    image: redis:7-alpine
+    profiles:
+      - cache
+    ports:
+      - "6379:6379"
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    networks:
+      - app-network
+
+  # Image built by `npm run build:api` (encore build docker --base apps/api/Dockerfile.base).
+  # The single image serves both the Encore API (port 4000) and the built SPA (web service / api.static).
+  api:
+    image: ${API_IMAGE:-acme-vue-encore-api:latest}
+    environment:
+      NODE_ENV: ${NODE_ENV:-production}
+      AUTH_DRIVER: ${AUTH_DRIVER:-mock}
+      CSRF_SECRET: ${CSRF_SECRET:?Set CSRF_SECRET in .env}
+      JWT_PRIVATE_KEY: ${JWT_PRIVATE_KEY:?Set JWT_PRIVATE_KEY in .env}
+      JWT_PUBLIC_KEY: ${JWT_PUBLIC_KEY:?Set JWT_PUBLIC_KEY in .env}
+      JWT_REFRESH_PRIVATE_KEY: ${JWT_REFRESH_PRIVATE_KEY:?Set JWT_REFRESH_PRIVATE_KEY in .env}
+      JWT_REFRESH_PUBLIC_KEY: ${JWT_REFRESH_PUBLIC_KEY:?Set JWT_REFRESH_PUBLIC_KEY in .env}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?Set POSTGRES_PASSWORD in .env}
+      # Optional: OAuth gateway credentials (required when using the BFF data proxy)
+      GATEWAY_OAUTH_CLIENT_ID: ${GATEWAY_OAUTH_CLIENT_ID:-}
+      GATEWAY_OAUTH_CLIENT_SECRET: ${GATEWAY_OAUTH_CLIENT_SECRET:-}
+      PRIVATE_API_BASE_URL: ${PRIVATE_API_BASE_URL:-}
+      # Optional: Redis-backed rate limiting (REDIS_URL is NOT a session store)
+      REDIS_URL: ${REDIS_URL:-}
+    ports:
+      - "4000:4000"
+    depends_on:
+      postgres:
+        condition: service_healthy
+    networks:
+      - app-network
+
+volumes:
+  pgdata:
+
+networks:
+  app-network:
+    driver: bridge

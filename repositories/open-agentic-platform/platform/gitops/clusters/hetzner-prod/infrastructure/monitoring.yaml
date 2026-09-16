@@ -1,0 +1,276 @@
+# Spec 196 — platform metrics stack (kube-prometheus-stack HelmRelease).
+#
+# One Prometheus server with three roles (spec 196 §Architecture):
+#   (a) RECEIVES statecraft's Encore remote_write (push — Encore's
+#       `prometheus` exporter has no scrape endpoint and no auth field),
+#   (b) SCRAPES the pull targets (deployd-api, Flux controllers,
+#       ingress-nginx, node-exporter, kube-state-metrics — FR-003),
+#   (c) SERVES Grafana queries.
+# Agent mode cannot do (a) or (c); server mode with
+# enableRemoteWriteReceiver is the only shape that satisfies the spec
+# (FR-002). The unauthenticated receiver is contained by NetworkPolicy
+# (FR-006 / SC-008): reachable ONLY from statecraft-system and from
+# inside `monitoring`; never exposed at ingress. Policies live at
+# `platform/k8s/policies/{monitoring,namespace-baseline}/` and are
+# reconciled by the `policies` Flux Kustomization
+# (`../policies-kustomization.yaml`).
+#
+# Chart source: prometheus-community HelmRepository — the same Flux
+# source kind as cert-manager (jetstack) / ingress-nginx / reflector
+# (FR-005). Version pinned; the Prometheus Operator CRDs ride the chart
+# pin and are upgraded deliberately via CreateReplace (FR-007) — bumps
+# are their own PRs.
+#
+# Alertmanager is OFF and the ~100 bundled default PrometheusRules are
+# NOT created (FR-008): alert routing + SLO rules are a separate later
+# spec; the chart does not get to decide alerting policy by default.
+# Grafana's bundled kube-mixin default dashboards stay off for the same
+# reason — they lean on the recording rules the prune removes.
+#
+# Phase-2 operator dependency (plan.md §Phasing): Grafana consumes the
+# `grafana-oidc` Secret (envFromSecret) carrying
+# GF_AUTH_GENERIC_OAUTH_CLIENT_ID / _SECRET. That Secret is
+# materialised by `platform/infra/hetzner/setup.sh` ONLY once the
+# operator has created the `grafana` OIDC client manually in the
+# Rauthy admin UI and filled `.env` (the documented `[manual]`
+# OIDC-client convention — FR-004). Until then the Grafana pod blocks
+# on the missing Secret and this HelmRelease reports not-Ready; the
+# data plane (Prometheus, exporters, scrapes, remote_write) is already
+# live. Same operator contract as rauthy's `rauthy-smtp-secret`.
+#
+# DOMAIN pinning: `grafana.statecraft.ing` + the Rauthy issuer are
+# hardcoded because this manifest lives under `clusters/hetzner-prod/`
+# — the cluster-specific-subtree convention established in
+# `rauthy.yaml`. Future clusters get their own subtree.
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: monitoring
+---
+apiVersion: source.toolkit.fluxcd.io/v1
+kind: HelmRepository
+metadata:
+  name: prometheus-community
+  namespace: flux-system
+spec:
+  interval: 24h
+  url: https://prometheus-community.github.io/helm-charts
+---
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: monitoring
+  namespace: monitoring
+spec:
+  interval: 1h
+  chart:
+    spec:
+      chart: kube-prometheus-stack
+      # Pinned (FR-007). Bumps are deliberate edits in their own PRs
+      # and re-validate the Operator CRD set the chart ships.
+      version: "86.2.2"
+      sourceRef:
+        kind: HelmRepository
+        name: prometheus-community
+        namespace: flux-system
+      interval: 24h
+  install:
+    # CRDs are a governed dependency surface (FR-007): installed and
+    # upgraded explicitly with the chart pin, never skipped into
+    # version skew (helm-controller's upgrade default is Skip).
+    crds: CreateReplace
+    timeout: 10m
+    remediation:
+      retries: 3
+  upgrade:
+    crds: CreateReplace
+    timeout: 10m
+    remediation:
+      retries: 3
+  values:
+    # Deterministic short object names: the Prometheus Service becomes
+    # `monitoring-prometheus`, which is the literal DNS name statecraft's
+    # infra.config.json remote_write_url points at (FR-001).
+    fullnameOverride: monitoring
+    # Without clean names the operator-side objects double the suffix:
+    # PVC `prometheus-monitoring-prometheus-db-prometheus-monitoring-prometheus-0`
+    # (71 chars). hcloud caps volume-label values at 63 chars, and the
+    # CSI driver labels each volume with its PVC name, so volume creation
+    # is rejected (`invalid input in field 'labels'`) and the TSDB PVC
+    # never binds. Clean names shorten the PVC to
+    # `prometheus-monitoring-db-prometheus-monitoring-0` (48). Operator
+    # objects only — the chart-owned `monitoring-prometheus` Service
+    # (the FR-001 remote_write literal) is unaffected.
+    cleanPrometheusOperatorObjectNames: true
+
+    # FR-008 — no silently-inherited alerting policy.
+    defaultRules:
+      create: false
+    alertmanager:
+      enabled: false
+
+    # k3s embeds controller-manager/scheduler/proxy/etcd without
+    # separately reachable metrics endpoints — leaving these scrapes on
+    # would ship permanently-down targets, not observability.
+    kubeControllerManager:
+      enabled: false
+    kubeScheduler:
+      enabled: false
+    kubeProxy:
+      enabled: false
+    kubeEtcd:
+      enabled: false
+
+    prometheusOperator:
+      # No PrometheusRule authoring surface lands in this spec
+      # (FR-008 prunes the bundled set; SLO rules are a later spec),
+      # and the validating-webhook path would otherwise need an
+      # apiserver→operator ingress allow through monitoring's
+      # default-deny. Off until the alerting spec needs it.
+      admissionWebhooks:
+        enabled: false
+      tls:
+        enabled: false
+
+    prometheus:
+      prometheusSpec:
+        # FR-002: the receive half of the hybrid topology.
+        enableRemoteWriteReceiver: true
+        # FR-002: the admin API (series deletion, snapshots, TSDB
+        # compaction) stays closed — explicit, so a future values edit
+        # that flips it is a visible contract change, not a default
+        # drifting.
+        enableAdminAPI: false
+        # FR-010 via plan.md §Concrete values; revisit both at the
+        # FR-009 promotion trigger.
+        retention: 15d
+        storageSpec:
+          volumeClaimTemplate:
+            spec:
+              # hcloud CSI minimum is 10Gi (deployd values-hetzner
+              # T002 verification); 20Gi clears it.
+              storageClassName: hcloud-volumes
+              accessModes: ["ReadWriteOnce"]
+              resources:
+                requests:
+                  storage: 20Gi
+        # FR-003 — consume the annotation-declared pull targets. The
+        # operator's ServiceMonitor machinery covers the stack's own
+        # components (node-exporter, kube-state-metrics, kubelet,
+        # apiserver, coredns); this job covers the OAP-annotated pods.
+        # Namespaces are enumerated, not wildcarded: the scrape
+        # surface is a governed allowlist that moves with FR-006's
+        # egress flows.
+        additionalScrapeConfigs:
+          - job_name: oap-annotated-pods
+            kubernetes_sd_configs:
+              - role: pod
+                namespaces:
+                  names:
+                    - flux-system
+                    - deployd-system
+                    - ingress-nginx
+            relabel_configs:
+              - source_labels:
+                  - __meta_kubernetes_pod_annotation_prometheus_io_scrape
+                action: keep
+                regex: "true"
+              - source_labels:
+                  - __meta_kubernetes_pod_annotation_prometheus_io_path
+                action: replace
+                target_label: __metrics_path__
+                regex: (.+)
+              - source_labels:
+                  - __address__
+                  - __meta_kubernetes_pod_annotation_prometheus_io_port
+                action: replace
+                regex: ([^:]+)(?::\d+)?;(\d+)
+                replacement: $1:$2
+                target_label: __address__
+              - source_labels: [__meta_kubernetes_namespace]
+                target_label: namespace
+              - source_labels: [__meta_kubernetes_pod_name]
+                target_label: pod
+
+    grafana:
+      enabled: true
+      # FR-008 companion: the kube-mixin bundle leans on the pruned
+      # defaultRules recording rules; OAP dashboards are provisioned
+      # explicitly via the sidecar (monitoring-dashboards.yaml).
+      defaultDashboardsEnabled: false
+      # Phase-2 manual-client Secret (see header). Carries
+      # GF_AUTH_GENERIC_OAUTH_CLIENT_ID / _SECRET so the credential
+      # never enters git.
+      envFromSecret: grafana-oidc
+      persistence:
+        # Dashboards are code-provisioned; this is state only
+        # (plan.md). 2Gi is below the hcloud CSI 10Gi floor, so it
+        # rides the cluster default class (local-path) — the same
+        # posture as rauthy's 2Gi persistence.
+        enabled: true
+        size: 2Gi
+      ingress:
+        enabled: true
+        ingressClassName: nginx
+        annotations:
+          # Platform-host default issuer per post-create.sh's issuer
+          # policy (HTTP-01 for platform hosts).
+          cert-manager.io/cluster-issuer: letsencrypt-prod
+        hosts:
+          - grafana.statecraft.ing
+        tls:
+          - secretName: grafana-tls
+            hosts:
+              - grafana.statecraft.ing
+      # FR-004 — Rauthy OIDC is the SOLE authentication path. The
+      # contract is the property (no credential authenticates outside
+      # OIDC); these are the knobs that hold it for Grafana 12.x:
+      #   - disable_login_form        → no username/password UI
+      #   - auth.basic enabled=false  → no `Authorization: Basic` API path
+      #   - auth.anonymous off        → no unauthenticated viewer
+      #   - generic_oauth.auto_login  → "/" goes straight to Rauthy
+      #   - disable_initial_admin_creation → no local admin user is
+      #     ever created, so no local-admin credential exists to rotate
+      #     or leak (the chart's admin Secret becomes inert)
+      # Proxy auth, JWT auth, and LDAP are off by Grafana default and
+      # stay off (absence of [auth.proxy]/[auth.jwt]/[auth.ldap]
+      # enablement here is the pinned state — SC-003's negative probes
+      # are the runtime check).
+      grafana.ini:
+        server:
+          root_url: https://grafana.statecraft.ing
+        security:
+          disable_initial_admin_creation: true
+        auth:
+          disable_login_form: true
+        auth.anonymous:
+          enabled: false
+        auth.basic:
+          enabled: false
+        auth.generic_oauth:
+          enabled: true
+          name: Rauthy
+          auto_login: true
+          use_pkce: true
+          allow_sign_up: true
+          # `oap` is the Rauthy custom scope that maps the
+          # platform_role attribute into the token
+          # (seed-rauthy.mjs OAP_SCOPE).
+          scopes: openid email profile oap
+          auth_url: https://auth.statecraft.ing/auth/v1/oidc/authorize
+          token_url: https://auth.statecraft.ing/auth/v1/oidc/token
+          api_url: https://auth.statecraft.ing/auth/v1/oidc/userinfo
+          # Locked map (plan.md, owner 2026-06-04): owner|admin →
+          # Admin, member → Viewer; Editor unused. Rauthy nests OAP
+          # claims under `custom.*` (spec 106 FR-002;
+          # web/app/lib/auth.server.ts) with legacy top-level
+          # fallback — the JMESPath checks both. strict=true: an
+          # unknown or missing platform_role authenticates to
+          # NOTHING, not to a default role.
+          role_attribute_strict: true
+          role_attribute_path: >-
+            (custom.platform_role == 'owner' || custom.platform_role ==
+            'admin') && 'Admin' || custom.platform_role == 'member' &&
+            'Viewer' || (platform_role == 'owner' || platform_role ==
+            'admin') && 'Admin' || platform_role == 'member' && 'Viewer'

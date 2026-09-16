@@ -1,0 +1,33 @@
+{
+  "mapping": {
+    "dependsOn": [
+      "001-site-scaffold",
+      "002-launch-content"
+    ],
+    "implementingPaths": [
+      {
+        "path": "app/lib/product-family.ts",
+        "source": "spec-edge"
+      }
+    ],
+    "resolvedUnits": [
+      {
+        "locations": [
+          {
+            "file": "app/lib/product-family.ts"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "file",
+          "path": "app/lib/product-family.ts"
+        }
+      }
+    ],
+    "specId": "003-product-family-registry",
+    "specStatus": "approved"
+  },
+  "schemaVersion": "1.1.0",
+  "shardHash": "5c47998c11b1b14114e64f5770c99bc7f1e8488826099824e888699b53fe2e0a"
+}

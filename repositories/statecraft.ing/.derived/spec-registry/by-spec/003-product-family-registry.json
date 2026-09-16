@@ -1,0 +1,36 @@
+{
+  "record": {
+    "created": "2026-07-15",
+    "dependsOn": [
+      "001-site-scaffold",
+      "002-launch-content"
+    ],
+    "establishes": [
+      {
+        "kind": "file",
+        "path": "app/lib/product-family.ts"
+      }
+    ],
+    "id": "003-product-family-registry",
+    "implementation": "complete",
+    "origin": {
+      "retroactive": true
+    },
+    "sectionHeadings": [
+      "003: Product-family registry",
+      "1. Purpose",
+      "2. Territory",
+      "3. The roster",
+      "4. Acceptance",
+      "5. Out of scope",
+      "6. Status (2026-07-15): complete",
+      "7. Status note (2026-09-11): the CLI's role line catches up with its tree"
+    ],
+    "specPath": "specs/003-product-family-registry/spec.md",
+    "status": "approved",
+    "summary": "The canonical registry of the Statecraft product family: each repo's name, role, SPDX license, and URL, encoded once in app/lib/product-family.ts and consumed by the index family section, the footer, and the /registry viewer's repoMeta lookup. This spec gives that module a single explicit owner so a roster change (a repo added, removed, or re-described) is an ordinary authoring edit here plus the module, with no coupling waiver and no edit to the scaffold (001) or launch-content (002) specs. It owns the roster data, not the rendering.\n",
+    "title": "Product-family registry: a single owner for the shared repo list"
+  },
+  "shardHash": "99ea9c1bf7ef2cb95bf994ee2002d4fb2c8f6fae08b88df2bf0b32afe5cf131a",
+  "specVersion": "1.2.0"
+}

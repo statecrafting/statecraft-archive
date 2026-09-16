@@ -1,0 +1,36 @@
+{
+  "name": "@opc/notification-orchestrator",
+  "version": "0.1.0",
+  "description": "Notification orchestrator with typed events, deduplication, preference-gated delivery, and multi-channel routing",
+  "private": true,
+  "type": "module",
+  "main": "src/index.ts",
+  "types": "src/index.ts",
+  "exports": {
+    ".": "./src/index.ts",
+    "./types": "./src/types.ts",
+    "./orchestrator": "./src/orchestrator.ts",
+    "./dedup": "./src/deduplication/dedup-index.ts",
+    "./preferences": "./src/preferences/preference-engine.ts",
+    "./store": "./src/preferences/store.ts",
+    "./channels/native": "./src/channels/native.ts",
+    "./channels/web-push": "./src/channels/web-push.ts",
+    "./channels/toast": "./src/channels/toast.ts",
+    "./log": "./src/log/event-log.ts",
+    "./pruner": "./src/log/pruner.ts",
+    "./integration": "./src/integration.ts"
+  },
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "test": "vitest run",
+    "lint": "eslint src/"
+  },
+  "devDependencies": {
+    "@types/node": "^24.5.0",
+    "typescript": "^6.0.3",
+    "vitest": "^4.1.5"
+  },
+  "oap": {
+    "spec": "057-notification-system"
+  }
+}

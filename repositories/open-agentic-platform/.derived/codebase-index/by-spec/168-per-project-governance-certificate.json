@@ -1,0 +1,274 @@
+{
+  "diagnostics": {
+    "errors": [],
+    "warnings": [
+      {
+        "code": "W-002",
+        "message": "spec '168-per-project-governance-certificate' file unit 'docs/owasp/factory/AIDE-VELOCITY-OAP-INTENT.md' does not exist",
+        "path": "docs/owasp/factory/AIDE-VELOCITY-OAP-INTENT.md"
+      }
+    ]
+  },
+  "mapping": {
+    "dependsOn": [
+      "075-factory-workflow-engine",
+      "102-governed-excellence",
+      "167-born-with-spec-spine-kernel"
+    ],
+    "implementingPaths": [
+      {
+        "path": "crates/factory-engine/src/bin/build_certificate.rs",
+        "source": "spec-edge"
+      },
+      {
+        "path": "crates/factory-engine/src/bin/factory_run.rs",
+        "source": "spec-edge"
+      },
+      {
+        "path": "crates/factory-engine/src/governance_certificate.rs",
+        "source": "spec-edge"
+      },
+      {
+        "path": "crates/factory-engine/src/kernel_emission/emit.rs",
+        "source": "spec-edge"
+      },
+      {
+        "path": "crates/factory-engine/src/kernel_emission/mod.rs",
+        "source": "spec-edge"
+      },
+      {
+        "path": "crates/factory-engine/src/kernel_emission/templates.rs",
+        "source": "spec-edge"
+      },
+      {
+        "path": "crates/factory-engine/src/kernel_emission/version.rs",
+        "source": "spec-edge"
+      },
+      {
+        "path": "crates/factory-engine/src/lib.rs",
+        "source": "spec-edge"
+      },
+      {
+        "path": "crates/factory-engine/templates/kernel/toolchain.yaml.tmpl",
+        "source": "spec-edge"
+      },
+      {
+        "path": "crates/factory-engine/tests/kernel_emission_integration.rs",
+        "source": "spec-edge"
+      },
+      {
+        "path": "crates/factory-engine/tests/tenant_emission_integration.rs",
+        "source": "multiple"
+      },
+      {
+        "path": "crates/featuregraph/tests/golden/features_graph.json",
+        "source": "spec-edge"
+      },
+      {
+        "path": "specs/102-governed-excellence/spec.md",
+        "source": "spec-edge"
+      },
+      {
+        "path": "specs/167-born-with-spec-spine-kernel/spec.md",
+        "source": "spec-edge"
+      }
+    ],
+    "resolvedUnits": [
+      {
+        "locations": [
+          {
+            "file": "crates/factory-engine/templates/kernel/toolchain.yaml.tmpl"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "file",
+          "path": "crates/factory-engine/templates/kernel/toolchain.yaml.tmpl"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "crates/factory-engine/tests/tenant_emission_integration.rs"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "file",
+          "path": "crates/factory-engine/tests/tenant_emission_integration.rs"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "crates/factory-engine/src/bin/build_certificate.rs"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "extends",
+        "unit": {
+          "kind": "file",
+          "path": "crates/factory-engine/src/bin/build_certificate.rs"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "crates/factory-engine/src/bin/factory_run.rs"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "extends",
+        "unit": {
+          "kind": "file",
+          "path": "crates/factory-engine/src/bin/factory_run.rs"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "crates/factory-engine/src/governance_certificate.rs"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "extends",
+        "unit": {
+          "kind": "file",
+          "path": "crates/factory-engine/src/governance_certificate.rs"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "crates/factory-engine/src/kernel_emission/emit.rs"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "extends",
+        "unit": {
+          "kind": "file",
+          "path": "crates/factory-engine/src/kernel_emission/emit.rs"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "crates/factory-engine/src/kernel_emission/mod.rs"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "extends",
+        "unit": {
+          "kind": "file",
+          "path": "crates/factory-engine/src/kernel_emission/mod.rs"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "crates/factory-engine/src/kernel_emission/templates.rs"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "extends",
+        "unit": {
+          "kind": "file",
+          "path": "crates/factory-engine/src/kernel_emission/templates.rs"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "crates/factory-engine/src/kernel_emission/version.rs"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "extends",
+        "unit": {
+          "kind": "file",
+          "path": "crates/factory-engine/src/kernel_emission/version.rs"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "crates/factory-engine/src/lib.rs"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "extends",
+        "unit": {
+          "kind": "file",
+          "path": "crates/factory-engine/src/lib.rs"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "crates/factory-engine/tests/kernel_emission_integration.rs"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "extends",
+        "unit": {
+          "kind": "file",
+          "path": "crates/factory-engine/tests/kernel_emission_integration.rs"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "crates/featuregraph/tests/golden/features_graph.json"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "extends",
+        "unit": {
+          "kind": "file",
+          "path": "crates/featuregraph/tests/golden/features_graph.json"
+        }
+      },
+      {
+        "locations": [],
+        "ownership": false,
+        "sourceField": "references",
+        "unit": {
+          "kind": "file",
+          "path": "docs/owasp/factory/AIDE-VELOCITY-OAP-INTENT.md"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "specs/102-governed-excellence/spec.md"
+          }
+        ],
+        "ownership": false,
+        "sourceField": "references",
+        "unit": {
+          "kind": "file",
+          "path": "specs/102-governed-excellence/spec.md"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "specs/167-born-with-spec-spine-kernel/spec.md"
+          }
+        ],
+        "ownership": false,
+        "sourceField": "references",
+        "unit": {
+          "kind": "file",
+          "path": "specs/167-born-with-spec-spine-kernel/spec.md"
+        }
+      }
+    ],
+    "specId": "168-per-project-governance-certificate",
+    "specStatus": "approved"
+  },
+  "schemaVersion": "1.1.0",
+  "shardHash": "13f75044f5ddc0ceea3b5fbd323e9ff3c12c95a5d3ac7d4b292dabbad0e33160"
+}

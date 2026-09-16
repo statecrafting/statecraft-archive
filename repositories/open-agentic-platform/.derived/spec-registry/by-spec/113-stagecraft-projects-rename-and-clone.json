@@ -1,0 +1,133 @@
+{
+  "record": {
+    "created": "2026-04-26",
+    "dependsOn": [
+      "087-unified-workspace-architecture",
+      "108-factory-as-platform-feature",
+      "109-factory-pat-and-pubsub-sync",
+      "112-factory-project-lifecycle"
+    ],
+    "domain": "platform",
+    "extends": [
+      {
+        "nature": "additive",
+        "spec": "112-factory-project-lifecycle",
+        "unit": {
+          "kind": "file",
+          "path": "platform/services/statecraft/web/app/routes/app._index.tsx"
+        }
+      },
+      {
+        "nature": "additive",
+        "spec": "112-factory-project-lifecycle",
+        "unit": {
+          "kind": "file",
+          "path": "platform/services/statecraft/web/app/routes/app.tsx"
+        }
+      },
+      {
+        "nature": "additive",
+        "spec": "112-factory-project-lifecycle",
+        "unit": {
+          "kind": "file",
+          "path": "platform/services/statecraft/web/app/components/CloneProjectDialog.tsx"
+        }
+      },
+      {
+        "nature": "additive",
+        "spec": "112-factory-project-lifecycle",
+        "unit": {
+          "kind": "file",
+          "path": "platform/services/statecraft/web/app/lib/projects-api.server.ts"
+        }
+      },
+      {
+        "nature": "additive",
+        "spec": "112-factory-project-lifecycle",
+        "unit": {
+          "kind": "file",
+          "path": "platform/services/statecraft/api/projects/clone.ts"
+        }
+      },
+      {
+        "nature": "additive",
+        "spec": "112-factory-project-lifecycle",
+        "unit": {
+          "kind": "file",
+          "path": "platform/services/statecraft/api/projects/cloneHelpers.ts"
+        }
+      },
+      {
+        "nature": "additive",
+        "spec": "112-factory-project-lifecycle",
+        "unit": {
+          "kind": "file",
+          "path": "platform/services/statecraft/api/projects/cloneAvailability.ts"
+        }
+      },
+      {
+        "nature": "additive",
+        "spec": "112-factory-project-lifecycle",
+        "unit": {
+          "kind": "file",
+          "path": "platform/services/statecraft/api/projects/encore.service.ts"
+        }
+      },
+      {
+        "nature": "additive",
+        "spec": "112-factory-project-lifecycle",
+        "unit": {
+          "kind": "file",
+          "path": "platform/services/statecraft/api/projects/cloneAvailability.test.ts"
+        }
+      }
+    ],
+    "extraFrontmatter": {
+      "slug": "statecraft-projects-rename-and-clone"
+    },
+    "id": "113-statecraft-projects-rename-and-clone",
+    "implementation": "complete",
+    "kind": "product",
+    "owner": "bart",
+    "references": [
+      {
+        "role": "historical",
+        "unit": {
+          "kind": "file",
+          "path": "platform/services/statecraft/api/projects/clone.test.ts"
+        }
+      }
+    ],
+    "risk": "medium",
+    "sectionHeadings": [
+      "113 — Statecraft Projects Rename + In-Org Project Clone",
+      "1. Problem",
+      "2. Goals",
+      "3. Non-Goals",
+      "4. User Scenarios & Testing",
+      "User Story 1 — Clone a project into the current org with rename (Priority: P1)",
+      "User Story 2 — Project listing is labelled \"Projects\" (Priority: P2)",
+      "Edge Cases",
+      "5. Requirements",
+      "5.1 Functional Requirements",
+      "Rename surface",
+      "Clone action — UI",
+      "Clone action — async availability API",
+      "Clone action — submit API",
+      "SSR loader",
+      "5.2 Key Entities",
+      "5.3 Permissions and audit",
+      "5.4 Out-of-process operations",
+      "6. Success Criteria",
+      "Measurable Outcomes",
+      "7. Open Decisions",
+      "8. Provenance"
+    ],
+    "specPath": "specs/113-statecraft-projects-rename-and-clone/spec.md",
+    "status": "approved",
+    "summary": "Renames the statecraft web \"Dashboard\" surface to \"Projects\" (page title, subtitle, top-nav label) and turns the existing copy-icon stub on each project row into a real Clone action. Clone opens a dialog where the user can rename the new project (project name, slug, GitHub repo name) with live, debounced availability checks against the destination org and workspace. On submit it duplicates the source project's primary GitHub repo (full git history) into the user's current OAP org's GitHub installation, registers a new project bound to the new repo, copies the adapter binding and `.artifacts/raw/` knowledge objects, and emits a `project.cloned` audit event. Members and environments are not copied — they are governance state owned per project.\n",
+    "title": "Statecraft Projects Rename + In-Org Project Clone"
+  },
+  "shardHash": "816d2f89f469d77d12a334d2da01d9556d45c7770734364ce6373555ba1998b0",
+  "specVersion": "1.1.0"
+}

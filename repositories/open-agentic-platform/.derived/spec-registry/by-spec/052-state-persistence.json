@@ -1,0 +1,61 @@
+{
+  "record": {
+    "authors": [
+      "open-agentic-platform"
+    ],
+    "codeAliases": [
+      "STATE_PERSISTENCE",
+      "WORKFLOW_RESUME"
+    ],
+    "created": "2026-03-29",
+    "domain": "opc",
+    "extends": [
+      {
+        "nature": "additive",
+        "spec": "004-spec-to-execution-bridge-mvp",
+        "unit": {
+          "id": "orchestrator",
+          "kind": "crate"
+        }
+      }
+    ],
+    "extraFrontmatter": {
+      "language": "en",
+      "sources": [
+        "agents",
+        "claudepal",
+        "crystal"
+      ]
+    },
+    "featureBranch": "052-state-persistence",
+    "id": "052-state-persistence",
+    "implementation": "complete",
+    "kind": "platform",
+    "sectionHeadings": [
+      "Feature Specification: State Persistence for Resumable Workflows",
+      "Purpose",
+      "Scope",
+      "In scope",
+      "Out of scope",
+      "Requirements",
+      "Functional",
+      "Non-functional",
+      "Architecture",
+      "State file schema (JSON)",
+      "SQLite schema",
+      "SSE stream architecture",
+      "Resume flow",
+      "Implementation approach",
+      "Success criteria",
+      "Dependencies",
+      "Risk",
+      "Security hardening amendment (2026-07-02)"
+    ],
+    "specPath": "specs/052-state-persistence/spec.md",
+    "status": "approved",
+    "summary": "Orchestrator commands persist workflow progress to state files (state.json or SQLite) so that interrupted workflows can be resumed from the last completed step. State is created at workflow start, updated after each step, and checked on startup to offer resume. Checkpoint and approval gates pause execution until operator confirmation. An append-only stream server with SSE replay provides live and historical visibility into workflow progress.\n",
+    "title": "State Persistence for Resumable Workflows"
+  },
+  "shardHash": "5de9c20dc34ca6928c8add8267320b05333f352e122260ae87c9444adbe255a7",
+  "specVersion": "1.1.0"
+}

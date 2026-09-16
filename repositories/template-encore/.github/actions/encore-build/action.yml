@@ -1,0 +1,66 @@
+name: Build Encore Docker image
+description: >
+  Build the API's Docker image via `encore build docker` and push to a
+  registry. Assumes the calling job has run the `encore-install` action and
+  `npm ci` inside `apps/api/`, and that the SPA has been built into
+  `apps/api/web/build` (so bundle_source picks it up).
+
+  Image layout: a custom `Dockerfile.base` carries OS packages + helper
+  binaries, and `encore build docker --base <image>` lays the compiled
+  main.mjs, encore-runtime.node, and (with bundle_source: true) the source
+  tree on top. See docs/encore-ts/encore-custom-dockerfile.md.
+
+inputs:
+  image-name:
+    description: Image name without registry or tag (e.g. `my-org/api`).
+    required: true
+  registry:
+    description: Container registry hostname (e.g. `ghcr.io`).
+    required: false
+    default: ghcr.io
+  encore-cli:
+    description: Absolute path to the Encore CLI binary (from encore-install).
+    required: false
+    default: /home/runner/.encore/bin/encore
+  api-context:
+    description: Directory containing the Encore app + Dockerfile.base.
+    required: false
+    default: ./apps/api
+  infra-config:
+    description: Path to infra.config.json passed to `encore build docker`.
+    required: false
+    default: ./infra.config.json
+
+runs:
+  using: composite
+  steps:
+    - name: Build base image
+      shell: bash
+      run: |
+        docker build \
+          -f "${{ inputs.api-context }}/Dockerfile.base" \
+          -t "encore-api-base:${{ github.sha }}" \
+          "${{ inputs.api-context }}"
+
+    - name: Build Encore image
+      shell: bash
+      working-directory: ${{ inputs.api-context }}
+      run: |
+        "${{ inputs.encore-cli }}" build docker \
+          --config "${{ inputs.infra-config }}" \
+          --base "encore-api-base:${{ github.sha }}" \
+          "${{ inputs.image-name }}:${{ github.sha }}"
+
+    - name: Tag image
+      shell: bash
+      run: |
+        REGISTRY_IMAGE="${{ inputs.registry }}/${{ inputs.image-name }}"
+        docker tag "${{ inputs.image-name }}:${{ github.sha }}" "$REGISTRY_IMAGE:${{ github.sha }}"
+        docker tag "${{ inputs.image-name }}:${{ github.sha }}" "$REGISTRY_IMAGE:latest"
+
+    - name: Push image
+      shell: bash
+      run: |
+        REGISTRY_IMAGE="${{ inputs.registry }}/${{ inputs.image-name }}"
+        docker push "$REGISTRY_IMAGE:${{ github.sha }}"
+        docker push "$REGISTRY_IMAGE:latest"

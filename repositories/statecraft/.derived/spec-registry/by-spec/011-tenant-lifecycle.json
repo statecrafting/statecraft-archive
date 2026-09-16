@@ -1,0 +1,54 @@
+{
+  "record": {
+    "created": "2026-07-21",
+    "dependsOn": [
+      "001-statecraft-thesis",
+      "004-tenants-github-app",
+      "008-governance-attestation",
+      "009-control-plane-deploy"
+    ],
+    "establishes": [
+      {
+        "kind": "directory",
+        "path": "backend/tenants/access/"
+      },
+      {
+        "kind": "file",
+        "path": "backend/auth/github-identity.ts"
+      },
+      {
+        "kind": "directory",
+        "path": "frontend/src/routes/operator/"
+      }
+    ],
+    "id": "011-tenant-lifecycle",
+    "implementation": "in-progress",
+    "sectionHeadings": [
+      "011: Tenant lifecycle and org-derived access",
+      "1. Purpose",
+      "2. Identity groundwork (verified against rauthy 0.36.0 source, 2026-07-21)",
+      "3. The authorization model",
+      "4. Territory",
+      "5. Behavior",
+      "5.1 GitHub identity on the app user",
+      "5.2 Membership model",
+      "5.3 Login-time reconciliation",
+      "5.4 Uninstall (the exit for the link)",
+      "5.5 Delete tenant (the exit for the tenant)",
+      "5.6 Self-serve entry: install creates the tenant",
+      "5.7 Linkage gating",
+      "5.8 Operator surfaces",
+      "6. Operator prerequisites",
+      "7. Acceptance",
+      "8. Out of scope",
+      "9. Status (2026-07-21): in-progress",
+      "Status (2026-07-22): live acceptance walk, items 1-2 and 4-7 verified"
+    ],
+    "specPath": "specs/011-tenant-lifecycle/spec.md",
+    "status": "approved",
+    "summary": "Completes the tenant model that spec 004 opened: create gains delete, install gains uninstall, and ownership-by-creator grows into a two-tier authorization model. Tier one is the global statecraft_operator rauthy role (the platform operator: sees all tenants, can do everything); tier two is per-tenant membership derived from GitHub org roles (org admin -> tenant admin, org member -> tenant member), never from a rauthy role, so a customer who installs the App can never escalate to platform power. Self-serve onboarding turns on: rauthy auto_onboarding mints federated users from GitHub sign-in, an install with no pre-existing tenant auto-creates one bound to the chosen org, and login-time reconciliation grants a second org admin tenant access without an install. Provisioning verbs (stamp, fleet deploy/update/backup) gate on an active installation; teardown verbs (uninstall, fleet remove, tenant delete) never do. Destructive lifecycle acts run through the spec 008 action gate and land in the attestation ledger.\n",
+    "title": "Tenant lifecycle and org-derived access"
+  },
+  "shardHash": "bb82abc9d7569010246ffd9795e7df0cdf8c8d6c33536270534d122fb850cd54",
+  "specVersion": "1.2.0"
+}

@@ -1,0 +1,61 @@
+{{- if .Values.seedRauthy.enabled }}
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: statecraft-seed-rauthy-{{ .Release.Revision }}
+  labels:
+    app: statecraft-seed-rauthy
+  annotations:
+    # Runs after the schema migration hook (weight -5) and before the main
+    # statecraft-api Deployment rolls. Idempotent; safe to re-run.
+    "helm.sh/hook": pre-install,pre-upgrade
+    "helm.sh/hook-weight": "-4"
+    "helm.sh/hook-delete-policy": before-hook-creation
+spec:
+  backoffLimit: 2
+  ttlSecondsAfterFinished: 600
+  template:
+    metadata:
+      labels:
+        app: statecraft-seed-rauthy
+    spec:
+      restartPolicy: Never
+      serviceAccountName: {{ .Values.serviceAccount.name }}
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 10001
+        runAsGroup: 10001
+        fsGroup: 10001
+      containers:
+        - name: seed-rauthy
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          imagePullPolicy: IfNotPresent
+          command: ["node", "/workspace/platform/services/statecraft/scripts/seed-rauthy.mjs"]
+          envFrom:
+            - secretRef:
+                name: statecraft-api-secrets
+                optional: false
+          resources:
+            requests:
+              cpu: 50m
+              memory: 96Mi
+            limits:
+              cpu: 250m
+              memory: 192Mi
+          securityContext:
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+            capabilities:
+              drop:
+                - ALL
+          volumeMounts:
+            - name: tmp
+              mountPath: /tmp
+      volumes:
+        - name: tmp
+          emptyDir: {}
+{{- end }}

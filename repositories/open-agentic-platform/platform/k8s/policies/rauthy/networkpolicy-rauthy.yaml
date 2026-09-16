@@ -1,0 +1,113 @@
+# Security review fix (MEDIUM finding) -- rauthy-system NetworkPolicies.
+#
+# rauthy-system had NO enforced NetworkPolicy before this file (same gap
+# as statecraft-system and deployd-system -- see the sibling files in
+# this directory and monitoring/networkpolicy-monitoring.yaml's incident
+# header for the shared rationale). This is the first enforced
+# default-deny for this namespace; the allow set below is the complete
+# list -- anything else in or out is dropped.
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: default-deny-all
+  namespace: rauthy-system
+spec:
+  podSelector: {}
+  policyTypes:
+    - Ingress
+    - Egress
+---
+# Raft (:8100) + hiqlite-API (:8200) peer traffic between the rauthy
+# StatefulSet's replicas, reached via the headless Service.
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: allow-intra-namespace
+  namespace: rauthy-system
+spec:
+  podSelector: {}
+  policyTypes:
+    - Ingress
+    - Egress
+  ingress:
+    - from:
+        - podSelector: {}
+  egress:
+    - to:
+        - podSelector: {}
+---
+# Public ingress: ingress-nginx -> rauthy (:8080) -- the auth.${DOMAIN}
+# OIDC/OAuth2 endpoints (login, token, JWKS, admin UI).
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: allow-ingress-nginx
+  namespace: rauthy-system
+spec:
+  podSelector: {}
+  policyTypes:
+    - Ingress
+  ingress:
+    - from:
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: ingress-nginx
+      ports:
+        - port: 8080
+          protocol: TCP
+---
+# Cross-namespace direct callers, in case in-cluster DNS for the public
+# rauthy hostname does not hairpin back through ingress-nginx: statecraft
+# (M2M token exchange, seed-rauthy Helm hook, sweeper CronJobs) and
+# deployd-api (JWT/JWKS validation) both call Rauthy's OIDC endpoints
+# directly.
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: allow-cross-namespace-ingress
+  namespace: rauthy-system
+spec:
+  podSelector: {}
+  policyTypes:
+    - Ingress
+  ingress:
+    - from:
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: statecraft-system
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: deployd-system
+      ports:
+        - port: 8080
+          protocol: TCP
+---
+# rauthy's own outbound needs: DNS, SMTP (magic-link email, spec 106
+# amendment; STARTTLS on 587 -- see the rauthy chart's `smtp` values and
+# the blocked-outbound-465 note in infra/hetzner/setup.sh), and HTTPS
+# (upstream OIDC / JWKS federation to configured social/enterprise Auth
+# Providers -- rauthy fetches discovery documents and JWKS over 443, same
+# as the deployd-api policy's general-HTTPS-egress allowance in the
+# sibling deployd/networkpolicy-deployd.yaml).
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: allow-egress-infra
+  namespace: rauthy-system
+spec:
+  podSelector: {}
+  policyTypes:
+    - Egress
+  egress:
+    - ports:
+        - port: 53
+          protocol: UDP
+        - port: 53
+          protocol: TCP
+    - ports:
+        - port: 587
+          protocol: TCP
+    - ports:
+        - port: 443
+          protocol: TCP

@@ -1,0 +1,187 @@
+{
+  "record": {
+    "codeAliases": [
+      "OPC_DECOMPOSITION",
+      "REVERSE_ENGINEERING_PIPELINE",
+      "BORN_WITH_PIPELINE"
+    ],
+    "created": "2026-05-22",
+    "dependsOn": [
+      "032-opc-inspect-governance-wiring-mvp",
+      "073-axiomregent-unification",
+      "095-checkpoint-branch-of-thought",
+      "115-knowledge-extraction-pipeline",
+      "120-factory-extraction-stage",
+      "147-spec-kind-grammar",
+      "154-logical-unit-ownership-grammar",
+      "156-references-edge-provenance-grammar",
+      "161-knowledge-requirements-provenance-emission"
+    ],
+    "domain": "opc",
+    "establishes": [
+      {
+        "kind": "directory",
+        "path": "crates/opc-decomposition-pipeline"
+      },
+      {
+        "kind": "file",
+        "path": "product/apps/opc/src-tauri/src/commands/decomposition.rs"
+      },
+      {
+        "kind": "directory",
+        "path": "product/apps/opc/src/features/decomposition"
+      },
+      {
+        "kind": "file",
+        "path": "product/apps/opc/src/components/DecompositionPanel.tsx"
+      }
+    ],
+    "extends": [
+      {
+        "nature": "additive",
+        "spec": "032-opc-inspect-governance-wiring-mvp",
+        "unit": {
+          "kind": "file",
+          "path": "product/apps/opc/src-tauri/Cargo.toml"
+        }
+      },
+      {
+        "nature": "additive",
+        "spec": "032-opc-inspect-governance-wiring-mvp",
+        "unit": {
+          "kind": "file",
+          "path": "product/apps/opc/src-tauri/src/commands/mod.rs"
+        }
+      },
+      {
+        "nature": "additive",
+        "spec": "032-opc-inspect-governance-wiring-mvp",
+        "unit": {
+          "kind": "file",
+          "path": "product/apps/opc/src-tauri/src/lib.rs"
+        }
+      },
+      {
+        "nature": "additive",
+        "spec": "034-featuregraph-registry-scanner-fix",
+        "unit": {
+          "kind": "file",
+          "path": "crates/featuregraph/tests/golden/features_graph.json"
+        }
+      }
+    ],
+    "extraFrontmatter": {
+      "compliance": [
+        {
+          "controls": [
+            "ASI06"
+          ],
+          "framework": "owasp-asi-2026"
+        }
+      ],
+      "slug": "opc-decomposition-pipeline"
+    },
+    "id": "165-opc-decomposition-pipeline",
+    "implementation": "complete",
+    "kind": "capability",
+    "owner": "bart",
+    "references": [
+      {
+        "role": "decomposition-source",
+        "unit": {
+          "kind": "file",
+          "path": "docs/owasp/factory/AIDE-VELOCITY-OAP-INTENT.md"
+        }
+      },
+      {
+        "role": "extraction-substrate",
+        "unit": {
+          "kind": "file",
+          "path": "specs/120-factory-extraction-stage/spec.md"
+        }
+      },
+      {
+        "role": "xray-substrate",
+        "unit": {
+          "kind": "directory",
+          "path": "crates/xray"
+        }
+      },
+      {
+        "role": "semantic-substrate",
+        "unit": {
+          "kind": "directory",
+          "path": "crates/axiomregent"
+        }
+      },
+      {
+        "role": "provenance-consumer",
+        "unit": {
+          "kind": "file",
+          "path": "specs/161-knowledge-requirements-provenance-emission/spec.md"
+        }
+      },
+      {
+        "role": "target-renderer",
+        "unit": {
+          "kind": "file",
+          "path": "specs/163-statecraft-requirements-view/spec.md"
+        }
+      }
+    ],
+    "refines": [
+      {
+        "aspect": "decomposition-panel-shell-wiring",
+        "refines_specs": [
+          "180-opc-shell-codification"
+        ],
+        "unit": {
+          "kind": "file",
+          "path": "product/apps/opc/src/lib/api.ts"
+        }
+      },
+      {
+        "aspect": "decomposition-panel-shell-wiring",
+        "refines_specs": [
+          "180-opc-shell-codification"
+        ],
+        "unit": {
+          "kind": "file",
+          "path": "product/apps/opc/src/contexts/TabContext.tsx"
+        }
+      },
+      {
+        "aspect": "decomposition-panel-shell-wiring",
+        "refines_specs": [
+          "180-opc-shell-codification"
+        ],
+        "unit": {
+          "kind": "file",
+          "path": "product/apps/opc/src/components/TabContent.tsx"
+        }
+      }
+    ],
+    "risk": "high",
+    "sectionHeadings": [
+      "165 — OPC decomposition pipeline",
+      "1. Problem",
+      "2. Decision",
+      "2.1 Stage inventory",
+      "2.2 Pipeline execution semantics",
+      "2.3 Determinism and reproducibility",
+      "3. Functional Requirements",
+      "4. Success Criteria",
+      "5. Scope",
+      "In scope",
+      "Out of scope (deferred)",
+      "6. Compliance",
+      "7. Cross-references"
+    ],
+    "specPath": "specs/165-opc-decomposition-pipeline/spec.md",
+    "status": "approved",
+    "summary": "The six-stage OPC pipeline that produces draft specs from external evidence: (1) knowledge extraction via spec 120's deterministic Rust extractor, (2) structural fingerprinting via xray, (3) semantic clustering via axiomregent/search, (4) behavioural traversal via the call graph + cross-reference data, (5) temporal lineage via git history mapped to logical units per spec 154, and (6) LLM synthesis that consumes the structured evidence from stages 1–5 and emits draft specs.\nBoth reverse-engineering (the agent-builder-console case — an existing repo with no spec spine) and born-with (factory-engine adapter output bundles) flow through the same pipeline. Emitted draft specs carry `status: draft`, `origin: retroactive: true`, a declared `kind:` per spec 147, declared logical units per spec 154, and `role: decomposition-origin` references with `provenance:` per spec 161 (the emission contract).\nDraft specs land in the project's repo under `<project>/specs/` and surface in the statecraft Requirements view (spec 163). The developer reviews them there: edits, refinements, rejection of bad derivations, splitting of over-broad specs. Approved specs become the execution contract OPC pulls back to drive factory runs against the project.\n",
+    "title": "OPC decomposition pipeline — reverse-engineering and born-with spec spawning"
+  },
+  "shardHash": "e9b41668f8cedc2d248a7fcb99dc295a9bbe82c2e90c4987b15e8071bc4de661",
+  "specVersion": "1.1.0"
+}

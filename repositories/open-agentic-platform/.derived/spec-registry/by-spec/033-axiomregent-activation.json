@@ -1,0 +1,55 @@
+{
+  "record": {
+    "authors": [
+      "open-agentic-platform"
+    ],
+    "codeAliases": [
+      "MCP_ROUTER",
+      "MCP_ROUTER_CONTRACT",
+      "MCP_SNAPSHOT_WORKSPACE",
+      "MCP_TOOLS"
+    ],
+    "created": "2026-03-29",
+    "domain": "opc",
+    "establishes": [
+      {
+        "kind": "file",
+        "path": "crates/axiomregent/src/lib.rs"
+      }
+    ],
+    "extraFrontmatter": {
+      "language": "en"
+    },
+    "featureBranch": "033-axiomregent-activation",
+    "id": "033-axiomregent-activation",
+    "implementation": "complete",
+    "kind": "platform",
+    "owner": "bart",
+    "references": [
+      {
+        "role": "historical",
+        "unit": {
+          "kind": "file",
+          "path": "product/apps/opc/src-tauri/src/commands/sidecars.rs"
+        }
+      }
+    ],
+    "risk": "medium",
+    "sectionHeadings": [
+      "Feature Specification: axiomregent activation",
+      "Purpose",
+      "Scope",
+      "In scope",
+      "Out of scope",
+      "Requirements",
+      "Success criteria",
+      "Contract notes"
+    ],
+    "specPath": "specs/033-axiomregent-activation/spec.md",
+    "status": "approved",
+    "summary": "Activate the bundled axiomregent sidecar at OPC desktop startup, verify bundling and port discovery, expose governed tools in the MCP UI, and surface safety-tier visibility — without rerouting all agent execution in this slice.\n",
+    "title": "axiomregent sidecar activation and governance surface"
+  },
+  "shardHash": "d8e34a49506d998c46483eacc2c8e49e32137ab997bbf5f8d674f9623e58d072",
+  "specVersion": "1.1.0"
+}

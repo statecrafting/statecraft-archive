@@ -1,0 +1,102 @@
+# Postgres (spec 010) - born empty, the CoreLedger driver target (spec 003).
+#
+# A raw single-instance StatefulSet on the official postgres image, reconciled
+# by Flux, rather than a Helm chart: NSQ (below) has no maintained chart and is
+# already a raw manifest, and a single born-empty Postgres on the official
+# image sidesteps the Bitnami catalog changes (mid-2025) that leave the old
+# bitnami/postgresql image tags in ImagePullBackOff. Only OAP's data was
+# discarded; the driver-swap scaling thesis (control plane on Postgres, stamped
+# apps on libSQL/Turso) is unchanged.
+#
+# The password comes from the SOPS-decrypted `statecraft-postgres` Secret
+# (key POSTGRES_PASSWORD). The Service name `postgresql` preserves the in-
+# cluster DNS the control plane's ENRAHITU_LEDGER_URL points at.
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: postgresql
+  namespace: statecraft-system
+  labels:
+    app: postgresql
+spec:
+  type: ClusterIP
+  selector:
+    app: postgresql
+  ports:
+    - name: postgres
+      port: 5432
+      targetPort: 5432
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: postgresql
+  namespace: statecraft-system
+  labels:
+    app: postgresql
+spec:
+  serviceName: postgresql
+  replicas: 1
+  selector:
+    matchLabels:
+      app: postgresql
+  template:
+    metadata:
+      labels:
+        app: postgresql
+    spec:
+      securityContext:
+        fsGroup: 999
+      containers:
+        - name: postgres
+          image: postgres:17
+          imagePullPolicy: IfNotPresent
+          ports:
+            - name: postgres
+              containerPort: 5432
+          env:
+            - name: POSTGRES_USER
+              value: statecraft
+            - name: POSTGRES_DB
+              value: statecraft
+            - name: POSTGRES_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: statecraft-postgres
+                  key: POSTGRES_PASSWORD
+            # Keep PGDATA in a subdirectory of the mounted volume so the
+            # official image's initdb does not trip over a lost+found.
+            - name: PGDATA
+              value: /var/lib/postgresql/data/pgdata
+          readinessProbe:
+            exec:
+              command: ["pg_isready", "-U", "statecraft", "-d", "statecraft"]
+            initialDelaySeconds: 10
+            periodSeconds: 10
+            timeoutSeconds: 5
+          livenessProbe:
+            exec:
+              command: ["pg_isready", "-U", "statecraft", "-d", "statecraft"]
+            initialDelaySeconds: 30
+            periodSeconds: 15
+            timeoutSeconds: 5
+          resources:
+            requests:
+              cpu: 100m
+              memory: 256Mi
+            limits:
+              cpu: "1"
+              memory: 1Gi
+          volumeMounts:
+            - name: data
+              mountPath: /var/lib/postgresql/data
+  volumeClaimTemplates:
+    - metadata:
+        name: data
+      spec:
+        accessModes: ["ReadWriteOnce"]
+        storageClassName: hcloud-volumes
+        resources:
+          requests:
+            storage: 10Gi

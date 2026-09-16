@@ -1,0 +1,66 @@
+{
+  "mapping": {
+    "dependsOn": [
+      "118-workflow-spec-traceability"
+    ],
+    "implementingPaths": [
+      {
+        "path": ".github/workflows/deploy-docs.yml",
+        "source": "spec-edge"
+      },
+      {
+        "path": "crates/featuregraph/tests/golden/features_graph.json",
+        "source": "spec-edge"
+      },
+      {
+        "path": "website",
+        "source": "spec-edge"
+      }
+    ],
+    "resolvedUnits": [
+      {
+        "locations": [
+          {
+            "file": "website"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "directory",
+          "path": "website"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": ".github/workflows/deploy-docs.yml"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "file",
+          "path": ".github/workflows/deploy-docs.yml"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "crates/featuregraph/tests/golden/features_graph.json"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "extends",
+        "unit": {
+          "kind": "file",
+          "path": "crates/featuregraph/tests/golden/features_graph.json"
+        }
+      }
+    ],
+    "specId": "223-documentation-website",
+    "specStatus": "approved"
+  },
+  "schemaVersion": "1.1.0",
+  "shardHash": "275b2f665c09e765c825f2768ab69c6bbeb778eb2a9d0088580aba94f293d20e"
+}

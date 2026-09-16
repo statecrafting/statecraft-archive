@@ -1,0 +1,115 @@
+# Spec: 217-spec-spine-engine-swap-collapse
+# Spec: 006-conformance-lint-mvp
+# Spec: 177-ci-orchestrator-pr-gate
+#
+# Foundational spec-tooling conformance bundle. Spec 217 deleted the
+# in-tree engine (it supersedes the 001/002 MVP crates); the published
+# spec-spine CLI compile/registry/index smokes replace them. Plus the
+# surviving OAP overlays: oap-registry-enrich, spec-lint (006, strict per
+# spec 128), oap-code-index-enrich, and the policy compiler.
+#
+# Dispatched unconditionally from `.github/workflows/ci.yml` (spec 177
+# §2.2 constitutional carve-out): spec-spine conformance is the
+# foundational gate.
+
+name: Spec conformance
+
+on:
+  workflow_call:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  spec-conformance:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+
+      # Disk headroom (spec 135 FR-05a, amendment 2026-06-11): this job
+      # stacks six per-tool release target dirs in one workspace, and its
+      # merge_group instance ENOSPC'd on a hosted runner (run 27371047814,
+      # rustc LLVM "IO failure on output stream"). The local composite
+      # reclaims ~25 GB on hosted runners only (guard inside the action).
+      - uses: ./.github/actions/free-disk-space
+
+      - name: Rust toolchain
+        uses: dtolnay/rust-toolchain@29eef336d9b2848a0b548edc03f92a220660cdb8 # pinned for rust-toolchain.toml lockstep
+        with:
+          toolchain: '1.95.0'
+
+      - name: Cache Rust dependencies
+        uses: Swatinem/rust-cache@e18b497796c12c097a38f9edb9d0641fb99eee32 # v2
+        with:
+          shared-key: spec-conformance
+
+      - name: Install spec-spine CLI
+        run: cargo install spec-spine-cli --version 0.10.0 --locked
+
+      - name: Emit registry (compile smoke)
+        run: spec-spine compile
+
+      # Spec 222: registry-shard freshness gate. `spec-spine compile` above
+      # regenerated the by-spec shards in place; a non-empty diff against the
+      # committed tree means a spec.md was refined without recompiling its
+      # shard (the spec 208 / PR #422 silent-drift hole). Scoped to by-spec/
+      # so the gitignored aggregate and the registry-oap.json overlay cannot
+      # make it spuriously red or green. This is a git-layer equality check,
+      # not JSON parsing, so it stays within governed-artifact-reads.md.
+      - name: Registry-shard freshness gate (spec 222)
+        run: |
+          if ! git diff --exit-code -- .derived/spec-registry/by-spec/; then
+            echo "::error::Stale registry shard(s): a spec.md changed without its by-spec shard regenerated. Run 'spec-spine compile' and commit .derived/spec-registry/by-spec/."
+            exit 1
+          fi
+
+      - name: Build oap-registry-enrich (Cut D W-06a)
+        run: cargo build --release --manifest-path tools/oap/oap-registry-enrich/Cargo.toml --target-dir tools/oap/oap-registry-enrich/target
+
+      - name: Emit registry-oap.json (OAP-specific overlay)
+        run: ./tools/oap/oap-registry-enrich/target/release/oap-registry-enrich
+
+      - name: Registry read-path smoke
+        run: spec-spine registry list | head -n 5
+
+      - name: Build spec-lint (Feature 006)
+        run: cargo build --release --manifest-path tools/spec-spine/spec-lint/Cargo.toml --target-dir tools/spec-spine/spec-lint/target
+
+      - name: spec-lint (strict; spec 128 amends 006)
+        run: ./tools/spec-spine/spec-lint/target/release/spec-lint --fail-on-warn
+
+      - name: spec-lint tests
+        run: cargo test --manifest-path tools/spec-spine/spec-lint/Cargo.toml
+
+      # Broad codebase-index staleness is no longer a required PR gate
+      # (spec 188 Phase 3): the broad index is a best-effort cache, drift
+      # surfaced post-merge by cd-index-staleness-report.yml; the narrow
+      # PR-time gate is the slice check below. The engine smoke belongs to
+      # the spec-tooling conformance bundle.
+      #
+      # Spec 184/188 narrow config-hash gate, now `spec-spine index check
+      # --slice claude-config` (spec 217 replaced the in-tree config-hash
+      # check). ORDER MATTERS: this validates the COMMITTED slice sidecar
+      # (.derived/codebase-index/slices.json) against the current
+      # .claude/settings.json + .mcp.json, so it MUST run before the index
+      # build smoke below, which regenerates that sidecar and would
+      # otherwise make this check vacuously green.
+      - name: Check config-hash slice (spec 184 gate)
+        run: spec-spine index check --slice claude-config
+
+      - name: Emit codebase index (smoke)
+        run: spec-spine index
+
+      - name: Build oap-code-index-enrich (Cut D W-07a)
+        run: cargo build --release --manifest-path tools/oap/oap-code-index-enrich/Cargo.toml --target-dir tools/oap/oap-code-index-enrich/target
+
+      - name: Emit index-oap.json (OAP-specific overlay)
+        run: ./tools/oap/oap-code-index-enrich/target/release/oap-code-index-enrich
+
+      - name: Build policy-compiler
+        run: cargo build --release --manifest-path tools/oap/policy-compiler/Cargo.toml --target-dir tools/oap/policy-compiler/target
+
+      - name: Policy compiler tests
+        run: cargo test --manifest-path tools/oap/policy-compiler/Cargo.toml

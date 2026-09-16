@@ -1,0 +1,146 @@
+{
+  "diagnostics": {
+    "errors": [],
+    "warnings": [
+      {
+        "code": "W-002",
+        "message": "spec '087-unified-workspace-architecture' directory unit 'product/packages/project-sdk' is not a directory",
+        "path": "product/packages/project-sdk"
+      }
+    ]
+  },
+  "mapping": {
+    "dependsOn": [
+      "074-factory-ingestion",
+      "075-factory-workflow-engine",
+      "076-factory-desktop-panel",
+      "077-statecraft-factory-api",
+      "078-platform-completion-plan",
+      "080-github-identity-onboarding",
+      "082-artifact-integrity-platform-hardening"
+    ],
+    "implementingPaths": [
+      {
+        "path": "platform/services/statecraft/api/sync/duplex.ts",
+        "source": "spec-edge"
+      },
+      {
+        "path": "platform/services/statecraft/api/sync/registry.ts",
+        "source": "spec-edge"
+      },
+      {
+        "path": "platform/services/statecraft/api/sync/relay.ts",
+        "source": "spec-edge"
+      },
+      {
+        "path": "platform/services/statecraft/api/sync/service.ts",
+        "source": "spec-edge"
+      },
+      {
+        "path": "platform/services/statecraft/api/sync/store.ts",
+        "source": "spec-edge"
+      },
+      {
+        "path": "platform/services/statecraft/api/sync/types.ts",
+        "source": "spec-edge"
+      },
+      {
+        "path": "product/packages/workspace-sdk",
+        "source": "manifest-metadata"
+      }
+    ],
+    "resolvedUnits": [
+      {
+        "locations": [
+          {
+            "file": "platform/services/statecraft/api/sync/duplex.ts"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "file",
+          "path": "platform/services/statecraft/api/sync/duplex.ts"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "platform/services/statecraft/api/sync/registry.ts"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "file",
+          "path": "platform/services/statecraft/api/sync/registry.ts"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "platform/services/statecraft/api/sync/relay.ts"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "file",
+          "path": "platform/services/statecraft/api/sync/relay.ts"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "platform/services/statecraft/api/sync/service.ts"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "file",
+          "path": "platform/services/statecraft/api/sync/service.ts"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "platform/services/statecraft/api/sync/store.ts"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "file",
+          "path": "platform/services/statecraft/api/sync/store.ts"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "platform/services/statecraft/api/sync/types.ts"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "file",
+          "path": "platform/services/statecraft/api/sync/types.ts"
+        }
+      },
+      {
+        "locations": [],
+        "ownership": false,
+        "sourceField": "references",
+        "unit": {
+          "kind": "directory",
+          "path": "product/packages/project-sdk"
+        }
+      }
+    ],
+    "specId": "087-unified-workspace-architecture",
+    "specStatus": "approved"
+  },
+  "schemaVersion": "1.1.0",
+  "shardHash": "30a494a19093117538c371e4c7fb586404e7a95e18d4acc6179a3230cfeadc78"
+}

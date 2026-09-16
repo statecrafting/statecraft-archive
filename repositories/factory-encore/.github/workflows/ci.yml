@@ -1,0 +1,142 @@
+# Spec: 000-factory-kernel
+#
+# Root CI orchestrator. Branch protection's required check on main is the
+# terminal ci-gate job; every other gate is a reusable (workflow_call:) workflow
+# dispatched from here.
+#
+# Routing: a changes job runs an inline git diff against the base and emits one
+# boolean per routed workflow (no third-party action). The generator route gates
+# on the generator surface; the constitutional gates (spec-spine governance, the
+# cross-repo lockstep) skip the filter and always run on PRs. On merge_group /
+# workflow_dispatch the routes fall back to true (no base to diff). The ci-gate
+# aggregator treats skipped as success and fails on any upstream failure or
+# cancelled.
+
+name: ci
+
+on:
+  pull_request:
+    branches: [main]
+  push:
+    branches: [main]
+  merge_group:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pull-requests: read
+
+jobs:
+  # route
+  changes:
+    runs-on: ubuntu-latest
+    name: route / changed-paths
+    timeout-minutes: 5
+    outputs:
+      generator: ${{ steps.f.outputs.generator }}
+    steps:
+      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+        with:
+          fetch-depth: 0
+
+      - name: Compute changed-path routes
+        id: f
+        shell: bash
+        env:
+          EVENT: ${{ github.event_name }}
+          PR_BASE_SHA: ${{ github.event.pull_request.base.sha }}
+          PUSH_BEFORE_SHA: ${{ github.event.before }}
+        run: |
+          set -euo pipefail
+          if [ "$EVENT" = "merge_group" ] || [ "$EVENT" = "workflow_dispatch" ]; then
+            echo "generator=true" >> "$GITHUB_OUTPUT"
+            echo "$EVENT: no base to diff; running all routes"
+            exit 0
+          fi
+          if [ "$EVENT" = "pull_request" ]; then
+            base="$PR_BASE_SHA"
+          else
+            base="$PUSH_BEFORE_SHA"
+          fi
+          zero="0000000000000000000000000000000000000000"
+          if [ -z "$base" ] || [ "$base" = "$zero" ] || ! git cat-file -e "${base}^{commit}" 2>/dev/null; then
+            base="$(git rev-parse HEAD~1 2>/dev/null || git rev-parse HEAD)"
+          fi
+          changed="$(git diff --name-only "$base" HEAD)"
+          printf '%s\n' "changed files since ${base}:" "$changed"
+          m() { printf '%s\n' "$changed" | grep -qE "$1"; }
+          # generator route: the deterministic generator toolchain (the adapter
+          # scripts/modules, the root toolchain manifests).
+          generator=false
+          if m '^adapters/' \
+             || m '^package(-lock)?\.json$' \
+             || m '^tsconfig\.json$' \
+             || m '^vitest\.config\.ts$' \
+             || m '^\.github/workflows/generator-ci\.yml$'; then
+            generator=true
+          fi
+          echo "generator=$generator" >> "$GITHUB_OUTPUT"
+          echo "routes -> generator=$generator"
+
+  # routed by changed paths
+  generator:
+    needs: changes
+    if: needs.changes.outputs.generator == 'true'
+    uses: ./.github/workflows/generator-ci.yml
+
+  # routed by changed paths -- structural e2e (Node-only, cheap). The expensive
+  # build matrix stays nightly (generator-e2e-nightly.yml); spec 007.
+  generator-e2e:
+    needs: changes
+    if: needs.changes.outputs.generator == 'true'
+    uses: ./.github/workflows/generator-e2e.yml
+
+  # constitutional (always-run)
+  spec-spine:
+    uses: ./.github/workflows/spec-spine.yml
+
+  lockstep:
+    uses: ./.github/workflows/ci-lockstep.yml
+
+  # AI PR review (PR-only; folded into the gate). Job-level pull-requests: write
+  # overrides ci.yml's read default; secrets: inherit passes the OAuth token.
+  ai-review:
+    if: github.event_name == 'pull_request'
+    permissions:
+      contents: read
+      pull-requests: write
+    secrets: inherit
+    uses: ./.github/workflows/ai-pr-review.yml
+
+  # aggregator
+  ci-gate:
+    name: ci-gate
+    if: always()
+    needs:
+      - changes
+      - generator
+      - generator-e2e
+      - spec-spine
+      - lockstep
+      - ai-review
+    runs-on: ubuntu-latest
+    timeout-minutes: 2
+    steps:
+      - name: Aggregate upstream results
+        env:
+          RESULTS: ${{ toJSON(needs) }}
+        run: |
+          set -u
+          echo "$RESULTS"
+          # failure / cancelled block merge; skipped (path-filter said "don't
+          # run", or job opted out via its own if:) and success pass. The
+          # aggregator is the merge contract; keep it small.
+          if echo "$RESULTS" | jq -e '
+              to_entries
+              | map(.value.result)
+              | any(. == "failure" or . == "cancelled")
+            ' > /dev/null; then
+            echo "::error::one or more upstream jobs failed or were cancelled"
+            exit 1
+          fi
+          echo "all upstream jobs satisfied (success or skipped)"

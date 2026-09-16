@@ -1,0 +1,359 @@
+{
+  "mapping": {
+    "dependsOn": [
+      "001-statecraft-thesis"
+    ],
+    "implementingPaths": [
+      {
+        "path": "",
+        "source": "manifest-metadata"
+      },
+      {
+        "path": ".github/workflows/verify.yml",
+        "source": "spec-edge"
+      },
+      {
+        "path": ".statecraft/",
+        "source": "spec-edge"
+      },
+      {
+        "path": "backend/",
+        "source": "spec-edge"
+      },
+      {
+        "path": "backend/auth/",
+        "source": "spec-edge"
+      },
+      {
+        "path": "backend/core/",
+        "source": "spec-edge"
+      },
+      {
+        "path": "backend/health/",
+        "source": "spec-edge"
+      },
+      {
+        "path": "backend/hiq/",
+        "source": "spec-edge"
+      },
+      {
+        "path": "backend/idp/",
+        "source": "spec-edge"
+      },
+      {
+        "path": "backend/lib/",
+        "source": "spec-edge"
+      },
+      {
+        "path": "backend/web/",
+        "source": "spec-edge"
+      },
+      {
+        "path": "docker/",
+        "source": "spec-edge"
+      },
+      {
+        "path": "encore.app",
+        "source": "spec-edge"
+      },
+      {
+        "path": "infra.config.dev.json",
+        "source": "spec-edge"
+      },
+      {
+        "path": "infra.config.json",
+        "source": "spec-edge"
+      },
+      {
+        "path": "package-lock.json",
+        "source": "spec-edge"
+      },
+      {
+        "path": "package.json",
+        "source": "spec-edge"
+      },
+      {
+        "path": "scripts/",
+        "source": "spec-edge"
+      },
+      {
+        "path": "tsconfig.json",
+        "source": "spec-edge"
+      },
+      {
+        "path": "vitest.config.ts",
+        "source": "spec-edge"
+      },
+      {
+        "path": "vitest.setup.ts",
+        "source": "spec-edge"
+      }
+    ],
+    "resolvedUnits": [
+      {
+        "locations": [
+          {
+            "file": ".statecraft/"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "directory",
+          "path": ".statecraft/"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "backend/"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "directory",
+          "path": "backend/"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "backend/auth/"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "directory",
+          "path": "backend/auth/"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "backend/core/"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "directory",
+          "path": "backend/core/"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "backend/health/"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "directory",
+          "path": "backend/health/"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "backend/hiq/"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "directory",
+          "path": "backend/hiq/"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "backend/idp/"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "directory",
+          "path": "backend/idp/"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "backend/lib/"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "directory",
+          "path": "backend/lib/"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "backend/web/"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "directory",
+          "path": "backend/web/"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "docker/"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "directory",
+          "path": "docker/"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "scripts/"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "directory",
+          "path": "scripts/"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": ".github/workflows/verify.yml"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "file",
+          "path": ".github/workflows/verify.yml"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "encore.app"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "file",
+          "path": "encore.app"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "infra.config.dev.json"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "file",
+          "path": "infra.config.dev.json"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "infra.config.json"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "file",
+          "path": "infra.config.json"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "package-lock.json"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "file",
+          "path": "package-lock.json"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "package.json"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "file",
+          "path": "package.json"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "tsconfig.json"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "file",
+          "path": "tsconfig.json"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "vitest.config.ts"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "file",
+          "path": "vitest.config.ts"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "vitest.setup.ts"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "file",
+          "path": "vitest.setup.ts"
+        }
+      }
+    ],
+    "specId": "002-app-shell",
+    "specStatus": "approved"
+  },
+  "schemaVersion": "1.1.0",
+  "shardHash": "d6cdadb63717eab05d7d3e88ea9a00c31d4ff34f968cbabc731c79577aa2a12f"
+}

@@ -1,0 +1,79 @@
+{
+  "mapping": {
+    "dependsOn": [
+      "000-bootstrap-spec-system",
+      "037-cross-platform-axiomregent",
+      "073-axiomregent-unification",
+      "075-factory-workflow-engine",
+      "104-makefile-ci-parity-contract"
+    ],
+    "implementingPaths": [
+      {
+        "path": "Makefile",
+        "source": "spec-edge"
+      },
+      {
+        "path": "tools/oap/adapter-scopes-compiler",
+        "source": "manifest-metadata"
+      },
+      {
+        "path": "tools/oap/adapter-scopes-compiler/src/lib.rs",
+        "source": "spec-edge"
+      },
+      {
+        "path": "tools/oap/adapter-scopes-compiler/src/main.rs",
+        "source": "spec-edge"
+      }
+    ],
+    "resolvedUnits": [
+      {
+        "locations": [
+          {
+            "file": "tools/oap/adapter-scopes-compiler/src/lib.rs"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "file",
+          "path": "tools/oap/adapter-scopes-compiler/src/lib.rs"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "tools/oap/adapter-scopes-compiler/src/main.rs"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "file",
+          "path": "tools/oap/adapter-scopes-compiler/src/main.rs"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "Makefile",
+            "span": {
+              "endLine": 110,
+              "startLine": 99
+            }
+          }
+        ],
+        "ownership": true,
+        "sourceField": "co_authority",
+        "unit": {
+          "anchor": "axiomregent-build",
+          "file": "Makefile",
+          "kind": "section"
+        }
+      }
+    ],
+    "specId": "105-scripts-to-binaries-migration",
+    "specStatus": "approved"
+  },
+  "schemaVersion": "1.1.0",
+  "shardHash": "a210e63fb2d952771d97672b7ab83b91d2ddeacd2380f1b9f9fd58dfa9b2d688"
+}

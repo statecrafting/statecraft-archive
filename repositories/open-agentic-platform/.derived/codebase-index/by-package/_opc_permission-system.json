@@ -1,0 +1,11 @@
+{
+  "package": {
+    "kind": "npm-package",
+    "name": "@opc/permission-system",
+    "path": "product/packages/permission-system",
+    "specRef": "049-permission-system",
+    "version": "0.1.0"
+  },
+  "schemaVersion": "1.1.0",
+  "shardHash": "7034f625e2f6171d06ae9fee20460dbbd3253c07b640a90fd85c62b0aad75a25"
+}

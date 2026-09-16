@@ -1,0 +1,101 @@
+{
+  "mapping": {
+    "dependsOn": [
+      "217-spec-spine-engine-swap-collapse",
+      "188-derived-index-merge-serialization"
+    ],
+    "implementingPaths": [
+      {
+        "path": ".github/workflows/spec-conformance.yml",
+        "source": "spec-edge"
+      },
+      {
+        "path": "crates/featuregraph/tests/golden/features_graph.json",
+        "source": "spec-edge"
+      },
+      {
+        "path": "specs/184-claude-shared-config-governance/spec.md",
+        "source": "spec-edge"
+      },
+      {
+        "path": "specs/188-derived-index-merge-serialization/spec.md",
+        "source": "spec-edge"
+      },
+      {
+        "path": "specs/217-spec-spine-engine-swap-collapse/spec.md",
+        "source": "spec-edge"
+      }
+    ],
+    "resolvedUnits": [
+      {
+        "locations": [
+          {
+            "file": ".github/workflows/spec-conformance.yml"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "extends",
+        "unit": {
+          "kind": "file",
+          "path": ".github/workflows/spec-conformance.yml"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "crates/featuregraph/tests/golden/features_graph.json"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "extends",
+        "unit": {
+          "kind": "file",
+          "path": "crates/featuregraph/tests/golden/features_graph.json"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "specs/184-claude-shared-config-governance/spec.md"
+          }
+        ],
+        "ownership": false,
+        "sourceField": "references",
+        "unit": {
+          "kind": "file",
+          "path": "specs/184-claude-shared-config-governance/spec.md"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "specs/188-derived-index-merge-serialization/spec.md"
+          }
+        ],
+        "ownership": false,
+        "sourceField": "references",
+        "unit": {
+          "kind": "file",
+          "path": "specs/188-derived-index-merge-serialization/spec.md"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "specs/217-spec-spine-engine-swap-collapse/spec.md"
+          }
+        ],
+        "ownership": false,
+        "sourceField": "references",
+        "unit": {
+          "kind": "file",
+          "path": "specs/217-spec-spine-engine-swap-collapse/spec.md"
+        }
+      }
+    ],
+    "specId": "222-registry-shard-freshness-gate",
+    "specStatus": "approved"
+  },
+  "schemaVersion": "1.1.0",
+  "shardHash": "37ca433671ddda188d8acffae54de6630744fc2c3dfd87df8e559cbf68d4c178"
+}

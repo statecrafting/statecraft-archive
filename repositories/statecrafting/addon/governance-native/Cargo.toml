@@ -1,0 +1,57 @@
+[package]
+name = "governance-native"
+version = "0.2.0"
+edition = "2021"
+publish = false
+license = "AGPL-3.0"
+description = "the control plane's governance spine as a napi-rs addon: canonical JSON, the attest-ledger record chain, the action-gate, and the trust window, exposed to an Encore.ts governance service."
+
+# Standalone crate: no root Cargo workspace exists in this repo. Declaring an
+# empty workspace here pins the workspace root to this directory so cargo never
+# walks upward looking for one (spec-spine.toml standalone_rust_workspaces).
+[workspace]
+
+[package.metadata.spec-spine]
+spec = "005-governance-native"
+
+[lib]
+# cdylib for the napi addon; rlib so `cargo test` builds a normal test harness
+# over the pure logic modules (the #[napi] layer is cfg'd out under test).
+crate-type = ["cdylib", "rlib"]
+
+[dependencies]
+# The four governance crates, exact-pinned from crates.io per statecraft spec
+# 008 §1 (published under the statecrafting org; no git deps).
+canonical-keysort-json = "=0.1.0"
+attest-ledger-types = "=0.1.0"
+attest-ledger-core = "=0.1.0"
+action-gate-types = "=0.1.0"
+action-gate-core = "=0.1.0"
+trust-window = "=0.1.0"
+
+# napi glue is only compiled for the addon build, never for `cargo test`
+# (see src/lib.rs). Optional so the test build does not link Node symbols.
+napi = { version = "3", default-features = false, features = ["napi8"], optional = true }
+napi-derive = { version = "3", optional = true }
+
+# supporting primitives
+ed25519-dalek = "3"
+sha2 = "0.10"
+hex = "0.4"
+base64 = "0.22"
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+
+[build-dependencies]
+napi-build = "2"
+
+[features]
+# `node` pulls in the napi bindings and is on by default so `napi build` and a
+# plain `cargo build` produce the addon. `cargo test --no-default-features`
+# exercises the pure logic without linking the Node C API.
+default = ["node"]
+node = ["dep:napi", "dep:napi-derive"]
+
+[profile.release]
+lto = true
+strip = true

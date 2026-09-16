@@ -1,0 +1,135 @@
+# Platform metrics sink (kube-prometheus-stack HelmRelease, spec 010).
+#
+# One Prometheus with two roles: RECEIVES statecraft's Encore remote_write
+# (Encore's exporter pushes; no scrape endpoint) and SCRAPES pull targets
+# (ingress-nginx, Flux, node-exporter, kube-state-metrics).
+#
+# It has no UI and no identity. Grafana was dropped with its OIDC client in the
+# observability pivot (spec 010 section 2.2): platform observability is the
+# in-substrate flag-gated frontend-admin, same-origin behind
+# statecraft_operator, so a cluster dashboard would need either no auth at
+# ingress or exactly the standalone monitoring identity the thesis retires.
+# Prometheus is kept because the substrate contract makes every app export
+# /metrics, and because cluster-plane signals are invisible from inside a
+# container. Nothing here may gain an Ingress or a LoadBalancer Service:
+# in-cluster reachability is the whole posture. Until frontend-admin reads it,
+# the operator reads it with `kubectl port-forward`.
+#
+# Alertmanager and the ~100 bundled default rules stay OFF (alerting policy is
+# a later spec, not a chart default).
+---
+apiVersion: source.toolkit.fluxcd.io/v1
+kind: HelmRepository
+metadata:
+  name: prometheus-community
+  namespace: flux-system
+spec:
+  interval: 24h
+  url: https://prometheus-community.github.io/helm-charts
+---
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: monitoring
+  namespace: monitoring
+spec:
+  interval: 1h
+  chart:
+    spec:
+      chart: kube-prometheus-stack
+      version: "86.2.2"
+      sourceRef:
+        kind: HelmRepository
+        name: prometheus-community
+        namespace: flux-system
+      interval: 24h
+  install:
+    crds: CreateReplace
+    timeout: 10m
+    remediation:
+      retries: 3
+  upgrade:
+    crds: CreateReplace
+    timeout: 10m
+    remediation:
+      retries: 3
+  values:
+    # Deterministic short names: the Prometheus Service becomes
+    # `monitoring-prometheus`, the literal DNS name Encore's remote_write_url
+    # points at. cleanPrometheusOperatorObjectNames keeps operator-side PVC
+    # names under hcloud's 63-char volume-label cap.
+    fullnameOverride: monitoring
+    cleanPrometheusOperatorObjectNames: true
+
+    defaultRules:
+      create: false
+    alertmanager:
+      enabled: false
+
+    # k3s embeds these without separately reachable metrics endpoints; leaving
+    # them on would ship permanently-down targets.
+    kubeControllerManager:
+      enabled: false
+    kubeScheduler:
+      enabled: false
+    kubeProxy:
+      enabled: false
+    kubeEtcd:
+      enabled: false
+
+    prometheusOperator:
+      admissionWebhooks:
+        enabled: false
+      tls:
+        enabled: false
+
+    prometheus:
+      prometheusSpec:
+        enableRemoteWriteReceiver: true
+        enableAdminAPI: false
+        retention: 15d
+        storageSpec:
+          volumeClaimTemplate:
+            spec:
+              storageClassName: hcloud-volumes
+              accessModes: ["ReadWriteOnce"]
+              resources:
+                requests:
+                  storage: 20Gi
+        additionalScrapeConfigs:
+          - job_name: statecraft-annotated-pods
+            kubernetes_sd_configs:
+              - role: pod
+                namespaces:
+                  names:
+                    - flux-system
+                    - statecraft-system
+                    - ingress-nginx
+            relabel_configs:
+              - source_labels:
+                  - __meta_kubernetes_pod_annotation_prometheus_io_scrape
+                action: keep
+                regex: "true"
+              - source_labels:
+                  - __meta_kubernetes_pod_annotation_prometheus_io_path
+                action: replace
+                target_label: __metrics_path__
+                regex: (.+)
+              - source_labels:
+                  - __address__
+                  - __meta_kubernetes_pod_annotation_prometheus_io_port
+                action: replace
+                regex: ([^:]+)(?::\d+)?;(\d+)
+                replacement: $1:$2
+                target_label: __address__
+              - source_labels: [__meta_kubernetes_namespace]
+                target_label: namespace
+              - source_labels: [__meta_kubernetes_pod_name]
+                target_label: pod
+
+    # Dropped in the observability pivot (see the header). Re-enabling it would
+    # reintroduce the standalone monitoring identity thesis section 3.4
+    # retires; the fleet's per-tenant Grafana add-on (spec 006) is a separate,
+    # tenant-scoped surface and is not this.
+    grafana:
+      enabled: false

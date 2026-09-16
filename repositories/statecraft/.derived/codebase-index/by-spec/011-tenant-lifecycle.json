@@ -1,0 +1,69 @@
+{
+  "mapping": {
+    "dependsOn": [
+      "001-statecraft-thesis",
+      "004-tenants-github-app",
+      "008-governance-attestation",
+      "009-control-plane-deploy"
+    ],
+    "implementingPaths": [
+      {
+        "path": "backend/auth/github-identity.ts",
+        "source": "spec-edge"
+      },
+      {
+        "path": "backend/tenants/access/",
+        "source": "spec-edge"
+      },
+      {
+        "path": "frontend/src/routes/operator/",
+        "source": "spec-edge"
+      }
+    ],
+    "resolvedUnits": [
+      {
+        "locations": [
+          {
+            "file": "backend/tenants/access/"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "directory",
+          "path": "backend/tenants/access/"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "frontend/src/routes/operator/"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "directory",
+          "path": "frontend/src/routes/operator/"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "backend/auth/github-identity.ts"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "file",
+          "path": "backend/auth/github-identity.ts"
+        }
+      }
+    ],
+    "specId": "011-tenant-lifecycle",
+    "specStatus": "approved"
+  },
+  "schemaVersion": "1.1.0",
+  "shardHash": "de2f3ab3fbc2d6b51cdb7a0ec569af0e4270633653810653a10946d2273701dc"
+}

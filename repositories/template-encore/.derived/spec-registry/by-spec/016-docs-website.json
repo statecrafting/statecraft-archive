@@ -1,0 +1,46 @@
+{
+  "record": {
+    "codeAliases": [
+      "DOCS_WEBSITE"
+    ],
+    "created": "2026-06-25",
+    "dependsOn": [
+      "011-workflow-pins-lint",
+      "012-enterprise-actions-governance"
+    ],
+    "domain": "ci-cd",
+    "establishes": [
+      {
+        "kind": "file",
+        "path": "website/"
+      },
+      {
+        "kind": "file",
+        "path": ".github/workflows/deploy-docs.yml"
+      }
+    ],
+    "id": "016-docs-website",
+    "implementation": "complete",
+    "kind": "feature",
+    "owner": "bart",
+    "risk": "low",
+    "sectionHeadings": [
+      "016 - Documentation website",
+      "1. Purpose",
+      "2. Territory",
+      "3. Behavior",
+      "FR-01: Standalone Docusaurus site under `website/`",
+      "FR-02: GitHub Pages publish workflow",
+      "FR-03: Constraint conformance",
+      "FR-04: Inert until Pages is enabled",
+      "4. Acceptance criteria",
+      "5. Out of scope"
+    ],
+    "specPath": "specs/016-docs-website/spec.md",
+    "status": "approved",
+    "summary": "The standalone Docusaurus v3 documentation site under `website/` and the `deploy-docs.yml` workflow that builds it and publishes to GitHub Pages. The site is a shipped deliverable (authored docs about the architecture, security model, governance, and developer workflow), not part of the runnable app or the npm workspace. The publish workflow runs on pushes to `main` that touch the site, is inert until a repo admin enables Pages, and satisfies the SHA-pin (spec 011) and allow-listed-publisher (spec 012) constraints like every other workflow.\n",
+    "title": "Documentation website: the Docusaurus docs site and its GitHub Pages publish workflow"
+  },
+  "shardHash": "16e3b0077033534f58b6961a9f7785da3812fef792b1b2714412bba8e829fb2e",
+  "specVersion": "1.1.0"
+}

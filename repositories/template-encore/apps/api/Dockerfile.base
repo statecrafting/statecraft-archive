@@ -1,0 +1,10 @@
+# Custom base image for `encore build docker --base` (spec 001).
+# Encore layers the compiled application bundle on top of this base; the base
+# carries the OS, the Node runtime, and any helper binaries the image needs.
+FROM node:24-slim
+
+RUN apt-get update \
+  && apt-get install -y --no-install-recommends ca-certificates curl tini \
+  && rm -rf /var/lib/apt/lists/*
+
+ENTRYPOINT ["tini", "--"]

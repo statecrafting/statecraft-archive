@@ -1,0 +1,84 @@
+# Spec 137 — wildcard TLS cert for tenant Ingresses.
+# Spec 151 Phase 2 — Flux-reconciled migration from
+# `platform/infra/hetzner/manifests/tenants-wildcard-certificate.yaml`
+# (the imperative artifact this gitops version supersedes).
+#
+# A single wildcard cert covering `*.tenants.statecraft.ing` + the apex
+# `tenants.statecraft.ing`. Both SANs are issued together so a tenant
+# Ingress (one-label-deep host) and a future shared landing page on
+# the apex both share the same cert lifecycle.
+#
+# Domain pinning: hardcoded to `statecraft.ing` because this manifest
+# lives under `clusters/hetzner-prod/` — by gitops-tree convention the
+# subtree is cluster-specific (FUTURE clusters/<name>/ get their own
+# subtree with their own pinned domain). The imperative ancestor used
+# `${DOMAIN}` envsubst; Flux does not run envsubst, and a `postBuild.
+# substituteFrom` ConfigMap pattern is overkill for one variable in
+# one manifest. Refactor to substituteFrom if/when multi-cluster
+# parity needs justify it.
+#
+# Wildcard scope caveat (RFC 6125 / Let's Encrypt limits): one
+# wildcard label only. `dev.tenants.statecraft.ing` ✅,
+# `dev.project1.tenants.statecraft.ing` ✗. Spec 137 Decision 4's
+# hostname pattern is therefore flattened to one label after
+# `.tenants.`, e.g. `<env-slug>-<project-slug>-<org-slug>` (hyphens,
+# not dots). See spec 137 §12 amendment.
+#
+# CRD ordering (R-004): this resource is a cert-manager.io/v1
+# Certificate. The CRD is installed by cert-manager. During the
+# Phase-2-to-Phase-3 interim window, cert-manager is materialised by
+# `post-create.sh` BEFORE `flux bootstrap` runs (per setup.sh's
+# sequence: hetzner-k3s create → flux bootstrap → sops-age Secret →
+# post-create.sh → cluster-specific imperative blocks). The
+# Certificate's first reconciliation attempt may race with cert-
+# manager startup; Flux retries on transient apply failure, so the
+# convergence is robust without a wrapping Kustomization dependsOn.
+# When Phase 3 lands cert-manager as a Flux-reconciled HelmRelease,
+# that PR adds a `Kustomization` wrapper here with
+# `dependsOn: [cert-manager]` for explicit ordering.
+#
+# Replication (spec 137 Phase 4↔5 integration, 2026-05-17):
+# `spec.secretTemplate.annotations` carries kubernetes-reflector
+# annotations. cert-manager propagates the secretTemplate verbatim
+# onto the generated `tenants-wildcard-tls` Secret. Reflector (now
+# Flux-reconciled per `../infrastructure/reflector.yaml`) clones the
+# Secret into every namespace matching `reflection-auto-namespaces`
+# (the `.+` catch-all — every namespace gets a copy). Tenant
+# Ingresses (rendered by deployd-api in per-app namespaces)
+# reference `secretName: tenants-wildcard-tls` and find the
+# replicated Secret in their own namespace at TLS-terminate time.
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: tenants-wildcard
+  namespace: cert-manager
+  labels:
+    oap.spec: "137-tenant-environment-access-gates"
+spec:
+  secretName: tenants-wildcard-tls
+  duration: 2160h    # 90 days (Let's Encrypt default)
+  renewBefore: 360h  # 15 days before expiry
+  privateKey:
+    algorithm: ECDSA
+    size: 256
+    rotationPolicy: Always
+  dnsNames:
+    - "*.tenants.statecraft.ing"
+    - "tenants.statecraft.ing"
+  issuerRef:
+    name: letsencrypt-prod-dns01-cloudflare
+    kind: ClusterIssuer
+  # kubernetes-reflector annotations propagated onto the generated
+  # `tenants-wildcard-tls` Secret. See header comment for the full
+  # replication explanation.
+  secretTemplate:
+    annotations:
+      # Source-side: allow this Secret to be reflected.
+      reflector.v1.k8s.emberstack.com/reflection-allowed: "true"
+      # Catch-all auto-clone into every namespace. Tenant namespaces
+      # are created on-demand by deployd-api at deploy time; reflector
+      # picks them up and clones the Secret without a per-namespace
+      # admin pass. If a tighter scope is needed later (e.g. only
+      # namespaces labelled `oap.tenant=true`), narrow the regex here.
+      reflector.v1.k8s.emberstack.com/reflection-auto-enabled: "true"
+      reflector.v1.k8s.emberstack.com/reflection-auto-namespaces: ".+"

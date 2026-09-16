@@ -1,0 +1,69 @@
+{
+  "mapping": {
+    "dependsOn": [
+      "001-packages-thesis",
+      "004-kernel-native",
+      "005-governance-native",
+      "006-fleet-native"
+    ],
+    "implementingPaths": [
+      {
+        "path": "addon/fleet-native/",
+        "source": "spec-edge"
+      },
+      {
+        "path": "addon/governance-native/",
+        "source": "spec-edge"
+      },
+      {
+        "path": "specs/009-native-extraction/",
+        "source": "spec-edge"
+      }
+    ],
+    "resolvedUnits": [
+      {
+        "locations": [
+          {
+            "file": "specs/009-native-extraction/"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "directory",
+          "path": "specs/009-native-extraction/"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "addon/fleet-native/"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "extends",
+        "unit": {
+          "kind": "directory",
+          "path": "addon/fleet-native/"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "addon/governance-native/"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "extends",
+        "unit": {
+          "kind": "directory",
+          "path": "addon/governance-native/"
+        }
+      }
+    ],
+    "specId": "009-native-extraction",
+    "specStatus": "draft"
+  },
+  "schemaVersion": "1.1.0",
+  "shardHash": "1503437596a7685ce21b9403fe945b1896be51df76bcb082f2c5dcd60b2fc4df"
+}

@@ -1,0 +1,440 @@
+# ============================================================================
+# Example Build Specification: Event Registration Portal
+# ============================================================================
+# A worked, conformant Build Specification (schema_version 1.1.0) for a
+# neutral domain: a conference event-registration portal. It is a "dual"
+# deployment: a public attendee-facing surface and an internal organizer
+# admin surface that owns the database.
+#
+# This file is illustration only. It is not tied to any real organization.
+# ============================================================================
+
+schema_version: "1.1.0"
+
+project:
+  name: "event-registration-portal"
+  display_name: "Event Registration Portal"
+  org: "example-co"
+  description: >
+    A portal where attendees browse conferences, register for events and
+    sessions, and manage their registrations, while organizers publish events
+    and review registrations from an internal admin surface.
+  variant: dual
+  domain: "events-and-conferences"
+
+auth:
+  audiences:
+    attendee:
+      method: oidc
+      provider: "keycloak"
+      provisioning_model: open-authenticated   # anyone may self-register and is created on first login
+      roles:
+        - role_code: "attendee"
+          display_name: "Attendee"
+          description: "Browses events and manages their own registrations."
+          permissions: ["registration:write:own", "registration:read:own"]
+    organizer:
+      method: oidc
+      provider: "keycloak"
+      provisioning_model: admin-only            # organizer accounts are pre-provisioned by an admin
+      roles:
+        - role_code: "organizer"
+          display_name: "Organizer"
+          description: "Publishes and manages events and reviews registrations."
+          permissions: ["event:write", "registration:read", "registration:decision"]
+        - role_code: "admin"
+          display_name: "Administrator"
+          description: "Manages organizer accounts and all events."
+          permissions: ["event:write", "registration:read", "registration:decision", "user:write"]
+
+  service_to_service:
+    method: client-credentials
+    description: "The public surface acquires a token to call the internal API."
+    token_validation:
+      issuer: ["https://issuer.example.com/realms/app"]
+      audience: "app-api"
+      allowed_clients: ["public-surface"]
+    token_cache:
+      enabled: true
+      refresh_buffer_seconds: 300
+
+  session:
+    timeout_minutes: 30
+    persistence:
+      enum: persistent
+    store_type_hint: "postgresql"
+
+data_model:
+  entities:
+    - name: "Event"
+      description: "A conference or event that attendees can register for."
+      fields:
+        - { name: "id", type: uuid, primary: true, required: true, default: "uuid" }
+        - { name: "slug", type: string, required: true, unique: true, max_length: 120 }
+        - { name: "name", type: string, required: true, max_length: 200 }
+        - { name: "description", type: text }
+        - { name: "venue", type: string, max_length: 200 }
+        - { name: "startsAt", type: datetime, required: true }
+        - { name: "endsAt", type: datetime, required: true }
+        - { name: "capacity", type: integer, required: true }
+        - { name: "status", type: enum, required: true, default: "draft", enum_values: ["draft", "published", "closed"] }
+        - { name: "createdAt", type: timestamp, required: true, default: "now" }
+      indexes:
+        - { fields: ["status"], unique: false }
+      business_rules: ["BR-004"]
+    - name: "Session"
+      description: "A talk or track session within an event."
+      fields:
+        - { name: "id", type: uuid, primary: true, required: true, default: "uuid" }
+        - { name: "eventId", type: reference, required: true, ref_entity: "Event", ref_on_delete: cascade }
+        - { name: "title", type: string, required: true, max_length: 200 }
+        - { name: "abstract", type: text }
+        - { name: "room", type: string, max_length: 80 }
+        - { name: "startsAt", type: datetime, required: true }
+        - { name: "endsAt", type: datetime, required: true }
+        - { name: "capacity", type: integer }
+    - name: "Attendee"
+      description: "A person who registers for events."
+      fields:
+        - { name: "id", type: uuid, primary: true, required: true, default: "uuid" }
+        - { name: "email", type: string, required: true, unique: true, max_length: 254 }
+        - { name: "fullName", type: string, required: true, max_length: 160 }
+        - { name: "organization", type: string, max_length: 200 }
+        - { name: "createdAt", type: timestamp, required: true, default: "now" }
+    - name: "Registration"
+      description: "An attendee's registration for an event."
+      fields:
+        - { name: "id", type: uuid, primary: true, required: true, default: "uuid" }
+        - { name: "eventId", type: reference, required: true, ref_entity: "Event", ref_on_delete: restrict }
+        - { name: "attendeeId", type: reference, required: true, ref_entity: "Attendee", ref_on_delete: restrict }
+        - { name: "status", type: enum, required: true, default: "draft", enum_values: ["draft", "submitted", "confirmed", "waitlisted", "cancelled"] }
+        - { name: "submittedAt", type: datetime }
+        - { name: "createdAt", type: timestamp, required: true, default: "now" }
+      unique_constraints:
+        - { fields: ["eventId", "attendeeId"], name: "uq_registration_event_attendee" }
+      business_rules: ["BR-001", "BR-002", "BR-003"]
+  relationships:
+    - { type: one-to-many, from: "Event", to: "Session", description: "An event has many sessions." }
+    - { type: one-to-many, from: "Event", to: "Registration", description: "An event has many registrations." }
+    - { type: one-to-many, from: "Attendee", to: "Registration", description: "An attendee has many registrations." }
+
+business_rules:
+  - id: "BR-001"
+    name: "Registration State Machine"
+    description: "A registration moves through draft, submitted, then confirmed or waitlisted, and may be cancelled."
+    type: state-machine
+    enforced_at: both
+    entities: ["Registration"]
+    states: ["draft", "submitted", "confirmed", "waitlisted", "cancelled"]
+    transitions:
+      - { from: "draft", to: ["submitted", "cancelled"], requires_role: ["attendee"] }
+      - { from: "submitted", to: ["confirmed", "waitlisted", "cancelled"], requires_role: ["organizer"] }
+      - { from: "waitlisted", to: ["confirmed", "cancelled"], requires_role: ["organizer"] }
+      - { from: "confirmed", to: ["cancelled"], requires_role: ["attendee", "organizer"] }
+    terminal_states: ["cancelled"]
+  - id: "BR-002"
+    name: "Event Capacity Enforcement"
+    description: "A registration is confirmed only while confirmed registrations are below event capacity; otherwise it is waitlisted."
+    type: constraint
+    enforced_at: service
+    entities: ["Registration", "Event"]
+    condition: "count(confirmed registrations for event) < event.capacity"
+    message: "Event is at capacity; registration was waitlisted."
+  - id: "BR-003"
+    name: "One Registration Per Attendee Per Event"
+    description: "An attendee may hold at most one non-cancelled registration for a given event."
+    type: validation
+    enforced_at: both
+    entities: ["Registration"]
+    condition: "no existing non-cancelled registration for (eventId, attendeeId)"
+    message: "You already have a registration for this event."
+  - id: "BR-004"
+    name: "Only Organizers Publish Events"
+    description: "Transitioning an event to published or closed requires the organizer or admin role."
+    type: authorization
+    enforced_at: service
+    entities: ["Event"]
+
+api:
+  base_path: "/api/v1"
+  resources:
+    - name: "events"
+      entity: "Event"
+      description: "Browse and manage events."
+      operations:
+        - id: "list-events"
+          method: GET
+          path: "/"
+          description: "List published events."
+          audience: ["attendee", "organizer"]
+          auth: public
+          stack: both
+          response: { type: paginated, entity: "Event" }
+          use_cases: ["UC-001"]
+          test_cases: ["TC-001"]
+        - id: "get-event"
+          method: GET
+          path: "/:id"
+          description: "Get one event with its sessions."
+          audience: ["attendee", "organizer"]
+          auth: public
+          stack: both
+          response: { type: single, entity: "Event" }
+          use_cases: ["UC-001"]
+          test_cases: ["TC-002"]
+        - id: "publish-event"
+          method: POST
+          path: "/:id/publish"
+          description: "Publish or close an event."
+          audience: ["organizer"]
+          auth: required
+          required_roles: ["organizer", "admin"]
+          stack: internal
+          response: { type: single, entity: "Event" }
+          business_rules: ["BR-004"]
+          use_cases: ["UC-004"]
+          test_cases: ["TC-003"]
+    - name: "registrations"
+      entity: "Registration"
+      description: "Create and review registrations."
+      operations:
+        - id: "create-registration"
+          method: POST
+          path: "/"
+          description: "Submit a registration for an event."
+          audience: ["attendee"]
+          auth: required
+          required_roles: ["attendee"]
+          stack: public
+          request: { body: { entity: "Registration", fields: ["eventId"] } }
+          response: { type: single, entity: "Registration" }
+          business_rules: ["BR-001", "BR-002", "BR-003"]
+          use_cases: ["UC-002"]
+          test_cases: ["TC-004", "TC-005"]
+        - id: "list-my-registrations"
+          method: GET
+          path: "/mine"
+          description: "List the caller's own registrations."
+          audience: ["attendee"]
+          auth: required
+          required_roles: ["attendee"]
+          stack: public
+          response: { type: list, entity: "Registration" }
+          use_cases: ["UC-002"]
+          test_cases: ["TC-006"]
+        - id: "decide-registration"
+          method: POST
+          path: "/:id/decision"
+          description: "Confirm or waitlist a submitted registration."
+          audience: ["organizer"]
+          auth: required
+          required_roles: ["organizer", "admin"]
+          stack: internal
+          response: { type: single, entity: "Registration" }
+          business_rules: ["BR-001", "BR-002"]
+          use_cases: ["UC-005"]
+          test_cases: ["TC-007"]
+  system_endpoints:
+    - { id: "health-liveness", method: GET, path: "/health/liveness", description: "Liveness probe.", auth: public }
+    - { id: "health-readiness", method: GET, path: "/health/readiness", description: "Readiness probe.", auth: public }
+
+ui:
+  pages:
+    - id: "landing"
+      title: "Welcome"
+      path: "/"
+      description: "Public landing page describing upcoming events."
+      page_type: landing
+      audience: "attendee"
+      view_type: public
+      requires_auth: false
+      nav_section: "main"
+      nav_order: 1
+      use_cases: ["UC-001"]
+    - id: "events-list"
+      title: "Events"
+      path: "/events"
+      description: "Browse published events."
+      page_type: list
+      audience: "attendee"
+      view_type: public
+      requires_auth: false
+      data_sources:
+        - { operation_id: "list-events", purpose: "Load events", trigger: on-load }
+      nav_section: "main"
+      nav_order: 2
+      use_cases: ["UC-001"]
+      test_cases: ["TC-001"]
+    - id: "event-detail"
+      title: "Event"
+      path: "/events/:id"
+      description: "View an event and register."
+      page_type: detail
+      audience: "attendee"
+      view_type: public
+      requires_auth: false
+      data_sources:
+        - { operation_id: "get-event", purpose: "Load event", trigger: on-load }
+      use_cases: ["UC-001", "UC-002"]
+      test_cases: ["TC-002"]
+    - id: "register-form"
+      title: "Register"
+      path: "/events/:id/register"
+      description: "Submit a registration for an event."
+      page_type: form
+      audience: "attendee"
+      view_type: public-authenticated
+      requires_auth: true
+      required_roles: ["attendee"]
+      data_sources:
+        - { operation_id: "create-registration", purpose: "Submit registration", trigger: on-submit }
+      submits_to: "create-registration"
+      use_cases: ["UC-002"]
+      test_cases: ["TC-004"]
+    - id: "my-registrations"
+      title: "My Registrations"
+      path: "/my/registrations"
+      description: "View and cancel the caller's registrations."
+      page_type: list
+      audience: "attendee"
+      view_type: public-authenticated
+      requires_auth: true
+      required_roles: ["attendee"]
+      data_sources:
+        - { operation_id: "list-my-registrations", purpose: "Load my registrations", trigger: on-load }
+      nav_section: "main"
+      nav_order: 3
+      use_cases: ["UC-002"]
+      test_cases: ["TC-006"]
+    - id: "organizer-dashboard"
+      title: "Organizer Dashboard"
+      path: "/admin"
+      description: "Organizer overview of events and pending registrations."
+      page_type: dashboard
+      audience: "organizer"
+      view_type: private-authenticated
+      requires_auth: true
+      required_roles: ["organizer", "admin"]
+      nav_section: "admin"
+      nav_order: 1
+      use_cases: ["UC-004", "UC-005"]
+    - id: "registrations-review"
+      title: "Review Registrations"
+      path: "/admin/registrations"
+      description: "Confirm or waitlist submitted registrations."
+      page_type: list
+      audience: "organizer"
+      view_type: private-authenticated
+      requires_auth: true
+      required_roles: ["organizer", "admin"]
+      data_sources:
+        - { operation_id: "decide-registration", purpose: "Decide registration", trigger: on-action }
+      nav_section: "admin"
+      nav_order: 2
+      use_cases: ["UC-005"]
+      test_cases: ["TC-007"]
+    - id: "login"
+      title: "Sign In"
+      path: "/login"
+      description: "Authentication entry point."
+      page_type: login
+      audience: "attendee"
+      view_type: public
+      requires_auth: false
+      guest_only: true
+  navigation:
+    sections:
+      - { id: "main", label: "Main", audience: "attendee", view_type: "public-authenticated" }
+      - { id: "admin", label: "Admin", audience: "organizer", view_type: "private-authenticated" }
+
+integrations:
+  - id: "INT-001"
+    name: "Transactional email"
+    type: email
+    description: "Sends registration confirmation and decision notices."
+    required: true
+    config_params:
+      - { name: "smtp_url", description: "SMTP connection URL", sensitive: true, required: true }
+    implementation_status: live
+  - id: "INT-002"
+    name: "Payment processor"
+    type: external-api
+    description: "Collects optional event fees. Stubbed in this example."
+    required: false
+    config_params:
+      - { name: "payment_api_key", description: "Payment provider API key", sensitive: true, required: false }
+    implementation_status: stub
+
+notifications:
+  events:
+    - id: "registration_submitted"
+      trigger: "Registration transitions to submitted"
+      recipient: "attendee"
+      channel: email
+      subject_template: "Your registration {{registrationId}} was received"
+      delivery: async-with-retry
+      retry_attempts: 3
+    - id: "registration_confirmed"
+      trigger: "Registration transitions to confirmed"
+      recipient: "attendee"
+      channel: email
+      subject_template: "You are confirmed for {{eventName}}"
+      delivery: async-with-retry
+      retry_attempts: 3
+
+audit:
+  enabled: true
+  tracked_actions:
+    - { action_code: "status-change", entities: ["Registration"], captures: ["old_value", "new_value", "actor"] }
+    - { action_code: "publish", entities: ["Event"], captures: ["new_value", "actor"] }
+  retention:
+    policy: "3-years"
+    immutable: true
+
+security:
+  rate_limiting:
+    - { tier: "default", description: "General API endpoints", max_requests: 100, window_seconds: 900, applies_to: ["*"] }
+    - { tier: "auth", description: "Login and callback", max_requests: 10, window_seconds: 900, applies_to: ["login-*"] }
+  cors:
+    allow_credentials: true
+    origin_policy:
+      enum: explicit
+  csrf:
+    enabled: true
+    applies_to:
+      enum: state-changing
+  correlation_id:
+    enabled: true
+    header_name: "X-Request-Id"
+    propagate_to_downstream: true
+
+health_checks:
+  liveness:
+    path: "/health/liveness"
+    description: "Process is alive; no dependency checks."
+  readiness:
+    path: "/health/readiness"
+    description: "Checks the database connection."
+    dependencies:
+      - { name: "database", check: "ping", timeout_ms: 5000, required: true }
+
+error_handling:
+  envelope:
+    success_field: "success"
+    error_field: "error"
+    error_subfields:
+      - { name: "code", type: "string", required: true }
+      - { name: "message", type: "string", required: true }
+      - { name: "details", type: "object", required: false }
+  suppress_details_in_production: true
+
+traceability:
+  use_cases:
+    - { id: "UC-001", name: "Browse events", description: "An attendee browses published events." }
+    - { id: "UC-002", name: "Register for an event", description: "An attendee submits a registration." }
+    - { id: "UC-004", name: "Publish an event", description: "An organizer publishes an event." }
+    - { id: "UC-005", name: "Review registrations", description: "An organizer confirms or waitlists registrations." }
+  test_cases:
+    - { id: "TC-001", name: "List events returns published only", covers_use_case: "UC-001", type: integration }
+    - { id: "TC-004", name: "Create registration enforces uniqueness", covers_use_case: "UC-002", type: integration }
+    - { id: "TC-007", name: "Decision confirms within capacity", covers_use_case: "UC-005", type: e2e }

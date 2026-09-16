@@ -1,0 +1,42 @@
+{
+  "mapping": {
+    "implementingPaths": [
+      {
+        "path": "crates/policy-kernel",
+        "source": "spec-edge"
+      }
+    ],
+    "resolvedUnits": [
+      {
+        "locations": [
+          {
+            "file": "crates/policy-kernel"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "extends",
+        "unit": {
+          "id": "open_agentic_policy_kernel",
+          "kind": "crate"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "crates/policy-kernel"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "extends",
+        "unit": {
+          "id": "open_agentic_policy_kernel",
+          "kind": "crate"
+        }
+      }
+    ],
+    "specId": "068-permission-runtime",
+    "specStatus": "approved"
+  },
+  "schemaVersion": "1.1.0",
+  "shardHash": "61213a74c6093eb96f95b8c7194f7742279677fef35967434afb1cc5a8b66d63"
+}

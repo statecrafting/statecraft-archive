@@ -1,0 +1,541 @@
+{
+  "mapping": {
+    "dependsOn": [
+      "198-factory-governance-envelope",
+      "166-opc-stop-hook-gate-chain",
+      "172-opc-live-agent-session-introspection",
+      "075-factory-workflow-engine"
+    ],
+    "implementingPaths": [
+      {
+        "path": "crates/factory-contracts/src/build_spec.rs",
+        "source": "spec-edge"
+      },
+      {
+        "path": "crates/factory-contracts/src/governance_envelope.rs",
+        "source": "spec-edge"
+      },
+      {
+        "path": "crates/factory-contracts/src/lib.rs",
+        "source": "spec-edge"
+      },
+      {
+        "path": "crates/factory-contracts/src/run_budget.rs",
+        "source": "spec-edge"
+      },
+      {
+        "path": "crates/factory-engine",
+        "source": "spec-edge"
+      },
+      {
+        "path": "crates/factory-engine/src/bin/factory_run.rs",
+        "source": "spec-edge"
+      },
+      {
+        "path": "crates/factory-engine/src/engine.rs",
+        "source": "spec-edge"
+      },
+      {
+        "path": "crates/factory-engine/src/governance_certificate.rs",
+        "source": "spec-edge"
+      },
+      {
+        "path": "crates/featuregraph/tests/golden/features_graph.json",
+        "source": "spec-edge"
+      },
+      {
+        "path": "crates/orchestrator/Cargo.toml",
+        "source": "spec-edge"
+      },
+      {
+        "path": "crates/orchestrator/src/budget_gate.rs",
+        "source": "spec-edge"
+      },
+      {
+        "path": "crates/orchestrator/src/circuit_breaker.rs",
+        "source": "spec-edge"
+      },
+      {
+        "path": "crates/orchestrator/src/lib.rs",
+        "source": "spec-edge"
+      },
+      {
+        "path": "docs/owasp-agentic-top-10-2026.md",
+        "source": "spec-edge"
+      },
+      {
+        "path": "platform/services/statecraft/CLAUDE.md",
+        "source": "spec-edge"
+      },
+      {
+        "path": "platform/services/statecraft/api/db/migrations/3_audit_log_actor_action_created_idx.up.sql",
+        "source": "spec-edge"
+      },
+      {
+        "path": "platform/services/statecraft/api/factory/approvalSummary.ts",
+        "source": "spec-edge"
+      },
+      {
+        "path": "platform/services/statecraft/api/factory/approvalVelocity-pure.test.ts",
+        "source": "spec-edge"
+      },
+      {
+        "path": "platform/services/statecraft/api/factory/approvalVelocity-pure.ts",
+        "source": "spec-edge"
+      },
+      {
+        "path": "platform/services/statecraft/api/factory/approvalVelocity.test.ts",
+        "source": "spec-edge"
+      },
+      {
+        "path": "platform/services/statecraft/api/factory/approvalVelocity.ts",
+        "source": "spec-edge"
+      },
+      {
+        "path": "platform/services/statecraft/api/factory/auditActions.ts",
+        "source": "spec-edge"
+      },
+      {
+        "path": "platform/services/statecraft/api/factory/queueStormGate.test.ts",
+        "source": "spec-edge"
+      },
+      {
+        "path": "platform/services/statecraft/api/factory/queueStormGate.ts",
+        "source": "spec-edge"
+      },
+      {
+        "path": "platform/services/statecraft/api/factory/runs.ts",
+        "source": "spec-edge"
+      },
+      {
+        "path": "platform/services/statecraft/api/factory/runsScheduler.ts",
+        "source": "spec-edge"
+      },
+      {
+        "path": "platform/services/statecraft/vite.config.ts",
+        "source": "spec-edge"
+      },
+      {
+        "path": "product/apps/opc/src-tauri/src/commands/factory.rs",
+        "source": "spec-edge"
+      },
+      {
+        "path": "product/apps/opc/src-tauri/src/commands/run_governance.rs",
+        "source": "spec-edge"
+      },
+      {
+        "path": "standards/schemas/factory/governance-envelope.schema.yaml",
+        "source": "spec-edge"
+      }
+    ],
+    "resolvedUnits": [
+      {
+        "locations": [
+          {
+            "file": "crates/factory-contracts/src/governance_envelope.rs"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "file",
+          "path": "crates/factory-contracts/src/governance_envelope.rs"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "crates/factory-contracts/src/run_budget.rs"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "file",
+          "path": "crates/factory-contracts/src/run_budget.rs"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "crates/orchestrator/src/budget_gate.rs"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "file",
+          "path": "crates/orchestrator/src/budget_gate.rs"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "platform/services/statecraft/api/db/migrations/3_audit_log_actor_action_created_idx.up.sql"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "file",
+          "path": "platform/services/statecraft/api/db/migrations/3_audit_log_actor_action_created_idx.up.sql"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "platform/services/statecraft/api/factory/approvalVelocity-pure.test.ts"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "file",
+          "path": "platform/services/statecraft/api/factory/approvalVelocity-pure.test.ts"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "platform/services/statecraft/api/factory/approvalVelocity-pure.ts"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "file",
+          "path": "platform/services/statecraft/api/factory/approvalVelocity-pure.ts"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "platform/services/statecraft/api/factory/approvalVelocity.test.ts"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "file",
+          "path": "platform/services/statecraft/api/factory/approvalVelocity.test.ts"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "platform/services/statecraft/api/factory/approvalVelocity.ts"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "file",
+          "path": "platform/services/statecraft/api/factory/approvalVelocity.ts"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "platform/services/statecraft/api/factory/queueStormGate.test.ts"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "file",
+          "path": "platform/services/statecraft/api/factory/queueStormGate.test.ts"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "platform/services/statecraft/api/factory/queueStormGate.ts"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "file",
+          "path": "platform/services/statecraft/api/factory/queueStormGate.ts"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "crates/featuregraph/tests/golden/features_graph.json"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "extends",
+        "unit": {
+          "kind": "file",
+          "path": "crates/featuregraph/tests/golden/features_graph.json"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "standards/schemas/factory/governance-envelope.schema.yaml"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "extends",
+        "unit": {
+          "kind": "file",
+          "path": "standards/schemas/factory/governance-envelope.schema.yaml"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "crates/factory-contracts/src/build_spec.rs"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "refines",
+        "unit": {
+          "kind": "file",
+          "path": "crates/factory-contracts/src/build_spec.rs"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "crates/factory-contracts/src/lib.rs"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "refines",
+        "unit": {
+          "kind": "file",
+          "path": "crates/factory-contracts/src/lib.rs"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "crates/factory-engine/src/bin/factory_run.rs"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "refines",
+        "unit": {
+          "kind": "file",
+          "path": "crates/factory-engine/src/bin/factory_run.rs"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "crates/factory-engine/src/engine.rs"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "refines",
+        "unit": {
+          "kind": "file",
+          "path": "crates/factory-engine/src/engine.rs"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "crates/factory-engine/src/governance_certificate.rs"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "refines",
+        "unit": {
+          "kind": "file",
+          "path": "crates/factory-engine/src/governance_certificate.rs"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "crates/orchestrator/Cargo.toml"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "refines",
+        "unit": {
+          "kind": "file",
+          "path": "crates/orchestrator/Cargo.toml"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "crates/orchestrator/src/lib.rs"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "refines",
+        "unit": {
+          "kind": "file",
+          "path": "crates/orchestrator/src/lib.rs"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "platform/services/statecraft/CLAUDE.md"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "refines",
+        "unit": {
+          "kind": "file",
+          "path": "platform/services/statecraft/CLAUDE.md"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "platform/services/statecraft/api/factory/approvalSummary.ts"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "refines",
+        "unit": {
+          "kind": "file",
+          "path": "platform/services/statecraft/api/factory/approvalSummary.ts"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "platform/services/statecraft/api/factory/auditActions.ts"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "refines",
+        "unit": {
+          "kind": "file",
+          "path": "platform/services/statecraft/api/factory/auditActions.ts"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "platform/services/statecraft/api/factory/auditActions.ts"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "refines",
+        "unit": {
+          "kind": "file",
+          "path": "platform/services/statecraft/api/factory/auditActions.ts"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "platform/services/statecraft/api/factory/runs.ts"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "refines",
+        "unit": {
+          "kind": "file",
+          "path": "platform/services/statecraft/api/factory/runs.ts"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "platform/services/statecraft/vite.config.ts"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "refines",
+        "unit": {
+          "kind": "file",
+          "path": "platform/services/statecraft/vite.config.ts"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "product/apps/opc/src-tauri/src/commands/factory.rs"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "refines",
+        "unit": {
+          "kind": "file",
+          "path": "product/apps/opc/src-tauri/src/commands/factory.rs"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "crates/factory-engine"
+          }
+        ],
+        "ownership": false,
+        "sourceField": "references",
+        "unit": {
+          "id": "factory-engine",
+          "kind": "crate"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "crates/orchestrator/src/circuit_breaker.rs"
+          }
+        ],
+        "ownership": false,
+        "sourceField": "references",
+        "unit": {
+          "kind": "file",
+          "path": "crates/orchestrator/src/circuit_breaker.rs"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "docs/owasp-agentic-top-10-2026.md"
+          }
+        ],
+        "ownership": false,
+        "sourceField": "references",
+        "unit": {
+          "kind": "file",
+          "path": "docs/owasp-agentic-top-10-2026.md"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "platform/services/statecraft/api/factory/runsScheduler.ts"
+          }
+        ],
+        "ownership": false,
+        "sourceField": "references",
+        "unit": {
+          "kind": "file",
+          "path": "platform/services/statecraft/api/factory/runsScheduler.ts"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "product/apps/opc/src-tauri/src/commands/run_governance.rs"
+          }
+        ],
+        "ownership": false,
+        "sourceField": "references",
+        "unit": {
+          "kind": "file",
+          "path": "product/apps/opc/src-tauri/src/commands/run_governance.rs"
+        }
+      }
+    ],
+    "specId": "202-run-blast-radius-governor",
+    "specStatus": "approved"
+  },
+  "schemaVersion": "1.1.0",
+  "shardHash": "fa4742a2dbb5b80c8c7289266017387db3e716618cd6735d73d7eaf85e09b652"
+}

@@ -1,0 +1,56 @@
+{
+  "record": {
+    "created": "2026-07-21",
+    "dependsOn": [
+      "001-statecraft-thesis",
+      "002-app-shell",
+      "009-control-plane-deploy",
+      "011-tenant-lifecycle"
+    ],
+    "establishes": [
+      {
+        "kind": "directory",
+        "path": "frontend-admin/"
+      },
+      {
+        "kind": "directory",
+        "path": "backend/admin/"
+      },
+      {
+        "kind": "directory",
+        "path": "backend/obs/"
+      },
+      {
+        "kind": "file",
+        "path": "app-manifest.json"
+      },
+      {
+        "kind": "file",
+        "path": "app-model.json"
+      },
+      {
+        "kind": "file",
+        "path": "scripts/extract-model.mjs"
+      }
+    ],
+    "id": "012-frontend-admin-adoption",
+    "implementation": "complete",
+    "sectionHeadings": [
+      "012: frontend-admin adoption",
+      "1. Purpose",
+      "2. Cross-repo dependency",
+      "3. Territory",
+      "4. Behavior",
+      "5. Acceptance",
+      "5.1 Implementation notes (2026-07-22)",
+      "5.2 Closure (2026-07-22): live acceptance holds",
+      "6. Out of scope"
+    ],
+    "specPath": "specs/012-frontend-admin-adoption/spec.md",
+    "status": "approved",
+    "summary": "statecraft adopts the substrate's flag-gated admin dashboard (enrahitu specs 022/023: the observability contract and frontend-admin) as the platform operator dashboard promised by thesis section 3.4: same-origin, gated on statecraft_operator, rendering the platform's own /metrics, traces, service catalog, and app model. This is the piece specs 001 and 010 already committed to (\"platform observability is the in-substrate flag-gated admin dashboard\"; cluster Grafana was dropped on that promise), landing as a chassis capability consumed here, not as platform-original code. The domain operator console (all-tenants, spec 011) stays in frontend/; frontend-admin is the substrate observability surface. The platform's /metrics becomes the scrape target for spec 010's in-cluster Prometheus and must not be exposed at the public ingress.\n",
+    "title": "frontend-admin adoption: the platform operator dashboard"
+  },
+  "shardHash": "cde0943cbf6e0b2bc733e6bc893b364845597a9e1c2de236872e4c08b9621812",
+  "specVersion": "1.2.0"
+}

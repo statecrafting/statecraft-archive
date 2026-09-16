@@ -1,0 +1,206 @@
+{
+  "mapping": {
+    "dependsOn": [
+      "001-module-manifest-schema",
+      "002-encore-generator-core",
+      "003-user-management-module",
+      "004-dual-app-generator",
+      "006-factory-schema-lockstep"
+    ],
+    "implementingPaths": [
+      {
+        "path": "adapters/acme-vue-encore/manifest.yaml",
+        "source": "spec-edge"
+      },
+      {
+        "path": "adapters/acme-vue-encore/modules/cron/files/scheduler/lock.ts",
+        "source": "spec-edge"
+      },
+      {
+        "path": "adapters/acme-vue-encore/modules/cron/files/scheduler/worker.ts",
+        "source": "spec-edge"
+      },
+      {
+        "path": "adapters/acme-vue-encore/modules/cron/manifest.json",
+        "source": "spec-edge"
+      },
+      {
+        "path": "adapters/acme-vue-encore/modules/data-redis/manifest.json",
+        "source": "spec-edge"
+      },
+      {
+        "path": "adapters/acme-vue-encore/modules/security-core/manifest.json",
+        "source": "spec-edge"
+      },
+      {
+        "path": "adapters/acme-vue-encore/scripts/lib/born-with.ts",
+        "source": "spec-edge"
+      },
+      {
+        "path": "adapters/acme-vue-encore/scripts/lib/encore-composer.ts",
+        "source": "spec-edge"
+      },
+      {
+        "path": "adapters/acme-vue-encore/scripts/lib/install-module.ts",
+        "source": "spec-edge"
+      },
+      {
+        "path": "adapters/acme-vue-encore/scripts/lib/manifest.schema.ts",
+        "source": "spec-edge"
+      },
+      {
+        "path": "adapters/acme-vue-encore/scripts/setup-dual-app.ts",
+        "source": "spec-edge"
+      }
+    ],
+    "resolvedUnits": [
+      {
+        "locations": [
+          {
+            "file": "adapters/acme-vue-encore/scripts/lib/born-with.ts"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "extends",
+        "unit": {
+          "kind": "file",
+          "path": "adapters/acme-vue-encore/scripts/lib/born-with.ts"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "adapters/acme-vue-encore/modules/cron/files/scheduler/lock.ts"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "refines",
+        "unit": {
+          "kind": "file",
+          "path": "adapters/acme-vue-encore/modules/cron/files/scheduler/lock.ts"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "adapters/acme-vue-encore/modules/cron/files/scheduler/worker.ts"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "refines",
+        "unit": {
+          "kind": "file",
+          "path": "adapters/acme-vue-encore/modules/cron/files/scheduler/worker.ts"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "adapters/acme-vue-encore/modules/cron/manifest.json"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "refines",
+        "unit": {
+          "kind": "file",
+          "path": "adapters/acme-vue-encore/modules/cron/manifest.json"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "adapters/acme-vue-encore/modules/data-redis/manifest.json"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "refines",
+        "unit": {
+          "kind": "file",
+          "path": "adapters/acme-vue-encore/modules/data-redis/manifest.json"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "adapters/acme-vue-encore/scripts/lib/encore-composer.ts"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "refines",
+        "unit": {
+          "kind": "file",
+          "path": "adapters/acme-vue-encore/scripts/lib/encore-composer.ts"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "adapters/acme-vue-encore/scripts/lib/install-module.ts"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "refines",
+        "unit": {
+          "kind": "file",
+          "path": "adapters/acme-vue-encore/scripts/lib/install-module.ts"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "adapters/acme-vue-encore/scripts/lib/manifest.schema.ts"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "refines",
+        "unit": {
+          "kind": "file",
+          "path": "adapters/acme-vue-encore/scripts/lib/manifest.schema.ts"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "adapters/acme-vue-encore/manifest.yaml"
+          }
+        ],
+        "ownership": false,
+        "sourceField": "references",
+        "unit": {
+          "kind": "file",
+          "path": "adapters/acme-vue-encore/manifest.yaml"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "adapters/acme-vue-encore/modules/security-core/manifest.json"
+          }
+        ],
+        "ownership": false,
+        "sourceField": "references",
+        "unit": {
+          "kind": "file",
+          "path": "adapters/acme-vue-encore/modules/security-core/manifest.json"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "adapters/acme-vue-encore/scripts/setup-dual-app.ts"
+          }
+        ],
+        "ownership": false,
+        "sourceField": "references",
+        "unit": {
+          "kind": "file",
+          "path": "adapters/acme-vue-encore/scripts/setup-dual-app.ts"
+        }
+      }
+    ],
+    "specId": "008-data-redis-promotion-dual-composition",
+    "specStatus": "draft"
+  },
+  "schemaVersion": "1.1.0",
+  "shardHash": "c55d51c3b99115206970f0965ca5ec899ca58ce0611d8ceefde0bfcfcbb6041d"
+}

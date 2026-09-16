@@ -1,0 +1,10 @@
+{
+  "package": {
+    "kind": "npm-package",
+    "name": "@template/shared",
+    "path": "packages/shared",
+    "version": "1.0.0"
+  },
+  "schemaVersion": "1.1.0",
+  "shardHash": "6350a72ba7a04fda13143b18f15f18c3c2849f2b6749cdfd2903fc1ff296eaf3"
+}

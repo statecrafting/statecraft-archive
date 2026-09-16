@@ -1,0 +1,245 @@
+{
+  "record": {
+    "authors": [
+      "open-agentic-platform"
+    ],
+    "codeAliases": [
+      "previewRedis",
+      "MODULE_CATALOG",
+      "ENCORE_INFRA_CONFIG"
+    ],
+    "created": "2026-07-06",
+    "dependsOn": [
+      "138-statecraft-create-realised-scaffold",
+      "199-factory-thin-consumer-sync",
+      "160-factory-adapter-statecraft-relocation",
+      "213-tenant-repo-image-build",
+      "214-tenant-app-chart-supersession",
+      "225-deployd-selfprovision-rbac"
+    ],
+    "domain": "platform",
+    "establishes": [
+      {
+        "kind": "file",
+        "path": "platform/charts/acme-vue-encore/templates/redis.yaml"
+      },
+      {
+        "kind": "file",
+        "path": "platform/services/statecraft/api/factory/moduleCatalog.ts"
+      },
+      {
+        "kind": "file",
+        "path": "platform/services/statecraft/api/factory/moduleCatalogCache.ts"
+      },
+      {
+        "kind": "file",
+        "path": "platform/services/statecraft/api/factory/moduleCatalogCache.test.ts"
+      },
+      {
+        "kind": "file",
+        "path": "platform/services/statecraft/web/app/lib/module-selection.ts"
+      },
+      {
+        "kind": "file",
+        "path": "platform/services/statecraft/web/app/lib/module-selection.test.ts"
+      },
+      {
+        "kind": "file",
+        "path": "platform/services/statecraft/api/projects/scaffold/envExample.ts"
+      },
+      {
+        "kind": "file",
+        "path": "platform/services/statecraft/api/projects/scaffold/envExample.test.ts"
+      },
+      {
+        "kind": "file",
+        "path": "platform/services/statecraft/web/app/lib/create-project-variant.ts"
+      },
+      {
+        "kind": "file",
+        "path": "platform/services/statecraft/web/app/lib/create-project-variant.test.ts"
+      },
+      {
+        "kind": "file",
+        "path": "platform/services/statecraft/api/db/migrations/4_project_uses_redis.up.sql"
+      }
+    ],
+    "extends": [
+      {
+        "nature": "additive",
+        "spec": "034-featuregraph-registry-scanner-fix",
+        "unit": {
+          "kind": "file",
+          "path": "crates/featuregraph/tests/golden/features_graph.json"
+        }
+      },
+      {
+        "nature": "additive",
+        "spec": "214-tenant-app-chart-supersession",
+        "unit": {
+          "kind": "file",
+          "path": "platform/services/deployd-api-rs/src/helm.rs"
+        }
+      },
+      {
+        "nature": "additive",
+        "spec": "214-tenant-app-chart-supersession",
+        "unit": {
+          "kind": "file",
+          "path": "platform/services/deployd-api-rs/src/routes.rs"
+        }
+      },
+      {
+        "nature": "additive",
+        "spec": "214-tenant-app-chart-supersession",
+        "unit": {
+          "kind": "file",
+          "path": "platform/charts/acme-vue-encore/templates/deployment.yaml"
+        }
+      },
+      {
+        "nature": "additive",
+        "spec": "214-tenant-app-chart-supersession",
+        "unit": {
+          "kind": "file",
+          "path": "platform/charts/acme-vue-encore/values.yaml"
+        }
+      },
+      {
+        "nature": "additive",
+        "spec": "214-tenant-app-chart-supersession",
+        "unit": {
+          "kind": "file",
+          "path": "platform/charts/acme-vue-encore/templates/_helpers.tpl"
+        }
+      },
+      {
+        "nature": "additive",
+        "spec": "214-tenant-app-chart-supersession",
+        "unit": {
+          "kind": "file",
+          "path": "platform/charts/acme-vue-encore/templates/networkpolicy.yaml"
+        }
+      },
+      {
+        "nature": "additive",
+        "spec": "138-statecraft-create-realised-scaffold",
+        "unit": {
+          "kind": "file",
+          "path": "platform/services/statecraft/api/projects/scaffold/moduleCatalog.ts"
+        }
+      },
+      {
+        "nature": "additive",
+        "spec": "138-statecraft-create-realised-scaffold",
+        "unit": {
+          "kind": "file",
+          "path": "platform/services/statecraft/api/projects/create.ts"
+        }
+      },
+      {
+        "nature": "additive",
+        "spec": "138-statecraft-create-realised-scaffold",
+        "unit": {
+          "kind": "file",
+          "path": "platform/services/statecraft/api/projects/scaffold/perRequestScaffold.ts"
+        }
+      },
+      {
+        "nature": "additive",
+        "spec": "138-statecraft-create-realised-scaffold",
+        "unit": {
+          "kind": "file",
+          "path": "platform/services/statecraft/web/app/routes/app.projects.new.tsx"
+        }
+      },
+      {
+        "nature": "additive",
+        "spec": "138-statecraft-create-realised-scaffold",
+        "unit": {
+          "kind": "file",
+          "path": "platform/services/statecraft/web/app/lib/projects-api.server.ts"
+        }
+      },
+      {
+        "nature": "additive",
+        "spec": "138-statecraft-create-realised-scaffold",
+        "unit": {
+          "kind": "file",
+          "path": "platform/services/statecraft/CLAUDE.md"
+        }
+      },
+      {
+        "nature": "additive",
+        "spec": "199-factory-thin-consumer-sync",
+        "unit": {
+          "kind": "file",
+          "path": "platform/services/statecraft/api/factory/browse.ts"
+        }
+      },
+      {
+        "nature": "additive",
+        "spec": "112-factory-project-lifecycle",
+        "unit": {
+          "kind": "file",
+          "path": "platform/services/statecraft/api/projects/scaffold/scaffold.test.ts"
+        }
+      },
+      {
+        "nature": "additive",
+        "spec": "112-factory-project-lifecycle",
+        "unit": {
+          "kind": "file",
+          "path": "platform/services/statecraft/api/projects/scaffold/perRequestScaffold.test.ts"
+        }
+      },
+      {
+        "nature": "additive",
+        "spec": "215-statecraft-deploy-trigger-ux",
+        "unit": {
+          "kind": "file",
+          "path": "platform/services/statecraft/api/deploy/deploy.ts"
+        }
+      },
+      {
+        "nature": "additive",
+        "spec": "114-async-project-clone-pipeline",
+        "unit": {
+          "kind": "file",
+          "path": "platform/services/statecraft/api/db/schema.ts"
+        }
+      }
+    ],
+    "extraFrontmatter": {
+      "language": "en"
+    },
+    "featureBranch": "227-create-project-infra-config-projection",
+    "id": "227-create-project-infra-config-projection",
+    "implementation": "complete",
+    "kind": "platform",
+    "sectionHeadings": [
+      "227. Create Project as an Encore-infra-config projection",
+      "1. Purpose",
+      "1.1 The catalog is hand-mirrored and has drifted",
+      "1.2 One checkbox UI conflates three kinds of thing",
+      "1.3 Two axes are fused, and the default profile is dropped",
+      "1.4 The Encore infra config is already there, and invisible",
+      "2. The reframe",
+      "2.1 Option A: topology parity (the environment model)",
+      "3. Requirements",
+      "Functional Requirements",
+      "Key Entities",
+      "4. Success Criteria",
+      "5. Relationships and coupling posture",
+      "6. Implementation staging",
+      "Implementation log",
+      "7. Out of scope"
+    ],
+    "specPath": "specs/227-create-project-infra-config-projection/spec.md",
+    "status": "approved",
+    "summary": "The statecraft \"Create New Project\" surface hand-mirrors the factory adapter's module catalog in two independently-maintained hardcoded copies (the frontend route and a backend module) that have drifted: they still offer a \"Redis\" module whose factory-encore source is an inert marker with a false label (it claims a Redis rate-limit backend that does not exist; the baseline limiter is Postgres). The surface also conflates three different kinds of thing under one checkbox UI (inert markers, base-app config knobs, and the one real feature module) and fuses factory-encore's two orthogonal axes (auth profile x topology) into a single \"Variant\" selector that silently drops the default profile. This spec reframes the surface as a projection of vocabulary that already exists: feature modules derived from the adapter manifest, and infrastructure resources projected from the app's committed apps/api/infra.config.json (Encore's infra.schema.json). It splits the form into a two-axis selector (auth {public, internal}; topology {single, dual}), an Infrastructure section (read-only projection of the baked infra.config topology, Postgres default-on, Redis opt-in), an Application-features section (real modules only), and Base-app config fields (CORS, BFF knobs). Under Option A (topology parity), the infra.config.json is the app-level, build-time, read-only topology; per-environment hosts/credentials/secrets are runtime env resolved via GitHub Environments (dev owned by OAP/deployd, staging/prod by the tenant). It adds a deployd previewRedis dev-only provisioning path mirroring previewDatabase so Redis becomes a real provisionable resource. Companion to factory-encore spec 008 (data-redis promotion, dual module composition, CORS knob), which owns the adapter-side changes this surface projects.\n",
+    "title": "Create Project as an Encore-infra-config projection: derived catalog, two-axis selector, dev-provisioned Redis"
+  },
+  "shardHash": "25c1220e7b854bba94dae35f1b56217d019863c380c66756cc1ca264ace5a74c",
+  "specVersion": "1.1.0"
+}

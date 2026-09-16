@@ -1,0 +1,63 @@
+id: testing-001
+category: testing
+priority: high
+context: >
+  Applies to all test files across the project. Tests are the primary
+  verification mechanism for correctness and the safety net for refactoring.
+tags:
+  - typescript
+  - javascript
+  - testing
+  - vitest
+
+rules:
+  - verb: ALWAYS
+    subject: "write tests that are independent and can run in any order"
+    rationale: >
+      Tests that depend on execution order or shared mutable state create
+      flaky CI pipelines and make it impossible to run a single test in
+      isolation for debugging.
+
+  - verb: ALWAYS
+    subject: "test behavior, not implementation details"
+    rationale: >
+      Tests coupled to internal implementation break on every refactor
+      without catching real bugs. Test the public contract: given these
+      inputs, expect these outputs or side effects.
+
+  - verb: NEVER
+    subject: "leave disabled tests (.skip, .todo) without a tracking issue"
+    rationale: >
+      Disabled tests decay silently. Without a tracking issue, nobody
+      remembers why they were skipped or when to re-enable them.
+
+  - verb: PREFER
+    subject: "explicit assertions over snapshot tests for logic"
+    rationale: >
+      Snapshot tests are useful for large stable outputs (HTML, JSON schemas)
+      but hide regressions in business logic behind a simple "update snapshot"
+      command.
+
+anti_patterns:
+  - pattern: "it.skip('should handle edge case')"
+    correction: "it.skip('should handle edge case') // TODO: #123"
+
+examples:
+  - bad: |
+      it('works', () => {
+        const svc = new Service();
+        expect(svc._internalCache.size).toBe(0);
+        svc.add('x');
+        expect(svc._internalCache.size).toBe(1);
+      });
+    good: |
+      it('adds an item and reports correct count', () => {
+        const svc = new Service();
+        svc.add('x');
+        expect(svc.count()).toBe(1);
+        expect(svc.has('x')).toBe(true);
+      });
+    explanation: >
+      The good example tests the public API (count, has) rather than
+      reaching into the private _internalCache. The test survives an
+      internal refactor from Map to Set or array.

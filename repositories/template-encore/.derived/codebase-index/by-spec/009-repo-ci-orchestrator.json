@@ -1,0 +1,85 @@
+{
+  "mapping": {
+    "dependsOn": [
+      "000-bootstrap",
+      "010-supply-chain-gates",
+      "012-enterprise-actions-governance"
+    ],
+    "implementingPaths": [
+      {
+        "path": ".github/CODEOWNERS",
+        "source": "spec-edge"
+      },
+      {
+        "path": ".github/dependabot.yml",
+        "source": "spec-edge"
+      },
+      {
+        "path": ".github/pull_request_template.md",
+        "source": "spec-edge"
+      },
+      {
+        "path": ".github/workflows/ci.yml",
+        "source": "spec-edge"
+      }
+    ],
+    "resolvedUnits": [
+      {
+        "locations": [
+          {
+            "file": ".github/CODEOWNERS"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "file",
+          "path": ".github/CODEOWNERS"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": ".github/dependabot.yml"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "file",
+          "path": ".github/dependabot.yml"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": ".github/pull_request_template.md"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "file",
+          "path": ".github/pull_request_template.md"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": ".github/workflows/ci.yml"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "file",
+          "path": ".github/workflows/ci.yml"
+        }
+      }
+    ],
+    "specId": "009-repo-ci-orchestrator",
+    "specStatus": "approved"
+  },
+  "schemaVersion": "1.1.0",
+  "shardHash": "a28da89a633252865142516b5361cbef918220d6c42e7ad3a2b0e6104de4a81d"
+}

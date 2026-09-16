@@ -1,0 +1,7 @@
+Acme Vendor Onboarding Portal
+Business Case: Extracted Text
+
+Payment processing: Out of Scope. Finance systems are not in scope for Phase 1.
+All financial disbursement is handled externally by existing third-party infrastructure.
+The portal's role is limited to intake, eligibility determination, and routing of applications.
+Applicants submit requests; adjudication and payment are downstream of this system.

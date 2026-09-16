@@ -1,0 +1,89 @@
+# Build + publish the statecraft control-plane single-container image
+# (spec 009). Unlike the enrahitu template, the toolchain is consumed as npm
+# packages (@statecrafting/toolchain, @statecrafting/hiqlite-native, and since
+# statecrafting specs 005/006 the two control-plane addons as
+# @statecrafting/{governance,fleet}-native): `npm ci` on a linux runner pulls
+# every prebuilt linux binary from the corresponding *-linux-x64 / *-linux-x64-gnu
+# optional-dependency packages. Nothing Rust builds here at all.
+#
+# amd64 only: the fleet cluster is x86-64. The prebuilt @statecrafting/toolchain-linux-x64
+# binaries (tsparser + runtime) require GLIBC_2.39, so the build runs on
+# ubuntu-24.04 (glibc 2.39) and the image base is node:24-trixie-slim (glibc
+# 2.41 >= 2.39) so the runtime + the prebuilt addons all load.
+#
+# NOTE: no /health smoke here. The control plane runs the Postgres driver
+# (spec 003), so it cannot become healthy without a database; runtime
+# verification happens in the deploy stage (spec 009) where Postgres exists.
+# This job proves the image BUILDS and is pullable.
+name: image
+
+on:
+  workflow_dispatch:
+  release:
+    types: [published]
+
+permissions:
+  contents: read
+  packages: write
+
+concurrency:
+  group: image-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build-and-push:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
+      - uses: actions/setup-node@a0853c24544627f65ddf259abe73b1d18a591444 # v5.0.0
+        with:
+          node-version: 24
+          cache: npm
+      # npm ci installs the linux platform packages
+      # (@statecrafting/toolchain-linux-x64 -> encore-runtime.node + tsparser-encore,
+      # @statecrafting/hiqlite-native-linux-x64-gnu -> the hiqlite .node, and
+      # @statecrafting/{governance,fleet}-native-linux-x64-gnu -> the two
+      # control-plane addons, published rather than built here since
+      # statecrafting specs 005/006).
+      - run: npm ci
+      # frontend is not a root workspace and has its own lockfile; build:web only
+      # runs `vite build`, it does not install. Install its deps first.
+      - name: Install the frontend (SPA) deps
+        run: npm --prefix frontend ci
+      - name: Install the admin dashboard deps (spec 012)
+        run: npm --prefix frontend-admin ci
+      - name: Build the SPA (into backend/web/dist)
+        run: npm run build:web
+      - name: Build the admin dashboard (into backend/web/dist-admin, spec 012)
+        run: npm run build:web-admin
+      - name: Build the app bundle (npm toolchain)
+        run: npm run build:app
+      - name: App model freshness (spec 012; the image carries app-model.json)
+        run: npm run check:model
+      - name: Stage the linux Encore runtime + docker infra config
+        run: |
+          set -euo pipefail
+          cp node_modules/@statecrafting/toolchain-linux-x64/encore-runtime.node docker/encore-runtime.node
+          node node_modules/@statecrafting/toolchain/lib/augment-infra.mjs \
+            infra.config.json .encore/build/compile-result.json infra.config.docker.json
+      - name: Build the base image (app + vendored-in-npm runtime)
+        run: docker build -f docker/Dockerfile.base -t statecraft-api:latest .
+      - name: Build the final image (+ rauthy)
+        run: docker build -f docker/Dockerfile --build-arg BASE_IMAGE=statecraft-api:latest -t statecraft:latest .
+      - name: Report built image arch
+        run: docker image inspect statecraft:latest --format 'built statecraft:latest ({{.Architecture}})'
+      - name: Push to GHCR
+        env:
+          IMAGE: ghcr.io/${{ github.repository_owner }}/statecraft
+        run: |
+          set -euo pipefail
+          echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u "${{ github.actor }}" --password-stdin
+          docker tag statecraft:latest "$IMAGE:${{ github.sha }}"
+          docker tag statecraft:latest "$IMAGE:latest"
+          docker push "$IMAGE:${{ github.sha }}"
+          docker push "$IMAGE:latest"
+          if [ "${{ github.event_name }}" = "release" ]; then
+            docker tag statecraft:latest "$IMAGE:${{ github.event.release.tag_name }}"
+            docker push "$IMAGE:${{ github.event.release.tag_name }}"
+          fi

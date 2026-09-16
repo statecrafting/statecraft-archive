@@ -1,0 +1,136 @@
+{
+  "record": {
+    "created": "2026-04-30",
+    "dependsOn": [
+      "075-factory-workflow-engine",
+      "091-registry-enrichment",
+      "118-workflow-spec-traceability",
+      "120-factory-extraction-stage"
+    ],
+    "domain": "tooling",
+    "establishes": [
+      {
+        "kind": "file",
+        "path": "crates/provenance-validator/Cargo.toml"
+      },
+      {
+        "kind": "file",
+        "path": "crates/provenance-validator/src/lib.rs"
+      },
+      {
+        "kind": "file",
+        "path": "crates/provenance-validator/src/allowlist.rs"
+      },
+      {
+        "kind": "file",
+        "path": "crates/provenance-validator/src/citation.rs"
+      },
+      {
+        "kind": "file",
+        "path": "crates/factory-contracts/src/provenance.rs"
+      }
+    ],
+    "extends": [
+      {
+        "nature": "additive",
+        "spec": "075-factory-workflow-engine",
+        "unit": {
+          "kind": "file",
+          "path": "crates/factory-engine/src/stages/quality_gates.rs"
+        }
+      }
+    ],
+    "extraFrontmatter": {
+      "compliance": [
+        {
+          "controls": [
+            "ASI01",
+            "ASI10"
+          ],
+          "framework": "owasp-asi-2026"
+        }
+      ],
+      "slug": "claim-provenance-enforcement"
+    },
+    "id": "121-claim-provenance-enforcement",
+    "implementation": "complete",
+    "kind": "governance",
+    "owner": "bart",
+    "references": [
+      {
+        "role": "historical",
+        "unit": {
+          "kind": "file",
+          "path": "crates/provenance-validator/src/anchor.rs"
+        }
+      },
+      {
+        "role": "historical",
+        "unit": {
+          "kind": "file",
+          "path": "platform/services/statecraft/api/governance/provenancePolicy.ts"
+        }
+      },
+      {
+        "role": "historical",
+        "unit": {
+          "kind": "file",
+          "path": "crates/factory-engine/src/stages/s1_business_requirements.rs"
+        }
+      },
+      {
+        "role": "historical",
+        "unit": {
+          "kind": "file",
+          "path": "crates/factory-engine/skills/business-requirements-analyst.md"
+        }
+      },
+      {
+        "role": "historical",
+        "unit": {
+          "kind": "file",
+          "path": "crates/factory-engine/skills/validate.md"
+        }
+      }
+    ],
+    "risk": "critical",
+    "sectionHeadings": [
+      "121 — Claim Provenance Enforcement",
+      "1. Problem",
+      "2. Goals",
+      "3. Non-Goals",
+      "4. User Scenarios & Testing",
+      "User Story 1 — Stage 1 fabrication is blocked at the gate (Priority: P1)",
+      "User Story 2 — `ASSUMPTION`-tagged INT-* produces no code at Stage 4/5 (Priority: P1)",
+      "User Story 3 — Charter reword preserves `BR-007` (Priority: P1)",
+      "User Story 4 — Retroactive audit on contaminated example BRD (Priority: P2)",
+      "User Story 5 — Citation drift on corpus change (Priority: P2)",
+      "Edge Cases",
+      "5. Requirements",
+      "5.1 Functional Requirements",
+      "Validator crate",
+      "Provenance schema",
+      "Anchor hashing",
+      "Allowlist",
+      "Citation matching",
+      "Quality gate and modes",
+      "Assumption budget",
+      "Cross-stage cascade",
+      "Audit (retroactive)",
+      "Observability",
+      "5.2 Key Entities",
+      "5.3 Permissions and audit",
+      "5.4 Out-of-process operations",
+      "6. Success Criteria",
+      "Measurable Outcomes",
+      "7. Open Decisions",
+      "8. Provenance"
+    ],
+    "specPath": "specs/121-claim-provenance-enforcement/spec.md",
+    "status": "approved",
+    "summary": "Make every claim that the Factory Phase-1 pipeline mints (`STK-*`, `SN-*`, `BR-*`, `UC-*`, `TC-*`, `INT-*`, `FS-*`, `SYSREQ-*`, `STREQ-*`, `SWREQ-*`, `USRREQ-*`) prove its provenance against the typed extraction corpus produced by spec 120, OR be tagged `ASSUMPTION` with a named human owner and a budget entry. Introduce a `crates/provenance-validator` crate that reads `ExtractionOutput` directly via serde — independent of the LLM that minted the claim — and runs an allowlist-driven external-entity detector against each claim's text. Claims that name an external entity with no verbatim citation and no `ASSUMPTION` tag are `REJECTED`; the Stage 1 gate blocks. Stable `anchorHash` IDs preserve `BR-007` across regeneration so a charter reword does not renumber downstream tests. `ASSUMPTION`-tagged claims propagate to a parallel `assumption-only-manifest.md` and Stages 4–5 emit spec-only artifacts for them — no DDL, no zod, no test fixtures, no banners — until they are promoted to `DERIVED` by a citation arriving in the corpus. Stage CD inversion lives in spec 122; this spec produces the validator and gate that spec 122 reuses.\n",
+    "title": "Claim Provenance Enforcement"
+  },
+  "shardHash": "57efd5c484b1884202e5db619412817cb3d92efb5bbfaf37e318f39491566315",
+  "specVersion": "1.1.0"
+}

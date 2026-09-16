@@ -1,0 +1,21 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://open-agentic-platform.local/schemas/config-hash.schema.json",
+  "title": "Open Agentic Platform — Claude shared-config slice hash (spec 188 Phase 4)",
+  "description": "The narrow, governed sub-hash re-homed out of the broad codebase index by spec 188 Phase 4. Emitted by `codebase-indexer compile` to `.derived/codebase-index/config-hash.json` (a tracked file, re-included from `.gitignore`) and verified by `codebase-indexer check-config` as the PR-time blocking gate preserving spec 184's guarantee. Separating it from `codebase-index.schema.json` leaves the broad `index.json` cache carrying nothing gated — the cache/contract tension Phase 4 dissolves.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schemaVersion", "claudeConfigHash"],
+  "properties": {
+    "schemaVersion": {
+      "type": "string",
+      "const": "1.0.0",
+      "description": "Schema version. 1.0.0 (spec 188 Phase 4): initial shape — the config-slice hash re-homed from `codebase-index.schema.json` build.claudeConfigHash (which existed at index schema 2.3.0, spec 188 Phase 3, and was removed at index schema 3.0.0)."
+    },
+    "claudeConfigHash": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$",
+      "description": "SHA-256 over ONLY the Claude shared-config slice (`.claude/settings.json` + `.mcp.json`, the spec 184 set). Computed by the same `claude_config_input_files` definition `check-config` re-derives, so the written and verified values cannot drift. This is the one governed, tracked value the narrow `check-config` / `ci-config-hash` gate blocks on; the broad `index.json` carries nothing gated since Phase 4 re-homed this field here."
+    }
+  }
+}

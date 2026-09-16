@@ -1,0 +1,37 @@
+{
+  "name": "@opc/verification-profiles",
+  "version": "0.1.0",
+  "description": "YAML-based verification profiles with named profiles, composable skills, and post-session security gates",
+  "private": true,
+  "type": "module",
+  "main": "src/index.ts",
+  "types": "src/index.ts",
+  "exports": {
+    ".": "./src/index.ts",
+    "./types": "./src/types.ts",
+    "./parser": "./src/parser.ts",
+    "./schema": "./src/schema.ts",
+    "./defaults": "./src/defaults.ts",
+    "./profiles": "./src/profiles.ts",
+    "./loader": "./src/loader.ts",
+    "./runner": "./src/runner.ts",
+    "./gate": "./src/gate.ts",
+    "./selector": "./src/selector.ts"
+  },
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "test": "vitest run",
+    "lint": "eslint src/"
+  },
+  "devDependencies": {
+    "@types/node": "^24.5.0",
+    "typescript": "^6.0.3",
+    "vitest": "^4.1.5"
+  },
+  "dependencies": {
+    "yaml": "^2.8.4"
+  },
+  "oap": {
+    "spec": "053-verification-profiles"
+  }
+}

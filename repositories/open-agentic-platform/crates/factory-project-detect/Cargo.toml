@@ -1,0 +1,29 @@
+# SPDX-License-Identifier: AGPL-3.0-or-later
+# Copyright (C) 2026 Bartek Kus
+
+[package]
+name = "factory-project-detect"
+publish = false   # internal workspace crate; binaries ship via release workflows, not crates.io
+version = "0.1.0"
+edition = "2024"
+description = "Detect whether a directory is a factory-produced project (ACP, legacy, scaffold-only) — spec 112"
+
+[dependencies]
+factory-contracts = { path = "../factory-contracts" }
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+serde_yaml = "0.9"
+thiserror = "2"
+anyhow = "1"
+chrono = { version = "0.4", features = ["serde"] }
+clap = { version = "4", features = ["derive"] }
+
+[dev-dependencies]
+tempfile = "3"
+
+[[bin]]
+name = "factory-project-detect"
+path = "src/bin/factory-project-detect.rs"
+
+[package.metadata.oap]
+spec = "112-factory-project-lifecycle"

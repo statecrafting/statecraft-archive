@@ -1,0 +1,34 @@
+{
+  "name": "@template/web",
+  "version": "1.0.0",
+  "description": "Vue.js web app for the Vue + Encore Enterprise Template",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vue-tsc && vite build",
+    "preview": "vite preview",
+    "typecheck": "vue-tsc --noEmit",
+    "test": "vitest run",
+    "test:watch": "vitest"
+  },
+  "dependencies": {
+    "@primevue/themes": "^4.2.5",
+    "@template/shared": "*",
+    "@vitejs/plugin-vue": "^6.0.7",
+    "axios": "^1.18.1",
+    "pinia": "^3.0.4",
+    "primeicons": "^7.0.0",
+    "primevue": "^4.2.5",
+    "typescript": "^6.0.3",
+    "vite": "^8.1.3",
+    "vue": "^3.5.39",
+    "vue-router": "^5.1.0",
+    "vue-tsc": "^3.3.6"
+  },
+  "devDependencies": {
+    "@vue/test-utils": "^2.4.11",
+    "happy-dom": "^20.10.6",
+    "vitest": "^4.0.18"
+  }
+}

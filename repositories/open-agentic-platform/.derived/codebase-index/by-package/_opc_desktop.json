@@ -1,0 +1,11 @@
+{
+  "package": {
+    "kind": "npm-package",
+    "name": "@opc/desktop",
+    "path": "product/apps/opc",
+    "specRef": "032-opc-inspect-governance-wiring-mvp",
+    "version": "0.4.0"
+  },
+  "schemaVersion": "1.1.0",
+  "shardHash": "64af4f98d2d3f0355abad151538a16dca2e3726e2bed563dd5c759f651abfc9b"
+}

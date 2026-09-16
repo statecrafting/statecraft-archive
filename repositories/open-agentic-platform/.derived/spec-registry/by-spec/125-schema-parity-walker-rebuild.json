@@ -1,0 +1,60 @@
+{
+  "record": {
+    "amends": [
+      "120-factory-extraction-stage"
+    ],
+    "created": "2026-05-01",
+    "dependsOn": [
+      "120-factory-extraction-stage",
+      "121-claim-provenance-enforcement",
+      "122-stakeholder-doc-inversion"
+    ],
+    "domain": "tooling",
+    "extraFrontmatter": {
+      "amended": "2026-05-01",
+      "approved": "2026-05-01",
+      "slug": "schema-parity-walker-rebuild"
+    },
+    "id": "125-schema-parity-walker-rebuild",
+    "implementation": "complete",
+    "kind": "governance",
+    "owner": "bart",
+    "refines": [
+      {
+        "aspect": "schema-parity-walker",
+        "unit": {
+          "kind": "file",
+          "path": "tools/oap/schema-parity-check/index.mjs"
+        }
+      },
+      {
+        "aspect": "schema-parity-walker",
+        "unit": {
+          "kind": "file",
+          "path": "platform/services/statecraft/api/knowledge/extractionOutput.ts"
+        }
+      }
+    ],
+    "risk": "medium",
+    "sectionHeadings": [
+      "125 — Schema-Parity Walker — Rebuild for Hand-Rolled Validators",
+      "1. Problem Statement",
+      "2. Decision",
+      "3. Implementation",
+      "3.1 Schema descriptor",
+      "3.2 Parity walker rewrite",
+      "3.3 In-file consistency test",
+      "4. Migration",
+      "5. Acceptance",
+      "6. Non-Goals",
+      "7. Open Questions",
+      "8. Implementation Notes"
+    ],
+    "specPath": "specs/125-schema-parity-walker-rebuild/spec.md",
+    "status": "approved",
+    "summary": "Restores the `make ci-schema-parity` gate after commit `b6859d3` removed zod from `api/knowledge/extractionOutput.ts` in favour of hand-rolled TypeScript validators (the architectural fix for an Encore.ts parser crash). The current parity tool walks a zod schema tree; with no zod schema present it short-circuits with `missing exports` and the gate fails. This spec replaces the zod walker with a Validator-aware introspection path so `extractionOutputSchema` is no longer required and the Rust↔TS fingerprint check resumes its job.\n",
+    "title": "Schema-Parity Walker — Rebuild for Hand-Rolled Validators"
+  },
+  "shardHash": "02056356b15bee6c22639d0651f95ceabcf686625f23b9daa24d8fef3cdf45c3",
+  "specVersion": "1.1.0"
+}

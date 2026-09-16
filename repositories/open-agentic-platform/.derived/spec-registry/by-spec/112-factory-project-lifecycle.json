@@ -1,0 +1,163 @@
+{
+  "record": {
+    "amendmentRecord": "amended by spec 199 (2026-06-11), editorial: factory-project-detect's\ncurrent-protocol test fixtures use the live names (templateName\n\"template\" for scaffold-only; adapter \"acme-vue-encore\" in ACP\npipeline-state). The legacy-detection fixtures intentionally KEEP\n\"acme-vue-node\": they model real-world enterprise-factory-produced artifacts\nwhose template.json genuinely carries that name, and the ACP-precedence\ntest's decoy marker now differs from the ACP adapter name, making its\nprovenance assertion meaningful. No detection behavior change.\n138-statecraft-create-realised-scaffold (2026-05-04).\nself-amended (2026-06-05) — §6.3 Open-in-OPC handoff refined: the\nstatecraft web-UI \"Open in OPC\" button now resolves its deep link via a\nlightweight GET /api/projects/:id/opc-deep-link endpoint instead of the\nfull /opc-bundle, and the project layout route gained a shouldRevalidate\nguard. Motivated by a statecraft-api OOMKill — the full bundle minted a\nGitHub installation token on every project navigation (React Router v7\nsingle-fetch revalidation), which stacked with bulk-knowledge-upload\nextraction fan-out at the pod's 1Gi limit. Adds a refines: edge over the\nOPC-handoff consumer paths.\nself-amended (2026-06-10) — §5.2 failure-surfacing posture extended from\npre-flight to mid-flight: scaffold/push and post-push DB failures raise\ntyped (non-internal) APIErrors carrying the real cause + the orphaned\nscaffold-job id, because production Encore redacts internal messages to\na generic 500. §5.3's scaffold-output VCS-free invariant graduated into\nthe open standard (one normative sentence in\nstandards/schemas/factory/adapter-manifest.schema.yaml `scaffold:`).\nself-amended (2026-06-12) — the Create flow now writes the spec-167\n`.kernel-version` born-with stamp into commit #1. perRequestScaffold.ts\ngained a step-5 write (after the L0 pipeline-state seed, before push) via a\nnew sibling helper kernelVersionStamp.ts; create.ts threads adapter identity\n+ manifest into it. The helper file is claimed by spec 167 (extends edge,\nthe stamp is 167's concept — plan G4); this entry is the narrative record on\n112's side. No project-lifecycle contract change: the stamp is one\nadditional commit-#1 artifact alongside `.factory/pipeline-state.json`.\nself-amended (2026-06-27) - §5.3 scaffold topology corrected for the\nfactory-encore generator-product split (docs/analysis/\nacme-vue-encore-generator-product-split.md). The create-time generator\n(scripts/) and the module catalog (modules/) moved out of the\nscaffold-source repo (template-encore) into the factory-encore adapter\n(adapters/acme-vue-encore/), and the scaffold-source repo became a lean\nbaseline. Warmup now clones BOTH owned upstreams: factory-encore for the\ngenerator + modules + tsx, template-encore as the --source baseline, and\nruns the adapter's manifest-declared entry_point. New §5.3.1 records the\ntwo-cache model. Confined to the spec-112-owned scaffold/ directory\n(templateCache.ts, scheduler.ts, perRequestScaffold.ts); no admission or\nDB-schema change, because the factory-encore repo+ref is already resolvable\nfrom the existing legacy-mixed factory_upstreams row. The six-operation\ndecomposition is unchanged; only operations 1 to 3's source topology moves.\n",
+    "created": "2026-04-22",
+    "dependsOn": [
+      "074-factory-ingestion",
+      "075-factory-workflow-engine",
+      "087-unified-workspace-architecture",
+      "094-unified-artifact-store",
+      "108-factory-as-platform-feature",
+      "109-factory-pat-and-pubsub-sync",
+      "110-statecraft-to-opc-factory-trigger",
+      "111-org-agent-catalog-sync"
+    ],
+    "domain": "platform",
+    "establishes": [
+      {
+        "id": "factory-project-detect",
+        "kind": "crate"
+      },
+      {
+        "kind": "file",
+        "path": "platform/services/statecraft/api/projects/create.ts"
+      },
+      {
+        "kind": "file",
+        "path": "platform/services/statecraft/api/projects/import.ts"
+      },
+      {
+        "kind": "file",
+        "path": "platform/services/statecraft/api/projects/opcBundle.ts"
+      },
+      {
+        "kind": "file",
+        "path": "platform/services/statecraft/api/projects/opcBundleHelpers.ts"
+      },
+      {
+        "kind": "directory",
+        "path": "platform/services/statecraft/api/projects/scaffold"
+      },
+      {
+        "kind": "file",
+        "path": "platform/services/statecraft/web/app/routes/app.projects.new.tsx"
+      },
+      {
+        "kind": "file",
+        "path": "platform/services/statecraft/web/app/routes/app.projects.import.tsx"
+      },
+      {
+        "kind": "file",
+        "path": "product/apps/opc/src-tauri/src/commands/factory_project.rs"
+      },
+      {
+        "kind": "file",
+        "path": "product/apps/opc/src-tauri/src/commands/keychain.rs"
+      },
+      {
+        "kind": "file",
+        "path": "product/apps/opc/src/routes/factory/ProjectCockpit.tsx"
+      }
+    ],
+    "extends": [
+      {
+        "nature": "additive",
+        "spec": "108-factory-as-platform-feature",
+        "unit": {
+          "kind": "file",
+          "path": "platform/services/statecraft/api/factory/translator.ts"
+        }
+      },
+      {
+        "nature": "additive",
+        "spec": "108-factory-as-platform-feature",
+        "unit": {
+          "kind": "directory",
+          "path": "standards/schemas/factory"
+        }
+      }
+    ],
+    "extraFrontmatter": {
+      "amended": "2026-06-28",
+      "slug": "factory-project-lifecycle"
+    },
+    "id": "112-factory-project-lifecycle",
+    "implementation": "in-progress",
+    "kind": "platform",
+    "owner": "bart",
+    "refines": [
+      {
+        "aspect": "open-in-opc-handoff",
+        "unit": {
+          "kind": "file",
+          "path": "platform/services/statecraft/api/projects/opcBundle.test.ts"
+        }
+      },
+      {
+        "aspect": "open-in-opc-handoff",
+        "unit": {
+          "kind": "file",
+          "path": "platform/services/statecraft/web/app/lib/projects-api.server.ts"
+        }
+      },
+      {
+        "aspect": "open-in-opc-handoff",
+        "unit": {
+          "kind": "file",
+          "path": "platform/services/statecraft/web/app/routes/app.project.$projectId.tsx"
+        }
+      }
+    ],
+    "sectionHeadings": [
+      "112 — Factory Project Lifecycle — Create, Import, Open",
+      "1. Problem",
+      "1.0 Provenance and end-to-end model",
+      "1.1 What none of the prior specs answer",
+      "2. Decision",
+      "2.1 Three entry points",
+      "2.2 Template-distributor discontinued",
+      "3. Contracts",
+      "3.1 Canonical state location",
+      "3.2 ACP schemas (from spec 074, vendored)",
+      "3.3 Detection crate",
+      "3.4 Legacy translation",
+      "3.5 Adapter identity",
+      "4. OPC Open Path",
+      "4.1 Detection on folder open",
+      "4.2 Factory Cockpit",
+      "4.3 Artifact extraction as a birth-time step",
+      "5. Statecraft Create Path",
+      "5.1 UI — `/app/projects/new`",
+      "5.1.1 Scaffold-readiness gate",
+      "5.2 Backend — `api/projects/create.ts`",
+      "5.3 What is absorbed from template-distributor",
+      "5.3.1 Generator-product split: the two-cache warmup *(amended 2026-06-27, refined 2026-06-28)*",
+      "5.4 Statecraft–OPC boundary",
+      "6. Statecraft Import Path",
+      "6.1 UI — `/app/projects/import`",
+      "6.2 Backend — `api/projects/import.ts`",
+      "6.3 Open-in-OPC handoff",
+      "6.4 Bundle authentication and pipeline token threading",
+      "6.4.1 Token shape and source",
+      "6.4.2 Bundle endpoint extension",
+      "6.4.3 OPC-side clone injection",
+      "6.4.4 OPC-side persistence and refresh",
+      "6.4.5 Factory pipeline threading",
+      "6.4.6 Audit and observability",
+      "6.4.7 Public-repo path",
+      "7. State Authority and Sync",
+      "8. Adapter Manifest Extension",
+      "9. Implementation Phases",
+      "10. Risks and Open Questions",
+      "11. Non-Goals",
+      "12. Glossary",
+      "Amendment record"
+    ],
+    "specPath": "specs/112-factory-project-lifecycle/spec.md",
+    "status": "approved",
+    "summary": "Defines the contract-anchored lifecycle for factory-produced projects across three entry points: (1) OPC opens a local folder and recognises it as a factory project via ACP pipeline-state conformance; (2) Statecraft creates a new project by scaffolding an adapter and pushing to GitHub; (3) Statecraft imports an existing GitHub repo and registers it in the workspace. Anchors detection on the ACP contract layer (spec 074) and extends the translator (spec 108) to bridge legacy `legacy-factory`-shaped manifests. Absorbs the scaffold/push capability currently in the external `template-distributor` repo into statecraft; template-distributor is discontinued as a separate service.\n",
+    "title": "Factory Project Lifecycle — Create, Import, Open"
+  },
+  "shardHash": "77a316eeacf1afb90e5a1ee2d4ca661b66618ba82d83aeb6ee6a5f6ff5036dbe",
+  "specVersion": "1.1.0"
+}

@@ -1,0 +1,100 @@
+# spec-spine.toml governs this repository. All keys are optional; an
+# absent file behaves as the defaults for a single-Cargo-workspace repo.
+
+[meta]
+# The governing floor (spec 013). The coupling gate's built-in bypass
+# list is compiled into the binary, so two versions can judge the same
+# diff differently; the kit's hooks and the `/verify` skill also need
+# verbs that arrived in 0.15.0 and 0.18.0. CI installs this same floor.
+required_version = ">=0.18.0"
+
+[manifest]
+metadata_namespace = "spec-spine"
+
+[domains]
+allowed = []   # empty: the `domain` field is free-text / disabled
+
+[kind]
+allowed = []   # empty: the `kind` field is free-text / disabled
+
+[layout]
+specs_dir     = "specs"
+derived_dir   = ".derived"
+standards_dir = "standards/spec"
+# No in-tree Rust crates remain. The governance (spec 008) and fleet (spec 006)
+# napi addons moved to the statecrafting repo (its specs 005 and 006) and are
+# consumed here as pinned @statecrafting/* dependencies, exactly as the Encore
+# toolchain and the hiqlite addon already were. Both specs keep their backend/
+# service directories; only the addon path transferred.
+#
+# The app shell (spec 002) brings the root package.json (an Encore app,
+# spec-spine key -> 002); the SPA is the frontend/ package (spec 007,
+# spec-spine key -> 007), and the operator dashboard is the frontend-admin/
+# package (spec 012, spec-spine key -> 012), matching the enrahitu chassis
+# backend/ + frontend/ + frontend-admin/ convention. Pinned dependencies are
+# not in-tree packages, so none are listed here.
+standalone_rust_workspaces = []
+standalone_npm_packages    = ["frontend", "frontend-admin"]
+
+[index]
+# Governance surfaces beyond the always-hashed core. Service manifests are
+# added as services land (spec 001 3 service map).
+#
+# WATCH THE GLOB FORM. `dir/**` matches DIRECTORIES and therefore no files.
+# The form that folds the files under a directory into the global-inputs
+# hash is `dir/**/*`. The bare form parses, prints back through
+# `config show`, and matches nothing: every entry here carried it until
+# spec 013, so the agent harness was nominally hashed and actually was not
+# (L-010).
+extra_hashed_inputs = [
+  "standards/**/*",
+  ".github/workflows/**/*",
+  ".claude/agents/**/*",
+  ".claude/rules/**/*",
+  ".claude/skills/**/*",
+  ".claude/settings.json",
+  ".mcp.json",
+  "AGENTS.md",
+  "CLAUDE.md",
+  "Makefile",
+  ".githooks/**/*",
+  ".gitattributes",
+  "scripts/**/*",
+  "app-manifest.json",
+  "encore.app",
+  "infra.config.json",
+  "infra.config.dev.json",
+]
+# Directories the symbol resolver and the coverage walk skip. `encore.gen`
+# joins the defaults in spec 013: it is Encore's generated client surface,
+# gitignored and rewritten by every `npm run build:app`, so no spec can
+# claim it and its presence in the coverage walk is the only thing keeping
+# `index coverage --fail-on-untraced` red.
+resolver_exclusions = ["target", "node_modules", ".derived", "dist", "build", ".next", "encore.gen"]
+
+[coupling]
+waiver_keyword = "Spec-Drift-Waiver:"
+bypass_prefixes = ["**/README.md"]
+# C-002: refuse a changed source file that no spec specifically claims.
+# Turned on by spec 013, once `index coverage` reached 100 percent: the
+# ratchet is only honest on a corpus that has retired its coverage debt.
+require_ownership = true
+
+[lint]
+# L-008 suppression: claimed paths deliberately in no content hash.
+# `spec-spine check` still reports the count, so the exception stays
+# explicit rather than silent. See specs/013-agent-harness/spec.md 5.2
+# for why each entry is here.
+unwitnessed_allowed = [
+  "README.md",
+  "package-lock.json",
+  "tsconfig.json",
+  "vitest.config.ts",
+  "vitest.setup.ts",
+  ".env.example",
+  ".dockerignore",
+  "docker/compose.postgres.yml",
+  "infra/gitops/clusters/statecraft-hetzner/statecraft-kustomization.yaml",
+  "backend/auth/github-identity.ts",
+  "app-model.json",
+]

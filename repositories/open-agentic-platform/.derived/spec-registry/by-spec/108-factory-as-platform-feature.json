@@ -1,0 +1,46 @@
+{
+  "record": {
+    "amendmentRecord": "139-factory-artifact-substrate",
+    "created": "2026-04-20",
+    "dependsOn": [
+      "074-factory-ingestion",
+      "075-factory-workflow-engine",
+      "087-unified-workspace-architecture",
+      "088-factory-upstream-sync"
+    ],
+    "domain": "platform",
+    "extraFrontmatter": {
+      "amended": "2026-05-05",
+      "approved": "2026-05-01",
+      "slug": "factory-as-platform-feature"
+    },
+    "id": "108-factory-as-platform-feature",
+    "implementation": "complete",
+    "kind": "platform",
+    "owner": "bart",
+    "sectionHeadings": [
+      "108 — Factory as a First-Class Platform Feature",
+      "1. Problem Statement",
+      "2. Decision",
+      "3. Data Model",
+      "4. Encore APIs",
+      "5. Sync Flow",
+      "6. UI — `/app/factory`",
+      "7. OPC Interface Contract",
+      "7.1 Punt — desktop factory-run migration",
+      "8. Removals",
+      "9. Non-Goals",
+      "10. Open Questions",
+      "11. Implementation Notes"
+    ],
+    "specPath": "specs/108-factory-as-platform-feature/spec.md",
+    "status": "approved",
+    "summary": "Removes the repo-rooted `factory/` directory and reimplements adapters, contracts, processes, and upstream-map configuration as first-class entities inside statecraft. Factory becomes a governed, organisationally-scoped feature surfaced at `/app/factory`; Factory runs continue to execute via OPC but are orchestrated by the platform. Supersedes spec 088 for the upstream sync flow.\n",
+    "supersedes": [
+      "088-factory-upstream-sync"
+    ],
+    "title": "Factory as a First-Class Platform Feature"
+  },
+  "shardHash": "28d5902222fe9da35115d567b5e540caebefdd1d4d7967735a57d61497f22d64",
+  "specVersion": "1.1.0"
+}

@@ -1,0 +1,111 @@
+{{- if .Values.networkPolicy.enabled -}}
+# Security review fix (MEDIUM finding) -- tenant/preview-namespace
+# default-deny.
+#
+# deployd-api creates each tenant/preview namespace dynamically (helm
+# upgrade --install --create-namespace); there is no static Flux
+# Kustomization entry point for a namespace whose name isn't known ahead
+# of time (unlike platform/k8s/policies/{statecraft,deployd,rauthy},
+# which ARE statically wired). Riding this NetworkPolicy along with the
+# tenant workload chart itself means every tenant namespace gets the same
+# default-deny + necessary-allow posture the moment `helm upgrade
+# --install` first lands it, with no extra deployd-api code path needed.
+#
+# 2026-06-12 incident lesson (platform/k8s/policies/monitoring/
+# networkpolicy-monitoring.yaml header): every allow rule below ships
+# together with the default-deny in the same install, and the
+# ingress-nginx allow is namespace-wide (podSelector: {}), not pinned to
+# this chart's own pod labels: the sibling oauth2-proxy-gate release
+# (spec 137, optional, `gate.enabled`) shares this namespace and needs
+# the same public-ingress reachability on its own port.
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: default-deny-all
+  namespace: {{ .Release.Namespace }}
+  labels:
+    {{- include "acme-vue-encore.labels" . | nindent 4 }}
+spec:
+  podSelector: {}
+  policyTypes:
+    - Ingress
+    - Egress
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: allow-intra-namespace
+  namespace: {{ .Release.Namespace }}
+  labels:
+    {{- include "acme-vue-encore.labels" . | nindent 4 }}
+spec:
+  podSelector: {}
+  policyTypes:
+    - Ingress
+    - Egress
+  ingress:
+    - from:
+        - podSelector: {}
+  egress:
+    - to:
+        - podSelector: {}
+---
+# Public ingress: ingress-nginx -> the app Service and, when the spec 137
+# gate is installed alongside, the oauth2-proxy-gate Service.
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: allow-ingress-nginx
+  namespace: {{ .Release.Namespace }}
+  labels:
+    {{- include "acme-vue-encore.labels" . | nindent 4 }}
+spec:
+  podSelector: {}
+  policyTypes:
+    - Ingress
+  ingress:
+    - from:
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: ingress-nginx
+      ports:
+        - port: {{ .Values.service.port }}
+          protocol: TCP
+        {{- if .Values.gate.enabled }}
+        - port: {{ .Values.gate.proxyServicePort }}
+          protocol: TCP
+        {{- end }}
+---
+# Outbound: DNS, and general HTTPS/Postgres/Redis egress for whatever
+# external APIs, managed database, or cache the tenant app calls. The
+# in-namespace preview Postgres (FR-006) and preview Redis (spec 227 FR-005)
+# are already covered by allow-intra-namespace above; external
+# (previewDatabase/previewRedis disabled) deployments point at
+# operator-managed endpoints this chart has no fixed address for, so this
+# stays port-scoped rather than peer-pinned, matching the convention in
+# platform/k8s/policies/monitoring's egress rule.
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: allow-egress-external
+  namespace: {{ .Release.Namespace }}
+  labels:
+    {{- include "acme-vue-encore.labels" . | nindent 4 }}
+spec:
+  podSelector: {}
+  policyTypes:
+    - Egress
+  egress:
+    - ports:
+        - port: 53
+          protocol: UDP
+        - port: 53
+          protocol: TCP
+    - ports:
+        - port: 443
+          protocol: TCP
+        - port: 5432
+          protocol: TCP
+        - port: 6379
+          protocol: TCP
+{{- end -}}

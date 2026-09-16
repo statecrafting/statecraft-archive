@@ -1,0 +1,55 @@
+{
+  "record": {
+    "amendmentRecord": "amended 2026-05-13 by spec 147 (spec-kind-grammar): bumped the registry schema 1.4.0 -> 1.5.0 with kind-grammar field declarations; spec 132's unamendable list is unchanged.\namended 2026-06-18 by spec 217 (engine-swap collapse): the in-tree spec-compiler that enforced V-011 (unamendable-anchor enforcement) was deleted; that check is now in spec-spine-core. The spec_compiler crate-unit is stripped (path deleted); the frozen-schema invariant (constrains edge) survives unchanged.\n",
+    "amends": [
+      "000-bootstrap-spec-system"
+    ],
+    "codeAliases": [
+      "CONSTITUTIONAL_FREEZE"
+    ],
+    "constrains": [
+      {
+        "flavor": "invariant-freeze",
+        "unit": {
+          "kind": "file",
+          "path": "standards/schemas/spec-spine/registry.schema.json"
+        }
+      }
+    ],
+    "created": "2026-05-02",
+    "dependsOn": [
+      "000-bootstrap-spec-system",
+      "001-spec-compiler-mvp"
+    ],
+    "domain": "substrate",
+    "extraFrontmatter": {
+      "amended": "2026-06-18",
+      "approved": "2026-05-02",
+      "slug": "constitutional-invariant-freeze"
+    },
+    "id": "132-constitutional-invariant-freeze",
+    "implementation": "complete",
+    "kind": "governance",
+    "owner": "bart",
+    "risk": "medium",
+    "sectionHeadings": [
+      "132 — Constitutional invariant freeze",
+      "1. Problem Statement",
+      "2. Decision",
+      "3. Scope",
+      "In scope (this commit)",
+      "Out of scope (deferred to human authorship)",
+      "4. Functional Requirements",
+      "5. Proposed amendment to spec 000 (deferred)",
+      "6. Acceptance",
+      "7. Risks and Mitigations",
+      "8. Out of scope (next steps)"
+    ],
+    "specPath": "specs/132-constitutional-invariant-freeze/spec.md",
+    "status": "approved",
+    "summary": "Spec 000 is itself amendable, including the amendment protocol. This spec adds a frontmatter convention — `unamendable: [<anchor>, ...]` on the amended spec, and `amends_sections: [<anchor>, ...]` on the amender — and a new spec-compiler violation (V-011) that rejects any amendment whose `amends_sections` overlaps the amended spec's `unamendable` list. Tooling-only in this commit: the schema field is declared, V-011 fires on synthetic fixtures, the registry SPEC_VERSION bumps 1.3.0 → 1.4.0. Spec 000 itself is **not** edited here; the proposed amendment is staged in `/tmp/spec_000_proposed_amendment.diff` for human review and application. Amended by spec 147 (2026-05-13) to bump the registry schema 1.4.0 → 1.5.0 with the kind-grammar field declarations. Spec 132's `unamendable` list remains untouched (V-006..V-010 reserved range is not populated by 147 per Commitment 2; V-012..V-019 occupy the next free slots).\n",
+    "title": "Constitutional invariant freeze — `unamendable` anchors and V-011"
+  },
+  "shardHash": "796c83d07913034f87492f76c82fae348567cdacbf0795931d823667a6710f6e",
+  "specVersion": "1.1.0"
+}

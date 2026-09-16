@@ -1,0 +1,11 @@
+# Divergent fixture for ci-parity-check tests (spec 104 §5.2).
+# The `cargo test --manifest-path crates/axiomregent/Cargo.toml` line below
+# has NO local mirror in the sibling Makefile; check_parity MUST detect the
+# drift.
+name: CI axiomregent
+on: [push]
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - run: cargo test --manifest-path crates/axiomregent/Cargo.toml

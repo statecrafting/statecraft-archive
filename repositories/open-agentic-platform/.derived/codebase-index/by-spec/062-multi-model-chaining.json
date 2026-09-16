@@ -1,0 +1,48 @@
+{
+  "diagnostics": {
+    "errors": [],
+    "warnings": [
+      {
+        "code": "W-002",
+        "message": "spec '062-multi-model-chaining' file unit 'crates/agent/src/chain.rs' does not exist",
+        "path": "crates/agent/src/chain.rs"
+      }
+    ]
+  },
+  "mapping": {
+    "implementingPaths": [
+      {
+        "path": "product/packages/multi-model-chaining",
+        "source": "multiple"
+      }
+    ],
+    "resolvedUnits": [
+      {
+        "locations": [
+          {
+            "file": "product/packages/multi-model-chaining"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "directory",
+          "path": "product/packages/multi-model-chaining"
+        }
+      },
+      {
+        "locations": [],
+        "ownership": false,
+        "sourceField": "references",
+        "unit": {
+          "kind": "file",
+          "path": "crates/agent/src/chain.rs"
+        }
+      }
+    ],
+    "specId": "062-multi-model-chaining",
+    "specStatus": "approved"
+  },
+  "schemaVersion": "1.1.0",
+  "shardHash": "23b94d2ffc125e375d3925f0ced2f90b823dc2b6244142b8070c1e88f58942bc"
+}

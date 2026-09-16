@@ -1,0 +1,63 @@
+# spec-spine.toml: governs factory-encore (the create-time / generator home).
+#
+# factory-encore now carries governed code: the deterministic acme-vue-encore
+# generator (adapters/acme-vue-encore/scripts + modules), its create-time
+# orchestration, the CI surface, and the cross-repo lockstep that binds the
+# generator to template-encore's frozen app invariants. The spec corpus under
+# specs/ compiles to a deterministic registry; the codebase index maps every
+# spec to the code it owns; the PR-time coupling gate refuses code that drifts
+# from its owning spec. All keys are optional; this file writes out the
+# deviations from the defaults explicitly.
+
+[manifest]
+# package.json "spec-spine".spec annotation namespace.
+metadata_namespace = "spec-spine"
+
+[domains]
+# Closed taxonomy: every spec declares one (enforced via --fail-on-warn).
+# factory-encore is create-time only: governance (the kernel + CI), generator
+# (the deterministic materializer + module catalog), ci-cd (the lockstep), and
+# docs (architecture-doc governance for the generator's human guides).
+allowed = ["governance", "generator", "ci-cd", "docs"]
+
+[kind]
+# Closed taxonomy: every spec declares one (enforced via --fail-on-warn).
+allowed = ["architecture", "feature", "governance"]
+
+[layout]
+specs_dir     = "specs"
+derived_dir   = ".derived"
+standards_dir = "standards/spec"
+# The generator toolchain is a single root package (tsx + vitest, no apps).
+npm_workspaces = ["package.json"]
+
+[index]
+# Hashed governance inputs beyond the always-hashed core (manifests,
+# specs/*/spec.md, this file). The CI workflows and the standards corpus are
+# governance code the spec corpus claims; hashing them keeps quiet edits
+# visible in the staleness gate.
+extra_hashed_inputs = [
+  "standards/**",
+  ".github/workflows/**",
+]
+resolver_exclusions = ["node_modules", ".derived", "dist", "build"]
+
+[coupling]
+# Built-in bypass floor already covers .github/, docs/, README.md, CODEOWNERS,
+# lockfiles, .derived/, etc. The OAP-mirror layers (process/, contract/) and
+# the adapter's prose assets (agents/, patterns/) are authored standard/prose,
+# not spec-owned generator code; they sit in the bypass floor.
+bypass_prefixes = [
+  "process/",
+  "contract/",
+  "adapters/acme-vue-encore/agents/",
+  "adapters/acme-vue-encore/patterns/",
+]
+# Dependency-only PRs (package.json version-string bumps in dependency tables)
+# self-waive; fail-closed on anything else.
+auto_waive_dependency_only = true
+waiver_keyword = "Spec-Drift-Waiver:"
+
+[branding]
+compiler_id = "spec-spine"
+indexer_id  = "spec-spine"

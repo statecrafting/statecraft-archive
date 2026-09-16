@@ -1,0 +1,26 @@
+id: hooks-in-hooks-dir
+message: |
+  React hooks (functions starting with 'use') must live in hooks/ or services/, not lib/.
+
+  BAD:  lib/some-file.ts exporting useSomething()
+  GOOD: hooks/useSomething.ts or services/something.ts
+
+  The lib/ directory is for pure business logic and utilities.
+severity: error
+language: TypeScript
+files:
+  - 'src/lib/**/*.ts'
+  - 'src/lib/**/*.tsx'
+rule:
+  any:
+    - pattern: export function $HOOK($$$PARAMS) { $$$BODY }
+    - pattern: export const $HOOK = ($$$PARAMS) => $BODY
+    - pattern: export const $HOOK = async ($$$PARAMS) => $BODY
+constraints:
+  HOOK:
+    regex: '^use[A-Z]'
+note: |
+  Enforces directory boundaries:
+  - lib/:      Pure business logic, utilities (no React hooks)
+  - hooks/:    React hooks for UI behavior
+  - services/: Data-fetching hooks and service wrappers

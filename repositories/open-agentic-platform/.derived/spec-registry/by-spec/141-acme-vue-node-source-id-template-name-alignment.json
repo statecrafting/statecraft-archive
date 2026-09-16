@@ -1,0 +1,118 @@
+{
+  "record": {
+    "amendmentRecord": "199-factory-thin-consumer-sync",
+    "amends": [
+      "140-acme-vue-node-scaffold-source-id-cutover"
+    ],
+    "codeAliases": [
+      "ACME_VUE_NODE_SOURCE_ID_TEMPLATE_NAME_ALIGNMENT"
+    ],
+    "created": "2026-05-06",
+    "dependsOn": [
+      "140-acme-vue-node-scaffold-source-id-cutover"
+    ],
+    "domain": "platform",
+    "extends": [
+      {
+        "nature": "additive",
+        "spec": "140-acme-vue-node-scaffold-source-id-cutover",
+        "unit": {
+          "kind": "file",
+          "path": "platform/services/statecraft/api/factory/translator.ts"
+        }
+      },
+      {
+        "nature": "additive",
+        "spec": "140-acme-vue-node-scaffold-source-id-cutover",
+        "unit": {
+          "kind": "file",
+          "path": "platform/services/statecraft/api/factory/substrateBrowser.ts"
+        }
+      },
+      {
+        "nature": "additive",
+        "spec": "140-acme-vue-node-scaffold-source-id-cutover",
+        "unit": {
+          "kind": "file",
+          "path": "platform/services/statecraft/api/factory/translator.test.ts"
+        }
+      },
+      {
+        "nature": "additive",
+        "spec": "140-acme-vue-node-scaffold-source-id-cutover",
+        "unit": {
+          "kind": "file",
+          "path": "platform/services/statecraft/api/factory/artifacts.test.ts"
+        }
+      },
+      {
+        "nature": "additive",
+        "spec": "140-acme-vue-node-scaffold-source-id-cutover",
+        "unit": {
+          "kind": "file",
+          "path": "platform/services/statecraft/api/projects/scaffold/scheduler.test.ts"
+        }
+      },
+      {
+        "nature": "additive",
+        "spec": "140-acme-vue-node-scaffold-source-id-cutover",
+        "unit": {
+          "kind": "file",
+          "path": "platform/services/statecraft/api/projects/scaffold/scaffold.test.ts"
+        }
+      },
+      {
+        "nature": "additive",
+        "spec": "140-acme-vue-node-scaffold-source-id-cutover",
+        "unit": {
+          "kind": "file",
+          "path": "platform/services/statecraft/vite.config.ts"
+        }
+      }
+    ],
+    "extraFrontmatter": {
+      "amended": "2026-06-09",
+      "approved": "2026-05-06",
+      "slug": "acme-vue-node-source-id-template-name-alignment"
+    },
+    "id": "141-acme-vue-node-source-id-template-name-alignment",
+    "implementation": "complete",
+    "kind": "amendment",
+    "owner": "bart",
+    "references": [
+      {
+        "role": "historical",
+        "unit": {
+          "kind": "file",
+          "path": "platform/services/statecraft/api/factory/oapNativeAdapters.ts"
+        }
+      },
+      {
+        "role": "historical",
+        "unit": {
+          "kind": "file",
+          "path": "platform/services/statecraft/api/factory/projection.test.ts"
+        }
+      }
+    ],
+    "risk": "low",
+    "sectionHeadings": [
+      "141 — acme-vue-node source-id alignment with `template.json::templateName`",
+      "1. Background",
+      "2. Resolution",
+      "2.1 Code constant",
+      "2.2 Migration 37",
+      "2.3 Test + jsdoc updates",
+      "2.4 Migration 36 immutability",
+      "3. Acceptance criteria",
+      "4. Out of scope",
+      "5. Provenance"
+    ],
+    "specPath": "specs/141-acme-vue-node-source-id-template-name-alignment/spec.md",
+    "status": "approved",
+    "summary": "Spec 140 §2.1 fixed the canonical scaffold_source_id for acme-vue-node as `acme-vue-node-template`. The upstream's own `template.json::templateName` is `acme-vue-node`. This amendment aligns the code constant, the migration-36 substrate row body, and the factory_upstreams source-id key with the upstream's self-declared name (one canonical id end-to-end), so the readiness gate resolves for orgs whose template upstream is registered via the legacy two-row form without re-entering the same repo URL.\n",
+    "title": "Align acme-vue-node scaffold_source_id with template.json::templateName"
+  },
+  "shardHash": "22f82370a44757efe3be12dee981a70286f545c9bafc3d850b789a1a69669c2c",
+  "specVersion": "1.1.0"
+}

@@ -1,0 +1,174 @@
+{
+  "mapping": {
+    "dependsOn": [
+      "032-opc-inspect-governance-wiring-mvp",
+      "073-axiomregent-unification",
+      "087-unified-workspace-architecture",
+      "134-fast-local-ci-mode",
+      "147-spec-kind-grammar",
+      "177-ci-orchestrator-pr-gate",
+      "183-opc-boot-precondition-gate"
+    ],
+    "implementingPaths": [
+      {
+        "path": ".github/workflows/opc-e2e-nightly.yml",
+        "source": "spec-edge"
+      },
+      {
+        "path": "crates/featuregraph/tests/golden/features_graph.json",
+        "source": "spec-edge"
+      },
+      {
+        "path": "product/apps/opc/src-tauri/Cargo.toml",
+        "source": "spec-edge"
+      },
+      {
+        "path": "product/apps/opc/src-tauri/examples/e2e_seed_session.rs",
+        "source": "spec-edge"
+      },
+      {
+        "path": "product/apps/opc/src/App.tsx",
+        "source": "spec-edge"
+      },
+      {
+        "path": "product/apps/opc/tests-e2e",
+        "source": "spec-edge"
+      },
+      {
+        "path": "product/apps/opc/tests-e2e/fixtures",
+        "source": "spec-edge"
+      },
+      {
+        "path": "product/apps/opc/tests-e2e/harness",
+        "source": "spec-edge"
+      },
+      {
+        "path": "specs/183-opc-boot-precondition-gate/spec.md",
+        "source": "spec-edge"
+      }
+    ],
+    "resolvedUnits": [
+      {
+        "locations": [
+          {
+            "file": "product/apps/opc/tests-e2e"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "directory",
+          "path": "product/apps/opc/tests-e2e"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "product/apps/opc/tests-e2e/fixtures"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "directory",
+          "path": "product/apps/opc/tests-e2e/fixtures"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "product/apps/opc/tests-e2e/harness"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "directory",
+          "path": "product/apps/opc/tests-e2e/harness"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": ".github/workflows/opc-e2e-nightly.yml"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "file",
+          "path": ".github/workflows/opc-e2e-nightly.yml"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "product/apps/opc/src-tauri/examples/e2e_seed_session.rs"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "file",
+          "path": "product/apps/opc/src-tauri/examples/e2e_seed_session.rs"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "crates/featuregraph/tests/golden/features_graph.json"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "extends",
+        "unit": {
+          "kind": "file",
+          "path": "crates/featuregraph/tests/golden/features_graph.json"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "product/apps/opc/src/App.tsx"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "extends",
+        "unit": {
+          "kind": "file",
+          "path": "product/apps/opc/src/App.tsx"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "product/apps/opc/src-tauri/Cargo.toml"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "refines",
+        "unit": {
+          "kind": "file",
+          "path": "product/apps/opc/src-tauri/Cargo.toml"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "specs/183-opc-boot-precondition-gate/spec.md"
+          }
+        ],
+        "ownership": false,
+        "sourceField": "references",
+        "unit": {
+          "kind": "file",
+          "path": "specs/183-opc-boot-precondition-gate/spec.md"
+        }
+      }
+    ],
+    "specId": "187-opc-e2e-test-harness",
+    "specStatus": "approved"
+  },
+  "schemaVersion": "1.1.0",
+  "shardHash": "77b0758dd890310b38f4510aa31002261b9c49609404adced2ad4ed0b0695bed"
+}

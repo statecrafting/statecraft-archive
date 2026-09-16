@@ -1,0 +1,11 @@
+{
+  "package": {
+    "kind": "npm-workspace",
+    "name": "acme-vue-encore",
+    "path": "",
+    "specRef": "000-bootstrap",
+    "version": "1.0.0"
+  },
+  "schemaVersion": "1.1.0",
+  "shardHash": "a1b70eeda7e2e23c58d7082881b37489463588fbfac0795c11dddeb8cee03515"
+}

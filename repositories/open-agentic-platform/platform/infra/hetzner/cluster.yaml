@@ -1,0 +1,36 @@
+# Hetzner K3s cluster configuration for OAP
+# Prerequisites: brew install vitobotta/tap/hetzner_k3s
+# Usage: hetzner-k3s create --config cluster.yaml
+
+cluster_name: oap-hetzner
+kubeconfig_path: ~/.config/oap/infra/hetzner/kubeconfig
+# region: k3s-version
+k3s_version: v1.33.11+k3s1
+# endregion k3s-version
+
+networking:
+  ssh:
+    port: 22
+    use_agent: false
+    public_key_path: "~/.ssh/id_ed25519_github.pub"
+    private_key_path: "~/.ssh/id_ed25519_github"
+  allowed_networks:
+    ssh:
+      - 0.0.0.0/0
+    api:
+      - 0.0.0.0/0
+  public_network:
+    ipv4: true
+    ipv6: true
+
+masters_pool:
+  instance_type: cx23
+  instance_count: 1
+  locations:
+    - nbg1
+
+worker_node_pools:
+  - name: worker
+    instance_type: cx43
+    instance_count: 1
+    location: nbg1

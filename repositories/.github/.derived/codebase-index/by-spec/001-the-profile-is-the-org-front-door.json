@@ -1,0 +1,66 @@
+{
+  "mapping": {
+    "dependsOn": [
+      "000-bootstrap"
+    ],
+    "implementingPaths": [
+      {
+        "path": "README.md",
+        "source": "spec-edge"
+      },
+      {
+        "path": "profile/README.md",
+        "source": "spec-edge"
+      },
+      {
+        "path": "profile/artifacts/",
+        "source": "spec-edge"
+      }
+    ],
+    "resolvedUnits": [
+      {
+        "locations": [
+          {
+            "file": "profile/artifacts/"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "directory",
+          "path": "profile/artifacts/"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "README.md"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "file",
+          "path": "README.md"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "profile/README.md"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "file",
+          "path": "profile/README.md"
+        }
+      }
+    ],
+    "specId": "001-the-profile-is-the-org-front-door",
+    "specStatus": "approved"
+  },
+  "schemaVersion": "1.1.0",
+  "shardHash": "b142c5e4da2e94a3ea40194c9733238647de07b56a2c6c4986130cc6cb79a872"
+}

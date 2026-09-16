@@ -1,0 +1,85 @@
+{
+  "mapping": {
+    "dependsOn": [
+      "007-encore-ci-cd",
+      "011-workflow-pins-lint",
+      "012-enterprise-actions-governance"
+    ],
+    "implementingPaths": [
+      {
+        "path": ".github/workflows/deploy-dev.yml",
+        "source": "spec-edge"
+      },
+      {
+        "path": ".github/workflows/deploy-prod.yml",
+        "source": "spec-edge"
+      },
+      {
+        "path": ".github/workflows/deploy-reusable.yml",
+        "source": "spec-edge"
+      },
+      {
+        "path": ".github/workflows/deploy-staging.yml",
+        "source": "spec-edge"
+      }
+    ],
+    "resolvedUnits": [
+      {
+        "locations": [
+          {
+            "file": ".github/workflows/deploy-dev.yml"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "file",
+          "path": ".github/workflows/deploy-dev.yml"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": ".github/workflows/deploy-prod.yml"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "file",
+          "path": ".github/workflows/deploy-prod.yml"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": ".github/workflows/deploy-reusable.yml"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "file",
+          "path": ".github/workflows/deploy-reusable.yml"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": ".github/workflows/deploy-staging.yml"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "file",
+          "path": ".github/workflows/deploy-staging.yml"
+        }
+      }
+    ],
+    "specId": "008-container-host-deploy",
+    "specStatus": "approved"
+  },
+  "schemaVersion": "1.1.0",
+  "shardHash": "fca9636342510ab187cf0f26c61bc4f43febe7360ceefc2b3b740f232767e17b"
+}

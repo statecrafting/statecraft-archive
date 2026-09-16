@@ -1,0 +1,62 @@
+# spec-spine.toml — governs this repository.
+#
+# The template is governed by the published `spec-spine` npm package: the
+# spec corpus under specs/ compiles to a deterministic registry, the codebase
+# index maps every spec to the code it owns, and the PR-time coupling gate
+# refuses code that drifts from its owning spec. All keys are optional; this
+# file writes out the template's deviations from the defaults explicitly.
+
+[manifest]
+# Cargo `[package.metadata.spec-spine].spec` / package.json `"spec-spine".spec`
+metadata_namespace = "spec-spine"
+
+[domains]
+# Closed taxonomy: every spec declares one (L-002 enforced via --fail-on-warn).
+allowed = ["governance", "app", "ci-cd", "agentic"]
+
+[kind]
+# Closed taxonomy: every spec declares one (L-003 enforced via --fail-on-warn).
+allowed = ["architecture", "feature", "governance"]
+
+[layout]
+specs_dir     = "specs"
+derived_dir   = ".derived"
+standards_dir = "standards/spec"
+# The npm workspace root (apps/web, apps/web-internal, packages/*).
+npm_workspaces = ["package.json"]
+# apps/api is the standalone Encore app — deliberately outside the npm
+# workspace (Encore owns its install/build lifecycle), so it is declared
+# explicitly for manifest discovery.
+standalone_npm_packages = ["apps/api"]
+
+[index]
+# Hashed governance inputs beyond the always-hashed core (manifests,
+# specs/*/spec.md, this file). `.claude/**` + `.mcp.json` keep quiet edits to
+# the agentic config visible in the staleness gate (spec 015); `.githooks/**`
+# and `tools/lint/**` are governance code the corpus claims.
+extra_hashed_inputs = [
+  "standards/**",
+  ".github/workflows/**",
+  ".github/actions/**",
+  ".claude/**",
+  ".mcp.json",
+  ".githooks/**",
+  "tools/lint/**",
+]
+resolver_exclusions = ["node_modules", ".derived", "dist", "build", ".next", "target"]
+
+[coupling]
+# Additions to the built-in bypass floor (which already covers .github/,
+# docs/, README.md, CODEOWNERS, lockfiles, .derived/, etc.).
+bypass_prefixes = []
+# Dependabot-class PRs pass mechanically (spec-spine 0.2.0, its spec 005
+# §3.5): a diff whose non-bypassed changes are package.json version
+# strings inside dependency tables self-waives, fail-closed on anything
+# else. Paired with 0.2.0 governance-projection hashing (its spec 004
+# §3.5), which keeps dep bumps from staling the committed index.
+auto_waive_dependency_only = true
+waiver_keyword = "Spec-Drift-Waiver:"
+
+[branding]
+compiler_id = "spec-spine"
+indexer_id  = "spec-spine"

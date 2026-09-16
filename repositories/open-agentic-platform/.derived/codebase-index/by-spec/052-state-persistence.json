@@ -1,0 +1,33 @@
+{
+  "mapping": {
+    "implementingPaths": [
+      {
+        "path": "crates/orchestrator",
+        "source": "multiple"
+      },
+      {
+        "path": "crates/run",
+        "source": "manifest-metadata"
+      }
+    ],
+    "resolvedUnits": [
+      {
+        "locations": [
+          {
+            "file": "crates/orchestrator"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "extends",
+        "unit": {
+          "id": "orchestrator",
+          "kind": "crate"
+        }
+      }
+    ],
+    "specId": "052-state-persistence",
+    "specStatus": "approved"
+  },
+  "schemaVersion": "1.1.0",
+  "shardHash": "6d58eb37a59b20f4b63aa82c418cb65ec7e91ddc09e18f8bb39e34afe7301428"
+}

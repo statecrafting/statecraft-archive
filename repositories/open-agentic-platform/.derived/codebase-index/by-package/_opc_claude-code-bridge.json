@@ -1,0 +1,11 @@
+{
+  "package": {
+    "kind": "npm-package",
+    "name": "@opc/claude-code-bridge",
+    "path": "product/packages/claude-code-bridge",
+    "specRef": "045-claude-code-sdk-bridge",
+    "version": "0.1.0"
+  },
+  "schemaVersion": "1.1.0",
+  "shardHash": "906f1ce31a16601dfdef4946f18f017eb08c7d7a8b6ad9032d09b29c0844291b"
+}

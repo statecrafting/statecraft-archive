@@ -1,0 +1,52 @@
+{
+  "record": {
+    "codeAliases": [
+      "ACTIONS_ALLOWLIST"
+    ],
+    "constrains": [
+      {
+        "note": "every `uses:` ref must be an allow-listed publisher and SHA-pinned; no third-party change-filter actions",
+        "target_specs": [
+          "007-encore-ci-cd",
+          "008-container-host-deploy",
+          "009-repo-ci-orchestrator",
+          "010-supply-chain-gates",
+          "013-ai-pr-review"
+        ],
+        "unit": {
+          "kind": "file",
+          "path": ".github/workflows/"
+        }
+      }
+    ],
+    "created": "2026-06-10",
+    "dependsOn": [
+      "011-workflow-pins-lint"
+    ],
+    "domain": "ci-cd",
+    "id": "012-enterprise-actions-governance",
+    "implementation": "complete",
+    "kind": "governance",
+    "owner": "bart",
+    "risk": "low",
+    "sectionHeadings": [
+      "012 — Enterprise Actions governance",
+      "1. Purpose",
+      "2. Territory",
+      "3. Behavior",
+      "FR-01: Allow-listed publishers only",
+      "FR-02: Inline change-routing (no third-party filter action)",
+      "FR-03: Every external ref SHA-pinned",
+      "FR-04: Merge-queue posture",
+      "3.1 Enforcement model",
+      "4. Acceptance criteria",
+      "5. Out of scope"
+    ],
+    "specPath": "specs/012-enterprise-actions-governance/spec.md",
+    "status": "approved",
+    "summary": "The enterprise (EMU) constraint set for GitHub Actions: only allow-listed publishers may execute, so workflows route changes with inline git diff instead of third-party filter actions; every permitted third-party ref is SHA-pinned; the merge_group trigger ships inert until a repo admin enables the merge queue.\n",
+    "title": "Enterprise Actions governance: the GitHub Actions allow-list, inline change-routing, and the merge queue"
+  },
+  "shardHash": "e7af6c29acc1996302a40a13678a270506ec88a1ade98042b1c79a6dc7ff5557",
+  "specVersion": "1.1.0"
+}

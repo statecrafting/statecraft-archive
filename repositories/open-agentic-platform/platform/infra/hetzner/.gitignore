@@ -1,0 +1,6 @@
+kubeconfig
+*.tfstate
+*.tfstate.backup
+.terraform/
+.env
+mirrord/.statecraft.env

@@ -1,0 +1,48 @@
+{
+  "diagnostics": {
+    "errors": [],
+    "warnings": [
+      {
+        "code": "W-002",
+        "message": "spec '074-factory-ingestion' directory unit 'factory' is not a directory",
+        "path": "factory"
+      }
+    ]
+  },
+  "mapping": {
+    "implementingPaths": [
+      {
+        "path": "crates/factory-contracts",
+        "source": "multiple"
+      }
+    ],
+    "resolvedUnits": [
+      {
+        "locations": [
+          {
+            "file": "crates/factory-contracts"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "id": "factory-contracts",
+          "kind": "crate"
+        }
+      },
+      {
+        "locations": [],
+        "ownership": false,
+        "sourceField": "references",
+        "unit": {
+          "kind": "directory",
+          "path": "factory"
+        }
+      }
+    ],
+    "specId": "074-factory-ingestion",
+    "specStatus": "approved"
+  },
+  "schemaVersion": "1.1.0",
+  "shardHash": "10a9b1dba4a62224ae53fe19b7cfa0740ef2671e9e3d84783a18ac1de180a5af"
+}

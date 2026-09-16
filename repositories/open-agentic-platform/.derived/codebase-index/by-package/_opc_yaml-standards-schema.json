@@ -1,0 +1,11 @@
+{
+  "package": {
+    "kind": "npm-package",
+    "name": "@opc/yaml-standards-schema",
+    "path": "product/packages/yaml-standards-schema",
+    "specRef": "055-yaml-standards-schema",
+    "version": "0.1.0"
+  },
+  "schemaVersion": "1.1.0",
+  "shardHash": "dfac1ed35ebb198d9f798613371b051a188d766d9ed785f8bb6fcf06ebe9706b"
+}

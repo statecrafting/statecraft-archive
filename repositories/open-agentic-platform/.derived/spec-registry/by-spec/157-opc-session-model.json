@@ -1,0 +1,85 @@
+{
+  "record": {
+    "codeAliases": [
+      "OPC_SESSION_MODEL"
+    ],
+    "created": "2026-05-22",
+    "dependsOn": [
+      "045-claude-code-sdk-bridge"
+    ],
+    "domain": "opc",
+    "establishes": [
+      {
+        "id": "opc::commands::claude::list_projects",
+        "kind": "symbol"
+      },
+      {
+        "id": "opc::commands::claude::get_project_sessions",
+        "kind": "symbol"
+      },
+      {
+        "id": "opc::commands::claude::decode_project_path",
+        "kind": "symbol"
+      },
+      {
+        "id": "opc::commands::claude::get_project_path_from_sessions",
+        "kind": "symbol"
+      }
+    ],
+    "extraFrontmatter": {
+      "approved": "2026-05-22",
+      "slug": "opc-session-model"
+    },
+    "id": "157-opc-session-model",
+    "implementation": "complete",
+    "kind": "governance",
+    "owner": "bart",
+    "references": [
+      {
+        "role": "implementation-witness",
+        "unit": {
+          "kind": "file",
+          "path": "product/apps/opc/src/stores/sessionStore.ts"
+        }
+      },
+      {
+        "role": "analogous-pattern",
+        "unit": {
+          "kind": "file",
+          "path": "specs/099-workspace-scoped-persistence/spec.md"
+        }
+      },
+      {
+        "role": "complementary-mechanism",
+        "unit": {
+          "kind": "file",
+          "path": "specs/095-checkpoint-branch-of-thought/spec.md"
+        }
+      }
+    ],
+    "risk": "low",
+    "sectionHeadings": [
+      "157 — OPC session model",
+      "1. Problem",
+      "2. Decision",
+      "3. The session model",
+      "3.1 Filesystem layout",
+      "3.2 Many sessions per project",
+      "3.3 JSONL content is normative for project identity",
+      "3.4 OPC project identity vs statecraft project identity",
+      "4. Non-disambiguating-by-design",
+      "5. Compliance",
+      "6. Scope",
+      "In scope (this spec)",
+      "Out of scope (and intentionally so)",
+      "7. Acceptance",
+      "8. Cross-references"
+    ],
+    "specPath": "specs/157-opc-session-model/spec.md",
+    "status": "approved",
+    "summary": "OPC's session model has been operating since the desktop app shipped: Claude Code's own filesystem-backed JSONL session history is the source of truth, surfaced to the desktop UI via four Tauri commands in `product/apps/opc/src-tauri/src/commands/claude.rs` (`list_projects`, `get_project_sessions`, `decode_project_path`, `get_project_path_from_sessions`). The discipline that emerges from this surface — many sessions per project path, project identity by *filesystem path* rather than statecraft project UUID, JSONL content authoritative over the encoded directory name, non-disambiguating across developers by design — has had no spec authority until now.\nThis spec formalises the discipline. No code changes ride on the spec landing; the four named symbols already exist and exhibit the documented behaviour. What lands is symbol-level spec authority over the session-model protocol, alongside spec 045's pre-existing file-level claim on `claude.rs` for the broader Claude Code SDK bridge surface — spec 154 §6's authority function resolves the layered ownership cleanly. The design choice that the layout is *non-disambiguating across developers* is stated affirmatively, not apologetically: OPC inherits Claude Code's own session model and any disambiguation surface is a separable concern owned by a later spec.\n",
+    "title": "OPC session model — multi-session-per-project-path, JSONL-authoritative"
+  },
+  "shardHash": "0c52d6f39266197661ef0fc24bad09b1fed149531becc51b944dbf66ddef0c2e",
+  "specVersion": "1.1.0"
+}

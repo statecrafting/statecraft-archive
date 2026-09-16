@@ -1,0 +1,153 @@
+{
+  "record": {
+    "amendmentRecord": "self-amended (2026-06-12) — comparison-model correction, implementation PR.\nA full file-by-file diff against the pinned ref (factory@cc1139f)\nfalsified the original FIELD-LEVEL structural-parity premise for three of\nthe ten lockstep files: adapter-manifest.schema.yaml is adapter-specialised\nby design (spec 197 FR-007 explicitly scoped its richer command/convention\nset out), and build-spec.schema.yaml + stage-outputs/sitemap.schema.json\ncarry factory-side ADDITIVE evolution (workspace_id, the larger page_type\ncatalog). Spec 197 AC-8 only verified the narrow 1.1.0 delta\n(provisioning_model + implementation_status), not whole-file parity.\n§\"Semantic diff\", §\"The lockstep set\", FR-001, AC-1, AC-2 are rewritten to a\nthree-mode comparison (exact parity / directional floor / section-scoped\ndirectional floor) that is true at the pin and still falsifiable. Adds\npinned_ref and the establishes: edges for the tool + two lanes + fixtures.\nimplementation flipped pending → in-progress.\n\nself-amended (2026-06-12, second) — dual_stack joins the section scope;\nimplementation closes. A live OPC adapter-load failure proved dual_stack is\ncross-repo contract surface, not an adapter-determined detail: OAP's mirror\n(and its Rust parser + consumer) sat on the legacy stack model\n(audience_to_stack/stacks) while factory's manifest had moved to the\nvariant model (audience_to_variant/variants) — drift the gate could not see\nbecause §\"The lockstep set\" excluded dual_stack from the section-scoped\ncompare. PR #344 realigned all three OAP artifacts to the variant model;\nthis amendment widens the gate's adapter-manifest scope to {schema_version,\ngovernance, dual_stack} so that drift class fails CI from now on.\n§\"The lockstep set\", FR-001, and AC-2(c) are updated in lockstep with the\ntool's include_top_keys. implementation flipped in-progress → complete\n(evidence in §Implementation log).\n\nself-amended (2026-06-23, third): pin bump + name-agnostic reshape. The\nupstream contract source was rebuilt clean-room and the\nUPSTREAM_FACTORY_SOURCE variable repointed (2026-06-21); pinned_ref moves\ncc1139f -> 427f499, the current upstream contract commit, re-verified in\nlockstep here (parity holds on every mode). The spec's live-mechanism prose\nis de-named: repo identity (org-qualified paths, repo@ref syntax) is\noperational config resolved from UPSTREAM_FACTORY_SOURCE, not spec truth, so\na future rename is a zero-spec-edit variable flip and only a clean-room\ncontent change bumps the pin (this one). Adds §\"Upstream source identity is\noperational, not spec truth\". Five stage-output schema titles are\nde-em-dashed (em-dash to hyphen) to restore exact parity with the upstream\nmirror and clear a house-style violation; no contract-shape change. Dated\nhistorical verification notes (@cc1139f) are left intact as records.\n\nself-amended (2026-07-08, fourth): pin bump for the spec 210 agentic_posture\ncontract mirror. OAP's build-spec.schema.yaml gains the top-level\nagentic_posture object (spec 210 FR-001, schema 1.1.0 -> 1.2.0), a Floor-mode\nfile, so the upstream factory contract must mirror it; factory-encore#21 adds\nthe same field + version bump. pinned_ref moves 427f499 -> a87daf6, the\nupstream commit carrying the mirror, re-verified in lockstep here (Floor\nparity holds on every mode). No lockstep-set or compare-mode change.\n",
+    "authors": [
+      "open-agentic-platform"
+    ],
+    "coAuthority": [
+      {
+        "unit": {
+          "anchor": "factory-schema-lockstep",
+          "file": "Makefile",
+          "kind": "section"
+        },
+        "with_specs": [
+          "104-makefile-ci-parity-contract"
+        ]
+      }
+    ],
+    "codeAliases": [
+      "FACTORY_SCHEMA_LOCKSTEP_CI"
+    ],
+    "created": "2026-06-11",
+    "domain": "tooling",
+    "establishes": [
+      {
+        "kind": "directory",
+        "path": "tools/oap/factory-schema-lockstep"
+      },
+      {
+        "kind": "file",
+        "path": ".github/workflows/ci-factory-schema-lockstep.yml"
+      },
+      {
+        "kind": "file",
+        "path": ".github/workflows/ci-factory-schema-lockstep-cron.yml"
+      },
+      {
+        "kind": "file",
+        "path": "tools/oap/ci-parity-check/tests/fixtures/aligned/.github/workflows/ci-factory-schema-lockstep.yml"
+      },
+      {
+        "kind": "file",
+        "path": "tools/oap/ci-parity-check/tests/fixtures/divergent/.github/workflows/ci-factory-schema-lockstep.yml"
+      }
+    ],
+    "extends": [
+      {
+        "nature": "additive",
+        "spec": "177-ci-orchestrator-pr-gate",
+        "unit": {
+          "kind": "file",
+          "path": ".github/workflows/ci.yml"
+        }
+      },
+      {
+        "nature": "additive",
+        "spec": "104-makefile-ci-parity-contract",
+        "unit": {
+          "kind": "file",
+          "path": "tools/oap/ci-parity-check/src/lib.rs"
+        }
+      },
+      {
+        "nature": "additive",
+        "spec": "104-makefile-ci-parity-contract",
+        "unit": {
+          "kind": "file",
+          "path": "tools/oap/ci-parity-check/tests/fixtures/aligned/Makefile"
+        }
+      },
+      {
+        "nature": "additive",
+        "spec": "034-featuregraph-registry-scanner-fix",
+        "unit": {
+          "kind": "file",
+          "path": "crates/featuregraph/tests/golden/features_graph.json"
+        }
+      }
+    ],
+    "extraFrontmatter": {
+      "amended": "2026-06-23",
+      "compliance": [
+        {
+          "controls": [
+            "ASI07"
+          ],
+          "framework": "owasp-asi-2026"
+        }
+      ],
+      "language": "en",
+      "pinned_ref": "a87daf6f642cc16ff3c40937019a27c3fe2d55dc"
+    },
+    "featureBranch": "feat/212-factory-schema-lockstep-ci",
+    "id": "212-factory-schema-lockstep-ci",
+    "implementation": "complete",
+    "kind": "governance",
+    "references": [
+      {
+        "role": "gate-declaration",
+        "unit": {
+          "kind": "file",
+          "path": "specs/197-factory-contract-open-standard-extensions/spec.md"
+        }
+      },
+      {
+        "role": "context",
+        "unit": {
+          "kind": "directory",
+          "path": "standards/schemas/factory"
+        }
+      },
+      {
+        "role": "context",
+        "unit": {
+          "kind": "directory",
+          "path": "tools/oap/schema-parity-check"
+        }
+      },
+      {
+        "role": "historical",
+        "unit": {
+          "kind": "directory",
+          "path": "factory"
+        }
+      }
+    ],
+    "sectionHeadings": [
+      "Feature Specification: Factory Schema Lockstep CI",
+      "Purpose",
+      "Why not extend the existing schema-parity-check (§4 of the design)",
+      "Key design positions",
+      "Upstream source identity is operational, not spec truth",
+      "Pin source — two lanes (committed pin + cron against main)",
+      "Fetch auth — authenticated cross-org fetch, PAT secret",
+      "Semantic diff — three comparison modes, not one",
+      "The lockstep set — per-file modes (and the Tier-B gap)",
+      "The lockstep route (PR-lane trigger)",
+      "Spec-197-FR-005 GoA-concept guard — denylist token scan, both surfaces",
+      "Free-disk-space composite — not needed (recorded)",
+      "Functional requirements (sketch — refine before implementation)",
+      "Acceptance criteria (sketch)",
+      "Out of scope",
+      "Sequencing",
+      "Implementation log"
+    ],
+    "specPath": "specs/212-factory-schema-lockstep-ci/spec.md",
+    "status": "approved",
+    "summary": "Spec 197 declares the factory Build Spec an open standard that the owned upstream source mirrors, and spec 197 AC-8 / spec 198 both verified that mirror BY HAND (\"verified directly against factory origin/main @ cc1139f\"). A hand diff is not a gate: the next upstream-source edit, or the next OAP schema bump, can silently diverge the two contract surfaces and nothing fails. This spec automates the lockstep: an OAP-side enforcing CI job that fetches the configured upstream source's contract/schemas/** at a committed pin and asserts structural agreement against standards/schemas/factory/** under a three-mode comparison (exact parity for the shared surface; a directional floor where OAP fields must persist on the upstream side but upstream additions pass; a section-scoped floor for the adapter-specialised manifest). Byte-equality is impossible: the surfaces carry divergent comments, additive evolution, and adapter-specific sections by design. A spec-197 FR-005 guard additionally asserts no GoA-specific concept entered either contract surface. Two lanes: a PR-time check against the committed pin, and a scheduled check against the upstream source @ main that catches upstream drift the pin hasn't yet absorbed. The upstream source stays gate-free (spec_spine: false); enforcement is unidirectional, OAP-side.\n",
+    "title": "Factory Schema Lockstep CI (cross-repo contract parity, automated)"
+  },
+  "shardHash": "1c0324c590cd7a2ea8b86d8434374512e4e95b66200df8fb66595717055a297f",
+  "specVersion": "1.1.0"
+}

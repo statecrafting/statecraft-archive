@@ -1,0 +1,123 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "oauth2-proxy-gate.fullname" . }}
+  labels:
+    {{- include "oauth2-proxy-gate.labels" . | nindent 4 }}
+spec:
+  replicas: {{ .Values.replicaCount }}
+  strategy:
+    type: RollingUpdate
+  selector:
+    matchLabels:
+      {{- include "oauth2-proxy-gate.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      labels:
+        {{- include "oauth2-proxy-gate.selectorLabels" . | nindent 8 }}
+        {{- with .Values.podLabels }}
+        {{- toYaml . | nindent 8 }}
+        {{- end }}
+      annotations:
+        # Force restart on Secret/ConfigMap content change so updated
+        # allowlist + secret rotation propagate without an explicit
+        # `kubectl rollout restart`.
+        oap.gate/secret-revision: {{ include (print $.Template.BasePath "/secret.yaml") . | sha256sum }}
+        {{- if .Values.allowlist.emails }}
+        oap.gate/allowlist-revision: {{ include (print $.Template.BasePath "/configmap.yaml") . | sha256sum }}
+        {{- end }}
+        {{- with .Values.podAnnotations }}
+        {{- toYaml . | nindent 8 }}
+        {{- end }}
+    spec:
+      serviceAccountName: {{ include "oauth2-proxy-gate.serviceAccountName" . }}
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      securityContext:
+        {{- toYaml .Values.podSecurityContext | nindent 8 }}
+      containers:
+        - name: oauth2-proxy
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          securityContext:
+            {{- toYaml .Values.containerSecurityContext | nindent 12 }}
+          args:
+            - --provider=oidc
+            - --oidc-issuer-url={{ required "rauthy.issuerUrl is required" .Values.rauthy.issuerUrl }}
+            - --client-id={{ required "rauthy.clientId is required" .Values.rauthy.clientId }}
+            - --client-secret-file=/secrets/client-secret
+            - --cookie-secret-file=/secrets/cookie-secret
+            - --cookie-name=_oap_gate
+            - --cookie-secure=true
+            - --cookie-httponly=true
+            - --http-address=0.0.0.0:{{ .Values.service.port }}
+            - --reverse-proxy=true
+            - --whitelist-domain={{ required "tenant.host is required" .Values.tenant.host }}
+            - --redirect-url=https://{{ .Values.tenant.host }}/oauth2/callback
+            # `static://200` makes oauth2-proxy serve its own auth endpoints
+            # (/oauth2/auth, /oauth2/sign_in, /oauth2/callback, /oauth2/sign_out)
+            # without proxying anywhere — ingress-nginx auth-url uses /oauth2/auth
+            # to gate the real tenant request; the tenant Service handles the
+            # actual application traffic. Static upstreams keep this Deployment
+            # stateless and unaware of the tenant.
+            - --upstream=static://200
+            - --scope={{ .Values.rauthy.scopes }}
+            - --skip-provider-button=false
+            # Spec 137 FR-005 — defense-in-depth allowlist at the proxy layer.
+            # Rauthy still enforces the primary identity check at the OIDC layer.
+            {{- if .Values.allowlist.emails }}
+            - --authenticated-emails-file=/etc/oauth2-proxy/allowlist/emails
+            {{- end }}
+            {{- range .Values.allowlist.domains }}
+            - --email-domain={{ . }}
+            {{- end }}
+            {{- if and (not .Values.allowlist.domains) (not .Values.allowlist.emails) }}
+              {{- if .Values.allowlist.trustRauthyOnly }}
+            # Explicit opt-out (allowlist.trustRauthyOnly=true): operator has
+            # confirmed Rauthy's own Auth Provider already enforces the
+            # allowlist upstream (e.g. Google Workspace org-restricted). This
+            # is the only path that may render --email-domain=*.
+            - --email-domain=*
+              {{- else }}
+                {{- fail "oauth2-proxy-gate: no allowlist configured (allowlist.emails and allowlist.domains are both empty). Set one of them, or set allowlist.trustRauthyOnly=true to explicitly opt into Rauthy-only enforcement. Refusing to default to an open gate (--email-domain=*)." }}
+              {{- end }}
+            {{- end }}
+          ports:
+            - name: http
+              containerPort: {{ .Values.service.port }}
+              protocol: TCP
+          readinessProbe:
+            {{- toYaml .Values.readinessProbe | nindent 12 }}
+          livenessProbe:
+            {{- toYaml .Values.livenessProbe | nindent 12 }}
+          {{- with .Values.resources }}
+          resources:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          volumeMounts:
+            - name: secrets
+              mountPath: /secrets
+              readOnly: true
+            {{- if .Values.allowlist.emails }}
+            - name: allowlist
+              mountPath: /etc/oauth2-proxy/allowlist
+              readOnly: true
+            {{- end }}
+            # oauth2-proxy writes nothing to disk at runtime, but Go's
+            # net/http occasionally wants a writable tmp; keep an emptyDir
+            # mount so readOnlyRootFilesystem stays clean.
+            - name: tmp
+              mountPath: /tmp
+      volumes:
+        - name: secrets
+          secret:
+            secretName: {{ include "oauth2-proxy-gate.secretName" . }}
+        {{- if .Values.allowlist.emails }}
+        - name: allowlist
+          configMap:
+            name: {{ include "oauth2-proxy-gate.configMapName" . }}
+        {{- end }}
+        - name: tmp
+          emptyDir: {}

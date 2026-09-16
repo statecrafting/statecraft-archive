@@ -1,0 +1,32 @@
+{
+  "mapping": {
+    "dependsOn": [
+      "000-bootstrap"
+    ],
+    "implementingPaths": [
+      {
+        "path": "README.md",
+        "source": "spec-edge"
+      }
+    ],
+    "resolvedUnits": [
+      {
+        "locations": [
+          {
+            "file": "README.md"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "file",
+          "path": "README.md"
+        }
+      }
+    ],
+    "specId": "001-statecraft-thesis",
+    "specStatus": "approved"
+  },
+  "schemaVersion": "1.1.0",
+  "shardHash": "678d7c4d66b1b48d6756d28b3f6596868e47ea618a7bf11cc5b9f64d386df484"
+}

@@ -1,0 +1,52 @@
+{
+  "mapping": {
+    "amends": [
+      "139-factory-artifact-substrate"
+    ],
+    "dependsOn": [
+      "139-factory-artifact-substrate"
+    ],
+    "implementingPaths": [
+      {
+        "path": "platform/services/statecraft/api/db/schema.ts",
+        "source": "spec-edge"
+      },
+      {
+        "path": "platform/services/statecraft/vite.config.ts",
+        "source": "spec-edge"
+      }
+    ],
+    "resolvedUnits": [
+      {
+        "locations": [
+          {
+            "file": "platform/services/statecraft/api/db/schema.ts"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "extends",
+        "unit": {
+          "kind": "file",
+          "path": "platform/services/statecraft/api/db/schema.ts"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "platform/services/statecraft/vite.config.ts"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "extends",
+        "unit": {
+          "kind": "file",
+          "path": "platform/services/statecraft/vite.config.ts"
+        }
+      }
+    ],
+    "specId": "142-factory-id-columns-text-cutover",
+    "specStatus": "approved"
+  },
+  "schemaVersion": "1.1.0",
+  "shardHash": "b26531c6a82eaf6e0b5a8d677eeadafd4f6064b6ca5bebb866cfe4c6d73e3bb4"
+}

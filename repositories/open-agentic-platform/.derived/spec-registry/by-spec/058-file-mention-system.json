@@ -1,0 +1,67 @@
+{
+  "record": {
+    "authors": [
+      "open-agentic-platform"
+    ],
+    "codeAliases": [
+      "FILE_MENTION"
+    ],
+    "created": "2026-03-29",
+    "domain": "opc",
+    "establishes": [
+      {
+        "kind": "directory",
+        "path": "product/packages/file-mention"
+      }
+    ],
+    "extraFrontmatter": {
+      "language": "en"
+    },
+    "featureBranch": "058-file-mention-system",
+    "id": "058-file-mention-system",
+    "implementation": "complete",
+    "kind": "ui",
+    "references": [
+      {
+        "role": "historical",
+        "unit": {
+          "kind": "file",
+          "path": "product/apps/opc/src/components/FileMentionAutocomplete.tsx"
+        }
+      },
+      {
+        "role": "historical",
+        "unit": {
+          "kind": "file",
+          "path": "product/apps/opc/src/lib/fileMentionSystem.ts"
+        }
+      }
+    ],
+    "sectionHeadings": [
+      "Feature Specification: @-Mention Autocomplete for Files and Agents",
+      "Purpose",
+      "Scope",
+      "In scope",
+      "Out of scope",
+      "Requirements",
+      "Functional",
+      "Non-functional",
+      "Architecture",
+      "Mention candidate types",
+      "Fuzzy match engine",
+      "Composer integration",
+      "Package structure",
+      "Interaction flow",
+      "Implementation approach",
+      "Success criteria",
+      "Dependencies",
+      "Risk"
+    ],
+    "specPath": "specs/058-file-mention-system/spec.md",
+    "status": "approved",
+    "summary": "Autocomplete system for the chat composer that triggers on \"@\" to let users mention project files or target specific agents. Fetches the project file tree, flattens it to a searchable list, applies fuzzy filtering as the user types, and presents a keyboard-navigable dropdown. Agent @mentions route the message to the selected agent.\n",
+    "title": "@-Mention Autocomplete for Files and Agents"
+  },
+  "shardHash": "7e37215583f0c17dcdfe557bff3685aeaf6c33c174c99e3885594f35a64d708a",
+  "specVersion": "1.1.0"
+}

@@ -1,0 +1,9 @@
+{
+  "mapping": {
+    "implementingPaths": [],
+    "specId": "040-blockoli-semantic-search-wiring",
+    "specStatus": "superseded"
+  },
+  "schemaVersion": "1.1.0",
+  "shardHash": "85111c569a487d1295affa55f3d52233288e829ea64ccc74ceaf10bd88b76d99"
+}

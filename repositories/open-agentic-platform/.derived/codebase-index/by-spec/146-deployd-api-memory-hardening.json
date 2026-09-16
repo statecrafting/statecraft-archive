@@ -1,0 +1,55 @@
+{
+  "mapping": {
+    "dependsOn": [
+      "073-axiomregent-unification",
+      "143-presigned-upload-public-endpoint"
+    ],
+    "implementingPaths": [
+      {
+        "path": "platform/charts/deployd-api/values.yaml",
+        "source": "spec-edge"
+      },
+      {
+        "path": "platform/services/statecraft/test/spec146-deployd-memory.config.test.ts",
+        "source": "spec-edge"
+      }
+    ],
+    "resolvedUnits": [
+      {
+        "locations": [
+          {
+            "file": "platform/services/statecraft/test/spec146-deployd-memory.config.test.ts"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "file",
+          "path": "platform/services/statecraft/test/spec146-deployd-memory.config.test.ts"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "platform/charts/deployd-api/values.yaml",
+            "span": {
+              "endLine": 61,
+              "startLine": 50
+            }
+          }
+        ],
+        "ownership": true,
+        "sourceField": "co_authority",
+        "unit": {
+          "anchor": "resources",
+          "file": "platform/charts/deployd-api/values.yaml",
+          "kind": "section"
+        }
+      }
+    ],
+    "specId": "146-deployd-api-memory-hardening",
+    "specStatus": "approved"
+  },
+  "schemaVersion": "1.1.0",
+  "shardHash": "2d1e29e61744324d717e3b8b3a06f1834d8e4e1aed8e0899afd0e3827e1cd57c"
+}

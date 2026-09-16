@@ -1,0 +1,12 @@
+{
+  "package": {
+    "edition": "2024",
+    "kind": "rust-lib",
+    "name": "agent-frontmatter",
+    "path": "crates/agent-frontmatter",
+    "specRef": "054-agent-frontmatter-schema",
+    "version": "0.1.0"
+  },
+  "schemaVersion": "1.1.0",
+  "shardHash": "4ea9243ffa6b4df107ca428341b763520c360d198c22255feaee0a89ea914d8c"
+}

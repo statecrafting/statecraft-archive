@@ -1,0 +1,36 @@
+[package]
+name = "open_agentic_code_index_enrich"
+publish = false   # OAP-internal CI artifact; never shipped via release-tools.yml
+version = "0.1.0"
+edition = "2024"
+description = "OAP-side enricher for the generic codebase index: walks factory/adapters, .claude/{agents,commands,rules,schemas}, .github/workflows, emits index-oap.json with Layers 3-5 overlaid on Layers 1-2"
+rust-version = "1.85"
+
+[[bin]]
+name = "oap-code-index-enrich"
+path = "src/main.rs"
+
+[lib]
+name = "open_agentic_code_index_enrich"
+path = "src/lib.rs"
+
+[dependencies]
+clap = { version = "4", features = ["derive"] }
+# Spec 217 engine swap: read the committed index shards (by-spec/by-package)
+# via the published spec-spine library, replacing the in-tree codebase-indexer.
+# default-features=false drops the symbol-resolution tree-sitter dep (the read
+# path needs no symbol resolution; avoids the xray 0.26 `links` clash).
+spec-spine-core = { version = "0.10.0", default-features = false }
+spec-spine-types = "0.10.0"
+open_agentic_spec_types = { path = "../../shared/spec-types" }
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+serde_yaml = "0.9"
+toml = "0.8"
+walkdir = "2"
+
+[dev-dependencies]
+tempfile = "3.27.0"
+
+[package.metadata.oap]
+spec = "101-codebase-index-mvp"

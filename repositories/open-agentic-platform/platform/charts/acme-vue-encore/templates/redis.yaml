@@ -1,0 +1,136 @@
+{{- if .Values.previewRedis.enabled -}}
+{{- /* Spec 227 FR-005: opt-in preview-grade Redis, the previewDatabase
+       mirror for the cache resource. Single replica, no HA, no persistence
+       (pure in-memory cache: --save "" + --appendonly no), so
+       readOnlyRootFilesystem is safe. The password is generated once and
+       reused across upgrades via `lookup` so app pods keep authenticating
+       after a redeploy. Explicitly NOT production-grade: non-development
+       environments supply an external Redis endpoint as runtime env instead
+       (deployd never provisions Redis for them). */ -}}
+{{- $redisName := include "acme-vue-encore.redisName" . -}}
+{{- $existing := lookup "v1" "Secret" .Release.Namespace $redisName -}}
+{{- $password := "" -}}
+{{- if and $existing $existing.data (hasKey $existing.data "REDIS_PASSWORD") -}}
+{{- $password = index $existing.data "REDIS_PASSWORD" | b64dec -}}
+{{- else -}}
+{{- $password = randAlphaNum 24 -}}
+{{- end -}}
+apiVersion: v1
+kind: Secret
+metadata:
+  name: {{ $redisName }}
+  labels:
+    {{- include "acme-vue-encore.labels" . | nindent 4 }}
+    app.kubernetes.io/component: redis
+type: Opaque
+stringData:
+  REDIS_PASSWORD: {{ $password | quote }}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ $redisName }}
+  labels:
+    {{- include "acme-vue-encore.labels" . | nindent 4 }}
+    app.kubernetes.io/component: redis
+spec:
+  type: ClusterIP
+  ports:
+    - port: 6379
+      targetPort: redis
+      protocol: TCP
+      name: redis
+  selector:
+    {{- include "acme-vue-encore.selectorLabels" . | nindent 4 }}
+    app.kubernetes.io/component: redis
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ $redisName }}
+  labels:
+    {{- include "acme-vue-encore.labels" . | nindent 4 }}
+    app.kubernetes.io/component: redis
+spec:
+  replicas: 1
+  # Recreate: a single-replica cache with no persistence has no reason to run
+  # two pods side by side during a rollout.
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      {{- include "acme-vue-encore.selectorLabels" . | nindent 6 }}
+      app.kubernetes.io/component: redis
+  template:
+    metadata:
+      labels:
+        {{- include "acme-vue-encore.selectorLabels" . | nindent 8 }}
+        app.kubernetes.io/component: redis
+    spec:
+      # No K8s API access needed for a plain Redis pod.
+      automountServiceAccountToken: false
+      securityContext:
+        runAsNonRoot: true
+        # redis:*-alpine ships the built-in "redis" user, uid/gid 999.
+        runAsUser: 999
+        runAsGroup: 999
+        fsGroup: 999
+        seccompProfile:
+          type: RuntimeDefault
+      containers:
+        - name: redis
+          image: {{ .Values.previewRedis.image | quote }}
+          imagePullPolicy: IfNotPresent
+          securityContext:
+            allowPrivilegeEscalation: false
+            # Persistence is disabled below, so the root filesystem is read-only.
+            readOnlyRootFilesystem: true
+            capabilities:
+              drop:
+                - ALL
+          command:
+            - redis-server
+          # --requirepass reads the generated secret via the REDIS_PASSWORD
+          # container env below (K8s expands $(REDIS_PASSWORD) in args). The
+          # password appears in the pod's argv, which is acceptable for a
+          # network-isolated dev preview; production supplies an external Redis
+          # endpoint instead. --save "" + --appendonly no keep it a pure
+          # in-memory cache (no disk writes, hence readOnlyRootFilesystem).
+          args:
+            - --requirepass
+            - $(REDIS_PASSWORD)
+            - --save
+            - ""
+            - --appendonly
+            - "no"
+          env:
+            - name: REDIS_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ $redisName }}
+                  key: REDIS_PASSWORD
+            # redis-cli reads REDISCLI_AUTH automatically, so the readiness
+            # probe authenticates without putting the password on its argv.
+            - name: REDISCLI_AUTH
+              valueFrom:
+                secretKeyRef:
+                  name: {{ $redisName }}
+                  key: REDIS_PASSWORD
+          ports:
+            - name: redis
+              containerPort: 6379
+              protocol: TCP
+          {{- with .Values.previewRedis.resources }}
+          resources:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          readinessProbe:
+            exec:
+              command:
+                - redis-cli
+                - ping
+            initialDelaySeconds: 5
+            periodSeconds: 10
+            timeoutSeconds: 3
+            failureThreshold: 6
+{{- end -}}

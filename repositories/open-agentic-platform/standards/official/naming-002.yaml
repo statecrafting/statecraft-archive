@@ -1,0 +1,38 @@
+id: naming-002
+category: naming
+priority: medium
+context: >
+  Applies to file and directory naming in TypeScript and JavaScript projects.
+  Consistent file naming enables predictable imports and simplifies glob
+  patterns for tooling.
+tags:
+  - typescript
+  - javascript
+  - naming
+  - files
+
+rules:
+  - verb: ALWAYS
+    subject: "use kebab-case for file and directory names"
+    rationale: >
+      kebab-case avoids case-sensitivity issues across operating systems
+      (macOS is case-insensitive by default, Linux is not). It also
+      produces clean, readable URLs when files are served statically.
+
+  - verb: ALWAYS
+    subject: "suffix test files with .test.ts or .spec.ts"
+    rationale: >
+      Consistent test file suffixes enable test runners to discover tests
+      via glob patterns without explicit configuration.
+
+  - verb: NEVER
+    subject: "use spaces or special characters in file names"
+    rationale: >
+      Spaces and special characters require quoting in shell commands and
+      break many build tools and scripts.
+
+anti_patterns:
+  - pattern: "UserProfile.ts"
+    correction: "user-profile.ts"
+  - pattern: "my component.tsx"
+    correction: "my-component.tsx"

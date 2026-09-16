@@ -1,0 +1,121 @@
+{
+  "mapping": {
+    "amends": [
+      "116-supply-chain-policy-gates"
+    ],
+    "dependsOn": [
+      "116-supply-chain-policy-gates",
+      "104-makefile-ci-parity-contract"
+    ],
+    "implementingPaths": [
+      {
+        "path": ".githooks/pre-commit",
+        "source": "spec-edge"
+      },
+      {
+        "path": ".github/workflows/ci-supply-chain.yml",
+        "source": "spec-edge"
+      },
+      {
+        "path": "tools/lint/tests/fixtures/failing/action.yml",
+        "source": "spec-edge"
+      },
+      {
+        "path": "tools/lint/tests/fixtures/passing/action.yml",
+        "source": "spec-edge"
+      },
+      {
+        "path": "tools/lint/workflow-pins-test.sh",
+        "source": "spec-edge"
+      },
+      {
+        "path": "tools/lint/workflow-pins.sh",
+        "source": "spec-edge"
+      }
+    ],
+    "resolvedUnits": [
+      {
+        "locations": [
+          {
+            "file": "tools/lint/tests/fixtures/failing/action.yml"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "file",
+          "path": "tools/lint/tests/fixtures/failing/action.yml"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "tools/lint/tests/fixtures/passing/action.yml"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "file",
+          "path": "tools/lint/tests/fixtures/passing/action.yml"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "tools/lint/workflow-pins-test.sh"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "file",
+          "path": "tools/lint/workflow-pins-test.sh"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "tools/lint/workflow-pins.sh"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "file",
+          "path": "tools/lint/workflow-pins.sh"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": ".githooks/pre-commit"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "refines",
+        "unit": {
+          "kind": "file",
+          "path": ".githooks/pre-commit"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": ".github/workflows/ci-supply-chain.yml"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "refines",
+        "unit": {
+          "kind": "file",
+          "path": ".github/workflows/ci-supply-chain.yml"
+        }
+      }
+    ],
+    "specId": "158-workflow-ref-sha-pinning-lint",
+    "specStatus": "approved"
+  },
+  "schemaVersion": "1.1.0",
+  "shardHash": "00601bd0ddd5101e9ccf13a1b71f2f14c5e20b3236930d7445381d3a16cab919"
+}

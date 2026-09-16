@@ -1,0 +1,110 @@
+{
+  "record": {
+    "authors": [
+      "open-agentic-platform"
+    ],
+    "codeAliases": [
+      "TENANT_TAIL",
+      "TENANT_TAIL_VERIFIER_TOOLKIT"
+    ],
+    "created": "2026-06-16",
+    "dependsOn": [
+      "102-governed-excellence",
+      "168-per-project-governance-certificate",
+      "198-factory-governance-envelope",
+      "170-signed-inter-stage-manifests",
+      "121-claim-provenance-enforcement"
+    ],
+    "domain": "platform",
+    "extends": [
+      {
+        "nature": "additive",
+        "spec": "034-featuregraph-registry-scanner-fix",
+        "unit": {
+          "kind": "file",
+          "path": "crates/featuregraph/tests/golden/features_graph.json"
+        }
+      }
+    ],
+    "extraFrontmatter": {
+      "compliance": [
+        {
+          "controls": [
+            "ASI04"
+          ],
+          "framework": "owasp-asi-2026"
+        }
+      ],
+      "language": "en"
+    },
+    "featureBranch": "feat/219-tenant-tail-verifier-toolkit",
+    "id": "219-tenant-tail-verifier-toolkit",
+    "implementation": "complete",
+    "kind": "capability",
+    "references": [
+      {
+        "role": "context",
+        "unit": {
+          "kind": "file",
+          "path": "crates/factory-engine/src/governance_certificate.rs"
+        }
+      },
+      {
+        "role": "context",
+        "unit": {
+          "kind": "file",
+          "path": "crates/provenance-validator/src/validator.rs"
+        }
+      },
+      {
+        "role": "context",
+        "unit": {
+          "kind": "file",
+          "path": "specs/209-tenant-kernel-ci-enforcement/spec.md"
+        }
+      },
+      {
+        "role": "context",
+        "unit": {
+          "kind": "file",
+          "path": "docs/adr/0002-governance-certificate-vended-distributable.md"
+        }
+      }
+    ],
+    "refines": [
+      {
+        "aspect": "retire-cargo-install-path",
+        "unit": {
+          "kind": "file",
+          "path": "crates/factory-engine/templates/kernel/toolchain.yaml.tmpl"
+        }
+      },
+      {
+        "aspect": "toolchain-render-tests-npm-pin",
+        "unit": {
+          "kind": "file",
+          "path": "crates/factory-engine/src/kernel_emission/templates.rs"
+        }
+      }
+    ],
+    "sectionHeadings": [
+      "Feature Specification: Tenant-Tail Verifier Toolkit",
+      "Grounding note (status: complete, 2026-06-21)",
+      "Repository topology (grounded, supersedes the ADR 0002 OAP-internal-crate sketch)",
+      "Purpose",
+      "What exists today (the R-1 read, grounding FR-001's scope)",
+      "Functional requirements (refined in plan.md; FR-006 / AC-8 landed)",
+      "Staged third verb (verify-sbom)",
+      "Licensing (delta surfaced, decision recorded)",
+      "Acceptance criteria (refined in plan.md; verify legs satisfied cross-repo, AC-8 landed here)",
+      "Out of scope",
+      "Sequencing"
+    ],
+    "specPath": "specs/219-tenant-tail-verifier-toolkit/spec.md",
+    "status": "approved",
+    "summary": "209 FR-001 enumerates the gates the seeded tenant CI must run: spec-spine's (compile, lint, couple, index, registry) plus run-side verifiers that live in factory-engine in-tree and reach no tenant. spec-spine's gates are vended over npm via its own distribution spec; the run-side verifiers are not vended at all. This spec defines and vends tenant-tail: a single npm-distributed, verify-only CLI that lives in its OWN repository (mirroring spec-spine's repo/crate/npm shape), one pin, one integrity surface. It bookends the spine: the spine compiles the corpus, the tail verifies the factory's paperwork. Per the R-1 read (residuals note, 2026-06-16) only TWO verify cores exist as code and extract cleanly today: the certificate core (102/168/198/170) and the provenance validator (121, already its own crate crates/provenance-validator). The toolkit ships those two verbs now (verify-certificate, verify-provenance); verify-sbom is a forward-declared third verb that lands when its core exists (spec 203 is an unimplemented draft and, by its own refines map, its verify side extends the certificate core rather than standing alone). The emitter (build-certificate) is identity-bearing and harness-bound and is explicitly NOT here; it ships with its firing in a future emit spec (residual R-2). Completion criterion: with spec-spine and tenant-tail both vended, every gate 209 FR-001 names has a vended source, which is what makes 209 AC-1 structurally reachable.\n",
+    "title": "Tenant-Tail Verifier Toolkit (the vended tenant verification surface)"
+  },
+  "shardHash": "4f5883b47bffeb2bf62feceef23fda072495e195571e6864c300f8d97559a0a8",
+  "specVersion": "1.1.0"
+}

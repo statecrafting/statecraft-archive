@@ -1,0 +1,221 @@
+{
+  "diagnostics": {
+    "errors": [],
+    "warnings": [
+      {
+        "code": "W-002",
+        "message": "spec '169-tool-schema-strictness' file unit 'docs/owasp/factory/AIDE-VELOCITY-OAP-INTENT.md' does not exist",
+        "path": "docs/owasp/factory/AIDE-VELOCITY-OAP-INTENT.md"
+      },
+      {
+        "code": "W-002",
+        "message": "spec '169-tool-schema-strictness' file unit 'docs/owasp/owasp_top_10_agentic_applications_summary.md' does not exist",
+        "path": "docs/owasp/owasp_top_10_agentic_applications_summary.md"
+      }
+    ]
+  },
+  "mapping": {
+    "dependsOn": [
+      "036-safety-tier-governance",
+      "049-permission-system",
+      "067-tool-definition-registry",
+      "068-permission-runtime"
+    ],
+    "implementingPaths": [
+      {
+        "path": "crates/axiomregent/src/registry_bridge.rs",
+        "source": "spec-edge"
+      },
+      {
+        "path": "crates/featuregraph/tests/golden/features_graph.json",
+        "source": "spec-edge"
+      },
+      {
+        "path": "crates/tool-registry/Cargo.toml",
+        "source": "spec-edge"
+      },
+      {
+        "path": "crates/tool-registry/src/async_registry.rs",
+        "source": "spec-edge"
+      },
+      {
+        "path": "crates/tool-registry/src/lib.rs",
+        "source": "spec-edge"
+      },
+      {
+        "path": "crates/tool-registry/src/registry.rs",
+        "source": "spec-edge"
+      },
+      {
+        "path": "crates/tool-registry/src/strictness.rs",
+        "source": "spec-edge"
+      },
+      {
+        "path": "crates/tool-registry/src/tests.rs",
+        "source": "spec-edge"
+      },
+      {
+        "path": "crates/tool-registry/src/types.rs",
+        "source": "spec-edge"
+      },
+      {
+        "path": "specs/067-tool-definition-registry/spec.md",
+        "source": "spec-edge"
+      }
+    ],
+    "resolvedUnits": [
+      {
+        "locations": [
+          {
+            "file": "crates/tool-registry/src/strictness.rs"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "file",
+          "path": "crates/tool-registry/src/strictness.rs"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "crates/featuregraph/tests/golden/features_graph.json"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "extends",
+        "unit": {
+          "kind": "file",
+          "path": "crates/featuregraph/tests/golden/features_graph.json"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "crates/tool-registry/Cargo.toml"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "extends",
+        "unit": {
+          "kind": "file",
+          "path": "crates/tool-registry/Cargo.toml"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "crates/tool-registry/src/tests.rs"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "extends",
+        "unit": {
+          "kind": "file",
+          "path": "crates/tool-registry/src/tests.rs"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "crates/axiomregent/src/registry_bridge.rs"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "refines",
+        "unit": {
+          "kind": "file",
+          "path": "crates/axiomregent/src/registry_bridge.rs"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "crates/tool-registry/src/async_registry.rs"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "refines",
+        "unit": {
+          "kind": "file",
+          "path": "crates/tool-registry/src/async_registry.rs"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "crates/tool-registry/src/lib.rs"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "refines",
+        "unit": {
+          "kind": "file",
+          "path": "crates/tool-registry/src/lib.rs"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "crates/tool-registry/src/registry.rs"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "refines",
+        "unit": {
+          "kind": "file",
+          "path": "crates/tool-registry/src/registry.rs"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "crates/tool-registry/src/types.rs"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "refines",
+        "unit": {
+          "kind": "file",
+          "path": "crates/tool-registry/src/types.rs"
+        }
+      },
+      {
+        "locations": [],
+        "ownership": false,
+        "sourceField": "references",
+        "unit": {
+          "kind": "file",
+          "path": "docs/owasp/factory/AIDE-VELOCITY-OAP-INTENT.md"
+        }
+      },
+      {
+        "locations": [],
+        "ownership": false,
+        "sourceField": "references",
+        "unit": {
+          "kind": "file",
+          "path": "docs/owasp/owasp_top_10_agentic_applications_summary.md"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "specs/067-tool-definition-registry/spec.md"
+          }
+        ],
+        "ownership": false,
+        "sourceField": "references",
+        "unit": {
+          "kind": "file",
+          "path": "specs/067-tool-definition-registry/spec.md"
+        }
+      }
+    ],
+    "specId": "169-tool-schema-strictness",
+    "specStatus": "approved"
+  },
+  "schemaVersion": "1.1.0",
+  "shardHash": "13d69c63cb8a8688313d0734e76fa29d47ec736e15c3d22a1852127ce316f206"
+}

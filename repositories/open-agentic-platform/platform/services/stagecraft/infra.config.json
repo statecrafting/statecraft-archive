@@ -1,0 +1,104 @@
+{
+  "$schema": "https://encore.dev/schemas/infra.schema.json",
+  "metrics": {
+    "type": "prometheus",
+    "collection_interval": 60,
+    "remote_write_url": "http://monitoring-prometheus.monitoring.svc.cluster.local:9090/api/v1/write"
+  },
+  "secrets": {
+    "DOMAIN": { "$env": "DOMAIN" },
+    "APP_BASE_URL": { "$env": "APP_BASE_URL" },
+    "SESSION_SECRET": { "$env": "SESSION_SECRET" },
+    "OIDC_SPA_CLIENT_ID": { "$env": "OIDC_SPA_CLIENT_ID" },
+    "RAUTHY_URL": { "$env": "RAUTHY_URL" },
+    "RAUTHY_CLIENT_ID": { "$env": "RAUTHY_CLIENT_ID" },
+    "RAUTHY_CLIENT_SECRET": { "$env": "RAUTHY_CLIENT_SECRET" },
+    "RAUTHY_ADMIN_TOKEN": { "$env": "RAUTHY_ADMIN_TOKEN" },
+    "RAUTHY_ADMIN_TOKEN_NAME": { "$env": "RAUTHY_ADMIN_TOKEN_NAME" },
+    "PAT_ENCRYPTION_KEY": { "$env": "PAT_ENCRYPTION_KEY" },
+    "GITHUB_APP_ID": { "$env": "GITHUB_APP_ID" },
+    "GITHUB_APP_PRIVATE_KEY": { "$env": "GITHUB_APP_PRIVATE_KEY" },
+    "GITHUB_WEBHOOK_SECRET": { "$env": "GITHUB_WEBHOOK_SECRET" },
+    "SLACK_WEBHOOK_URL": { "$env": "SLACK_WEBHOOK_URL" },
+    "S3_ENDPOINT": { "$env": "S3_ENDPOINT" },
+    "S3_PUBLIC_ENDPOINT": { "$env": "S3_PUBLIC_ENDPOINT" },
+    "S3_REGION": { "$env": "S3_REGION" },
+    "S3_ACCESS_KEY": { "$env": "S3_ACCESS_KEY" },
+    "S3_SECRET_KEY": { "$env": "S3_SECRET_KEY" },
+    "ANTHROPIC_API_KEY": { "$env": "ANTHROPIC_API_KEY" },
+    "FACTORY_SIGNING_PRIVATE_KEY": { "$env": "FACTORY_SIGNING_PRIVATE_KEY" },
+    "FACTORY_SIGNING_KID": { "$env": "FACTORY_SIGNING_KID" },
+    "FACTORY_SIGNING_PREVIOUS_PUBLIC_JWK": { "$env": "FACTORY_SIGNING_PREVIOUS_PUBLIC_JWK" }
+  },
+  "pubsub": [
+    {
+      "type": "nsq",
+      "hosts": "nsqd.statecraft-system.svc.cluster.local:4150",
+      "topics": {
+        "factory-event": {
+          "name": "factory-event",
+          "subscriptions": {
+            "slack-factory-notification": {
+              "name": "slack-factory-notification"
+            },
+            "sync-relay": {
+              "name": "sync-relay"
+            },
+            "sync-outbox-relay": {
+              "name": "sync-outbox-relay"
+            },
+            "factory-stream-relay": {
+              "name": "factory-stream-relay"
+            }
+          }
+        },
+        "factory-sync-request": {
+          "name": "factory-sync-request",
+          "subscriptions": {
+            "factory-sync-worker": {
+              "name": "factory-sync-worker"
+            }
+          }
+        },
+        "project-clone-request": {
+          "name": "project-clone-request",
+          "subscriptions": {
+            "project-clone-worker": {
+              "name": "project-clone-worker"
+            }
+          }
+        },
+        "knowledge-extraction-request": {
+          "name": "knowledge-extraction-request",
+          "subscriptions": {
+            "knowledge-extraction-worker": {
+              "name": "knowledge-extraction-worker"
+            }
+          }
+        },
+        "factory-override-scan-request": {
+          "name": "factory-override-scan-request",
+          "subscriptions": {
+            "factory-override-scan-worker": {
+              "name": "factory-override-scan-worker"
+            }
+          }
+        }
+      }
+    }
+  ],
+  "sql_servers": [
+    {
+      "host": "postgresql.statecraft-system.svc.cluster.local",
+      "databases": {
+        "statecraft": {
+          "name": "statecraft",
+          "username": "statecraft",
+          "password": {
+            "$env": "POSTGRES_PASSWORD"
+          }
+        }
+      }
+    }
+  ]
+}

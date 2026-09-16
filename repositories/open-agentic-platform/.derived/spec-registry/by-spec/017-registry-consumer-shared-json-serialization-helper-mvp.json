@@ -1,0 +1,40 @@
+{
+  "record": {
+    "authors": [
+      "open-agentic-platform"
+    ],
+    "created": "2026-03-22",
+    "domain": "tooling",
+    "extends": [
+      {
+        "nature": "additive",
+        "spec": "002-registry-consumer-mvp"
+      }
+    ],
+    "extraFrontmatter": {
+      "language": "en"
+    },
+    "featureBranch": "017-registry-consumer-shared-json-serialization-helper-mvp",
+    "id": "017-registry-consumer-shared-json-serialization-helper-mvp",
+    "implementation": "complete",
+    "kind": "platform-delivery",
+    "refines": [
+      {
+        "aspect": "json-serialization"
+      }
+    ],
+    "sectionHeadings": [
+      "Feature Specification: Shared JSON serialization helper",
+      "Purpose",
+      "Requirements",
+      "Out of scope"
+    ],
+    "specPath": "specs/017-registry-consumer-shared-json-serialization-helper-mvp/spec.md",
+    "status": "superseded",
+    "summary": "Consolidate pretty vs compact JSON serialization in one library helper; no CLI behavior change.\n",
+    "supersededBy": "217-spec-spine-engine-swap-collapse",
+    "title": "Registry consumer shared JSON serialization helper"
+  },
+  "shardHash": "d56f6b3a63986d482b8ea9ffc20862370c9701918bf58ec83c4d2766263100bc",
+  "specVersion": "1.1.0"
+}

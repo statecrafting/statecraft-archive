@@ -1,0 +1,54 @@
+{
+  "record": {
+    "authors": [
+      "open-agentic-platform"
+    ],
+    "codeAliases": [
+      "STATECRAFT_FACTORY",
+      "FACTORY_API"
+    ],
+    "created": "2026-04-04",
+    "domain": "platform",
+    "establishes": [
+      {
+        "kind": "directory",
+        "path": "platform/services/statecraft/api/factory"
+      }
+    ],
+    "extraFrontmatter": {
+      "language": "en"
+    },
+    "featureBranch": "feat/077-statecraft-factory-api",
+    "id": "077-statecraft-factory-api",
+    "implementation": "complete",
+    "kind": "platform",
+    "sectionHeadings": [
+      "Feature Specification: Statecraft Factory Lifecycle API",
+      "Purpose",
+      "Scope",
+      "In scope",
+      "Out of scope",
+      "Requirements",
+      "Functional Requirements",
+      "Non-Functional Requirements",
+      "Architecture",
+      "Database Schema Extensions",
+      "Encore.ts Service Structure",
+      "Integration Points",
+      "Implementation Approach",
+      "Phase 1: Schema & Core Endpoints (3 days)",
+      "Phase 2: Stage Lifecycle (2 days)",
+      "Phase 3: Policy Bundle (2 days)",
+      "Phase 4: Deployment Handoff (1 day)",
+      "Success Criteria",
+      "Dependencies",
+      "Risks"
+    ],
+    "specPath": "specs/077-statecraft-factory-api/spec.md",
+    "status": "approved",
+    "summary": "Extends the Statecraft platform service with Factory-specific API endpoints for project initialization, adapter selection, stage confirmation/rejection, policy bundle compilation, audit trail capture, and deployment handoff.\n",
+    "title": "Statecraft Factory Lifecycle API — Project Init, Stage Confirmation, Audit Trail"
+  },
+  "shardHash": "fd77b69c53fcca5dc82df4764f8d4b8833d35b2f10ee989b26efaeba5cc98387",
+  "specVersion": "1.1.0"
+}

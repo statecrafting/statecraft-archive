@@ -1,0 +1,46 @@
+{
+  "mapping": {
+    "implementingPaths": [
+      {
+        "path": "product/apps/opc/src-tauri/src/commands/worktree_agents.rs",
+        "source": "spec-edge"
+      },
+      {
+        "path": "product/packages/worktree-agents",
+        "source": "multiple"
+      }
+    ],
+    "resolvedUnits": [
+      {
+        "locations": [
+          {
+            "file": "product/packages/worktree-agents"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "id": "@opc/worktree-agents",
+          "kind": "crate"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "product/apps/opc/src-tauri/src/commands/worktree_agents.rs"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "file",
+          "path": "product/apps/opc/src-tauri/src/commands/worktree_agents.rs"
+        }
+      }
+    ],
+    "specId": "051-worktree-agents",
+    "specStatus": "approved"
+  },
+  "schemaVersion": "1.1.0",
+  "shardHash": "a4d3623d1ef3e34354a2933dacfea7bf3e8c1b727bd2e16a71a6fbebd0068188"
+}

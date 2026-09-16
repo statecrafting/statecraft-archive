@@ -1,0 +1,41 @@
+{
+  "record": {
+    "created": "2026-09-12",
+    "dependsOn": [
+      "014-rahi-realignment",
+      "015-hosted-work-contract",
+      "017-rahi-cell-migration"
+    ],
+    "establishes": [
+      {
+        "kind": "directory",
+        "path": "specs/018-hosted-work-service/"
+      }
+    ],
+    "id": "018-hosted-work-service",
+    "implementation": "pending",
+    "sectionHeadings": [
+      "018: The hosted work service",
+      "1. Purpose",
+      "1.1 The approval gate",
+      "2. Territory",
+      "3. What the service serves",
+      "4. Durability",
+      "5. The byte store",
+      "6. Tenant authorization, and cross-tenant 404s under test",
+      "7. Customer data, before any is accepted",
+      "8. Nothing executes",
+      "9. The run views",
+      "10. Negative cases",
+      "11. Acceptance",
+      "12. Cross-repo dependency",
+      "13. Out of scope"
+    ],
+    "specPath": "specs/018-hosted-work-service/spec.md",
+    "status": "draft",
+    "summary": "The service half of spec 015, split from it on 2026-09-12 so that the contract's schema work is not blocked by a cell that does not exist yet (spec 014 section 11, ST-06). The contract, its fixtures and its pure evaluator stay in 015. This spec is what a running plane adds on top: the endpoints that serve the contract from spec 017 Part A's N=1 pilot cell, device-grant runner identity against Rahi's native client, durable leases, fences and idempotency keys, an immutable content-addressed byte store the cell's backup covers, tenant authorization with automated cross-tenant 404 tests, a mechanical refusal to execute anything, and a run list and run detail. It runs as a controlled engineering pilot with no external customer, and customer-data retention and deletion are configured before any customer data is accepted. It is approvable only for the N=1 pilot, after its prerequisites are evidenced.\n",
+    "title": "The hosted work service: the 015 contract served from the N=1 pilot cell"
+  },
+  "shardHash": "9badfdfe5919badf5503b9edd8cf9084601c063d3157decfa666ea058258f915",
+  "specVersion": "1.2.0"
+}

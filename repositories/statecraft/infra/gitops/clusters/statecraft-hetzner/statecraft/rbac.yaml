@@ -1,0 +1,50 @@
+# Fleet placement RBAC (specs 006/009).
+#
+# The fleet addon (@statecrafting/fleet-native) drives the cluster API from
+# inside the control-plane pod: it creates tenant namespaces (t-<tenantId>)
+# and places one EnRaHiTu container + volume + ingress per app, plus the
+# backup Job and the namespace's default-deny NetworkPolicy. The pod ran as
+# the namespace default ServiceAccount with no grants, so every placement
+# and teardown died at the API server (surfaced by spec 011's acceptance
+# walk: remove failed Forbidden). A dedicated ServiceAccount carries a
+# ClusterRole because tenant namespaces are created dynamically; the grant
+# is scoped by resource type to exactly what fleet-native touches.
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: statecraft
+  namespace: statecraft-system
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: statecraft-fleet
+rules:
+  - apiGroups: [""]
+    resources: ["namespaces"]
+    verbs: ["get", "list", "create"]
+  - apiGroups: [""]
+    resources: ["services", "persistentvolumeclaims"]
+    verbs: ["get", "list", "create", "patch", "delete"]
+  - apiGroups: ["apps"]
+    resources: ["deployments"]
+    verbs: ["get", "list", "create", "patch", "delete"]
+  - apiGroups: ["batch"]
+    resources: ["jobs"]
+    verbs: ["get", "list", "create", "patch", "delete"]
+  - apiGroups: ["networking.k8s.io"]
+    resources: ["ingresses", "networkpolicies"]
+    verbs: ["get", "list", "create", "patch", "delete"]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: statecraft-fleet
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: statecraft-fleet
+subjects:
+  - kind: ServiceAccount
+    name: statecraft
+    namespace: statecraft-system

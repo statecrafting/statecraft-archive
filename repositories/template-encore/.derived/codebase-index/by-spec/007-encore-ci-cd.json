@@ -1,0 +1,85 @@
+{
+  "mapping": {
+    "dependsOn": [
+      "001-encore-app-architecture",
+      "005-spa-static-serving",
+      "009-repo-ci-orchestrator"
+    ],
+    "implementingPaths": [
+      {
+        "path": ".github/actions/encore-build/action.yml",
+        "source": "spec-edge"
+      },
+      {
+        "path": ".github/actions/encore-install/action.yml",
+        "source": "spec-edge"
+      },
+      {
+        "path": ".github/workflows/encore-cd.yml.example",
+        "source": "spec-edge"
+      },
+      {
+        "path": ".github/workflows/encore-ci.yml",
+        "source": "spec-edge"
+      }
+    ],
+    "resolvedUnits": [
+      {
+        "locations": [
+          {
+            "file": ".github/actions/encore-build/action.yml"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "file",
+          "path": ".github/actions/encore-build/action.yml"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": ".github/actions/encore-install/action.yml"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "file",
+          "path": ".github/actions/encore-install/action.yml"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": ".github/workflows/encore-cd.yml.example"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "file",
+          "path": ".github/workflows/encore-cd.yml.example"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": ".github/workflows/encore-ci.yml"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "file",
+          "path": ".github/workflows/encore-ci.yml"
+        }
+      }
+    ],
+    "specId": "007-encore-ci-cd",
+    "specStatus": "approved"
+  },
+  "schemaVersion": "1.1.0",
+  "shardHash": "13ec3935882af09d71fe3658d407abb4d032232759b8215207cd9db61418403b"
+}

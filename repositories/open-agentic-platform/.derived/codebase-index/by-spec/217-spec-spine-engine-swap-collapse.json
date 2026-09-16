@@ -1,0 +1,82 @@
+{
+  "mapping": {
+    "amends": [
+      "003-feature-lifecycle-mvp",
+      "039-feature-id-reconciliation",
+      "091-registry-enrichment",
+      "101-codebase-index-mvp",
+      "102-governed-excellence",
+      "103-init-protocol-governed-reads",
+      "118-workflow-spec-traceability",
+      "127-spec-code-coupling-gate",
+      "128-spec-lint-default-fail-on-warn",
+      "129-granular-package-oap-metadata",
+      "130-spec-coupling-primary-owner",
+      "132-constitutional-invariant-freeze",
+      "147-spec-kind-grammar",
+      "152-path-co-authority",
+      "154-logical-unit-ownership-grammar",
+      "155-logical-unit-resolution-semantics",
+      "156-references-edge-provenance-grammar",
+      "159-v004-lint-fixture-exemption",
+      "161-knowledge-requirements-provenance-emission",
+      "179-domain-frontmatter-field",
+      "182-claude-skills-migration",
+      "184-claude-shared-config-governance",
+      "188-derived-index-merge-serialization"
+    ],
+    "dependsOn": [
+      "216-spec-spine-library-grammar-adoption",
+      "130-spec-coupling-primary-owner",
+      "133-amends-aware-coupling-gate",
+      "154-logical-unit-ownership-grammar",
+      "155-logical-unit-resolution-semantics",
+      "101-codebase-index-mvp",
+      "127-spec-code-coupling-gate",
+      "152-path-co-authority",
+      "181-registry-consumer-unit-grammar-authority"
+    ],
+    "implementingPaths": [
+      {
+        "path": "crates/featuregraph/tests/golden/features_graph.json",
+        "source": "spec-edge"
+      },
+      {
+        "path": "spec-spine.toml",
+        "source": "spec-edge"
+      }
+    ],
+    "resolvedUnits": [
+      {
+        "locations": [
+          {
+            "file": "spec-spine.toml"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "file",
+          "path": "spec-spine.toml"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "crates/featuregraph/tests/golden/features_graph.json"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "extends",
+        "unit": {
+          "kind": "file",
+          "path": "crates/featuregraph/tests/golden/features_graph.json"
+        }
+      }
+    ],
+    "specId": "217-spec-spine-engine-swap-collapse",
+    "specStatus": "approved"
+  },
+  "schemaVersion": "1.1.0",
+  "shardHash": "bc7db172f2bc1b5cdf64dac22d8d6fe470afc1a92f86ddf7ebb83d334e507715"
+}

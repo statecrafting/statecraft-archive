@@ -1,0 +1,49 @@
+{
+  "record": {
+    "codeAliases": [
+      "DUAL_APP_GENERATOR"
+    ],
+    "created": "2026-06-10",
+    "dependsOn": [
+      "002-encore-generator-core",
+      "003-user-management-module"
+    ],
+    "domain": "generator",
+    "establishes": [
+      {
+        "kind": "file",
+        "path": "adapters/acme-vue-encore/scripts/setup-dual-app.ts"
+      },
+      {
+        "kind": "file",
+        "path": "adapters/acme-vue-encore/scripts/setup-dual-app.test.ts"
+      }
+    ],
+    "id": "004-dual-app-generator",
+    "implementation": "complete",
+    "kind": "feature",
+    "owner": "bart",
+    "risk": "medium",
+    "sectionHeadings": [
+      "004. Dual-app generator: two independent Encore apps",
+      "1. Purpose",
+      "2. Territory",
+      "3. Behavior",
+      "FR-001 — Output shape",
+      "FR-002 — Auth driver configuration",
+      "FR-003: Staff-SPA static-serving wiring (generator action; contract owned by the product `spa-static-serving` spec)",
+      "FR-004 — Independent encore check",
+      "FR-005 — Reuse of generator core",
+      "FR-006 — CLI interface",
+      "FR-007 — Per-variant `git init` skipped for machine-driven runs",
+      "4. Acceptance criteria",
+      "5. Out of scope"
+    ],
+    "specPath": "specs/004-dual-app-generator/spec.md",
+    "status": "approved",
+    "summary": "setup-dual-app.ts generates two independent Encore applications from one invocation: <dest>/public (AUTH_DRIVER=rauthy, external-facing, apps/web) and <dest>/internal (AUTH_DRIVER=rauthy, staff-facing, apps/web-internal wired into the internal app's web service). Independent apps (separate encore.app files, databases, and deployments) are the locked isolation decision.\n",
+    "title": "Dual-app generator: two independent Encore apps (external + staff, both rauthy OIDC)"
+  },
+  "shardHash": "186ada083b14ef67e6da20a4e14ca2d0dbb9f52ffe29bd7f47134459ab4135e2",
+  "specVersion": "1.1.0"
+}

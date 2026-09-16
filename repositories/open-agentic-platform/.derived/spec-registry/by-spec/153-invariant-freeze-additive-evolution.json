@@ -1,0 +1,47 @@
+{
+  "record": {
+    "amends": [
+      "130-spec-coupling-primary-owner"
+    ],
+    "amendsSections": [
+      "constrains-meta-authority"
+    ],
+    "codeAliases": [
+      "INVARIANT_FREEZE_BACKWARD_COMPAT"
+    ],
+    "created": "2026-05-20",
+    "dependsOn": [
+      "130-spec-coupling-primary-owner"
+    ],
+    "domain": "substrate",
+    "extraFrontmatter": {
+      "approved": "2026-05-20",
+      "slug": "invariant-freeze-additive-evolution"
+    },
+    "id": "153-invariant-freeze-additive-evolution",
+    "implementation": "complete",
+    "kind": "governance",
+    "owner": "bart",
+    "risk": "low",
+    "sectionHeadings": [
+      "153 — Invariant-freeze: backward-compatibility framing",
+      "1. Problem",
+      "2. Amendment",
+      "3. Scope",
+      "In scope (this commit)",
+      "Out of scope (and intentionally so)",
+      "4. Consequences",
+      "For spec 132 (constitutional-invariant-freeze)",
+      "For spec 130 (this spec amends 130)",
+      "For future invariant-freeze declarations",
+      "5. Acceptance",
+      "6. Cross-references"
+    ],
+    "specPath": "specs/153-invariant-freeze-additive-evolution/spec.md",
+    "status": "approved",
+    "summary": "Spec 130 §2.7 introduces `constrains: kind: invariant-freeze` with the clause \"future amendments cannot widen it.\" The plain-text reading is imprecise: in schema-evolution terms, widening means accepting more documents (strict superset), which is exactly what additive evolution does and which does not invalidate previously-valid documents. This spec amends §2.7 with precise framing: invariant-freeze enforces backward compatibility, permitting strictly additive evolution that preserves all previously-valid documents and their semantics. Non-additive changes (narrowing, semantic redefinition, surface removal) require explicit re-freeze via a new `constrains:` declaration or supersession. The amendment is general — applies to every `invariant-freeze` instance — and is motivated by the Tier 2 logical-unit ownership grammar's additive registry-schema extension.\n",
+    "title": "Invariant-freeze semantics — backward-compatibility framing"
+  },
+  "shardHash": "d067d7d0087c7b69b0fe7a508dc4c7ea76e28f627742ab5efab20c72687dbbc6",
+  "specVersion": "1.1.0"
+}

@@ -1,0 +1,36 @@
+# Spec: 004-spec-to-execution-bridge-mvp
+# Spec: 044-multi-agent-orchestration
+# Spec: 177-ci-orchestrator-pr-gate
+#
+# CI for orchestrator: check, clippy, and test.
+# Dispatched from `.github/workflows/ci.yml` on PRs touching the
+# orchestrator crate or its provider/standards-loader siblings (spec
+# 177); manual via workflow_dispatch.
+
+name: CI orchestrator
+
+on:
+  workflow_call:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+env:
+  CARGO_TERM_COLOR: always
+
+jobs:
+  check-and-test:
+    runs-on: ubuntu-latest
+    name: check + clippy + test
+    timeout-minutes: 30
+
+    steps:
+      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+
+      - name: CI orchestrator
+        uses: ./.github/actions/rust-ci
+        with:
+          manifest-path: crates/orchestrator/Cargo.toml
+          cache-workspaces: crates/orchestrator
+          cache-shared-key: orchestrator

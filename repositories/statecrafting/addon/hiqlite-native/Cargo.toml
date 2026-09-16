@@ -1,0 +1,55 @@
+[package]
+name = "hiqlite-native"
+version = "0.2.0"
+edition = "2021"
+publish = false
+license = "Apache-2.0"
+description = "in-process hiqlite as the state layer: replicated SQL, watch, leased locks with fencing, encrypted backups, cache/KV and counters, exposed to Encore.ts via napi-rs."
+
+[package.metadata.spec-spine]
+spec = "003-hiqlite-native"
+
+[lib]
+crate-type = ["cdylib"]
+
+[dependencies]
+napi = { version = "3", default-features = false, features = ["napi8", "tokio_rt", "serde-json"] }
+napi-derive = "3"
+# The state-layer feature set (enrahitu spec 032, the interface contract).
+#
+# `sqlite` is the expensive one and the cost is accepted deliberately: it pulls
+# rusqlite + deadpool + serde_rusqlite, so SQLite-C now compiles into the .node
+# on all three platforms, ending this crate's former "no bundled SQLite-C"
+# property. It buys replicated SQL, which is what makes hiqlite the state layer
+# rather than a cache, and it is also what unlocks `backup` (which resolves to
+# ["dep:cron", "s3", "sqlite"]), the product's durability story.
+#
+# `dlock` and `listen_notify_local` both resolve to ["cache"], already enabled,
+# so they are nearly free. `listen_notify` (the REMOTE variant) is deliberately
+# NOT enabled: it would let a non-member client subscribe to the cache raft
+# group over SSE, which is a second egress path that bypasses the API layer
+# where admission runs (enrahitu spec 032 section 3.10).
+hiqlite = { version = "=0.14.0", default-features = false, features = [
+  "cache",
+  "counters",
+  "macros",
+  "sqlite",
+  "dlock",
+  "listen_notify_local",
+  "backup",
+] }
+tokio = { version = "1", features = ["sync"] }
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+# Backup encryption keys. Enabling `backup` pulls hiqlite's `s3` feature, which
+# makes NodeConfig.enc_keys mandatory: the node refuses to start without them,
+# because off-box backups are encrypted with them. cryptr is not re-exported by
+# hiqlite, so it is a direct dependency pinned to the version hiqlite uses.
+cryptr = "0.10"
+
+[build-dependencies]
+napi-build = "2"
+
+[profile.release]
+lto = true
+strip = true

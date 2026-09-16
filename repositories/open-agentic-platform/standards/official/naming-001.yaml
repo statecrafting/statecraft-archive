@@ -1,0 +1,57 @@
+id: naming-001
+category: naming
+priority: high
+context: >
+  Applies to all TypeScript and JavaScript source files. Consistent naming
+  conventions improve readability and reduce cognitive load when navigating
+  unfamiliar code.
+tags:
+  - typescript
+  - javascript
+  - naming
+  - style
+
+rules:
+  - verb: ALWAYS
+    subject: "use camelCase for variables, functions, and methods"
+    rationale: >
+      camelCase is the universal JavaScript/TypeScript convention. Mixing
+      styles (snake_case, PascalCase) within the same role creates
+      inconsistency and slows down code review.
+
+  - verb: ALWAYS
+    subject: "use PascalCase for classes, interfaces, types, and enums"
+    rationale: >
+      PascalCase distinguishes type-level constructs from value-level
+      identifiers at a glance, reducing ambiguity in imports and usage.
+
+  - verb: PREFER
+    subject: "descriptive names over abbreviations"
+    rationale: >
+      Abbreviated names save a few keystrokes but cost minutes of
+      comprehension for every future reader. Names should communicate
+      intent, not minimize character count.
+
+  - verb: AVOID
+    subject: "single-letter variable names outside of loop indices"
+    rationale: >
+      Single-letter names convey no semantic meaning. Loop indices (i, j, k)
+      are an established exception where the scope is small and the purpose
+      is obvious.
+
+anti_patterns:
+  - pattern: "const usr = getUser();"
+    correction: "const user = getUser();"
+  - pattern: "function proc(d: Data) {}"
+    correction: "function processData(data: Data) {}"
+
+examples:
+  - bad: |
+      interface user_profile { first_name: string; }
+      function get_user(id: string) { return db.find(id); }
+    good: |
+      interface UserProfile { firstName: string; }
+      function getUser(id: string) { return db.find(id); }
+    explanation: >
+      The good example uses PascalCase for the interface and camelCase for
+      the function and property, following standard TypeScript conventions.

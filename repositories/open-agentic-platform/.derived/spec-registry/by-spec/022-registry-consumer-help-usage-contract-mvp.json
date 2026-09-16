@@ -1,0 +1,40 @@
+{
+  "record": {
+    "authors": [
+      "open-agentic-platform"
+    ],
+    "created": "2026-03-22",
+    "domain": "tooling",
+    "extends": [
+      {
+        "nature": "additive",
+        "spec": "002-registry-consumer-mvp"
+      }
+    ],
+    "extraFrontmatter": {
+      "language": "en"
+    },
+    "featureBranch": "022-registry-consumer-help-usage-contract-mvp",
+    "id": "022-registry-consumer-help-usage-contract-mvp",
+    "implementation": "complete",
+    "kind": "platform-delivery",
+    "refines": [
+      {
+        "aspect": "contract-tests"
+      }
+    ],
+    "sectionHeadings": [
+      "Feature Specification: Help/usage output contract",
+      "Purpose",
+      "Requirements",
+      "Out of scope"
+    ],
+    "specPath": "specs/022-registry-consumer-help-usage-contract-mvp/spec.md",
+    "status": "superseded",
+    "summary": "Lock top-level and subcommand help output for registry-consumer using fixture transcripts and integration tests, preventing silent ergonomics drift.\n",
+    "supersededBy": "217-spec-spine-engine-swap-collapse",
+    "title": "Registry consumer help/usage output contract MVP"
+  },
+  "shardHash": "9dbe9e7cc422394d7394e9bf8c442e2b7ae51824fae3539ad0cb1c7cff3512d6",
+  "specVersion": "1.1.0"
+}

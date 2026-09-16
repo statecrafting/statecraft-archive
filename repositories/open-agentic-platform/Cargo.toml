@@ -1,0 +1,64 @@
+[workspace]
+resolver = "2"
+members = [
+    # 22 OAP library crates.
+    "crates/agent",
+    "crates/agent-frontmatter",
+    "crates/artifact-extract",
+    "crates/axiomregent",
+    "crates/canonical-json",
+    "crates/factory-contracts",
+    "crates/factory-engine",
+    "crates/factory-platform-client",
+    "crates/factory-project-detect",
+    "crates/featuregraph",
+    "crates/opc-decomposition-pipeline",
+    "crates/orchestrator",
+    "crates/policy-kernel",
+    "crates/provenance-validator",
+    "crates/provider-registry",
+    "crates/run",
+    "crates/sandbox-k8s",
+    "crates/sandbox-local-container",
+    "crates/skill-factory",
+    "crates/standards-loader",
+    "crates/tool-registry",
+    "crates/xray",
+
+    # 1 spec-spine tool: the 4 generic engine crates (spec-compiler,
+    # registry-consumer, codebase-indexer, spec-code-coupling-check) were
+    # deleted by spec 217 Phase 3 (the published spec-spine library replaces
+    # them); spec-lint survives as the OAP overlay lint.
+    "tools/spec-spine/spec-lint",
+
+    # 9 OAP-specific Rust tools (schema-parity-check is JS-only;
+    # spec-unit-migrate is a one-shot Segment 5 migrator under spec 154,
+    # retained as historical artifact post-Segment-6 excision).
+    "tools/oap/adapter-scopes-compiler",
+    "tools/oap/assumption-cascade-check",
+    "tools/oap/ci-parity-check",
+    "tools/oap/codification-gate",
+    "tools/oap/factory-schema-lockstep",
+    "tools/oap/oap-code-index-enrich",
+    "tools/oap/oap-registry-enrich",
+    "tools/oap/policy-compiler",
+    "tools/oap/spec-unit-migrate",
+    "tools/oap/stakeholder-doc-lint",
+
+    # Shared spec types crate.
+    "tools/shared/spec-types",
+]
+
+# apps/opc/src-tauri/ is a deliberately separate single-member workspace
+# (its own [workspace] table) to prevent libsqlite3-sys linking conflicts
+# when both this crate and crates/axiomregent bundle rusqlite. Operator
+# decision #1 (Epic 2): keep isolated.
+#
+# platform/services/deployd-api-rs/ is excluded from this root workspace per
+# operator decision #2 (Epic 2): platform/ remains structurally untouched
+# (master plan §Locked target layout). It builds standalone via
+# `cargo build --manifest-path platform/services/deployd-api-rs/Cargo.toml`.
+exclude = [
+    "product/apps/opc/src-tauri",
+    "platform/services/deployd-api-rs",
+]

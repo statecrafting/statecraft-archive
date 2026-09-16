@@ -1,0 +1,118 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "business-rules.schema.json",
+  "title": "Business Rules - Stage 1 Output",
+  "description": "Every constraint, validation, computation, state machine, and authorization rule extracted from business documents.",
+  "type": "object",
+  "required": ["rules"],
+  "additionalProperties": false,
+  "properties": {
+    "rules": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "$ref": "#/$defs/rule" }
+    }
+  },
+  "$defs": {
+    "rule": {
+      "type": "object",
+      "required": ["id", "name", "type", "description", "entities"],
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "type": "string",
+          "pattern": "^BR-\\d{3}$",
+          "description": "Stable identifier in BR-nnn format."
+        },
+        "name": {
+          "type": "string",
+          "minLength": 1
+        },
+        "type": {
+          "type": "string",
+          "enum": [
+            "state-machine",
+            "validation",
+            "computation",
+            "authorization",
+            "constraint",
+            "privacy",
+            "retention"
+          ]
+        },
+        "description": {
+          "type": "string",
+          "minLength": 1
+        },
+        "entities": {
+          "type": "array",
+          "minItems": 1,
+          "items": { "type": "string" },
+          "description": "Entity names this rule applies to."
+        },
+        "states": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "All valid states (state-machine type)."
+        },
+        "transitions": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/transition" },
+          "description": "Valid state transitions (state-machine type)."
+        },
+        "terminal_states": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "States with no outbound transitions (state-machine type)."
+        },
+        "formula": {
+          "type": "string",
+          "description": "Human-readable formula (computation type)."
+        },
+        "inputs": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "Field names used in computation (computation type)."
+        },
+        "output": {
+          "type": "string",
+          "description": "Field that holds the computed result (computation type)."
+        },
+        "condition": {
+          "type": "string",
+          "description": "When this validation applies (validation type)."
+        },
+        "message": {
+          "type": "string",
+          "description": "Error message if validation is violated (validation type)."
+        }
+      }
+    },
+    "transition": {
+      "type": "object",
+      "required": ["from", "to"],
+      "additionalProperties": false,
+      "properties": {
+        "from": {
+          "type": "string",
+          "description": "Source state."
+        },
+        "to": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "Valid target states."
+        },
+        "requires_role": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "Roles allowed to trigger this transition."
+        },
+        "conditions": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "Human-readable preconditions for this transition."
+        }
+      }
+    }
+  }
+}

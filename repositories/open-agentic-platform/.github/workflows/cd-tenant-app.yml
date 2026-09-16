@@ -1,0 +1,146 @@
+# Spec: 214-tenant-app-chart-supersession
+#
+# CD for the acme-vue-encore reference image (FR-010 / SC-006). Builds and
+# pushes the factory's template reference scaffold image to GHCR so the
+# deploy path (the acme-vue-encore chart + the deployd dispatch contract) has a
+# real artifact to install. Replaces the retired synthetic-tenant CD workflow:
+# the reference tenant is now the factory's own scaffold, not the synthetic
+# hello service.
+#
+# The image source is cross-repo (the template upstream), pinned by a
+# full commit SHA per spec 158. Those coordinates are operational config
+# supplied out-of-band as repo variables + a read token, NOT committed here:
+#   vars.TENANT_APP_TEMPLATE_REPO          owner/template
+#   vars.TENANT_APP_TEMPLATE_REF           a full 40-char commit SHA (spec 158)
+#   secrets.TENANT_APP_TEMPLATE_READ_TOKEN read token for the upstream checkout
+# The resolve step fails loud with a specific diagnostic when they are unset
+# rather than building from a guessed source: SC-006 lockstep requires the
+# exact template version the scaffold path ships, so a wrong source is worse
+# than no build.
+#
+# Build pipeline mirrors template's own `build:docker`
+# (`encore build docker --config ./infra.config.json --base <base> <image>`,
+# apps/api/package.json): build the public SPA into apps/api/web/build
+# (bundle_source: true folds it into the image), build the runtime base image
+# from apps/api/Dockerfile.base, then let Encore lay its overlay on the base.
+# This repo (OAP) is checked out at the workspace root so the pinned Encore CLI
+# installs via OAP's own `encore-install` composite action; the template source
+# is checked out into ./template-src and every build step runs there.
+#
+# workflow_dispatch-only: the source is cross-repo, so there is no in-repo path
+# to trigger a push on (unlike the retired synthetic-tenant CD workflow, whose
+# source lived in-repo).
+
+name: CD tenant-app
+
+on:
+  workflow_dispatch:
+    inputs:
+      template_ref:
+        description: "template commit SHA to build (overrides vars.TENANT_APP_TEMPLATE_REF)"
+        required: false
+        type: string
+
+concurrency:
+  group: cd-tenant-app-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  IMAGE: ghcr.io/${{ github.repository }}/acme-vue-encore
+  ENCORE_VERSION: '1.57.9'
+
+jobs:
+  build-and-push:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+    outputs:
+      image-tag: ${{ steps.meta.outputs.sha-tag }}
+
+    steps:
+      - name: Resolve cross-repo template source (fail loud if unset)
+        id: src
+        env:
+          TEMPLATE_REPO: ${{ vars.TENANT_APP_TEMPLATE_REPO }}
+          TEMPLATE_REF: ${{ github.event.inputs.template_ref || vars.TENANT_APP_TEMPLATE_REF }}
+        run: |
+          if [ -z "$TEMPLATE_REPO" ] || [ -z "$TEMPLATE_REF" ]; then
+            echo "::error::TENANT_APP_TEMPLATE_REPO and TENANT_APP_TEMPLATE_REF must be set (repo variables, or pass template_ref via workflow_dispatch). The reference image builds from the template upstream pinned by SHA (spec 158 / SC-006); refusing to build from a guessed source."
+            exit 1
+          fi
+          if ! printf '%s' "$TEMPLATE_REF" | grep -Eq '^[0-9a-f]{40}$'; then
+            echo "::error::TENANT_APP_TEMPLATE_REF must be a full 40-char commit SHA (spec 158: no floating refs). Got: $TEMPLATE_REF"
+            exit 1
+          fi
+          {
+            echo "repo=$TEMPLATE_REPO"
+            echo "ref=$TEMPLATE_REF"
+          } >> "$GITHUB_OUTPUT"
+
+      - name: Check out this repo (for the encore-install composite action)
+        uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+
+      - name: Check out template source (SHA-pinned, spec 158)
+        uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+        with:
+          repository: ${{ steps.src.outputs.repo }}
+          ref: ${{ steps.src.outputs.ref }}
+          token: ${{ secrets.TENANT_APP_TEMPLATE_READ_TOKEN }}
+          path: template-src
+
+      - name: Compute image tags (from the template commit, for lockstep traceability)
+        id: meta
+        run: |
+          SHA_SHORT="$(printf '%s' "${{ steps.src.outputs.ref }}" | cut -c1-7)"
+          echo "sha-tag=sha-${SHA_SHORT}" >> "$GITHUB_OUTPUT"
+          echo "Building tags: sha-${SHA_SHORT}, latest"
+
+      - name: Set up Node.js
+        uses: actions/setup-node@48b55a011bda9f5d6aeb4c2d9c7362e8dae4041e # v6
+        with:
+          node-version: "24"
+
+      - name: Install dependencies (root workspaces)
+        working-directory: template-src
+        run: npm ci
+
+      - name: Build shared packages + public SPA
+        working-directory: template-src
+        run: |
+          npm run build:packages
+          npm run build:web
+
+      - name: Install Encore CLI (OAP pinned version)
+        uses: ./.github/actions/encore-install
+        with:
+          encore-version: ${{ env.ENCORE_VERSION }}
+
+      - name: Install API dependencies
+        working-directory: template-src/apps/api
+        run: npm ci
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@bb05f3f5519dd87d3ba754cc423b652a5edd6d2c # v4
+
+      - name: Build the runtime base image (apps/api/Dockerfile.base)
+        working-directory: template-src
+        run: docker build -f apps/api/Dockerfile.base -t template-api-base:local apps/api
+
+      - name: Build the Encore image (encore build docker --base)
+        working-directory: template-src
+        run: npm run build:api
+
+      - name: Log in to GHCR
+        uses: docker/login-action@af1e73f918a031802d376d3c8bbc3fe56130a9b0 # v4
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Tag and push the reference image
+        run: |
+          docker tag template-api:local "${IMAGE}:${{ steps.meta.outputs.sha-tag }}"
+          docker tag template-api:local "${IMAGE}:latest"
+          docker push "${IMAGE}:${{ steps.meta.outputs.sha-tag }}"
+          docker push "${IMAGE}:latest"

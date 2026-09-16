@@ -1,0 +1,14 @@
+# Core platform hosts (DEV)
+# ------------------------------------------------------------------------------
+
+statecraft_host = "statecraft.localdev.online"
+deployd_host    = "deployd.localdev.online"
+rauthy_host     = "rauthy.localdev.online"
+
+letsencrypt_email = "admin@example.com"
+
+# If true, Terraform applies the ClusterIssuer resource
+apply_cluster_issuer = true
+
+# Rauthy (OIDC provider) is deployed via the rauthy Terraform module.
+# See platform/infra/terraform/modules/rauthy/ for configuration.

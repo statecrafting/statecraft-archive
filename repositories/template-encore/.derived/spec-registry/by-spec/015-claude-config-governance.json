@@ -1,0 +1,47 @@
+{
+  "record": {
+    "codeAliases": [
+      "CLAUDE_CONFIG"
+    ],
+    "created": "2026-06-10",
+    "dependsOn": [
+      "000-bootstrap"
+    ],
+    "domain": "agentic",
+    "establishes": [
+      {
+        "kind": "file",
+        "path": ".mcp.json"
+      },
+      {
+        "kind": "file",
+        "path": ".claude/settings.json"
+      }
+    ],
+    "id": "015-claude-config-governance",
+    "implementation": "complete",
+    "kind": "governance",
+    "owner": "bart",
+    "risk": "low",
+    "sectionHeadings": [
+      "015 — Claude Code shared config governance: .mcp.json and .claude/settings.json as hashed inputs",
+      "1. Purpose",
+      "2. Territory",
+      "3. Behavior",
+      "FR-01: Both files are hashed index inputs",
+      "FR-02: Edit-in-place discipline",
+      "FR-03: Self-governance loop",
+      "FR-04: User-scope files are excluded",
+      "FR-05: Governing existing content",
+      "4. Acceptance criteria",
+      "5. Out of scope",
+      "6. Design notes"
+    ],
+    "specPath": "specs/015-claude-config-governance/spec.md",
+    "status": "approved",
+    "summary": "Team-shared agentic configuration — .mcp.json (MCP servers) and .claude/settings.json (permissions, hooks) — is governed content: both files are hashed index inputs via spec-spine.toml's [index] extra_hashed_inputs, so a quiet edit to either is visible as index staleness on the PR. Files are edited in place, never reformatted (hook bodies are whitespace-sensitive shell strings).\n",
+    "title": "Claude Code shared config governance: .mcp.json and .claude/settings.json as hashed inputs"
+  },
+  "shardHash": "036ceb33f952a807fe43807ff4a89939bef5bb4388e5b6974bc62e9ddd8f4fd1",
+  "specVersion": "1.1.0"
+}

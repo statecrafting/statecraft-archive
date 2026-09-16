@@ -1,0 +1,10 @@
+# Aligned fixture for ci-parity-check tests (spec 104 §5.2).
+# Every significant token in this workflow's `run:` block is mirrored by a
+# token in the sibling Makefile.
+name: CI axiomregent
+on: [push]
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - run: cargo test --manifest-path crates/axiomregent/Cargo.toml

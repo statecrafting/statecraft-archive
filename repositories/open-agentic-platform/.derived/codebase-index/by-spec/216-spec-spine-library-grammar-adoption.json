@@ -1,0 +1,78 @@
+{
+  "mapping": {
+    "amends": [
+      "130-spec-coupling-primary-owner",
+      "154-logical-unit-ownership-grammar",
+      "133-amends-aware-coupling-gate",
+      "181-registry-consumer-unit-grammar-authority",
+      "188-derived-index-merge-serialization"
+    ],
+    "dependsOn": [
+      "001-spec-compiler-mvp",
+      "130-spec-coupling-primary-owner",
+      "132-constitutional-invariant-freeze",
+      "133-amends-aware-coupling-gate",
+      "153-invariant-freeze-additive-evolution",
+      "154-logical-unit-ownership-grammar"
+    ],
+    "implementingPaths": [
+      {
+        "path": "crates/featuregraph/tests/golden/features_graph.json",
+        "source": "spec-edge"
+      },
+      {
+        "path": "standards/schemas/spec-spine/registry.schema.json",
+        "source": "spec-edge"
+      },
+      {
+        "path": "tools/shared/spec-types/src/lib.rs",
+        "source": "spec-edge"
+      }
+    ],
+    "resolvedUnits": [
+      {
+        "locations": [
+          {
+            "file": "crates/featuregraph/tests/golden/features_graph.json"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "extends",
+        "unit": {
+          "kind": "file",
+          "path": "crates/featuregraph/tests/golden/features_graph.json"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "standards/schemas/spec-spine/registry.schema.json"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "extends",
+        "unit": {
+          "kind": "file",
+          "path": "standards/schemas/spec-spine/registry.schema.json"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "tools/shared/spec-types/src/lib.rs"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "refines",
+        "unit": {
+          "kind": "file",
+          "path": "tools/shared/spec-types/src/lib.rs"
+        }
+      }
+    ],
+    "specId": "216-spec-spine-library-grammar-adoption",
+    "specStatus": "approved"
+  },
+  "schemaVersion": "1.1.0",
+  "shardHash": "90ae48226e7278c7b6c462190d093be60e600838d40ce4ffec34e084fea332a4"
+}

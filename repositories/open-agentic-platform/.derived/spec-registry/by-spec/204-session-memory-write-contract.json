@@ -1,0 +1,208 @@
+{
+  "record": {
+    "amends": [
+      "198-factory-governance-envelope"
+    ],
+    "authors": [
+      "open-agentic-platform"
+    ],
+    "codeAliases": [
+      "SESSION_MEMORY_WRITE_CONTRACT"
+    ],
+    "created": "2026-06-11",
+    "dependsOn": [
+      "056-session-memory",
+      "198-factory-governance-envelope"
+    ],
+    "domain": "opc",
+    "establishes": [
+      {
+        "kind": "file",
+        "path": "product/packages/carrier-gate/src/rules.js"
+      },
+      {
+        "kind": "file",
+        "path": "product/packages/carrier-gate/src/fixture.js"
+      },
+      {
+        "kind": "file",
+        "path": "product/packages/carrier-gate/src/index.js"
+      },
+      {
+        "kind": "file",
+        "path": "product/packages/carrier-gate/src/index.d.ts"
+      },
+      {
+        "kind": "file",
+        "path": "product/packages/carrier-gate/src/rules.test.ts"
+      },
+      {
+        "kind": "file",
+        "path": "product/packages/carrier-gate/package.json"
+      },
+      {
+        "kind": "file",
+        "path": "product/packages/carrier-gate/tsconfig.json"
+      },
+      {
+        "kind": "file",
+        "path": "product/packages/session-memory/src/gate.ts"
+      },
+      {
+        "kind": "file",
+        "path": "product/packages/session-memory/src/gate.test.ts"
+      },
+      {
+        "kind": "file",
+        "path": "product/packages/session-memory/src/provenance.test.ts"
+      },
+      {
+        "kind": "file",
+        "path": "product/packages/session-memory/src/expiry/decay.ts"
+      },
+      {
+        "kind": "file",
+        "path": "product/packages/session-memory/src/expiry/retention.test.ts"
+      },
+      {
+        "kind": "file",
+        "path": "product/packages/session-memory/src/quarantine.test.ts"
+      }
+    ],
+    "extends": [
+      {
+        "nature": "additive",
+        "spec": "034-featuregraph-registry-scanner-fix",
+        "unit": {
+          "kind": "file",
+          "path": "crates/featuregraph/tests/golden/features_graph.json"
+        }
+      }
+    ],
+    "extraFrontmatter": {
+      "compliance": [
+        {
+          "controls": [
+            "ASI06"
+          ],
+          "framework": "owasp-asi-2026"
+        }
+      ],
+      "language": "en"
+    },
+    "featureBranch": "feat/204-session-memory-write-contract",
+    "id": "204-session-memory-write-contract",
+    "implementation": "complete",
+    "kind": "platform",
+    "references": [
+      {
+        "role": "context",
+        "unit": {
+          "kind": "file",
+          "path": "docs/owasp-agentic-top-10-2026.md"
+        }
+      }
+    ],
+    "refines": [
+      {
+        "aspect": "shared-carrier-rules",
+        "unit": {
+          "kind": "file",
+          "path": "platform/services/statecraft/api/factory/overrideGate.ts"
+        }
+      },
+      {
+        "aspect": "memory-write-gate",
+        "unit": {
+          "kind": "file",
+          "path": "product/packages/session-memory/src/server.ts"
+        }
+      },
+      {
+        "aspect": "provenance-trust-columns",
+        "unit": {
+          "kind": "file",
+          "path": "product/packages/session-memory/src/storage/sqlite.ts"
+        }
+      },
+      {
+        "aspect": "provenance-trust-columns",
+        "unit": {
+          "kind": "file",
+          "path": "product/packages/session-memory/src/storage/migrations.ts"
+        }
+      },
+      {
+        "aspect": "provenance-trust-columns",
+        "unit": {
+          "kind": "file",
+          "path": "product/packages/session-memory/src/tools/store.ts"
+        }
+      },
+      {
+        "aspect": "provenance-trust-columns",
+        "unit": {
+          "kind": "file",
+          "path": "product/packages/session-memory/src/harvesting/engine.ts"
+        }
+      },
+      {
+        "aspect": "retention-boundary",
+        "unit": {
+          "kind": "file",
+          "path": "product/packages/session-memory/src/expiry/promotion.ts"
+        }
+      },
+      {
+        "aspect": "retention-boundary",
+        "unit": {
+          "kind": "file",
+          "path": "product/packages/session-memory/src/storage/sqlite.test.ts"
+        }
+      },
+      {
+        "aspect": "retention-boundary",
+        "unit": {
+          "kind": "file",
+          "path": "product/packages/session-memory/src/integration.test.ts"
+        }
+      },
+      {
+        "aspect": "trust-class-types",
+        "unit": {
+          "kind": "file",
+          "path": "product/packages/session-memory/src/types.ts"
+        }
+      },
+      {
+        "aspect": "memory-write-gate",
+        "unit": {
+          "kind": "file",
+          "path": "product/packages/session-memory/src/index.ts"
+        }
+      },
+      {
+        "aspect": "memory-write-gate",
+        "unit": {
+          "kind": "file",
+          "path": "product/packages/session-memory/package.json"
+        }
+      }
+    ],
+    "sectionHeadings": [
+      "Feature Specification: Session-Memory Write Contract",
+      "Purpose",
+      "Functional requirements",
+      "Acceptance criteria",
+      "Out of scope",
+      "Sequencing",
+      "Implementation"
+    ],
+    "specPath": "specs/204-session-memory-write-contract/spec.md",
+    "status": "approved",
+    "summary": "Extend the substrate override-write discipline (spec 198 FR-013) to OAP's second persistent-memory surface: the OPC session-memory MCP (spec 056). Today memory writes are ungoverned — no validation-on-write, no provenance stamp, no trust class, no decay of unverified entries, and harvested agent output can be promoted toward permanent retention without any human in the loop (ASI06 bootstrap-poisoning shape). This spec mirrors the FR-013 architecture onto session memory: a deterministic carrier-class gate on every write, provenance (actor, origin session, content hash) on every revision, trust classes with human-gated promotion, trust-weighted decay, and a no-self-ingestion rule. The cross-cutting principle carries verbatim: a model may DETECT, only rules may BLOCK.\n",
+    "title": "Session-Memory Write Contract (ASI06 cockpit surface)"
+  },
+  "shardHash": "e2732f342f7048c1b7268042cf02faecee01cb1cec613904a346843020ddaf31",
+  "specVersion": "1.1.0"
+}

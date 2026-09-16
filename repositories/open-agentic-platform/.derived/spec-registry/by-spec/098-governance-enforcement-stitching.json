@@ -1,0 +1,70 @@
+{
+  "record": {
+    "codeAliases": [
+      "GOVERNANCE_ENFORCEMENT_STITCHING"
+    ],
+    "created": "2026-04-11",
+    "dependsOn": [
+      "090-governance-non-optionality",
+      "093-spec-driven-preflight",
+      "097-promotion-grade-mirror"
+    ],
+    "domain": "opc",
+    "extends": [
+      {
+        "nature": "additive",
+        "spec": "097-promotion-grade-mirror",
+        "unit": {
+          "kind": "file",
+          "path": "crates/orchestrator/src/promotion.rs"
+        }
+      },
+      {
+        "nature": "additive",
+        "spec": "097-promotion-grade-mirror",
+        "unit": {
+          "kind": "file",
+          "path": "crates/orchestrator/src/lib.rs"
+        }
+      },
+      {
+        "nature": "additive",
+        "spec": "033-axiomregent-activation",
+        "unit": {
+          "kind": "file",
+          "path": "crates/axiomregent/src/router/mod.rs"
+        }
+      },
+      {
+        "nature": "additive",
+        "spec": "033-axiomregent-activation",
+        "unit": {
+          "kind": "file",
+          "path": "crates/axiomregent/src/router/permissions.rs"
+        }
+      }
+    ],
+    "id": "098-governance-enforcement-stitching",
+    "implementation": "complete",
+    "kind": "governance",
+    "owner": "bart",
+    "risk": "high",
+    "sectionHeadings": [
+      "098 — Governance Enforcement Stitching",
+      "Problem",
+      "Solution",
+      "Slice 1: governance_mode field in DispatchResult + DispatchOptions",
+      "Slice 2: Capture GovernedPlan and thread to metadata",
+      "Slice 3: Positive-assertion promotion gate",
+      "Slice 4: Mutation preflight enforcement in MCP router",
+      "Slice 5: End-to-end integration test",
+      "Acceptance Criteria"
+    ],
+    "specPath": "specs/098-governance-enforcement-stitching/spec.md",
+    "status": "approved",
+    "summary": "Wire governance mode into live workflow metadata and make MCP router preflight blocking for mutation tools. Closes two stitching defects that leave governance advisory rather than constitutional.\n",
+    "title": "Governance Enforcement Stitching"
+  },
+  "shardHash": "9e6fb7c13b8a338dc12c381f3e14d0ec3fd29bbe2df96fe7cb7c3485d525677e",
+  "specVersion": "1.1.0"
+}

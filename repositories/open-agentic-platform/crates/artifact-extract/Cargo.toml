@@ -1,0 +1,41 @@
+# SPDX-License-Identifier: AGPL-3.0-or-later
+# Copyright (C) 2026 Bartek Kus
+
+[package]
+name = "artifact-extract"
+publish = false   # internal workspace crate; binaries ship via release workflows, not crates.io
+version = "0.2.0"
+edition = "2024"
+license = "AGPL-3.0-or-later"
+description = "Deterministic artifact extractor for the Factory s-1-extract stage. Emits typed factory_contracts::knowledge::ExtractionOutput. No model client allowed (spec 120 FR-007)."
+
+[lib]
+name = "artifact_extract"
+path = "src/lib.rs"
+
+# Legacy CLI shim for statecraft's `advanceKnowledgeToExtracted` incident-
+# response path (spec 115 `STATECRAFT_EXTRACT_LEGACY_TRANSITION`). Walks
+# `<root>/.artifacts/raw/` and invokes the spec-120 deterministic library
+# per file, emitting JSONL summary on stdout. Modern flow is the spec-120
+# `POST /api/projects/:projectId/knowledge/objects/:id/extraction-output`
+# endpoint, which does not call this binary.
+[[bin]]
+name = "artifact-extract"
+path = "src/bin/artifact_extract.rs"
+
+[dependencies]
+factory-contracts = { path = "../factory-contracts" }
+serde_json = "1"
+thiserror = "2"
+zip = { version = "2", default-features = false, features = ["deflate"] }
+quick-xml = "0.36"
+# 0.12 pulls lopdf ^0.42, the patched line for RUSTSEC-2026-0187 (DoS via
+# deeply nested PDF objects, fixed in lopdf 0.42.0). 0.7 pinned lopdf 0.34.
+pdf-extract = "0.12"
+
+[dev-dependencies]
+tempfile = "3"
+toml = "0.8"
+
+[package.metadata.oap]
+spec = "120-factory-extraction-stage"

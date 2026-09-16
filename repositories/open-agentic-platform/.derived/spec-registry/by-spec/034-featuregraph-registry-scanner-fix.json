@@ -1,0 +1,51 @@
+{
+  "record": {
+    "authors": [
+      "open-agentic-platform"
+    ],
+    "codeAliases": [
+      "FEATUREGRAPH_REGISTRY",
+      "GOVERNANCE_ENGINE"
+    ],
+    "created": "2026-03-29",
+    "domain": "tooling",
+    "extraFrontmatter": {
+      "language": "en"
+    },
+    "featureBranch": "034-featuregraph-registry-scanner-fix",
+    "id": "034-featuregraph-registry-scanner-fix",
+    "implementation": "complete",
+    "kind": "platform",
+    "origin": {
+      "retroactive": true
+    },
+    "owner": "bart",
+    "refines": [
+      {
+        "aspect": "scanner-spec-directive-canonical-layout",
+        "unit": {
+          "kind": "file",
+          "path": "crates/featuregraph/src/scanner.rs"
+        }
+      }
+    ],
+    "risk": "low",
+    "sectionHeadings": [
+      "Feature Specification: featuregraph registry scanner fix",
+      "Purpose",
+      "Scope",
+      "In scope",
+      "Out of scope",
+      "Requirements",
+      "Success criteria",
+      "Contract notes",
+      "Amendments received"
+    ],
+    "specPath": "specs/034-featuregraph-registry-scanner-fix/spec.md",
+    "status": "approved",
+    "summary": "Point the featuregraph scanner and related governance inputs at `.derived/spec-registry/registry.json` (compiled by spec-compiler) instead of requiring `spec/features.yaml`, so the governance panel can hydrate from the same source of truth as CI and the Inspect surface.\n",
+    "title": "featuregraph scanner reads compiled registry"
+  },
+  "shardHash": "0d12efceb48734862e102c430220c2a1e35c707017f1dd1c4015beec4532b200",
+  "specVersion": "1.1.0"
+}

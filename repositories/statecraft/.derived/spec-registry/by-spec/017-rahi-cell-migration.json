@@ -1,0 +1,44 @@
+{
+  "record": {
+    "created": "2026-09-11",
+    "dependsOn": [
+      "002-app-shell",
+      "014-rahi-realignment"
+    ],
+    "establishes": [
+      {
+        "kind": "directory",
+        "path": "specs/017-rahi-cell-migration/"
+      }
+    ],
+    "id": "017-rahi-cell-migration",
+    "implementation": "pending",
+    "sectionHeadings": [
+      "017: The Rahi cell shell and the domain port",
+      "1. Purpose",
+      "1.1 Two parts, two approvals",
+      "1.2 Part A's Rahi checklist",
+      "2. What the port actually is, measured",
+      "3. The cell shell",
+      "4. What the shell inherits, and what it must not assume",
+      "5. The domain port",
+      "6. Identity: the volume is the migration",
+      "7. Evidence moves as original bytes",
+      "8. The fleet disposition",
+      "9. The factory disposition",
+      "10. The model disposition",
+      "11. The UI",
+      "12. Part B: cutover and rollback",
+      "13. Part B's gate: live prerequisites",
+      "14. Acceptance",
+      "15. Cross-repo dependency",
+      "16. Out of scope"
+    ],
+    "specPath": "specs/017-rahi-cell-migration/spec.md",
+    "status": "draft",
+    "summary": "The control plane becomes a Rahi cell: a manifest, migrations, routes, operator routes, and a one-line main that hands control to the chassis runner. Roughly half of today's backend is chassis plumbing that Rahi supplies outright and is deleted rather than ported; the other half is the domain, which moves behind a port that preserves tenant and GitHub semantics exactly, negative authorization tests first. Identity is a volume, not a database, so the volume is the migration's primary object; the legacy evidence chain is archived and closed as original bytes with the published verifier binary that verifies them, and stays historical evidence rather than becoming the cell's ledger. Cutover is staged behind a reverse proxy with a stated rollback, and acceptance is live, never a green unit suite. The spec is two parts. Part A is a new N=1 Rahi pilot cell that holds no live data and enrols no external customer, built against Rahi's pilot checklist. Part B migrates the running plane, and only after rehearsal evidence and a recorded cutover decision. Aligned on 2026-09-12 with the owner's adoption (spec 014 section 11): pilot first and migration later (ST-03); the factory and fleet preserved without expansion, with retirement and native extraction deferred until Part B's inventory and rollback are proven (ST-02); the endpoint table in a statecraft overlay and no unknown section in Rahi's manifest (ST-04).\n",
+    "title": "The Rahi cell shell and the domain port: migration, cutover and rollback"
+  },
+  "shardHash": "4a0108dfc90a9730d3e522193ba22e614df6b636b9a2b1012c2aa9a86f385a95",
+  "specVersion": "1.2.0"
+}

@@ -1,0 +1,626 @@
+# ============================================================================
+# Factory Build Specification Schema
+# ============================================================================
+#
+# The Build Specification is the core contract between the Process Layer
+# (factory pipeline) and the Adapter Layer (tech-specific implementation).
+#
+# It describes WHAT to build - completely technology-free.
+# No frameworks, no languages, no components, no file paths.
+#
+# The factory produces this. The adapter consumes it.
+#
+# Schema version: 1.2.0
+#
+# 1.2.0 (spec 210 - build spec agentic posture): adds the top-level
+#   agentic_posture object (posture: none | declared | governed, with
+#   enumerated surfaces; governed surfaces carry an inline governance
+#   envelope). Additive/optional; absent field defaults to none, and the
+#   governance certificate records the default AS defaulted (so an auditor
+#   can tell "authored none" from "nobody asked").
+#
+# 1.1.0 (spec 197 - open-standard extensions):
+#   - auth.audiences.<name>.provisioning_model  (admin-only | open-authenticated) - REQUIRED
+#       per audience (explicit, auditable access decision; no silent default)
+#   - integrations[].implementation_status      (live | stub | deferred) - optional/additive
+# Only org-/stack-generalizable concepts may enter this contract; organization-specific
+# concepts (classification labels, service catalogue) live in the adapter layer.
+# ============================================================================
+
+schema_version: "1.2.0"
+
+# ─────────────────────────────────────────────────────────────────────────────
+# PROJECT
+# ─────────────────────────────────────────────────────────────────────────────
+# Identity and deployment topology of the system being built.
+#
+project:
+  # Required fields
+  name: string                    # Machine-safe slug (e.g., "acme-vendor-onboarding-portal")
+  display_name: string            # Human-readable (e.g., "Acme Vendor Onboarding Portal")
+  org: string                     # Organization slug (e.g., "acme-corp")
+  description: string             # One-paragraph purpose statement
+
+  # Variant determines deployment topology
+  # - single-public:  one API + one web, internet-facing, no owned database
+  # - single-internal: one API + one web, private network, owns database
+  # - dual: two APIs + two webs, public proxies to internal via service-to-service auth
+  variant:
+    enum: [single-public, single-internal, dual]
+
+  # Optional metadata
+  domain: string                  # e.g., "events-and-conferences"
+  fiscal_context: string          # e.g., "2025-2026" if relevant to business logic
+
+
+# ─────────────────────────────────────────────────────────────────────────────
+# AGENTIC POSTURE (spec 210)
+# ─────────────────────────────────────────────────────────────────────────────
+# The produced application's OWN agentic surface, as a declared, falsifiable
+# contract fact (Least Agency applied to outputs). Optional/additive. Absent
+# field defaults to `none`, and the governance certificate records the default
+# AS defaulted, so an auditor can tell "authored none" (someone decided) from
+# "defaulted none" (nobody asked). The declaration is falsified against the
+# produced app's SBOM (spec 203): posture `none` with a known agent/LLM SDK
+# dependency in the BOM fails certificate verification with a diagnostic naming
+# the package. This is app-level posture, NOT the factory-run envelope (spec
+# 198): the run envelope governs how the factory built; this governs what it
+# built.
+#
+agentic_posture:                     # optional; absent => none (recorded defaulted)
+  # Declared agentic level of the produced application.
+  posture:
+    enum: [none, declared, governed] # none: no model calls, agent loops, tool surfaces, or persistent memory; declared: surfaces enumerated; governed: declared + each surface carries a governance envelope
+  # Enumerated agentic surfaces. REQUIRED non-empty for `declared` and
+  # `governed`; MUST be empty (or omitted) for `none`.
+  surfaces:
+    - kind:
+        enum: [model-api, tool-surface, memory-persistence, human-approval-point]
+      description: string            # human elaboration of the surface
+      # REQUIRED for every surface under `governed`: an inline governance
+      # envelope conforming (in shape) to governance-envelope.schema.yaml (the
+      # spec 198 schema, reused at application level). Shape validation only;
+      # runtime admission of the app's own agents is the tenant deployment's
+      # concern, out of scope here.
+      governance_envelope: object    # see governance-envelope.schema.yaml
+
+
+# ─────────────────────────────────────────────────────────────────────────────
+# AUTH
+# ─────────────────────────────────────────────────────────────────────────────
+# Authentication methods and role definitions. Tech-agnostic: specifies
+# what kind of auth, not what library or driver implements it.
+#
+auth:
+  audiences:
+    # Key = audience name (e.g., "citizen", "staff")
+    # Each audience maps to an auth method and a set of roles.
+    <audience_name>:
+      method:
+        enum: [saml, oidc, api-key, basic, mock]
+      provider: string            # Identity provider name (e.g., "keycloak", "auth0")
+      # How users of THIS audience gain access (spec 197). REQUIRED per audience -
+      # an explicit, auditable access decision with NO silent default (a missing
+      # value is a hard error, not a permissive fallback). Per-audience by design:
+      # a dual app may set citizen=open-authenticated + staff=admin-only.
+      provisioning_model:                        # REQUIRED
+        enum: [admin-only, open-authenticated]   # admin-only: pre-provisioned by admin + user-management page; open-authenticated: auto-create on first login, no user-management page
+      roles:
+        - role_code: string       # Machine-safe (e.g., "onboarding-analyst")
+          display_name: string    # Human-readable (e.g., "Onboarding Analyst")
+          description: string     # What this role can do
+          permissions: [string]   # Abstract permission labels (e.g., "assess:write", "decision:write")
+
+  # Service-to-service auth (for dual-stack or external integrations)
+  service_to_service:
+    method:
+      enum: [client-credentials, mutual-tls, api-key, none]
+    description: string           # e.g., "Public API acquires token to call internal API"
+    token_validation:
+      issuer: [string]            # Allowed issuer URLs (e.g., ["https://issuer.example.com/realms/app"])
+      audience: string            # Expected audience claim (e.g., "app-api")
+      allowed_clients: [string]   # Client ID allowlist (empty = any valid token)
+    token_cache:
+      enabled: boolean
+      refresh_buffer_seconds: integer  # Refresh this many seconds before expiry (e.g., 300)
+
+  # Session policy
+  session:
+    timeout_minutes: integer      # e.g., 30
+    require_recent_auth_for: [string]  # Operations requiring recent re-authentication
+    persistence:
+      enum: [none, persistent]    # "none" = in-memory OK (dev only); "persistent" = must survive restart
+    store_type_hint: string       # Advisory: "redis", "postgresql", "dynamodb" - adapter picks implementation
+
+
+# ─────────────────────────────────────────────────────────────────────────────
+# DATA MODEL
+# ─────────────────────────────────────────────────────────────────────────────
+# Tech-agnostic entity model. No SQL, no ORM, no table names.
+# Adapters translate this to their database layer (DDL, migrations, types).
+#
+data_model:
+  entities:
+    - name: string                # PascalCase entity name (e.g., "Event")
+      description: string         # What this entity represents
+
+      fields:
+        - name: string            # camelCase field name (e.g., "requestedAmount")
+          type:
+            enum: [
+              string, text, integer, decimal, boolean, uuid,
+              date, datetime, timestamp,
+              enum, json,
+              reference                # FK to another entity
+            ]
+          primary: boolean          # default: false
+          required: boolean         # default: false
+          unique: boolean           # default: false
+          default: any              # default value (literal or keyword like "now", "uuid")
+
+          # For enum type
+          enum_values: [string]     # e.g., ["draft", "submitted", "approved"]
+
+          # For decimal type
+          precision: integer        # total digits
+          scale: integer            # decimal places
+
+          # For string type
+          max_length: integer
+
+          # For reference type
+          ref_entity: string        # Target entity name
+          ref_field: string         # Target field name (default: primary key)
+          ref_on_delete:
+            enum: [cascade, restrict, set-null, no-action]
+
+      # Composite unique constraints
+      unique_constraints:
+        - fields: [string]          # e.g., ["organizationId", "contactRole"]
+          name: string              # Constraint name
+
+      # Check constraints (expressed as business rules, not SQL)
+      check_constraints:
+        - name: string
+          description: string       # Human-readable (e.g., "Fiscal year must be YYYY-YYYY format")
+
+      # Indexes for query performance
+      indexes:
+        - fields: [string]
+          unique: boolean
+
+      # Business rules that govern this entity
+      business_rules: [string]      # References to rules in business_rules section (e.g., "BR-007")
+
+      # Hydration hints for seed/fixture generation (spec 081)
+      hydration:
+        type:
+          enum: [reference, transactional, junction]
+        seed_count: integer           # Rows for reference seed (0 = derive from enum_values)
+        fixture_count: integer        # Dev fixture rows (default: 3)
+        fixture_profiles:
+          - name: string              # e.g., "draft-request"
+            description: string       # e.g., "A registration in draft status"
+            field_overrides:
+              <field_name>: any       # e.g., status: "draft"
+
+  # Relationships that don't fit as simple references
+  # (e.g., many-to-many junction tables, polymorphic associations)
+  relationships:
+    - type:
+        enum: [one-to-one, one-to-many, many-to-many]
+      from: string                  # Entity name
+      to: string                    # Entity name
+      through: string               # Junction entity name (for many-to-many)
+      description: string
+
+
+# ─────────────────────────────────────────────────────────────────────────────
+# BUSINESS RULES
+# ─────────────────────────────────────────────────────────────────────────────
+# Named rules that govern domain behavior. Referenced by entities,
+# operations, and pages. Tech-agnostic: describes the constraint,
+# not the implementation.
+#
+business_rules:
+  - id: string                     # e.g., "BR-007"
+    name: string                   # Short title (e.g., "Registration State Machine")
+    description: string            # Full description of the rule
+    type:
+      enum: [
+        state-machine,             # Status transition constraints
+        validation,                # Field/form validation
+        computation,               # Calculated field (e.g., composite score)
+        authorization,             # Role-based access control
+        constraint,                # Cross-entity or temporal constraint
+        privacy,                   # Data suppression/masking
+        retention                  # Data lifecycle/retention policy
+      ]
+    enforced_at:
+      enum: [service, database, both]
+    entities: [string]             # Which entities this rule applies to
+
+    # Type-specific detail (only the relevant block is required)
+
+    # For state-machine type
+    states: [string]               # All valid states
+    transitions:
+      - from: string
+        to: [string]               # Valid target states
+        requires_role: [string]    # Roles allowed to trigger
+        conditions: [string]       # Human-readable preconditions
+    terminal_states: [string]      # States with no outbound transitions
+
+    # For computation type
+    formula: string                # Human-readable formula
+    inputs: [string]               # Field names used in computation
+    output: string                 # Field that holds the result
+
+    # For validation type
+    condition: string              # When this validation applies
+    message: string                # Error message if violated
+
+
+# ─────────────────────────────────────────────────────────────────────────────
+# API
+# ─────────────────────────────────────────────────────────────────────────────
+# Resource-oriented API specification. Describes endpoints, operations,
+# auth requirements, and data shapes - without HTTP framework specifics.
+#
+api:
+  # Base path prefix (e.g., "/api/v1")
+  base_path: string
+
+  resources:
+    - name: string                  # Kebab-case resource name (e.g., "events")
+      entity: string                # Primary entity this resource manages
+      description: string
+
+      # Parent resource for nested routes (e.g., "events" for programs)
+      parent:
+        resource: string            # Parent resource name
+        param: string               # URL parameter name (e.g., "requestId")
+
+      operations:
+        - id: string                # Unique operation ID (e.g., "create-event")
+          method:
+            enum: [GET, POST, PUT, PATCH, DELETE]
+          path: string              # Relative to resource base (e.g., "/", "/:id", "/:id/transitions")
+          description: string       # What this operation does
+
+          # Who can call this
+          audience: [string]        # Audience names from auth section (e.g., ["citizen", "staff"])
+          auth:
+            enum: [required, optional, service-only, public]
+          required_roles: [string]  # Role codes (empty = any authenticated user)
+
+          # For dual-stack: which API stack handles this
+          stack:
+            enum: [public, internal, both]
+
+          # Request shape
+          request:
+            params:
+              - name: string
+                type: string
+                description: string
+            query:
+              - name: string
+                type: string
+                required: boolean
+                description: string
+            body:
+              entity: string        # Entity name for request body
+              fields: [string]      # Subset of entity fields accepted
+              schema: object        # Override: inline schema if not entity-derived
+
+          # Response shape
+          response:
+            type:
+              enum: [single, list, paginated, empty, binary, custom]
+            entity: string          # Entity name for response
+            fields: [string]        # Subset of entity fields returned (empty = all)
+            schema: object          # Override: inline schema if not entity-derived
+
+          # Business rules enforced by this operation
+          business_rules: [string]  # e.g., ["BR-007", "BR-010"]
+
+          # Traceability
+          use_cases: [string]       # e.g., ["UC-003"]
+          test_cases: [string]      # e.g., ["TC-012"]
+
+  # Non-resource endpoints (health, audit, system)
+  system_endpoints:
+    - id: string
+      method: string
+      path: string
+      description: string
+      auth:
+        enum: [required, optional, service-only, public]
+
+
+# ─────────────────────────────────────────────────────────────────────────────
+# UI
+# ─────────────────────────────────────────────────────────────────────────────
+# Page specifications. Describes what pages exist, what data they show,
+# what actions they support - without framework or component specifics.
+#
+ui:
+  pages:
+    - id: string                    # Unique page ID (e.g., "dashboard")
+      title: string                 # Display title
+      path: string                  # URL path (e.g., "/dashboard")
+      description: string           # What this page does
+
+      page_type:
+        enum: [
+          landing,                  # Public landing/marketing page
+          dashboard,                # Overview with metrics/cards
+          list,                     # Table/list of records
+          detail,                   # Single record view
+          form,                     # Create/edit form
+          content,                  # Static content page
+          help,                     # Help/documentation page
+          profile,                  # User profile
+          login,                    # Authentication page
+          error                     # Error page (404, 500)
+        ]
+
+      audience: string              # Audience name from auth section
+      view_type:
+        enum: [public, public-authenticated, private-authenticated]
+
+      # Auth requirements
+      requires_auth: boolean
+      required_roles: [string]      # Empty = any authenticated user
+      guest_only: boolean           # Only for unauthenticated users (e.g., login page)
+
+      # Data sources - what API operations this page calls
+      data_sources:
+        - operation_id: string      # References api.resources.operations.id
+          purpose: string           # e.g., "Load request list", "Submit form"
+          trigger:
+            enum: [on-load, on-action, on-submit, on-interval]
+
+      # For form pages: what the form submits to
+      submits_to: string            # Operation ID
+
+      # Navigation
+      nav_section: string           # Where this appears in navigation (e.g., "main", "admin", "none")
+      nav_order: integer            # Sort order within section
+      nav_icon: string              # Icon hint (adapter maps to its icon library)
+
+      # Traceability
+      use_cases: [string]
+      test_cases: [string]
+
+  # Navigation structure
+  navigation:
+    sections:
+      - id: string                  # e.g., "main", "admin"
+        label: string
+        audience: string
+        view_type: string
+
+
+# ─────────────────────────────────────────────────────────────────────────────
+# INTEGRATIONS
+# ─────────────────────────────────────────────────────────────────────────────
+# External systems the application connects to. Tech-agnostic: describes
+# what integration exists, not how it's implemented.
+#
+integrations:
+  - id: string                      # e.g., "INT-002"
+    name: string                    # e.g., "S3-compatible object storage"
+    type:
+      enum: [
+        file-storage,               # Object/blob storage
+        data-ingestion,             # Periodic data import from external source
+        email,                      # Transactional email
+        identity-provider,          # Auth provider (detailed in auth section)
+        external-api,               # Generic external API
+        message-queue               # Async message bus
+      ]
+    description: string
+    required: boolean               # false = graceful degradation if unavailable
+
+    # Configuration requirements (adapter maps to env vars)
+    config_params:
+      - name: string                # e.g., "connection_string", "api_base_url"
+        description: string
+        sensitive: boolean          # Should be treated as a secret
+        required: boolean
+
+    # For data-ingestion type
+    sync_schedule: string           # Cron expression or keyword (e.g., "daily", "0 2 * * *")
+
+    # Related business rules
+    business_rules: [string]
+
+    # Implementation lifecycle (spec 197). Optional; absent ⇒ unspecified (adapter decides).
+    # NOTE: deliberately NO "catalog-auto" / service-catalogue value - a catalogue is org
+    # infrastructure, not a contract concept (open-standard principle, spec 197 FR-005).
+    implementation_status:
+      enum: [live, stub, deferred]    # live: wired to a real service; stub: "service pending" indicator; deferred: declared, not yet implemented
+
+
+# ─────────────────────────────────────────────────────────────────────────────
+# NOTIFICATIONS
+# ─────────────────────────────────────────────────────────────────────────────
+# Event-driven notifications the system must send.
+#
+notifications:
+  events:
+    - id: string                    # e.g., "application_submitted"
+      trigger: string               # What causes this (e.g., "Event transitions to submitted")
+      recipient: string             # Role or relationship (e.g., "applicant", "assigned-analyst")
+      channel:
+        enum: [email, in-app, both]
+      subject_template: string      # e.g., "Your registration {{requestId}} has been submitted"
+      description: string
+      delivery:
+        enum: [fire-and-forget, async-with-retry, guaranteed]
+      retry_attempts: integer       # Only for async-with-retry (default: 0)
+
+
+# ─────────────────────────────────────────────────────────────────────────────
+# AUDIT
+# ─────────────────────────────────────────────────────────────────────────────
+# Audit trail requirements.
+#
+audit:
+  enabled: boolean
+  tracked_actions:
+    - action_code: string           # e.g., "create", "update", "status-change", "role-change"
+      entities: [string]            # Which entities trigger this action
+      captures: [string]            # What data to log (e.g., "new_value", "old_value", "ip_address")
+  retention:
+    policy: string                  # e.g., "7-years"
+    immutable: boolean              # If true, audit records cannot be modified or deleted
+  business_rules: [string]          # e.g., ["BR-017", "BR-018"]
+
+
+# ─────────────────────────────────────────────────────────────────────────────
+# SECURITY
+# ─────────────────────────────────────────────────────────────────────────────
+# Non-functional security requirements. Describes WHAT protections the
+# system must have - not HOW the adapter implements them (that's in the
+# adapter's middleware patterns).
+#
+security:
+  # Rate limiting tiers
+  rate_limiting:
+    - tier: string                  # e.g., "default", "auth", "upload"
+      description: string           # e.g., "General API endpoints"
+      max_requests: integer         # e.g., 100
+      window_seconds: integer       # e.g., 900 (15 minutes)
+      applies_to: [string]          # Operation IDs or patterns (e.g., ["*"], ["login-*", "callback-*"])
+
+  # CORS policy
+  cors:
+    allow_credentials: boolean      # Whether to allow cookies/session credentials
+    origin_policy:
+      enum: [explicit, same-origin, wildcard]  # "explicit" = must be configured per deployment
+    description: string
+
+  # Host header validation
+  host_validation:
+      enum: [required, optional, none]  # "required" = must validate Host header against allowlist
+      description: string
+
+  # Content Security Policy level
+  csp:
+    enabled: boolean
+    reporting_endpoint: boolean     # Whether to expose a CSP violation reporting endpoint
+
+  # CSRF protection
+  csrf:
+    enabled: boolean
+    applies_to:
+      enum: [state-changing, all]   # "state-changing" = POST/PUT/PATCH/DELETE only
+
+  # Request tracing
+  correlation_id:
+    enabled: boolean
+    header_name: string             # e.g., "X-Request-Id"
+    propagate_to_downstream: boolean  # Forward to internal APIs in dual-stack
+
+
+# ─────────────────────────────────────────────────────────────────────────────
+# HEALTH CHECKS
+# ─────────────────────────────────────────────────────────────────────────────
+# What health/readiness probes the system must expose.
+#
+health_checks:
+  liveness:
+    path: string                    # e.g., "/health/liveness"
+    description: string             # e.g., "Process is alive, no dependency checks"
+
+  readiness:
+    path: string                    # e.g., "/health/readiness"
+    description: string
+    dependencies:
+      - name: string                # e.g., "session-store", "database", "community-data"
+        check: string               # What to verify (e.g., "ping", "table-exists", "connection-pool")
+        timeout_ms: integer         # e.g., 5000
+        required: boolean           # If true, readiness fails when this dependency is down
+
+  info:
+    path: string                    # e.g., "/api/v1/info"
+    description: string
+    redact_in_production: boolean   # Whether to suppress details in production
+
+
+# ─────────────────────────────────────────────────────────────────────────────
+# ERROR HANDLING
+# ─────────────────────────────────────────────────────────────────────────────
+# Error response contract. Defines the error envelope structure so that
+# adapters produce consistent error responses and frontends can parse them.
+#
+error_handling:
+  envelope:
+    success_field: string           # e.g., "success" - boolean indicating success/failure
+    error_field: string             # e.g., "error" - object containing error details
+    error_subfields:
+      - name: string                # e.g., "code", "message", "details"
+        type: string                # e.g., "string", "string", "object"
+        required: boolean
+  suppress_details_in_production: boolean  # Never expose stack traces or internal errors
+
+
+# ─────────────────────────────────────────────────────────────────────────────
+# DATA INGESTION (expanded)
+# ─────────────────────────────────────────────────────────────────────────────
+# For integrations of type data-ingestion, additional requirements.
+# Supplements the integrations section with operational detail.
+#
+data_ingestion:
+  - integration_id: string          # References integrations[].id
+    manual_trigger: boolean         # Whether admins can trigger sync manually
+    status_endpoint: boolean        # Whether to expose sync status for monitoring
+    partial_failure:
+      enum: [abort, continue, continue-and-log]  # What to do on per-record errors
+    staleness_tracking: boolean     # Track last-sync-at, record count, duration
+    privacy_rules: [string]         # Business rules applied during ingestion (e.g., ["BR-015", "BR-016"])
+
+
+# ─────────────────────────────────────────────────────────────────────────────
+# FILE STORAGE (expanded)
+# ─────────────────────────────────────────────────────────────────────────────
+# For integrations of type file-storage, additional requirements.
+#
+file_storage:
+  - integration_id: string          # References integrations[].id
+    upload:
+      method:
+        enum: [pre-signed-url, direct-upload, multipart]
+      url_expiry_seconds: integer   # e.g., 900 (15 minutes)
+    download:
+      method:
+        enum: [pre-signed-url, proxy, direct]
+      url_expiry_seconds: integer   # e.g., 3600 (1 hour)
+    virus_scanning:
+      enabled: boolean
+      scan_before_available: boolean  # If true, file is not downloadable until scan passes
+    max_file_size_bytes: integer
+    allowed_mime_types: [string]    # e.g., ["application/pdf", "image/png", "image/jpeg"]
+
+
+# ─────────────────────────────────────────────────────────────────────────────
+# TRACEABILITY
+# ─────────────────────────────────────────────────────────────────────────────
+# Maps use cases and test cases to the features that implement them.
+# Used by the verification layer for cross-stage consistency checks.
+#
+traceability:
+  use_cases:
+    - id: string                    # e.g., "UC-003"
+      name: string                  # e.g., "Submit Registration"
+      description: string
+
+  test_cases:
+    - id: string                    # e.g., "TC-012"
+      name: string
+      covers_use_case: string       # UC reference
+      type:
+        enum: [unit, integration, e2e, smoke, manual]

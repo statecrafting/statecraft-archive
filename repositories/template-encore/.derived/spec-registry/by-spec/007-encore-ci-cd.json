@@ -1,0 +1,59 @@
+{
+  "record": {
+    "codeAliases": [
+      "ENCORE_CI",
+      "ENCORE_CD"
+    ],
+    "created": "2026-06-10",
+    "dependsOn": [
+      "001-encore-app-architecture",
+      "005-spa-static-serving",
+      "009-repo-ci-orchestrator"
+    ],
+    "domain": "ci-cd",
+    "establishes": [
+      {
+        "kind": "file",
+        "path": ".github/actions/encore-install/action.yml"
+      },
+      {
+        "kind": "file",
+        "path": ".github/actions/encore-build/action.yml"
+      },
+      {
+        "kind": "file",
+        "path": ".github/workflows/encore-ci.yml"
+      },
+      {
+        "kind": "file",
+        "path": ".github/workflows/encore-cd.yml.example"
+      }
+    ],
+    "id": "007-encore-ci-cd",
+    "implementation": "complete",
+    "kind": "governance",
+    "owner": "bart",
+    "risk": "medium",
+    "sectionHeadings": [
+      "007 — Encore CI/CD: composite actions, CI workflow, CD example, typed-client staleness gate",
+      "1. Purpose",
+      "2. Territory",
+      "3. Behavior",
+      "FR-001 — `encore-install` composite action",
+      "FR-002 — `encore-build` composite action",
+      "FR-003 — `encore-ci.yml` workflow structure",
+      "FR-004 — Typed-client staleness gate (determinism contract)",
+      "FR-005 — `encore-cd.yml.example` (inert template)",
+      "FR-006 — SHA-pinning",
+      "FR-007 — ci.yml routing (co-authority)",
+      "4. Acceptance criteria",
+      "5. Out of scope"
+    ],
+    "specPath": "specs/007-encore-ci-cd/spec.md",
+    "status": "approved",
+    "summary": "Encore delivery plumbing: encore-install and encore-build composite actions, the reusable encore-ci.yml workflow (web type-check/build, encore check, typed-client staleness diff with volatile-prefix normalisation), and the inert encore-cd.yml.example deployment recipe. Encore CI is dispatched from ci.yml's encore route and required by ci-gate.\n",
+    "title": "Encore CI/CD: composite actions, CI workflow, CD example, typed-client staleness gate"
+  },
+  "shardHash": "3193680acfc72308e6f0460423a58def94927add859500a4b9ebcc25b8fcb06b",
+  "specVersion": "1.1.0"
+}

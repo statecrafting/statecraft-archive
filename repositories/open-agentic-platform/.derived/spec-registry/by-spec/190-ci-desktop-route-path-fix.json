@@ -1,0 +1,59 @@
+{
+  "record": {
+    "codeAliases": [
+      "CI_DESKTOP_ROUTE_FIX"
+    ],
+    "created": "2026-05-30",
+    "dependsOn": [
+      "177-ci-orchestrator-pr-gate",
+      "178-opc-directory-rename"
+    ],
+    "domain": "tooling",
+    "extends": [
+      {
+        "nature": "additive",
+        "spec": "034-featuregraph-registry-scanner-fix",
+        "unit": {
+          "kind": "file",
+          "path": "crates/featuregraph/tests/golden/features_graph.json"
+        }
+      }
+    ],
+    "extraFrontmatter": {
+      "approved": "2026-05-30",
+      "completed": "2026-05-30",
+      "slug": "ci-desktop-route-path-fix"
+    },
+    "id": "190-ci-desktop-route-path-fix",
+    "implementation": "complete",
+    "kind": "governance",
+    "owner": "bart",
+    "refines": [
+      {
+        "aspect": "desktop-route-path",
+        "refines_specs": [
+          "177-ci-orchestrator-pr-gate"
+        ],
+        "unit": {
+          "kind": "file",
+          "path": ".github/workflows/ci.yml"
+        }
+      }
+    ],
+    "risk": "low",
+    "sectionHeadings": [
+      "190 — Fix ci.yml desktop paths-filter after the #178 rename",
+      "1. Problem",
+      "2. Fix",
+      "3. Scope and non-goals",
+      "4. Acceptance",
+      "5. Cross-references"
+    ],
+    "specPath": "specs/190-ci-desktop-route-path-fix/spec.md",
+    "status": "approved",
+    "summary": "The spec-177 CI orchestrator routes the desktop PR gate (check + clippy + test) via a dorny/paths-filter glob in `ci.yml`. That glob still names `product/apps/desktop/**`, but spec 178 renamed the directory to `product/apps/opc/`. Since #178 the desktop gate has therefore been **dark for desktop-only PRs** — it fired only incidentally when a PR also touched `crates/**` (the filter's other glob). This spec retargets the glob to `product/apps/opc/**`, restoring the gate. A live demonstration: PR #257 changed `product/apps/opc/src-tauri/**` and the desktop job skipped, so a clippy violation merged; PR #258 (which touched `crates/`) ran the gate and caught it. Same class of silent-dark-gate as spec 189's schema-parity finding, narrower blast radius.\n",
+    "title": "Fix ci.yml desktop paths-filter stranded by the spec-178 product/apps rename"
+  },
+  "shardHash": "b838b8711389f9450f17910aa74b3861f9c9ed1c2f1494a3adaa4e92f26ab9f2",
+  "specVersion": "1.1.0"
+}

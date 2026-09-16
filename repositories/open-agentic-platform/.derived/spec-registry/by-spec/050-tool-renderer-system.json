@@ -1,0 +1,49 @@
+{
+  "record": {
+    "authors": [
+      "open-agentic-platform"
+    ],
+    "codeAliases": [
+      "TOOL_RENDERER_SYSTEM"
+    ],
+    "created": "2026-03-29",
+    "domain": "opc",
+    "establishes": [
+      {
+        "id": "@opc/tool-renderer",
+        "kind": "crate"
+      }
+    ],
+    "extraFrontmatter": {
+      "language": "en"
+    },
+    "featureBranch": "050-tool-renderer-system",
+    "id": "050-tool-renderer-system",
+    "implementation": "complete",
+    "kind": "platform",
+    "sectionHeadings": [
+      "Feature Specification: Config-Driven Tool Rendering System",
+      "Purpose",
+      "Scope",
+      "In scope",
+      "Out of scope",
+      "Requirements",
+      "Functional",
+      "Non-functional",
+      "Architecture",
+      "ToolDisplayConfig type",
+      "Package structure",
+      "Rendering flow",
+      "Implementation approach",
+      "Success criteria",
+      "Dependencies",
+      "Risk"
+    ],
+    "specPath": "specs/050-tool-renderer-system/spec.md",
+    "status": "approved",
+    "summary": "Config-driven tool rendering replacing hard-coded display logic with a ToolDisplayConfig registry. Each tool declares input display, result display, content renderers, and color schemes. Supports subagent containers with nested tool history and collapsible thinking traces with elapsed time.\n",
+    "title": "Config-Driven Tool Rendering System"
+  },
+  "shardHash": "7c53fd3b92e409be1dd81b64e488ee788f9605abbc648a1695ae357525ce4c11",
+  "specVersion": "1.1.0"
+}

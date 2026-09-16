@@ -1,0 +1,59 @@
+{
+  "record": {
+    "codeAliases": [
+      "PORTFOLIO_INTELLIGENCE"
+    ],
+    "created": "2026-04-11",
+    "dependsOn": [
+      "091-registry-enrichment",
+      "093-spec-driven-preflight"
+    ],
+    "domain": "tooling",
+    "establishes": [
+      {
+        "kind": "file",
+        "path": "crates/featuregraph/src/enrichment.rs"
+      }
+    ],
+    "extends": [
+      {
+        "nature": "additive",
+        "spec": "034-featuregraph-registry-scanner-fix",
+        "unit": {
+          "kind": "file",
+          "path": "crates/featuregraph/src/preflight.rs"
+        }
+      },
+      {
+        "nature": "additive",
+        "spec": "083-xray-ui-upgrade",
+        "unit": {
+          "id": "xray",
+          "kind": "crate"
+        }
+      }
+    ],
+    "id": "096-portfolio-intelligence",
+    "implementation": "complete",
+    "kind": "platform",
+    "owner": "bart",
+    "risk": "medium",
+    "sectionHeadings": [
+      "096 — Portfolio Intelligence",
+      "Problem",
+      "Solution",
+      "Implementation Slices",
+      "Slice 1: xray-featuregraph bridge (`enrichment.rs`)",
+      "Slice 2: Blast radius analysis",
+      "Slice 3: Wire `governance_drift` as Tauri command",
+      "Slice 4: Enriched preflight with blast radius",
+      "Acceptance Criteria"
+    ],
+    "specPath": "specs/096-portfolio-intelligence/spec.md",
+    "status": "approved",
+    "summary": "Bridge xray structural metrics and featuregraph feature attribution into a unified portfolio intelligence layer. Enables blast radius analysis, governance drift detection from desktop, and enriched feature views with complexity and test coverage data.\n",
+    "title": "Portfolio Intelligence — xray-featuregraph Bridge"
+  },
+  "shardHash": "ac2041bb4e7c1e3f79fa331ef964f713b37932b2cbace6533b0661ebcceb1e44",
+  "specVersion": "1.1.0"
+}

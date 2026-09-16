@@ -1,0 +1,74 @@
+name: Encore CLI install
+description: >
+  Install + cache the pinned Encore CLI version. Extracted from encore-build
+  so the typecheck job (which doesn't build a Docker image) can also reuse
+  the install path. Direct CloudFront tarball install — see encore-build
+  for the rationale.
+
+inputs:
+  encore-version:
+    description: Encore CLI version to install
+    required: true
+  encore-sha256:
+    description: >
+      Expected sha256 digest of the encore-${encore-version}-linux_amd64.tar.gz
+      tarball, verified before extraction. The default is the real published
+      digest for the pinned Encore version (1.57.9), so the integrity check is
+      load-bearing and fail-closed on a mismatch for every current caller
+      (they all pass encore-version 1.57.9 and inherit this default). Bumping
+      ENCORE_VERSION in a caller workflow WITHOUT updating this digest will
+      fail closed at install time by design: the new tarball's hash will not
+      match, so version and digest must move together. Verification can still
+      be opted out of by passing an explicitly empty value.
+    required: false
+    default: 'dfd43dcd456f91414a823315480da921333e6d1e3535ab48c47c09225d022af5'
+
+runs:
+  using: composite
+  steps:
+    - name: Cache Encore CLI
+      id: cache-encore
+      uses: actions/cache@27d5ce7f107fe9357f9df03efb73ab90386fccae # v5
+      with:
+        path: ~/.encore
+        key: encore-${{ runner.os }}-${{ runner.arch }}-${{ inputs.encore-version }}
+
+    - name: Install Encore CLI
+      if: steps.cache-encore.outputs.cache-hit != 'true'
+      shell: bash
+      env:
+        ENCORE_VERSION: ${{ inputs.encore-version }}
+        ENCORE_SHA256: ${{ inputs.encore-sha256 }}
+      run: |
+        set -euo pipefail
+        install_dir="$HOME/.encore"
+        mkdir -p "$install_dir/bin"
+        url="https://d2f391esomvqpi.cloudfront.net/encore-${ENCORE_VERSION}-linux_amd64.tar.gz"
+        curl --fail --location --silent --show-error \
+          --retry 5 --retry-delay 5 --retry-all-errors \
+          --output "$install_dir/encore.tar.gz" "$url"
+        if [ -z "$ENCORE_SHA256" ] || [ "$ENCORE_SHA256" = "REPLACE_WITH_PUBLISHED_SHA256" ]; then
+          # Verification explicitly opted out of (empty encore-sha256, or the
+          # leftover placeholder as a defensive fallback). The default input is
+          # now the real published digest, so this branch no longer fires for
+          # any current caller; it exists only for a deliberate opt-out. Skip
+          # with a loud warning rather than silently proceeding.
+          echo "::warning::encore-sha256 is empty (integrity verification opted out) for encore-${ENCORE_VERSION}-linux_amd64.tar.gz: skipping integrity verification."
+        else
+          echo "${ENCORE_SHA256}  ${install_dir}/encore.tar.gz" > "$install_dir/encore.tar.gz.sha256"
+          if command -v sha256sum >/dev/null 2>&1; then
+            sha256sum -c "$install_dir/encore.tar.gz.sha256"
+          else
+            shasum -a 256 -c "$install_dir/encore.tar.gz.sha256"
+          fi
+        fi
+        rm -f "$install_dir/encore.tar.gz.sha256"
+        rm -rf "$install_dir/encore-go" "$install_dir/runtimes"
+        tar -C "$install_dir" -xzf "$install_dir/encore.tar.gz"
+        chmod +x "$install_dir"/bin/*
+        rm "$install_dir/encore.tar.gz"
+        "$install_dir/bin/encore" version
+
+    - name: Add Encore to PATH
+      shell: bash
+      run: echo "$HOME/.encore/bin" >> "$GITHUB_PATH"

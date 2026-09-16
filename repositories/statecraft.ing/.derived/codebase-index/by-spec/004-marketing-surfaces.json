@@ -1,0 +1,289 @@
+{
+  "mapping": {
+    "dependsOn": [
+      "001-site-scaffold",
+      "002-launch-content",
+      "003-product-family-registry"
+    ],
+    "implementingPaths": [
+      {
+        "path": "app/components/architecture-explorer.tsx",
+        "source": "spec-edge"
+      },
+      {
+        "path": "app/components/icons.tsx",
+        "source": "spec-edge"
+      },
+      {
+        "path": "app/components/paper-reader.tsx",
+        "source": "spec-edge"
+      },
+      {
+        "path": "app/components/sign-in-link.tsx",
+        "source": "spec-edge"
+      },
+      {
+        "path": "app/components/site-chrome.tsx",
+        "source": "spec-edge"
+      },
+      {
+        "path": "app/lib/explorer-diagrams.ts",
+        "source": "spec-edge"
+      },
+      {
+        "path": "app/lib/get-started.ts",
+        "source": "spec-edge"
+      },
+      {
+        "path": "app/lib/papers.ts",
+        "source": "spec-edge"
+      },
+      {
+        "path": "app/lib/products.ts",
+        "source": "spec-edge"
+      },
+      {
+        "path": "app/lib/whitepaper.ts",
+        "source": "spec-edge"
+      },
+      {
+        "path": "app/routes.ts",
+        "source": "spec-edge"
+      },
+      {
+        "path": "app/routes/get-started.tsx",
+        "source": "spec-edge"
+      },
+      {
+        "path": "app/routes/papers.$slug.tsx",
+        "source": "spec-edge"
+      },
+      {
+        "path": "app/routes/papers.tsx",
+        "source": "spec-edge"
+      },
+      {
+        "path": "app/routes/products.tsx",
+        "source": "spec-edge"
+      },
+      {
+        "path": "react-router.config.ts",
+        "source": "spec-edge"
+      }
+    ],
+    "resolvedUnits": [
+      {
+        "locations": [
+          {
+            "file": "app/components/architecture-explorer.tsx"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "file",
+          "path": "app/components/architecture-explorer.tsx"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "app/components/icons.tsx"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "file",
+          "path": "app/components/icons.tsx"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "app/components/paper-reader.tsx"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "file",
+          "path": "app/components/paper-reader.tsx"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "app/components/sign-in-link.tsx"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "file",
+          "path": "app/components/sign-in-link.tsx"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "app/lib/explorer-diagrams.ts"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "file",
+          "path": "app/lib/explorer-diagrams.ts"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "app/lib/get-started.ts"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "file",
+          "path": "app/lib/get-started.ts"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "app/lib/papers.ts"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "file",
+          "path": "app/lib/papers.ts"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "app/lib/products.ts"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "file",
+          "path": "app/lib/products.ts"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "app/lib/whitepaper.ts"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "file",
+          "path": "app/lib/whitepaper.ts"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "app/routes/get-started.tsx"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "file",
+          "path": "app/routes/get-started.tsx"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "app/routes/papers.$slug.tsx"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "file",
+          "path": "app/routes/papers.$slug.tsx"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "app/routes/papers.tsx"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "file",
+          "path": "app/routes/papers.tsx"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "app/routes/products.tsx"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "file",
+          "path": "app/routes/products.tsx"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "app/components/site-chrome.tsx"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "extends",
+        "unit": {
+          "kind": "file",
+          "path": "app/components/site-chrome.tsx"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "app/routes.ts"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "extends",
+        "unit": {
+          "kind": "file",
+          "path": "app/routes.ts"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "react-router.config.ts"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "extends",
+        "unit": {
+          "kind": "file",
+          "path": "react-router.config.ts"
+        }
+      }
+    ],
+    "specId": "004-marketing-surfaces",
+    "specStatus": "approved"
+  },
+  "schemaVersion": "1.1.0",
+  "shardHash": "45ad72c5afa30e052583efdc4528caee225e35f59cc4669a4dc057910c62c7d2"
+}

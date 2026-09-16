@@ -1,0 +1,101 @@
+[
+  {
+    "id": 11546448181,
+    "node_id": "LA_kwDOTa56FM8AAAACsDjRNQ",
+    "url": "https://api.github.com/repos/statecrafting/statecrafting/labels/bug",
+    "name": "bug",
+    "color": "d73a4a",
+    "default": true,
+    "description": "Something isn't working",
+    "archived_at": null,
+    "archived_by": null
+  },
+  {
+    "id": 11546448210,
+    "node_id": "LA_kwDOTa56FM8AAAACsDjRUg",
+    "url": "https://api.github.com/repos/statecrafting/statecrafting/labels/documentation",
+    "name": "documentation",
+    "color": "0075ca",
+    "default": true,
+    "description": "Improvements or additions to documentation",
+    "archived_at": null,
+    "archived_by": null
+  },
+  {
+    "id": 11546448234,
+    "node_id": "LA_kwDOTa56FM8AAAACsDjRag",
+    "url": "https://api.github.com/repos/statecrafting/statecrafting/labels/duplicate",
+    "name": "duplicate",
+    "color": "cfd3d7",
+    "default": true,
+    "description": "This issue or pull request already exists",
+    "archived_at": null,
+    "archived_by": null
+  },
+  {
+    "id": 11546448261,
+    "node_id": "LA_kwDOTa56FM8AAAACsDjRhQ",
+    "url": "https://api.github.com/repos/statecrafting/statecrafting/labels/enhancement",
+    "name": "enhancement",
+    "color": "a2eeef",
+    "default": true,
+    "description": "New feature or request",
+    "archived_at": null,
+    "archived_by": null
+  },
+  {
+    "id": 11546448288,
+    "node_id": "LA_kwDOTa56FM8AAAACsDjRoA",
+    "url": "https://api.github.com/repos/statecrafting/statecrafting/labels/good%20first%20issue",
+    "name": "good first issue",
+    "color": "7057ff",
+    "default": true,
+    "description": "Good for newcomers",
+    "archived_at": null,
+    "archived_by": null
+  },
+  {
+    "id": 11546448313,
+    "node_id": "LA_kwDOTa56FM8AAAACsDjRuQ",
+    "url": "https://api.github.com/repos/statecrafting/statecrafting/labels/help%20wanted",
+    "name": "help wanted",
+    "color": "008672",
+    "default": true,
+    "description": "Extra attention is needed",
+    "archived_at": null,
+    "archived_by": null
+  },
+  {
+    "id": 11546448339,
+    "node_id": "LA_kwDOTa56FM8AAAACsDjR0w",
+    "url": "https://api.github.com/repos/statecrafting/statecrafting/labels/invalid",
+    "name": "invalid",
+    "color": "e4e669",
+    "default": true,
+    "description": "This doesn't seem right",
+    "archived_at": null,
+    "archived_by": null
+  },
+  {
+    "id": 11546448367,
+    "node_id": "LA_kwDOTa56FM8AAAACsDjR7w",
+    "url": "https://api.github.com/repos/statecrafting/statecrafting/labels/question",
+    "name": "question",
+    "color": "d876e3",
+    "default": true,
+    "description": "Further information is requested",
+    "archived_at": null,
+    "archived_by": null
+  },
+  {
+    "id": 11546448392,
+    "node_id": "LA_kwDOTa56FM8AAAACsDjSCA",
+    "url": "https://api.github.com/repos/statecrafting/statecrafting/labels/wontfix",
+    "name": "wontfix",
+    "color": "ffffff",
+    "default": true,
+    "description": "This will not be worked on",
+    "archived_at": null,
+    "archived_by": null
+  }
+]

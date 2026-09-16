@@ -1,0 +1,217 @@
+{
+  "record": {
+    "authors": [
+      "open-agentic-platform"
+    ],
+    "codeAliases": [
+      "ORG_AGENT_KILL_SWITCH"
+    ],
+    "created": "2026-06-11",
+    "dependsOn": [
+      "198-factory-governance-envelope",
+      "172-opc-live-agent-session-introspection",
+      "106-rauthy-native-oidc-and-membership"
+    ],
+    "domain": "platform",
+    "establishes": [
+      {
+        "kind": "file",
+        "path": "platform/services/statecraft/api/factory/orgHalt.ts"
+      },
+      {
+        "kind": "file",
+        "path": "platform/services/statecraft/api/factory/orgHalt.test.ts"
+      },
+      {
+        "kind": "file",
+        "path": "product/apps/opc/tests-e2e/fixtures/208/org-halt-drill.e2e.ts"
+      }
+    ],
+    "extends": [
+      {
+        "nature": "additive",
+        "spec": "198-factory-governance-envelope",
+        "unit": {
+          "kind": "file",
+          "path": "platform/services/statecraft/api/factory/revocations.ts"
+        }
+      },
+      {
+        "nature": "additive",
+        "spec": "198-factory-governance-envelope",
+        "unit": {
+          "kind": "file",
+          "path": "product/apps/opc/src-tauri/src/commands/run_governance.rs"
+        }
+      },
+      {
+        "nature": "additive",
+        "spec": "198-factory-governance-envelope",
+        "unit": {
+          "kind": "file",
+          "path": "product/apps/opc/src-tauri/src/commands/factory.rs"
+        }
+      },
+      {
+        "nature": "additive",
+        "spec": "198-factory-governance-envelope",
+        "unit": {
+          "kind": "file",
+          "path": "product/apps/opc/src-tauri/src/commands/factory_platform.rs"
+        }
+      },
+      {
+        "nature": "additive",
+        "spec": "187-opc-e2e-test-harness",
+        "unit": {
+          "kind": "file",
+          "path": "product/apps/opc/tests-e2e/harness/mock_statecraft.ts"
+        }
+      },
+      {
+        "nature": "additive",
+        "spec": "187-opc-e2e-test-harness",
+        "unit": {
+          "kind": "file",
+          "path": "product/apps/opc/tests-e2e/harness/mock_statecraft.test.ts"
+        }
+      },
+      {
+        "nature": "additive",
+        "spec": "034-featuregraph-registry-scanner-fix",
+        "unit": {
+          "kind": "file",
+          "path": "crates/featuregraph/tests/golden/features_graph.json"
+        }
+      }
+    ],
+    "extraFrontmatter": {
+      "compliance": [
+        {
+          "controls": [
+            "ASI10",
+            "ASI08"
+          ],
+          "framework": "owasp-asi-2026"
+        }
+      ],
+      "language": "en"
+    },
+    "featureBranch": "feat/208-org-agent-kill-switch",
+    "id": "208-org-agent-kill-switch",
+    "implementation": "pending",
+    "kind": "governance",
+    "references": [
+      {
+        "role": "context",
+        "unit": {
+          "kind": "file",
+          "path": "docs/owasp-agentic-top-10-2026.md"
+        }
+      }
+    ],
+    "refines": [
+      {
+        "aspect": "org-halt-storage",
+        "unit": {
+          "kind": "file",
+          "path": "platform/services/statecraft/api/db/schema.ts"
+        }
+      },
+      {
+        "aspect": "org-halt-audit-actions",
+        "unit": {
+          "kind": "file",
+          "path": "platform/services/statecraft/api/factory/auditActions.ts"
+        }
+      },
+      {
+        "aspect": "org-halt-refusal-reason",
+        "unit": {
+          "kind": "file",
+          "path": "platform/services/statecraft/api/sync/types.ts"
+        }
+      },
+      {
+        "aspect": "org-halt-grant-refusal",
+        "unit": {
+          "kind": "file",
+          "path": "platform/services/statecraft/api/factory/grantDuplexHandlers.ts"
+        }
+      },
+      {
+        "aspect": "org-halt-session-refusal",
+        "unit": {
+          "kind": "file",
+          "path": "platform/services/statecraft/api/sync/duplex.ts"
+        }
+      },
+      {
+        "aspect": "org-halt-serve-bind-refusal",
+        "unit": {
+          "kind": "file",
+          "path": "platform/services/statecraft/api/factory/admission.ts"
+        }
+      },
+      {
+        "aspect": "org-halt-test-lane",
+        "unit": {
+          "kind": "file",
+          "path": "platform/services/statecraft/vite.config.ts"
+        }
+      },
+      {
+        "aspect": "org-halt-propagation",
+        "unit": {
+          "kind": "file",
+          "path": "platform/services/statecraft/api/sync/service.ts"
+        }
+      },
+      {
+        "aspect": "halt-aware-session-termination",
+        "unit": {
+          "kind": "file",
+          "path": "product/apps/opc/src-tauri/src/commands/live_sessions.rs"
+        }
+      },
+      {
+        "aspect": "org-halt-engine-ack",
+        "unit": {
+          "kind": "file",
+          "path": "product/apps/opc/src-tauri/src/commands/sync_client.rs"
+        }
+      },
+      {
+        "aspect": "org-halt-handler-registration",
+        "unit": {
+          "kind": "file",
+          "path": "product/apps/opc/src-tauri/src/lib.rs"
+        }
+      }
+    ],
+    "sectionHeadings": [
+      "Feature Specification: Org-Wide Agent Kill Switch and Quarantine",
+      "Purpose",
+      "Design model: composition over a new mechanism",
+      "State machine",
+      "Scope lattice",
+      "Functional requirements",
+      "FR-001: Halt verb",
+      "FR-002: Credential revocation propagation",
+      "FR-003: Propagation bound, stated and measured",
+      "FR-004: Quarantine record and reintegration",
+      "FR-005: Drill requirement",
+      "Acceptance criteria",
+      "Out of scope",
+      "Dependencies and sequencing",
+      "Phasing (proposed; refine in plan.md)",
+      "Deferred hardening (Phase 3.1)"
+    ],
+    "specPath": "specs/208-org-agent-kill-switch/spec.md",
+    "status": "draft",
+    "summary": "Containment today is precise but narrow: an operator can force-disconnect one session (spec 172), the four-key revocation lattice quarantines factory content (spec 198 FR-010), and Rauthy sessions can be revoked one principal at a time. What does not exist is the emergency stop ASI10 m4 and ASI04 m8 require: one admin-gated action that halts agent execution org-wide (pausing in-flight runs at the next boundary, refusing new sessions and grant issuance, revoking agent credentials) with propagation inside a stated bound, a quarantine record, and reintegration that requires fresh validation plus human approval. The switch composes the levers that already exist (grant renewal, duplex channels, revocation rows, session force-disconnect) rather than adding a parallel mechanism, and it is drilled: a kill switch that has never been pulled is decoration, so exercising it is an acceptance criterion, not an operational afterthought.\n",
+    "title": "Org-Wide Agent Kill Switch and Quarantine (ASI10 containment)"
+  },
+  "shardHash": "2b6e83f7eb107d4e4a54a9e7d7c897b78b72861b5855e5becc9b4d6f4c6a569a",
+  "specVersion": "1.1.0"
+}

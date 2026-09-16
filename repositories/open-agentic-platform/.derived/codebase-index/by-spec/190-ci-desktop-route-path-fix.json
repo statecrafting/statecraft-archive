@@ -1,0 +1,50 @@
+{
+  "mapping": {
+    "dependsOn": [
+      "177-ci-orchestrator-pr-gate",
+      "178-opc-directory-rename"
+    ],
+    "implementingPaths": [
+      {
+        "path": ".github/workflows/ci.yml",
+        "source": "spec-edge"
+      },
+      {
+        "path": "crates/featuregraph/tests/golden/features_graph.json",
+        "source": "spec-edge"
+      }
+    ],
+    "resolvedUnits": [
+      {
+        "locations": [
+          {
+            "file": "crates/featuregraph/tests/golden/features_graph.json"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "extends",
+        "unit": {
+          "kind": "file",
+          "path": "crates/featuregraph/tests/golden/features_graph.json"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": ".github/workflows/ci.yml"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "refines",
+        "unit": {
+          "kind": "file",
+          "path": ".github/workflows/ci.yml"
+        }
+      }
+    ],
+    "specId": "190-ci-desktop-route-path-fix",
+    "specStatus": "approved"
+  },
+  "schemaVersion": "1.1.0",
+  "shardHash": "7571b8ee06221e3f4d2ee92f993520fc62e22d88fbd5319aec43c84b00c7e9a1"
+}

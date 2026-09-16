@@ -1,0 +1,33 @@
+{
+  "mapping": {
+    "implementingPaths": [
+      {
+        "path": "crates/orchestrator",
+        "source": "spec-edge"
+      },
+      {
+        "path": "product/packages/verification-profiles",
+        "source": "manifest-metadata"
+      }
+    ],
+    "resolvedUnits": [
+      {
+        "locations": [
+          {
+            "file": "crates/orchestrator"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "refines",
+        "unit": {
+          "id": "orchestrator",
+          "kind": "crate"
+        }
+      }
+    ],
+    "specId": "053-verification-profiles",
+    "specStatus": "approved"
+  },
+  "schemaVersion": "1.1.0",
+  "shardHash": "23216b92a8e3919bb7964c1dfbc7d3496807fe120fa945e66696555b0ecd1b3a"
+}

@@ -1,0 +1,118 @@
+{
+  "record": {
+    "amendmentRecord": "amended 2026-06-18 by spec 217 (engine-swap collapse): the W-161\ndecomposition-origin lint code is OAP-domain and remains in the surviving OAP\noverlay spec-lint. The engine swap removed only the generic half of the lint\nsurface; W-161's home and behaviour are unchanged. Recorded for completeness.\n",
+    "codeAliases": [
+      "KNOWLEDGE_REQUIREMENTS_PROVENANCE",
+      "PROVENANCE_EMISSION_RENDERING"
+    ],
+    "created": "2026-05-22",
+    "dependsOn": [
+      "154-logical-unit-ownership-grammar",
+      "156-references-edge-provenance-grammar",
+      "120-factory-extraction-stage"
+    ],
+    "domain": "substrate",
+    "extends": [
+      {
+        "nature": "additive",
+        "spec": "006-conformance-lint-mvp",
+        "unit": {
+          "kind": "file",
+          "path": "tools/shared/spec-types/src/lib.rs"
+        }
+      },
+      {
+        "nature": "additive",
+        "spec": "006-conformance-lint-mvp",
+        "unit": {
+          "kind": "file",
+          "path": "tools/spec-spine/spec-lint/src/lib.rs"
+        }
+      },
+      {
+        "nature": "additive",
+        "spec": "006-conformance-lint-mvp",
+        "unit": {
+          "kind": "file",
+          "path": "tools/spec-spine/spec-lint/src/main.rs"
+        }
+      },
+      {
+        "nature": "additive",
+        "spec": "006-conformance-lint-mvp",
+        "unit": {
+          "kind": "file",
+          "path": "tools/spec-spine/spec-lint/tests/lint.rs"
+        }
+      },
+      {
+        "nature": "additive",
+        "spec": "034-featuregraph-registry-scanner-fix",
+        "unit": {
+          "kind": "file",
+          "path": "crates/featuregraph/tests/golden/features_graph.json"
+        }
+      }
+    ],
+    "extraFrontmatter": {
+      "amended": "2026-06-18",
+      "slug": "knowledge-requirements-provenance-emission"
+    },
+    "id": "161-knowledge-requirements-provenance-emission",
+    "implementation": "complete",
+    "kind": "governance",
+    "owner": "bart",
+    "references": [
+      {
+        "role": "decomposition-source",
+        "unit": {
+          "kind": "file",
+          "path": "docs/owasp/factory/AIDE-VELOCITY-OAP-INTENT.md"
+        }
+      },
+      {
+        "role": "grammar-source",
+        "unit": {
+          "kind": "file",
+          "path": "specs/156-references-edge-provenance-grammar/spec.md"
+        }
+      },
+      {
+        "role": "knowledge-substrate",
+        "unit": {
+          "kind": "file",
+          "path": "specs/120-factory-extraction-stage/spec.md"
+        }
+      },
+      {
+        "role": "target-renderer",
+        "unit": {
+          "kind": "file",
+          "path": "specs/163-statecraft-requirements-view/spec.md"
+        }
+      }
+    ],
+    "risk": "medium",
+    "sectionHeadings": [
+      "161 — Knowledge → Requirements provenance: emission & rendering",
+      "1. Problem",
+      "2. Decision",
+      "2.1 Emission contract (producer: OPC decomposition pipeline)",
+      "2.2 Rendering contract (consumer: statecraft Requirements view)",
+      "2.3 Round-trip property",
+      "3. Functional Requirements",
+      "4. Success Criteria",
+      "5. Scope",
+      "In scope",
+      "Out of scope (deferred)",
+      "6. Cross-references",
+      "Amendments received"
+    ],
+    "specPath": "specs/161-knowledge-requirements-provenance-emission/spec.md",
+    "status": "approved",
+    "summary": "Spec 156 established the `references:` edge sibling `provenance:` field with two typed kinds (`knowledge`, `code-fingerprint`). The grammar exists; the two consumers don't. This spec specifies (a) the *emission contract* the OPC decomposition pipeline (spec 165) must follow when it lands a draft spec derived from a statecraft knowledge item or an xray code fingerprint, and (b) the *rendering contract* the statecraft Requirements view (spec 163) must follow when it displays such a spec to a developer reviewing the lineage. The two contracts are paired: an emitted provenance entry that the renderer cannot resolve is a drift event; a renderer that can resolve an entry that was not emitted is impossible by construction.\nSpec 161 closes the loop that AIDE-VELOCITY leaves implicit. In AIDE, a SharePoint document produces a `requirements.md` and the link between them is operational convention. In OAP, the link is a typed relationship-graph edge with two evidentiary anchors — `statecraft://project/<uuid>/knowledge/<uuid>` or a content-addressed xray fingerprint — and both the authoring tool and the review surface honour the same typed shape.\n",
+    "title": "Knowledge → Requirements provenance: emission contract and Requirements-view rendering"
+  },
+  "shardHash": "dfb3716503ce17cac7b7b0b71843acc90110cf292ecd419317c24eff1a883626",
+  "specVersion": "1.1.0"
+}

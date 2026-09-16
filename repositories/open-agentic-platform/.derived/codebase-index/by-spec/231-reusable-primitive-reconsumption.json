@@ -1,0 +1,117 @@
+{
+  "mapping": {
+    "dependsOn": [
+      "047-governance-control-plane"
+    ],
+    "implementingPaths": [
+      {
+        "path": "crates/featuregraph/tests/golden/features_graph.json",
+        "source": "spec-edge"
+      },
+      {
+        "path": "crates/policy-kernel/Cargo.toml",
+        "source": "spec-edge"
+      },
+      {
+        "path": "crates/policy-kernel/src/audit.rs",
+        "source": "spec-edge"
+      },
+      {
+        "path": "crates/policy-kernel/src/coherence.rs",
+        "source": "spec-edge"
+      },
+      {
+        "path": "crates/policy-kernel/src/lib.rs",
+        "source": "spec-edge"
+      },
+      {
+        "path": "crates/policy-kernel/src/proof_chain.rs",
+        "source": "spec-edge"
+      }
+    ],
+    "resolvedUnits": [
+      {
+        "locations": [
+          {
+            "file": "crates/featuregraph/tests/golden/features_graph.json"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "extends",
+        "unit": {
+          "kind": "file",
+          "path": "crates/featuregraph/tests/golden/features_graph.json"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "crates/policy-kernel/Cargo.toml"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "refines",
+        "unit": {
+          "kind": "file",
+          "path": "crates/policy-kernel/Cargo.toml"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "crates/policy-kernel/src/coherence.rs"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "refines",
+        "unit": {
+          "kind": "file",
+          "path": "crates/policy-kernel/src/coherence.rs"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "crates/policy-kernel/src/lib.rs"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "refines",
+        "unit": {
+          "kind": "file",
+          "path": "crates/policy-kernel/src/lib.rs"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "crates/policy-kernel/src/proof_chain.rs"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "refines",
+        "unit": {
+          "kind": "file",
+          "path": "crates/policy-kernel/src/proof_chain.rs"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "crates/policy-kernel/src/audit.rs"
+          }
+        ],
+        "ownership": false,
+        "sourceField": "references",
+        "unit": {
+          "kind": "file",
+          "path": "crates/policy-kernel/src/audit.rs"
+        }
+      }
+    ],
+    "specId": "231-reusable-primitive-reconsumption",
+    "specStatus": "approved"
+  },
+  "schemaVersion": "1.1.0",
+  "shardHash": "e8da20f7afb1764ff9e17ddf4882881d1143e8737b081d9db837d47c3bc59301"
+}

@@ -1,0 +1,56 @@
+{
+  "record": {
+    "amendmentRecord": "amended 2026-07-08 by spec 229 (auth-driver model correction): default\nflipped rauthy-oidc to rauthy; app-level members clarified to mock|rauthy;\nupstream IdPs (SAML/Entra/Auth0/Google/GitHub) federate inside Rauthy as\nupstream providers, not AUTH_DRIVER members. Registry pattern and\nV-015/V-017 unchanged. Spec 149 retained as a grammar fixture.\n",
+    "authors": [
+      "open-agentic-platform"
+    ],
+    "created": "2026-05-17",
+    "dependsOn": [
+      "147-spec-kind-grammar"
+    ],
+    "domain": "platform",
+    "extraFrontmatter": {
+      "amended": "2026-07-08",
+      "approved": "2026-05-22",
+      "category": [
+        "auth",
+        "identity"
+      ],
+      "default": "rauthy",
+      "member_contract": "auth-driver",
+      "production_forbidden": [
+        "example-tenant-mock"
+      ],
+      "selector": "AUTH_DRIVER"
+    },
+    "id": "148-auth-driver-registry",
+    "implementation": "complete",
+    "kind": "registry",
+    "owner": "open-agentic-platform",
+    "references": [
+      {
+        "role": "planned",
+        "unit": {
+          "kind": "directory",
+          "path": "crates/auth-driver/"
+        }
+      }
+    ],
+    "risk": "medium",
+    "sectionHeadings": [
+      "148 — Auth driver registry",
+      "§1 Motivation",
+      "§2 Mechanism",
+      "§3 Defaults and forbidden production members",
+      "§4 Why a registry spec, not a configuration table",
+      "§5 Acceptance criteria",
+      "§6 Out of scope"
+    ],
+    "specPath": "specs/148-auth-driver-registry/spec.md",
+    "status": "approved",
+    "summary": "Registry kind: defines the pluggable identity-provider integration point. Members are `kind: capability` specs implementing the auth-driver contract (token exchange, session validation, scope projection). The `AUTH_DRIVER` env var selects one member at runtime; the default is `rauthy-oidc` (spec 106). The proving-ground capability member is spec 149-saml-auth-driver. Profile specs (e.g. 150) select AUTH_DRIVER members per tenant via the `selects:` map.\nAuthored as part of spec 147 §Migration Phase 3 — the proving-ground spec triplet exercising V-013/V-014/V-015/V-017 against the new `registry` / `capability` / `profile` kinds.\n",
+    "title": "Auth driver registry — pluggable identity-provider integration contract"
+  },
+  "shardHash": "1879e47956a1b1c5902b1906673d526ef044281b73edb03dbbf18afd7f35c8b9",
+  "specVersion": "1.1.0"
+}

@@ -1,0 +1,32 @@
+{
+  "mapping": {
+    "dependsOn": [
+      "000-bootstrap"
+    ],
+    "implementingPaths": [
+      {
+        "path": "README.md",
+        "source": "spec-edge"
+      }
+    ],
+    "resolvedUnits": [
+      {
+        "locations": [
+          {
+            "file": "README.md"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "file",
+          "path": "README.md"
+        }
+      }
+    ],
+    "specId": "001-packages-thesis",
+    "specStatus": "approved"
+  },
+  "schemaVersion": "1.1.0",
+  "shardHash": "ad3420ec2524221d77a1dc818fdb216b7cdc7ad5db418e6202670a57a8434620"
+}

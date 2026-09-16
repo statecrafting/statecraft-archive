@@ -1,0 +1,19 @@
+# SOPS configuration — spec 151 (declarative cluster reconciliation).
+#
+# Recipients per spec 151 §Clarification 9 (SOPS key custody, multi-recipient):
+#   1. Operator-host laptop key  — ~/.config/sops/age/keys.txt (mode 0600)
+#   2. Bitwarden-stored backup key — vault OAP, item `sops-age-hetzner-prod-recovery`,
+#                                    attachment `keys.txt`
+# Either private key can decrypt. Multi-operator custody is OOS v1.
+#
+# Scope is platform/gitops/clusters/hetzner-prod/secrets/ — spec 153 lands the
+# actual encrypted manifests; spec 151 ships the runtime mechanism only.
+# `encrypted_regex` keeps Secret metadata diff-readable; only the secret bodies
+# are encrypted.
+
+creation_rules:
+  - path_regex: platform/gitops/clusters/hetzner-prod/secrets/.*\.ya?ml$
+    encrypted_regex: ^(data|stringData)$
+    age: >-
+      age1xwjc42lcy22cpvhg2jrrfv7wtats2ge9xw4cc2h0wxf43tj4p34qlwd74a,
+      age1s8vhfm82rnqw8enq52c026qsxuxd6uh5ntd75wzdah39jws3cctsqp0ava

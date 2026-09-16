@@ -1,0 +1,48 @@
+{
+  "diagnostics": {
+    "errors": [],
+    "warnings": [
+      {
+        "code": "W-002",
+        "message": "spec '064-websocket-reconnection' file unit 'product/apps/opc/src/lib/wsReconnection.ts' does not exist",
+        "path": "product/apps/opc/src/lib/wsReconnection.ts"
+      }
+    ]
+  },
+  "mapping": {
+    "implementingPaths": [
+      {
+        "path": "product/apps/opc",
+        "source": "spec-edge"
+      }
+    ],
+    "resolvedUnits": [
+      {
+        "locations": [
+          {
+            "file": "product/apps/opc"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "extends",
+        "unit": {
+          "id": "@opc/desktop",
+          "kind": "crate"
+        }
+      },
+      {
+        "locations": [],
+        "ownership": false,
+        "sourceField": "references",
+        "unit": {
+          "kind": "file",
+          "path": "product/apps/opc/src/lib/wsReconnection.ts"
+        }
+      }
+    ],
+    "specId": "064-websocket-reconnection",
+    "specStatus": "approved"
+  },
+  "schemaVersion": "1.1.0",
+  "shardHash": "bf98f50b9e9cf31bacea9ff0759e1bbf908ba4eab83dc3547201579921b9ce6b"
+}

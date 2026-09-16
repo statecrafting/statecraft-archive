@@ -1,0 +1,155 @@
+{
+  "diagnostics": {
+    "errors": [],
+    "warnings": [
+      {
+        "code": "W-002",
+        "message": "spec '162-sandbox-execution-contract' file unit 'docs/owasp/factory/AIDE-VELOCITY-OAP-INTENT.md' does not exist",
+        "path": "docs/owasp/factory/AIDE-VELOCITY-OAP-INTENT.md"
+      },
+      {
+        "code": "W-002",
+        "message": "spec '162-sandbox-execution-contract' file unit 'docs/owasp/owasp_top_10_agentic_applications_summary.md' does not exist",
+        "path": "docs/owasp/owasp_top_10_agentic_applications_summary.md"
+      }
+    ]
+  },
+  "mapping": {
+    "amends": [
+      "074-factory-ingestion"
+    ],
+    "dependsOn": [
+      "075-factory-workflow-engine",
+      "102-governed-excellence",
+      "108-factory-as-platform-feature"
+    ],
+    "implementingPaths": [
+      {
+        "path": "crates/factory-contracts/src/sandbox.rs",
+        "source": "spec-edge"
+      },
+      {
+        "path": "crates/factory-engine",
+        "source": "spec-edge"
+      },
+      {
+        "path": "crates/factory-engine/src/sandbox",
+        "source": "spec-edge"
+      },
+      {
+        "path": "platform/k8s/policies/namespace-baseline",
+        "source": "spec-edge"
+      },
+      {
+        "path": "specs/075-factory-workflow-engine/spec.md",
+        "source": "spec-edge"
+      },
+      {
+        "path": "specs/102-governed-excellence/spec.md",
+        "source": "spec-edge"
+      }
+    ],
+    "resolvedUnits": [
+      {
+        "locations": [
+          {
+            "file": "crates/factory-engine/src/sandbox"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "directory",
+          "path": "crates/factory-engine/src/sandbox"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "crates/factory-contracts/src/sandbox.rs"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "file",
+          "path": "crates/factory-contracts/src/sandbox.rs"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "crates/factory-engine"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "constrains",
+        "unit": {
+          "kind": "directory",
+          "path": "crates/factory-engine"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "platform/k8s/policies/namespace-baseline"
+          }
+        ],
+        "ownership": false,
+        "sourceField": "references",
+        "unit": {
+          "kind": "directory",
+          "path": "platform/k8s/policies/namespace-baseline"
+        }
+      },
+      {
+        "locations": [],
+        "ownership": false,
+        "sourceField": "references",
+        "unit": {
+          "kind": "file",
+          "path": "docs/owasp/factory/AIDE-VELOCITY-OAP-INTENT.md"
+        }
+      },
+      {
+        "locations": [],
+        "ownership": false,
+        "sourceField": "references",
+        "unit": {
+          "kind": "file",
+          "path": "docs/owasp/owasp_top_10_agentic_applications_summary.md"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "specs/075-factory-workflow-engine/spec.md"
+          }
+        ],
+        "ownership": false,
+        "sourceField": "references",
+        "unit": {
+          "kind": "file",
+          "path": "specs/075-factory-workflow-engine/spec.md"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "specs/102-governed-excellence/spec.md"
+          }
+        ],
+        "ownership": false,
+        "sourceField": "references",
+        "unit": {
+          "kind": "file",
+          "path": "specs/102-governed-excellence/spec.md"
+        }
+      }
+    ],
+    "specId": "162-sandbox-execution-contract",
+    "specStatus": "approved"
+  },
+  "schemaVersion": "1.1.0",
+  "shardHash": "ba09c9c35569c1f6c09c9697414f18e05f32586408f5210264157afb2a02cdc9"
+}

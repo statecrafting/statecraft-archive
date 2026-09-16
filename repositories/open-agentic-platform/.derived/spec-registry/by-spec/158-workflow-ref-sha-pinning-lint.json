@@ -1,0 +1,93 @@
+{
+  "record": {
+    "amends": [
+      "116-supply-chain-policy-gates"
+    ],
+    "codeAliases": [
+      "WORKFLOW_PINS"
+    ],
+    "created": "2026-05-22",
+    "dependsOn": [
+      "116-supply-chain-policy-gates",
+      "104-makefile-ci-parity-contract"
+    ],
+    "domain": "tooling",
+    "establishes": [
+      {
+        "kind": "file",
+        "path": "tools/lint/workflow-pins.sh"
+      },
+      {
+        "kind": "file",
+        "path": "tools/lint/workflow-pins-test.sh"
+      },
+      {
+        "kind": "file",
+        "path": "tools/lint/tests/fixtures/passing/action.yml"
+      },
+      {
+        "kind": "file",
+        "path": "tools/lint/tests/fixtures/failing/action.yml"
+      }
+    ],
+    "extraFrontmatter": {
+      "approved": "2026-05-22",
+      "closed": "2026-05-22",
+      "compliance": [
+        {
+          "controls": [
+            "ASI04"
+          ],
+          "framework": "owasp-asi-2026"
+        }
+      ],
+      "slug": "workflow-ref-sha-pinning-lint"
+    },
+    "id": "158-workflow-ref-sha-pinning-lint",
+    "implementation": "complete",
+    "kind": "governance",
+    "owner": "bart",
+    "refines": [
+      {
+        "aspect": "workflow-ref-pin-enforcement",
+        "unit": {
+          "kind": "file",
+          "path": ".github/workflows/ci-supply-chain.yml"
+        }
+      },
+      {
+        "aspect": "workflow-ref-pin-enforcement",
+        "unit": {
+          "kind": "file",
+          "path": ".githooks/pre-commit"
+        }
+      }
+    ],
+    "risk": "low",
+    "sectionHeadings": [
+      "158 — Workflow-ref SHA-pinning lint",
+      "1. Problem Statement",
+      "2. Goals",
+      "3. Functional Requirements",
+      "FR-001 — SHA-pin enforcement (the contract)",
+      "FR-002 — Lint as the compile (one script, two consumers)",
+      "FR-003 — No allow-list (soundness)",
+      "FR-004 — Workflow YAML must not embed example `uses:`",
+      "FR-005 — Trust transitivity (the positive shape of escape valves)",
+      "4. Implementation",
+      "4.1 Lint surface",
+      "4.2 Test fixtures (the lint's own spec)",
+      "4.3 CI consumer",
+      "4.4 Pre-commit consumer",
+      "5. Falsifiers",
+      "6. Migration & Compatibility",
+      "7. Non-Goals"
+    ],
+    "specPath": "specs/158-workflow-ref-sha-pinning-lint/spec.md",
+    "status": "approved",
+    "summary": "Promote the SHA-pinning convention across .github/workflows/** and .github/actions/** into a merge-blocking and commit-blocking contract. Adds tools/lint/workflow-pins.sh (line-oriented lint with five classification rules and fail-closed dynamic-ref handling), test fixtures that act as the lint's own spec, and a regression test runner. The lint runs as a step in ci-supply-chain.yml AND as a pre-commit hook gate in .githooks/pre-commit — same script, two consumers. No allow-list for un-pinned refs; the correct resolution for any flagged ref is to pin it.\n",
+    "title": "Workflow-ref SHA-pinning lint — promote convention to contract (amends 116)"
+  },
+  "shardHash": "07058447b65ff9068b62e5717f2bbe3986b4abbf3f50369d22260bb31921200b",
+  "specVersion": "1.1.0"
+}

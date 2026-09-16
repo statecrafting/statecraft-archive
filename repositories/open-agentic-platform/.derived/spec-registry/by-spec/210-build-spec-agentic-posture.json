@@ -1,0 +1,122 @@
+{
+  "record": {
+    "authors": [
+      "open-agentic-platform"
+    ],
+    "codeAliases": [
+      "BUILD_SPEC_AGENTIC_POSTURE"
+    ],
+    "created": "2026-06-11",
+    "dependsOn": [
+      "197-factory-contract-open-standard-extensions",
+      "198-factory-governance-envelope",
+      "203-produced-app-sbom-attestation",
+      "168-per-project-governance-certificate"
+    ],
+    "domain": "platform",
+    "establishes": [
+      {
+        "kind": "file",
+        "path": "standards/schemas/factory/agentic-sdk-watchlist.yaml"
+      }
+    ],
+    "extends": [
+      {
+        "nature": "additive",
+        "spec": "197-factory-contract-open-standard-extensions",
+        "unit": {
+          "kind": "file",
+          "path": "standards/schemas/factory/build-spec.schema.yaml"
+        }
+      },
+      {
+        "nature": "additive",
+        "spec": "197-factory-contract-open-standard-extensions",
+        "unit": {
+          "kind": "file",
+          "path": "crates/factory-contracts/src/build_spec.rs"
+        }
+      },
+      {
+        "nature": "additive",
+        "spec": "034-featuregraph-registry-scanner-fix",
+        "unit": {
+          "kind": "file",
+          "path": "crates/featuregraph/tests/golden/features_graph.json"
+        }
+      }
+    ],
+    "extraFrontmatter": {
+      "compliance": [
+        {
+          "controls": [
+            "ASI02",
+            "ASI10"
+          ],
+          "framework": "owasp-asi-2026"
+        }
+      ],
+      "language": "en"
+    },
+    "featureBranch": "feat/210-build-spec-agentic-posture",
+    "id": "210-build-spec-agentic-posture",
+    "implementation": "complete",
+    "kind": "governance",
+    "references": [
+      {
+        "role": "gate-declaration",
+        "unit": {
+          "kind": "file",
+          "path": "standards/schemas/factory/governance-envelope.schema.yaml"
+        }
+      },
+      {
+        "role": "context",
+        "unit": {
+          "kind": "file",
+          "path": "docs/owasp-agentic-top-10-2026.md"
+        }
+      }
+    ],
+    "refines": [
+      {
+        "aspect": "agentic-posture-certificate-binding",
+        "unit": {
+          "kind": "file",
+          "path": "crates/factory-engine/src/governance_certificate.rs"
+        }
+      },
+      {
+        "aspect": "agentic-posture-emitter-read-path",
+        "unit": {
+          "kind": "file",
+          "path": "crates/factory-engine/src/bin/build_certificate.rs"
+        }
+      },
+      {
+        "aspect": "agentic-posture-verify-path",
+        "unit": {
+          "kind": "file",
+          "path": "crates/factory-engine/src/bin/verify_certificate.rs"
+        }
+      }
+    ],
+    "sectionHeadings": [
+      "Feature Specification: Build Spec Agentic-Posture Declaration",
+      "Purpose",
+      "Model",
+      "Functional requirements",
+      "Acceptance criteria",
+      "Out of scope",
+      "Sequencing",
+      "ASI mapping",
+      "Implementation status"
+    ],
+    "specPath": "specs/210-build-spec-agentic-posture/spec.md",
+    "status": "approved",
+    "summary": "Make the produced application's agentic surface a declared, falsifiable contract fact. Produced apps are conventional web applications today, but nothing STATES that: the Build Spec is silent on whether the application embeds model calls, tools, or agent loops, so a tenant that later adds an LLM SDK acquires an ungoverned agentic surface while still carrying OAP's governance certificate, and the certificate then implies a coverage it does not have. This spec adds an open-standard Build Spec field, agentic_posture: none | declared | governed, binds it into the governance certificate, and makes it falsifiable by cross-checking the declaration against the produced app's SBOM (spec 203): posture \"none\" with a known agent/LLM SDK in the dependency tree fails verification with an attributable diagnostic. \"Declared\" requires the agentic surfaces to be enumerated; \"governed\" requires each surface to carry a governance envelope (the spec 198 schema, reused at application level), bridging the spec 198 contract from the factory run to the thing the factory built. This is cross-cutting principle 1 (Least Agency) applied to outputs: autonomy is a deliberate, stated choice, never a silent acquisition.\n",
+    "title": "Build Spec Agentic-Posture Declaration (Least Agency for produced apps)"
+  },
+  "shardHash": "3872ffef0b148f11433c5f3a7a7ba60e29406dfa8a402c4314b3060ff6815745",
+  "specVersion": "1.1.0"
+}

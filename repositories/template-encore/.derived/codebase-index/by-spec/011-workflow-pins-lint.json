@@ -1,0 +1,97 @@
+{
+  "mapping": {
+    "implementingPaths": [
+      {
+        "path": ".githooks/pre-commit",
+        "source": "spec-edge"
+      },
+      {
+        "path": "tools/lint/tests/fixtures/failing/action.yml",
+        "source": "spec-edge"
+      },
+      {
+        "path": "tools/lint/tests/fixtures/passing/action.yml",
+        "source": "spec-edge"
+      },
+      {
+        "path": "tools/lint/workflow-pins-test.sh",
+        "source": "spec-edge"
+      },
+      {
+        "path": "tools/lint/workflow-pins.sh",
+        "source": "spec-edge"
+      }
+    ],
+    "resolvedUnits": [
+      {
+        "locations": [
+          {
+            "file": "tools/lint/tests/fixtures/failing/action.yml"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "file",
+          "path": "tools/lint/tests/fixtures/failing/action.yml"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "tools/lint/tests/fixtures/passing/action.yml"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "file",
+          "path": "tools/lint/tests/fixtures/passing/action.yml"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "tools/lint/workflow-pins-test.sh"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "file",
+          "path": "tools/lint/workflow-pins-test.sh"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "tools/lint/workflow-pins.sh"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "file",
+          "path": "tools/lint/workflow-pins.sh"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": ".githooks/pre-commit"
+          }
+        ],
+        "ownership": false,
+        "sourceField": "references",
+        "unit": {
+          "kind": "file",
+          "path": ".githooks/pre-commit"
+        }
+      }
+    ],
+    "specId": "011-workflow-pins-lint",
+    "specStatus": "approved"
+  },
+  "schemaVersion": "1.1.0",
+  "shardHash": "c3a8e19f4f12ca101d4f6579aaed8ec4a0b6708e0503cb50f73f65a48f15e431"
+}

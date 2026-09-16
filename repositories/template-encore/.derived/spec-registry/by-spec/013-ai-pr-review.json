@@ -1,0 +1,45 @@
+{
+  "record": {
+    "codeAliases": [
+      "AI_PR_REVIEW"
+    ],
+    "created": "2026-06-10",
+    "dependsOn": [
+      "009-repo-ci-orchestrator",
+      "012-enterprise-actions-governance"
+    ],
+    "domain": "ci-cd",
+    "establishes": [
+      {
+        "kind": "file",
+        "path": ".github/workflows/ai-pr-review.yml"
+      }
+    ],
+    "id": "013-ai-pr-review",
+    "implementation": "complete",
+    "kind": "governance",
+    "owner": "bart",
+    "risk": "low",
+    "sectionHeadings": [
+      "013 — AI PR review folded into ci-gate",
+      "1. Purpose",
+      "2. Territory",
+      "3. Behavior",
+      "FR-01: Subscription-OAuth auth, never an API key",
+      "FR-02: Hardened, App-free review workflow",
+      "FR-03: ci-gate membership",
+      "FR-04: SHA-pinned action references",
+      "FR-05: No interactive mention bot",
+      "FR-06: API-failure resilience (pass visibly, never silently)",
+      "4. Acceptance criteria",
+      "5. Out of scope",
+      "6. Design notes"
+    ],
+    "specPath": "specs/013-ai-pr-review/spec.md",
+    "status": "approved",
+    "summary": "An App-free Claude review of every PR, dispatched from ci.yml and required by ci-gate: subscription OAuth token, pinned CLI version, diff over stdin, no ANTHROPIC_API_KEY, no exit-code swallowing, and a visible skip comment when the diff exceeds the size budget. A Claude API outage passes ci-gate with a visible notice while an auth failure still hard-fails.\n",
+    "title": "AI PR review folded into ci-gate"
+  },
+  "shardHash": "8622d8b74707b6bfe5e3c02688b315d6b88718533a86589ccd38319b1e1ba445",
+  "specVersion": "1.1.0"
+}

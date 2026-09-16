@@ -1,0 +1,44 @@
+{
+  "record": {
+    "authors": [
+      "open-agentic-platform"
+    ],
+    "created": "2026-03-22",
+    "domain": "tooling",
+    "extends": [
+      {
+        "nature": "additive",
+        "spec": "008-registry-consumer-status-report-json-mvp"
+      }
+    ],
+    "extraFrontmatter": {
+      "language": "en"
+    },
+    "featureBranch": "010-registry-consumer-status-report-json-contract-mvp",
+    "id": "010-registry-consumer-status-report-json-contract-mvp",
+    "implementation": "complete",
+    "kind": "platform-delivery",
+    "refines": [
+      {
+        "aspect": "contract-tests"
+      }
+    ],
+    "sectionHeadings": [
+      "Feature Specification: Registry consumer status-report JSON contract tests",
+      "Purpose and charter",
+      "In scope",
+      "Out of scope",
+      "Requirements *(mandatory)*",
+      "Functional Requirements",
+      "Success Criteria *(mandatory)*",
+      "Clarifications"
+    ],
+    "specPath": "specs/010-registry-consumer-status-report-json-contract-mvp/spec.md",
+    "status": "superseded",
+    "summary": "Declare and verify `status-report --json` as a stable automation interface using fixture-based contract tests, without changing runtime behavior.\n",
+    "supersededBy": "217-spec-spine-engine-swap-collapse",
+    "title": "Registry consumer status-report JSON contract tests"
+  },
+  "shardHash": "00e4118f44e33d16db0738d91a35e667000cd402ab930cacfc05ad3fd19349dd",
+  "specVersion": "1.1.0"
+}

@@ -1,0 +1,12 @@
+{
+  "package": {
+    "edition": "2024",
+    "kind": "rust-lib-bin",
+    "name": "open_agentic_policy_kernel",
+    "path": "crates/policy-kernel",
+    "specRef": "047-governance-control-plane",
+    "version": "0.1.0"
+  },
+  "schemaVersion": "1.1.0",
+  "shardHash": "af5d1c4c7bb9c90747095467d33facbf0fed3f3ca2d013b0533fb3df6113fcda"
+}

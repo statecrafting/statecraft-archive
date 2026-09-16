@@ -1,0 +1,213 @@
+# ============================================================================
+# Factory Pipeline State Schema
+# ============================================================================
+#
+# Durable execution state written to disk after every successful step.
+# Enables crash recovery: read state, skip completed work, continue
+# from last checkpoint.
+#
+# Written to: {project-root}/.factory/pipeline-state.json
+#
+# Schema version: 1.0.0
+# ============================================================================
+
+schema_version: "1.0.0"
+
+# ─────────────────────────────────────────────────────────────────────────────
+# PIPELINE IDENTITY
+# ─────────────────────────────────────────────────────────────────────────────
+pipeline:
+  id: string                        # UUID for this pipeline run
+  factory_version: string            # Factory framework version
+  started_at: datetime
+  updated_at: datetime              # Last state update
+  completed_at: datetime            # Null until pipeline finishes
+
+  status:
+    enum: [running, paused, completed, failed, cancelled]
+
+  # What produced this
+  adapter:
+    name: string
+    version: string
+  build_spec:
+    path: string                    # Path to the Build Specification used
+    hash: string                    # SHA-256 of Build Spec (detect drift)
+
+
+# ─────────────────────────────────────────────────────────────────────────────
+# STAGE PROGRESS
+# ─────────────────────────────────────────────────────────────────────────────
+# Tracks completion of each process-layer stage.
+#
+stages:
+  # Key = stage identifier
+  <stage_id>:                       # e.g., "pre-flight", "business-requirements", "data-model", etc.
+    status:
+      enum: [pending, in_progress, completed, failed, skipped]
+    started_at: datetime
+    completed_at: datetime
+
+    # Artifacts produced by this stage
+    artifacts:
+      - path: string               # File path relative to project root
+        type: string               # e.g., "build-spec", "entity-model", "brd", "sitemap"
+        hash: string               # SHA-256 for change detection
+
+    # Validation gate results
+    gate:
+      passed: boolean
+      checked_at: datetime
+      checks:
+        - id: string               # Check identifier
+          passed: boolean
+          message: string           # Error/warning message if failed
+          severity:
+            enum: [error, warning]
+
+    # Agent execution metadata
+    agent:
+      prompt_tokens: integer
+      completion_tokens: integer
+      model: string
+      duration_seconds: number
+
+
+# ─────────────────────────────────────────────────────────────────────────────
+# SCAFFOLDING PROGRESS
+# ─────────────────────────────────────────────────────────────────────────────
+# Per-feature tracking for adapter scaffolding (stages 7-9 in the pipeline).
+# Each feature = one API resource operation or one UI page.
+#
+scaffolding:
+  data:
+    status:
+      enum: [pending, in_progress, completed, failed]
+    entities_completed: [string]    # Entity names that have been scaffolded
+    entities_remaining: [string]
+    entities_failed:
+      - entity: string
+        error: string
+        retries: integer
+
+  seed:
+    status:
+      enum: [pending, in_progress, completed, failed, skipped]
+    files_created: [string]         # Paths of generated seed/fixture/module files
+    reference_entities_seeded: [string]
+    fixture_entities_generated: [string]
+    fixture_profiles_generated:
+      - entity: string
+        profiles: [string]          # Profile names
+    verified_at: datetime
+
+  api:
+    status:
+      enum: [pending, in_progress, completed, failed]
+    operations_completed:
+      - operation_id: string        # References Build Spec operation ID
+        files_created: [string]     # Paths of generated files
+        verified_at: datetime
+    operations_remaining: [string]  # Operation IDs not yet scaffolded
+    operations_failed:
+      - operation_id: string
+        error: string
+        retries: integer            # How many times this was retried
+        max_retries: integer        # Configured max (default: 3)
+
+  ui:
+    status:
+      enum: [pending, in_progress, completed, failed]
+    pages_completed:
+      - page_id: string
+        files_created: [string]
+        verified_at: datetime
+    pages_remaining: [string]
+    pages_failed:
+      - page_id: string
+        error: string
+        retries: integer
+        max_retries: integer
+
+  configure:
+    status:
+      enum: [pending, in_progress, completed, failed]
+    steps_completed: [string]       # e.g., ["identity", "env-vars", "auth-wiring"]
+
+  trim:
+    status:
+      enum: [pending, in_progress, completed, failed]
+    files_removed: [string]
+
+
+# ─────────────────────────────────────────────────────────────────────────────
+# VERIFICATION RESULTS
+# ─────────────────────────────────────────────────────────────────────────────
+# Aggregate verification state.
+#
+verification:
+  last_full_run:
+    timestamp: datetime
+    passed: boolean
+    results:
+      compile:
+        passed: boolean
+        output: string              # Truncated stdout/stderr
+      test:
+        passed: boolean
+        total: integer
+        passed_count: integer
+        failed_count: integer
+        skipped_count: integer
+        output: string
+      lint:
+        passed: boolean
+        warnings: integer
+        errors: integer
+        output: string
+      type_check:
+        passed: boolean
+        output: string
+
+  # Cross-stage consistency (factory-owned checks)
+  consistency:
+    - check: string                 # e.g., "Every UC maps to at least one API operation"
+      passed: boolean
+      details: string
+
+
+# ─────────────────────────────────────────────────────────────────────────────
+# ERROR LOG
+# ─────────────────────────────────────────────────────────────────────────────
+# Persistent error log for debugging failed runs.
+#
+errors:
+  - timestamp: datetime
+    stage: string                   # Which stage/phase
+    feature: string                 # Which operation/page (if applicable)
+    error_type:
+      enum: [compile, test, lint, generation, validation, system]
+    message: string
+    retry_number: integer
+    resolved: boolean
+
+
+# ─────────────────────────────────────────────────────────────────────────────
+# AUDIT TRAIL
+# ─────────────────────────────────────────────────────────────────────────────
+# Records of human confirmations and decisions during the pipeline.
+#
+audit:
+  - timestamp: datetime
+    event:
+      enum: [
+        stage_confirmed,            # User confirmed stage handoff
+        stage_rejected,             # User rejected stage output
+        feature_flagged,            # User flagged a feature for manual review
+        pipeline_paused,            # User paused pipeline
+        pipeline_resumed,           # User resumed pipeline
+        adapter_overridden,         # User overrode an adapter decision
+        manual_fix_applied          # User manually edited generated code
+      ]
+    stage: string
+    details: string

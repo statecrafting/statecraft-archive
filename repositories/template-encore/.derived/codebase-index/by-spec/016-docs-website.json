@@ -1,0 +1,50 @@
+{
+  "mapping": {
+    "dependsOn": [
+      "011-workflow-pins-lint",
+      "012-enterprise-actions-governance"
+    ],
+    "implementingPaths": [
+      {
+        "path": ".github/workflows/deploy-docs.yml",
+        "source": "spec-edge"
+      },
+      {
+        "path": "website/",
+        "source": "spec-edge"
+      }
+    ],
+    "resolvedUnits": [
+      {
+        "locations": [
+          {
+            "file": ".github/workflows/deploy-docs.yml"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "file",
+          "path": ".github/workflows/deploy-docs.yml"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "website/"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "file",
+          "path": "website/"
+        }
+      }
+    ],
+    "specId": "016-docs-website",
+    "specStatus": "approved"
+  },
+  "schemaVersion": "1.1.0",
+  "shardHash": "30d9679cbb87828188b0f4f6384abb4dd08fa0cb2b4889c3bf0b2a3c5461ba98"
+}

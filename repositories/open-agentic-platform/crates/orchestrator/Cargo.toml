@@ -1,0 +1,51 @@
+# SPDX-License-Identifier: AGPL-3.0-or-later
+# Copyright (C) 2026 Bartek Kus
+
+[package]
+name = "orchestrator"
+publish = false   # internal workspace crate; binaries ship via release workflows, not crates.io
+version = "0.1.0"
+edition = "2024"
+
+[features]
+default = ["local-sqlite"]
+local-sqlite = ["dep:rusqlite"]
+distributed = ["dep:hiqlite"]
+
+[dependencies]
+provider-registry = { path = "../provider-registry", default-features = false, features = ["anthropic", "openai"] }
+standards-loader = { path = "../standards-loader" }
+# RunBudget* contract types for the blast-radius governor (spec 202 FR-002).
+# factory-contracts is a leaf crate (no orchestrator dependency), so this edge
+# is acyclic.
+factory-contracts = { path = "../factory-contracts" }
+async-trait = "0.1"
+# hiqlite 0.14 (root workspace, via axiomregent) pins rusqlite ^0.40, matching the
+# isolated opc src-tauri workspace, so the whole graph now agrees on one rusqlite
+# major and libsqlite3-sys's `links = "sqlite3"` single-version rule is satisfied.
+# This collapses the previous ">=0.39, <0.41" range, which straddled the era when
+# hiqlite 0.13 held rusqlite at ^0.39 while opc already wanted 0.40.
+rusqlite = { version = "0.40", features = ["bundled"], optional = true }
+hiqlite = { version = "~0.14", default-features = false, features = ["sqlite", "listen_notify_local", "auto-heal"], optional = true }
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+serde_yaml = "0.9"
+thiserror = "2"
+tokio = { version = "1", features = ["sync", "time", "rt-multi-thread", "macros", "process"] }
+uuid = { version = "1", features = ["v4", "serde"] }
+axum = { version = "0.8", features = ["macros"] }
+dashmap = "6"
+futures-util = "0.3"
+async-stream = "0.3"
+cron = "0.17"
+chrono = { version = "0.4", features = ["serde"] }
+sha2 = "0.10"
+regex = "1"
+dirs = "6"
+
+[dev-dependencies]
+tempfile = "3"
+tokio = { version = "1", features = ["macros", "rt", "time"] }
+
+[package.metadata.oap]
+spec = "052-state-persistence"

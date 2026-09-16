@@ -1,0 +1,134 @@
+{
+  "record": {
+    "codeAliases": [
+      "OPC_STRUCTURAL_DIFF_PLAN",
+      "ANTI_ANTHROPOMORPHIC_PLAN_UI"
+    ],
+    "created": "2026-05-22",
+    "dependsOn": [
+      "032-opc-inspect-governance-wiring-mvp",
+      "076-factory-desktop-panel",
+      "102-governed-excellence",
+      "126-desktop-agent-picker-ui"
+    ],
+    "domain": "opc",
+    "establishes": [
+      {
+        "kind": "file",
+        "path": "product/apps/opc/src/components/factory/planTypes.ts"
+      },
+      {
+        "kind": "file",
+        "path": "product/apps/opc/src/components/factory/planAnalysis.ts"
+      },
+      {
+        "kind": "file",
+        "path": "product/apps/opc/src/components/factory/PlanStructuralDiff.tsx"
+      },
+      {
+        "kind": "file",
+        "path": "product/apps/opc/src/components/factory/PlanActionGraph.tsx"
+      },
+      {
+        "kind": "file",
+        "path": "product/apps/opc/src/components/factory/GateImpactSummary.tsx"
+      },
+      {
+        "kind": "file",
+        "path": "product/apps/opc/src/components/factory/PlanCertificatePrediction.tsx"
+      },
+      {
+        "kind": "file",
+        "path": "product/apps/opc/src/components/factory/PlanReviewDialog.tsx"
+      }
+    ],
+    "extends": [
+      {
+        "nature": "additive",
+        "spec": "076-factory-desktop-panel",
+        "unit": {
+          "kind": "file",
+          "path": "product/apps/opc/src/components/factory/FactoryPipelineContext.tsx"
+        }
+      },
+      {
+        "nature": "additive",
+        "spec": "076-factory-desktop-panel",
+        "unit": {
+          "kind": "file",
+          "path": "product/apps/opc/src/components/factory/FactoryPipelinePanel.tsx"
+        }
+      }
+    ],
+    "extraFrontmatter": {
+      "compliance": [
+        {
+          "controls": [
+            "ASI09"
+          ],
+          "framework": "owasp-asi-2026"
+        }
+      ],
+      "slug": "opc-structural-diff-plan-ui"
+    },
+    "id": "171-opc-structural-diff-plan-ui",
+    "implementation": "complete",
+    "kind": "platform",
+    "owner": "bart",
+    "references": [
+      {
+        "role": "decomposition-source",
+        "unit": {
+          "kind": "file",
+          "path": "docs/owasp/factory/AIDE-VELOCITY-OAP-INTENT.md"
+        }
+      },
+      {
+        "role": "doctrine-source",
+        "unit": {
+          "kind": "file",
+          "path": "docs/owasp/owasp_top_10_agentic_applications_summary.md"
+        }
+      },
+      {
+        "role": "governance-substrate",
+        "unit": {
+          "kind": "file",
+          "path": "specs/102-governed-excellence/spec.md"
+        }
+      }
+    ],
+    "refines": [
+      {
+        "aspect": "agent-plan-rendering",
+        "unit": {
+          "kind": "directory",
+          "path": "product/apps/opc/src/components/factory"
+        }
+      }
+    ],
+    "risk": "medium",
+    "sectionHeadings": [
+      "171 — Deterministic structural-diff plan UI in OPC",
+      "1. Problem",
+      "2. Decision",
+      "2.1 Primary surface — the action graph",
+      "2.2 Secondary surface — the conversational summary",
+      "2.3 Approval requires diff acknowledgement",
+      "2.4 Composition with spec 102",
+      "3. Functional Requirements",
+      "4. Success Criteria",
+      "5. Scope",
+      "In scope",
+      "Out of scope (deferred)",
+      "6. Compliance",
+      "7. Cross-references"
+    ],
+    "specPath": "specs/171-opc-structural-diff-plan-ui/spec.md",
+    "status": "approved",
+    "summary": "OWASP ASI09 (Human-Agent Trust Exploitation) prescribes *\"Out-of-band verification and rigid UX guardrails for critical actions\"* — concretely, plans rendered as structural diffs / action graphs (YAML/JSON), not as natural-language summaries that invite anthropomorphic trust.\nOPC's factory panel today renders agent plans conversationally — narrative text summarising what the agent intends to do. This is exactly the failure mode ASI09 warns against: a confident-sounding summary invites the human to trust without verifying. Spec 171 refines spec 076 (the factory desktop panel) with a structural-diff plan UI: every agent-proposed plan renders primarily as a YAML/JSON action graph + a structural diff against the current spec-spine state. Conversational summaries are *demoted* to a secondary panel, not the primary action surface.\nThe cockpit must not let a confident-sounding agent talk a human into bypassing a gate. The structural- diff rendering is the load-bearing UX commitment that makes that impossible by construction — the human reviews the proposed graph diff, not the agent's prose.\n",
+    "title": "Deterministic structural-diff plan UI in OPC — anti-anthropomorphic-trust rendering (ASI09)"
+  },
+  "shardHash": "b8a04834ac1e467f6ecd477fd19f9c3bd7128de794732cd4605f4ee387a66f5c",
+  "specVersion": "1.1.0"
+}

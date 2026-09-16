@@ -1,0 +1,38 @@
+{
+  "record": {
+    "authors": [
+      "open-agentic-platform"
+    ],
+    "created": "2026-03-22",
+    "domain": "tooling",
+    "extends": [
+      {
+        "nature": "additive",
+        "spec": "007-registry-consumer-status-report-mvp"
+      }
+    ],
+    "extraFrontmatter": {
+      "language": "en"
+    },
+    "featureBranch": "011-registry-consumer-status-report-status-filter-mvp",
+    "id": "011-registry-consumer-status-report-status-filter-mvp",
+    "implementation": "complete",
+    "kind": "platform-delivery",
+    "sectionHeadings": [
+      "Feature Specification: Registry consumer status-report status filter",
+      "Purpose and charter",
+      "In scope",
+      "Out of scope",
+      "Requirements *(mandatory)*",
+      "Success Criteria *(mandatory)*",
+      "Clarifications"
+    ],
+    "specPath": "specs/011-registry-consumer-status-report-status-filter-mvp/spec.md",
+    "status": "superseded",
+    "summary": "Add `--status <value>` to `status-report` so operators and scripts can request a single lifecycle row in text or JSON mode while preserving existing defaults.\n",
+    "supersededBy": "217-spec-spine-engine-swap-collapse",
+    "title": "Registry consumer status-report status filter"
+  },
+  "shardHash": "99294887efa8ef52078f6e424b9b5a89fa3e6b574ae7dc92aa283944940d3953",
+  "specVersion": "1.1.0"
+}

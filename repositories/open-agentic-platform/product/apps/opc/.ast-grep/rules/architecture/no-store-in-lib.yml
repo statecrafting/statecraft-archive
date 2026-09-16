@@ -1,0 +1,20 @@
+id: no-store-subscription-in-lib
+message: |
+  lib/ modules must use getState() for store access, not subscriptions.
+
+  BAD:  const value = useAgentStore(state => state.value)
+  GOOD: const value = useAgentStore.getState().value
+
+  Store subscriptions create React coupling. lib/ should remain pure.
+severity: error
+language: TypeScript
+files:
+  - 'src/lib/**/*.ts'
+  - 'src/lib/**/*.tsx'
+rule:
+  any:
+    - pattern: useAgentStore($$$SELECTOR)
+    - pattern: useSessionStore($$$SELECTOR)
+note: |
+  lib/ may import stores ONLY for getState() — one-way, non-reactive
+  data access without React coupling.

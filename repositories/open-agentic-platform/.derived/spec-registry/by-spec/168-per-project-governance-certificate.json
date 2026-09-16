@@ -1,0 +1,172 @@
+{
+  "record": {
+    "amendmentRecord": "amended by spec 178 (2026-05-24): mechanical regeneration of\ncrates/featuregraph/tests/golden/features_graph.json reflecting the\nproduct/apps/desktop/* → product/apps/opc/* path rename in spec\nfrontmatter. No semantic change to this spec's claims; fixture content\nupdated 1:1 with the rename per the atomicity contract encoded by spec\n177. The body \"Amendments received\" section carries the authoritative\ndated callout.\namended by spec 167 (2026-06-11), editorial cross-reference: §2.2/§2.3's\nreferences to \"spec 167's FR-005 decision\" and to refreshing tenant\nbinaries now resolve to the pinned-toolchain (npm devDependency) mode —\nspec 167's vendored tools/spec-spine/ binary arm was retired in its\n2026-06-11 self-amendment. No change to spec 168's certificate emission\nor verifier contract; the verifier still ships with the kernel, now via\nthe pinned spec-spine distribution rather than loose vendored binaries.\namended by spec 167 (2026-06-12), PR-2 retirement touch: 168's extends\nedges on kernel_emission/{templates.rs,emit.rs} and\ntests/kernel_emission_integration.rs were edited when 167's PR-2 retired the\nvendored-binary CI workflow template + the scaffold-claim generator. 168's\nestablishes target templates/kernel/toolchain.yaml.tmpl is UNCHANGED and the\ncertificate_toolchain emission contract (FR-001/FR-008) is intact — the\nfallback emit_kernel still writes .factory/toolchain.yaml with the\nemitter/verifier pin. Editorial-on-168; the change is 167's.\namended by spec 220 (2026-06-20), clarification: 168 FR-001/FR-002 (a tenant\nships and fires the emitter, automatic at run completion) were\ncapability-complete in-engine under 168 (the tenant-mode emitter requiring an\nattributable signer, the post-hoc build-certificate path from a run directory,\nand tests/tenant_emission_integration.rs all landed here), but the\ntenant-facing DELIVERY was not: spec 219 vended only the verify-only half\n(tenant-tail) and spec 209 FR-003 deferred the emitter, its firing, and the\ntenant signer identity. Spec 220 is that delivery. No change to 168's\ncertificate format or verifier contract; this clarifies that 168's\n\"implementation: complete\" was capability-level and the tenant emit leg lands\nin spec 220. The body \"Amendments received\" section carries the dated callout.\n",
+    "codeAliases": [
+      "TENANT_GOVERNANCE_CERTIFICATE",
+      "PER_PROJECT_CERT_EMISSION"
+    ],
+    "created": "2026-05-22",
+    "dependsOn": [
+      "075-factory-workflow-engine",
+      "102-governed-excellence",
+      "167-born-with-spec-spine-kernel"
+    ],
+    "domain": "platform",
+    "establishes": [
+      {
+        "kind": "file",
+        "path": "crates/factory-engine/tests/tenant_emission_integration.rs"
+      },
+      {
+        "kind": "file",
+        "path": "crates/factory-engine/templates/kernel/toolchain.yaml.tmpl"
+      }
+    ],
+    "extends": [
+      {
+        "nature": "additive",
+        "spec": "102-governed-excellence",
+        "unit": {
+          "kind": "file",
+          "path": "crates/factory-engine/src/governance_certificate.rs"
+        }
+      },
+      {
+        "nature": "additive",
+        "spec": "102-governed-excellence",
+        "unit": {
+          "kind": "file",
+          "path": "crates/factory-engine/src/lib.rs"
+        }
+      },
+      {
+        "nature": "additive",
+        "spec": "102-governed-excellence",
+        "unit": {
+          "kind": "file",
+          "path": "crates/factory-engine/src/bin/build_certificate.rs"
+        }
+      },
+      {
+        "nature": "additive",
+        "spec": "102-governed-excellence",
+        "unit": {
+          "kind": "file",
+          "path": "crates/factory-engine/src/bin/factory_run.rs"
+        }
+      },
+      {
+        "nature": "additive",
+        "spec": "167-born-with-spec-spine-kernel",
+        "unit": {
+          "kind": "file",
+          "path": "crates/factory-engine/src/kernel_emission/mod.rs"
+        }
+      },
+      {
+        "nature": "additive",
+        "spec": "167-born-with-spec-spine-kernel",
+        "unit": {
+          "kind": "file",
+          "path": "crates/factory-engine/src/kernel_emission/version.rs"
+        }
+      },
+      {
+        "nature": "additive",
+        "spec": "167-born-with-spec-spine-kernel",
+        "unit": {
+          "kind": "file",
+          "path": "crates/factory-engine/src/kernel_emission/emit.rs"
+        }
+      },
+      {
+        "nature": "additive",
+        "spec": "167-born-with-spec-spine-kernel",
+        "unit": {
+          "kind": "file",
+          "path": "crates/factory-engine/src/kernel_emission/templates.rs"
+        }
+      },
+      {
+        "nature": "additive",
+        "spec": "167-born-with-spec-spine-kernel",
+        "unit": {
+          "kind": "file",
+          "path": "crates/factory-engine/tests/kernel_emission_integration.rs"
+        }
+      },
+      {
+        "nature": "additive",
+        "spec": "034-featuregraph-registry-scanner-fix",
+        "unit": {
+          "kind": "file",
+          "path": "crates/featuregraph/tests/golden/features_graph.json"
+        }
+      }
+    ],
+    "extraFrontmatter": {
+      "amended": "2026-06-20",
+      "compliance": [
+        {
+          "controls": [
+            "ASI04",
+            "ASI09"
+          ],
+          "framework": "owasp-asi-2026"
+        }
+      ],
+      "slug": "per-project-governance-certificate"
+    },
+    "id": "168-per-project-governance-certificate",
+    "implementation": "complete",
+    "kind": "capability",
+    "owner": "bart",
+    "references": [
+      {
+        "role": "decomposition-source",
+        "unit": {
+          "kind": "file",
+          "path": "docs/owasp/factory/AIDE-VELOCITY-OAP-INTENT.md"
+        }
+      },
+      {
+        "role": "substrate-spec",
+        "unit": {
+          "kind": "file",
+          "path": "specs/102-governed-excellence/spec.md"
+        }
+      },
+      {
+        "role": "kernel-channel",
+        "unit": {
+          "kind": "file",
+          "path": "specs/167-born-with-spec-spine-kernel/spec.md"
+        }
+      }
+    ],
+    "risk": "medium",
+    "sectionHeadings": [
+      "168 — Per-project governance certificate emission",
+      "1. Problem",
+      "2. Decision",
+      "2.1 Tenant-emit semantics",
+      "2.2 Verifier distribution",
+      "2.3 Continuity with spec 167",
+      "2.4 Stage shape for tenant runs",
+      "3. Functional Requirements",
+      "4. Success Criteria",
+      "5. Scope",
+      "In scope",
+      "Out of scope (deferred)",
+      "6. Compliance",
+      "7. Cross-references",
+      "Amendments received"
+    ],
+    "specPath": "specs/168-per-project-governance-certificate/spec.md",
+    "status": "approved",
+    "summary": "Spec 102 emits `governance-certificate.json` per OAP factory run, binding requirements hash, frozen Build Spec hash, per-stage artifact hashes, and a self- authenticating SHA-256 over the canonical JSON. The companion verifier (`make verify-certificate`) does not trust the system that produced the certificate (FR-007 of spec 102).\nToday this discipline applies to OAP's *own* factory runs. Tenant projects produced by the substrate run their *own* factory pipelines (e.g., re-running an adapter to refresh a scaffold, or running a tenant- side codegen stage), and those runs need the same independently-verifiable governance chain. Without it, the trust chain breaks at the tenant boundary — an auditor verifying a tenant's pipeline runs has no cryptographic ground truth, only the tenant's own log narratives.\nSpec 168 extends spec 102 with a *tenant-emit* mode: the same certificate format, the same verifier, the same FR-007 posture (verifier does not trust the producer), now applied to tenant pipelines. Born-with tenants inherit emission via the spec 167 kernel; retrofit tenants opt in via the same pattern when the decomposition pipeline (spec 165) graduates their first specs.\n",
+    "title": "Per-project governance certificate emission and tenant-side verifier"
+  },
+  "shardHash": "0ca4f650b420fcd095f076aaaa081ce5cc3a09e05c8be244595f662c1cdcde87",
+  "specVersion": "1.1.0"
+}

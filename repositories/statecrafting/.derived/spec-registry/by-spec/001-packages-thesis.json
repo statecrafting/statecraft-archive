@@ -1,0 +1,32 @@
+{
+  "record": {
+    "created": "2026-07-17",
+    "dependsOn": [
+      "000-bootstrap"
+    ],
+    "establishes": [
+      {
+        "kind": "file",
+        "path": "README.md"
+      }
+    ],
+    "id": "001-packages-thesis",
+    "sectionHeadings": [
+      "001: The statecrafting packages",
+      "1. Purpose",
+      "2. What consolidates here",
+      "3. The licensing model",
+      "3.1 The rationale that does not apply",
+      "3.2 The dependency-direction invariant",
+      "4. Ownership is transferred, never duplicated",
+      "5. The migration ladder",
+      "6. Out of scope"
+    ],
+    "specPath": "specs/001-packages-thesis/spec.md",
+    "status": "approved",
+    "summary": "Five packages consumed across the product family are owned by whichever repo built them first, under three npm scopes that no longer describe ownership. Consolidate them under `@statecrafting/*` here, governed by this repo's spine. Nothing is relicensed: the root is Apache-2.0 as a default, vendored Encore stays MPL-2.0, and governance-native and fleet-native keep AGPL-3.0 because they are control-plane internals no stamped app touches. The split follows customer reach, not Encore's license. Ownership transfers one edge at a time; the exporting specs own backend/ code that stays and must survive intact.\n",
+    "title": "The statecrafting packages: one scope, three licenses, one spine"
+  },
+  "shardHash": "dfd3b7cf71e469c909824de35796a1e1784385319302b3461864eb41d87d5f21",
+  "specVersion": "1.2.0"
+}

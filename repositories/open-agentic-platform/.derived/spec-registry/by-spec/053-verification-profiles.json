@@ -1,0 +1,59 @@
+{
+  "record": {
+    "authors": [
+      "open-agentic-platform"
+    ],
+    "codeAliases": [
+      "VERIFICATION_PROFILES",
+      "VERIFY_GATES"
+    ],
+    "created": "2026-03-29",
+    "domain": "opc",
+    "extraFrontmatter": {
+      "language": "en",
+      "sources": [
+        "claudepal",
+        "asterisk-mcp-server",
+        "developer-cc-commands"
+      ]
+    },
+    "featureBranch": "053-verification-profiles",
+    "id": "053-verification-profiles",
+    "implementation": "complete",
+    "kind": "platform",
+    "refines": [
+      {
+        "aspect": "verification-gates",
+        "unit": {
+          "id": "orchestrator",
+          "kind": "crate"
+        }
+      }
+    ],
+    "sectionHeadings": [
+      "Feature Specification: Verification Profiles",
+      "Purpose",
+      "Scope",
+      "In scope",
+      "Out of scope",
+      "Requirements",
+      "Functional",
+      "Non-functional",
+      "Architecture",
+      "Profile YAML schema",
+      "Skill YAML schema",
+      "Execution flow",
+      "Directory structure",
+      "Implementation approach",
+      "Success criteria",
+      "Dependencies",
+      "Risk"
+    ],
+    "specPath": "specs/053-verification-profiles/spec.md",
+    "status": "approved",
+    "summary": "YAML-based verification configuration with named profiles (pr, release, etc.), each composing reusable verification skills. Each skill declares a determinism level, safety tier, and ordered steps with command, timeout, read-only flag, and network policy. Post-session security gates require all verifiers to pass before changes are marked delivered, ensuring automated quality enforcement at every delivery boundary.\n",
+    "title": "Verification Profiles"
+  },
+  "shardHash": "bc15541a06292ce2078a658b2bca6ad861b985603a84cb15afebe452c7935eec",
+  "specVersion": "1.1.0"
+}

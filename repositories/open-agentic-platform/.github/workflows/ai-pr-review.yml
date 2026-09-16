@@ -1,0 +1,251 @@
+# Spec: 085-remote-control-cli
+#
+# AI-Powered PR Review. Uses Claude CLI to review diffs for bugs, security
+# issues, and spec compliance.
+#
+# Verifier mode (2026-06-10, generator-local/verifier-remote): when the PR
+# carries a `Local-Review-Evidence:` comment whose head SHA and diff sha256
+# match the current head, the adversarially-verified local review (produced
+# by /code-review v2, attached by /ship) stands in for generation and the
+# scan is skipped. Mirrors spec 102 FR-007's posture: the verifier does not
+# trust the producer — the evidence is bound to the exact head + diff, so a
+# review of any other state falls back to a full scan. Spec 177's claim
+# becomes "green ci-gate ⇒ locally-reviewed-with-verification, scanned by
+# CI, or visibly-skipped-as-oversized".
+#
+# Hardening notes (ci-hardening branch):
+#   - H3: diff payload is passed to Claude via stdin instead of `$(cat …)`
+#     interpolation, eliminating shell-evaluation of backticks/$( ) inside
+#     contributor-controlled diff content.
+#   - H4: Claude CLI version pinned via env var (CLAUDE_CLI_VERSION) so
+#     dependabot bumps land in one place.
+#   - M6: draft PRs are skipped to avoid burning Anthropic tokens on WIP.
+#   - Comment posts retry 3x with backoff: the 2026-06-10 GitHub auth
+#     incident failed this job twice at the post step after successful
+#     scans (each rerun re-paying the full scan).
+
+name: AI PR Review
+
+on:
+  # Spec 177 — dispatched as a reusable workflow from ci.yml so the AI review
+  # is part of the orchestrated PR-gate suite and the terminal `ci-gate`
+  # `needs:` it (a failed or absent review now blocks merge; green ci-gate ⇒
+  # actually reviewed). It no longer triggers standalone on `pull_request` —
+  # that would double-run it alongside the ci.yml dispatch.
+  workflow_call:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pull-requests: write
+
+env:
+  # Pinned to the npm `stable` dist-tag value at time of pin. The 2.1.88
+  # value previously here was never published — the version sequence skips
+  # numbers as releases are pulled. Bump in lockstep with ai-changelog.yml.
+  CLAUDE_CLI_VERSION: '2.1.185'
+  DIFF_SIZE_CAP: '2000'
+
+jobs:
+  ai-review:
+    runs-on: ubuntu-latest
+    name: ai-review / diff scan
+    timeout-minutes: 10
+    if: github.event.pull_request.draft == false
+    steps:
+      - name: Checkout
+        uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+        with:
+          fetch-depth: 0
+
+      # Verifier mode: accept an adversarially-verified local review bound
+      # to this exact head SHA + diff hash in place of regeneration. The
+      # short wait covers the race where /ship posts the evidence comment
+      # moments after PR creation while this job is already checking out.
+      # Evidence is accepted only from OWNER/MEMBER/COLLABORATOR comments —
+      # the head SHA and diff hash are publicly derivable, so without the
+      # author_association filter any drive-by commenter could suppress the
+      # scan on a fork PR.
+      - name: Check local review evidence
+        id: evidence
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+          HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+        run: |
+          verified=false
+          line=""
+          for attempt in 1 2; do
+            line=$(gh api "repos/${{ github.repository }}/issues/${PR_NUMBER}/comments" --paginate --jq '.[] | select(.author_association == "OWNER" or .author_association == "MEMBER" or .author_association == "COLLABORATOR") | .body' 2>/dev/null | grep -oE 'Local-Review-Evidence: head=[0-9a-f]{40} diff_sha256=[0-9a-f]{64}' | tail -1 || true)
+            [ -n "$line" ] && break
+            [ "$attempt" = "1" ] && sleep 15
+          done
+          if [ -n "$line" ]; then
+            ev_head=$(printf '%s' "$line" | sed -E 's/.*head=([0-9a-f]{40}).*/\1/')
+            ev_hash=$(printf '%s' "$line" | sed -E 's/.*diff_sha256=([0-9a-f]{64}).*/\1/')
+            cur_hash=$(git diff origin/main...HEAD | sha256sum | cut -d' ' -f1)
+            if [ "$ev_head" = "$HEAD_SHA" ] && [ "$ev_hash" = "$cur_hash" ]; then
+              verified=true
+              echo "::notice::Local review evidence verified for ${HEAD_SHA} — generation skipped (verifier mode)."
+            else
+              echo "::notice::Local review evidence found but stale (head or diff hash mismatch) — full scan."
+            fi
+          else
+            echo "::notice::No local review evidence — full scan."
+          fi
+          echo "verified=$verified" >> "$GITHUB_OUTPUT"
+
+      - name: Compute diff size
+        id: diff
+        run: |
+          DIFF_LINES=$(git diff origin/main...HEAD --stat | tail -1 | grep -oP '\d+ insertion' | grep -oP '\d+' || echo "0")
+          echo "lines=$DIFF_LINES" >> "$GITHUB_OUTPUT"
+          if [ "$DIFF_LINES" -gt "$DIFF_SIZE_CAP" ]; then
+            echo "skip=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "skip=false" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Generate diff
+        if: steps.diff.outputs.skip != 'true' && steps.evidence.outputs.verified != 'true'
+        run: git diff origin/main...HEAD > /tmp/pr-diff.txt
+
+      - name: Install Claude CLI
+        if: steps.diff.outputs.skip != 'true' && steps.evidence.outputs.verified != 'true'
+        run: npm install -g "@anthropic-ai/claude-code@${CLAUDE_CLI_VERSION}"
+
+      # H3 fix: prompt prelude is fed via -p; the diff is piped to stdin.
+      # No shell interpolation of contributor-controlled content occurs.
+      - name: Run AI Review
+        id: aireview
+        if: steps.diff.outputs.skip != 'true' && steps.evidence.outputs.verified != 'true'
+        env:
+          # Subscription-backed auth via the Claude Code OAuth token, NOT an
+          # API key. ANTHROPIC_API_KEY is deliberately NOT set here: an
+          # empty/unset API key wins by precedence over the OAuth token and
+          # was the silent auth failure that made every review since ~#220
+          # emit "Review generation failed" while the job stayed green.
+          CLAUDE_CODE_OAUTH_TOKEN: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
+        run: |
+          set -o pipefail
+          # Distinct, surfaced failure if the OAuth secret is unset, so an
+          # operator can tell "secret missing" from "API error" without
+          # decoding a generic CLI failure (raised by the AI review on #265).
+          if [ -z "${CLAUDE_CODE_OAUTH_TOKEN:-}" ]; then
+            echo "::error::CLAUDE_CODE_OAUTH_TOKEN secret is unset — AI review cannot authenticate."
+            exit 1
+          fi
+          PROMPT='You are reviewing a pull request for the Open Agentic Platform. The diff is provided on stdin. Review it for:
+          1. Bugs and logic errors
+          2. Security vulnerabilities (OWASP top 10)
+          3. Spec compliance (check that Feature: annotations match code_aliases in specs/)
+          4. Performance concerns
+
+          Be concise. Focus on issues, not praise. Format as markdown with ## sections.'
+          # API-failure resilience (spec 177, 2026-06-23 amendment): a Claude
+          # API outage must not block merges, but a pass must never be silent.
+          # Capture claude's exit + output, then classify the failure:
+          #   - secret unset (handled above) -> hard fail (config bug).
+          #   - auth / permission error -> hard fail: a broken token must be
+          #     fixed, not masked (preserves the ~#220/#265 anti-silent-green
+          #     guard against a green-but-dead review).
+          #   - anything else (overloaded_error, rate_limit_error, 5xx,
+          #     timeout, network, unclassified) -> PASS, with a LOUD
+          #     ::warning:: and a PR notice, so a third-party API incident
+          #     rides through instead of red-gating every PR. The pass is
+          #     visible (a comment is posted), never silent.
+          if claude -p "$PROMPT" --output-format text < /tmp/pr-diff.txt > /tmp/review.md 2> /tmp/review.err; then
+            echo "review_status=ok" >> "$GITHUB_OUTPUT"
+          else
+            rc=$?
+            err="$(cat /tmp/review.err /tmp/review.md 2>/dev/null)"
+            echo "claude exited ${rc}; captured output follows:" >&2
+            printf '%s\n' "$err" >&2
+            if printf '%s' "$err" | grep -qiE 'authentication_error|permission_error|invalid[^a-z]*(x-)?api[^a-z]*key|unauthorized|forbidden|oauth[^a-z]*(token)?[^a-z]*(invalid|expired|revoked|missing)'; then
+              echo "::error::AI review could not authenticate (not an API outage); fix CLAUDE_CODE_OAUTH_TOKEN. Details above."
+              exit 1
+            fi
+            excerpt="$(printf '%s' "$err" | tr '\n\r\t' '   ' | sed 's/  */ /g' | cut -c1-280)"
+            [ -z "$excerpt" ] && excerpt="claude CLI exited ${rc} with no captured output"
+            {
+              echo "review_status=api_failure"
+              echo "api_rc=${rc}"
+              echo "api_excerpt=${excerpt}"
+            } >> "$GITHUB_OUTPUT"
+            echo "::warning::AI review could not run due to a Claude API failure (rc=${rc}): ${excerpt}. Passing ci-gate so the API incident does not block merges; re-run once the API recovers."
+          fi
+
+      - name: Post review comment
+        # Explicit success() (raised by the AI review on #265): the post step
+        # must run only when Run AI Review succeeded, so a future
+        # `continue-on-error` can't let it post a partial/empty review.
+        if: success() && steps.diff.outputs.skip != 'true' && steps.evidence.outputs.verified != 'true' && steps.aireview.outputs.review_status == 'ok'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+          DIFF_LINES: ${{ steps.diff.outputs.lines }}
+        run: |
+          {
+            echo "## AI Code Review"
+            echo ""
+            cat /tmp/review.md
+            echo ""
+            echo "---"
+            echo "_Automated review by Claude. Diff size: ${DIFF_LINES} lines._"
+          } > /tmp/comment.md
+          for attempt in 1 2 3; do
+            gh pr comment "$PR_NUMBER" --body-file /tmp/comment.md && break
+            if [ "$attempt" = "3" ]; then exit 1; fi
+            echo "::warning::comment post failed (attempt ${attempt}) — retrying"
+            sleep 20
+          done
+
+      - name: Post API-failure notice (review could not run; make the pass VISIBLE)
+        # spec 177 (2026-06-23): a Claude API outage must not block merges, but
+        # the pass must never be silent. Run AI Review classified the failure as
+        # an API outage (review_status=api_failure) and exited 0; surface that
+        # here so a human sees the review did NOT happen and ci-gate passed
+        # anyway. Same posture as the oversized-diff skip notice below.
+        if: steps.aireview.outputs.review_status == 'api_failure'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+          API_RC: ${{ steps.aireview.outputs.api_rc }}
+          API_EXCERPT: ${{ steps.aireview.outputs.api_excerpt }}
+        run: |
+          echo "::warning::AI review SKIPPED due to a Claude API failure (rc=${API_RC}); ci-gate passes so the incident does not block merges. Re-run after recovery."
+          {
+            echo "## AI Code Review: SKIPPED (Claude API failure)"
+            echo ""
+            echo "The automated AI review could **not** run because the Claude API failed (\`rc=${API_RC}\`)."
+            echo ""
+            echo "Error excerpt:"
+            echo ""
+            printf '> %s\n' "${API_EXCERPT}"
+            echo ""
+            echo "\`ci-gate\` is passing anyway so a transient Anthropic API incident does not block merges (spec 177 API-failure resilience). A green \`ci-gate\` here does **not** imply an AI review happened: re-run this job once the API recovers, or attach local review evidence via \`/ship\`."
+          } > /tmp/api-fail-comment.md
+          gh pr comment "$PR_NUMBER" --body-file /tmp/api-fail-comment.md || echo "::warning::could not post API-failure notice comment"
+
+      - name: Skip notice (oversized diff — make the skip VISIBLE, not silent)
+        # When the diff exceeds DIFF_SIZE_CAP the review can't run, but the
+        # job still succeeds, so ci-gate passes. That would be a SILENT hole
+        # in spec 177's "green ci-gate ⇒ reviewed" claim — the folded gate
+        # caught it on PR #267. Post a PR comment so the skip is visible and
+        # a human knows manual review is required; spec 177's claim is scoped
+        # to "reviewed OR visibly-skipped-as-oversized" accordingly.
+        if: steps.diff.outputs.skip == 'true' && steps.evidence.outputs.verified != 'true'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+          DIFF_LINES: ${{ steps.diff.outputs.lines }}
+        run: |
+          echo "::warning::AI review SKIPPED — diff exceeds ${DIFF_SIZE_CAP} lines (${DIFF_LINES}); manual review required."
+          {
+            echo "## AI Code Review — SKIPPED (oversized diff)"
+            echo ""
+            echo "⚠️ This PR's diff (**${DIFF_LINES} lines**) exceeds \`DIFF_SIZE_CAP\` (${DIFF_SIZE_CAP}), so the automated AI review did **not** run."
+            echo ""
+            echo "\`ci-gate\` still passes (the review job is skipped, not failed) — so **a human reviewer must review this PR manually.** A green \`ci-gate\` on this PR does **not** imply an AI review happened."
+          } > /tmp/skip-comment.md
+          gh pr comment "$PR_NUMBER" --body-file /tmp/skip-comment.md

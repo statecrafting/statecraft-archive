@@ -1,0 +1,79 @@
+{
+  "diagnostics": {
+    "errors": [],
+    "warnings": [
+      {
+        "code": "W-002",
+        "message": "spec '073-axiomregent-unification' file unit 'product/apps/opc/src-tauri/src/commands/titor.rs' does not exist",
+        "path": "product/apps/opc/src-tauri/src/commands/titor.rs"
+      },
+      {
+        "code": "W-002",
+        "message": "spec '073-axiomregent-unification' file unit 'product/apps/opc/src-tauri/src/commands/search.rs' does not exist",
+        "path": "product/apps/opc/src-tauri/src/commands/search.rs"
+      }
+    ]
+  },
+  "mapping": {
+    "implementingPaths": [
+      {
+        "path": "crates/axiomregent",
+        "source": "multiple"
+      },
+      {
+        "path": "platform/services/deployd-api-rs",
+        "source": "multiple"
+      }
+    ],
+    "resolvedUnits": [
+      {
+        "locations": [
+          {
+            "file": "platform/services/deployd-api-rs"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "directory",
+          "path": "platform/services/deployd-api-rs"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "crates/axiomregent"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "extends",
+        "unit": {
+          "id": "axiomregent",
+          "kind": "crate"
+        }
+      },
+      {
+        "locations": [],
+        "ownership": false,
+        "sourceField": "references",
+        "unit": {
+          "kind": "file",
+          "path": "product/apps/opc/src-tauri/src/commands/search.rs"
+        }
+      },
+      {
+        "locations": [],
+        "ownership": false,
+        "sourceField": "references",
+        "unit": {
+          "kind": "file",
+          "path": "product/apps/opc/src-tauri/src/commands/titor.rs"
+        }
+      }
+    ],
+    "specId": "073-axiomregent-unification",
+    "specStatus": "approved"
+  },
+  "schemaVersion": "1.1.0",
+  "shardHash": "38287e2cfb12f7f9a2c95966e73784229bdd75d2d5b4aca664aa36d1f191b761"
+}

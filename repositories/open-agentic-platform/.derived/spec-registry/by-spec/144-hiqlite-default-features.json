@@ -1,0 +1,56 @@
+{
+  "record": {
+    "codeAliases": [
+      "HIQLITE_DEFAULT_FEATURES"
+    ],
+    "created": "2026-05-10",
+    "dependsOn": [
+      "073-axiomregent-unification",
+      "052-state-persistence"
+    ],
+    "domain": "platform",
+    "extraFrontmatter": {
+      "closed": "2026-05-10",
+      "slug": "hiqlite-default-features"
+    },
+    "id": "144-hiqlite-default-features",
+    "implementation": "complete",
+    "kind": "tooling",
+    "owner": "bart",
+    "refines": [
+      {
+        "aspect": "cargo-manifest-hygiene",
+        "unit": {
+          "kind": "file",
+          "path": "crates/orchestrator/Cargo.toml"
+        }
+      },
+      {
+        "aspect": "cargo-manifest-hygiene",
+        "unit": {
+          "kind": "file",
+          "path": "crates/axiomregent/Cargo.toml"
+        }
+      }
+    ],
+    "risk": "low",
+    "sectionHeadings": [
+      "144 — Hiqlite default-features hygiene",
+      "1. Background",
+      "2. Resolution",
+      "2.1 Orchestrator manifest",
+      "2.2 Axiomregent manifest",
+      "2.3 Lockfile regeneration",
+      "2.4 CI verification",
+      "3. Acceptance criteria",
+      "4. Out of scope",
+      "5. Provenance"
+    ],
+    "specPath": "specs/144-hiqlite-default-features/spec.md",
+    "status": "approved",
+    "summary": "`crates/orchestrator/Cargo.toml:20` declares the `hiqlite` dependency without `default-features = false`. Cargo unifies features across the `crates/` workspace, silently turning `auto-heal`, `backup`, `s3`, and `toml` on for both `orchestrator` and `axiomregent` even though axiomregent correctly sets `default-features = false` itself; the unification pulls `cron`, `toml 1.1.2+spec-1.1.0` (and the already-explicit `futures-util`) into `crates/Cargo.lock` for code that never runs. This spec adds the missing flag, drops two redundant feature entries (axiomregent `cache`, orchestrator `dlock`), surfaces `auto-heal` as an explicit choice in both crates, and verifies the lockfile no longer carries the unified-by-accident transitives. No source code, schema, or runtime behaviour changes. The deployd-api-rs durability fix is its own spec (145).\n",
+    "title": "Hiqlite default-features hygiene — stop unifying upstream defaults across the crates workspace"
+  },
+  "shardHash": "0dfcc8faca2b506f691cda3c50d5472a7b7d82a222b5db5c256146dbea449b88",
+  "specVersion": "1.1.0"
+}

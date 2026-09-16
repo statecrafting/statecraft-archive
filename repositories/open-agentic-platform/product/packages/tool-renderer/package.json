@@ -1,0 +1,34 @@
+{
+  "name": "@opc/tool-renderer",
+  "version": "0.1.0",
+  "description": "Config-driven tool rendering system for OAP desktop",
+  "private": true,
+  "type": "module",
+  "main": "src/index.ts",
+  "types": "src/index.ts",
+  "exports": {
+    ".": "./src/index.ts",
+    "./types": "./src/types.ts",
+    "./registry": "./src/registry.ts",
+    "./renderers": "./src/renderers/index.ts",
+    "./components": "./src/components/index.ts",
+    "./configs": "./src/configs/defaults.ts"
+  },
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "test": "vitest run",
+    "lint": "eslint src/"
+  },
+  "dependencies": {
+    "react": "^18.3.1"
+  },
+  "devDependencies": {
+    "@types/node": "^24.5.0",
+    "@types/react": "^18.3.1",
+    "typescript": "^6.0.3",
+    "vitest": "^4.1.5"
+  },
+  "oap": {
+    "spec": "050-tool-renderer-system"
+  }
+}

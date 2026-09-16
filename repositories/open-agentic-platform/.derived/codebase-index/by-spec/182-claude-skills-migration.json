@@ -1,0 +1,378 @@
+{
+  "mapping": {
+    "amends": [
+      "071-skill-command-factory",
+      "101-codebase-index-mvp",
+      "061-conductor-track-lifecycle",
+      "134-fast-local-ci-mode",
+      "135-fast-ci-as-default",
+      "104-makefile-ci-parity-contract",
+      "103-init-protocol-governed-reads"
+    ],
+    "implementingPaths": [
+      {
+        "path": ".claude/skills/cleanup",
+        "source": "spec-edge"
+      },
+      {
+        "path": ".claude/skills/cleanup/SKILL.md",
+        "source": "spec-edge"
+      },
+      {
+        "path": ".claude/skills/code-review",
+        "source": "spec-edge"
+      },
+      {
+        "path": ".claude/skills/code-review/SKILL.md",
+        "source": "spec-edge"
+      },
+      {
+        "path": ".claude/skills/commit",
+        "source": "spec-edge"
+      },
+      {
+        "path": ".claude/skills/commit/SKILL.md",
+        "source": "spec-edge"
+      },
+      {
+        "path": ".claude/skills/implement-plan",
+        "source": "spec-edge"
+      },
+      {
+        "path": ".claude/skills/implement-plan/SKILL.md",
+        "source": "spec-edge"
+      },
+      {
+        "path": ".claude/skills/init",
+        "source": "spec-edge"
+      },
+      {
+        "path": ".claude/skills/init/SKILL.md",
+        "source": "spec-edge"
+      },
+      {
+        "path": ".claude/skills/refactor-claude-md",
+        "source": "spec-edge"
+      },
+      {
+        "path": ".claude/skills/refactor-claude-md/SKILL.md",
+        "source": "spec-edge"
+      },
+      {
+        "path": ".claude/skills/research",
+        "source": "spec-edge"
+      },
+      {
+        "path": ".claude/skills/research/SKILL.md",
+        "source": "spec-edge"
+      },
+      {
+        "path": ".claude/skills/setup",
+        "source": "spec-edge"
+      },
+      {
+        "path": ".claude/skills/setup/SKILL.md",
+        "source": "spec-edge"
+      },
+      {
+        "path": ".claude/skills/validate-and-fix",
+        "source": "spec-edge"
+      },
+      {
+        "path": ".claude/skills/validate-and-fix/SKILL.md",
+        "source": "spec-edge"
+      },
+      {
+        "path": "specs/105-scripts-to-binaries-migration/spec.md",
+        "source": "spec-edge"
+      },
+      {
+        "path": "specs/178-opc-directory-rename/spec.md",
+        "source": "spec-edge"
+      },
+      {
+        "path": "specs/182-claude-skills-migration/baseline-init.txt",
+        "source": "spec-edge"
+      }
+    ],
+    "resolvedUnits": [
+      {
+        "locations": [
+          {
+            "file": ".claude/skills/cleanup"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "directory",
+          "path": ".claude/skills/cleanup"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": ".claude/skills/code-review"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "directory",
+          "path": ".claude/skills/code-review"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": ".claude/skills/commit"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "directory",
+          "path": ".claude/skills/commit"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": ".claude/skills/implement-plan"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "directory",
+          "path": ".claude/skills/implement-plan"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": ".claude/skills/init"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "directory",
+          "path": ".claude/skills/init"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": ".claude/skills/refactor-claude-md"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "directory",
+          "path": ".claude/skills/refactor-claude-md"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": ".claude/skills/research"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "directory",
+          "path": ".claude/skills/research"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": ".claude/skills/setup"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "directory",
+          "path": ".claude/skills/setup"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": ".claude/skills/validate-and-fix"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "directory",
+          "path": ".claude/skills/validate-and-fix"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": ".claude/skills/cleanup/SKILL.md"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "file",
+          "path": ".claude/skills/cleanup/SKILL.md"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": ".claude/skills/code-review/SKILL.md"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "file",
+          "path": ".claude/skills/code-review/SKILL.md"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": ".claude/skills/commit/SKILL.md"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "file",
+          "path": ".claude/skills/commit/SKILL.md"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": ".claude/skills/implement-plan/SKILL.md"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "file",
+          "path": ".claude/skills/implement-plan/SKILL.md"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": ".claude/skills/init/SKILL.md"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "file",
+          "path": ".claude/skills/init/SKILL.md"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": ".claude/skills/refactor-claude-md/SKILL.md"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "file",
+          "path": ".claude/skills/refactor-claude-md/SKILL.md"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": ".claude/skills/research/SKILL.md"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "file",
+          "path": ".claude/skills/research/SKILL.md"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": ".claude/skills/setup/SKILL.md"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "file",
+          "path": ".claude/skills/setup/SKILL.md"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": ".claude/skills/validate-and-fix/SKILL.md"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "file",
+          "path": ".claude/skills/validate-and-fix/SKILL.md"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "specs/182-claude-skills-migration/baseline-init.txt"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "file",
+          "path": "specs/182-claude-skills-migration/baseline-init.txt"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "specs/105-scripts-to-binaries-migration/spec.md"
+          }
+        ],
+        "ownership": false,
+        "sourceField": "references",
+        "unit": {
+          "kind": "file",
+          "path": "specs/105-scripts-to-binaries-migration/spec.md"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "specs/178-opc-directory-rename/spec.md"
+          }
+        ],
+        "ownership": false,
+        "sourceField": "references",
+        "unit": {
+          "kind": "file",
+          "path": "specs/178-opc-directory-rename/spec.md"
+        }
+      }
+    ],
+    "specId": "182-claude-skills-migration",
+    "specStatus": "approved"
+  },
+  "schemaVersion": "1.1.0",
+  "shardHash": "8a540f9280d836f8f8f898e0622760b7f6de5862a3ca8ee46a20f941f40eaf5e"
+}

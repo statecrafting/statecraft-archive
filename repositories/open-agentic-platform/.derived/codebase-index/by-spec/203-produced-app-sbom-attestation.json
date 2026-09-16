@@ -1,0 +1,154 @@
+{
+  "mapping": {
+    "dependsOn": [
+      "167-born-with-spec-spine-kernel",
+      "168-per-project-governance-certificate",
+      "112-factory-project-lifecycle",
+      "116-supply-chain-policy-gates"
+    ],
+    "implementingPaths": [
+      {
+        "path": "crates/factory-engine/src/bin/build_certificate.rs",
+        "source": "spec-edge"
+      },
+      {
+        "path": "crates/factory-engine/src/bin/verify_certificate.rs",
+        "source": "spec-edge"
+      },
+      {
+        "path": "crates/factory-engine/src/governance_certificate.rs",
+        "source": "spec-edge"
+      },
+      {
+        "path": "crates/factory-engine/src/kernel_emission/emit.rs",
+        "source": "spec-edge"
+      },
+      {
+        "path": "crates/factory-engine/tests/tenant_emission_integration.rs",
+        "source": "spec-edge"
+      },
+      {
+        "path": "crates/featuregraph/tests/golden/features_graph.json",
+        "source": "spec-edge"
+      },
+      {
+        "path": "docs/owasp-agentic-top-10-2026.md",
+        "source": "spec-edge"
+      },
+      {
+        "path": "platform/services/statecraft/api/factory/translator.ts",
+        "source": "spec-edge"
+      }
+    ],
+    "resolvedUnits": [
+      {
+        "locations": [
+          {
+            "file": "crates/factory-engine/tests/tenant_emission_integration.rs"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "extends",
+        "unit": {
+          "kind": "file",
+          "path": "crates/factory-engine/tests/tenant_emission_integration.rs"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "crates/featuregraph/tests/golden/features_graph.json"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "extends",
+        "unit": {
+          "kind": "file",
+          "path": "crates/featuregraph/tests/golden/features_graph.json"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "crates/factory-engine/src/bin/build_certificate.rs"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "refines",
+        "unit": {
+          "kind": "file",
+          "path": "crates/factory-engine/src/bin/build_certificate.rs"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "crates/factory-engine/src/bin/verify_certificate.rs"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "refines",
+        "unit": {
+          "kind": "file",
+          "path": "crates/factory-engine/src/bin/verify_certificate.rs"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "crates/factory-engine/src/governance_certificate.rs"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "refines",
+        "unit": {
+          "kind": "file",
+          "path": "crates/factory-engine/src/governance_certificate.rs"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "crates/factory-engine/src/kernel_emission/emit.rs"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "refines",
+        "unit": {
+          "kind": "file",
+          "path": "crates/factory-engine/src/kernel_emission/emit.rs"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "docs/owasp-agentic-top-10-2026.md"
+          }
+        ],
+        "ownership": false,
+        "sourceField": "references",
+        "unit": {
+          "kind": "file",
+          "path": "docs/owasp-agentic-top-10-2026.md"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "platform/services/statecraft/api/factory/translator.ts"
+          }
+        ],
+        "ownership": false,
+        "sourceField": "references",
+        "unit": {
+          "kind": "file",
+          "path": "platform/services/statecraft/api/factory/translator.ts"
+        }
+      }
+    ],
+    "specId": "203-produced-app-sbom-attestation",
+    "specStatus": "approved"
+  },
+  "schemaVersion": "1.1.0",
+  "shardHash": "eeefd280ab073f9c2547f6098b8eb92815ba4041317f9df8630a981c072f2176"
+}

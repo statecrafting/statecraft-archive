@@ -1,0 +1,69 @@
+{
+  "record": {
+    "authors": [
+      "open-agentic-platform"
+    ],
+    "codeAliases": [
+      "FACTORY_DESKTOP",
+      "FACTORY_PANEL"
+    ],
+    "created": "2026-04-04",
+    "domain": "opc",
+    "extends": [
+      {
+        "nature": "additive",
+        "spec": "032-opc-inspect-governance-wiring-mvp",
+        "unit": {
+          "id": "@opc/desktop",
+          "kind": "crate"
+        }
+      }
+    ],
+    "extraFrontmatter": {
+      "language": "en"
+    },
+    "featureBranch": "feat/076-factory-desktop-panel",
+    "id": "076-factory-desktop-panel",
+    "implementation": "complete",
+    "kind": "platform",
+    "references": [
+      {
+        "role": "historical",
+        "unit": {
+          "kind": "file",
+          "path": "product/apps/opc/src/components/FactoryPipelinePanel.tsx"
+        }
+      }
+    ],
+    "sectionHeadings": [
+      "Feature Specification: Factory Desktop Panel",
+      "Purpose",
+      "Scope",
+      "In scope",
+      "Out of scope",
+      "Requirements",
+      "Functional Requirements",
+      "Non-Functional Requirements",
+      "Architecture",
+      "Component Tree",
+      "State Management",
+      "Tauri Event Bindings",
+      "Server-resolved pipeline inputs",
+      "Implementation Approach",
+      "Phase 1: Core Panel & DAG (4 days)",
+      "Phase 2: Artifact Inspector & Gates (4 days)",
+      "Phase 3: Scaffold Monitor (3 days)",
+      "Phase 4: Token Dashboard & History (2 days)",
+      "Success Criteria",
+      "Dependencies",
+      "Risks",
+      "Factory desktop wiring hardening amendment (2026-07-09)"
+    ],
+    "specPath": "specs/076-factory-desktop-panel/spec.md",
+    "status": "approved",
+    "summary": "Adds an Factory Pipeline panel to the OPC desktop app with DAG stage visualization, real-time progress tracking, artifact inspection, gate confirm/reject dialogs, token spend dashboard, and scaffolding fan-out monitoring.\n",
+    "title": "Factory Desktop Panel — Pipeline Visualization, Artifact Inspection, and Gate Dialogs"
+  },
+  "shardHash": "5e9173bc6488981e367fc6d5101ca950b8c0ecacd2f3bb6d739451b070a324bf",
+  "specVersion": "1.1.0"
+}

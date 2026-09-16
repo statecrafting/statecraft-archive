@@ -1,0 +1,29 @@
+{
+  "mapping": {
+    "implementingPaths": [
+      {
+        "path": "crates/tool-registry",
+        "source": "multiple"
+      }
+    ],
+    "resolvedUnits": [
+      {
+        "locations": [
+          {
+            "file": "crates/tool-registry"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "extends",
+        "unit": {
+          "id": "tool-registry",
+          "kind": "crate"
+        }
+      }
+    ],
+    "specId": "067-tool-definition-registry",
+    "specStatus": "approved"
+  },
+  "schemaVersion": "1.1.0",
+  "shardHash": "772e5abeb8b34c1949db95b34828d5978e489798f74a63502b64c42181ecdd8e"
+}

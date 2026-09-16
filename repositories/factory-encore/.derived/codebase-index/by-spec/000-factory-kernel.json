@@ -1,0 +1,101 @@
+{
+  "mapping": {
+    "implementingPaths": [
+      {
+        "path": "",
+        "source": "manifest-metadata"
+      },
+      {
+        "path": ".github/workflows/ai-pr-review.yml",
+        "source": "spec-edge"
+      },
+      {
+        "path": ".github/workflows/ci.yml",
+        "source": "spec-edge"
+      },
+      {
+        "path": ".github/workflows/generator-ci.yml",
+        "source": "spec-edge"
+      },
+      {
+        "path": ".github/workflows/spec-spine.yml",
+        "source": "spec-edge"
+      },
+      {
+        "path": "standards/",
+        "source": "spec-edge"
+      }
+    ],
+    "resolvedUnits": [
+      {
+        "locations": [
+          {
+            "file": ".github/workflows/ai-pr-review.yml"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "file",
+          "path": ".github/workflows/ai-pr-review.yml"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": ".github/workflows/ci.yml"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "file",
+          "path": ".github/workflows/ci.yml"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": ".github/workflows/generator-ci.yml"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "file",
+          "path": ".github/workflows/generator-ci.yml"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": ".github/workflows/spec-spine.yml"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "file",
+          "path": ".github/workflows/spec-spine.yml"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "standards/"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "file",
+          "path": "standards/"
+        }
+      }
+    ],
+    "specId": "000-factory-kernel",
+    "specStatus": "approved"
+  },
+  "schemaVersion": "1.1.0",
+  "shardHash": "5ec59356079055e60e64f614b2cc72df48312376077e952d0aecf1a82dfac88f"
+}

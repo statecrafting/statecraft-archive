@@ -1,0 +1,135 @@
+{
+  "record": {
+    "amendmentRecord": "amended 2026-06-18 by spec 217 (engine-swap collapse): the spec-registry reader\nthis spec establishes (platform/services/statecraft/api/specRegistry/) was\nrepointed off the deleted in-tree registry-consumer binary onto the published\nspec-spine CLI. registryReader.ts now invokes `spec-spine registry` with\n`--repo <projectRoot>` (was `--registry-path <file>`) and parses\n`relationships --json` (was a text scrape); resolver.ts checks the by-spec shard\ndirectory (was registry.json). The Requirements view contract and rendering are\nunchanged; only the underlying read mechanism moved to the library seam.\n",
+    "codeAliases": [
+      "STATECRAFT_REQUIREMENTS_VIEW",
+      "SPEC_SPINE_DASHBOARD"
+    ],
+    "created": "2026-05-22",
+    "dependsOn": [
+      "087-unified-workspace-architecture",
+      "103-init-protocol-governed-reads",
+      "130-spec-coupling-primary-owner",
+      "147-spec-kind-grammar",
+      "152-path-co-authority",
+      "154-logical-unit-ownership-grammar",
+      "156-references-edge-provenance-grammar",
+      "161-knowledge-requirements-provenance-emission"
+    ],
+    "domain": "platform",
+    "establishes": [
+      {
+        "kind": "directory",
+        "path": "platform/services/statecraft/api/specRegistry"
+      },
+      {
+        "kind": "file",
+        "path": "platform/services/statecraft/web/app/lib/spec-registry-api.server.ts"
+      },
+      {
+        "kind": "file",
+        "path": "platform/services/statecraft/web/app/lib/spec-registry-grouping.ts"
+      },
+      {
+        "kind": "file",
+        "path": "platform/services/statecraft/web/app/lib/spec-registry-grouping.test.ts"
+      },
+      {
+        "kind": "file",
+        "path": "platform/services/statecraft/web/app/routes/app.project.$projectId.requirements.tsx"
+      },
+      {
+        "kind": "file",
+        "path": "platform/services/statecraft/web/app/routes/app.project.$projectId.requirements.$specId.tsx"
+      }
+    ],
+    "extends": [
+      {
+        "nature": "additive",
+        "spec": "087-unified-workspace-architecture",
+        "unit": {
+          "kind": "directory",
+          "path": "platform/services/statecraft/web/app/routes"
+        }
+      },
+      {
+        "nature": "additive",
+        "spec": "087-unified-workspace-architecture",
+        "unit": {
+          "kind": "file",
+          "path": "platform/services/statecraft/web/app/routes.ts"
+        }
+      },
+      {
+        "nature": "additive",
+        "spec": "087-unified-workspace-architecture",
+        "unit": {
+          "kind": "file",
+          "path": "platform/services/statecraft/api/db/schema.ts"
+        }
+      }
+    ],
+    "extraFrontmatter": {
+      "amended": "2026-06-18",
+      "slug": "statecraft-requirements-view"
+    },
+    "id": "163-statecraft-requirements-view",
+    "implementation": "complete",
+    "kind": "platform",
+    "owner": "bart",
+    "references": [
+      {
+        "role": "decomposition-source",
+        "unit": {
+          "kind": "file",
+          "path": "docs/owasp/factory/AIDE-VELOCITY-OAP-INTENT.md"
+        }
+      },
+      {
+        "role": "aide-analogue",
+        "unit": {
+          "kind": "file",
+          "path": "docs/owasp/factory/AIDE-VELOCITY-blueprint-spec.md"
+        }
+      },
+      {
+        "role": "governed-read-discipline",
+        "unit": {
+          "kind": "file",
+          "path": "specs/103-init-protocol-governed-reads/spec.md"
+        }
+      },
+      {
+        "role": "pair-spec",
+        "unit": {
+          "kind": "file",
+          "path": "specs/164-statecraft-development-lifecycle-board/spec.md"
+        }
+      }
+    ],
+    "risk": "medium",
+    "sectionHeadings": [
+      "163 — Spec-spine Requirements view in statecraft",
+      "1. Problem",
+      "2. Decision",
+      "2.1 Spec list (the inventory)",
+      "2.2 Derived groups (the relationship-graph projection)",
+      "2.3 Custom cosmetic group names",
+      "2.4 Spec detail (single-spec view)",
+      "3. Read-shaped — write surfaces are separate",
+      "4. Functional Requirements",
+      "5. Success Criteria",
+      "6. Scope",
+      "In scope",
+      "Out of scope (deferred)",
+      "7. Reading from the project's spec-spine — born-with vs imported",
+      "8. Cross-references"
+    ],
+    "specPath": "specs/163-statecraft-requirements-view/spec.md",
+    "status": "approved",
+    "summary": "The net-new `app.project.$projectId.requirements.tsx` route. Renders the spec-spine of the project — the authored specs that live under `<project>/specs/` inside the project repo — as the primary stakeholder-visible artifact of OAP's \"spec-spine as universal representation\" thesis (intent doc §2.4).\nGrouping is *derived*: the view walks the relationship graph at render time, filtering on `category:` / `kind:` / `references:` per spec 130 and spec 147, surfacing optional cosmetic group names as decoration on the derived groups. There is no `groups.yaml` config and no new spec-spine field — everything needed is already in authored frontmatter.\nThe view surfaces provenance badges per spec 161 for any spec derived from Knowledge or xray fingerprints, closing the AIDE-VELOCITY \"SharePoint document ↔ requirements.md by operational convention\" loop with a typed link.\nSpec 163 covers the **rendering** of the spec-spine inside statecraft. Editing, approval, and lifecycle state transitions are covered by spec 164 (Development view) and a future review/approve spec; spec 163 is read-shaped and is the stakeholder lens on project intent.\n",
+    "title": "Spec-spine Requirements view in statecraft"
+  },
+  "shardHash": "c181b71a347211e0fa36540d038522eaf169e248031e98e210e4c98faaa79585",
+  "specVersion": "1.1.0"
+}

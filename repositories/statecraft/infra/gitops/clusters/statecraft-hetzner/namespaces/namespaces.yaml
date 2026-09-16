@@ -1,0 +1,37 @@
+# Platform namespaces (spec 010).
+#
+# Created in their own Flux tier so both the `secrets` tier (SOPS Secrets
+# target these namespaces) and the `infrastructure` tier (HelmReleases install
+# into them) can depend on them existing first. The HelmReleases therefore do
+# not set `install.createNamespace`; namespace ownership lives here.
+#
+# kube-system (reflector) and flux-system (bootstrap) already exist and are
+# not managed here.
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: cert-manager
+  labels:
+    statecraft.spec: "010-statecraft-cluster"
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: ingress-nginx
+  labels:
+    statecraft.spec: "010-statecraft-cluster"
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: monitoring
+  labels:
+    statecraft.spec: "010-statecraft-cluster"
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: statecraft-system
+  labels:
+    statecraft.spec: "010-statecraft-cluster"

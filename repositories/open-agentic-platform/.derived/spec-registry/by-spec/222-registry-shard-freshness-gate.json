@@ -1,0 +1,85 @@
+{
+  "record": {
+    "authors": [
+      "open-agentic-platform"
+    ],
+    "codeAliases": [
+      "REGISTRY_SHARD_FRESHNESS_GATE"
+    ],
+    "created": "2026-06-24",
+    "dependsOn": [
+      "217-spec-spine-engine-swap-collapse",
+      "188-derived-index-merge-serialization"
+    ],
+    "domain": "tooling",
+    "extends": [
+      {
+        "nature": "additive",
+        "spec": "177-ci-orchestrator-pr-gate",
+        "unit": {
+          "kind": "file",
+          "path": ".github/workflows/spec-conformance.yml"
+        }
+      },
+      {
+        "nature": "additive",
+        "spec": "034-featuregraph-registry-scanner-fix",
+        "unit": {
+          "kind": "file",
+          "path": "crates/featuregraph/tests/golden/features_graph.json"
+        }
+      }
+    ],
+    "extraFrontmatter": {
+      "language": "en"
+    },
+    "featureBranch": "feat/222-registry-shard-freshness-gate",
+    "id": "222-registry-shard-freshness-gate",
+    "implementation": "complete",
+    "kind": "governance",
+    "references": [
+      {
+        "role": "precedent",
+        "unit": {
+          "kind": "file",
+          "path": "specs/184-claude-shared-config-governance/spec.md"
+        }
+      },
+      {
+        "role": "context",
+        "unit": {
+          "kind": "file",
+          "path": "specs/188-derived-index-merge-serialization/spec.md"
+        }
+      },
+      {
+        "role": "context",
+        "unit": {
+          "kind": "file",
+          "path": "specs/217-spec-spine-engine-swap-collapse/spec.md"
+        }
+      }
+    ],
+    "sectionHeadings": [
+      "Feature Specification: Registry-shard freshness gate",
+      "Purpose",
+      "Design model: extend the narrow PR-time block, not the broad index gate",
+      "Mechanism: recompile, then diff",
+      "Functional requirements",
+      "FR-001: By-spec shard freshness gate",
+      "FR-002: Gate at PR time and in the merge queue",
+      "FR-003: Actionable failure message",
+      "FR-004: Scope discipline",
+      "Acceptance criteria",
+      "Out of scope",
+      "Dependencies and sequencing",
+      "Security hardening amendment (2026-07-02)"
+    ],
+    "specPath": "specs/222-registry-shard-freshness-gate/spec.md",
+    "status": "approved",
+    "summary": "The committed per-spec registry shards (.derived/spec-registry/by-spec/*.json) are machine truth derived from specs/*/spec.md, but CI runs `spec-spine compile` only as a smoke test: it proves the registry can be emitted, never that the committed shards match a fresh compile. So a spec.md can be refined while its shard is left describing an earlier draft, and the drift merges silently (spec 208 did exactly this in PR #422, fixed reactively in #423). This spec adds a PR-time freshness gate to spec-conformance.yml: recompile, then `git diff --exit-code` the by-spec shard tree, failing the run on any drift. It is deliberately modelled on spec 184's narrow claude-config slice (a conflict-free PR-time block on a committed artifact), not on the broad codebase-index gate that spec 188 moved post-merge: spec 217 re-committed the registry as conflict-free per-spec shards, each a pure function of its own spec.md, so a per-shard gate does not reintroduce the O(N-squared) merge-serialization tension that drove 188.\n",
+    "title": "Registry-shard freshness gate (PR-time staleness block for committed by-spec shards)"
+  },
+  "shardHash": "7183936ae1fd326a604a743e4e16b4c330283e5496f3b40a8324fedc5dc024a2",
+  "specVersion": "1.1.0"
+}

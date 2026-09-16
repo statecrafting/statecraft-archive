@@ -1,0 +1,90 @@
+{
+  "diagnostics": {
+    "errors": [],
+    "warnings": [
+      {
+        "code": "W-002",
+        "message": "spec '086-open-source-launch' file unit 'CONTRIBUTING.md' does not exist",
+        "path": "CONTRIBUTING.md"
+      },
+      {
+        "code": "W-002",
+        "message": "spec '086-open-source-launch' file unit 'SECURITY.md' does not exist",
+        "path": "SECURITY.md"
+      },
+      {
+        "code": "W-002",
+        "message": "spec '086-open-source-launch' file unit 'CODE_OF_CONDUCT.md' does not exist",
+        "path": "CODE_OF_CONDUCT.md"
+      },
+      {
+        "code": "W-002",
+        "message": "spec '086-open-source-launch' file unit 'CHANGELOG.md' does not exist",
+        "path": "CHANGELOG.md"
+      }
+    ]
+  },
+  "mapping": {
+    "implementingPaths": [
+      {
+        "path": "docs/ARCHITECTURE.md",
+        "source": "spec-edge"
+      }
+    ],
+    "resolvedUnits": [
+      {
+        "locations": [
+          {
+            "file": "docs/ARCHITECTURE.md"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "file",
+          "path": "docs/ARCHITECTURE.md"
+        }
+      },
+      {
+        "locations": [],
+        "ownership": false,
+        "sourceField": "references",
+        "unit": {
+          "kind": "file",
+          "path": "CHANGELOG.md"
+        }
+      },
+      {
+        "locations": [],
+        "ownership": false,
+        "sourceField": "references",
+        "unit": {
+          "kind": "file",
+          "path": "CODE_OF_CONDUCT.md"
+        }
+      },
+      {
+        "locations": [],
+        "ownership": false,
+        "sourceField": "references",
+        "unit": {
+          "kind": "file",
+          "path": "CONTRIBUTING.md"
+        }
+      },
+      {
+        "locations": [],
+        "ownership": false,
+        "sourceField": "references",
+        "unit": {
+          "kind": "file",
+          "path": "SECURITY.md"
+        }
+      }
+    ],
+    "specId": "086-open-source-launch",
+    "specStatus": "approved"
+  },
+  "schemaVersion": "1.1.0",
+  "shardHash": "48d140253cc5bfcd00da915e239acc94f7b2609cc8df20cfa654baa2decbb0f5"
+}

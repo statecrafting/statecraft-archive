@@ -1,0 +1,67 @@
+{
+  "record": {
+    "authors": [
+      "open-agentic-platform"
+    ],
+    "codeAliases": [
+      "PROMPT_ASSEMBLY_CACHE"
+    ],
+    "created": "2026-03-31",
+    "domain": "opc",
+    "extends": [
+      {
+        "nature": "additive",
+        "spec": "046-context-compaction",
+        "unit": {
+          "kind": "directory",
+          "path": "product/packages/prompt-assembly"
+        }
+      }
+    ],
+    "extraFrontmatter": {
+      "language": "en",
+      "sources": [
+        "claude-code"
+      ]
+    },
+    "featureBranch": "070-prompt-assembly-cache",
+    "id": "070-prompt-assembly-cache",
+    "implementation": "complete",
+    "kind": "platform",
+    "references": [
+      {
+        "role": "historical",
+        "unit": {
+          "kind": "file",
+          "path": "crates/agent/src/prompt_assembly.rs"
+        }
+      }
+    ],
+    "sectionHeadings": [
+      "Feature Specification: Prompt Assembly and Cache Boundaries",
+      "Purpose",
+      "Scope",
+      "In scope",
+      "Out of scope",
+      "Requirements",
+      "Functional",
+      "Non-functional",
+      "Architecture",
+      "Prompt structure",
+      "Section registry",
+      "Assembly pipeline",
+      "Compaction integration",
+      "Compaction strategy",
+      "Implementation approach",
+      "Success criteria",
+      "Dependencies",
+      "Risk"
+    ],
+    "specPath": "specs/070-prompt-assembly-cache/spec.md",
+    "status": "approved",
+    "summary": "Implements modular system prompt assembly with explicit cache boundaries, absorbed from Claude Code's prompt architecture. Static sections (tool descriptions, behavioral rules, orchestrator rules) are assembled once and cached across turns. Dynamic sections (memory, MCP context, workflow state, active hooks) rebuild each turn. Integrates with context compaction (Feature 046) for bounded-context long sessions.\n",
+    "title": "Prompt Assembly and Cache Boundaries"
+  },
+  "shardHash": "d70b36bf6233514211618384f374de7180c8834ab79f36f954a0e8d4cba9226f",
+  "specVersion": "1.1.0"
+}

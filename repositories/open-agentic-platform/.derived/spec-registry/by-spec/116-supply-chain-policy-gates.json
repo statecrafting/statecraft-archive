@@ -1,0 +1,99 @@
+{
+  "record": {
+    "amendmentRecord": "158-workflow-ref-sha-pinning-lint",
+    "coAuthority": [
+      {
+        "unit": {
+          "anchor": "supply-chain",
+          "file": "Makefile",
+          "kind": "section"
+        },
+        "with_specs": [
+          "104-makefile-ci-parity-contract"
+        ]
+      }
+    ],
+    "codeAliases": [
+      "SUPPLY_CHAIN_POLICY"
+    ],
+    "created": "2026-04-28",
+    "dependsOn": [
+      "000-bootstrap-spec-system",
+      "047-governance-control-plane",
+      "104-makefile-ci-parity-contract"
+    ],
+    "domain": "tooling",
+    "establishes": [
+      {
+        "kind": "file",
+        "path": "deny.toml"
+      },
+      {
+        "kind": "file",
+        "path": ".github/workflows/ci-supply-chain.yml"
+      }
+    ],
+    "extraFrontmatter": {
+      "amended": "2026-05-22",
+      "approved": "2026-05-02",
+      "closed": "2026-05-02",
+      "compliance": [
+        {
+          "controls": [
+            "ASI04"
+          ],
+          "framework": "owasp-asi-2026"
+        }
+      ],
+      "slug": "supply-chain-policy-gates"
+    },
+    "id": "116-supply-chain-policy-gates",
+    "implementation": "complete",
+    "kind": "governance",
+    "owner": "bart",
+    "refines": [
+      {
+        "aspect": "advisory-response-overrides",
+        "unit": {
+          "kind": "file",
+          "path": "platform/services/statecraft/package.json"
+        }
+      },
+      {
+        "aspect": "advisory-response-overrides",
+        "unit": {
+          "kind": "file",
+          "path": "product/pnpm-workspace.yaml"
+        }
+      }
+    ],
+    "risk": "medium",
+    "sectionHeadings": [
+      "116 — Supply-Chain Policy Gates",
+      "1. Problem Statement",
+      "2. Goals",
+      "3. Scope",
+      "In scope",
+      "Out of scope",
+      "4. Policy Bundle (deny.toml)",
+      "5. CI Workflow Shape",
+      "6. Makefile Shape",
+      "7. Acceptance Criteria",
+      "8. Risks and Mitigations",
+      "9. Promotion Record",
+      "9.1 Original plan (historical, not in effect)",
+      "9.2 Day-0 collapse (2026-05-02)",
+      "9.3 Below-threshold inventory (informational, not a blocker)",
+      "10. Cross-references",
+      "11. Advisory response log",
+      "Amendment 2026-06-29 (reset-prep housekeeping)",
+      "Advisory exception amendment (2026-07-02)"
+    ],
+    "specPath": "specs/116-supply-chain-policy-gates/spec.md",
+    "status": "approved",
+    "summary": "Add governed supply-chain gates to CI. cargo-deny enforces a policy bundle for advisories, licenses, and banned crates across every Rust manifest in the repo; pnpm/npm audit covers the JavaScript surface (product/apps/opc + platform/services/statecraft). Posture is blocking from day 0 (the 30-day warn-only window planned in §9.1 was collapsed on 2026-05-02 after a clean dry-run; see §9 promotion record). The gate is mirrored in the Makefile under a new `ci-supply-chain` target, composed into `make ci`, and validated by ci-parity-check.\n",
+    "title": "Supply-Chain Policy Gates — cargo-deny + dependency audit in CI"
+  },
+  "shardHash": "5374b2bc5aa3a851522aa7cfc4575d9415e8ccfe6ebba6df97d571fa59aec916",
+  "specVersion": "1.1.0"
+}

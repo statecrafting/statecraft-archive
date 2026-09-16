@@ -1,0 +1,74 @@
+{
+  "record": {
+    "authors": [
+      "open-agentic-platform"
+    ],
+    "codeAliases": [
+      "ENCRYPTED_KEYCHAIN"
+    ],
+    "created": "2026-03-31",
+    "domain": "opc",
+    "extends": [
+      {
+        "nature": "additive",
+        "spec": "032-opc-inspect-governance-wiring-mvp",
+        "unit": {
+          "id": "@opc/desktop",
+          "kind": "crate"
+        }
+      }
+    ],
+    "extraFrontmatter": {
+      "language": "en",
+      "sources": [
+        "claudepal",
+        "claudecodeui"
+      ]
+    },
+    "featureBranch": "065-encrypted-keychain",
+    "id": "065-encrypted-keychain",
+    "implementation": "complete",
+    "kind": "desktop",
+    "references": [
+      {
+        "role": "historical",
+        "unit": {
+          "kind": "file",
+          "path": "product/apps/opc/src-tauri/src/keychain.rs"
+        }
+      },
+      {
+        "role": "historical",
+        "unit": {
+          "kind": "file",
+          "path": "product/apps/opc/src/components/CredentialPicker.tsx"
+        }
+      }
+    ],
+    "sectionHeadings": [
+      "Feature Specification: Encrypted Keychain and Credential Storage",
+      "Purpose",
+      "Scope",
+      "In scope",
+      "Out of scope",
+      "Requirements",
+      "Functional",
+      "Non-functional",
+      "Architecture",
+      "Key derivation",
+      "Encrypt/decrypt",
+      "Tauri command bridge",
+      "Censor integration flow",
+      "Implementation approach",
+      "Success criteria",
+      "Dependencies",
+      "Risk"
+    ],
+    "specPath": "specs/065-encrypted-keychain/spec.md",
+    "status": "approved",
+    "summary": "Software keychain for the desktop app using AES-256-GCM encryption with a machine-derived key. Stores API keys, tokens, and credentials in a typed, encrypted SQLite table with per-entry active/inactive toggle. Integrates with the existing censor module to prevent accidental exposure of stored secrets in agent output.\n",
+    "title": "Encrypted Keychain and Credential Storage"
+  },
+  "shardHash": "a8deac19bf9c1d5d3c764e0e4032476bea9d76d5450a94daed1d22e55dc115db",
+  "specVersion": "1.1.0"
+}

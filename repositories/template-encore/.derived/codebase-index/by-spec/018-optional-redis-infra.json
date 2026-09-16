@@ -1,0 +1,51 @@
+{
+  "mapping": {
+    "dependsOn": [
+      "001-encore-app-architecture",
+      "002-security-data-invariants",
+      "008-container-host-deploy"
+    ],
+    "implementingPaths": [
+      {
+        "path": "apps/api/lib/redis.test.ts",
+        "source": "spec-edge"
+      },
+      {
+        "path": "apps/api/lib/redis.ts",
+        "source": "spec-edge"
+      }
+    ],
+    "resolvedUnits": [
+      {
+        "locations": [
+          {
+            "file": "apps/api/lib/redis.test.ts"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "file",
+          "path": "apps/api/lib/redis.test.ts"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "apps/api/lib/redis.ts"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "file",
+          "path": "apps/api/lib/redis.ts"
+        }
+      }
+    ],
+    "specId": "018-optional-redis-infra",
+    "specStatus": "approved"
+  },
+  "schemaVersion": "1.1.0",
+  "shardHash": "ffa159334fa79447bf97f386081037829b43e54ba4f5993bb72a7ff4e107323f"
+}

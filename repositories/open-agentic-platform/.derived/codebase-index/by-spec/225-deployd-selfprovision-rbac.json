@@ -1,0 +1,101 @@
+{
+  "mapping": {
+    "dependsOn": [
+      "136-tenant-hello-demo-service",
+      "145-deployd-durability"
+    ],
+    "implementingPaths": [
+      {
+        "path": "crates/featuregraph/tests/golden/features_graph.json",
+        "source": "spec-edge"
+      },
+      {
+        "path": "platform/charts/deployd-api/templates/rbac.yaml",
+        "source": "spec-edge"
+      },
+      {
+        "path": "platform/charts/deployd-api/values-hetzner.yaml",
+        "source": "spec-edge"
+      },
+      {
+        "path": "platform/services/deployd-api-rs/src/rbac.rs",
+        "source": "spec-edge"
+      },
+      {
+        "path": "platform/services/deployd-api-rs/src/routes.rs",
+        "source": "spec-edge"
+      }
+    ],
+    "resolvedUnits": [
+      {
+        "locations": [
+          {
+            "file": "platform/charts/deployd-api/templates/rbac.yaml"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "file",
+          "path": "platform/charts/deployd-api/templates/rbac.yaml"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "platform/services/deployd-api-rs/src/rbac.rs"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "file",
+          "path": "platform/services/deployd-api-rs/src/rbac.rs"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "crates/featuregraph/tests/golden/features_graph.json"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "extends",
+        "unit": {
+          "kind": "file",
+          "path": "crates/featuregraph/tests/golden/features_graph.json"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "platform/services/deployd-api-rs/src/routes.rs"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "extends",
+        "unit": {
+          "kind": "file",
+          "path": "platform/services/deployd-api-rs/src/routes.rs"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "platform/charts/deployd-api/values-hetzner.yaml"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "refines",
+        "unit": {
+          "kind": "file",
+          "path": "platform/charts/deployd-api/values-hetzner.yaml"
+        }
+      }
+    ],
+    "specId": "225-deployd-selfprovision-rbac",
+    "specStatus": "approved"
+  },
+  "schemaVersion": "1.1.0",
+  "shardHash": "2115aaddf45345e2e16b8506592ad20f909c2acc318193dac4b82448943fb150"
+}

@@ -1,0 +1,66 @@
+{
+  "name": "statecraft",
+  "private": true,
+  "version": "0.1.0",
+  "description": "Statecraft SaaS platform — auth, admin, project management, deployment orchestration",
+  "license": "MPL-2.0",
+  "type": "module",
+  "oap": {
+    "spec": "087-unified-workspace-architecture"
+  },
+  "overrides": {
+    "esbuild": "^0.28.1"
+  },
+  "scripts": {
+    "test": "vitest",
+    "encore": "BOOTSTRAP_ADMIN_EMAIL=admin@example.com encore run --port=4000 --debug",
+    "start": "npm run gen && npm run build:frontend && npm run encore",
+    "gen": "encore gen client --output=./web/app/lib/client.ts --env=local",
+    "build:frontend": "cd web && react-router build"
+  },
+  "devDependencies": {
+    "@react-router/dev": "8.2.0",
+    "@tailwindcss/vite": "^4.3.2",
+    "@types/luxon": "^3.7.2",
+    "@types/node": "^26.0.1",
+    "@types/pdf-parse": "^1.1.5",
+    "@types/react": "^19.2.17",
+    "@types/react-dom": "^19.2.3",
+    "drizzle-kit": "^0.31.10",
+    "prettier": "^3.9.4",
+    "tailwindcss": "^4.3.1",
+    "typescript": "^6.0.3",
+    "vite": "^8.1.2",
+    "vite-tsconfig-paths": "^6.1.1",
+    "vitest": "^4.1.9"
+  },
+  "dependencies": {
+    "@aws-sdk/client-s3": "^3.1082.0",
+    "@aws-sdk/s3-request-presigner": "^3.1082.0",
+    "@opc/carrier-gate": "file:../../../product/packages/carrier-gate",
+    "@react-router/node": "8.2.0",
+    "@react-router/serve": "8.2.0",
+    "@tanstack/react-query": "^5.101.2",
+    "drizzle-orm": "^0.45.2",
+    "encore.dev": "^1.57.9",
+    "isbot": "^5.2.0",
+    "knex": "^3.3.0",
+    "libsodium-wrappers": "^0.8.4",
+    "lucide-react": "^1.23.0",
+    "luxon": "^3.7.2",
+    "mammoth": "^1.12.0",
+    "pdf-parse": "^2.4.5",
+    "pg": "^8.22.0",
+    "react": "^19.2.7",
+    "react-dom": "^19.2.7",
+    "react-markdown": "^10.1.0",
+    "react-router": "8.2.0",
+    "recharts": "^3.9.2",
+    "remark-gfm": "^4.0.1",
+    "yaml": "^2.9.0",
+    "zod": "^4.3.6"
+  },
+  "optionalDependencies": {
+    "@rollup/rollup-linux-x64-gnu": "^4.62.2"
+  }
+}

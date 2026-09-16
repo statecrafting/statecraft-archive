@@ -1,0 +1,44 @@
+{
+  "record": {
+    "amendmentRecord": "147-spec-kind-grammar",
+    "authors": [
+      "open-agentic-platform"
+    ],
+    "created": "2026-03-22",
+    "domain": "tooling",
+    "extraFrontmatter": {
+      "amended": "2026-05-13",
+      "closed": "2026-03-22",
+      "language": "en"
+    },
+    "featureBranch": "001-spec-compiler-mvp",
+    "id": "001-spec-compiler-mvp",
+    "implementation": "complete",
+    "kind": "tooling",
+    "sectionHeadings": [
+      "Feature Specification: Spec compiler MVP",
+      "Purpose and charter",
+      "Normative dependency",
+      "User Scenarios & Testing *(mandatory)*",
+      "User Story 1 — Compile the repository (Priority: P1)",
+      "User Story 2 — Determinism for CI (Priority: P2)",
+      "User Story 3 — Forbidden standalone YAML is caught (Priority: P3)",
+      "Edge Cases",
+      "Requirements *(mandatory)*",
+      "Functional Requirements",
+      "Key Entities",
+      "Success Criteria *(mandatory)*",
+      "Measurable Outcomes",
+      "Clarifications",
+      "Session 2026-03-22",
+      "Session 2026-05-04 — Implementation behaviour hoisted from `tools/spec-spine/spec-compiler/README.md`"
+    ],
+    "specPath": "specs/001-spec-compiler-mvp/spec.md",
+    "status": "superseded",
+    "summary": "Implement the first spec compiler: scan specs/, validate markdown + frontmatter, emit deterministic registry.json and ephemeral build-meta.json per Feature 000 schemas; enforce V-001–V-004; golden tests for determinism. Amended by spec 147 (2026-05-13) to extend the compiler with the kind-grammar validation surface: KNOWN_KEYS extension, V-012..V-019 (warning severity in Phase 1), VALID_KINDS enum, SHAPE_TABLE reservation, and `implements:` scalar/list serialization. SPEC_VERSION bumps 1.4.0 → 1.5.0.\n",
+    "supersededBy": "217-spec-spine-engine-swap-collapse",
+    "title": "Spec compiler MVP (registry.json + build-meta.json)"
+  },
+  "shardHash": "e1784cf6d9cdb028684e7f2345e21a301f30088ffb96d2b4880aaeb18d1c4497",
+  "specVersion": "1.1.0"
+}

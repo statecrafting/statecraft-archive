@@ -1,0 +1,42 @@
+{
+  "record": {
+    "authors": [
+      "open-agentic-platform"
+    ],
+    "created": "2026-03-29",
+    "domain": "opc",
+    "extraFrontmatter": {
+      "language": "en"
+    },
+    "featureBranch": "040-blockoli-semantic-search-wiring",
+    "id": "040-blockoli-semantic-search-wiring",
+    "implementation": "n-a",
+    "kind": "product",
+    "sectionHeadings": [
+      "Feature Specification: Blockoli semantic search — Tauri command wiring",
+      "Purpose",
+      "Scope",
+      "In scope",
+      "Out of scope",
+      "Requirements",
+      "Functional",
+      "Non-functional",
+      "Architecture",
+      "State management",
+      "Indexing flow",
+      "Search flow",
+      "Key integration points",
+      "Success criteria",
+      "Contract notes",
+      "Risk",
+      "Supersession"
+    ],
+    "specPath": "specs/040-blockoli-semantic-search-wiring/spec.md",
+    "status": "superseded",
+    "summary": "Wire the existing blockoli semantic code search library into the desktop app by implementing the two stubbed Tauri commands (index + search), adding managed state for the VectorStore, and making SemanticSearchPanel functional end-to-end.\n",
+    "supersededBy": "073-axiomregent-unification",
+    "title": "Blockoli semantic search — Tauri command wiring"
+  },
+  "shardHash": "e869970b97255259c3bf1ffc5577bc61983b63c57f2672e792390e99df82e4f0",
+  "specVersion": "1.1.0"
+}

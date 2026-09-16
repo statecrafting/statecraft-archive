@@ -1,0 +1,81 @@
+# Spec: 085-remote-control-cli
+#
+# AI-Powered Changelog Generation. Uses Claude CLI to generate structured
+# changelogs from commit history.
+#
+# Hardening notes (ci-hardening branch):
+#   - H3: commit list passed via stdin instead of `$(cat …)` interpolation.
+#   - H4: Claude CLI version pinned via env var (CLAUDE_CLI_VERSION).
+
+name: AI Changelog
+
+on:
+  release:
+    types: [published]
+
+permissions:
+  contents: write
+
+env:
+  # Pinned to npm `stable` dist-tag value. Bump in lockstep with ai-pr-review.yml.
+  CLAUDE_CLI_VERSION: '2.1.185'
+
+jobs:
+  changelog:
+    runs-on: ubuntu-latest
+    name: changelog / generate + attach
+    timeout-minutes: 10
+    steps:
+      - name: Checkout
+        uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+        with:
+          fetch-depth: 0
+
+      - name: Get previous tag
+        id: prev_tag
+        run: |
+          PREV=$(git tag --sort=-creatordate | head -2 | tail -1)
+          echo "tag=$PREV" >> "$GITHUB_OUTPUT"
+
+      - name: Get commit log
+        env:
+          PREV_TAG: ${{ steps.prev_tag.outputs.tag }}
+        run: git log "${PREV_TAG}..HEAD" --oneline --no-merges > /tmp/commits.txt
+
+      - name: Install Claude CLI
+        run: npm install -g "@anthropic-ai/claude-code@${CLAUDE_CLI_VERSION}"
+
+      # H3 fix: prelude is in -p; commit list arrives via stdin so backticks
+      # or $(...) in commit messages are never evaluated by the shell.
+      - name: Generate changelog
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+        run: |
+          set -o pipefail
+          PROMPT='Generate a changelog from the commits provided on stdin. Group into sections:
+          ## Features
+          ## Fixes
+          ## Infrastructure
+          ## Documentation
+
+          Each entry should be a bullet point with a concise description.
+          Skip merge commits and trivial changes.'
+          claude -p "$PROMPT" --output-format text < /tmp/commits.txt > /tmp/changelog.md \
+            || echo "Changelog generation failed" > /tmp/changelog.md
+
+      - name: Update release body
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          RELEASE_TAG: ${{ github.event.release.tag_name }}
+        run: |
+          EXISTING=$(gh release view "$RELEASE_TAG" --json body -q .body)
+          {
+            printf '%s\n' "$EXISTING"
+            echo ""
+            echo "---"
+            echo ""
+            echo "## Auto-Generated Changelog"
+            echo ""
+            cat /tmp/changelog.md
+          } > /tmp/release-body.md
+          gh release edit "$RELEASE_TAG" --notes-file /tmp/release-body.md

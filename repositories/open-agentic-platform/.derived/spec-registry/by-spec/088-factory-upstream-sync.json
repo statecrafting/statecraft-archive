@@ -1,0 +1,42 @@
+{
+  "record": {
+    "created": "2026-04-10",
+    "dependsOn": [
+      "074-factory-ingestion",
+      "075-factory-workflow-engine"
+    ],
+    "domain": "platform",
+    "extraFrontmatter": {
+      "slug": "factory-upstream-sync"
+    },
+    "id": "088-factory-upstream-sync",
+    "implementation": "complete",
+    "kind": "process",
+    "owner": "bart",
+    "sectionHeadings": [
+      "088 — Factory Upstream Sync Protocol",
+      "1. Problem Statement",
+      "2. Design Principles",
+      "3. Mapping Manifest",
+      "3.1 Schema",
+      "3.2 Relationship Types",
+      "3.3 Layer Assignment",
+      "4. Sync Protocol",
+      "Phase 1: Discover Changes",
+      "Phase 2: Analyze Impact",
+      "Phase 3: Apply (with checkpoints)",
+      "Phase 4: Verify",
+      "5. Exclusion Rules",
+      "6. Functional Requirements",
+      "7. Non-Functional Requirements",
+      "8. Relationship to Existing Specs"
+    ],
+    "specPath": "specs/088-factory-upstream-sync/spec.md",
+    "status": "superseded",
+    "summary": "Defines the protocol, mapping manifest, and tooling for translating updates from upstream repositories (legacy-factory, template) into OAP's factory/ three-layer architecture. Superseded by spec 108: the translation protocol in §5 is retained and lifted into the spec 108 sync worker, but storage moves from the on-disk factory/ tree to PostgreSQL and the trigger moves from the /factory-sync CLI command to the statecraft UI.\n",
+    "supersededBy": "108-factory-as-platform-feature",
+    "title": "Factory Upstream Sync Protocol"
+  },
+  "shardHash": "9456e8ad02e52c83d8c5bb50f6b88d55fae13fcff28e1e18641de6c9beae50f3",
+  "specVersion": "1.1.0"
+}

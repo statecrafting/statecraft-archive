@@ -1,0 +1,12 @@
+# ------------------------------------------------------------------------------
+# Core platform hosts (DEV)
+# ------------------------------------------------------------------------------
+project_name = "statecraft-dev"
+location     = "canadacentral"
+
+# ------------------------------------------------------------------------------
+# OIDC (Rauthy) M2M credentials — Sensitive (DO NOT COMMIT REAL VALUES)
+# ------------------------------------------------------------------------------
+
+oidc_m2m_client_id     = "statecraft-m2m-app"
+oidc_m2m_client_secret = "change-me-management-secret"

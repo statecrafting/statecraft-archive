@@ -1,0 +1,108 @@
+{
+  "diagnostics": {
+    "errors": [],
+    "warnings": [
+      {
+        "code": "W-002",
+        "message": "spec '185-sandbox-local-container-backend' file unit 'docs/owasp/owasp_top_10_agentic_applications_summary.md' does not exist",
+        "path": "docs/owasp/owasp_top_10_agentic_applications_summary.md"
+      }
+    ]
+  },
+  "mapping": {
+    "dependsOn": [
+      "162-sandbox-execution-contract",
+      "075-factory-workflow-engine",
+      "102-governed-excellence"
+    ],
+    "implementingPaths": [
+      {
+        "path": "crates/sandbox-local-container",
+        "source": "multiple"
+      },
+      {
+        "path": "crates/sandbox-local-container/src/lib.rs",
+        "source": "comment-header"
+      },
+      {
+        "path": "specs/075-factory-workflow-engine/spec.md",
+        "source": "spec-edge"
+      },
+      {
+        "path": "specs/102-governed-excellence/spec.md",
+        "source": "spec-edge"
+      },
+      {
+        "path": "specs/162-sandbox-execution-contract/spec.md",
+        "source": "spec-edge"
+      }
+    ],
+    "resolvedUnits": [
+      {
+        "locations": [
+          {
+            "file": "crates/sandbox-local-container"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "directory",
+          "path": "crates/sandbox-local-container"
+        }
+      },
+      {
+        "locations": [],
+        "ownership": false,
+        "sourceField": "references",
+        "unit": {
+          "kind": "file",
+          "path": "docs/owasp/owasp_top_10_agentic_applications_summary.md"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "specs/075-factory-workflow-engine/spec.md"
+          }
+        ],
+        "ownership": false,
+        "sourceField": "references",
+        "unit": {
+          "kind": "file",
+          "path": "specs/075-factory-workflow-engine/spec.md"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "specs/102-governed-excellence/spec.md"
+          }
+        ],
+        "ownership": false,
+        "sourceField": "references",
+        "unit": {
+          "kind": "file",
+          "path": "specs/102-governed-excellence/spec.md"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "specs/162-sandbox-execution-contract/spec.md"
+          }
+        ],
+        "ownership": false,
+        "sourceField": "references",
+        "unit": {
+          "kind": "file",
+          "path": "specs/162-sandbox-execution-contract/spec.md"
+        }
+      }
+    ],
+    "specId": "185-sandbox-local-container-backend",
+    "specStatus": "approved"
+  },
+  "schemaVersion": "1.1.0",
+  "shardHash": "5b260317e60ebe958df2ea28eb8b6f7cede15bca325c23818327da0f74e8bf49"
+}

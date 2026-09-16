@@ -1,0 +1,11 @@
+{
+  "package": {
+    "kind": "npm-package",
+    "name": "@opc/carrier-gate",
+    "path": "product/packages/carrier-gate",
+    "specRef": "204-session-memory-write-contract",
+    "version": "0.1.0"
+  },
+  "schemaVersion": "1.1.0",
+  "shardHash": "b42e9501e653b6075eef2b91ecbb4659d67900bb7458f92ea7489ea521fdef78"
+}

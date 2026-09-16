@@ -1,0 +1,170 @@
+# Spec: 212-factory-schema-lockstep-ci
+#
+# Factory schema lockstep — cron lane (spec 212 FR-004).
+#
+# The against-main, human-routed companion to the pinned PR lane
+# (ci-factory-schema-lockstep.yml). The PR lane is deterministic and blocks on
+# the COMMITTED PIN; it structurally cannot see factory moving ahead of
+# that pin. This lane runs on a schedule (+ manual dispatch), fetches
+# factory@main, runs the same lockstep assertion, and on divergence
+# OPENS or ANNOTATES a single tracking issue ("upstream drifted from pin;
+# reconcile and bump") rather than failing an unrelated PR.
+#
+# Advisory-but-not-ignorable: an operational failure (cannot fetch) still fails
+# the job (fail-visible, never skipped-green). Only a *content* divergence is
+# routed to the issue. The issue is DEDUPLICATED by label so the channel does
+# not become noise-to-be-ignored (the skipped-green failure mode in a coat).
+#
+# NOT in ci-parity-check's ENFORCING_WORKFLOWS — it has no `make ci-strict`
+# mirror obligation (it is advisory issue-routing, not a pre-merge gate).
+
+name: CI factory schema lockstep (cron)
+
+on:
+  schedule:
+    # Mondays 07:00 UTC — weekly upstream-drift sweep.
+    - cron: '0 7 * * 1'
+  workflow_dispatch:
+
+# The fetch token (UPSTREAM_SOURCES_RO_TOKEN) is read-only and separate; this
+# lane additionally needs issues:write to file/annotate the tracking issue.
+permissions:
+  contents: read
+  issues: write
+
+env:
+  CARGO_TERM_COLOR: always
+  DRIFT_LABEL: factory-schema-drift
+
+jobs:
+  factory-schema-lockstep-cron:
+    runs-on: ubuntu-latest
+    name: factory-schema-lockstep / against factory@main
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+
+      - name: Rust toolchain
+        uses: dtolnay/rust-toolchain@29eef336d9b2848a0b548edc03f92a220660cdb8 # pinned for rust-toolchain.toml lockstep
+        with:
+          toolchain: '1.95.0'
+
+      - name: Cache Rust dependencies
+        uses: Swatinem/rust-cache@42dc69e1aa15d09112580998cf2ef0119e2e91ae # v2
+        with:
+          shared-key: factory-schema-lockstep
+
+      # Fetch factory@main (NOT the pin) — this lane's whole point is to
+      # see upstream move ahead of the committed pin. Fail-visible on a fetch
+      # failure (operational, exit ≠ content divergence).
+      - name: Fetch factory contract/schemas at main
+        env:
+          UPSTREAM_SOURCES_RO_TOKEN: ${{ secrets.UPSTREAM_SOURCES_RO_TOKEN }}
+          UPSTREAM_FACTORY_SOURCE: ${{ vars.UPSTREAM_FACTORY_SOURCE }}
+        run: |
+          set -euo pipefail
+          if [ -z "${UPSTREAM_SOURCES_RO_TOKEN:-}" ]; then
+            echo "::error::UPSTREAM_SOURCES_RO_TOKEN is not set — cannot fetch factory (fail-visible)." >&2
+            exit 1
+          fi
+           if [ -z "${UPSTREAM_FACTORY_SOURCE:-}" ]; then
+            echo "::error::UPSTREAM_FACTORY_SOURCE is not set — cannot resolve factory (fail-visible)." >&2
+            exit 1
+          fi
+          rm -rf .factory
+          mkdir .factory
+          cd .factory
+          git init -q
+          git remote add origin "https://x-access-token:${UPSTREAM_SOURCES_RO_TOKEN}@${UPSTREAM_FACTORY_SOURCE}.git"
+          git config core.sparseCheckout true
+          git sparse-checkout init --cone
+          git sparse-checkout set contract/schemas
+          if ! git fetch --depth 1 origin main 2> fetch.err; then
+            # Redact any leaked token before surfacing the error (defence-in-depth).
+            sed 's#x-access-token:[^@]*@#x-access-token:***@#g' fetch.err >&2
+            echo "::error::cannot fetch factory@main; check UPSTREAM_SOURCES_RO_TOKEN." >&2
+            exit 1
+          fi
+          git checkout -q FETCH_HEAD
+          echo "FACTORY_ENCORE_MAIN_SHA=$(git rev-parse HEAD)" >> "$GITHUB_ENV"
+          test -d contract/schemas
+
+      - name: Build the lockstep checker
+        run: cargo build --release --manifest-path tools/oap/factory-schema-lockstep/Cargo.toml --target-dir tools/oap/factory-schema-lockstep/target
+
+      # Run the assertion; capture exit + JSON. Exit 2 (operational) fails the
+      # job; exit 1 (content divergence) is routed to the issue; 0 is clean.
+      - name: Run lockstep check against main
+        id: check
+        run: |
+          set +e
+          ./tools/oap/factory-schema-lockstep/target/release/factory-schema-lockstep \
+            --oap-dir standards/schemas/factory \
+            --factory-dir .factory/contract/schemas \
+            --json > report.json 2> report.err
+          code=$?
+          echo "exit_code=$code" >> "$GITHUB_OUTPUT"
+          cat report.err >&2 || true
+          cat report.json || true
+          if [ "$code" = "2" ]; then
+            echo "::error::operational failure running the lockstep check (fail-visible)." >&2
+            exit 2
+          fi
+          exit 0
+
+      - name: Read the committed pin
+        id: pin
+        run: |
+          pin=$(grep -E '^pinned_ref:' specs/212-factory-schema-lockstep-ci/spec.md | head -1 | sed -E 's/^pinned_ref:[[:space:]]*"?([0-9a-fA-F]+)"?.*/\1/')
+          echo "pinned_ref=$pin" >> "$GITHUB_OUTPUT"
+
+      # Content divergence → open or annotate the single tracking issue.
+      - name: Open or annotate the drift issue
+        if: steps.check.outputs.exit_code == '1'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          title="Factory schema lockstep: factory@main has drifted from pin"
+          body=$(printf '%s\n' \
+            "The scheduled lockstep sweep found a divergence between OAP's canonical" \
+            "\`standards/schemas/factory/**\` and \`factory@main\`'s" \
+            "\`contract/schemas/**\`." \
+            "" \
+            "- Committed pin (PR lane): \`${{ steps.pin.outputs.pinned_ref }}\`" \
+            "- factory@main: \`${FACTORY_ENCORE_MAIN_SHA}\`" \
+            "" \
+            "Reconcile the surfaces, then bump \`pinned_ref\` in" \
+            "\`specs/212-factory-schema-lockstep-ci/spec.md\` to the new ref" \
+            "(a coupling-gated spec edit — FR-007)." \
+            "" \
+            "<details><summary>lockstep report</summary>" \
+            "" \
+            '```json' \
+            "$(cat report.json)" \
+            '```' \
+            "</details>" \
+            "" \
+            "_Filed by ci-factory-schema-lockstep-cron.yml (spec 212 FR-004). Updated in place on each run._")
+          existing=$(gh issue list --state open --label "$DRIFT_LABEL" --json number --jq '.[0].number // empty')
+          if [ -n "$existing" ]; then
+            echo "annotating existing drift issue #$existing"
+            gh issue comment "$existing" --body "$body"
+          else
+            echo "opening new drift issue"
+            gh label create "$DRIFT_LABEL" --color B60205 --description "factory contract drift (spec 212)" 2>/dev/null || true
+            gh issue create --title "$title" --label "$DRIFT_LABEL" --body "$body"
+          fi
+
+      # Clean run → if an open drift issue exists, the gap closed; comment + close.
+      - name: Resolve the drift issue if main is back in lockstep
+        if: steps.check.outputs.exit_code == '0'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          existing=$(gh issue list --state open --label "$DRIFT_LABEL" --json number --jq '.[0].number // empty')
+          if [ -n "$existing" ]; then
+            gh issue comment "$existing" --body "factory@main (\`${FACTORY_ENCORE_MAIN_SHA}\`) is back in lockstep with OAP's canonical contract. Closing; bump \`pinned_ref\` to adopt the reconciled ref."
+            gh issue close "$existing"
+          fi

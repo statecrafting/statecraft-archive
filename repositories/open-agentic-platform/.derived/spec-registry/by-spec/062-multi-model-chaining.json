@@ -1,0 +1,63 @@
+{
+  "record": {
+    "authors": [
+      "open-agentic-platform"
+    ],
+    "codeAliases": [
+      "MULTI_MODEL_CHAIN"
+    ],
+    "created": "2026-03-29",
+    "domain": "opc",
+    "establishes": [
+      {
+        "kind": "directory",
+        "path": "product/packages/multi-model-chaining"
+      }
+    ],
+    "extraFrontmatter": {
+      "language": "en",
+      "sources": [
+        "deepreasoning",
+        "ruflo"
+      ]
+    },
+    "featureBranch": "062-multi-model-chaining",
+    "id": "062-multi-model-chaining",
+    "implementation": "complete",
+    "kind": "platform",
+    "references": [
+      {
+        "role": "historical",
+        "unit": {
+          "kind": "file",
+          "path": "crates/agent/src/chain.rs"
+        }
+      }
+    ],
+    "sectionHeadings": [
+      "Feature Specification: Multi-Model Chaining",
+      "Purpose",
+      "Scope",
+      "In scope",
+      "Out of scope",
+      "Requirements",
+      "Functional",
+      "Non-functional",
+      "Architecture",
+      "Chain configuration",
+      "Token usage and pricing",
+      "SSE event extensions",
+      "Execution flow",
+      "Implementation approach",
+      "Success criteria",
+      "Dependencies",
+      "Risk"
+    ],
+    "specPath": "specs/062-multi-model-chaining/spec.md",
+    "status": "approved",
+    "summary": "Multi-model chaining pipeline: call Model A (reasoning model) for deep analysis, wrap its output in thinking tags, inject as an assistant message, then call Model B (response model) for the final response. Per-request token usage aggregation across all providers in a chain with configurable pricing tables. SSE streaming across multi-phase model calls so consumers see incremental output from each phase without waiting for the full chain to complete.\n",
+    "title": "Multi-Model Chaining"
+  },
+  "shardHash": "99f1831504b3338b4b81e44ce8edb84b24694549d5dd002612d7b200005414f0",
+  "specVersion": "1.1.0"
+}

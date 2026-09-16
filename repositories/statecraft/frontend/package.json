@@ -1,0 +1,32 @@
+{
+  "name": "@statecraft/frontend",
+  "version": "0.1.0",
+  "private": true,
+  "license": "AGPL-3.0",
+  "spec-spine": { "spec": "007-governance-webapp" },
+  "type": "module",
+  "description": "statecraft governance UI (spec 007): a React 19 + React Router v7 SPA built into backend/web/dist and served same-origin by the chassis web static service. Surface: login, tenants, GitHub App install, stamp launcher + job progress, fleet table.",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run"
+  },
+  "dependencies": {
+    "react": "^19.1.0",
+    "react-dom": "^19.1.0",
+    "react-router": "^7.6.0"
+  },
+  "devDependencies": {
+    "@testing-library/jest-dom": "^6.6.3",
+    "@testing-library/react": "^16.3.0",
+    "@types/node": "^26.0.1",
+    "@types/react": "^19.1.0",
+    "@types/react-dom": "^19.1.0",
+    "@vitejs/plugin-react": "^5.0.0",
+    "jsdom": "^26.0.0",
+    "typescript": "^6.0.3",
+    "vite": "^7.0.0",
+    "vitest": "^4.0.18"
+  }
+}

@@ -1,0 +1,17 @@
+# Authoritative Rust toolchain pin for the workspace.
+#
+# When you bump `channel`, you MUST also update the matching default in:
+#   - .github/actions/rust-ci/action.yml         (input `toolchain`)
+#   - .github/workflows/release-desktop.yml      (jobs.*.steps[Rust toolchain].with.toolchain)
+#   - .github/workflows/release-tools.yml        (same)
+#   - .github/workflows/build-axiomregent.yml    (same — sidecar producer/validator)
+#
+# Why duplicated: dtolnay/rust-toolchain's `components:` input installs against
+# whatever `toolchain:` it was told. Without the explicit input the action
+# installs `stable`, then rustup re-installs the channel pinned here on first
+# cargo invocation — but clippy and rustfmt would only be present for stable,
+# not for 1.95.0. Passing the explicit input keeps clippy/rustfmt in lockstep.
+[toolchain]
+channel = "1.95.0"
+components = ["clippy", "rustfmt"]
+profile = "minimal"

@@ -1,0 +1,13 @@
+# Composite-action fixture — every `uses:` ref is SHA-pinned, including
+# the comment-after-sha form and the digest-pinned docker image. The
+# workflow-pins lint MUST exit 0 against this file.
+name: passing-fixture
+description: All refs SHA-pinned or otherwise out-of-scope.
+
+runs:
+  using: composite
+  steps:
+    - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6
+    - uses: dtolnay/rust-toolchain@29eef336d9b2848a0b548edc03f92a220660cdb8
+    - uses: ./.github/actions/local-helper
+    - uses: docker://nginx@sha256:abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789

@@ -1,0 +1,61 @@
+# Spec: 214-tenant-app-chart-supersession
+# Spec: 177-ci-orchestrator-pr-gate
+#
+# CI for the acme-vue-encore reference chart (the factory's template
+# scaffold shape): PR-time helm lint + render gates (default, gate+ingress+tls,
+# and preview-database). The Stage 1 FR-011 gate-seam render-parity job proved
+# the access-gate seam carried over to this chart before the synthetic
+# reference was retired in Stage 2; with that retirement landed, the parity
+# job is removed (its comparison input no longer exists).
+#
+# Dispatched from `.github/workflows/ci.yml` on PRs touching the acme-vue-encore
+# chart or this workflow (spec 177); manual via workflow_dispatch.
+#
+# FR-010 fixture-image build (SC-006 lockstep): building the reference image
+# from a materialised template profile is a cross-repo step that needs
+# the per-org template source (repo + pinned SHA + read token), which is
+# operational config resolved at runtime from org admission, not in-repo. The
+# image build lives in cd-tenant-app.yml (Stage 2); wiring the cross-repo
+# source as a repo variable + read token is the remaining operational step (a
+# SHA-pinned cross-repo checkout per spec 158 needs a real SHA).
+
+name: CI tenant-app
+
+on:
+  workflow_call:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  chart-lint:
+    runs-on: ubuntu-latest
+    name: helm lint + render
+    timeout-minutes: 5
+
+    steps:
+      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+
+      - name: Install Helm
+        uses: azure/setup-helm@9bc31f4ebc9c6b171d7bfbaa5d006ae7abdb4310 # v5
+
+      - name: helm lint
+        run: helm lint platform/charts/acme-vue-encore/
+
+      - name: helm template (default values)
+        run: helm template acme-vue-encore-ci platform/charts/acme-vue-encore/ > /tmp/render-default.yaml
+
+      - name: helm template (gate + ingress + tls)
+        run: |
+          helm template acme-vue-encore-ci platform/charts/acme-vue-encore/ \
+            --set ingress.enabled=true --set ingress.host=app.tenants.test \
+            --set ingress.tls.enabled=true --set ingress.tls.secretName=tenants-wildcard-tls \
+            --set gate.enabled=true --set gate.proxyServiceName=app-gate --set gate.proxyServicePort=4180 \
+            > /tmp/render-gate.yaml
+
+      - name: helm template (preview database) renders the StatefulSet
+        run: |
+          helm template acme-vue-encore-ci platform/charts/acme-vue-encore/ \
+            --set previewDatabase.enabled=true > /tmp/render-db.yaml
+          grep -q "kind: StatefulSet" /tmp/render-db.yaml

@@ -1,0 +1,11 @@
+{
+  "package": {
+    "kind": "npm-package",
+    "name": "@opc/notification-orchestrator",
+    "path": "product/packages/notification-orchestrator",
+    "specRef": "057-notification-system",
+    "version": "0.1.0"
+  },
+  "schemaVersion": "1.1.0",
+  "shardHash": "db76e16eeb1e5e042f0e43a4680f2ee3d7aac987cd24c0bc24d3225d4fd7828a"
+}

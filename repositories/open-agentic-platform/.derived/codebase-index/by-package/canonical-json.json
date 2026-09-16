@@ -1,0 +1,11 @@
+{
+  "package": {
+    "edition": "2024",
+    "kind": "rust-lib",
+    "name": "canonical-json",
+    "path": "crates/canonical-json",
+    "version": "0.1.0"
+  },
+  "schemaVersion": "1.1.0",
+  "shardHash": "7003bed8d4de19d11dc351fd5c24fab6bea2c8ebba2f3c6d2f4a3bb192810304"
+}

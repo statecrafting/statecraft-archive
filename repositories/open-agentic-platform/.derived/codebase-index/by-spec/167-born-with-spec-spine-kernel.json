@@ -1,0 +1,309 @@
+{
+  "diagnostics": {
+    "errors": [],
+    "warnings": [
+      {
+        "code": "W-002",
+        "message": "spec '167-born-with-spec-spine-kernel' file unit 'docs/owasp/factory/AIDE-VELOCITY-OAP-INTENT.md' does not exist",
+        "path": "docs/owasp/factory/AIDE-VELOCITY-OAP-INTENT.md"
+      },
+      {
+        "code": "W-002",
+        "message": "spec '167-born-with-spec-spine-kernel' file unit 'tools/spec-spine/spec-code-coupling-check/Cargo.toml' does not exist",
+        "path": "tools/spec-spine/spec-code-coupling-check/Cargo.toml"
+      }
+    ]
+  },
+  "mapping": {
+    "dependsOn": [
+      "000-bootstrap-spec-system",
+      "001-spec-compiler-mvp",
+      "075-factory-workflow-engine",
+      "120-factory-extraction-stage",
+      "127-spec-code-coupling-gate",
+      "147-spec-kind-grammar",
+      "165-opc-decomposition-pipeline"
+    ],
+    "implementingPaths": [
+      {
+        "path": "crates/factory-engine",
+        "source": "spec-edge"
+      },
+      {
+        "path": "crates/factory-engine/src/engine.rs",
+        "source": "spec-edge"
+      },
+      {
+        "path": "crates/factory-engine/src/kernel_emission",
+        "source": "spec-edge"
+      },
+      {
+        "path": "crates/factory-engine/src/kernel_emission/emit.rs",
+        "source": "multiple"
+      },
+      {
+        "path": "crates/factory-engine/src/kernel_emission/gather.rs",
+        "source": "multiple"
+      },
+      {
+        "path": "crates/factory-engine/src/kernel_emission/mod.rs",
+        "source": "multiple"
+      },
+      {
+        "path": "crates/factory-engine/src/kernel_emission/templates.rs",
+        "source": "multiple"
+      },
+      {
+        "path": "crates/factory-engine/src/kernel_emission/version.rs",
+        "source": "multiple"
+      },
+      {
+        "path": "crates/factory-engine/src/lib.rs",
+        "source": "spec-edge"
+      },
+      {
+        "path": "crates/factory-engine/templates/kernel/tenant.makefile.tmpl",
+        "source": "spec-edge"
+      },
+      {
+        "path": "crates/factory-engine/tests/kernel_emission_integration.rs",
+        "source": "multiple"
+      },
+      {
+        "path": "crates/featuregraph/tests/golden/features_graph.json",
+        "source": "spec-edge"
+      },
+      {
+        "path": "platform/services/statecraft/api/projects/scaffold/kernelVersionStamp.ts",
+        "source": "spec-edge"
+      },
+      {
+        "path": "specs/000-bootstrap-spec-system/spec.md",
+        "source": "spec-edge"
+      },
+      {
+        "path": "standards/spec",
+        "source": "spec-edge"
+      }
+    ],
+    "resolvedUnits": [
+      {
+        "locations": [
+          {
+            "file": "crates/factory-engine/src/kernel_emission"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "directory",
+          "path": "crates/factory-engine/src/kernel_emission"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "crates/factory-engine/src/kernel_emission/emit.rs"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "file",
+          "path": "crates/factory-engine/src/kernel_emission/emit.rs"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "crates/factory-engine/src/kernel_emission/gather.rs"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "file",
+          "path": "crates/factory-engine/src/kernel_emission/gather.rs"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "crates/factory-engine/src/kernel_emission/mod.rs"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "file",
+          "path": "crates/factory-engine/src/kernel_emission/mod.rs"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "crates/factory-engine/src/kernel_emission/templates.rs"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "file",
+          "path": "crates/factory-engine/src/kernel_emission/templates.rs"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "crates/factory-engine/src/kernel_emission/version.rs"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "file",
+          "path": "crates/factory-engine/src/kernel_emission/version.rs"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "crates/factory-engine/templates/kernel/tenant.makefile.tmpl"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "file",
+          "path": "crates/factory-engine/templates/kernel/tenant.makefile.tmpl"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "crates/factory-engine/tests/kernel_emission_integration.rs"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "file",
+          "path": "crates/factory-engine/tests/kernel_emission_integration.rs"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "crates/factory-engine"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "extends",
+        "unit": {
+          "kind": "directory",
+          "path": "crates/factory-engine"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "crates/factory-engine/src/engine.rs"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "extends",
+        "unit": {
+          "kind": "file",
+          "path": "crates/factory-engine/src/engine.rs"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "crates/factory-engine/src/lib.rs"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "extends",
+        "unit": {
+          "kind": "file",
+          "path": "crates/factory-engine/src/lib.rs"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "crates/featuregraph/tests/golden/features_graph.json"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "extends",
+        "unit": {
+          "kind": "file",
+          "path": "crates/featuregraph/tests/golden/features_graph.json"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "platform/services/statecraft/api/projects/scaffold/kernelVersionStamp.ts"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "extends",
+        "unit": {
+          "kind": "file",
+          "path": "platform/services/statecraft/api/projects/scaffold/kernelVersionStamp.ts"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "standards/spec"
+          }
+        ],
+        "ownership": false,
+        "sourceField": "references",
+        "unit": {
+          "kind": "directory",
+          "path": "standards/spec"
+        }
+      },
+      {
+        "locations": [],
+        "ownership": false,
+        "sourceField": "references",
+        "unit": {
+          "kind": "file",
+          "path": "docs/owasp/factory/AIDE-VELOCITY-OAP-INTENT.md"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "specs/000-bootstrap-spec-system/spec.md"
+          }
+        ],
+        "ownership": false,
+        "sourceField": "references",
+        "unit": {
+          "kind": "file",
+          "path": "specs/000-bootstrap-spec-system/spec.md"
+        }
+      },
+      {
+        "locations": [],
+        "ownership": false,
+        "sourceField": "references",
+        "unit": {
+          "kind": "file",
+          "path": "tools/spec-spine/spec-code-coupling-check/Cargo.toml"
+        }
+      }
+    ],
+    "specId": "167-born-with-spec-spine-kernel",
+    "specStatus": "approved"
+  },
+  "schemaVersion": "1.1.0",
+  "shardHash": "1b8a00dfefbb4b229cb9977a2f520fb49c5b7784ea5ec143c7111405e11af24d"
+}

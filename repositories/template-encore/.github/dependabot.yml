@@ -1,0 +1,53 @@
+# Spec: 009-repo-ci-orchestrator
+#
+# Dependabot configuration for the template. Bumps the template's
+# dependency surfaces:
+#   - GitHub Actions (every workflow + composite action pins to a full SHA)
+#   - npm (the application workspace at the repo root, and the standalone
+#     Encore app at apps/api)
+#
+# Each ecosystem groups minor + patch updates to reduce PR noise.
+# Downstream projects extend the npm list as they add manifests.
+
+version: 2
+updates:
+  # GitHub Actions — every workflow + composite action pins to a full
+  # commit SHA. Dependabot rewrites the SHA + version comment in lockstep
+  # so spec 011's workflow-pins lint stays happy.
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: weekly
+      day: monday
+      time: "09:00"
+    open-pull-requests-limit: 5
+    groups:
+      actions-minor-patch:
+        update-types: [minor, patch]
+    labels:
+      - dependencies
+      - github-actions
+
+  # npm — the application workspace at the repo root (apps/web,
+  # apps/web-internal, packages/*) plus the spec-spine governance CLI.
+  - package-ecosystem: npm
+    directory: /
+    schedule:
+      interval: weekly
+    open-pull-requests-limit: 5
+    groups:
+      npm-minor-patch:
+        update-types: [minor, patch]
+    labels: [dependencies, javascript]
+
+  # npm — the standalone Encore app (outside the root workspace; Encore
+  # owns its install/build lifecycle).
+  - package-ecosystem: npm
+    directory: /apps/api
+    schedule:
+      interval: weekly
+    open-pull-requests-limit: 5
+    groups:
+      npm-minor-patch:
+        update-types: [minor, patch]
+    labels: [dependencies, javascript]

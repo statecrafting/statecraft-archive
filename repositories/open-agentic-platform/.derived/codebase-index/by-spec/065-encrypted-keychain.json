@@ -1,0 +1,62 @@
+{
+  "diagnostics": {
+    "errors": [],
+    "warnings": [
+      {
+        "code": "W-002",
+        "message": "spec '065-encrypted-keychain' file unit 'product/apps/opc/src-tauri/src/keychain.rs' does not exist",
+        "path": "product/apps/opc/src-tauri/src/keychain.rs"
+      },
+      {
+        "code": "W-002",
+        "message": "spec '065-encrypted-keychain' file unit 'product/apps/opc/src/components/CredentialPicker.tsx' does not exist",
+        "path": "product/apps/opc/src/components/CredentialPicker.tsx"
+      }
+    ]
+  },
+  "mapping": {
+    "implementingPaths": [
+      {
+        "path": "product/apps/opc",
+        "source": "spec-edge"
+      }
+    ],
+    "resolvedUnits": [
+      {
+        "locations": [
+          {
+            "file": "product/apps/opc"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "extends",
+        "unit": {
+          "id": "@opc/desktop",
+          "kind": "crate"
+        }
+      },
+      {
+        "locations": [],
+        "ownership": false,
+        "sourceField": "references",
+        "unit": {
+          "kind": "file",
+          "path": "product/apps/opc/src-tauri/src/keychain.rs"
+        }
+      },
+      {
+        "locations": [],
+        "ownership": false,
+        "sourceField": "references",
+        "unit": {
+          "kind": "file",
+          "path": "product/apps/opc/src/components/CredentialPicker.tsx"
+        }
+      }
+    ],
+    "specId": "065-encrypted-keychain",
+    "specStatus": "approved"
+  },
+  "schemaVersion": "1.1.0",
+  "shardHash": "5c2e7a8d8a287402008423556dc6c4559b60650c9a59ad053e0fad3d7c48406a"
+}

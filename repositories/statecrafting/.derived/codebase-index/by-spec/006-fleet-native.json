@@ -1,0 +1,37 @@
+{
+  "mapping": {
+    "dependsOn": [
+      "000-bootstrap",
+      "001-packages-thesis"
+    ],
+    "implementingPaths": [
+      {
+        "path": "addon/fleet-native",
+        "source": "manifest-metadata"
+      },
+      {
+        "path": "addon/fleet-native/",
+        "source": "spec-edge"
+      }
+    ],
+    "resolvedUnits": [
+      {
+        "locations": [
+          {
+            "file": "addon/fleet-native/"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "directory",
+          "path": "addon/fleet-native/"
+        }
+      }
+    ],
+    "specId": "006-fleet-native",
+    "specStatus": "approved"
+  },
+  "schemaVersion": "1.1.0",
+  "shardHash": "8c2ead2e477b6c759b4743fba272ed4852eabc57df645b56187870c6a8c73f60"
+}

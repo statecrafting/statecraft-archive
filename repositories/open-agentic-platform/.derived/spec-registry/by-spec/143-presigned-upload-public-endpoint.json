@@ -1,0 +1,290 @@
+{
+  "record": {
+    "amends": [
+      "087-unified-workspace-architecture",
+      "115-knowledge-extraction-pipeline"
+    ],
+    "codeAliases": [
+      "PRESIGNED_UPLOAD_PUBLIC_ENDPOINT"
+    ],
+    "created": "2026-05-07",
+    "dependsOn": [
+      "087-unified-workspace-architecture",
+      "115-knowledge-extraction-pipeline"
+    ],
+    "domain": "platform",
+    "establishes": [
+      {
+        "kind": "file",
+        "path": "platform/services/statecraft/api/knowledge/storage.ts"
+      },
+      {
+        "kind": "file",
+        "path": "platform/services/statecraft/api/knowledge/uploadLimits.ts"
+      },
+      {
+        "kind": "file",
+        "path": "platform/services/statecraft/api/knowledge/uploadLimits.test.ts"
+      },
+      {
+        "kind": "file",
+        "path": "platform/services/statecraft/api/knowledge/requestUpload.integration.test.ts"
+      },
+      {
+        "kind": "file",
+        "path": "platform/services/statecraft/api/auth/refreshCookie.ts"
+      },
+      {
+        "kind": "file",
+        "path": "platform/services/statecraft/api/auth/refreshCookie-pure.ts"
+      },
+      {
+        "kind": "file",
+        "path": "platform/services/statecraft/api/auth/refreshCookie.test.ts"
+      },
+      {
+        "kind": "file",
+        "path": "platform/services/statecraft/api/auth/refreshCookie-pure.test.ts"
+      },
+      {
+        "kind": "file",
+        "path": "platform/services/statecraft/web/app/lib/fetchWithRefresh.ts"
+      },
+      {
+        "kind": "file",
+        "path": "platform/services/statecraft/web/app/lib/fetchWithRefresh.test.ts"
+      },
+      {
+        "kind": "file",
+        "path": "platform/infra/hetzner/validate/spec-143.sh"
+      },
+      {
+        "kind": "file",
+        "path": "platform/charts/statecraft/templates/cronjob-orphan-sweeper.yaml"
+      },
+      {
+        "kind": "file",
+        "path": "platform/charts/statecraft/templates/external-secret-knowledge-sweeper.yaml"
+      },
+      {
+        "kind": "file",
+        "path": "platform/services/statecraft/web/app/components/ExtractionView.tsx"
+      }
+    ],
+    "extends": [
+      {
+        "nature": "additive",
+        "spec": "087-unified-workspace-architecture",
+        "unit": {
+          "kind": "file",
+          "path": "platform/services/statecraft/api/knowledge/knowledge.ts"
+        }
+      },
+      {
+        "nature": "additive",
+        "spec": "087-unified-workspace-architecture",
+        "unit": {
+          "kind": "file",
+          "path": "platform/services/statecraft/api/knowledge/auditActions.ts"
+        }
+      },
+      {
+        "nature": "additive",
+        "spec": "087-unified-workspace-architecture",
+        "unit": {
+          "kind": "file",
+          "path": "platform/services/statecraft/api/knowledge/orphanSweeper.ts"
+        }
+      },
+      {
+        "nature": "additive",
+        "spec": "087-unified-workspace-architecture",
+        "unit": {
+          "kind": "file",
+          "path": "platform/services/statecraft/api/knowledge/orphanSweeper.integration.test.ts"
+        }
+      },
+      {
+        "nature": "additive",
+        "spec": "087-unified-workspace-architecture",
+        "unit": {
+          "kind": "file",
+          "path": "platform/services/statecraft/api/knowledge/scheduler.ts"
+        }
+      },
+      {
+        "nature": "additive",
+        "spec": "087-unified-workspace-architecture",
+        "unit": {
+          "kind": "file",
+          "path": "platform/services/statecraft/web/app/routes/app.project.$projectId.knowledge.tsx"
+        }
+      },
+      {
+        "nature": "additive",
+        "spec": "087-unified-workspace-architecture",
+        "unit": {
+          "kind": "file",
+          "path": "platform/charts/statecraft/templates/deployment.yaml"
+        }
+      },
+      {
+        "nature": "additive",
+        "spec": "087-unified-workspace-architecture",
+        "unit": {
+          "kind": "file",
+          "path": "platform/charts/statecraft/values.yaml"
+        }
+      },
+      {
+        "nature": "additive",
+        "spec": "087-unified-workspace-architecture",
+        "unit": {
+          "kind": "file",
+          "path": "platform/charts/statecraft/values-hetzner.yaml"
+        }
+      },
+      {
+        "nature": "additive",
+        "spec": "115-knowledge-extraction-pipeline",
+        "unit": {
+          "kind": "file",
+          "path": "platform/services/statecraft/api/knowledge/extractionCore.ts"
+        }
+      },
+      {
+        "nature": "additive",
+        "spec": "115-knowledge-extraction-pipeline",
+        "unit": {
+          "kind": "file",
+          "path": "platform/services/statecraft/api/knowledge/extractionWorker.ts"
+        }
+      }
+    ],
+    "extraFrontmatter": {
+      "slug": "presigned-upload-public-endpoint"
+    },
+    "id": "143-presigned-upload-public-endpoint",
+    "implementation": "in-progress",
+    "kind": "platform",
+    "owner": "bart",
+    "refines": [
+      {
+        "aspect": "presigned-upload-public-endpoint",
+        "unit": {
+          "kind": "file",
+          "path": "platform/services/statecraft/api/knowledge/storage.dualClient.test.ts"
+        }
+      },
+      {
+        "aspect": "presigned-upload-public-endpoint",
+        "unit": {
+          "kind": "file",
+          "path": "platform/infra/hetzner/setup.sh"
+        }
+      },
+      {
+        "aspect": "presigned-upload-public-endpoint",
+        "unit": {
+          "kind": "file",
+          "path": "platform/infra/hetzner/post-create.sh"
+        }
+      },
+      {
+        "aspect": "presigned-upload-public-endpoint",
+        "unit": {
+          "kind": "file",
+          "path": "platform/infra/hetzner/.env.example"
+        }
+      },
+      {
+        "aspect": "presigned-upload-public-endpoint",
+        "unit": {
+          "kind": "file",
+          "path": "platform/services/statecraft/infra.config.json"
+        }
+      },
+      {
+        "aspect": "presigned-upload-public-endpoint",
+        "unit": {
+          "kind": "file",
+          "path": "platform/charts/deployd-api/values-hetzner.yaml"
+        }
+      },
+      {
+        "aspect": "presigned-upload-public-endpoint",
+        "unit": {
+          "kind": "file",
+          "path": "platform/charts/deployd-api/templates/deployment.yaml"
+        }
+      },
+      {
+        "aspect": "presigned-upload-public-endpoint",
+        "unit": {
+          "kind": "file",
+          "path": "platform/services/statecraft/test/__mocks__/encore-config.ts"
+        }
+      },
+      {
+        "aspect": "presigned-upload-public-endpoint",
+        "unit": {
+          "kind": "file",
+          "path": "platform/services/statecraft/vite.config.ts"
+        }
+      },
+      {
+        "aspect": "presigned-upload-public-endpoint",
+        "unit": {
+          "kind": "file",
+          "path": "platform/services/statecraft/test/spec143-fu015.config.test.ts"
+        }
+      },
+      {
+        "aspect": "presigned-upload-public-endpoint",
+        "unit": {
+          "kind": "file",
+          "path": "platform/services/statecraft/web/app/routes/app.project.$projectId.knowledge.$id.tsx"
+        }
+      },
+      {
+        "aspect": "presigned-upload-public-endpoint",
+        "unit": {
+          "kind": "file",
+          "path": "platform/services/statecraft/api/db/schema.ts"
+        }
+      }
+    ],
+    "risk": "medium",
+    "sectionHeadings": [
+      "143 — Presigned upload public endpoint",
+      "1. Problem Statement",
+      "1.1 Evidence ledger",
+      "1.2 Why the cluster ended up like this",
+      "2. Goals",
+      "3. Non-Goals",
+      "4. Architecture",
+      "4.1 Endpoint duality",
+      "4.2 Configuration semantics",
+      "4.3 MinIO ingress (Hetzner)",
+      "4.4 CORS, console security, and MinIO chart wiring",
+      "4.5 Orphan-row reconciliation",
+      "4.6 Presigned URL TTLs",
+      "4.7 Cert issuance topology (amendment, 2026-05-08)",
+      "5. Functional Requirements",
+      "6. Non-Functional Requirements",
+      "7. Implementation Plan",
+      "8. Testing",
+      "9. Migration",
+      "10. Amendment record",
+      "11. Open Questions",
+      "12. Lessons (added by 2026-05-08 amendment)",
+      "13. Evidence ledger (historical record)"
+    ],
+    "specPath": "specs/143-presigned-upload-public-endpoint/spec.md",
+    "status": "draft",
+    "summary": "Browser uploads via presigned PUT have never landed in MinIO on the Hetzner deployment because the server-issued presigned URL points at the cluster-internal MinIO service URL, which the browser cannot resolve and which mixed-content policy blocks anyway. This spec splits the storage client into internal and public-facing endpoints, adds a public ingress for MinIO with TLS, configures CORS for the statecraft origin, and updates the storage module so presigned URLs use the public endpoint while server-side ops keep using the internal one. Amends spec 087 NF-002 to add the browser-reachability requirement for the object-store endpoint that backs presigned uploads.\n",
+    "title": "Presigned upload public endpoint — browser-reachable object store for direct uploads"
+  },
+  "shardHash": "d06f7f53007a948b9ff0cccf50fd355d552b918663deff9c3010e6fc8553716b",
+  "specVersion": "1.1.0"
+}

@@ -1,0 +1,12 @@
+{
+  "package": {
+    "edition": "2024",
+    "kind": "rust-lib-bin",
+    "name": "open_agentic_spec_lint",
+    "path": "tools/spec-spine/spec-lint",
+    "specRef": "147-spec-kind-grammar",
+    "version": "0.1.0"
+  },
+  "schemaVersion": "1.1.0",
+  "shardHash": "eeee383aee9f0bc3bfbbd49b559137f0e948516c3f96281adb784ae66a80c887"
+}

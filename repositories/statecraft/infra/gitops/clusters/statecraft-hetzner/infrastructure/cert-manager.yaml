@@ -1,0 +1,43 @@
+# cert-manager HelmRelease (spec 010).
+#
+# The `infrastructure` Flux Kustomization gates its Ready on a healthCheck of
+# THIS HelmRelease, and the `manifests` tier (ClusterIssuers) dependsOn
+# infrastructure, so the cert-manager.io/v1 CRDs are always present before any
+# ClusterIssuer/Certificate dry-run runs on a fresh cluster.
+---
+apiVersion: source.toolkit.fluxcd.io/v1
+kind: HelmRepository
+metadata:
+  name: jetstack
+  namespace: flux-system
+spec:
+  interval: 24h
+  url: https://charts.jetstack.io
+---
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: cert-manager
+  namespace: cert-manager
+spec:
+  interval: 1h
+  chart:
+    spec:
+      chart: cert-manager
+      version: "v1.19.3"
+      sourceRef:
+        kind: HelmRepository
+        name: jetstack
+        namespace: flux-system
+      interval: 24h
+  install:
+    timeout: 5m
+    remediation:
+      retries: 3
+  upgrade:
+    timeout: 5m
+    remediation:
+      retries: 3
+  values:
+    crds:
+      enabled: true

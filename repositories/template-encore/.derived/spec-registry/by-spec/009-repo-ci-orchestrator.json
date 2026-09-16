@@ -1,0 +1,59 @@
+{
+  "record": {
+    "codeAliases": [
+      "CI_ORCHESTRATOR"
+    ],
+    "created": "2026-06-10",
+    "dependsOn": [
+      "000-bootstrap",
+      "010-supply-chain-gates",
+      "012-enterprise-actions-governance"
+    ],
+    "domain": "ci-cd",
+    "establishes": [
+      {
+        "kind": "file",
+        "path": ".github/workflows/ci.yml"
+      },
+      {
+        "kind": "file",
+        "path": ".github/dependabot.yml"
+      },
+      {
+        "kind": "file",
+        "path": ".github/CODEOWNERS"
+      },
+      {
+        "kind": "file",
+        "path": ".github/pull_request_template.md"
+      }
+    ],
+    "id": "009-repo-ci-orchestrator",
+    "implementation": "complete",
+    "kind": "governance",
+    "owner": "bart",
+    "risk": "low",
+    "sectionHeadings": [
+      "009 — Repo CI orchestrator",
+      "1. Purpose",
+      "2. Territory",
+      "3. Behavior",
+      "3.1 Pipeline shape",
+      "FR-01: Inline git-diff change routing",
+      "FR-02: Constitutional always-on gates",
+      "FR-03: Routed gates",
+      "FR-04: ci-gate aggregator",
+      "FR-05: dependabot.yml — npm and github-actions only",
+      "FR-06: CODEOWNERS",
+      "FR-07: pull_request_template.md",
+      "4. Acceptance criteria",
+      "5. Out of scope"
+    ],
+    "specPath": "specs/009-repo-ci-orchestrator/spec.md",
+    "status": "approved",
+    "summary": "The root CI orchestrator: ci.yml computes change routes with inline git diff (no third-party filter action), always runs the constitutional gates (the spec-spine governance workflow and supply-chain), dispatches routed gates (Encore CI, AI review), and aggregates everything behind the terminal ci-gate job that branch protection requires. Dependabot covers npm and github-actions ecosystems; CODEOWNERS and the PR template route review.\n",
+    "title": "Repo CI orchestrator: ci.yml routing, dependabot, CODEOWNERS, PR template"
+  },
+  "shardHash": "9d4c9c93d29ac3f1091a8b9d172373f1572843676b049d19280158815897f5b2",
+  "specVersion": "1.1.0"
+}

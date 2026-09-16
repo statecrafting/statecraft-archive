@@ -1,0 +1,121 @@
+# Spec: 009-control-plane-deploy (section 4.9)
+#
+# AI-Powered Changelog Generation. Uses the Claude CLI to generate a
+# structured changelog from commit history and append it to the release
+# body. Ported from OAP spec 085; companion to ai-pr-review.yml. Inert until
+# this repo cuts releases, which image.yml already anticipates.
+#
+# Kept from the OAP hardening lineage:
+#   - The commit list is piped via stdin, never shell-interpolated, so
+#     backticks or $( ) in commit messages are never evaluated.
+#   - CLAUDE_CLI_VERSION pins the CLI; bump in lockstep with ai-pr-review.yml.
+# Changed from OAP: auth is the same CLAUDE_CODE_OAUTH_TOKEN secret the
+# review workflow uses (one operator-managed secret, not two), with the same
+# distinct failure when it is unset and the same auth-vs-outage failure
+# classification (auth errors fail the job; outages degrade loudly).
+
+name: AI Changelog
+
+on:
+  release:
+    types: [published]
+
+permissions:
+  contents: write
+
+env:
+  # Pinned to the npm `stable` dist-tag value at time of pin.
+  CLAUDE_CLI_VERSION: '2.1.185'
+
+jobs:
+  changelog:
+    runs-on: ubuntu-latest
+    name: changelog / generate + attach
+    timeout-minutes: 10
+    steps:
+      - name: Checkout
+        uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+        with:
+          fetch-depth: 0
+
+      - name: Get previous tag
+        id: prev_tag
+        run: |
+          # sed -n 2p: the second-newest tag, EMPTY on a first release. head -2
+          # with a single tag would echo that tag back, and tag..tag is an
+          # empty range, so the first changelog would cover nothing.
+          PREV=$(git tag --sort=-creatordate | sed -n '2p')
+          echo "tag=$PREV" >> "$GITHUB_OUTPUT"
+
+      - name: Get commit log
+        env:
+          PREV_TAG: ${{ steps.prev_tag.outputs.tag }}
+        run: |
+          # First release: no previous tag, so the changelog covers all history.
+          if [ -n "$PREV_TAG" ]; then
+            git log "${PREV_TAG}..HEAD" --oneline --no-merges > /tmp/commits.txt
+          else
+            git log HEAD --oneline --no-merges > /tmp/commits.txt
+          fi
+
+      - name: Install Claude CLI
+        run: npm install -g "@anthropic-ai/claude-code@${CLAUDE_CLI_VERSION}"
+
+      # Prelude in -p; commit list on stdin.
+      - name: Generate changelog
+        env:
+          # Subscription-backed auth via the Claude Code OAuth token, NOT an
+          # API key. ANTHROPIC_API_KEY is deliberately NOT set here (mirror of
+          # ai-pr-review.yml): an empty/unset API key wins by precedence over
+          # the OAuth token, a silent auth failure whose placeholder body
+          # would mask the misconfiguration.
+          CLAUDE_CODE_OAUTH_TOKEN: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
+        run: |
+          set -o pipefail
+          if [ -z "${CLAUDE_CODE_OAUTH_TOKEN:-}" ]; then
+            echo "::error::CLAUDE_CODE_OAUTH_TOKEN secret is unset; changelog generation cannot authenticate."
+            exit 1
+          fi
+          PROMPT='Generate a changelog from the commits provided on stdin. Commits follow conventional-commit style and reference spec ids like feat(009). Group into sections:
+          ## Features
+          ## Fixes
+          ## Infrastructure
+          ## Documentation
+
+          Each entry should be a bullet point with a concise description, keeping the spec id reference when present.
+          Skip merge commits and trivial changes.'
+          # Same failure classification as ai-pr-review.yml: an auth error is a
+          # config bug that must fail the job (a broken token would otherwise
+          # surface only when someone inspects a release body), while an API
+          # outage degrades to a placeholder with a visible ::warning::.
+          if claude -p "$PROMPT" --output-format text < /tmp/commits.txt > /tmp/changelog.md 2> /tmp/changelog.err; then
+            :
+          else
+            rc=$?
+            err="$(cat /tmp/changelog.err /tmp/changelog.md 2>/dev/null)"
+            echo "claude exited ${rc}; captured output follows:" >&2
+            printf '%s\n' "$err" >&2
+            if printf '%s' "$err" | grep -qiE 'authentication_error|permission_error|invalid[^a-z]*(x-)?api[^a-z]*key|unauthorized|forbidden|oauth[^a-z]*(token)?[^a-z]*(invalid|expired|revoked|missing)'; then
+              echo "::error::Changelog generation could not authenticate (not an API outage); fix CLAUDE_CODE_OAUTH_TOKEN. Details above."
+              exit 1
+            fi
+            echo "::warning::Changelog generation failed (rc=${rc}); the release body carries a placeholder instead of a changelog."
+            echo "_Changelog generation failed; see the AI Changelog workflow run for details._" > /tmp/changelog.md
+          fi
+
+      - name: Update release body
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          RELEASE_TAG: ${{ github.event.release.tag_name }}
+        run: |
+          EXISTING=$(gh release view "$RELEASE_TAG" --json body -q .body)
+          {
+            printf '%s\n' "$EXISTING"
+            echo ""
+            echo "---"
+            echo ""
+            echo "## Auto-Generated Changelog"
+            echo ""
+            cat /tmp/changelog.md
+          } > /tmp/release-body.md
+          gh release edit "$RELEASE_TAG" --notes-file /tmp/release-body.md

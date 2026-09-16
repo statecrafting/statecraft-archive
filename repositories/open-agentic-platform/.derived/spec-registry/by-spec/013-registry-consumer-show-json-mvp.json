@@ -1,0 +1,38 @@
+{
+  "record": {
+    "authors": [
+      "open-agentic-platform"
+    ],
+    "created": "2026-03-22",
+    "domain": "tooling",
+    "extends": [
+      {
+        "nature": "additive",
+        "spec": "002-registry-consumer-mvp"
+      }
+    ],
+    "extraFrontmatter": {
+      "language": "en"
+    },
+    "featureBranch": "013-registry-consumer-show-json-mvp",
+    "id": "013-registry-consumer-show-json-mvp",
+    "implementation": "complete",
+    "kind": "platform-delivery",
+    "sectionHeadings": [
+      "Feature Specification: Registry consumer show JSON contract",
+      "Purpose and charter",
+      "In scope",
+      "Out of scope",
+      "Requirements *(mandatory)*",
+      "Success criteria",
+      "Clarifications"
+    ],
+    "specPath": "specs/013-registry-consumer-show-json-mvp/spec.md",
+    "status": "superseded",
+    "summary": "Add explicit `show --json <id>` for single-feature retrieval with a stable pretty-printed JSON object contract, without changing default show output or trust semantics.\n",
+    "supersededBy": "217-spec-spine-engine-swap-collapse",
+    "title": "Registry consumer show JSON contract"
+  },
+  "shardHash": "de880fc4f7af4fd86f442de24f932c47519b9a1b94bb2fc4fe7bb731066caa41",
+  "specVersion": "1.1.0"
+}

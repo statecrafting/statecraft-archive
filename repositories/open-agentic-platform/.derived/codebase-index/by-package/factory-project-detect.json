@@ -1,0 +1,12 @@
+{
+  "package": {
+    "edition": "2024",
+    "kind": "rust-lib-bin",
+    "name": "factory-project-detect",
+    "path": "crates/factory-project-detect",
+    "specRef": "112-factory-project-lifecycle",
+    "version": "0.1.0"
+  },
+  "schemaVersion": "1.1.0",
+  "shardHash": "facc0c78233bd1c376a8bcdbd614df1f4af9cda630de18bd254d0148e5f3279b"
+}

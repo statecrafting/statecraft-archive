@@ -1,0 +1,191 @@
+@import "tailwindcss";
+
+/*
+ * Class-based dark mode. `.dark` is set on <html> by the no-flash script in
+ * root.tsx: it reads a stored `theme` preference and falls back to the OS
+ * `prefers-color-scheme`. The theme toggle flips the class and persists the
+ * choice.
+ */
+@custom-variant dark (&:is(.dark *));
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+  /*
+   * System fonts only. The acceptance requires zero runtime requests to any
+   * non-same-origin host, so no Google Fonts / webfont CDN: we ride the OS
+   * UI + monospace stacks instead.
+   */
+  --font-sans: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont,
+    "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif,
+    "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+  --font-mono: ui-monospace, SFMono-Regular, "SF Mono", "JetBrains Mono",
+    "Fira Code", Menlo, Consolas, "Liberation Mono", "Courier New", monospace;
+}
+
+/*
+ * "Governance ledger" palette (ported from the OAP ecosystem site). OKLCH
+ * throughout; the accent is a cyan/teal at hue 195. Light theme on :root,
+ * dark theme under the `.dark` class.
+ */
+:root {
+  --radius: 0.5rem;
+  --background: oklch(0.98 0.003 260);
+  --foreground: oklch(0.18 0.01 260);
+  --card: oklch(1 0 0);
+  --card-foreground: oklch(0.18 0.01 260);
+  --popover: oklch(1 0 0);
+  --popover-foreground: oklch(0.18 0.01 260);
+  --primary: oklch(0.5 0.18 195);
+  --primary-foreground: oklch(0.98 0 0);
+  --secondary: oklch(0.95 0.005 260);
+  --secondary-foreground: oklch(0.35 0.015 260);
+  --muted: oklch(0.94 0.005 260);
+  --muted-foreground: oklch(0.45 0.015 260);
+  --accent: oklch(0.94 0.008 260);
+  --accent-foreground: oklch(0.18 0.01 260);
+  --destructive: oklch(0.55 0.22 25);
+  --destructive-foreground: oklch(0.98 0 0);
+  --border: oklch(0.88 0.008 260);
+  --input: oklch(0.92 0.005 260);
+  --ring: oklch(0.5 0.18 195);
+  color-scheme: light;
+}
+
+.dark {
+  --background: oklch(0.12 0.008 260);
+  --foreground: oklch(0.92 0.01 80);
+  --card: oklch(0.16 0.01 260);
+  --card-foreground: oklch(0.92 0.01 80);
+  --popover: oklch(0.14 0.008 260);
+  --popover-foreground: oklch(0.92 0.01 80);
+  --primary: oklch(0.75 0.15 195);
+  --primary-foreground: oklch(0.12 0.008 260);
+  --secondary: oklch(0.2 0.01 260);
+  --secondary-foreground: oklch(0.75 0.02 80);
+  --muted: oklch(0.22 0.008 260);
+  --muted-foreground: oklch(0.6 0.015 260);
+  --accent: oklch(0.2 0.015 260);
+  --accent-foreground: oklch(0.92 0.01 80);
+  --destructive: oklch(0.6 0.2 25);
+  --destructive-foreground: oklch(0.98 0 0);
+  --border: oklch(0.25 0.01 260);
+  --input: oklch(0.2 0.01 260);
+  --ring: oklch(0.75 0.15 195);
+  color-scheme: dark;
+}
+
+@layer base {
+  body {
+    @apply bg-background text-foreground;
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--ring);
+    outline-offset: 2px;
+    border-radius: 4px;
+  }
+}
+
+@layer components {
+  /* Governance-ledger utilities (glow, pulse-dot, spec-chip, blueprint grid). */
+  .glow-cyan-sm {
+    box-shadow: 0 0 6px oklch(0.75 0.15 195 / 0.2);
+  }
+  .text-glow {
+    text-shadow: 0 0 8px oklch(0.75 0.15 195 / 0.4);
+  }
+
+  .pulse-dot {
+    display: inline-block;
+    width: 6px;
+    height: 6px;
+    border-radius: 9999px;
+    background: oklch(0.75 0.15 195);
+    animation: pulse-glow 2s ease-in-out infinite;
+  }
+  @keyframes pulse-glow {
+    0%,
+    100% {
+      opacity: 0.4;
+      box-shadow: 0 0 2px oklch(0.75 0.15 195 / 0.3);
+    }
+    50% {
+      opacity: 1;
+      box-shadow: 0 0 8px oklch(0.75 0.15 195 / 0.6);
+    }
+  }
+
+  .spec-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 2px 8px;
+    border-radius: 4px;
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    background: oklch(0.75 0.15 195 / 0.08);
+    border: 1px solid oklch(0.75 0.15 195 / 0.2);
+    color: oklch(0.5 0.18 195);
+  }
+  .dark .spec-chip {
+    color: oklch(0.75 0.15 195);
+  }
+
+  /* Faint engineering-blueprint grid, used behind heroes. */
+  .blueprint-grid {
+    background-image: linear-gradient(
+        oklch(0.75 0.15 195 / 0.04) 1px,
+        transparent 1px
+      ),
+      linear-gradient(90deg, oklch(0.75 0.15 195 / 0.04) 1px, transparent 1px);
+    background-size: 40px 40px;
+  }
+}
+
+/* Print-optimized styles for the spec detail pages. */
+@media print {
+  nav,
+  header,
+  footer,
+  button {
+    display: none !important;
+  }
+  body,
+  main {
+    background: white !important;
+    color: black !important;
+  }
+  a[href^="http"]::after {
+    content: " (" attr(href) ")";
+    font-size: 9px;
+    color: #666 !important;
+    word-break: break-all;
+  }
+  @page {
+    margin: 1.5cm 2cm;
+  }
+}

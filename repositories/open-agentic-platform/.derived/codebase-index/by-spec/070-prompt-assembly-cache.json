@@ -1,0 +1,52 @@
+{
+  "diagnostics": {
+    "errors": [],
+    "warnings": [
+      {
+        "code": "W-002",
+        "message": "spec '070-prompt-assembly-cache' file unit 'crates/agent/src/prompt_assembly.rs' does not exist",
+        "path": "crates/agent/src/prompt_assembly.rs"
+      }
+    ]
+  },
+  "mapping": {
+    "implementingPaths": [
+      {
+        "path": "crates/agent/src/prompt/mod.rs",
+        "source": "comment-header"
+      },
+      {
+        "path": "product/packages/prompt-assembly",
+        "source": "multiple"
+      }
+    ],
+    "resolvedUnits": [
+      {
+        "locations": [
+          {
+            "file": "product/packages/prompt-assembly"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "extends",
+        "unit": {
+          "kind": "directory",
+          "path": "product/packages/prompt-assembly"
+        }
+      },
+      {
+        "locations": [],
+        "ownership": false,
+        "sourceField": "references",
+        "unit": {
+          "kind": "file",
+          "path": "crates/agent/src/prompt_assembly.rs"
+        }
+      }
+    ],
+    "specId": "070-prompt-assembly-cache",
+    "specStatus": "approved"
+  },
+  "schemaVersion": "1.1.0",
+  "shardHash": "005cf52ab60c94cc71b77017b4fb1df6594c64a4ee9c6575117fe78eb38b8066"
+}

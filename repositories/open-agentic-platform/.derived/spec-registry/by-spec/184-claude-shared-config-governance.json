@@ -1,0 +1,78 @@
+{
+  "record": {
+    "amendmentRecord": "amended by spec 188 (2026-05-30, Phase 4a) — the guarantee's STORAGE\nmoved, behavior bit-for-bit unchanged. The `claudeConfigHash` slice that\nPhase 3 placed at `build.claudeConfigHash` inside the broad `index.json`\nis re-homed to its own tracked file `.derived/codebase-index/config-hash.json`\n(index schema 2.3.0 → 3.0.0). `check-config` now reads that file. The\nPR-time blocking guarantee this spec installed is identical — same two\nfiles, same hash, same `ci-config-hash` gate — only the storage location\nchanged, so the broad index carries nothing governed (spec 188 §Phase 4).\nAC-4/AC-7 below are unaffected: `make index` still regenerates the slice\nand `check-config` still trips on a quiet edit.\n\namended by spec 188 (2026-05-30, Phase 3) — the PR-time blocking\nguarantee is RE-HOMED, not weakened. When 184 landed, the guarantee\n(\"a quiet edit to .mcp.json / .claude/settings.json cannot merge\nunacknowledged\") was enforced by the broad `codebase-indexer check`\nstaleness gate. Spec 188 Phase 3 drops that broad check as a per-PR gate\n(the broad index becomes a best-effort cache), so the guarantee is now\ncarried by a dedicated narrow gate: `codebase-indexer check-config`\n(spec 101 FR-12) verifies a `build.claudeConfigHash` sub-hash over ONLY\nthese two files, wired as the constitutional `ci-config-hash` PR workflow.\nThe behavioral guarantee is unchanged (still PR-time, still blocking);\nonly the mechanism narrowed. The FR-009 \"back door\" (a healer silently\nabsorbing config drift) is closed **by construction**: spec 188's\ndirect-push heal was retired (incompatible with `main`'s PR-required +\nsigned-commits protection), so nothing on `main` regenerates-and-commits\nthe index — there is no healer that could absorb drift. AC-4 and AC-7\nbelow carry inline notes recording the mechanism change.\n\namended 2026-06-18 by spec 217 (engine-swap collapse): the in-tree codebase-indexer that provided the config-hash slice (check-config) was deleted; that logic is now in spec-spine-core (`spec-spine index check --slice claude-config`). The codebase-indexer edge is stripped (path deleted); this spec's authority over the hashed inputs (.mcp.json, .claude/settings.json) survives.\n",
+    "amends": [
+      "101-codebase-index-mvp"
+    ],
+    "authors": [
+      "bart"
+    ],
+    "codeAliases": [
+      "MCP_CONFIG_PATH",
+      "CLAUDE_SETTINGS_PATH"
+    ],
+    "created": "2026-05-25",
+    "domain": "tooling",
+    "establishes": [
+      {
+        "kind": "file",
+        "path": ".mcp.json"
+      },
+      {
+        "kind": "file",
+        "path": ".claude/settings.json"
+      }
+    ],
+    "extraFrontmatter": {
+      "amended": "2026-06-18",
+      "language": "en",
+      "shape": "mechanism-add",
+      "slug": "claude-shared-config-governance"
+    },
+    "id": "184-claude-shared-config-governance",
+    "implementation": "complete",
+    "kind": "amendment",
+    "owner": "bart",
+    "references": [
+      {
+        "role": "precedent",
+        "unit": {
+          "kind": "file",
+          "path": "specs/179-domain-frontmatter-field/spec.md"
+        }
+      },
+      {
+        "role": "precedent",
+        "unit": {
+          "kind": "file",
+          "path": "specs/182-claude-skills-migration/spec.md"
+        }
+      }
+    ],
+    "risk": "low",
+    "sectionHeadings": [
+      "Feature Specification: Claude Code shared config governance",
+      "Purpose",
+      "Retroactive authority over existing contents",
+      "Scope",
+      "Mechanical change list",
+      "Acceptance criteria",
+      "Risk and mitigation",
+      "Known gaps in the baseline",
+      "Baseline evolution record",
+      "2026-06-10 — hooks rework: guard-glob broadened, automation layers added",
+      "2026-06-10 (second edit) — permissions slimmed to project-specific surface",
+      "2026-06-10 (third edit) — SessionStart matcher widened to compaction",
+      "Follow-up tooling (not in this spec)",
+      "Relationship to spec 182",
+      "References",
+      "Security hardening amendment (2026-07-02)"
+    ],
+    "specPath": "specs/184-claude-shared-config-governance/spec.md",
+    "status": "approved",
+    "summary": "Bring two sibling Claude Code shared config files into the spec spine's governed-input set: `.mcp.json` (team-shared MCP server config at the repo root) and `.claude/settings.json` (permissions, hooks, statusLine, outputStyle, env). Both are quiet configuration files that change Claude Code behavior across every team member who opens the repo — a quiet edit to either has team-wide consequences identical in effect to a Cargo.toml or workflow YAML change, but unlike those they pass the spec/code coupling gate invisibly because the indexer does not hash them. This spec amends the indexer (`tools/spec-spine/codebase-indexer/src/lib.rs`) to add both files to the `collect_input_files` walk, amends spec 101's documented input set to enumerate them, and declares `establishes:` over both so they are authority-owned. Behavior is unchanged: existing MCP servers continue to start exactly as configured; existing permissions and hooks continue to apply unchanged. After this spec lands, any edit to either file trips the codebase-index staleness gate. This closes the self-governance gap for hooks that guard other hashed inputs — editing the PostToolUse hook glob in `.claude/settings.json` now itself trips the gate, not just the inputs the hook protects.\n",
+    "title": "Claude Code shared config governance — .mcp.json and .claude/settings.json as hashed inputs"
+  },
+  "shardHash": "82995df6fcf5c96f49c6ddf5a8fedb01df6afa8cdd8b446a34282bb135731755",
+  "specVersion": "1.1.0"
+}

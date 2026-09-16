@@ -1,0 +1,55 @@
+# ============================================================================
+# factory-encore: Process Governance Envelope
+# ============================================================================
+# The process-layer admission brief, conformant to
+# contract/schemas/governance-envelope.schema.yaml (schema_version 1.0.0).
+#
+# It declares obligations that hold (predicates), never pipeline topology. The
+# declared ceilings must equal or bound the aggregate computed from the agent
+# frontmatter under process/agents/. The one scoped-write agent is the
+# client-documentation-orchestrator (scope: requirements/client/**); every other
+# agent is read-only, so the mutation ceiling is scoped-write.
+# ============================================================================
+
+schema_version: "1.0.0"
+
+process:
+  id: "factory-encore-process"
+  objective_class: >
+    Produce a frozen Build Specification from business documents and hand it off
+    to a bound adapter for scaffolding. Each run declares a concrete objective
+    instantiating this class; out-of-class objectives are not admissible.
+  goal_identifier_scheme: "build-spec:<project>"
+
+ceilings:
+  max_tier: "tier1"
+  max_mutation: "scoped-write"
+
+gates:
+  - predicate: "approval-before-build-spec-freeze"
+    description: >
+      A human approval gate exists before the Build Specification is frozen.
+  - predicate: "checkpoint-before-any-scoped-write"
+    description: >
+      A checkpoint gate exists before any stage whose agents exceed read-only
+      mutation.
+  - predicate: "plain-language-summaries"
+    description: >
+      Gate prompts present deterministic facts (artifact names, counts, hashes),
+      never model-generated rationales.
+  - predicate: "preview-no-side-effects"
+    description: >
+      Rendering a preview of any artifact performs no state-changing or network
+      calls.
+
+emits:
+  - kind: "build-spec"
+  - kind: "stage-output"
+  - kind: "pipeline-state"
+  - kind: "handoff-report"
+
+constituents:
+  agents: "process/agents/*.md"
+
+overrides:
+  require_verified: false

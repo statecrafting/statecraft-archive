@@ -1,0 +1,34 @@
+{
+  "name": "@opc/skill-command-factory",
+  "version": "0.1.0",
+  "description": "Skill and command factory — loads markdown skill files, validates frontmatter, registers as tools with hook integration",
+  "private": true,
+  "type": "module",
+  "main": "src/index.ts",
+  "types": "src/index.ts",
+  "exports": {
+    ".": "./src/index.ts",
+    "./types": "./src/types.ts",
+    "./parser": "./src/parser.ts",
+    "./factory": "./src/factory.ts",
+    "./tool-def": "./src/tool-def.ts",
+    "./filter": "./src/filter.ts",
+    "./plugin-loader": "./src/plugin-loader.ts"
+  },
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "test": "vitest run",
+    "lint": "eslint src/"
+  },
+  "devDependencies": {
+    "@types/node": "^24.5.0",
+    "typescript": "^6.0.3",
+    "vitest": "^4.1.5"
+  },
+  "dependencies": {
+    "yaml": "^2.8.4"
+  },
+  "oap": {
+    "spec": "071-skill-command-factory"
+  }
+}

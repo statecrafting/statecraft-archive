@@ -1,0 +1,193 @@
+{
+  "format": "statecrafting.evidence-bytes.vectors/v1",
+  "digest": "sha256 over the decoded bytes of bytesBase64; never over any re-serialization",
+  "vectors": [
+    {
+      "id": "V01-key-order",
+      "class": "key-order",
+      "note": "Object keys out of lexicographic order.",
+      "bytesBase64": "eyJ6ZXRhIjoxLCJhbHBoYSI6Mn0=",
+      "size": 20,
+      "declaredDigest": "sha256:71a27d34724a8107561d2dc650d91d25fc5ce37309596ec7aee7ca86d99b037a"
+    },
+    {
+      "id": "V02-insignificant-whitespace",
+      "class": "whitespace",
+      "note": "CRLF, tab, spaces around separators, trailing newline.",
+      "bytesBase64": "ew0KCSJhIiA6IDEgLA0KCSJiIjpbIDEsIDIgXQ0KfQo=",
+      "size": 32,
+      "declaredDigest": "sha256:c768ca7429671d64f642fe6e24e9139d9590cab77471a0ad6df864f531c4d853"
+    },
+    {
+      "id": "V03-duplicate-key",
+      "class": "duplicate-key",
+      "note": "The same key twice with different values.",
+      "bytesBase64": "eyJhIjoxLCJhIjoyfQ==",
+      "size": 13,
+      "declaredDigest": "sha256:1c53ee0df7b12fd4d65b976120c7fa6b847dc41dffd7f0331c3237a1ceab1756"
+    },
+    {
+      "id": "V04-duplicate-envelope-id",
+      "class": "duplicate-key",
+      "note": "Duplicate top-level id: the ledger envelope id is metadata derived from the payload.",
+      "bytesBase64": "eyJpZCI6ImZpcnN0IiwiaWQiOiJzZWNvbmQiLCJraW5kIjoiZXZpZGVuY2UifQ==",
+      "size": 46,
+      "declaredDigest": "sha256:a9283c0afaf29b6dd8fe434ec754349aaa93da356b5dfec053b59f670b929751"
+    },
+    {
+      "id": "V05-integer-beyond-u64",
+      "class": "large-number",
+      "note": "Integer literal wider than u64 and than an IEEE double's exact range.",
+      "bytesBase64": "eyJiaWciOjEyMzQ1Njc4OTAxMjM0NTY3ODkwMTIzfQ==",
+      "size": 31,
+      "declaredDigest": "sha256:0c28a9ec554bdf54579810698fed686256a048c94b8ede126650eea2e92e76c8"
+    },
+    {
+      "id": "V06-integer-2p53-plus-1",
+      "class": "large-number",
+      "note": "2^53 + 1: exact in a u64, not exact in an IEEE double.",
+      "bytesBase64": "eyJuIjo5MDA3MTk5MjU0NzQwOTkzfQ==",
+      "size": 22,
+      "declaredDigest": "sha256:4ac8309cc76123ef6c5325ef925fc873e9b5856ec4f844ef1462f9303960378a"
+    },
+    {
+      "id": "V07-integer-2p64",
+      "class": "large-number",
+      "note": "2^64: one past u64::MAX.",
+      "bytesBase64": "eyJuIjoxODQ0Njc0NDA3MzcwOTU1MTYxNn0=",
+      "size": 26,
+      "declaredDigest": "sha256:5171b3f02739553257cde342c54398ac7f809898b9fbce52c1b40f7ff07c5d22"
+    },
+    {
+      "id": "V08-number-spellings",
+      "class": "number-spelling",
+      "note": "Equivalent numeric spellings: 1.0, 1e3, -0, 1E+2, 0.10.",
+      "bytesBase64": "eyJmIjoxLjAsImUiOjFlMywieiI6LTAsIngiOjFFKzIsImQiOjAuMTB9",
+      "size": 42,
+      "declaredDigest": "sha256:001608e68f90e279726d2ca653421b7da250d71f17fb6f4809206c1855a05160"
+    },
+    {
+      "id": "V09-decimal-precision",
+      "class": "large-number",
+      "note": "A decimal literal carrying more precision than an IEEE double.",
+      "bytesBase64": "eyJwcmljZSI6MC4xMDAwMDAwMDAwMDAwMDAwMDU1NTExMTUxMjMxMjU3ODI3fQ==",
+      "size": 46,
+      "declaredDigest": "sha256:0b85fe5253e47284b5f1aee3e8022c61bc834af43ef6065a8392f0ea138e7b17"
+    },
+    {
+      "id": "V10-string-escapes",
+      "class": "escape-spelling",
+      "note": "Escaped spellings of plain characters: \\u00e9, \\/, \\u0041.",
+      "bytesBase64": "eyJzIjoiXHUwMGU5XC9cdTAwNDEifQ==",
+      "size": 22,
+      "declaredDigest": "sha256:ae4250224cf2d05f6ea3b089668aff80c74ed4b60297936a93244eb911d73785"
+    },
+    {
+      "id": "V11-non-bmp-key-order",
+      "class": "key-order",
+      "note": "Keys U+E000 and U+1F600: UTF-8 byte order and UTF-16 code-unit order disagree.",
+      "bytesBase64": "eyJcdWUwMDAiOjEsIlx1ZDgzZFx1ZGUwMCI6Mn0=",
+      "size": 29,
+      "declaredDigest": "sha256:cbc59ba170b24c28f6de748a91f6cd6c844aa7470605f4accc7bf644eb05f495"
+    },
+    {
+      "id": "V12-lone-surrogate-escape",
+      "class": "invalid-i-json",
+      "note": "An escaped unpaired surrogate: valid JSON grammar, not I-JSON.",
+      "bytesBase64": "eyJzIjoiXHVkODAwIn0=",
+      "size": 14,
+      "declaredDigest": "sha256:d06a70a1ca4d3ac4099cd5f35ecbb551be652247e0950c05790e8f0c58010851"
+    },
+    {
+      "id": "V13-utf8-bom",
+      "class": "encoding",
+      "note": "A UTF-8 byte-order mark before the document.",
+      "bytesBase64": "77u/eyJhIjoxfQ==",
+      "size": 10,
+      "declaredDigest": "sha256:e3170108e7583c4ad52e05763a606c1dceef76c81a8e1503dde511b5ca764f81"
+    },
+    {
+      "id": "V14-invalid-utf8",
+      "class": "encoding",
+      "note": "A raw 0xFF byte inside a string: not UTF-8.",
+      "bytesBase64": "eyJhIjoi/yJ9",
+      "size": 9,
+      "declaredDigest": "sha256:dc2222acf0a31b9e965c6577a25c70f729766e07124482731257cb4bca738af7"
+    },
+    {
+      "id": "V15-deep-nesting",
+      "class": "parser-limit",
+      "note": "Arrays nested 200 deep.",
+      "bytesBase64": "W1tbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW1tbW1tdXV1dXV1dXV1dXV1dXV1dXV1dXV1dXV1dXV1dXV1dXV1dXV1dXV1dXV1dXV1dXV1dXV1dXV1dXV1dXV1dXV1dXV1dXV1dXV1dXV1dXV1dXV1dXV1dXV1dXV1dXV1dXV1dXV1dXV1dXV1dXV1dXV1dXV1dXV1dXV1dXV1dXV1dXV1dXV1dXV1dXV1dXV1dXV1dXV1dXV1dXV1dXV1dXV1dXV1dXV1dXV1dXV1dXV1dXV1dXV1dXV1dXV1dXV1dXV1dXV1dXV1dXQ==",
+      "size": 400,
+      "declaredDigest": "sha256:d4c5d966af55699404c24de399162a5bee9733888d2f5dd0ab41515cf3995df4"
+    },
+    {
+      "id": "V16-trailing-document",
+      "class": "parser-limit",
+      "note": "Two JSON documents in one body.",
+      "bytesBase64": "eyJhIjoxfSB7ImIiOjJ9",
+      "size": 15,
+      "declaredDigest": "sha256:b3583052341ed170ea8562a471af03e16ec9c256320c606f52a67736d1192409"
+    },
+    {
+      "id": "V17-integer-2p53",
+      "class": "large-number",
+      "note": "2^53: exact in an IEEE double, outside the JavaScript safe-integer range.",
+      "bytesBase64": "eyJuIjo5MDA3MTk5MjU0NzQwOTkyfQ==",
+      "size": 22,
+      "declaredDigest": "sha256:66c87d9cb3014e05a11baa97df62282d89d425f22ee15816577c84534e2ef1bb"
+    },
+    {
+      "id": "V18-integer-2p53-minus-1",
+      "class": "large-number",
+      "note": "2^53 - 1: the largest JavaScript safe integer.",
+      "bytesBase64": "eyJuIjo5MDA3MTk5MjU0NzQwOTkxfQ==",
+      "size": 22,
+      "declaredDigest": "sha256:e1da48c6a6089f06ecb4e0a2259e658e3786b2420f52baccdf929ec6460d7b41"
+    },
+    {
+      "id": "V19-integer-collision-a",
+      "class": "large-number",
+      "pairWith": "V20-integer-collision-b",
+      "note": "A 30-digit integer (statecraft 014 section 10.3, Probe 1).",
+      "bytesBase64": "eyJuIjoxMjM0NTY3ODkwMTIzNDU2Nzg5MDEyMzQ1Njc4OTB9",
+      "size": 36,
+      "declaredDigest": "sha256:03b8f78ef5e8a305f4cda82942db0c6accec4046b40457ae19055ea5e4fff2ac"
+    },
+    {
+      "id": "V20-integer-collision-b",
+      "class": "large-number",
+      "pairWith": "V19-integer-collision-a",
+      "note": "The same integer plus one.",
+      "bytesBase64": "eyJuIjoxMjM0NTY3ODkwMTIzNDU2Nzg5MDEyMzQ1Njc4OTF9",
+      "size": 36,
+      "declaredDigest": "sha256:087f8e964b6186900fe07922fda2b1b229cfd2aeda2f181484daa5b4f34a2046"
+    },
+    {
+      "id": "C01-flat-string-envelope",
+      "class": "control",
+      "note": "Positive control: the flat all-string shape statecraft's live chain holds.",
+      "bytesBase64": "eyJpZCI6IngiLCJraW5kIjoic3RhbXAifQ==",
+      "size": 25,
+      "declaredDigest": "sha256:8862fd1e87d228e69ce5abc7dfbf6618e4186bb15ee70cec0d0f8b5033a5853d"
+    },
+    {
+      "id": "C02-typed-reference-canonical",
+      "class": "control",
+      "note": "Positive control: statecraft 014 D-3's typed reference, keys in UTF-8 order, members portable.",
+      "bytesBase64": "eyJieXRlRGlnZXN0IjoiYWJhYmFiYWJhYmFiYWJhYmFiYWJhYmFiYWJhYmFiYWJhYmFiYWJhYmFiYWJhYmFiYWJhYmFiYWJhYmFiYWJhYiIsImJ5dGVMZW5ndGgiOjEyMzQsImRpZ2VzdEFsZyI6InNoYS0yNTYiLCJwcm9kdWNlckRpZ2VzdCI6bnVsbCwic2NoZW1hVmVyc2lvbiI6MSwic3ViamVjdCI6eyJjb21taXQiOiJjMGMwYzBjMGMwYzBjMGMwYzBjMGMwYzBjMGMwYzBjMGMwYzBjMGMwIiwicmVwbyI6ImdpdGh1Yi5jb20vZXhhbXBsZS9hcHAiLCJ0cmVlIjpudWxsfSwidHlwZSI6InN0YXRlY3JhZnQtY2xpL3JlY2VpcHQifQ==",
+      "size": 301,
+      "declaredDigest": "sha256:e2cd67a67b289f3a219b882463f92240c4c939599c5bdd58ef6263c01761944d"
+    },
+    {
+      "id": "C03-typed-reference-reordered",
+      "class": "key-order",
+      "pairWith": "C02-typed-reference-canonical",
+      "note": "The same reference with keys in construction order, as a JavaScript object literal would emit them.",
+      "bytesBase64": "eyJ0eXBlIjoic3RhdGVjcmFmdC1jbGkvcmVjZWlwdCIsInNjaGVtYVZlcnNpb24iOjEsImRpZ2VzdEFsZyI6InNoYS0yNTYiLCJieXRlRGlnZXN0IjoiYWJhYmFiYWJhYmFiYWJhYmFiYWJhYmFiYWJhYmFiYWJhYmFiYWJhYmFiYWJhYmFiYWJhYmFiYWJhYmFiYWJhYiIsImJ5dGVMZW5ndGgiOjEyMzQsInByb2R1Y2VyRGlnZXN0IjpudWxsLCJzdWJqZWN0Ijp7InJlcG8iOiJnaXRodWIuY29tL2V4YW1wbGUvYXBwIiwiY29tbWl0IjoiYzBjMGMwYzBjMGMwYzBjMGMwYzBjMGMwYzBjMGMwYzBjMGMwYzBjMCIsInRyZWUiOm51bGx9fQ==",
+      "size": 301,
+      "declaredDigest": "sha256:5d40077eaa1c98ba52fee39c71db7d3949ff818789637158585a24f4440d6f95"
+    }
+  ]
+}

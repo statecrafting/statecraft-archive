@@ -1,0 +1,181 @@
+# Self-contained workspace — isolated from root to prevent libsqlite3-sys linking
+# conflicts when both this crate and crates/axiomregent bundle rusqlite.
+[workspace]
+
+[package]
+name = "opc"
+version = "0.4.0"
+description = "GUI app and Toolkit for Claude Code"
+authors = ["bartekus"]
+license = "AGPL-3.0-or-later"
+publish = false   # internal workspace crate; binaries ship via release workflows, not crates.io
+edition = "2024"
+default-run = "opc"
+
+[package.metadata.oap]
+spec = "032-opc-inspect-governance-wiring-mvp"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[[bin]]
+name = "opc"
+path = "src/main.rs"
+
+[lib]
+name = "opc_lib"
+crate-type = ["lib", "cdylib", "staticlib"]
+
+[[bin]]
+name = "opc-web"
+path = "src/web_main.rs"
+
+# Spec 187 [[opc-e2e-auth-state-seeding]]: e2e-only keychain seed helper. Gated
+# behind `e2e-seed` (nothing in the production feature set enables it), so it is
+# never compiled into a shipping build. It links the same `keyring` dep as the
+# app so a seeded value reads back identically. Built by the nightly with
+# `--example e2e_seed_session --features e2e-seed`.
+#
+# It is an `[[example]]`, NOT a `[[bin]]`: Tauri's bundler copies every `[[bin]]`
+# of the packaged crate into the app bundle, and a required-features bin that
+# the release build never compiles made the bundler fail with
+# "e2e_seed_session does not exist" (broke Release Desktop + the nightly's
+# `tauri build`). Examples are not bundled. See examples/e2e_seed_session.rs.
+[[example]]
+name = "e2e_seed_session"
+path = "examples/e2e_seed_session.rs"
+required-features = ["e2e-seed"]
+
+[build-dependencies]
+tauri-build = { version = "2", features = [] }
+
+[dependencies]
+tauri = { version = "2", features = [ "protocol-asset", "tray-icon", "image-png", "macos-private-api"] }
+tauri-plugin-shell = "2"
+tauri-plugin-dialog = "2"
+tauri-plugin-fs = "2.5"
+tauri-plugin-process = "2"
+tauri-plugin-updater = "2"
+tauri-plugin-notification = "2"
+tauri-plugin-clipboard-manager = "2"
+tauri-plugin-global-shortcut = "2"
+tauri-plugin-http = "2"
+tauri-plugin-window-state = "2"
+tauri-plugin-single-instance = "2"
+tauri-plugin-autostart = "2"
+tauri-plugin-log = { version = "2", features = ["colored"] }
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+specta = { version = "=2.0.0-rc.22", features = ["derive", "serde_json"] }
+tauri-specta = { version = "=2.0.0-rc.21", features = ["typescript"] }
+specta-typescript = "=0.0.9"
+hex = "0.4"
+tokio = { version = "1", features = ["full"] }
+tokio-util = { version = "0.7", features = ["rt"] }
+rusqlite = { version = "0.40", features = ["bundled"] }
+dirs = "6"
+chrono = { version = "0.4", features = ["serde"] }
+anyhow = "1"
+log = "0.4"
+env_logger = "0.11"
+regex = "1"
+glob = "0.3"
+base64 = "0.22"
+libc = "0.2"
+reqwest = { version = "0.13", features = ["json", "native-tls-vendored"] }
+tokio-tungstenite = { version = "0.29", features = ["connect", "native-tls-vendored"] }
+futures = "0.3"
+async-trait = "0.1"
+thiserror = "2"
+tempfile = "3"
+which = "8"
+sha2 = "0.11"
+zstd = "0.13"
+uuid = { version = "1.23", features = ["v4", "v5", "serde"] }
+walkdir = "2"
+serde_yaml = "0.9"
+axum = { version = "0.8", features = ["ws"] }
+tower = "0.5"
+tower-http = { version = "0.7", features = ["fs", "cors"] }
+clap = { version = "4.6", features = ["derive"] }
+futures-util = "0.3"
+image = "0.25"
+similar = { version = "3", features = ["unicode", "text"] }
+sysinfo = "0.39"
+
+# Opc additions
+xray         = { path = "../../../../crates/xray" }
+featuregraph = { path = "../../../../crates/featuregraph" }
+# Spec 217 engine swap: read the committed registry shards via the published
+# spec-spine library. default-features=false drops the symbol-resolution
+# tree-sitter dep (clashes with xray 0.26 under the `links` rule).
+spec-spine-core = { version = "0.10.0", default-features = false }
+spec-spine-types = "0.10.0"
+agent        = { path = "../../../../crates/agent" }
+run          = { path = "../../../../crates/run" }
+orchestrator = { path = "../../../../crates/orchestrator" }
+provider-registry = { path = "../../../../crates/provider-registry", default-features = false, features = ["anthropic", "openai"] }
+policy-kernel = { package = "open_agentic_policy_kernel", path = "../../../../crates/policy-kernel", default-features = false }
+factory-engine = { path = "../../../../crates/factory-engine" }
+factory-contracts = { path = "../../../../crates/factory-contracts" }
+factory-platform-client = { path = "../../../../crates/factory-platform-client" }
+factory-project-detect = { path = "../../../../crates/factory-project-detect" }
+provenance-validator = { path = "../../../../crates/provenance-validator" }
+opc-decomposition-pipeline = { path = "../../../../crates/opc-decomposition-pipeline" }
+
+
+keyring = { version = "3", features = ["apple-native", "windows-native", "sync-secret-service"] }
+git2 = { version = "0.21", default-features = false }
+tauri-plugin-deep-link = "2"
+tauri-plugin-persisted-scope = "2"
+tauri-plugin-opener = "2"
+tauri-plugin-os = "2"
+url = { version = "2.5.8", default-features = false }
+
+# Dev-only: MCP bridge exposes the running app to AI assistants (Claude Code, Cursor, etc.)
+# via a WebSocket on port 9223. Excluded from Linux builds due to upstream glib conflicts.
+# Made optional so it isn't linked during `cargo test` (avoids WebView2 COM DLL issues
+# in headless test environments). Enable with: cargo tauri dev --features mcp-dev
+[target.'cfg(any(target_os = "macos", target_os = "windows"))'.dependencies]
+tauri-plugin-mcp-bridge = { version = "0.11", optional = true }
+
+[target.'cfg(target_os = "macos")'.dependencies]
+window-vibrancy = "0.7"
+cocoa = "0.26"
+objc = "0.2"
+tauri-nspanel = { git = "https://github.com/ahkohd/tauri-nspanel", branch = "v2.1" }
+
+[features]
+# This feature is used for production builds or when a dev server is not specified, DO NOT REMOVE!!
+custom-protocol = ["tauri/custom-protocol"]
+# Enable to activate the MCP bridge during development (cargo tauri dev --features mcp-dev).
+# Exposes the running app to AI assistants via WebSocket on port 9223.
+mcp-dev = ["tauri-plugin-mcp-bridge"]
+# Spec 187 [[opc-e2e-auth-state-seeding]]: gates the e2e-only `e2e_seed_session`
+# example. A marker feature (no deps: the example only needs the always-present
+# `keyring` dep). Off in every production build; enabled only by the nightly
+# e2e job via `--example e2e_seed_session --features e2e-seed`.
+e2e-seed = []
+
+[dev-dependencies]
+# Spec 180 FR-T5 — deterministic mtime control for the usage-cache freshness
+# test (set a file's mtime without changing its body to assert a cache hit
+# does not re-read).
+filetime = "0.2"
+# Spec 180 FR-T8 — criterion bench harness for the filesystem-scanning usage
+# handler. Matches the spec-spine bench precedent (policy-kernel, policy-
+# compiler, codebase-indexer all use criterion 0.8 with harness = false).
+criterion = "0.8"
+
+# Spec 180 §5 / FR-T8 — Tier 2 bench-presence for the user-filesystem-scanning
+# usage handler. Relative-regression gating (FR-T9) is wired in CI, not here.
+[[bench]]
+name = "usage_scan"
+harness = false
+
+# Aligned to cargo release defaults (only `strip` set explicitly) so OPC's
+# shared-crate fingerprints match the root workspace, unlocking shared-target
+# build reuse. Do NOT re-add opt-level="z" / lto=true / codegen-units=1 /
+# panic="abort": each diverges the fingerprint and kills reuse. Rationale,
+# panic-strategy reasoning, and the [profile.bench] removal: spec 180 §12.
+[profile.release]
+strip = true

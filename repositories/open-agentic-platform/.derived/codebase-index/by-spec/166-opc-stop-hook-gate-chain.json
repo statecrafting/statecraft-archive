@@ -1,0 +1,195 @@
+{
+  "diagnostics": {
+    "errors": [],
+    "warnings": [
+      {
+        "code": "W-002",
+        "message": "spec '166-opc-stop-hook-gate-chain' file unit 'docs/owasp/factory/AIDE-VELOCITY-OAP-INTENT.md' does not exist",
+        "path": "docs/owasp/factory/AIDE-VELOCITY-OAP-INTENT.md"
+      },
+      {
+        "code": "W-002",
+        "message": "spec '166-opc-stop-hook-gate-chain' file unit 'docs/owasp/factory/AIDE-VELOCITY-HARNESS-blueprint-spec.md' does not exist",
+        "path": "docs/owasp/factory/AIDE-VELOCITY-HARNESS-blueprint-spec.md"
+      }
+    ]
+  },
+  "mapping": {
+    "dependsOn": [
+      "101-codebase-index-mvp",
+      "103-init-protocol-governed-reads",
+      "127-spec-code-coupling-gate",
+      "128-spec-lint-default-fail-on-warn",
+      "131-adversarial-prompt-refusal-policy",
+      "133-amends-aware-coupling-gate",
+      "134-fast-local-ci-mode",
+      "135-fast-ci-as-default"
+    ],
+    "implementingPaths": [
+      {
+        "path": "Makefile",
+        "source": "spec-edge"
+      },
+      {
+        "path": "product/apps/opc/src-tauri/resources/claude-hooks",
+        "source": "spec-edge"
+      },
+      {
+        "path": "product/apps/opc/src-tauri/resources/claude-hooks.json",
+        "source": "spec-edge"
+      },
+      {
+        "path": "product/apps/opc/src-tauri/resources/claude-hooks/_lib.sh",
+        "source": "comment-header"
+      },
+      {
+        "path": "product/apps/opc/src-tauri/tauri.conf.json",
+        "source": "spec-edge"
+      },
+      {
+        "path": "product/apps/opc/src/lib/hooksManager.spec166.test.ts",
+        "source": "multiple"
+      },
+      {
+        "path": "product/apps/opc/src/lib/hooksManager.ts",
+        "source": "spec-edge"
+      },
+      {
+        "path": "product/apps/opc/src/types/hooks.ts",
+        "source": "spec-edge"
+      },
+      {
+        "path": "specs/103-init-protocol-governed-reads/spec.md",
+        "source": "spec-edge"
+      }
+    ],
+    "resolvedUnits": [
+      {
+        "locations": [
+          {
+            "file": "product/apps/opc/src-tauri/resources/claude-hooks"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "directory",
+          "path": "product/apps/opc/src-tauri/resources/claude-hooks"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "product/apps/opc/src-tauri/resources/claude-hooks.json"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "file",
+          "path": "product/apps/opc/src-tauri/resources/claude-hooks.json"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "product/apps/opc/src-tauri/tauri.conf.json"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "extends",
+        "unit": {
+          "kind": "file",
+          "path": "product/apps/opc/src-tauri/tauri.conf.json"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "product/apps/opc/src/lib/hooksManager.spec166.test.ts"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "extends",
+        "unit": {
+          "kind": "file",
+          "path": "product/apps/opc/src/lib/hooksManager.spec166.test.ts"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "product/apps/opc/src/lib/hooksManager.ts"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "extends",
+        "unit": {
+          "kind": "file",
+          "path": "product/apps/opc/src/lib/hooksManager.ts"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "product/apps/opc/src/types/hooks.ts"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "extends",
+        "unit": {
+          "kind": "file",
+          "path": "product/apps/opc/src/types/hooks.ts"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "Makefile"
+          }
+        ],
+        "ownership": false,
+        "sourceField": "references",
+        "unit": {
+          "kind": "file",
+          "path": "Makefile"
+        }
+      },
+      {
+        "locations": [],
+        "ownership": false,
+        "sourceField": "references",
+        "unit": {
+          "kind": "file",
+          "path": "docs/owasp/factory/AIDE-VELOCITY-HARNESS-blueprint-spec.md"
+        }
+      },
+      {
+        "locations": [],
+        "ownership": false,
+        "sourceField": "references",
+        "unit": {
+          "kind": "file",
+          "path": "docs/owasp/factory/AIDE-VELOCITY-OAP-INTENT.md"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "specs/103-init-protocol-governed-reads/spec.md"
+          }
+        ],
+        "ownership": false,
+        "sourceField": "references",
+        "unit": {
+          "kind": "file",
+          "path": "specs/103-init-protocol-governed-reads/spec.md"
+        }
+      }
+    ],
+    "specId": "166-opc-stop-hook-gate-chain",
+    "specStatus": "approved"
+  },
+  "schemaVersion": "1.1.0",
+  "shardHash": "36a6795df2cb983056c2b2e2f0f89149962d2503f274c8da0686ef61247a062d"
+}

@@ -1,0 +1,9 @@
+# Empty stub for ci-parity-check fixtures (spec 104 §5.2).
+# No `run:` blocks → no tokens to mirror → no parity contribution.
+name: stub
+on: [push]
+jobs:
+  noop:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6

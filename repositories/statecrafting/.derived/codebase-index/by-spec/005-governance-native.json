@@ -1,0 +1,37 @@
+{
+  "mapping": {
+    "dependsOn": [
+      "000-bootstrap",
+      "001-packages-thesis"
+    ],
+    "implementingPaths": [
+      {
+        "path": "addon/governance-native",
+        "source": "manifest-metadata"
+      },
+      {
+        "path": "addon/governance-native/",
+        "source": "spec-edge"
+      }
+    ],
+    "resolvedUnits": [
+      {
+        "locations": [
+          {
+            "file": "addon/governance-native/"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "directory",
+          "path": "addon/governance-native/"
+        }
+      }
+    ],
+    "specId": "005-governance-native",
+    "specStatus": "approved"
+  },
+  "schemaVersion": "1.1.0",
+  "shardHash": "3c8b67218d54e4f1ce22f698dc248a4de290b8e093720cd73e88f983479db3ce"
+}

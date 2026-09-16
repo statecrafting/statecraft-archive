@@ -1,0 +1,28 @@
+[package]
+name = "open_agentic_codification_gate"
+publish = false   # internal workspace crate; binaries ship via release workflows, not crates.io
+version = "0.1.0"
+edition = "2024"
+description = "Stop-hook gate that blocks session closure until every CRITICAL/HIGH finding from axiomregent / provenance-validator / policy-kernel is codified in the spec spine (spec 174)."
+rust-version = "1.85"
+
+[[bin]]
+name = "codification-gate"
+path = "src/main.rs"
+
+[lib]
+name = "open_agentic_codification_gate"
+path = "src/lib.rs"
+
+[dependencies]
+clap = { version = "4", features = ["derive"] }
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+serde_yaml = "0.9"
+walkdir = "2"
+
+[dev-dependencies]
+tempfile = "3"
+
+[package.metadata.oap]
+spec = "174-codification-gate"

@@ -1,0 +1,34 @@
+# SPDX-License-Identifier: AGPL-3.0-or-later
+# Copyright (C) 2026 Bartek Kus
+
+[package]
+name = "featuregraph"
+publish = false   # internal workspace crate; binaries ship via release workflows, not crates.io
+version = "0.1.0"
+edition = "2024"
+
+[dependencies]
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+serde_yaml = "0.9"
+ignore = "0.4"
+regex = "1.10"
+sha2 = "0.10"
+hex = "0.4"
+thiserror = "2"
+anyhow = "1.0"
+xray = { path = "../xray" }
+# Spec 217 engine swap: read the committed spec registry + codebase index
+# through the published spec-spine library instead of the in-tree reader.
+# `default-features = false` drops the (default-on) `symbol-resolution` feature
+# and its tree-sitter native dep tree (spec-spine 027), which would otherwise
+# clash with xray's tree-sitter 0.26 via the `links = "tree-sitter"` rule. The
+# committed-shard readers we use need no symbol resolution.
+spec-spine-core = { version = "0.10.0", default-features = false }
+spec-spine-types = "0.10.0"
+
+[dev-dependencies]
+tempfile = "3.10"
+
+[package.metadata.oap]
+spec = "034-featuregraph-registry-scanner-fix"

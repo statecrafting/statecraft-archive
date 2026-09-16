@@ -1,0 +1,264 @@
+
+[pre-cleanup] {
+  "leftover_count": 0,
+  "ids": []
+}
+
+[(a) volume-create] {
+  "count": 10,
+  "times_ms": [
+    59,
+    3,
+    3,
+    2,
+    2,
+    2,
+    2,
+    3,
+    2,
+    2
+  ],
+  "min": 2,
+  "max": 59,
+  "mean": 8
+}
+
+[(b) delete-cleanly] {
+  "deleted": "spec-137-smoke-001",
+  "delete_status": 200,
+  "delete_ms": 3,
+  "post_delete_get_status": 404,
+  "post_delete_get_body": "{\"timestamp\":1778874302,\"error\":\"NotFound\",\"message\":\"no rows returned\"}"
+}
+
+[(c) flows-toggle-via-put] {
+  "target": "spec-137-smoke-002",
+  "before_flows": [
+    "authorization_code"
+  ],
+  "add_status": 200,
+  "after_add_flows": [
+    "authorization_code",
+    "password"
+  ],
+  "remove_status": 200,
+  "after_remove_flows": [
+    "authorization_code"
+  ],
+  "note": "Rauthy 0.35 has NO `password_login_enabled` field — password disable is `flows_enabled` minus 'password'. PUT is the update verb (no PATCH endpoint)."
+}
+
+[(d) provider-binding] {
+  "provider_count": 0,
+  "attempted": false,
+  "note": "No upstream providers configured in Rauthy at smoke time; binding shape inferred from client schema only."
+}
+
+[reference-schema] {
+  "note": "Full Rauthy 0.35 client record shape (read-back) — anchor for the implementation contract.",
+  "fields": [
+    "access_token_alg",
+    "access_token_lifetime",
+    "auth_code_lifetime",
+    "challenges",
+    "confidential",
+    "default_scopes",
+    "enabled",
+    "flows_enabled",
+    "force_mfa",
+    "id",
+    "id_token_alg",
+    "name",
+    "redirect_uris",
+    "scopes"
+  ],
+  "sample": {
+    "id": "statecraft-server",
+    "name": "StateCraft Server",
+    "enabled": true,
+    "confidential": true,
+    "redirect_uris": [
+      "https://statecraft.ing/auth/oidc/callback",
+      "https://statecraft.ing/auth/rauthy/callback"
+    ],
+    "flows_enabled": [
+      "authorization_code",
+      "refresh_token"
+    ],
+    "access_token_alg": "EdDSA",
+    "id_token_alg": "EdDSA",
+    "auth_code_lifetime": 60,
+    "access_token_lifetime": 1800,
+    "scopes": [
+      "email",
+      "openid",
+      "profile",
+      "groups",
+      "oap"
+    ],
+    "default_scopes": [
+      "openid"
+    ],
+    "challenges": [
+      "S256"
+    ],
+    "force_mfa": false
+  }
+}
+
+[final-cleanup] {
+  "count": 9
+}
+
+[post-cleanup-verify] {
+  "remaining_count": 0,
+  "remaining_ids": []
+}
+
+=== SUMMARY ===
+{
+  "(a)_volume_tolerated": "PASS",
+  "(b)_delete_clean": "PASS",
+  "(c)_flows_toggleable_via_put": "PASS",
+  "(d)_provider_binding": "N/A (no providers configured)",
+  "cleanup_clean": "PASS"
+}
+
+=== FULL EVIDENCE (json) ===
+{
+  "startedAt": "2026-05-15T19:45:02.208Z",
+  "steps": [
+    {
+      "name": "pre-cleanup",
+      "ts": "2026-05-15T19:45:02.493Z",
+      "leftover_count": 0,
+      "ids": []
+    },
+    {
+      "name": "(a) volume-create",
+      "ts": "2026-05-15T19:45:02.575Z",
+      "count": 10,
+      "times_ms": [
+        59,
+        3,
+        3,
+        2,
+        2,
+        2,
+        2,
+        3,
+        2,
+        2
+      ],
+      "min": 2,
+      "max": 59,
+      "mean": 8
+    },
+    {
+      "name": "(b) delete-cleanly",
+      "ts": "2026-05-15T19:45:02.579Z",
+      "deleted": "spec-137-smoke-001",
+      "delete_status": 200,
+      "delete_ms": 3,
+      "post_delete_get_status": 404,
+      "post_delete_get_body": "{\"timestamp\":1778874302,\"error\":\"NotFound\",\"message\":\"no rows returned\"}"
+    },
+    {
+      "name": "(c) flows-toggle-via-put",
+      "ts": "2026-05-15T19:45:02.659Z",
+      "target": "spec-137-smoke-002",
+      "before_flows": [
+        "authorization_code"
+      ],
+      "add_status": 200,
+      "after_add_flows": [
+        "authorization_code",
+        "password"
+      ],
+      "remove_status": 200,
+      "after_remove_flows": [
+        "authorization_code"
+      ],
+      "note": "Rauthy 0.35 has NO `password_login_enabled` field — password disable is `flows_enabled` minus 'password'. PUT is the update verb (no PATCH endpoint)."
+    },
+    {
+      "name": "(d) provider-binding",
+      "ts": "2026-05-15T19:45:02.660Z",
+      "provider_count": 0,
+      "attempted": false,
+      "note": "No upstream providers configured in Rauthy at smoke time; binding shape inferred from client schema only."
+    },
+    {
+      "name": "reference-schema",
+      "ts": "2026-05-15T19:45:02.661Z",
+      "note": "Full Rauthy 0.35 client record shape (read-back) — anchor for the implementation contract.",
+      "fields": [
+        "access_token_alg",
+        "access_token_lifetime",
+        "auth_code_lifetime",
+        "challenges",
+        "confidential",
+        "default_scopes",
+        "enabled",
+        "flows_enabled",
+        "force_mfa",
+        "id",
+        "id_token_alg",
+        "name",
+        "redirect_uris",
+        "scopes"
+      ],
+      "sample": {
+        "id": "statecraft-server",
+        "name": "StateCraft Server",
+        "enabled": true,
+        "confidential": true,
+        "redirect_uris": [
+          "https://statecraft.ing/auth/oidc/callback",
+          "https://statecraft.ing/auth/rauthy/callback"
+        ],
+        "flows_enabled": [
+          "authorization_code",
+          "refresh_token"
+        ],
+        "access_token_alg": "EdDSA",
+        "id_token_alg": "EdDSA",
+        "auth_code_lifetime": 60,
+        "access_token_lifetime": 1800,
+        "scopes": [
+          "email",
+          "openid",
+          "profile",
+          "groups",
+          "oap"
+        ],
+        "default_scopes": [
+          "openid"
+        ],
+        "challenges": [
+          "S256"
+        ],
+        "force_mfa": false
+      }
+    },
+    {
+      "name": "final-cleanup",
+      "ts": "2026-05-15T19:45:02.751Z",
+      "count": 9
+    },
+    {
+      "name": "post-cleanup-verify",
+      "ts": "2026-05-15T19:45:02.754Z",
+      "remaining_count": 0,
+      "remaining_ids": []
+    }
+  ],
+  "completedAt": "2026-05-15T19:45:02.754Z",
+  "summary": {
+    "(a)_volume_tolerated": "PASS",
+    "(b)_delete_clean": "PASS",
+    "(c)_flows_toggleable_via_put": "PASS",
+    "(d)_provider_binding": "N/A (no providers configured)",
+    "cleanup_clean": "PASS"
+  }
+}

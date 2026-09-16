@@ -1,0 +1,135 @@
+{
+  "mapping": {
+    "dependsOn": [
+      "102-governed-excellence",
+      "168-per-project-governance-certificate"
+    ],
+    "implementingPaths": [
+      {
+        "path": "clippy.toml",
+        "source": "spec-edge"
+      },
+      {
+        "path": "crates/factory-engine/src/bin/factory_run.rs",
+        "source": "spec-edge"
+      },
+      {
+        "path": "crates/factory-engine/src/bin/verify_certificate.rs",
+        "source": "spec-edge"
+      },
+      {
+        "path": "crates/factory-engine/src/governance_certificate.rs",
+        "source": "spec-edge"
+      },
+      {
+        "path": "crates/featuregraph/tests/golden/features_graph.json",
+        "source": "spec-edge"
+      },
+      {
+        "path": "deny.toml",
+        "source": "spec-edge"
+      },
+      {
+        "path": "docs/adr/0002-governance-certificate-vended-distributable.md",
+        "source": "spec-edge"
+      }
+    ],
+    "resolvedUnits": [
+      {
+        "locations": [
+          {
+            "file": "clippy.toml"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "file",
+          "path": "clippy.toml"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "crates/factory-engine/src/governance_certificate.rs"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "extends",
+        "unit": {
+          "kind": "file",
+          "path": "crates/factory-engine/src/governance_certificate.rs"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "crates/featuregraph/tests/golden/features_graph.json"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "extends",
+        "unit": {
+          "kind": "file",
+          "path": "crates/featuregraph/tests/golden/features_graph.json"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "deny.toml"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "extends",
+        "unit": {
+          "kind": "file",
+          "path": "deny.toml"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "crates/factory-engine/src/bin/factory_run.rs"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "refines",
+        "unit": {
+          "kind": "file",
+          "path": "crates/factory-engine/src/bin/factory_run.rs"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "crates/factory-engine/src/bin/verify_certificate.rs"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "refines",
+        "unit": {
+          "kind": "file",
+          "path": "crates/factory-engine/src/bin/verify_certificate.rs"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "docs/adr/0002-governance-certificate-vended-distributable.md"
+          }
+        ],
+        "ownership": false,
+        "sourceField": "references",
+        "unit": {
+          "kind": "file",
+          "path": "docs/adr/0002-governance-certificate-vended-distributable.md"
+        }
+      }
+    ],
+    "specId": "218-run-cert-corpus-binding",
+    "specStatus": "approved"
+  },
+  "schemaVersion": "1.1.0",
+  "shardHash": "e695c17d90004266ec809a686fedbe1b5c1b65ddf165b86da4b49375f6027206"
+}

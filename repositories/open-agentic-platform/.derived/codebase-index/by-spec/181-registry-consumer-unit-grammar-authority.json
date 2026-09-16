@@ -1,0 +1,104 @@
+{
+  "mapping": {
+    "amends": [
+      "034-featuregraph-registry-scanner-fix"
+    ],
+    "dependsOn": [
+      "002-registry-consumer-mvp",
+      "130-spec-coupling-primary-owner",
+      "152-path-co-authority",
+      "154-logical-unit-ownership-grammar",
+      "155-logical-unit-resolution-semantics",
+      "180-opc-shell-codification"
+    ],
+    "implementingPaths": [
+      {
+        "path": "specs/130-spec-coupling-primary-owner/spec.md",
+        "source": "spec-edge"
+      },
+      {
+        "path": "specs/152-path-co-authority/spec.md",
+        "source": "spec-edge"
+      },
+      {
+        "path": "specs/154-logical-unit-ownership-grammar/spec.md",
+        "source": "spec-edge"
+      },
+      {
+        "path": "specs/180-opc-shell-codification/spec.md",
+        "source": "spec-edge"
+      }
+    ],
+    "resolvedUnits": [
+      {
+        "locations": [
+          {
+            "file": "specs/130-spec-coupling-primary-owner/spec.md"
+          }
+        ],
+        "ownership": false,
+        "sourceField": "references",
+        "unit": {
+          "kind": "file",
+          "path": "specs/130-spec-coupling-primary-owner/spec.md"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "specs/130-spec-coupling-primary-owner/spec.md"
+          }
+        ],
+        "ownership": false,
+        "sourceField": "references",
+        "unit": {
+          "kind": "file",
+          "path": "specs/130-spec-coupling-primary-owner/spec.md"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "specs/152-path-co-authority/spec.md"
+          }
+        ],
+        "ownership": false,
+        "sourceField": "references",
+        "unit": {
+          "kind": "file",
+          "path": "specs/152-path-co-authority/spec.md"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "specs/154-logical-unit-ownership-grammar/spec.md"
+          }
+        ],
+        "ownership": false,
+        "sourceField": "references",
+        "unit": {
+          "kind": "file",
+          "path": "specs/154-logical-unit-ownership-grammar/spec.md"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "specs/180-opc-shell-codification/spec.md"
+          }
+        ],
+        "ownership": false,
+        "sourceField": "references",
+        "unit": {
+          "kind": "file",
+          "path": "specs/180-opc-shell-codification/spec.md"
+        }
+      }
+    ],
+    "specId": "181-registry-consumer-unit-grammar-authority",
+    "specStatus": "superseded"
+  },
+  "schemaVersion": "1.1.0",
+  "shardHash": "651c7c082a1bccbbfb588e5f186ec67222761ab848da0ea4de8fffa29554387b"
+}

@@ -1,0 +1,119 @@
+{
+  "record": {
+    "amends": [
+      "074-factory-ingestion"
+    ],
+    "codeAliases": [
+      "ASI05_SANDBOX",
+      "SANDBOX_EXECUTION_CONTRACT",
+      "FACTORY_CODEGEN_SANDBOX"
+    ],
+    "constrains": [
+      {
+        "flavor": "invariant-freeze",
+        "unit": {
+          "kind": "directory",
+          "path": "crates/factory-engine"
+        }
+      }
+    ],
+    "created": "2026-05-22",
+    "dependsOn": [
+      "075-factory-workflow-engine",
+      "102-governed-excellence",
+      "108-factory-as-platform-feature"
+    ],
+    "domain": "platform",
+    "establishes": [
+      {
+        "kind": "file",
+        "path": "crates/factory-contracts/src/sandbox.rs"
+      },
+      {
+        "kind": "directory",
+        "path": "crates/factory-engine/src/sandbox"
+      }
+    ],
+    "extraFrontmatter": {
+      "amended": "2026-05-23",
+      "compliance": [
+        {
+          "controls": [
+            "ASI05",
+            "ASI10"
+          ],
+          "framework": "owasp-asi-2026"
+        }
+      ],
+      "slug": "sandbox-execution-contract"
+    },
+    "id": "162-sandbox-execution-contract",
+    "implementation": "complete",
+    "kind": "platform",
+    "owner": "bart",
+    "references": [
+      {
+        "role": "decomposition-source",
+        "unit": {
+          "kind": "file",
+          "path": "docs/owasp/factory/AIDE-VELOCITY-OAP-INTENT.md"
+        }
+      },
+      {
+        "role": "doctrine-source",
+        "unit": {
+          "kind": "file",
+          "path": "docs/owasp/owasp_top_10_agentic_applications_summary.md"
+        }
+      },
+      {
+        "role": "producer-spec",
+        "unit": {
+          "kind": "file",
+          "path": "specs/075-factory-workflow-engine/spec.md"
+        }
+      },
+      {
+        "role": "governance-receipt",
+        "unit": {
+          "kind": "file",
+          "path": "specs/102-governed-excellence/spec.md"
+        }
+      },
+      {
+        "role": "existing-k8s-baseline",
+        "unit": {
+          "kind": "directory",
+          "path": "platform/k8s/policies/namespace-baseline"
+        }
+      }
+    ],
+    "risk": "high",
+    "sectionHeadings": [
+      "162 — Sandbox execution contract (ASI05)",
+      "1. Problem",
+      "Two surfaces, one threat model",
+      "What the gap actually is",
+      "2. Decision — the contract",
+      "2.1 Contract invariants (every backend MUST satisfy)",
+      "2.2 Isolation tiers",
+      "2.3 Trait surface",
+      "2.4 Default backend at contract landing",
+      "3. Functional Requirements",
+      "4. Success Criteria",
+      "5. Scope",
+      "In scope (this spec)",
+      "Deferred to companion specs",
+      "6. Compliance — load-bearing for ASI05 and ASI10",
+      "7. Cross-references",
+      "8. Reframe history (amendment record)",
+      "Security hardening amendment (2026-07-02)"
+    ],
+    "specPath": "specs/162-sandbox-execution-contract/spec.md",
+    "status": "approved",
+    "summary": "OAP's single largest open OWASP ASI 2026 compliance gap is the absence of a hardened execution boundary for code the factory-engine emits and then exercises (lint/test/build/run-once). ASI05's prescription is **ephemeral micro-sandbox isolation** — and the prescription is substrate-agnostic: \"hardened containers with rigid network policies and low time-to-live thresholds\" is one example, not the only shape.\nSpec 162 establishes the substrate as a **contract**, not a deployment-topology choice. The contract is enforced uniformly whether the execution happens inside a developer's OPC laptop run (local-container backend, e.g. rootless Podman) or inside a CI / control-plane K8s cluster (K8s backend, e.g. gVisor / Firecracker / strict-network-policy pod). Both backends are peers under one trait surface. The contract is what closes the ASI05 gap; backend choice is operational.\nThis spec is the contract. Two companion specs (filed as follow-up drafts) own the backends: a local-container backend using rootless Podman/Docker via OCI primitives, and a K8s backend using kube-rs + admission policies + RuntimeClass selection. Both backends emit the same `sandbox-execution` stage record into the governance certificate so the verifier sees *how* a given execution was isolated (isolation tier, opaque runtime descriptor), not just *that* it was.\nSpec 162 constrains spec 075 (factory-workflow-engine) with an invariant: no adapter-emitted code is exercised outside the sandbox contract. Existing K8s baseline policies under `platform/k8s/policies/namespace-baseline/` remain a precedent for the K8s backend, not a normative source for the contract.\n",
+    "title": "Sandbox execution contract — ephemeral isolation invariants for factory-engine adapter codegen (ASI05)"
+  },
+  "shardHash": "e4fca1f8c23726934eee02602f3774cd4a532b3b5d132f02ba644a340eeed850",
+  "specVersion": "1.1.0"
+}

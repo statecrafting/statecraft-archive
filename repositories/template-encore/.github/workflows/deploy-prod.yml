@@ -1,0 +1,21 @@
+name: Deploy to Production
+
+# Container deploy for the `production` environment. Thin caller of the reusable
+# workflow; secrets/vars resolve from the GitHub `production` environment.
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  actions: read
+  packages: write
+  id-token: write
+  security-events: write
+
+jobs:
+  deploy:
+    uses: ./.github/workflows/deploy-reusable.yml
+    with:
+      environment: production
+    secrets: inherit

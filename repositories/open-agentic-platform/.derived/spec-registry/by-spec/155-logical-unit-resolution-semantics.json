@@ -1,0 +1,77 @@
+{
+  "record": {
+    "amendmentRecord": "amended 2026-06-18 by spec 217 (engine-swap collapse): the in-tree spec-compiler that housed the V-024 unit-resolution predicate was deleted; that logic is now in spec-spine-core/types. The spec-compiler test edge is stripped (path deleted); the spec-types overlay edge (where the resolution rules live) survives.\n",
+    "amends": [
+      "154-logical-unit-ownership-grammar"
+    ],
+    "amendsSections": [
+      "symbol-kind",
+      "module-kind",
+      "directory-kind",
+      "file-kind"
+    ],
+    "codeAliases": [
+      "UNIT_RESOLUTION_SEMANTICS"
+    ],
+    "created": "2026-05-21",
+    "dependsOn": [
+      "154-logical-unit-ownership-grammar"
+    ],
+    "domain": "substrate",
+    "extends": [
+      {
+        "nature": "additive",
+        "spec": "001-spec-compiler-mvp",
+        "unit": {
+          "kind": "file",
+          "path": "tools/shared/spec-types/src/lib.rs"
+        }
+      }
+    ],
+    "extraFrontmatter": {
+      "amended": "2026-06-18",
+      "approved": "2026-05-21",
+      "closed": "2026-05-22",
+      "slug": "logical-unit-resolution-semantics"
+    },
+    "id": "155-logical-unit-resolution-semantics",
+    "implementation": "complete",
+    "kind": "governance",
+    "owner": "bart",
+    "references": [
+      {
+        "role": "motivating-case",
+        "unit": {
+          "kind": "file",
+          "path": "specs/154-logical-unit-ownership-grammar/segment-3-design.md"
+        }
+      }
+    ],
+    "risk": "low",
+    "sectionHeadings": [
+      "155 — Logical-unit resolution semantics",
+      "1. Problem",
+      "2. Amendment",
+      "2.1 §3.2 (`symbol:`) — generics",
+      "2.2 §3.3 (`module:`) — missing-module behavior",
+      "2.3 §3.5 (`directory:`) — missing-directory behavior",
+      "2.4 §3.6 (`file:`) — rename-trace timing clarification",
+      "3. Scope",
+      "In scope (this spec)",
+      "Out of scope (and intentionally so)",
+      "4. Consequences",
+      "For spec 154",
+      "For Segment 3 implementation",
+      "For invariant-freeze (spec 130 §2.7 / spec 153)",
+      "For V-024 in spec-compiler",
+      "5. Acceptance",
+      "6. Cross-references"
+    ],
+    "specPath": "specs/155-logical-unit-resolution-semantics/spec.md",
+    "status": "approved",
+    "summary": "Spec 154's Segment 3 design pass surfaced four sites where the unit grammar's prose left resolution behavior under-specified. §3.2 (`symbol:`) does not distinguish a Rust path (an item identifier) from a type expression (a path with generic parameters), letting two authors target the same symbol with different surface syntax — the conflation the Tier 2 sequence exists to eliminate. §3.3 (`module:`) and §3.5 (`directory:`) are silent on the missing-unit case, while §3.1 (`crate:`), §3.2 (`symbol:`), and §3.4 (`section:`) explicitly state hard error; silence on three of six kinds produces incoherent asymmetry. §3.6 (`file:`)'s rename-trace exception is correct at gate time but ambiguous at compile time where no diff is available. This spec amends 154 §§3.2, 3.3, 3.5, and 3.6 with precise language. The amendments are strictly clarifying — every existing unit declaration valid under 154's prior reading remains valid — and unblock Segment 3 implementation by closing the silences before code lands.\n",
+    "title": "Logical-unit resolution semantics — precision fixes surfaced by Segment 3 design"
+  },
+  "shardHash": "7ab258668bcfac1b67d32c4aba1c3165b76df01fa213a9558e57ea5844bbd518",
+  "specVersion": "1.1.0"
+}

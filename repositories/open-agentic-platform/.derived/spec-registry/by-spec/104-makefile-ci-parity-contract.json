@@ -1,0 +1,97 @@
+{
+  "record": {
+    "amendmentRecord": "amended 2026-06-11 (self-amendment, riding the spec-198 FR-012\nadapter-scopes derivation cutover) — the PRODUCERS rule for\n`adapter-scopes-compiler` repoints its artifact from the retired\n`build/adapter-scopes.json` to the real committed snapshot at\n`platform/services/statecraft/api/factory/adapter-scopes.json`. The\ntool no longer writes a `build/` copy; the rule table stays truthful.\nNo workflow or Makefile recipe invokes the pattern today, so no\nparity verdict changes.\n\namended by the spec-177 ci-gate fold (2026-05-31) — `ai-pr-review.yml` is\nno longer \"not enforcing.\" It is folded into the orchestrated gate\n(made reusable, dispatched from `ci.yml`, required via `ci-gate.needs`), so\na failed or absent AI review now blocks merge. It nonetheless stays\n**parity-exempt**: an AI review calls a hosted model and cannot be\nreproduced by `make ci-strict`, so it is the FIRST gate without a local\nmirror — a deliberate carve-out. The parity TOOL needs no change: it\niterates `ENFORCING_WORKFLOWS` (which `ai-pr-review.yml` is correctly NOT\nin) and never reads `ci-gate.needs`, so a gate-without-mirror is invisible\nto it by construction. The §\"Explicitly not enforcing\" list and the\n\"AI-assist workflow is not enforcing\" line are corrected below to record\nthe new gate-but-exempt status honestly.\n\namended by spec 135 (135-fast-ci-as-default, 2026-05-03).\n\namended by spec 182 (2026-05-30) — the `process` section this spec\nco-authors moved verbatim to `.claude/skills/validate-and-fix/SKILL.md`\nin the spec-182 deprecation PR (legacy `.claude/commands/validate-and-fix.md`\ndeleted); the `co_authority` section unit and the SC-05 body references\nare repointed accordingly. No contract change.\n",
+    "coAuthority": [
+      {
+        "unit": {
+          "anchor": "ci-parity",
+          "file": "Makefile",
+          "kind": "section"
+        },
+        "with_specs": [
+          "102-governed-excellence",
+          "127-spec-code-coupling-gate",
+          "116-supply-chain-policy-gates",
+          "128-spec-lint-default-fail-on-warn",
+          "134-fast-local-ci-mode",
+          "135-fast-ci-as-default"
+        ]
+      },
+      {
+        "unit": {
+          "anchor": "process",
+          "file": ".claude/skills/validate-and-fix/SKILL.md",
+          "kind": "section"
+        },
+        "with_specs": [
+          "000-bootstrap-spec-system"
+        ]
+      }
+    ],
+    "codeAliases": [
+      "CI_PARITY_CONTRACT"
+    ],
+    "created": "2026-04-16",
+    "dependsOn": [
+      "000-bootstrap-spec-system",
+      "006-conformance-lint-mvp"
+    ],
+    "domain": "tooling",
+    "establishes": [
+      {
+        "kind": "file",
+        "path": "tools/oap/ci-parity-check/src/lib.rs"
+      },
+      {
+        "kind": "file",
+        "path": "tools/oap/ci-parity-check/src/main.rs"
+      },
+      {
+        "kind": "file",
+        "path": ".github/workflows/ci-parity.yml"
+      }
+    ],
+    "extraFrontmatter": {
+      "amended": "2026-06-11"
+    },
+    "id": "104-makefile-ci-parity-contract",
+    "implementation": "complete",
+    "kind": "governance",
+    "owner": "bart",
+    "risk": "low",
+    "sectionHeadings": [
+      "104 — Makefile as CI Parity Contract",
+      "1. Problem Statement",
+      "2. Solution",
+      "2.1 Principle — CI Parity Is Contractual",
+      "2.2 The CI-Enforcing Workflow Set",
+      "2.3 Drift-Check Tool",
+      "2.4 Enforcement Surface",
+      "2.5 Scope — What Changes, What Does Not",
+      "3. Functional Requirements",
+      "FR-01: Parity Contract Documented in Spec",
+      "FR-02: `tools/oap/ci-parity-check` Binary",
+      "FR-03: `make ci-parity` Target",
+      "FR-04: CI Parity Workflow",
+      "FR-04.1: Precondition Check (Fresh-Clone Execution Parity)",
+      "FR-05: Recognised Exclusions",
+      "FR-06: Explicit Allow List for CI-Only Steps",
+      "4. Success Criteria",
+      "SC-01: Drift Is Caught In CI",
+      "SC-02: The Tool Is Stable Against Cosmetic Changes",
+      "SC-03: `make ci-parity` Runs In Under 10 Seconds On A Warm Build",
+      "SC-04: The Allow List Is Explicit And Rare",
+      "SC-05: `/validate-and-fix` References The Contract",
+      "5. Out of Scope (MVP)",
+      "6. Clarifications",
+      "7. Cross-references",
+      "Amendments received"
+    ],
+    "specPath": "specs/104-makefile-ci-parity-contract/spec.md",
+    "status": "approved",
+    "summary": "Promote the root Makefile to the authoritative single source of truth for local validation parity with every CI-enforcing GitHub Actions workflow. Introduce a drift-check binary (tools/oap/ci-parity-check) and a CI job that fails on drift between workflow `run:` blocks and Makefile recipes.\n",
+    "title": "Makefile as CI Parity Contract — Drift-Checked Local Mirror of GitHub Actions"
+  },
+  "shardHash": "ed0f3a51835e0b410620af3750039c0cdbaf38a2966365e17c6ceb1cab2f8614",
+  "specVersion": "1.1.0"
+}

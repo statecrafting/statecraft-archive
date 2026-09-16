@@ -1,0 +1,12 @@
+{
+  "package": {
+    "edition": "2021",
+    "kind": "rust-lib",
+    "name": "hiqlite-native",
+    "path": "addon/hiqlite-native",
+    "specRef": "003-hiqlite-native",
+    "version": "0.2.0"
+  },
+  "schemaVersion": "1.1.0",
+  "shardHash": "0b285eff3bb8b8c233bc951843d7e1c5e7a23463a9622a1c2a9fc72eaf671e91"
+}

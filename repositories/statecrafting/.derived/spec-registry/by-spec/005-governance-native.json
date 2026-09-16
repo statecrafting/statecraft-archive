@@ -1,0 +1,37 @@
+{
+  "record": {
+    "created": "2026-07-20",
+    "dependsOn": [
+      "000-bootstrap",
+      "001-packages-thesis"
+    ],
+    "establishes": [
+      {
+        "kind": "directory",
+        "path": "addon/governance-native/"
+      }
+    ],
+    "id": "005-governance-native",
+    "implementation": "complete",
+    "sectionHeadings": [
+      "005: The governance spine as a napi-rs native addon",
+      "1. Purpose",
+      "2. Territory",
+      "2.1 The gate config comes with the crate",
+      "3. Behavior",
+      "3.1 License: AGPL-3.0, and why the shield holds",
+      "3.2 The napi surface",
+      "3.3 The license tier is enforced, not asserted",
+      "3.4 Publishing",
+      "4. Ownership: an edge transfer",
+      "5. Acceptance",
+      "6. Out of scope"
+    ],
+    "specPath": "specs/005-governance-native/spec.md",
+    "status": "approved",
+    "summary": "The fourth package: `@statecrafting/governance-native`, the control plane's governance spine. Canonical JSON, the attest-ledger record chain with Ed25519 anchors, the deterministic action gate over an ordered check registry, and the rolling-window trust scorer, behind a JSON-in / JSON-out napi surface. It arrives by edge transfer from statecraft `addon/governance-native/`, unchanged in behavior and unchanged in license: AGPL-3.0, because no stamped customer app loads it. statecraft spec 008 keeps `backend/governance/` and its whole service design; only this one path moves.\n",
+    "title": "The governance spine as a napi-rs native addon"
+  },
+  "shardHash": "a3f9fde00664ba34fb604c0f090d21e034673b8e395d667841d37d27c2b58810",
+  "specVersion": "1.2.0"
+}

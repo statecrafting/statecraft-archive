@@ -1,0 +1,14 @@
+# SOPS creation rules (spec 010).
+#
+# Cluster secrets under the statecraft-hetzner secrets tier are encrypted to
+# the statecraft age recipient below. Only `data`/`stringData` bodies are
+# encrypted, so the surrounding Secret metadata stays diff-readable in git.
+# The matching private key lives outside the repo at
+# ~/.config/statecrafting/infra/hetzner/age.agekey and is bootstrapped once
+# into flux-system as the `sops-age` Secret; it is never committed. The public
+# recipient is committed (here and in infra/secrets/age-recipient.txt) so any
+# operator can encrypt.
+creation_rules:
+  - path_regex: infra/gitops/clusters/statecraft-hetzner/secrets/.*\.sops\.ya?ml$
+    encrypted_regex: ^(data|stringData)$
+    age: age1pvcta0tp0sneq522ktpht0l6ukmhy2avh4p5kf290teadx5afs3q5uumur

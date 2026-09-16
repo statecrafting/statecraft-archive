@@ -1,0 +1,38 @@
+# Spec 151 Finding F8 follow-up — Flux Kustomization for the infrastructure tier.
+#
+# Decouples HelmRelease application (cert-manager, ingress-nginx, reflector,
+# rauthy) from Certificate / ClusterIssuer application. The downstream
+# `manifests` Flux Kustomization depends on THIS one being Ready before its
+# Certificate dry-run runs; that ordering is what F8 needed to fix.
+#
+# `healthChecks` selects only the cert-manager HelmRelease as the gating
+# health check (NOT `wait: true`, which would block on ALL applied resources).
+# Two reasons for the selective check:
+#   1. Bare cluster (DR Stage 2): rauthy depends on the `rauthy-secrets`
+#      Secret which doesn't exist on a bare cluster until spec 153 lands;
+#      `wait: true` would block infrastructure forever on rauthy failing.
+#   2. Production: only cert-manager has downstream CRD consumers in the
+#      `manifests/` tier; the others don't gate anything in the gitops tree.
+#
+# Result: as soon as cert-manager HelmRelease reports Ready, this Kustomization
+# reports Ready, the dependsOn on `manifests` fires, and Certificate /
+# ClusterIssuer dry-run succeeds because cert-manager.io/v1 CRDs are present.
+apiVersion: kustomize.toolkit.fluxcd.io/v1
+kind: Kustomization
+metadata:
+  name: infrastructure
+  namespace: flux-system
+spec:
+  interval: 10m
+  retryInterval: 1m
+  timeout: 10m
+  path: ./platform/gitops/clusters/hetzner-prod/infrastructure
+  prune: true
+  sourceRef:
+    kind: GitRepository
+    name: flux-system
+  healthChecks:
+    - apiVersion: helm.toolkit.fluxcd.io/v2
+      kind: HelmRelease
+      name: cert-manager
+      namespace: cert-manager

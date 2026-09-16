@@ -1,0 +1,74 @@
+{
+  "record": {
+    "codeAliases": [
+      "ENVELOPE_VERSION_PARITY"
+    ],
+    "created": "2026-05-29",
+    "dependsOn": [
+      "087-unified-workspace-architecture",
+      "119-project-as-unit-of-governance",
+      "120-factory-extraction-stage",
+      "125-schema-parity-walker-rebuild",
+      "183-opc-boot-precondition-gate"
+    ],
+    "domain": "tooling",
+    "establishes": [
+      {
+        "kind": "file",
+        "path": "tools/oap/schema-parity-check/envelope-version.mjs"
+      },
+      {
+        "kind": "file",
+        "path": "tools/oap/schema-parity-check/envelope-version.test.mjs"
+      }
+    ],
+    "extends": [
+      {
+        "nature": "additive",
+        "spec": "120-factory-extraction-stage",
+        "unit": {
+          "kind": "file",
+          "path": "tools/oap/schema-parity-check/index.mjs"
+        }
+      },
+      {
+        "nature": "additive",
+        "spec": "034-featuregraph-registry-scanner-fix",
+        "unit": {
+          "kind": "file",
+          "path": "crates/featuregraph/tests/golden/features_graph.json"
+        }
+      }
+    ],
+    "extraFrontmatter": {
+      "approved": "2026-05-29",
+      "slug": "duplex-envelope-version-parity"
+    },
+    "id": "189-duplex-envelope-version-parity",
+    "implementation": "complete",
+    "kind": "governance",
+    "owner": "bart",
+    "risk": "low",
+    "sectionHeadings": [
+      "189 — Duplex envelope schema-version parity",
+      "1. Problem statement",
+      "Why this slipped through",
+      "2. Decision",
+      "3. Implementation",
+      "3.0 Precondition — repair the walker's path resolution",
+      "3.1 Scalar-parity module",
+      "3.2 Walker wiring",
+      "3.3 Unit test",
+      "3.4 Subjects (read, not governed)",
+      "4. Acceptance",
+      "5. Non-goals (binding)",
+      "6. Cross-references"
+    ],
+    "specPath": "specs/189-duplex-envelope-version-parity/spec.md",
+    "status": "approved",
+    "summary": "Adds a scalar-constant parity check to the schema-parity walker (spec 125) that fails CI when the desktop's `ENVELOPE_SCHEMA_VERSION` (`product/apps/opc/src-tauri/src/commands/sync_client.rs`) does not equal the statecraft server's (`platform/services/statecraft/api/sync/types.ts`). The protocol-wide duplex envelope version is the one number both ends of the WebSocket must agree on, yet — unlike the per-kind mirror constants, which are kept honest by Rust↔TS fingerprint comparison — it had no automated parity check. It drifted silently when spec 119 moved the wire to v2 while the desktop constant stayed at 1, and stayed invisible until spec 183's boot gate turned the dropped `sync.hello` into a hard block. This spec closes the gap with the cheapest possible mechanism: a source-read scalar comparison inside the existing walker, with no new build step and no runtime import. Implementing it surfaced that the walker itself had been silently non-functional since the spec-spine crate split (#176) and the `build/`→`.derived/` migration left two stale path assumptions in `index.mjs`; this spec repairs those as a precondition (§3.0), restoring the whole gate — which is itself the reason the drift went uncaught.\n",
+    "title": "Duplex envelope schema-version parity — a cross-language tripwire for ENVELOPE_SCHEMA_VERSION"
+  },
+  "shardHash": "7b2de3b093633cc45cfb87c71f01f57c43a8152e7e4414e7a6da858f4b08a91b",
+  "specVersion": "1.1.0"
+}

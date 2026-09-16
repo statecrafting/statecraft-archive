@@ -1,0 +1,248 @@
+{
+  "$comment": "Patch to specs/000-bootstrap-spec-system/contracts/registry.schema.json bumping to 1.5.0. Apply by merging the additions below into the existing schema. Existing fields are unchanged.",
+  "$id": "https://open-agentic-platform/schemas/registry/1.5.0",
+  "schemaVersion": "1.5.0",
+  "definitions_added": {
+    "ImplementsItem": {
+      "type": "object",
+      "required": ["path"],
+      "properties": {
+        "path": { "type": "string", "minLength": 1 },
+        "primary": { "type": "boolean", "default": false }
+      },
+      "additionalProperties": false
+    },
+    "RetirementRationale": {
+      "type": "object",
+      "required": ["reason", "summary"],
+      "properties": {
+        "reason": {
+          "type": "string",
+          "enum": ["obsolete", "replaced", "withdrawn", "merged", "archived"]
+        },
+        "summary": {
+          "type": "string",
+          "minLength": 10,
+          "maxLength": 500
+        },
+        "references": {
+          "type": "array",
+          "items": { "type": "string" }
+        }
+      },
+      "additionalProperties": false
+    },
+    "Identity": {
+      "type": "object",
+      "required": ["name", "jurisdiction", "citizen_term"],
+      "properties": {
+        "name": { "type": "string", "minLength": 1 },
+        "jurisdiction": { "type": "string", "minLength": 1 },
+        "citizen_term": { "type": "string", "minLength": 1 },
+        "contacts": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["role", "email"],
+            "properties": {
+              "role": { "type": "string" },
+              "email": { "type": "string", "format": "email" }
+            },
+            "additionalProperties": false
+          }
+        },
+        "urls": {
+          "type": "object",
+          "properties": {
+            "public": { "type": "string", "format": "uri" },
+            "internal": { "type": "string", "format": "uri" }
+          },
+          "additionalProperties": false
+        }
+      },
+      "additionalProperties": false
+    },
+    "EnvVarDecl": {
+      "type": "object",
+      "required": ["key", "required", "description"],
+      "properties": {
+        "key": { "type": "string", "pattern": "^[A-Z][A-Z0-9_]*$" },
+        "required": { "type": "boolean" },
+        "default": { "type": "string" },
+        "description": { "type": "string" },
+        "sensitive": { "type": "boolean", "default": false }
+      },
+      "additionalProperties": false
+    },
+    "Registration": {
+      "type": "object",
+      "required": ["kind"],
+      "properties": {
+        "kind": {
+          "type": "string",
+          "enum": ["api", "auth-driver", "side-effect", "auth-export", "web-snippet"]
+        }
+      },
+      "additionalProperties": true
+    },
+    "Provides": {
+      "type": "object",
+      "properties": {
+        "registrations": {
+          "type": "array",
+          "items": { "$ref": "#/definitions/Registration" }
+        },
+        "files": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "env_vars": {
+          "type": "array",
+          "items": { "$ref": "#/definitions/EnvVarDecl" }
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+  "featureRecord_properties_added": {
+    "kind": {
+      "type": "string",
+      "enum": [
+        "platform",
+        "platform-delivery",
+        "governance",
+        "product",
+        "amendment",
+        "tooling",
+        "desktop",
+        "process",
+        "ui",
+        "architecture",
+        "constitutional-bootstrap",
+        "migration",
+        "product-consolidation",
+        "capability",
+        "registry",
+        "profile"
+      ],
+      "$comment": "Promoted from free-form string. V-012 enforces enum membership."
+    },
+    "shape": {
+      "type": "string",
+      "$comment": "Optional kind-refinement. Validated against (kind, shape) table; W-131 informational on unknown pair."
+    },
+    "category": {
+      "type": "array",
+      "items": { "type": "string" },
+      "$comment": "Optional cross-cutting tags. W-130 warns on unconventional values."
+    },
+    "supersedes": {
+      "type": "array",
+      "items": { "type": "string" },
+      "$comment": "Spec ids this spec replaces. Resolution checked similarly to depends_on."
+    },
+    "superseded_by": {
+      "type": "string",
+      "$comment": "Successor spec id. V-019 requires presence when status=superseded."
+    },
+    "retirement_rationale": {
+      "$ref": "#/definitions/RetirementRationale",
+      "$comment": "V-018 requires presence when status=retired."
+    },
+    "implements": {
+      "oneOf": [
+        {
+          "type": "string",
+          "$comment": "Scalar form — valid only when kind=capability. References a registry spec id."
+        },
+        {
+          "type": "array",
+          "items": { "$ref": "#/definitions/ImplementsItem" },
+          "$comment": "List form — code-path claims. Primary flag optional per item."
+        }
+      ],
+      "$comment": "Promoted from silently-consumed to registry-serialized. V-014 enforces shape; V-015 enforces registry resolution."
+    },
+    "provides": {
+      "$ref": "#/definitions/Provides",
+      "$comment": "Required when kind=capability per V-013."
+    },
+    "selectable_by": {
+      "type": "string",
+      "pattern": "^[A-Z][A-Z0-9_]*$",
+      "$comment": "Env var name. Optional. SHOULD be set when capability is one of multiple implementations of a single registry. V-015 verifies equality with the target registry's selector when present."
+    },
+    "composition": {
+      "type": "object",
+      "properties": {
+        "requires": {
+          "type": "array",
+          "items": { "type": "string" },
+          "$comment": "Hard capability/spec dependencies. Required when kind=capability or kind=profile per V-013."
+        },
+        "soft_requires": {
+          "type": "array",
+          "items": { "type": "string" },
+          "$comment": "Capabilities whose env vars are read as fallback but not strictly required."
+        },
+        "conflicts": {
+          "type": "array",
+          "items": { "type": "string" },
+          "$comment": "Mutual-exclusion declarations between capabilities."
+        }
+      },
+      "additionalProperties": false,
+      "$comment": "Composition-graph namespace for capability/profile specs. selects: stays top-level — see Identity."
+    },
+    "selector": {
+      "type": "string",
+      "pattern": "^[A-Z][A-Z0-9_]*$",
+      "$comment": "Required when kind=registry per V-013. The env var consumers use to pick an implementation."
+    },
+    "member_contract": {
+      "type": "string",
+      "$comment": "Required when kind=registry per V-013. Spec id or trait name members must satisfy."
+    },
+    "default": {
+      "type": "string",
+      "$comment": "Optional default for registry selector when no value is provided."
+    },
+    "production_forbidden": {
+      "type": "array",
+      "items": { "type": "string" },
+      "$comment": "Selector values forbidden in production environments."
+    },
+    "identity": {
+      "$ref": "#/definitions/Identity",
+      "$comment": "Required when kind=profile per V-013."
+    },
+    "selects": {
+      "type": "object",
+      "additionalProperties": { "type": "string" },
+      "$comment": "Required when kind=profile per V-013. Map of registry-spec-id -> capability-spec-id. V-017 enforces validity."
+    },
+    "policy": {
+      "type": "object",
+      "additionalProperties": true,
+      "$comment": "Optional structured policy values. Schema validated by policy-kernel at runtime, not at compile time. NOTE: top-level `requires`, `soft_requires`, and `conflicts` are NOT introduced. Capability and profile dependency-graph fields live under the composition.* namespace declared above."
+    }
+  },
+  "validation_codes_added": {
+    "V-012": "kind-enum-membership",
+    "V-013": "per-kind-required-fields (capability requires implements + provides + composition.requires; capability with shape: web-snippet requires at least one provides.registrations[].kind: web-snippet; registry requires selector + member_contract; profile requires identity + selects + composition.requires)",
+    "V-014": "implements-shape-consistency",
+    "V-015": "capability-implements-resolves-to-registry (and selectable_by equality with target registry's selector when present)",
+    "V-016": "primary-flag-uniqueness-corpus-wide (for any given path, at most one spec across the corpus declares primary: true)",
+    "V-017": "profile-selects-target-validity",
+    "V-018": "retirement-rationale-presence",
+    "V-019": "supersession-back-link-presence",
+    "V-020_through_V-024": "RESERVED per spec 132 convention (five slots; allocate forward to V-030+ if exhausted)"
+  },
+  "warning_codes_added": {
+    "W-130": "category-value-unconventional",
+    "W-131": "shape-value-not-in-table",
+    "W-132": "capability-selectable-but-unreferenced",
+    "W-002_rewired": "superseded-without-superseded_by (frontmatter check, no longer prose scan)",
+    "W-003_rewired": "retired-without-retirement_rationale (frontmatter check, no longer prose scan)"
+  }
+}

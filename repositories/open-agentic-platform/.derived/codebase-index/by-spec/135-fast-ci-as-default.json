@@ -1,0 +1,127 @@
+{
+  "mapping": {
+    "amends": [
+      "104-makefile-ci-parity-contract"
+    ],
+    "dependsOn": [
+      "104-makefile-ci-parity-contract",
+      "134-fast-local-ci-mode",
+      "130-spec-coupling-primary-owner"
+    ],
+    "implementingPaths": [
+      {
+        "path": ".claude/skills/validate-and-fix/SKILL.md",
+        "source": "spec-edge"
+      },
+      {
+        "path": ".github/actions/free-disk-space/action.yml",
+        "source": "spec-edge"
+      },
+      {
+        "path": ".github/workflows/ci-crates.yml",
+        "source": "spec-edge"
+      },
+      {
+        "path": "Makefile",
+        "source": "spec-edge"
+      },
+      {
+        "path": "specs/104-makefile-ci-parity-contract/spec.md",
+        "source": "spec-edge"
+      },
+      {
+        "path": "tools/oap/ci-parity-check/src/lib.rs",
+        "source": "spec-edge"
+      }
+    ],
+    "resolvedUnits": [
+      {
+        "locations": [
+          {
+            "file": ".github/actions/free-disk-space/action.yml"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "file",
+          "path": ".github/actions/free-disk-space/action.yml"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": ".claude/skills/validate-and-fix/SKILL.md"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "extends",
+        "unit": {
+          "kind": "file",
+          "path": ".claude/skills/validate-and-fix/SKILL.md"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": ".github/workflows/ci-crates.yml"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "extends",
+        "unit": {
+          "kind": "file",
+          "path": ".github/workflows/ci-crates.yml"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "specs/104-makefile-ci-parity-contract/spec.md"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "extends",
+        "unit": {
+          "kind": "file",
+          "path": "specs/104-makefile-ci-parity-contract/spec.md"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "tools/oap/ci-parity-check/src/lib.rs"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "extends",
+        "unit": {
+          "kind": "file",
+          "path": "tools/oap/ci-parity-check/src/lib.rs"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "Makefile",
+            "span": {
+              "endLine": 792,
+              "startLine": 782
+            }
+          }
+        ],
+        "ownership": true,
+        "sourceField": "co_authority",
+        "unit": {
+          "anchor": "ci-default-rename",
+          "file": "Makefile",
+          "kind": "section"
+        }
+      }
+    ],
+    "specId": "135-fast-ci-as-default",
+    "specStatus": "approved"
+  },
+  "schemaVersion": "1.1.0",
+  "shardHash": "90e73f6b7afb58ce61e5c713845b9c87dc34435c051a1198a6454d19eed43c04"
+}

@@ -1,0 +1,79 @@
+{
+  "record": {
+    "codeAliases": [
+      "CHECKPOINT_BRANCHING"
+    ],
+    "created": "2026-04-11",
+    "dependsOn": [
+      "092-workspace-runtime-threading",
+      "094-unified-artifact-store"
+    ],
+    "domain": "opc",
+    "extends": [
+      {
+        "nature": "additive",
+        "spec": "041-checkpoint-restore-ui",
+        "unit": {
+          "kind": "file",
+          "path": "crates/axiomregent/src/checkpoint/provider.rs"
+        }
+      },
+      {
+        "nature": "additive",
+        "spec": "041-checkpoint-restore-ui",
+        "unit": {
+          "kind": "file",
+          "path": "crates/axiomregent/src/checkpoint/types.rs"
+        }
+      },
+      {
+        "nature": "additive",
+        "spec": "041-checkpoint-restore-ui",
+        "unit": {
+          "kind": "file",
+          "path": "crates/axiomregent/src/checkpoint/store.rs"
+        }
+      },
+      {
+        "nature": "additive",
+        "spec": "052-state-persistence",
+        "unit": {
+          "kind": "file",
+          "path": "crates/orchestrator/src/gates.rs"
+        }
+      },
+      {
+        "nature": "additive",
+        "spec": "052-state-persistence",
+        "unit": {
+          "kind": "file",
+          "path": "crates/orchestrator/src/manifest.rs"
+        }
+      }
+    ],
+    "id": "095-checkpoint-branch-of-thought",
+    "implementation": "complete",
+    "kind": "platform",
+    "owner": "bart",
+    "risk": "high",
+    "sectionHeadings": [
+      "095 — Checkpoint Branch-of-Thought",
+      "Problem",
+      "Solution",
+      "Implementation Slices",
+      "Slice 1: Populate head_sha on checkpoint create",
+      "Slice 2: Populate fingerprint on checkpoint create",
+      "Slice 3: Add branch_name and run_id scoping",
+      "Slice 4: Add checkpoint.compare MCP tool",
+      "Slice 5: Bind approvals to checkpoint IDs",
+      "Slice 6: Desktop checkpoint timeline with branch visualization",
+      "Acceptance Criteria"
+    ],
+    "specPath": "specs/095-checkpoint-branch-of-thought/spec.md",
+    "status": "approved",
+    "summary": "Elevate checkpoints from safety snapshots to a navigable branch-of-thought DAG. Populate git HEAD SHA and repo fingerprint on create, add branch_name/run_id scoping, introduce checkpoint.compare MCP tool, bind gate approvals to checkpoint IDs, and provide desktop branch visualization.\n",
+    "title": "Checkpoint Branch-of-Thought"
+  },
+  "shardHash": "39129ca580fb1344f4f23ed53354c1c99436124cf93f310a4f78a25d4f63320d",
+  "specVersion": "1.1.0"
+}

@@ -1,0 +1,120 @@
+# Encore.ts CI: validates the API + Vue apps. Dispatched from ci.yml's
+# `encore` route as a reusable workflow (workflow_call), so it runs only on
+# PRs that touch the app surface (apps/**, packages/**, the encore-* actions,
+# or this file) and folds into the required `ci-gate` aggregator. Spec 007
+# takes co_authority on ci.yml's jobs.changes + jobs.ci-gate to wire this in,
+# which also retires the prior pull_request + non-main push double-trigger.
+#
+# Three jobs:
+#   web: Vue 3 apps (public + internal) + shared packages: install, build
+#        packages, type-check both SPAs, build the public SPA bundle.
+#   api: Encore.ts app: install the CLI, npm ci (standalone, not a
+#        workspace), and `encore check` (parse + service topology +
+#        type-check + boot + migrations against an ephemeral Postgres).
+#   client-staleness: regenerate the typed client and fail on structural
+#        drift from the committed apps/web/src/lib/encore-client.ts.
+#
+# (The legacy Express app was removed at the PR 5c cutover.)
+
+name: Encore CI
+
+on:
+  workflow_call:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  web:
+    name: Web (Vue 3) + packages
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+      - uses: actions/setup-node@48b55a011bda9f5d6aeb4c2d9c7362e8dae4041e # v6.4.0
+        with:
+          node-version: "24"
+          cache: npm
+      - name: Install dependencies
+        run: npm ci
+      - name: Build shared packages
+        run: npm run build:packages
+      - name: Type-check public SPA
+        run: npm run typecheck:web
+      - name: Type-check internal SPA
+        run: npm run typecheck:web-internal
+      - name: Build public SPA (into apps/api/web/build)
+        run: npm run build:web
+      # Optional gates — enable once the suites are populated:
+      # - run: npm run lint
+      # - run: npm run test:unit
+
+  api:
+    name: API (Encore.ts)
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./apps/api
+    steps:
+      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+      - uses: actions/setup-node@48b55a011bda9f5d6aeb4c2d9c7362e8dae4041e # v6.4.0
+        with:
+          node-version: "24"
+          cache: npm
+          cache-dependency-path: apps/api/package-lock.json
+      - name: Install Encore CLI
+        uses: ./.github/actions/encore-install
+      - name: Install dependencies
+        run: npm ci
+      - name: encore check (parse, topology, type-check, boot, migrate)
+        run: /home/runner/.encore/bin/encore check
+      - name: Put Encore CLI on PATH
+        run: echo "/home/runner/.encore/bin" >> "$GITHUB_PATH"
+      - name: Integration tests (encore test against ephemeral Postgres)
+        run: npm run test:integration
+
+  client-staleness:
+    name: Typed client up-to-date
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+      - uses: actions/setup-node@48b55a011bda9f5d6aeb4c2d9c7362e8dae4041e # v6.4.0
+        with:
+          node-version: "24"
+          cache: npm
+          cache-dependency-path: apps/api/package-lock.json
+      - name: Install Encore CLI
+        uses: ./.github/actions/encore-install
+      - name: Put Encore CLI on PATH
+        run: echo "/home/runner/.encore/bin" >> "$GITHUB_PATH"
+      - name: Install API dependencies
+        working-directory: ./apps/api
+        run: npm ci
+      - name: Regenerate the typed client
+        run: npm --prefix apps/api run gen:client
+      - name: Fail if the committed client is stale
+        shell: bash
+        # The generated client embeds a per-generation-random app-id prefix
+        # (in the Environment() URL, the Client doc comment, and the
+        # User-Agent) plus the CLI version. Those vary by environment and
+        # would make a naive diff non-deterministic, so normalize both the
+        # committed and freshly-generated client (replace the file's own
+        # app-id prefix and the CLI version with placeholders) before
+        # diffing. Only structural drift (new/changed endpoints or types)
+        # fails the gate.
+        run: |
+          CLIENT=apps/web/src/lib/encore-client.ts
+          norm() {
+            local f="$1" pre
+            pre=$(sed -nE 's/.*"([a-z0-9]{4,8})-Generated-TS-Client.*/\1/p' "$f" | head -1)
+            sed -E "s/${pre}/APPID/g; s#Encore[ /]v[0-9.]+#Encore vX#g" "$f"
+          }
+          git show "HEAD:$CLIENT" > /tmp/committed-client.ts
+          norm /tmp/committed-client.ts > /tmp/committed-norm.ts
+          norm "$CLIENT"               > /tmp/fresh-norm.ts
+          if ! diff -u /tmp/committed-norm.ts /tmp/fresh-norm.ts > /tmp/client.diff; then
+            echo "::error::$CLIENT is stale (structural drift). Run 'npm --prefix apps/api run gen:client' and commit."
+            cat /tmp/client.diff
+            exit 1
+          fi
+          echo "Typed client is up to date (ignoring app-id prefix + CLI version)."

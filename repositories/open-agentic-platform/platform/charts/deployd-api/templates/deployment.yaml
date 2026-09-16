@@ -1,0 +1,185 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: deployd-api
+spec:
+  replicas: 1
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      app: deployd-api
+  template:
+    metadata:
+      labels:
+        app: deployd-api
+        {{- with .Values.podLabels }}
+        {{- toYaml . | nindent 8 }}
+        {{- end }}
+      {{- with .Values.podAnnotations }}
+      annotations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+    spec:
+      serviceAccountName: {{ .Values.serviceAccount.name }}
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 10001
+        runAsGroup: 10001
+        fsGroup: 10001
+      containers:
+        - name: deployd-api
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy | default "IfNotPresent" }}
+          securityContext:
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+            capabilities:
+              drop:
+                - ALL
+          # No command/args wrapper — falls back to the image's default
+          # `CMD ["deployd-api"]` (Dockerfile L12). Spec 145 §2.2 Option B:
+          # the previous boot-scrub wiped the Hiqlite data subtree on every
+          # pod restart even when persistence.enabled, destroying the
+          # deployd audit trail. The cd84f1e9 stale-lock workaround that
+          # motivated the wider scrub was a hiqlite-pre-0.13 issue addressed
+          # upstream; hiqlite 0.13.1 manages its lock file internally on
+          # first-boot. Static guards: spec145-deployd-scrub.config.test.ts.
+          ports:
+            - containerPort: 8080
+          env:
+            - name: PORT
+              value: "8080"
+            - name: RUST_LOG
+              value: {{ .Values.rustLog | default "info,hiqlite=info" | quote }}
+            - name: SECRETS_DIR
+              value: {{ .Values.secrets.mountPath | quote }}
+            - name: OIDC_ENDPOINT
+              value: {{ .Values.oidc.endpoint | quote }}
+            - name: DEPLOYD_AUDIENCE
+              value: {{ .Values.oidc.audience | quote }}
+            - name: DEPLOYD_REQUIRED_SCOPE
+              value: {{ .Values.requiredScope | quote }}
+            {{- if .Values.rbac.selfProvision }}
+            # Self-provisioned per-namespace RBAC (opt-in): deployd creates a
+            # RoleBinding granting its own ServiceAccount the workloads
+            # ClusterRole in each target namespace before helm runs there
+            # (deployd-api-rs/src/rbac.rs). No-op default; see rbac.yaml.
+            - name: DEPLOYD_SELF_PROVISION_RBAC
+              value: "true"
+            - name: DEPLOYD_SERVICE_ACCOUNT
+              value: {{ .Values.serviceAccount.name | quote }}
+            - name: DEPLOYD_POD_NAMESPACE
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.namespace
+            - name: DEPLOYD_WORKLOADS_CLUSTER_ROLE
+              value: "deployd-controller-workloads"
+            {{- end }}
+            {{- if and .Values.backup.endpoint .Values.backup.bucket }}
+            # Spec 145 backup config — non-sensitive (FR-005a translation layer
+            # reads these DEPLOYD_BACKUP_* env vars in deployd-api-rs/src/config.rs).
+            - name: DEPLOYD_BACKUP_S3_ENDPOINT
+              value: {{ .Values.backup.endpoint | quote }}
+            - name: DEPLOYD_BACKUP_S3_BUCKET
+              value: {{ .Values.backup.bucket | quote }}
+            - name: DEPLOYD_BACKUP_S3_REGION
+              value: {{ .Values.backup.region | quote }}
+            - name: DEPLOYD_BACKUP_S3_PATH_STYLE
+              value: {{ .Values.backup.pathStyle | quote }}
+            - name: DEPLOYD_BACKUP_CRON_SCHEDULE
+              value: {{ .Values.backup.schedule | quote }}
+            - name: DEPLOYD_BACKUP_KEEP_DAYS
+              value: {{ .Values.backup.keep | quote }}
+            # Spec 145 backup config — sensitive (operator-managed Secret).
+            # Provider-dependent projection: `eso` populates via external-secret.yaml;
+            # `csi-azure` via secretproviderclass.yaml; `k8s` (Hetzner) via
+            # operator-managed pre-existing Secret.
+            - name: DEPLOYD_BACKUP_S3_ACCESS_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: deployd-api-secrets
+                  key: backup-s3-access-key
+            - name: DEPLOYD_BACKUP_S3_SECRET_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: deployd-api-secrets
+                  key: backup-s3-secret-key
+            - name: DEPLOYD_BACKUP_CRYPTR_KEYRING
+              valueFrom:
+                secretKeyRef:
+                  name: deployd-api-secrets
+                  key: backup-cryptr-keyring
+            - name: DEPLOYD_BACKUP_CRYPTR_ACTIVE_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: deployd-api-secrets
+                  key: backup-cryptr-active-key
+            {{- end }}
+          envFrom:
+            - secretRef:
+                name: deployd-api-secrets
+                optional: true
+          startupProbe:
+            httpGet:
+              path: /healthz
+              port: 8080
+            periodSeconds: 5
+            timeoutSeconds: 3
+            # 10 minutes total. Hiqlite's first-boot WAL+SQLite init is
+            # usually ~3s but has been observed hanging for 5+ minutes on
+            # cold-started Hetzner nodes — long enough to overrun the old
+            # 5-minute budget and SIGKILL before /healthz could bind.
+            # Bump this rather than chase a flaky one-shot.
+            failureThreshold: 120
+          readinessProbe:
+            httpGet:
+              path: /healthz
+              port: 8080
+            periodSeconds: 10
+            timeoutSeconds: 3
+            failureThreshold: 3
+          livenessProbe:
+            httpGet:
+              path: /healthz
+              port: 8080
+            periodSeconds: 20
+            timeoutSeconds: 3
+            failureThreshold: 3
+          {{- with .Values.resources }}
+          resources:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          volumeMounts:
+            - name: secrets-store
+              mountPath: {{ .Values.secrets.mountPath | quote }}
+              readOnly: true
+            - name: tmp
+              mountPath: /tmp
+            - name: data
+              mountPath: /var/lib/deployd
+      volumes:
+        - name: secrets-store
+          {{- if eq (default "k8s" .Values.secrets.provider) "csi-azure" }}
+          csi:
+            driver: secrets-store.csi.k8s.io
+            readOnly: true
+            volumeAttributes:
+              secretProviderClass: deployd-api-secrets
+          {{- else }}
+          secret:
+            secretName: deployd-api-secrets
+          {{- end }}
+        - name: tmp
+          emptyDir: {}
+        - name: data
+          {{- if .Values.persistence.enabled }}
+          persistentVolumeClaim:
+            claimName: deployd-api-data
+          {{- else }}
+          emptyDir: {}
+          {{- end }}

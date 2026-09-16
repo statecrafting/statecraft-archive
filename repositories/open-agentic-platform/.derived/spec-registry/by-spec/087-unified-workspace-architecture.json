@@ -1,0 +1,109 @@
+{
+  "record": {
+    "amendmentRecord": "183-opc-boot-precondition-gate",
+    "codeAliases": [
+      "UNIFIED_PROJECT"
+    ],
+    "created": "2026-04-09",
+    "dependsOn": [
+      "074-factory-ingestion",
+      "075-factory-workflow-engine",
+      "076-factory-desktop-panel",
+      "077-statecraft-factory-api",
+      "078-platform-completion-plan",
+      "080-github-identity-onboarding",
+      "082-artifact-integrity-platform-hardening"
+    ],
+    "domain": "platform",
+    "establishes": [
+      {
+        "kind": "file",
+        "path": "platform/services/statecraft/api/sync/types.ts"
+      },
+      {
+        "kind": "file",
+        "path": "platform/services/statecraft/api/sync/service.ts"
+      },
+      {
+        "kind": "file",
+        "path": "platform/services/statecraft/api/sync/duplex.ts"
+      },
+      {
+        "kind": "file",
+        "path": "platform/services/statecraft/api/sync/relay.ts"
+      },
+      {
+        "kind": "file",
+        "path": "platform/services/statecraft/api/sync/store.ts"
+      },
+      {
+        "kind": "file",
+        "path": "platform/services/statecraft/api/sync/registry.ts"
+      }
+    ],
+    "extraFrontmatter": {
+      "amended": "2026-06-07",
+      "slug": "unified-workspace-architecture"
+    },
+    "id": "087-unified-workspace-architecture",
+    "implementation": "complete",
+    "kind": "architecture",
+    "owner": "bart",
+    "references": [
+      {
+        "role": "historical",
+        "unit": {
+          "kind": "directory",
+          "path": "product/packages/project-sdk"
+        }
+      }
+    ],
+    "risk": "high",
+    "sectionHeadings": [
+      "087 — Unified Project Architecture",
+      "1. Problem Statement",
+      "2. Core Model",
+      "2.1 Entity Hierarchy",
+      "2.2 Key Relationships",
+      "2.3 Project Definition",
+      "3. Two Planes, One System",
+      "3.1 Plane Responsibilities",
+      "Web Plane — statecraft.ing",
+      "Desktop Plane — OPC",
+      "3.2 Factory Position",
+      "4. Knowledge Intake Domain",
+      "4.1 Architecture",
+      "4.2 Design Principles",
+      "4.3 Knowledge Object Lifecycle",
+      "4.4 Connector Model",
+      "5. Sync Protocol",
+      "5.1 Authoritative Ownership",
+      "5.2 Communication",
+      "5.3 Duplex Sync Substrate",
+      "Authority Invariant (Type-System-Enforced)",
+      "Functional Requirements",
+      "Retention Calculus (In-Memory Stores)",
+      "Reconnect Session-Identity Teardown (FR-SYNC-011)",
+      "Membership Gate Design (FR-SYNC-002)",
+      "Schema Versioning Design (FR-SYNC-003)",
+      "6. Identity Consolidation",
+      "7. Shared Component Architecture",
+      "8. Implementation Phases",
+      "Phase 1: Project Foundation",
+      "Phase 2: Knowledge Intake Domain",
+      "Phase 3: Web UI + Sync Channel",
+      "Phase 4: Connector Framework",
+      "Phase 5: Identity + Governance Hardening",
+      "9. Database Schema Additions (Statecraft)",
+      "10. Non-Functional Requirements",
+      "11. End-State Model Summary",
+      "12. Open issues / follow-ups (amendment, 2026-05-08)"
+    ],
+    "specPath": "specs/087-unified-workspace-architecture/spec.md",
+    "status": "approved",
+    "summary": "Unified architecture connecting web and desktop planes into one system with a first-class knowledge intake domain and project-scoped entity hierarchy. §5.3 adds the duplex sync substrate contract (FR-SYNC-001..010). Originally authored as \"Unified Workspace Architecture\" (2026-04-09); amended by spec 119 (2026-04-29) when the workspace layer was collapsed into project, by spec 143 (2026-05-08) to add the browser-reachability requirement to NF-002 for the object-store endpoint backing presigned uploads, and by spec 183 (2026-06-07) adding FR-SYNC-011 — the stream-identity-scoped reconnect teardown that closes the server-side duplex reconnect race wedging the boot gate.\n",
+    "title": "Unified Project Architecture"
+  },
+  "shardHash": "b8ca2e77687c6d0a4010f676dca9e23c10aafbb139ebd22fdf064e209e1026a2",
+  "specVersion": "1.1.0"
+}

@@ -1,0 +1,34 @@
+{
+  "record": {
+    "authors": [
+      "open-agentic-platform"
+    ],
+    "created": "2026-03-22",
+    "domain": "tooling",
+    "extends": [
+      {
+        "nature": "additive",
+        "spec": "008-registry-consumer-status-report-json-mvp"
+      }
+    ],
+    "extraFrontmatter": {
+      "language": "en"
+    },
+    "featureBranch": "016-registry-consumer-status-report-compact-json-mvp",
+    "id": "016-registry-consumer-status-report-compact-json-mvp",
+    "implementation": "complete",
+    "kind": "platform-delivery",
+    "sectionHeadings": [
+      "Feature Specification: Registry consumer status-report compact JSON",
+      "Requirements",
+      "Out of scope"
+    ],
+    "specPath": "specs/016-registry-consumer-status-report-compact-json-mvp/spec.md",
+    "status": "superseded",
+    "summary": "Add `status-report --compact` for single-line JSON array output, mutually exclusive with `--json`, completing compact symmetry with list and show.\n",
+    "supersededBy": "217-spec-spine-engine-swap-collapse",
+    "title": "Registry consumer status-report compact JSON"
+  },
+  "shardHash": "946575304982f83a0eb6feafab1d97c63ce95f2d3a77a6ab68925be9bc3b060a",
+  "specVersion": "1.1.0"
+}

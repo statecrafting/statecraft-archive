@@ -1,0 +1,11 @@
+{
+  "package": {
+    "kind": "npm-package",
+    "name": "@opc/multi-model-chaining",
+    "path": "product/packages/multi-model-chaining",
+    "specRef": "062-multi-model-chaining",
+    "version": "0.1.0"
+  },
+  "schemaVersion": "1.1.0",
+  "shardHash": "2ba23a4a9b43b098cc6095239074a49381ea8c9812a07225d172b2fae2ccbe4c"
+}

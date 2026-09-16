@@ -1,0 +1,48 @@
+{
+  "diagnostics": {
+    "errors": [],
+    "warnings": [
+      {
+        "code": "W-002",
+        "message": "spec '056-session-memory' directory unit 'product/packages/memory-mcp' is not a directory",
+        "path": "product/packages/memory-mcp"
+      }
+    ]
+  },
+  "mapping": {
+    "implementingPaths": [
+      {
+        "path": "product/packages/session-memory",
+        "source": "multiple"
+      }
+    ],
+    "resolvedUnits": [
+      {
+        "locations": [
+          {
+            "file": "product/packages/session-memory"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "directory",
+          "path": "product/packages/session-memory"
+        }
+      },
+      {
+        "locations": [],
+        "ownership": false,
+        "sourceField": "references",
+        "unit": {
+          "kind": "directory",
+          "path": "product/packages/memory-mcp"
+        }
+      }
+    ],
+    "specId": "056-session-memory",
+    "specStatus": "approved"
+  },
+  "schemaVersion": "1.1.0",
+  "shardHash": "38d65a2f0367dc31341c3d87c40f13492a4ff242c35ea7d2cb1581ea03103e8a"
+}

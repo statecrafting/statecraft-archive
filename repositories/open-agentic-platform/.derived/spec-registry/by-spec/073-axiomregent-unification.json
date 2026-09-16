@@ -1,0 +1,101 @@
+{
+  "record": {
+    "authors": [
+      "open-agentic-platform"
+    ],
+    "codeAliases": [
+      "AXIOM_UNIFY",
+      "HIQLITE_MIGRATION",
+      "GITHUB_ORG"
+    ],
+    "created": "2026-04-03",
+    "domain": "opc",
+    "establishes": [
+      {
+        "kind": "directory",
+        "path": "platform/services/deployd-api-rs"
+      }
+    ],
+    "extends": [
+      {
+        "nature": "wrapping",
+        "spec": "037-cross-platform-axiomregent",
+        "unit": {
+          "id": "axiomregent",
+          "kind": "crate"
+        }
+      }
+    ],
+    "extraFrontmatter": {
+      "language": "en",
+      "sources": [
+        "gitctx",
+        "blockoli",
+        "stackwalk",
+        "titor",
+        "github-app"
+      ]
+    },
+    "featureBranch": "073-axiomregent-unification",
+    "id": "073-axiomregent-unification",
+    "implementation": "complete",
+    "kind": "platform",
+    "references": [
+      {
+        "role": "historical",
+        "unit": {
+          "kind": "file",
+          "path": "product/apps/opc/src-tauri/src/commands/titor.rs"
+        }
+      },
+      {
+        "role": "historical",
+        "unit": {
+          "kind": "file",
+          "path": "product/apps/opc/src-tauri/src/commands/search.rs"
+        }
+      }
+    ],
+    "sectionHeadings": [
+      "Feature Specification: Axiomregent Unification",
+      "Purpose",
+      "Scope",
+      "In scope",
+      "Out of scope",
+      "Requirements",
+      "Functional",
+      "Non-functional",
+      "Architecture",
+      "Axiomregent Internal Architecture (Post-Unification)",
+      "ToolProvider Trait (Router Refactor)",
+      "Hiqlite Schema",
+      "GitHub Token Brokering Flow",
+      "Statecraft GitHub Webhook Absorption",
+      "deployd-api Rust Architecture",
+      "Cross-Session Event Propagation",
+      "Crate Elimination Plan",
+      "Implementation Approach",
+      "Phase 1: Hiqlite Foundation + Async Router",
+      "Phase 2: Checkpoint Unification (Titor Absorption)",
+      "Phase 3: Search Absorption (Blockoli + Stackwalk)",
+      "Phase 4: GitHub Integration (gitctx Absorption + Platform Token Broker)",
+      "Phase 5: deployd-api Rust Rewrite",
+      "Phase 6: Cleanup + CI",
+      "Success Criteria",
+      "Dependencies",
+      "Risk",
+      "Release Markers",
+      "Security hardening amendment (2026-07-02)"
+    ],
+    "specPath": "specs/073-axiomregent-unification/spec.md",
+    "status": "approved",
+    "summary": "Consolidates five standalone crates and services (gitctx, blockoli, stackwalk, titor, github-app) into axiomregent and statecraft. Migrates axiomregent from synchronous rusqlite to async hiqlite for unified storage, distributed coordination, and cross-session event propagation. Introduces GitHub organisation-level integration via a platform-brokered App installation token flow with per-tool scope narrowing. Rewrites deployd-api from Node.js/Express to Rust with hiqlite-backed persistent deployment state. Eliminates five standalone codebases and nine fragmented storage backends in favour of two unified layers: hiqlite (structured data + coordination) and filesystem (large binary blobs).\n",
+    "supersedes": [
+      "038-titor-tauri-command-wiring",
+      "040-blockoli-semantic-search-wiring"
+    ],
+    "title": "Axiomregent Unification: Crate Absorption, Hiqlite Storage, and GitHub Org Integration"
+  },
+  "shardHash": "5a7e26a2104c379407994cc921e77f91eccc13289c0f1e252b738c414a0159c7",
+  "specVersion": "1.1.0"
+}

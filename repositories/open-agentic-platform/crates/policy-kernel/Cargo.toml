@@ -1,0 +1,67 @@
+[package]
+name = "open_agentic_policy_kernel"
+publish = false   # internal workspace crate; binaries ship via release workflows, not crates.io
+version = "0.1.0"
+edition = "2024"
+description = "Deterministic policy evaluation kernel with permission runtime (native + wasm32)"
+rust-version = "1.85"
+
+[lib]
+crate-type = ["lib", "cdylib"]
+
+[[bin]]
+name = "verify_proof_chain"
+path = "src/bin/verify_proof_chain.rs"
+
+# Spec 207 FR-003: independent audit-chain verifier (sister to verify_proof_chain).
+[[bin]]
+name = "verify_audit_chain"
+path = "src/bin/verify_audit_chain.rs"
+
+[features]
+default = ["native"]
+native = ["dep:notify"]
+
+[dependencies]
+# Spec 047 FR-009.1 — Ed25519 signing for proof-chain genesis anchor.
+# Companion to factory-engine's spec 102 FR-008.1 cert signing; same key
+# resolution semantics for a coherent provenance story.
+base64 = "0.22"
+chrono = { version = "0.4", features = ["serde"] }
+dirs = "6"
+# Ed25519 signing for proof-chain genesis/links. Keygen seeds a 32-byte
+# buffer straight from the OS CSPRNG via `getrandom::fill` and hands it to
+# `SigningKey::from_bytes` — the exact operations `SigningKey::generate`
+# performs internally, inlined so we depend on neither dalek's `rand_core`
+# feature nor the rand_core crate (whose 0.9/0.10 line dropped both `OsRng`
+# and the `getrandom` feature).
+ed25519-dalek = "3"
+getrandom = "0.4.2"
+glob = "0.3"
+hex = "0.4"
+notify = { version = "8", optional = true }
+regex = "1"
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+sha2 = "0.10"
+# Extracted reusable primitives (Apache-2.0), re-consumed here so policy-kernel
+# becomes a thin OAP-specific shim over the shared cores (spec 231). OAP keeps
+# its own record/anchor/decision SHAPES for hash and signature parity and
+# delegates the underlying hashing, scoring, and gate machinery to these.
+canonical-keysort-json = "0.1"
+attest-ledger-core = "0.1"
+trust-window = "0.1"
+action-gate-core = "0.1"
+
+[dev-dependencies]
+criterion = "0.8"
+serde_json = "1"
+serde_yaml = "0.9"
+tempfile = "3"
+
+[[bench]]
+name = "kernel_eval"
+harness = false
+
+[package.metadata.oap]
+spec = "047-governance-control-plane"

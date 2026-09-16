@@ -1,0 +1,138 @@
+# Tool tier assignments for OAP governance (spec 093).
+# Each tool entry specifies: tier (tier1/tier2/tier3) and permission flags.
+#
+# Tier 1 — Autonomous: safe to auto-execute (read-only, diagnostic)
+# Tier 2 — Gated: requires human approval (writes, bounded mutations)
+# Tier 3 — Manual: dangerous or unclassified (execution, arbitrary commands)
+#
+# Unrecognized tools default to Tier 3 (catch-all).
+# Workspace-scoped overrides can be placed in .oap/workspaces/<id>/tool-tiers.toml.
+
+[tools."gov.preflight"]
+tier = "tier1"
+file_read = true
+
+[tools."gov.drift"]
+tier = "tier1"
+file_read = true
+
+[tools."features.impact"]
+tier = "tier1"
+file_read = true
+
+[tools."checkpoint.list"]
+tier = "tier1"
+file_read = true
+
+[tools."checkpoint.info"]
+tier = "tier1"
+file_read = true
+
+[tools."checkpoint.diff"]
+tier = "tier1"
+file_read = true
+
+[tools."checkpoint.verify"]
+tier = "tier1"
+file_read = true
+
+[tools."checkpoint.timeline"]
+tier = "tier1"
+file_read = true
+
+[tools."checkpoint.status"]
+tier = "tier1"
+file_read = true
+
+[tools."snapshot.info"]
+tier = "tier1"
+file_read = true
+
+[tools."snapshot.list"]
+tier = "tier1"
+file_read = true
+
+[tools."snapshot.diff"]
+tier = "tier1"
+file_read = true
+
+[tools."xray.scan"]
+tier = "tier1"
+file_read = true
+
+[tools."run.status"]
+tier = "tier1"
+network = true
+
+[tools."run.logs"]
+tier = "tier1"
+network = true
+
+[tools."agent.verify"]
+tier = "tier1"
+file_read = true
+
+# Tier 2 — Bounded mutations
+
+[tools."repo.apply_patch"]
+tier = "tier2"
+file_write = true
+
+[tools."repo.write_file"]
+tier = "tier2"
+file_write = true
+
+[tools."repo.delete"]
+tier = "tier2"
+file_write = true
+
+[tools."workspace.apply_patch"]
+tier = "tier2"
+file_write = true
+
+[tools."workspace.write_file"]
+tier = "tier2"
+file_write = true
+
+[tools."workspace.delete"]
+tier = "tier2"
+file_write = true
+
+[tools."write_file"]
+tier = "tier2"
+file_write = true
+
+[tools."checkpoint.create"]
+tier = "tier2"
+file_write = true
+
+[tools."checkpoint.restore"]
+tier = "tier2"
+file_write = true
+
+[tools."checkpoint.fork"]
+tier = "tier2"
+file_write = true
+
+[tools."checkpoint.gc"]
+tier = "tier2"
+file_write = true
+
+[tools."snapshot.create"]
+tier = "tier2"
+file_write = true
+
+[tools."agent.propose"]
+tier = "tier2"
+file_write = true
+
+# Tier 3 — Dangerous / explicit
+
+[tools."run.execute"]
+tier = "tier3"
+network = true
+
+[tools."agent.execute"]
+tier = "tier3"
+file_write = true
+network = true

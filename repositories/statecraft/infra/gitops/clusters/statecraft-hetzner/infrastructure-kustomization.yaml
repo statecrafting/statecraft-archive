@@ -1,0 +1,33 @@
+# Flux Kustomization: the infrastructure tier (spec 010).
+#
+# healthChecks gates Ready on the cert-manager HelmRelease ONLY (not
+# `wait: true`): postgres depends on a SOPS Secret that may not have decrypted
+# yet on a first reconcile, and `wait: true` would block the whole tier on it.
+# As soon as cert-manager reports Ready, the `manifests`
+# tier's dependsOn fires and ClusterIssuer dry-run succeeds (CRDs present).
+#
+# dependsOn namespaces (the HelmReleases install into pre-created namespaces).
+# It does NOT dependsOn secrets: cert-manager/ingress-nginx/reflector need no
+# secret and come up immediately; the secret-dependent releases retry until the
+# secrets tier lands their Secret.
+apiVersion: kustomize.toolkit.fluxcd.io/v1
+kind: Kustomization
+metadata:
+  name: infrastructure
+  namespace: flux-system
+spec:
+  interval: 10m
+  retryInterval: 1m
+  timeout: 10m
+  path: ./infra/gitops/clusters/statecraft-hetzner/infrastructure
+  prune: true
+  sourceRef:
+    kind: GitRepository
+    name: flux-system
+  dependsOn:
+    - name: namespaces
+  healthChecks:
+    - apiVersion: helm.toolkit.fluxcd.io/v2
+      kind: HelmRelease
+      name: cert-manager
+      namespace: cert-manager

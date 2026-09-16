@@ -1,0 +1,38 @@
+[package]
+name = "open_agentic_policy_compiler"
+publish = false   # internal workspace crate; binaries ship via release workflows, not crates.io
+version = "0.1.0"
+edition = "2024"
+description = "Policy compiler skeleton for governance control plane"
+rust-version = "1.85"
+
+[[bin]]
+name = "policy-compiler"
+path = "src/main.rs"
+
+[lib]
+name = "open_agentic_policy_compiler"
+path = "src/lib.rs"
+
+[dependencies]
+chrono = { version = "0.4", default-features = false, features = ["clock", "std"] }
+clap = { version = "4", features = ["derive"] }
+hex = "0.4"
+open_agentic_spec_types = { path = "../../shared/spec-types" }
+open_agentic_policy_kernel = { path = "../../../crates/policy-kernel" }
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+serde_yaml = "0.9"
+sha2 = "0.10"
+walkdir = "2"
+
+[dev-dependencies]
+criterion = "0.5"
+tempfile = "3.27.0"
+
+[[bench]]
+name = "compile_many"
+harness = false
+
+[package.metadata.oap]
+spec = "047-governance-control-plane"

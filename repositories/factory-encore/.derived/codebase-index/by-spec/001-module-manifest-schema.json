@@ -1,0 +1,114 @@
+{
+  "mapping": {
+    "implementingPaths": [
+      {
+        "path": "adapters/acme-vue-encore/modules/api-gateway/",
+        "source": "spec-edge"
+      },
+      {
+        "path": "adapters/acme-vue-encore/modules/data-postgres/",
+        "source": "spec-edge"
+      },
+      {
+        "path": "adapters/acme-vue-encore/modules/data-redis/",
+        "source": "spec-edge"
+      },
+      {
+        "path": "adapters/acme-vue-encore/modules/security-core/",
+        "source": "spec-edge"
+      },
+      {
+        "path": "adapters/acme-vue-encore/scripts/lib/manifest.schema.ts",
+        "source": "spec-edge"
+      },
+      {
+        "path": "adapters/acme-vue-encore/scripts/lib/modules-ts-generator.ts",
+        "source": "spec-edge"
+      }
+    ],
+    "resolvedUnits": [
+      {
+        "locations": [
+          {
+            "file": "adapters/acme-vue-encore/modules/api-gateway/"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "file",
+          "path": "adapters/acme-vue-encore/modules/api-gateway/"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "adapters/acme-vue-encore/modules/data-postgres/"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "file",
+          "path": "adapters/acme-vue-encore/modules/data-postgres/"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "adapters/acme-vue-encore/modules/data-redis/"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "file",
+          "path": "adapters/acme-vue-encore/modules/data-redis/"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "adapters/acme-vue-encore/modules/security-core/"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "file",
+          "path": "adapters/acme-vue-encore/modules/security-core/"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "adapters/acme-vue-encore/scripts/lib/manifest.schema.ts"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "file",
+          "path": "adapters/acme-vue-encore/scripts/lib/manifest.schema.ts"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "adapters/acme-vue-encore/scripts/lib/modules-ts-generator.ts"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "file",
+          "path": "adapters/acme-vue-encore/scripts/lib/modules-ts-generator.ts"
+        }
+      }
+    ],
+    "specId": "001-module-manifest-schema",
+    "specStatus": "approved"
+  },
+  "schemaVersion": "1.1.0",
+  "shardHash": "b23f2c660c1aaff8e6ef252e6262dd21903379bf2c91aff37eeff2bf4ed0658b"
+}

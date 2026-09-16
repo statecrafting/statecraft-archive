@@ -1,0 +1,26 @@
+# SPDX-License-Identifier: AGPL-3.0-or-later
+# Copyright (C) 2026 Bartek Kus
+
+[package]
+name = "factory-contracts"
+publish = false   # internal workspace crate; binaries ship via release workflows, not crates.io
+version = "0.1.0"
+edition = "2024"
+description = "Rust contract types for Factory delivery engine schemas — spec 074"
+
+[dependencies]
+agent-frontmatter = { path = "../agent-frontmatter" }
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+serde_yaml = "0.9"
+thiserror = "2"
+glob = "0.3"
+chrono = { version = "0.4", features = ["serde"] }
+sha2 = "0.10"
+unicode-normalization = "0.1"
+
+[dev-dependencies]
+tempfile = "3"
+
+[package.metadata.oap]
+spec = "074-factory-ingestion"

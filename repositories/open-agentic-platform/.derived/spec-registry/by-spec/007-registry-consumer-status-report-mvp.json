@@ -1,0 +1,40 @@
+{
+  "record": {
+    "authors": [
+      "open-agentic-platform"
+    ],
+    "created": "2026-03-22",
+    "domain": "tooling",
+    "extends": [
+      {
+        "nature": "additive",
+        "spec": "002-registry-consumer-mvp"
+      }
+    ],
+    "extraFrontmatter": {
+      "language": "en"
+    },
+    "featureBranch": "007-registry-consumer-status-report-mvp",
+    "id": "007-registry-consumer-status-report-mvp",
+    "implementation": "complete",
+    "kind": "platform-delivery",
+    "sectionHeadings": [
+      "Feature Specification: Registry consumer status reporting UX",
+      "Purpose and charter",
+      "In scope",
+      "Out of scope",
+      "Requirements *(mandatory)*",
+      "Functional Requirements",
+      "Key Entities",
+      "Success Criteria *(mandatory)*",
+      "Clarifications"
+    ],
+    "specPath": "specs/007-registry-consumer-status-report-mvp/spec.md",
+    "status": "superseded",
+    "summary": "Deliver a small user-facing registry-consumer improvement focused on lifecycle/status reporting: add a status summary command with counts and optional ids, keep current trust/exit semantics, and verify behavior with integration tests.\n",
+    "supersededBy": "217-spec-spine-engine-swap-collapse",
+    "title": "Registry consumer status reporting UX"
+  },
+  "shardHash": "6a46a0968aba2adeac915b25f33f32314973c41b439c40e36ab35539c264df06",
+  "specVersion": "1.1.0"
+}

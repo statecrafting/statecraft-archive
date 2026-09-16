@@ -1,0 +1,110 @@
+image:
+  # TODO: Set to your GHCR (or other registry) image path before deploying
+  repository: ghcr.io/your-org/open-agentic-platform/statecraft
+  tag: dev
+
+imagePullSecrets: []
+
+ingress:
+  enabled: true
+  className: nginx
+  host: statecraft.localdev.online
+  annotations: {}
+
+serviceAccount:
+  name: statecraft-api-sa
+  annotations: {}
+
+# Rauthy seed hook (spec 106 FR-002). Disabled by default until the GHCR
+# image ships the Rauthy 0.35 API compatibility fix; re-enable per-env in
+# values-<env>.yaml or via --set seedRauthy.enabled=true once the image
+# contains the updated scripts/seed-rauthy.mjs.
+seedRauthy:
+  enabled: false
+
+podLabels: {}
+
+secrets:
+  enabled: true
+  provider: "k8s"  # "k8s" | "eso" | "csi-azure"
+  mountPath: /mnt/secrets-store
+  create: false
+  data: {}
+  # ESO-specific
+  refreshInterval: "1h"
+  storeRef:
+    name: ""
+    kind: ClusterSecretStore
+  keys:
+    - key: STATECRAFT_DB_URL
+      remoteKey: statecraft-db-url
+    - key: OIDC_M2M_CLIENT_ID
+      remoteKey: oidc-m2m-client-id
+    - key: OIDC_M2M_CLIENT_SECRET
+      remoteKey: oidc-m2m-client-secret
+    # AES-256-GCM key for PAT-at-rest encryption (api/auth/patCrypto.ts).
+    # Must decode from base64 to exactly 32 bytes. Generate with:
+    #   openssl rand -base64 32
+    # Rotate only with care: existing factory_upstream_pats / project_pats
+    # rows become undecryptable if the key changes.
+    - key: PAT_ENCRYPTION_KEY
+      remoteKey: pat-encryption-key
+
+# Legacy Azure CSI driver opt-in (kept for backward compatibility)
+secretsMount:
+  enabled: false
+  objects: []
+
+# Legacy Azure workload identity (kept for backward compatibility)
+workloadIdentity:
+  clientId: ""
+
+keyVault:
+  name: ""
+  tenantId: ""
+
+oidc:
+  endpoint: "https://rauthy.localdev.online"
+  deploydAudience: "https://api.statecraft.localdev.online"
+  deploydScope: "deployd:deploy"
+
+resources:
+  requests:
+    cpu: 100m
+    memory: 128Mi
+  limits:
+    cpu: 500m
+    memory: 1Gi  # spec 143 FU-015 — was 512Mi, raised to give V8 + extraction-fan-out headroom (§13 2026-05-10 ~07:48 UTC).
+
+# Spec 143 FU-015 — V8 heap ceiling. Node 20's automatic
+# heap-from-cgroup detection does not engage on this image, so V8 must
+# be told the cap explicitly. Budget vs cgroup limit above:
+#   1024 MiB cgroup − 896 MiB V8 old-space = 128 MiB reserve
+#   (V8 new-space ~32, code-space ~10, Node runtime / libuv / native ~30,
+#    off-heap library buffers ~30, OS / page-cache headroom ~20).
+# Raise reserve if observed RSS approaches the cap; lower the old-space
+# cap before raising cgroup further. Full justification: spec 143 §13
+# 2026-05-10 ~07:48 UTC.
+nodeOptions: "--max-old-space-size=896"
+
+# Spec 112 §5.3 — workspace dir for the scaffold subflow.
+#
+# Statecraft's Create flow keeps a clone of the upstream `template` repo
+# (~150MB after `npm install`) plus four prebuilt profile trees in a
+# workspace directory. The dir is mounted at `STATECRAFT_WORKSPACE_DIR`
+# and survives pod restarts so warmup is skipped when on-disk state matches
+# the upstream HEAD.
+#
+# Persistence defaults to ON. Disable only if the cluster's storage class
+# is unavailable; with persistence off the warmup re-runs every restart.
+#
+# storageClass: leave blank to inherit the cluster default.
+#   Per-cloud overrides land in values-{azure,aws,gcp,do,hetzner}.yaml
+#   (e.g. "managed-csi" on Azure, "do-block-storage" on DigitalOcean).
+workspace:
+  dir: /var/statecraft/workspace
+  persistence:
+    enabled: true
+    size: 10Gi
+    storageClass: ""
+    accessMode: ReadWriteOnce

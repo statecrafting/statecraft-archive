@@ -1,0 +1,12 @@
+{
+  "package": {
+    "edition": "2021",
+    "kind": "rust-lib",
+    "name": "fleet-native",
+    "path": "addon/fleet-native",
+    "specRef": "006-fleet-native",
+    "version": "0.2.0"
+  },
+  "schemaVersion": "1.1.0",
+  "shardHash": "70ee2e6f99f300b794ce843f21d07dcd7d1316b67da1ec0c7d48ecebb615db75"
+}

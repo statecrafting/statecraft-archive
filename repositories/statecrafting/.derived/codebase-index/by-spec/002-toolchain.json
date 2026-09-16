@@ -1,0 +1,155 @@
+{
+  "mapping": {
+    "dependsOn": [
+      "000-bootstrap",
+      "001-packages-thesis"
+    ],
+    "implementingPaths": [
+      {
+        "path": "",
+        "source": "manifest-metadata"
+      },
+      {
+        "path": ".github/workflows/publish.yml",
+        "source": "spec-edge"
+      },
+      {
+        "path": "package.json",
+        "source": "spec-edge"
+      },
+      {
+        "path": "packages/toolchain",
+        "source": "manifest-metadata"
+      },
+      {
+        "path": "packages/toolchain-darwin-arm64",
+        "source": "manifest-metadata"
+      },
+      {
+        "path": "packages/toolchain-darwin-arm64/",
+        "source": "spec-edge"
+      },
+      {
+        "path": "packages/toolchain-linux-arm64",
+        "source": "manifest-metadata"
+      },
+      {
+        "path": "packages/toolchain-linux-arm64/",
+        "source": "spec-edge"
+      },
+      {
+        "path": "packages/toolchain-linux-x64",
+        "source": "manifest-metadata"
+      },
+      {
+        "path": "packages/toolchain-linux-x64/",
+        "source": "spec-edge"
+      },
+      {
+        "path": "packages/toolchain/",
+        "source": "spec-edge"
+      },
+      {
+        "path": "vendor/encore/",
+        "source": "spec-edge"
+      }
+    ],
+    "resolvedUnits": [
+      {
+        "locations": [
+          {
+            "file": "packages/toolchain-darwin-arm64/"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "directory",
+          "path": "packages/toolchain-darwin-arm64/"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "packages/toolchain-linux-arm64/"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "directory",
+          "path": "packages/toolchain-linux-arm64/"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "packages/toolchain-linux-x64/"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "directory",
+          "path": "packages/toolchain-linux-x64/"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "packages/toolchain/"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "directory",
+          "path": "packages/toolchain/"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "vendor/encore/"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "directory",
+          "path": "vendor/encore/"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": ".github/workflows/publish.yml"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "file",
+          "path": ".github/workflows/publish.yml"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "package.json"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "file",
+          "path": "package.json"
+        }
+      }
+    ],
+    "specId": "002-toolchain",
+    "specStatus": "approved"
+  },
+  "schemaVersion": "1.1.0",
+  "shardHash": "6e3e1fadbcba9989d6d93a6b37e0e77c597ae4496a1bf911000cfe30b8726256"
+}

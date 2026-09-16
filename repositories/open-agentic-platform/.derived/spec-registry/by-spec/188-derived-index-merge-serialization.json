@@ -1,0 +1,143 @@
+{
+  "record": {
+    "amendmentRecord": "amended 2026-06-15 by spec 216 (spec-spine-library-grammar-adoption, Phase 2b): bumped the broad index schema 3.0.0 -> 3.1.0 (additive `traceMapping.supersedes` field for coupling-gate supersession filtering); the narrow config-hash gate and \"broad index carries nothing governed\" invariant are unchanged.\namended 2026-06-18 by spec 217 (engine-swap collapse): the in-tree spec-compiler, codebase-indexer, and spec-code-coupling-check that this spec's index serialization extended were deleted; their edges are stripped (paths deleted). Workstream D also dropped the in-tree codebase-index.schema.json, removing that extends-101 schema edge. Spec 217 adds an amends-188 edge: Workstream D re-commits the sharded index/registry trees (conflict-free per-spec form), restoring present-on-clone (spec 101 SC-06) and superseding this spec's Phase 4b de-commit of the monolithic index.json.\n",
+    "amends": [
+      "101-codebase-index-mvp",
+      "177-ci-orchestrator-pr-gate",
+      "184-claude-shared-config-governance"
+    ],
+    "authors": [
+      "bart"
+    ],
+    "coAuthority": [
+      {
+        "unit": {
+          "anchor": "merge-driver",
+          "file": "Makefile",
+          "kind": "section"
+        }
+      },
+      {
+        "unit": {
+          "anchor": "ci-config-hash",
+          "file": "Makefile",
+          "kind": "section"
+        }
+      }
+    ],
+    "codeAliases": [
+      "oap-index-regen"
+    ],
+    "created": "2026-05-29",
+    "domain": "tooling",
+    "establishes": [
+      {
+        "kind": "file",
+        "path": ".githooks/merge-derived-index.sh"
+      },
+      {
+        "kind": "file",
+        "path": ".githooks/enable-merge-driver.sh"
+      },
+      {
+        "kind": "file",
+        "path": "tools/oap/ci-parity-check/tests/fixtures/aligned/.github/workflows/ci-config-hash.yml"
+      },
+      {
+        "kind": "file",
+        "path": "tools/oap/ci-parity-check/tests/fixtures/divergent/.github/workflows/ci-config-hash.yml"
+      },
+      {
+        "kind": "file",
+        "path": "standards/schemas/spec-spine/config-hash.schema.json"
+      }
+    ],
+    "extends": [
+      {
+        "nature": "additive",
+        "spec": "034-featuregraph-registry-scanner-fix",
+        "unit": {
+          "kind": "file",
+          "path": "crates/featuregraph/tests/golden/features_graph.json"
+        }
+      },
+      {
+        "nature": "additive",
+        "spec": "104-makefile-ci-parity-contract",
+        "unit": {
+          "kind": "file",
+          "path": "tools/oap/ci-parity-check/src/lib.rs"
+        }
+      },
+      {
+        "nature": "additive",
+        "spec": "001-spec-compiler-mvp",
+        "unit": {
+          "kind": "file",
+          "path": "tools/shared/spec-types/src/lib.rs"
+        }
+      }
+    ],
+    "extraFrontmatter": {
+      "amended": "2026-06-18",
+      "language": "en",
+      "shape": "mechanism-add",
+      "slug": "derived-index-merge-serialization"
+    },
+    "id": "188-derived-index-merge-serialization",
+    "implementation": "complete",
+    "kind": "governance",
+    "owner": "bart",
+    "references": [
+      {
+        "role": "precedent",
+        "unit": {
+          "kind": "file",
+          "path": "specs/184-claude-shared-config-governance/spec.md"
+        }
+      },
+      {
+        "role": "precedent",
+        "unit": {
+          "kind": "file",
+          "path": "specs/158-workflow-ref-sha-pinning-lint/spec.md"
+        }
+      },
+      {
+        "role": "pair-spec",
+        "unit": {
+          "kind": "file",
+          "path": "specs/127-spec-code-coupling-gate/spec.md"
+        }
+      }
+    ],
+    "risk": "medium",
+    "sectionHeadings": [
+      "Feature Specification: Derived-index merge serialization",
+      "Problem",
+      "What is *not* the problem in OAP (corrected from the transplanted analysis)",
+      "User Scenarios & Testing",
+      "User Story 1 — Rebase auto-heals the index (Priority: P1) — *Phase 1, implemented*",
+      "User Story 2 — Concurrent agent PRs are serialized and logical conflicts are caught (Priority: P2) — *Phase 2, IMPLEMENTED in code 2026-05-30 (queue enablement = ops step)*",
+      "User Story 3 — Index stays fresh on main without per-PR serialization (Priority: P3) — *Phase 3, IMPLEMENTED 2026-05-30*",
+      "Edge Cases",
+      "Requirements",
+      "Functional Requirements — Phase 1 (implemented in this change)",
+      "Functional Requirements — Phase 2 (IMPLEMENTED in code 2026-05-30 — merge-queue *enablement* is the one remaining ops step)",
+      "Functional Requirements — Phase 3 (IMPLEMENTED 2026-05-30 — §spec-184 tension resolved by re-homing, path 1)",
+      "The spec-184 tension *(load-bearing — read before implementing Phase 3)*",
+      "Resolution (enacted 2026-05-30, Phase 3)",
+      "Success Criteria",
+      "Phased delivery",
+      "Phase 4 — dissolve the cache/contract tension (split: 4a implemented, 4b deferred)",
+      "Relationships",
+      "Amendment — 2026-06-10: check-config re-homed into spec-conformance"
+    ],
+    "specPath": "specs/188-derived-index-merge-serialization/spec.md",
+    "status": "approved",
+    "summary": "Multi-PR / multi-agent merge friction in OAP reduces to a single serialization point: the committed `.derived/codebase-index/index.json` carries one global content hash, and `ci-codebase-index` requires it to be byte-fresh against the PR tree on every PR. Each merge to main forces every other open PR to rebase and regenerate that one file. This spec delivers the low-risk fix now — a deterministic git merge driver (Phase 1) that auto-regenerates the index on conflict so the toil per rebase drops to zero — and designs, without yet implementing, the two structural levers (Phase 2: GitHub merge queue; Phase 3: move index freshness from a required PR gate to a post-merge heal on main). Phase 3 is held because it is in direct tension with spec 184, which landed PR-time blocking of `.claude/settings.json` / `.mcp.json` edits days ago; that tension is surfaced here and left for an explicit decision rather than quietly inverted.\n",
+    "title": "Derived-index merge serialization — merge driver + merge queue + narrow config-hash gate (broad index demoted to best-effort cache)"
+  },
+  "shardHash": "e1d871d8e62ec1f8d245164fdc0fa56de5ef385138f5b4a26873eb3e801f4103",
+  "specVersion": "1.1.0"
+}

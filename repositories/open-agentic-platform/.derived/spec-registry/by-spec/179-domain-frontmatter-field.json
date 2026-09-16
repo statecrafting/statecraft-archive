@@ -1,0 +1,101 @@
+{
+  "record": {
+    "amendmentRecord": "amended 2026-06-18 by spec 217 (engine-swap collapse): the in-tree spec-compiler and registry-consumer that implemented the domain-field parse (V-030) and the --domain filter were deleted; those moved to spec-spine-core. The spec-compiler and registry-consumer test units are stripped (paths deleted); the surviving spec-lint V-031 presence test is retained.\n",
+    "amends": [
+      "000-bootstrap-spec-system"
+    ],
+    "codeAliases": [
+      "DOMAIN_FIELD"
+    ],
+    "created": "2026-05-24",
+    "dependsOn": [
+      "000-bootstrap-spec-system",
+      "001-spec-compiler-mvp",
+      "002-registry-consumer-mvp",
+      "006-conformance-lint-mvp",
+      "147-spec-kind-grammar"
+    ],
+    "domain": "substrate",
+    "establishes": [
+      {
+        "kind": "file",
+        "path": "tools/spec-spine/spec-lint/tests/spec179_domain_presence.rs"
+      }
+    ],
+    "extends": [
+      {
+        "nature": "additive",
+        "spec": "147-spec-kind-grammar",
+        "unit": {
+          "kind": "file",
+          "path": "tools/shared/spec-types/src/lib.rs"
+        }
+      },
+      {
+        "nature": "additive",
+        "spec": "006-conformance-lint-mvp",
+        "unit": {
+          "kind": "file",
+          "path": "tools/spec-spine/spec-lint/src/lib.rs"
+        }
+      },
+      {
+        "nature": "additive",
+        "spec": "132-constitutional-invariant-freeze",
+        "unit": {
+          "kind": "file",
+          "path": "standards/schemas/spec-spine/registry.schema.json"
+        }
+      }
+    ],
+    "extraFrontmatter": {
+      "amended": "2026-06-18",
+      "approved": "2026-05-24",
+      "shape": "mechanism-add",
+      "slug": "domain-frontmatter-field"
+    },
+    "id": "179-domain-frontmatter-field",
+    "implementation": "complete",
+    "kind": "amendment",
+    "owner": "bart",
+    "references": [
+      {
+        "role": "precedent",
+        "unit": {
+          "kind": "file",
+          "path": "specs/147-spec-kind-grammar/spec.md"
+        }
+      },
+      {
+        "role": "precedent",
+        "unit": {
+          "kind": "file",
+          "path": "specs/156-references-edge-provenance-grammar/spec.md"
+        }
+      }
+    ],
+    "risk": "low",
+    "sectionHeadings": [
+      "179 — Domain frontmatter field",
+      "1. Concern",
+      "2. Constitutional positioning",
+      "3. Grammar",
+      "3.1 Shape",
+      "3.2 Initial enum values",
+      "3.3 Required vs optional",
+      "4. Semantics",
+      "5. Tooling expectations",
+      "6. Implementation map",
+      "7. Out of scope",
+      "8. Acceptance criteria",
+      "9. Cross-references",
+      "10. Migration"
+    ],
+    "specPath": "specs/179-domain-frontmatter-field/spec.md",
+    "status": "approved",
+    "summary": "Adds a `domain:` frontmatter field to the universal spec grammar. The field is a single closed-enum string (`opc | platform | substrate | tooling`) declaring which tract owns a spec's authority. Strictly a *lens*, not a partition — the corpus stays one unified spine; `domain:` enables scoped enforcement rules and scoped consumer queries (e.g. \"specs with `domain: opc` and `kind: invariant-freeze` declaring a perf budget must reference a bench file\") that the unified-but-unindexed corpus cannot express. Required on new specs (V-031, warning until backfill is promoted); backfilled across the 179-spec corpus in the same PR. The spec-compiler parses `domain:` and emits V-030 on invalid enum values; registry-consumer exposes a `--domain <value>` filter on `list` / `status-report` and surfaces `domain:` in `show`; spec-lint emits V-031 at warning severity when the field is absent. Composes with spec 147 as the sibling field-grammar amendment of spec 000; future amendments may widen the enum.\n",
+    "title": "Domain frontmatter field — tract authority lens over the unified spec spine"
+  },
+  "shardHash": "0be1bcc2b65560b02398da29094ff6ade428521702dd92885ecfffd018f552b3",
+  "specVersion": "1.1.0"
+}

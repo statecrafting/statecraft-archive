@@ -1,0 +1,33 @@
+{
+  "mapping": {
+    "dependsOn": [
+      "001-encore-app-architecture",
+      "002-security-data-invariants"
+    ],
+    "implementingPaths": [
+      {
+        "path": "apps/api/auth/",
+        "source": "spec-edge"
+      }
+    ],
+    "resolvedUnits": [
+      {
+        "locations": [
+          {
+            "file": "apps/api/auth/"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "file",
+          "path": "apps/api/auth/"
+        }
+      }
+    ],
+    "specId": "003-multi-driver-auth-service",
+    "specStatus": "approved"
+  },
+  "schemaVersion": "1.1.0",
+  "shardHash": "15a2970780b5930fd7ca6f67c45b35e25a678a85fad5eb83ead7bc055c0da821"
+}

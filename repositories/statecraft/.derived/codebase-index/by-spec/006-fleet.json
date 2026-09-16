@@ -1,0 +1,32 @@
+{
+  "mapping": {
+    "dependsOn": [
+      "005-factory-service"
+    ],
+    "implementingPaths": [
+      {
+        "path": "backend/fleet/",
+        "source": "spec-edge"
+      }
+    ],
+    "resolvedUnits": [
+      {
+        "locations": [
+          {
+            "file": "backend/fleet/"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "directory",
+          "path": "backend/fleet/"
+        }
+      }
+    ],
+    "specId": "006-fleet",
+    "specStatus": "approved"
+  },
+  "schemaVersion": "1.1.0",
+  "shardHash": "f6784999031b129f50570c235def086b0261e53d76b18dc9d4fbe010f0ea0e61"
+}

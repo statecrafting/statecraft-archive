@@ -1,0 +1,36 @@
+# Spec 196 — explicit apply set for the `policies` Flux Kustomization
+# (platform/gitops/clusters/hetzner-prod/policies-kustomization.yaml).
+#
+# EXPLICIT list, not directory recursion, for the same reason the
+# gitops root kustomization is explicit (spec 151 Finding F8): the
+# namespace-baseline templates `networkpolicy-default-deny.yaml`,
+# `resourcequota.yaml`, and `limitrange.yaml` carry NO namespace in
+# their metadata — they are per-namespace templates applied with
+# `kubectl apply -n <ns>` by post-create.sh. Recursing over this
+# directory would dump them into `default`. Only namespace-explicit
+# policy manifests belong in this list.
+#
+# WITHDRAWN (2026-06-12 incident, spec 196 §Incident addendum): the
+# cross-namespace metrics allows (`networkpolicy-allow-metrics-egress.yaml`)
+# selected service pods in namespaces that have no default-deny. A
+# NetworkPolicy isolates every pod it selects for the policy type it
+# names, there is no "dormant-additive" allow, so the objects became
+# whole-namespace deny-excepts and took down all public ingress. Those
+# flows return WITH each namespace's default-deny under its own spec.
+#
+# Security review fix: the statecraft/deployd/rauthy default-deny plus
+# allow sets below close that same "no default-deny at all" gap for
+# these three namespaces (monitoring was, until this fix, the only
+# namespace with an enforced NetworkPolicy in this deployment). Each file
+# pairs its default-deny with every allow that namespace's own
+# ingress-nginx/DNS/cross-namespace traffic needs, landing together in
+# the same Flux apply, not staged separately, for the same reason the
+# withdrawal above happened: default-deny and its allows must not be
+# split across applies.
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+resources:
+  - monitoring/networkpolicy-monitoring.yaml
+  - statecraft/networkpolicy-statecraft.yaml
+  - deployd/networkpolicy-deployd.yaml
+  - rauthy/networkpolicy-rauthy.yaml

@@ -1,0 +1,178 @@
+{
+  "diagnostics": {
+    "errors": [],
+    "warnings": [
+      {
+        "code": "W-002",
+        "message": "spec '102-governed-excellence' file unit 'factory/contract/schemas/governance-certificate.schema.json' does not exist",
+        "path": "factory/contract/schemas/governance-certificate.schema.json"
+      },
+      {
+        "code": "W-002",
+        "message": "spec '102-governed-excellence' directory unit 'factory/contract/checks' is not a directory",
+        "path": "factory/contract/checks"
+      }
+    ]
+  },
+  "mapping": {
+    "dependsOn": [
+      "089-governed-convergence-plan",
+      "100-post-convergence-remediation",
+      "101-codebase-index-mvp"
+    ],
+    "implementingPaths": [
+      {
+        "path": "Makefile",
+        "source": "spec-edge"
+      },
+      {
+        "path": "crates/factory-engine/src/bin/factory_run.rs",
+        "source": "spec-edge"
+      },
+      {
+        "path": "crates/factory-engine/src/governance_certificate.rs",
+        "source": "spec-edge"
+      },
+      {
+        "path": "crates/factory-engine/src/lib.rs",
+        "source": "spec-edge"
+      },
+      {
+        "path": "crates/orchestrator/src/lib.rs",
+        "source": "spec-edge"
+      },
+      {
+        "path": "crates/policy-kernel/src/lib.rs",
+        "source": "spec-edge"
+      },
+      {
+        "path": "crates/tool-registry",
+        "source": "spec-edge"
+      },
+      {
+        "path": "tools/oap/oap-registry-enrich",
+        "source": "manifest-metadata"
+      }
+    ],
+    "resolvedUnits": [
+      {
+        "locations": [
+          {
+            "file": "crates/factory-engine/src/governance_certificate.rs"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "file",
+          "path": "crates/factory-engine/src/governance_certificate.rs"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "crates/tool-registry"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "extends",
+        "unit": {
+          "id": "tool-registry",
+          "kind": "crate"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "crates/factory-engine/src/bin/factory_run.rs"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "extends",
+        "unit": {
+          "kind": "file",
+          "path": "crates/factory-engine/src/bin/factory_run.rs"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "crates/factory-engine/src/lib.rs"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "extends",
+        "unit": {
+          "kind": "file",
+          "path": "crates/factory-engine/src/lib.rs"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "crates/orchestrator/src/lib.rs"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "extends",
+        "unit": {
+          "kind": "file",
+          "path": "crates/orchestrator/src/lib.rs"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "crates/policy-kernel/src/lib.rs"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "extends",
+        "unit": {
+          "kind": "file",
+          "path": "crates/policy-kernel/src/lib.rs"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "Makefile",
+            "span": {
+              "endLine": 197,
+              "startLine": 196
+            }
+          }
+        ],
+        "ownership": true,
+        "sourceField": "co_authority",
+        "unit": {
+          "anchor": "registry",
+          "file": "Makefile",
+          "kind": "section"
+        }
+      },
+      {
+        "locations": [],
+        "ownership": false,
+        "sourceField": "references",
+        "unit": {
+          "kind": "directory",
+          "path": "factory/contract/checks"
+        }
+      },
+      {
+        "locations": [],
+        "ownership": false,
+        "sourceField": "references",
+        "unit": {
+          "kind": "file",
+          "path": "factory/contract/schemas/governance-certificate.schema.json"
+        }
+      }
+    ],
+    "specId": "102-governed-excellence",
+    "specStatus": "approved"
+  },
+  "schemaVersion": "1.1.0",
+  "shardHash": "e98413fcaf4bbb5825d1bf59eb3c19bd52080a7c04f4ccae3c6e788f3bd5bd2e"
+}

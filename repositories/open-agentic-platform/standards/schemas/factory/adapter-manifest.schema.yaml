@@ -1,0 +1,394 @@
+# ============================================================================
+# Factory Adapter Manifest Schema
+# ============================================================================
+#
+# An Adapter Manifest declares what a technology adapter provides:
+# its stack, capabilities, supported features, build commands,
+# directory conventions, and agent/pattern file locations.
+#
+# The Process Layer reads this manifest at pre-flight to:
+# 1. Verify the adapter can fulfill the Build Specification
+# 2. Resolve directory paths for scaffolding
+# 3. Locate agent prompts and pattern files
+# 4. Determine build/test/lint commands for verification
+#
+# Each adapter ships exactly one manifest.yaml at its root.
+#
+# Schema version: 1.1.0
+#   1.1.0 — spec 198 FR-012: adds the `governance:` section (the adapter
+#           sub-envelope of the governance envelope). 1.0.0 manifests (no
+#           governance section) still parse and serve, but are NOT admissible
+#           under the spec 198 admission gate. Accepted versions are pinned
+#           in crates/factory-contracts/src/adapter_manifest.rs
+#           (ADAPTER_MANIFEST_ACCEPTED_SCHEMA_VERSIONS).
+# ============================================================================
+
+schema_version: "1.1.0"
+
+# ─────────────────────────────────────────────────────────────────────────────
+# IDENTITY
+# ─────────────────────────────────────────────────────────────────────────────
+adapter:
+  name: string                      # Machine-safe identifier (e.g., "acme-vue-node")
+  display_name: string              # Human-readable (e.g., "ACME Vue+Node Template")
+  version: string                   # SemVer (e.g., "3.0.0")
+  description: string               # What this adapter builds
+
+
+# ─────────────────────────────────────────────────────────────────────────────
+# STACK
+# ─────────────────────────────────────────────────────────────────────────────
+# What technologies this adapter uses. Informational for humans and
+# used by pre-flight to warn about stack mismatches.
+#
+stack:
+  language: string                  # e.g., "typescript", "rust", "go", "java", "csharp"
+  runtime: string                   # e.g., "node-22", "deno-2", "bun-1", "jvm-21", "dotnet-9"
+
+  backend:
+    framework: string               # e.g., "express-5", "axum", "spring-boot-3", "fastapi"
+    description: string             # How the backend is structured
+
+  frontend:
+    framework: string               # e.g., "vue-3", "react-19", "svelte-5", "htmx", "server-rendered"
+    state_management: string        # e.g., "pinia", "zustand", "signals", "none"
+    design_system: string           # e.g., "acme-web-components", "shadcn", "none"
+    description: string
+
+  database:
+    supported: [string]             # e.g., ["postgresql", "mysql", "sqlite"]
+    migration_tool: string          # e.g., "custom-ddl", "prisma", "diesel", "flyway", "alembic"
+    orm: string                     # e.g., "none", "prisma", "diesel", "sqlalchemy", "typeorm"
+
+
+# ─────────────────────────────────────────────────────────────────────────────
+# CAPABILITIES
+# ─────────────────────────────────────────────────────────────────────────────
+# Boolean flags declaring what architectural patterns this adapter supports.
+# Pre-flight checks these against Build Specification requirements.
+#
+capabilities:
+  # Deployment topology
+  dual_stack: boolean               # Can produce separate public + internal stacks
+  bff_pattern: boolean              # Public stack proxies to internal (no direct DB)
+  single_stack: boolean             # Can produce a single unified stack
+
+  # Auth patterns
+  session_auth: boolean             # Session-based auth (cookies)
+  token_auth: boolean               # JWT/bearer token auth
+  api_key_auth: boolean             # API key auth
+
+  # Features
+  module_system: boolean            # Has a pluggable module/plugin architecture
+  file_uploads: boolean             # Can handle file upload/storage
+  background_jobs: boolean          # Can run scheduled/async jobs
+  realtime: boolean                 # WebSocket/SSE support
+  email_notifications: boolean      # Can send transactional email
+  audit_logging: boolean            # Built-in audit trail support
+
+  # Data access
+  direct_sql: boolean               # Uses raw SQL (no ORM)
+  orm_based: boolean                # Uses an ORM
+  api_proxy: boolean                # Can proxy requests to another API
+
+
+# ─────────────────────────────────────────────────────────────────────────────
+# SUPPORTED AUTH METHODS
+# ─────────────────────────────────────────────────────────────────────────────
+# Maps Build Specification auth methods to adapter implementations.
+#
+supported_auth:
+  - method: string                  # Matches auth.audiences.<name>.method in Build Spec
+    driver: string                  # Adapter's internal driver name
+    providers: [string]             # Supported identity providers (empty = any)
+    description: string
+
+supported_session_stores:
+  - type: string                    # e.g., "redis", "postgresql", "memory", "dynamodb"
+    description: string
+
+
+# ─────────────────────────────────────────────────────────────────────────────
+# BUILD COMMANDS
+# ─────────────────────────────────────────────────────────────────────────────
+# Commands the verification harness uses to check adapter output.
+# All paths relative to the scaffolded project root.
+#
+commands:
+  install: string                   # e.g., "npm install", "cargo fetch", "mvn dependency:resolve"
+  compile: string                   # e.g., "npm run build", "cargo build", "mvn compile"
+  test: string                      # e.g., "npm test", "cargo test", "mvn test"
+  lint: string                      # e.g., "npm run lint", "cargo clippy", "mvn checkstyle:check"
+  dev: string                       # e.g., "npm run dev", "cargo watch", "mvn spring-boot:run"
+  format_check: string              # e.g., "npx prettier --check .", "cargo fmt --check"
+  type_check: string                # e.g., "npx tsc --noEmit", "mypy .", "cargo check"
+
+  # Seed / fixture runner
+  seed: string                      # e.g., "node scripts/run-seeds.js", "npx prisma db seed"
+
+  # Per-feature verification (run after each scaffolded feature)
+  # Subset of above — only fast checks, not full build
+  feature_verify:
+    - string                        # e.g., ["npm run build", "npm test"]
+
+
+# ─────────────────────────────────────────────────────────────────────────────
+# DIRECTORY CONVENTIONS
+# ─────────────────────────────────────────────────────────────────────────────
+# Template strings for file paths. The scaffolding agents use these to
+# determine where to write generated code.
+#
+# Placeholders:
+#   {stack}     — "api", "api-public", "api-internal", "web", "web-public", "web-internal"
+#   {resource}  — Kebab-case resource name (e.g., "funding-requests")
+#   {Resource}  — PascalCase (e.g., "FundingRequests")
+#   {entity}    — Kebab-case entity (e.g., "funding-request")
+#   {Entity}    — PascalCase entity (e.g., "FundingRequest")
+#   {PageName}  — PascalCase page name (e.g., "Dashboard")
+#   {org}       — Organization slug from Build Spec
+#   {timestamp} — Migration timestamp (e.g., "20260327100000")
+#   {name}      — Migration name (e.g., "create_organizations")
+#
+directory_conventions:
+  # Backend
+  api_service: string               # e.g., "apps/{stack}/src/services/{resource}.service.ts"
+  api_controller: string            # e.g., "apps/{stack}/src/controllers/{resource}.controller.ts"
+  api_route: string                 # e.g., "apps/{stack}/src/routes/{resource}.routes.ts"
+  api_test: string                  # e.g., "apps/{stack}/src/services/{resource}.service.test.ts"
+  api_types: string                 # e.g., "packages/shared/src/types/{entity}.types.ts"
+  api_middleware: string             # e.g., "apps/{stack}/src/middleware/{name}.middleware.ts"
+
+  # Frontend
+  ui_view: string                   # e.g., "apps/{stack}/src/views/{PageName}View.vue"
+  ui_store: string                  # e.g., "apps/{stack}/src/stores/{resource}.store.ts"
+  ui_route_config: string           # e.g., "apps/{stack}/src/router/index.ts"
+  ui_test: string                   # e.g., "apps/{stack}/src/views/{PageName}View.test.ts"
+  ui_component: string              # e.g., "apps/{stack}/src/components/{Name}.vue"
+
+  # Data layer
+  migration: string                 # e.g., "database/migrations/{timestamp}_{name}.sql"
+  seed: string                      # e.g., "database/seeds/{name}.sql"
+  schema_types: string              # e.g., "packages/shared/src/schemas/{entity}.schema.ts"
+  fixture_module: string            # e.g., "packages/shared/src/fixtures/index.ts"
+
+  # Shared
+  env_file: string                  # e.g., ".env.example"
+  env_file_per_stack:               # For dual-stack
+    public: string
+    internal: string
+
+
+# ─────────────────────────────────────────────────────────────────────────────
+# PATTERNS
+# ─────────────────────────────────────────────────────────────────────────────
+# Pointers to code generation pattern files. Each pattern is a focused
+# document (<200 lines) containing: convention, template code, naming rules,
+# and a concrete example.
+#
+# Scaffolding agents load ONE pattern at a time, not all of them.
+#
+patterns:
+  api:
+    service: string                 # Path relative to adapter root
+    controller: string
+    route: string
+    test: string
+    middleware: string
+    types: string
+  ui:
+    view: string
+    state: string
+    route: string
+    test: string
+    layout: string
+    component: string
+  data:
+    migration: string
+    query: string
+    seed: string
+    validation_schema: string
+    fixture_factory: string         # e.g., "patterns/data/fixture-factory.md"
+
+  # Page-type specific patterns (keyed by page_type from Build Spec)
+  page_types:
+    landing: string
+    dashboard: string
+    list: string
+    detail: string
+    form: string
+    content: string
+    help: string
+    profile: string
+    login: string
+
+
+# ─────────────────────────────────────────────────────────────────────────────
+# AGENTS
+# ─────────────────────────────────────────────────────────────────────────────
+# Pointers to agent prompt files. Each agent is a focused Markdown file
+# (<2K tokens) that a scaffolding agent reads before generating code.
+#
+agents:
+  # Required agents (every adapter must provide these)
+  api_scaffolder: string            # Generates service + controller + route + test for one endpoint
+  ui_scaffolder: string             # Generates view + state + route + test for one page
+  data_scaffolder: string           # Generates DDL/migration + types for entities
+  configurer: string                # Applies project identity, fills env vars, wires auth
+  trimmer: string                   # Removes unused scaffold artifacts
+
+  # Optional agents
+  seed_generator: string            # Generates seed SQL, fixture SQL, fixture factory module
+  reviewer: string                  # Reviews generated code for quality/consistency
+  security_auditor: string          # Checks for security issues
+
+
+# ─────────────────────────────────────────────────────────────────────────────
+# SCAFFOLD
+# ─────────────────────────────────────────────────────────────────────────────
+# Base project template to copy before scaffolding features.
+#
+# NORMATIVE (spec 112 §5.3, graduated into the open standard): the scaffold
+# output tree handed to the consumer MUST be VCS-free — no `.git` directory
+# at any depth. Version-control initialisation is the consumer's act, never
+# the scaffold's; machine-driven scaffold entry points MUST NOT run
+# `git init` (template precedent: `--no-git` / `NO_GIT`, implied by
+# `noInstall`).
+#
+scaffold:
+  source: string                    # Path to base project (relative to adapter root), e.g., "scaffold/"
+  description: string               # What the scaffold provides out of the box
+
+  # For adapters with a module system: which modules to install per variant
+  modules:
+    single-public: [string]
+    single-internal: [string]
+    dual: [string]
+
+  # Post-scaffold setup commands (run after copying scaffold, before feature scaffolding)
+  setup_commands:
+    - string                        # e.g., "npm install", "npx tsx scripts/setup-dual-app.ts"
+
+  # ── Spec 112 §8 additions ──────────────────────────────────────────────
+  # The fields below are required for an adapter to be Create-eligible via
+  # statecraft's web UI (`/app/projects/new`). Import and OPC-driven runs
+  # do not require them.
+  entry_point: string               # Relative path to scaffold entry script, e.g., "scripts/setup-app.ts"
+  runtime: string                   # Execution runtime; statecraft Create MVP accepts only "node-24"
+  args_schema: object               # JSON Schema for --args accepted by the entry point
+  profiles:                         # Declared variant/profile combinations
+    - name: string                  # e.g., "dual-saml-postgres"
+      variant: string               # Matches Build Spec project.variant
+      modules: [string]             # Module names activated for this profile
+      default: boolean
+  emits:                            # What scaffold produces, relative to project root
+    - path: string                  # e.g., "template.json", "apps/", ".factory/pipeline-state.json"
+      description: string           # Optional
+
+
+# ─────────────────────────────────────────────────────────────────────────────
+# GOVERNANCE — adapter sub-envelope (spec 198 FR-012; REQUIRED at 1.1.0)
+# ─────────────────────────────────────────────────────────────────────────────
+# The scaffold-boundary half of the governance envelope. Filed INSIDE the
+# manifest so the declaration and its reconcile evidence (`commands:`,
+# `directory_conventions:`, `scaffold.emits:`) share one content-addressed
+# unit and one revocation key (spec 198 FR-010/FR-012). Every field carries
+# the ASI control id(s) it satisfies (FR-002). OAP reconciles these
+# declarations against the adapter agents' frontmatter (spec 054 unified
+# schema + spec 198 FR-003 mutation grammar) and refuses admission on any
+# mismatch — the brief cannot lie about its parts.
+#
+governance:
+  max_tier: string                  # Tier ceiling for adapter agents:
+                                    # "tier1" | "tier2" | "tier3"          [ASI02 m1, ASI03]
+  file_write_scope:                 # Where adapter agents may create/
+    - string                        # modify/delete (glob per line)        [ASI02 m1, ASI05 m4]
+  file_write_denied:                # Real secret material + infra paths
+    - string                        # agents may never write (e.g., ".env",
+                                    # "**/keys/**", "**/.git/**")          [ASI05, CONST-002 class]
+  allowed_commands_from: string     # Key reference; the manifest map that
+                                    # IS the command allowlist. Only defined
+                                    # value: "commands" (one home per fact) [ASI02 m1/m7]
+  scaffold_execution:               # Declared executable surface at
+                                    # scaffold time                        [ASI05]
+    entry_points_from: [string]     # Key refs into scaffold:, e.g.
+                                    # "scaffold.entry_point",
+                                    # "scaffold.entry_point_dual"
+    setup_commands_from: string     # Key ref, e.g. "scaffold.setup_commands"
+    isolation: string               # Only defined value: "sandbox-required"
+                                    # (specs 162/185/186); unknown values
+                                    # fail validation closed               [ASI05; principle 9]
+  agents_from: string               # Key reference; the manifest map whose
+                                    # entries are the behavioral-manifest
+                                    # constituents. Only defined value:
+                                    # "agents"                             [ASI10 m5]
+
+
+# ─────────────────────────────────────────────────────────────────────────────
+# VALIDATION
+# ─────────────────────────────────────────────────────────────────────────────
+# Adapter-specific validation rules. These are architecture invariants
+# that the verification harness checks after scaffolding.
+#
+# Expressed as machine-checkable rules, NOT prose.
+#
+validation:
+  invariants:
+    - id: string                    # e.g., "INV-001"
+      description: string           # Human-readable
+      check:
+        type:
+          enum: [
+            grep-absent,            # Pattern must NOT appear in codebase
+            grep-present,           # Pattern must appear
+            file-exists,            # File must exist
+            file-absent,            # File must not exist
+            command-succeeds        # Shell command exits 0
+          ]
+        pattern: string             # Regex for grep, glob for file, command for shell
+        scope: string               # Where to check (e.g., "apps/", "packages/", ".")
+      severity:
+        enum: [error, warning]
+
+
+# ─────────────────────────────────────────────────────────────────────────────
+# DUAL STACK MAPPING
+# ─────────────────────────────────────────────────────────────────────────────
+# For adapters that support dual_stack: maps Build Spec audiences
+# to physical application variants. A variant is a standalone top-level
+# copy of the base (not an in-tree stack).
+#
+dual_stack:
+  # Generator that emits the dual deployment (optional)
+  generator: string                 # e.g., "scripts/setup-dual-app.ts"
+
+  # Maps audience → variant
+  audience_to_variant:
+    <audience_name>: string         # e.g., citizen: "public", staff: "internal"
+
+  # Variant names used in directory_conventions {variant} placeholder.
+  # NOTE (spec 229): a variant's auth_driver is the app-level driver, only
+  # "mock" (dev) or "rauthy" (prod). Upstream IdPs (github/google/auth0/entra/
+  # SAML-via-Google-Workspace) are Rauthy upstream-provider config, NOT values
+  # of this field.
+  variants:
+    public:
+      dir: string                   # top-level copy dir, e.g. "public"
+      api: string                   # backend app path, e.g. "apps/api"
+      web: string                   # SPA served, e.g. "apps/web"
+      port_api: integer             # e.g., 4000
+      port_web: integer             # e.g., 5173
+      auth_driver: string           # "mock" | "rauthy" only (spec 229; see note above)
+      env_example: string           # e.g., ".env.external.example"
+    internal:
+      dir: string                   # e.g., "internal"
+      api: string                   # e.g., "apps/api"
+      web: string                   # e.g., "apps/web-internal"
+      port_api: integer             # e.g., 4000
+      port_web: integer             # e.g., 5174
+      auth_driver: string           # "mock" | "rauthy" only (spec 229; see note above)
+      env_example: string           # e.g., ".env.internal.example"
+
+  # Data flow constraints
+  data_access:
+    public: string                  # e.g., "proxy" — public copy proxies /api/v1/data/* to internal
+    internal: string                # e.g., "direct" — internal copy owns the database

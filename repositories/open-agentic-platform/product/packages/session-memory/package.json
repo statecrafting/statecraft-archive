@@ -1,0 +1,45 @@
+{
+  "name": "@opc/session-memory",
+  "version": "0.1.0",
+  "description": "Session memory with SQLite persistence, harvesting engine, and MCP server for project-scoped AI memory",
+  "private": true,
+  "type": "module",
+  "main": "src/index.ts",
+  "types": "src/index.ts",
+  "exports": {
+    ".": "./src/index.ts",
+    "./types": "./src/types.ts",
+    "./gate": "./src/gate.ts",
+    "./storage": "./src/storage/sqlite.ts",
+    "./server": "./src/server.ts",
+    "./tools/store": "./src/tools/store.ts",
+    "./tools/query": "./src/tools/query.ts",
+    "./tools/delete": "./src/tools/delete.ts",
+    "./tools/list": "./src/tools/list.ts",
+    "./harvesting": "./src/harvesting/engine.ts",
+    "./harvesting/rules": "./src/harvesting/rules.ts",
+    "./harvesting/rules-loader": "./src/harvesting/rules-loader.ts",
+    "./expiry": "./src/expiry/sweeper.ts",
+    "./expiry/promotion": "./src/expiry/promotion.ts",
+    "./integration": "./src/integration.ts"
+  },
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "test": "vitest run",
+    "lint": "eslint src/"
+  },
+  "devDependencies": {
+    "@types/better-sqlite3": "^7.6.13",
+    "@types/node": "^24.5.0",
+    "typescript": "^6.0.3",
+    "vitest": "^4.1.5"
+  },
+  "dependencies": {
+    "@opc/carrier-gate": "workspace:*",
+    "better-sqlite3": "^12.9.0",
+    "yaml": "^2.8.4"
+  },
+  "oap": {
+    "spec": "056-session-memory"
+  }
+}

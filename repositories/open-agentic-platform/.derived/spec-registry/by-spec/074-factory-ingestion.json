@@ -1,0 +1,66 @@
+{
+  "record": {
+    "amendmentRecord": "162-sandbox-execution-contract",
+    "authors": [
+      "open-agentic-platform"
+    ],
+    "codeAliases": [
+      "FACTORY_INGESTION",
+      "FACTORY_CONTRACTS"
+    ],
+    "created": "2026-04-04",
+    "domain": "platform",
+    "establishes": [
+      {
+        "id": "factory-contracts",
+        "kind": "crate"
+      }
+    ],
+    "extraFrontmatter": {
+      "amended": "2026-05-23",
+      "language": "en"
+    },
+    "featureBranch": "feat/074-factory-ingestion",
+    "id": "074-factory-ingestion",
+    "implementation": "complete",
+    "kind": "platform",
+    "references": [
+      {
+        "role": "historical",
+        "unit": {
+          "kind": "directory",
+          "path": "factory"
+        }
+      }
+    ],
+    "sectionHeadings": [
+      "Feature Specification: Factory Ingestion as First-Class Delivery Engine",
+      "Purpose",
+      "Scope",
+      "In scope",
+      "Out of scope",
+      "Requirements",
+      "Functional Requirements",
+      "Non-Functional Requirements",
+      "Architecture",
+      "Dependency Graph",
+      "Key Types (Build Spec — Partial)",
+      "Key Types (Adapter Manifest — Partial)",
+      "Implementation Approach",
+      "Phase 1: Factory Integration (completed)",
+      "Phase 2: Contract Types Crate (3-4 days)",
+      "Phase 3: Registry & Loaders (2 days)",
+      "Phase 4: Spec Compiler Extension (1 day)",
+      "Phase 5: Schema Relocation (2026-05-05 follow-up)",
+      "Success Criteria",
+      "Dependencies",
+      "Risks"
+    ],
+    "specPath": "specs/074-factory-ingestion/spec.md",
+    "status": "approved",
+    "summary": "Ingest the Factory software factory framework into OAP as a first-class citizen, providing the delivery methodology layer that transforms OAP from a governed orchestration engine into a complete AI software factory. Defines directory structure, Rust contract types, adapter registry, and integration seams.\n",
+    "title": "Factory Ingestion as First-Class Delivery Engine"
+  },
+  "shardHash": "936bdee417ae0bc6b38e1315581b553ac8866a8225821e66b8bb2341f73c56f3",
+  "specVersion": "1.1.0"
+}

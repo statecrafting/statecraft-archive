@@ -1,0 +1,62 @@
+{
+  "use_cases": [
+    {
+      "id": "UC-001",
+      "name": "Browse events",
+      "actor": "attendee",
+      "preconditions": ["At least one event is published"],
+      "main_flow": [
+        "Attendee opens the events list",
+        "System returns published events",
+        "Attendee opens an event to see its details and sessions"
+      ],
+      "postconditions": ["Attendee has viewed event details"],
+      "related_entities": ["Event", "Session"]
+    },
+    {
+      "id": "UC-002",
+      "name": "Register for an event",
+      "actor": "attendee",
+      "preconditions": ["Attendee is authenticated", "Event is published"],
+      "main_flow": [
+        "Attendee opens the registration form for an event",
+        "Attendee submits the registration",
+        "System validates uniqueness and capacity",
+        "System records the registration as submitted",
+        "System notifies the attendee"
+      ],
+      "postconditions": ["A registration exists in submitted state"],
+      "related_entities": ["Registration", "Event", "Attendee"],
+      "business_rules": ["BR-001", "BR-002", "BR-003"]
+    },
+    {
+      "id": "UC-004",
+      "name": "Publish an event",
+      "actor": "organizer",
+      "preconditions": ["Organizer is authenticated", "Event exists in draft"],
+      "main_flow": [
+        "Organizer opens the event in the admin surface",
+        "Organizer publishes the event",
+        "System transitions the event to published"
+      ],
+      "postconditions": ["Event is visible to attendees"],
+      "related_entities": ["Event"],
+      "business_rules": ["BR-004"]
+    },
+    {
+      "id": "UC-005",
+      "name": "Review registrations",
+      "actor": "organizer",
+      "preconditions": ["Organizer is authenticated", "Submitted registrations exist"],
+      "main_flow": [
+        "Organizer opens the registrations review list",
+        "Organizer confirms or waitlists each submitted registration",
+        "System enforces event capacity",
+        "System notifies confirmed attendees"
+      ],
+      "postconditions": ["Each reviewed registration is confirmed or waitlisted"],
+      "related_entities": ["Registration", "Event"],
+      "business_rules": ["BR-001", "BR-002"]
+    }
+  ]
+}

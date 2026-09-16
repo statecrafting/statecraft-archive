@@ -1,0 +1,266 @@
+{
+  "diagnostics": {
+    "errors": [],
+    "warnings": [
+      {
+        "code": "W-002",
+        "message": "spec '171-opc-structural-diff-plan-ui' file unit 'docs/owasp/factory/AIDE-VELOCITY-OAP-INTENT.md' does not exist",
+        "path": "docs/owasp/factory/AIDE-VELOCITY-OAP-INTENT.md"
+      },
+      {
+        "code": "W-002",
+        "message": "spec '171-opc-structural-diff-plan-ui' file unit 'docs/owasp/owasp_top_10_agentic_applications_summary.md' does not exist",
+        "path": "docs/owasp/owasp_top_10_agentic_applications_summary.md"
+      }
+    ]
+  },
+  "mapping": {
+    "dependsOn": [
+      "032-opc-inspect-governance-wiring-mvp",
+      "076-factory-desktop-panel",
+      "102-governed-excellence",
+      "126-desktop-agent-picker-ui"
+    ],
+    "implementingPaths": [
+      {
+        "path": "product/apps/opc/src/components/factory",
+        "source": "spec-edge"
+      },
+      {
+        "path": "product/apps/opc/src/components/factory/FactoryPipelineContext.tsx",
+        "source": "spec-edge"
+      },
+      {
+        "path": "product/apps/opc/src/components/factory/FactoryPipelinePanel.tsx",
+        "source": "spec-edge"
+      },
+      {
+        "path": "product/apps/opc/src/components/factory/GateImpactSummary.tsx",
+        "source": "multiple"
+      },
+      {
+        "path": "product/apps/opc/src/components/factory/PlanActionGraph.tsx",
+        "source": "multiple"
+      },
+      {
+        "path": "product/apps/opc/src/components/factory/PlanCertificatePrediction.tsx",
+        "source": "multiple"
+      },
+      {
+        "path": "product/apps/opc/src/components/factory/PlanReviewDialog.tsx",
+        "source": "multiple"
+      },
+      {
+        "path": "product/apps/opc/src/components/factory/PlanStructuralDiff.tsx",
+        "source": "multiple"
+      },
+      {
+        "path": "product/apps/opc/src/components/factory/__tests__/FactoryPipelineContextPlan.test.tsx",
+        "source": "comment-header"
+      },
+      {
+        "path": "product/apps/opc/src/components/factory/__tests__/GateImpactSummary.test.tsx",
+        "source": "comment-header"
+      },
+      {
+        "path": "product/apps/opc/src/components/factory/__tests__/PlanCertificatePrediction.test.tsx",
+        "source": "comment-header"
+      },
+      {
+        "path": "product/apps/opc/src/components/factory/__tests__/PlanRenderers.test.tsx",
+        "source": "comment-header"
+      },
+      {
+        "path": "product/apps/opc/src/components/factory/__tests__/PlanReviewDialog.test.tsx",
+        "source": "comment-header"
+      },
+      {
+        "path": "product/apps/opc/src/components/factory/__tests__/planAnalysis.test.ts",
+        "source": "comment-header"
+      },
+      {
+        "path": "product/apps/opc/src/components/factory/__tests__/planTypes.test.ts",
+        "source": "comment-header"
+      },
+      {
+        "path": "product/apps/opc/src/components/factory/planAnalysis.ts",
+        "source": "multiple"
+      },
+      {
+        "path": "product/apps/opc/src/components/factory/planTypes.ts",
+        "source": "multiple"
+      },
+      {
+        "path": "specs/102-governed-excellence/spec.md",
+        "source": "spec-edge"
+      }
+    ],
+    "resolvedUnits": [
+      {
+        "locations": [
+          {
+            "file": "product/apps/opc/src/components/factory/GateImpactSummary.tsx"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "file",
+          "path": "product/apps/opc/src/components/factory/GateImpactSummary.tsx"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "product/apps/opc/src/components/factory/PlanActionGraph.tsx"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "file",
+          "path": "product/apps/opc/src/components/factory/PlanActionGraph.tsx"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "product/apps/opc/src/components/factory/PlanCertificatePrediction.tsx"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "file",
+          "path": "product/apps/opc/src/components/factory/PlanCertificatePrediction.tsx"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "product/apps/opc/src/components/factory/PlanReviewDialog.tsx"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "file",
+          "path": "product/apps/opc/src/components/factory/PlanReviewDialog.tsx"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "product/apps/opc/src/components/factory/PlanStructuralDiff.tsx"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "file",
+          "path": "product/apps/opc/src/components/factory/PlanStructuralDiff.tsx"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "product/apps/opc/src/components/factory/planAnalysis.ts"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "file",
+          "path": "product/apps/opc/src/components/factory/planAnalysis.ts"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "product/apps/opc/src/components/factory/planTypes.ts"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "file",
+          "path": "product/apps/opc/src/components/factory/planTypes.ts"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "product/apps/opc/src/components/factory/FactoryPipelineContext.tsx"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "extends",
+        "unit": {
+          "kind": "file",
+          "path": "product/apps/opc/src/components/factory/FactoryPipelineContext.tsx"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "product/apps/opc/src/components/factory/FactoryPipelinePanel.tsx"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "extends",
+        "unit": {
+          "kind": "file",
+          "path": "product/apps/opc/src/components/factory/FactoryPipelinePanel.tsx"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "product/apps/opc/src/components/factory"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "refines",
+        "unit": {
+          "kind": "directory",
+          "path": "product/apps/opc/src/components/factory"
+        }
+      },
+      {
+        "locations": [],
+        "ownership": false,
+        "sourceField": "references",
+        "unit": {
+          "kind": "file",
+          "path": "docs/owasp/factory/AIDE-VELOCITY-OAP-INTENT.md"
+        }
+      },
+      {
+        "locations": [],
+        "ownership": false,
+        "sourceField": "references",
+        "unit": {
+          "kind": "file",
+          "path": "docs/owasp/owasp_top_10_agentic_applications_summary.md"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "specs/102-governed-excellence/spec.md"
+          }
+        ],
+        "ownership": false,
+        "sourceField": "references",
+        "unit": {
+          "kind": "file",
+          "path": "specs/102-governed-excellence/spec.md"
+        }
+      }
+    ],
+    "specId": "171-opc-structural-diff-plan-ui",
+    "specStatus": "approved"
+  },
+  "schemaVersion": "1.1.0",
+  "shardHash": "a77cba42982116d5f505bb5c1b7c5aa7ba14abd1faadda21b7bf92f8cdc90b62"
+}

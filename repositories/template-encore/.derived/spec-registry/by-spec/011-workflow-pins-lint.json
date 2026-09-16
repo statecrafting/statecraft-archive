@@ -1,0 +1,62 @@
+{
+  "record": {
+    "codeAliases": [
+      "WORKFLOW_PINS"
+    ],
+    "created": "2026-06-10",
+    "domain": "ci-cd",
+    "establishes": [
+      {
+        "kind": "file",
+        "path": "tools/lint/workflow-pins.sh"
+      },
+      {
+        "kind": "file",
+        "path": "tools/lint/workflow-pins-test.sh"
+      },
+      {
+        "kind": "file",
+        "path": "tools/lint/tests/fixtures/passing/action.yml"
+      },
+      {
+        "kind": "file",
+        "path": "tools/lint/tests/fixtures/failing/action.yml"
+      }
+    ],
+    "id": "011-workflow-pins-lint",
+    "implementation": "complete",
+    "kind": "governance",
+    "owner": "bart",
+    "references": [
+      {
+        "role": "opt-in local enforcement point (owned by spec 000)",
+        "unit": {
+          "kind": "file",
+          "path": ".githooks/pre-commit"
+        }
+      }
+    ],
+    "risk": "low",
+    "sectionHeadings": [
+      "011 — Workflow-ref SHA-pinning lint",
+      "1. Purpose",
+      "2. Territory",
+      "3. Behavior",
+      "FR-01: SHA-pin enforcement",
+      "FR-02: One script, two consumers",
+      "FR-03: No allow-list",
+      "3.1 Classification rules",
+      "FR-04: Workflow YAML must not embed example `uses:` lines",
+      "3.2 Test fixtures as lint spec",
+      "FR-05: Trust transitivity",
+      "4. Acceptance criteria",
+      "5. Out of scope"
+    ],
+    "specPath": "specs/011-workflow-pins-lint/spec.md",
+    "status": "approved",
+    "summary": "Every `uses:` reference across .github/** must be pinned to a full commit SHA. tools/lint/workflow-pins.sh is the line-oriented lint (five classification rules, no allow-list — the only fix for a flagged ref is to pin it), workflow-pins-test.sh the fixture-backed regression runner. The gate runs in ci-supply-chain.yml and in the opt-in pre-commit hook.\n",
+    "title": "Workflow-ref SHA-pinning lint"
+  },
+  "shardHash": "c5a02314c89e2dcd8f1baba1fa1cb7314072e960b5433cb4c58db8ebaeb8142b",
+  "specVersion": "1.1.0"
+}

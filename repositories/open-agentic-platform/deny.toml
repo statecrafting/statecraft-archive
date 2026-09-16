@@ -1,0 +1,161 @@
+# cargo-deny policy bundle. Spec 116.
+#
+# Authoring rules:
+#   - This file is human-edited markdown-friendly TOML.
+#   - cargo-deny is the only consumer.
+#   - During the 30-day warn window after merge (until 2026-05-28), the
+#     ci-supply-chain.yml workflow runs `continue-on-error: true` so violations
+#     surface as advisory annotations rather than blocking PRs. After
+#     promotion, the gate becomes blocking.
+
+[advisories]
+db-path = "~/.cargo/advisory-db"
+db-urls = ["https://github.com/RustSec/advisory-db"]
+yanked = "warn"
+
+# Ignored advisories — all maintenance-status (no CVE, no unsound, no
+# yanked). Each entry names the chain and the upstream blocker.
+# Vulnerabilities and unsound advisories MUST NOT appear here.
+# Revisit annually or when the named upstream ships a release.
+ignore = [
+    # Bincode 2.x — author ceased development permanently after a
+    # doxxing/harassment incident; considers v1.3.3 a complete artifact
+    # and v2.x stable. No security defect; no successor named for our
+    # use case. Pulled by hiqlite v0.13.1 (latest) → cryptr → bincode.
+    # Revisit when hiqlite migrates off bincode 2.x (no public plan).
+    { id = "RUSTSEC-2025-0141", reason = "bincode 2.x archived; hiqlite 0.13 (latest) pins it; no security issue" },
+
+    # paste — original author archived the crate. `pastey` is a
+    # drop-in fork. Three transitive pulls in our graph: rav1e (image
+    # codec via ravif → image), tokenizers (HF tokenizers via fastembed),
+    # kd-tree (axiomregent semantic search). Replacing one leaves the
+    # others. Revisit when fastembed/tokenizers/rav1e migrate to pastey.
+    { id = "RUSTSEC-2024-0436", reason = "paste archived; pastey is a fork; pulled transitively by image/tokenizers/kd-tree" },
+
+    # fxhash — replaced by rustc-hash upstream. Reachable only via
+    # tauri-utils 2.8.3 → kuchikiki 0.8.8 (Tauri's HTML5 selectors
+    # fork) → selectors 0.24 → fxhash. Build-time only.
+    # Revisit when Tauri's kuchikiki fork bumps selectors.
+    { id = "RUSTSEC-2025-0057", reason = "fxhash unmaintained; pinned by Tauri's kuchikiki HTML5 fork" },
+
+    # proc-macro-error — replaced by proc-macro-error2. Reachable only
+    # via Tauri's Linux-tray stack: tray-icon → libappindicator →
+    # gtk 0.18 → glib-macros 0.18. Linux build only.
+    # Revisit when Tauri's tray-icon migrates to gtk4 / proc-macro-error2.
+    { id = "RUSTSEC-2024-0370", reason = "proc-macro-error unmaintained; pinned by Tauri's libappindicator (Linux tray)" },
+
+    # gtk-rs GTK3 bindings (10 sibling crates: gtk, atk, gdk, gdk-pixbuf,
+    # plus *-sys variants) — superseded by gtk4-rs. Reachable only via
+    # Tauri's tray-icon → libappindicator → gtk 0.18 stack. Linux build
+    # only. Revisit when Tauri's tray-icon migrates to gtk4 (tracked
+    # in tauri-apps/tao#999 and similar).
+    { id = "RUSTSEC-2024-0411", reason = "gtk-rs GTK3 deprecated; pinned by Tauri's libappindicator (Linux tray)" },
+    { id = "RUSTSEC-2024-0412", reason = "gtk-rs GTK3 deprecated; pinned by Tauri's libappindicator (Linux tray)" },
+    { id = "RUSTSEC-2024-0413", reason = "gtk-rs GTK3 deprecated; pinned by Tauri's libappindicator (Linux tray)" },
+    { id = "RUSTSEC-2024-0414", reason = "gtk-rs GTK3 deprecated; pinned by Tauri's libappindicator (Linux tray)" },
+    { id = "RUSTSEC-2024-0415", reason = "gtk-rs GTK3 deprecated; pinned by Tauri's libappindicator (Linux tray)" },
+    { id = "RUSTSEC-2024-0416", reason = "gtk-rs GTK3 deprecated; pinned by Tauri's libappindicator (Linux tray)" },
+    { id = "RUSTSEC-2024-0417", reason = "gtk-rs GTK3 deprecated; pinned by Tauri's libappindicator (Linux tray)" },
+    { id = "RUSTSEC-2024-0418", reason = "gtk-rs GTK3 deprecated; pinned by Tauri's libappindicator (Linux tray)" },
+    { id = "RUSTSEC-2024-0419", reason = "gtk-rs GTK3 deprecated; pinned by Tauri's libappindicator (Linux tray)" },
+    { id = "RUSTSEC-2024-0420", reason = "gtk-rs GTK3 deprecated; pinned by Tauri's libappindicator (Linux tray)" },
+
+    # unic-* — Unicode crate family unmaintained; superseded by `icu`.
+    # Reachable only via tauri-utils 2.8.3 → urlpattern 0.3.0 →
+    # idna_adapter → unic. Build-time only. Revisit when Tauri bumps
+    # urlpattern from 0.3 to 0.6+ (which dropped the unic dep).
+    { id = "RUSTSEC-2025-0075", reason = "unic-char-range unmaintained; pinned by Tauri's urlpattern 0.3" },
+    { id = "RUSTSEC-2025-0080", reason = "unic-common unmaintained; pinned by Tauri's urlpattern 0.3" },
+    { id = "RUSTSEC-2025-0081", reason = "unic-char-property unmaintained; pinned by Tauri's urlpattern 0.3" },
+    { id = "RUSTSEC-2025-0098", reason = "unic-ucd-version unmaintained; pinned by Tauri's urlpattern 0.3" },
+    { id = "RUSTSEC-2025-0100", reason = "unic-ucd-ident unmaintained; pinned by Tauri's urlpattern 0.3" },
+
+    # kube-rs 0.95 transitives — backoff, derivative, instant,
+    # rustls-pemfile. All four are direct deps of kube-rs / kube-client
+    # 0.95 (pulled by spec 186's sandbox-k8s crate). No security defect;
+    # all four are maintenance-status only. kube-rs migrated off these
+    # in 3.x; revisit when sandbox-k8s bumps to kube 3.x (tracked as a
+    # follow-up unit under spec 186, separate PR — bumping a major
+    # version of the K8s client is its own change with its own surface
+    # to review).
+    { id = "RUSTSEC-2025-0012", reason = "backoff unmaintained; pinned by kube-client 0.95 (spec 186) — kube 3.x drops it" },
+    { id = "RUSTSEC-2024-0388", reason = "derivative unmaintained; pinned by kube-client 0.95 (spec 186) — kube 3.x drops it" },
+    { id = "RUSTSEC-2024-0384", reason = "instant unmaintained; pinned by kube-runtime 0.95 (spec 186) — kube 3.x drops it" },
+    { id = "RUSTSEC-2025-0134", reason = "rustls-pemfile unmaintained; pinned by kube-client 0.95 (spec 186) — kube 3.x drops it" },
+    { id = "RUSTSEC-2026-0192", reason = "ttf-parser unmaintained; transitive via pdf-extract font parsing in knowledge extraction" },
+
+    # quick-xml 0.36 / 0.39 DoS advisories, both published 2026-07-02 and
+    # matching transitive quick-xml pins. The patched line is 0.40+, a
+    # breaking bump (0.x minor is semver-breaking) that needs the parent
+    # deps updated, tracked as a follow-up supply-chain PR. Time-boxed
+    # documented exception; XML parsing here is not on an
+    # attacker-controlled input path.
+    { id = "RUSTSEC-2026-0194", reason = "quick-xml quadratic duplicate-attribute-name DoS; transitive pin, patched in 0.40+ (breaking bump), follow-up tracked" },
+    { id = "RUSTSEC-2026-0195", reason = "quick-xml unbounded namespace-allocation DoS; transitive pin, patched in 0.40+ (breaking bump), follow-up tracked" },
+]
+
+[bans]
+# The single most common foot-gun in Rust workspaces — multiple major
+# versions of the same crate dragged in via different paths.
+multiple-versions = "warn"
+wildcards = "deny"
+# Path-based workspace deps (e.g. `agent = { path = "../agent" }`) are
+# version-less by convention; cargo-deny would otherwise flag every
+# internal dep as a wildcard. This exempts path deps only — `*` versions
+# from crates.io still error.
+allow-wildcard-paths = true
+# Crates we have explicitly chosen NOT to use. Empty on day 1; populate
+# via follow-up PRs as architectural decisions land (e.g. "use tracing,
+# not log").
+deny = [
+    # Spec 218 FR-002 (read, never recompute): factory-engine may depend on
+    # spec-spine-core (for the reader-side attestation_hash, registry reads, and
+    # type deserialisation) but MUST NOT depend on the spec-spine CLI binary
+    # crate, which carries the full corpus-compile / attestation-emit surface.
+    # This is the crate-level layer of the FR-002 boundary; the symbol-level
+    # layer is clippy.toml's disallowed-methods ban on attest/verify_recompute.
+    { name = "spec-spine-cli", reason = "spec 218 FR-002: read the attestation hash, never depend on the emit CLI" },
+]
+# Skip multiple-version warnings for these crates (use sparingly,
+# document why with an inline comment).
+skip = []
+
+[licenses]
+# cargo-deny v0.16 removed the explicit `deny` list (see EmbarkStudios/
+# cargo-deny#611). Effective behaviour is now: anything not in `allow`
+# is denied. GPL-family / AGPL / LGPL are deliberately omitted from
+# `allow`, which is incompatible with the desktop bundle's distribution
+# model.
+allow = [
+    "MIT",
+    "MIT-0",                  # MIT No Attribution — public-domain equivalent (e.g. borrow-or-share)
+    "Apache-2.0",
+    "Apache-2.0 WITH LLVM-exception",
+    "BSD-2-Clause",
+    "BSD-3-Clause",
+    "BSL-1.0",                # Boost Software License — permissive (e.g. clipboard-win, error-code via Tauri Windows clipboard)
+    "ISC",
+    "Unicode-3.0",
+    "CC0-1.0",
+    "CDLA-Permissive-2.0",    # Linux Foundation Community Data License (e.g. webpki-roots)
+    "NCSA",                   # Univ. of Illinois/NCSA — BSD-like (e.g. libfuzzer-sys)
+    "Zlib",
+    "MPL-2.0",
+]
+confidence-threshold = 0.93
+
+[licenses.private]
+# First-party workspace crates are AGPL-3.0-or-later (per repo SPDX headers)
+# but AGPL is intentionally absent from the [licenses].allow list above —
+# that allowlist applies to third-party deps that ship in the desktop
+# bundle. cargo-deny's `private.ignore` exempts unpublished workspace
+# members from license checks so they don't trigger `unlicensed` errors
+# while the third-party allowlist remains strict.
+ignore = true
+
+[sources]
+# Block crates from sources other than crates.io and github.com unless
+# explicitly allowlisted (e.g. a vendored grammar fork).
+unknown-registry = "deny"
+unknown-git = "warn"
+allow-git = []

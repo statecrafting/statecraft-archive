@@ -1,0 +1,142 @@
+{
+  "diagnostics": {
+    "errors": [],
+    "warnings": [
+      {
+        "code": "W-002",
+        "message": "spec '186-sandbox-k8s-backend' file unit 'docs/owasp/owasp_top_10_agentic_applications_summary.md' does not exist",
+        "path": "docs/owasp/owasp_top_10_agentic_applications_summary.md"
+      }
+    ]
+  },
+  "mapping": {
+    "dependsOn": [
+      "162-sandbox-execution-contract",
+      "075-factory-workflow-engine",
+      "102-governed-excellence"
+    ],
+    "implementingPaths": [
+      {
+        "path": "crates/sandbox-k8s",
+        "source": "multiple"
+      },
+      {
+        "path": "crates/sandbox-k8s/src/lib.rs",
+        "source": "comment-header"
+      },
+      {
+        "path": "platform/k8s/policies/namespace-baseline",
+        "source": "spec-edge"
+      },
+      {
+        "path": "specs/075-factory-workflow-engine/spec.md",
+        "source": "spec-edge"
+      },
+      {
+        "path": "specs/102-governed-excellence/spec.md",
+        "source": "spec-edge"
+      },
+      {
+        "path": "specs/162-sandbox-execution-contract/spec.md",
+        "source": "spec-edge"
+      },
+      {
+        "path": "specs/185-sandbox-local-container-backend/spec.md",
+        "source": "spec-edge"
+      }
+    ],
+    "resolvedUnits": [
+      {
+        "locations": [
+          {
+            "file": "crates/sandbox-k8s"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "directory",
+          "path": "crates/sandbox-k8s"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "platform/k8s/policies/namespace-baseline"
+          }
+        ],
+        "ownership": false,
+        "sourceField": "references",
+        "unit": {
+          "kind": "directory",
+          "path": "platform/k8s/policies/namespace-baseline"
+        }
+      },
+      {
+        "locations": [],
+        "ownership": false,
+        "sourceField": "references",
+        "unit": {
+          "kind": "file",
+          "path": "docs/owasp/owasp_top_10_agentic_applications_summary.md"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "specs/075-factory-workflow-engine/spec.md"
+          }
+        ],
+        "ownership": false,
+        "sourceField": "references",
+        "unit": {
+          "kind": "file",
+          "path": "specs/075-factory-workflow-engine/spec.md"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "specs/102-governed-excellence/spec.md"
+          }
+        ],
+        "ownership": false,
+        "sourceField": "references",
+        "unit": {
+          "kind": "file",
+          "path": "specs/102-governed-excellence/spec.md"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "specs/162-sandbox-execution-contract/spec.md"
+          }
+        ],
+        "ownership": false,
+        "sourceField": "references",
+        "unit": {
+          "kind": "file",
+          "path": "specs/162-sandbox-execution-contract/spec.md"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "specs/185-sandbox-local-container-backend/spec.md"
+          }
+        ],
+        "ownership": false,
+        "sourceField": "references",
+        "unit": {
+          "kind": "file",
+          "path": "specs/185-sandbox-local-container-backend/spec.md"
+        }
+      }
+    ],
+    "specId": "186-sandbox-k8s-backend",
+    "specStatus": "approved"
+  },
+  "schemaVersion": "1.1.0",
+  "shardHash": "9a18574d3172d107f3ae5bc5d07a507b57d81444f2f22ecb12de2eb82f1ce955"
+}

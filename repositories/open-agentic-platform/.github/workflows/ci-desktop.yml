@@ -1,0 +1,134 @@
+# Spec: 037-cross-platform-axiomregent
+# Spec: 086-open-source-launch
+# Spec: 177-ci-orchestrator-pr-gate
+#
+# CI for OPC desktop app: Rust check/clippy/test + TypeScript check + vitest.
+#
+# Hardening notes (ci-hardening branch):
+#   - M7: cross-target `cargo check` matrix runs on Linux + Windows in
+#     addition to the macos-latest full-fat clippy/test path. This catches
+#     link-level / feature-flag drift on the two release targets that were
+#     previously only validated at tag time by release-desktop.yml.
+#   - M5: timeouts on every job.
+#
+# Dispatched from `.github/workflows/ci.yml` on PRs touching the desktop
+# app, the crates workspace, or product packages (spec 177); manual via
+# workflow_dispatch.
+
+name: CI Desktop
+
+on:
+  workflow_call:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+env:
+  CARGO_TERM_COLOR: always
+
+jobs:
+  # Full Rust validation (check + clippy + test) on the primary release
+  # target (Apple Silicon). macOS deps: cocoa, objc, window-vibrancy,
+  # tauri-nspanel — Linux/Windows can't run this leg.
+  rust:
+    runs-on: macos-latest
+    name: rust / check + clippy + test (aarch64-apple-darwin)
+    timeout-minutes: 45
+
+    steps:
+      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+
+      - name: Rust toolchain
+        uses: dtolnay/rust-toolchain@29eef336d9b2848a0b548edc03f92a220660cdb8 # pinned for rust-toolchain.toml lockstep
+        with:
+          toolchain: '1.95.0'
+          components: clippy, rustfmt
+
+      - name: Cache Rust dependencies
+        uses: Swatinem/rust-cache@e18b497796c12c097a38f9edb9d0641fb99eee32 # v2
+        with:
+          workspaces: product/apps/opc/src-tauri
+          shared-key: ci-desktop-aarch64-apple-darwin
+
+      - name: Create dist stub for web_server include_str!
+        run: |
+          mkdir -p product/apps/opc/dist
+          echo '<!doctype html><html><body>stub</body></html>' > product/apps/opc/dist/index.html
+
+      - name: Create sidecar binary stub for Tauri build.rs
+        run: |
+          mkdir -p product/apps/opc/src-tauri/binaries
+          touch product/apps/opc/src-tauri/binaries/axiomregent-aarch64-apple-darwin
+          chmod +x product/apps/opc/src-tauri/binaries/axiomregent-aarch64-apple-darwin
+
+      - name: cargo check
+        run: cargo check --manifest-path product/apps/opc/src-tauri/Cargo.toml
+
+      - name: cargo clippy
+        run: cargo clippy --manifest-path product/apps/opc/src-tauri/Cargo.toml -- -A dead_code -D warnings
+
+      - name: cargo test (lib)
+        run: cargo test --manifest-path product/apps/opc/src-tauri/Cargo.toml --lib
+
+      - name: cargo test (doc)
+        run: cargo test --manifest-path product/apps/opc/src-tauri/Cargo.toml --doc
+
+      - name: Version alignment check
+        shell: bash
+        run: |
+          CARGO_VERSION=$(grep '^version' product/apps/opc/src-tauri/Cargo.toml | head -1 | sed 's/.*"\(.*\)".*/\1/')
+          PKG_VERSION=$(node -p "require('./product/apps/opc/package.json').version")
+          if [ "$CARGO_VERSION" != "$PKG_VERSION" ]; then
+            echo "::error::Version mismatch: Cargo.toml=$CARGO_VERSION package.json=$PKG_VERSION"
+            exit 1
+          fi
+          echo "Versions aligned: $CARGO_VERSION"
+
+  # M7 (cross-target cargo check on Linux + Windows) was added in PR #6 to
+  # catch release-target link breakage at PR time. It has failed on every
+  # PR since merge: the `macos-private-api` Tauri feature in
+  # product/apps/opc/src-tauri/Cargo.toml is cross-target, but only
+  # tauri.macos.conf.json declares macOSPrivateApi. The base
+  # tauri.conf.json (which tauri-build's build.rs reads when
+  # cargo check --target is invoked directly) doesn't allow the feature on
+  # Linux/Windows, producing a hard build.rs error.
+  #
+  # Per-target conf-path injection requires either Tauri's own CLI
+  # (defeating the "fast cargo check" point) or invasive feature gating
+  # via Cargo.toml target-specific deps. release-desktop.yml's tauri-action
+  # already validates the real cross-target builds at tag time, so the
+  # PR-time gate has been redundant noise.
+  #
+  # Removing the matrix. If a future change needs PR-time cross-target
+  # validation, reintroduce with `TAURI_CONFIG=$(cat tauri.<os>.conf.json)
+  # cargo check ...` or split macos-private-api behind a feature flag.
+
+  typescript:
+    runs-on: ubuntu-latest
+    name: typescript / check + test
+    timeout-minutes: 15
+    defaults:
+      run:
+        working-directory: product
+
+    steps:
+      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+
+      - uses: pnpm/action-setup@4f4305e1fe60ad818b8ae6fc4a697cc47eab0b2d # v6
+        with:
+          package_json_file: product/package.json
+      - uses: actions/setup-node@48b55a011bda9f5d6aeb4c2d9c7362e8dae4041e # v6
+        with:
+          node-version: 22
+          cache: pnpm
+          cache-dependency-path: product/pnpm-lock.yaml
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: TypeScript type check
+        run: pnpm --filter @opc/desktop exec tsc --noEmit
+
+      - name: Vitest
+        run: pnpm --filter @opc/desktop --filter @opc/carrier-gate --filter @opc/session-memory test

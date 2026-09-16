@@ -1,0 +1,130 @@
+{
+  "record": {
+    "authors": [
+      "open-agentic-platform"
+    ],
+    "codeAliases": [
+      "AGENT_NHI_IDENTITY"
+    ],
+    "created": "2026-06-11",
+    "dependsOn": [
+      "106-rauthy-native-oidc-and-membership",
+      "137-tenant-environment-access-gates",
+      "198-factory-governance-envelope"
+    ],
+    "domain": "platform",
+    "establishes": [
+      {
+        "kind": "file",
+        "path": "platform/services/statecraft/api/audit/auditTwoPrincipal.test.ts"
+      }
+    ],
+    "extends": [
+      {
+        "nature": "additive",
+        "spec": "034-featuregraph-registry-scanner-fix",
+        "unit": {
+          "kind": "file",
+          "path": "crates/featuregraph/tests/golden/features_graph.json"
+        }
+      }
+    ],
+    "extraFrontmatter": {
+      "compliance": [
+        {
+          "controls": [
+            "ASI03",
+            "ASI10"
+          ],
+          "framework": "owasp-asi-2026"
+        }
+      ],
+      "language": "en"
+    },
+    "featureBranch": "feat/205-agent-nhi-identity",
+    "id": "205-agent-nhi-identity",
+    "implementation": "pending",
+    "kind": "platform",
+    "references": [
+      {
+        "role": "context",
+        "unit": {
+          "kind": "file",
+          "path": "product/apps/opc/src-tauri/src/commands/live_sessions.rs"
+        }
+      },
+      {
+        "role": "context",
+        "unit": {
+          "kind": "file",
+          "path": "docs/owasp-agentic-top-10-2026.md"
+        }
+      }
+    ],
+    "refines": [
+      {
+        "aspect": "agent-nhi-minting",
+        "unit": {
+          "kind": "file",
+          "path": "platform/services/statecraft/api/auth/sessionMint.ts"
+        }
+      },
+      {
+        "aspect": "nhi-lifecycle",
+        "unit": {
+          "kind": "file",
+          "path": "platform/services/statecraft/api/auth/rauthy.ts"
+        }
+      },
+      {
+        "aspect": "audit-attribution",
+        "unit": {
+          "kind": "file",
+          "path": "platform/services/statecraft/api/db/schema.ts"
+        }
+      },
+      {
+        "aspect": "audit-attribution",
+        "unit": {
+          "kind": "file",
+          "path": "platform/services/statecraft/api/audit/audit.ts"
+        }
+      },
+      {
+        "aspect": "audit-attribution",
+        "unit": {
+          "kind": "file",
+          "path": "platform/services/statecraft/api/sync/service.ts"
+        }
+      },
+      {
+        "aspect": "audit-attribution",
+        "unit": {
+          "kind": "file",
+          "path": "platform/services/statecraft/api/factory/grantDuplexHandlers.ts"
+        }
+      },
+      {
+        "aspect": "audit-attribution",
+        "unit": {
+          "kind": "file",
+          "path": "platform/services/statecraft/vite.config.ts"
+        }
+      }
+    ],
+    "sectionHeadings": [
+      "Feature Specification: Per-Agent Non-Human Identity and Task-Scoped Credentials",
+      "Purpose",
+      "Functional requirements (sketch — refine before implementation)",
+      "Acceptance criteria (sketch)",
+      "Out of scope",
+      "Sequencing"
+    ],
+    "specPath": "specs/205-agent-nhi-identity/spec.md",
+    "status": "draft",
+    "summary": "Give agents a governed identity distinct from the human who launched them. Today every agent session rides the user's Rauthy JWT: agent actions audit to the human, agent access cannot be revoked without killing the human's session, and least privilege per agent is structurally impossible — the exact \"attribution gap\" ASI03 names as the root cause of identity and privilege abuse. Factory runs already have the right fabric in miniature: spec 198 FR-005 run-grants are short-lived, audience-bound, stage-renewed credentials. This spec extends that fabric to interactive agent sessions: a per-agent-session non-human identity (NHI) minted through the platform, a recorded on-behalf-of delegation chain whose effective scope is the intersection of the human's scopes and the agent's admitted profile (never inheritance, ASI03 m7), task-scoped short-TTL tokens, and revocation that is independent in both directions.\n",
+    "title": "Per-Agent Non-Human Identity and Task-Scoped Credentials (ASI03)"
+  },
+  "shardHash": "b1ecabf13f5c9248c9ade0f67cfd114f69836ae2206fa41ffa3cf0581711a737",
+  "specVersion": "1.1.0"
+}

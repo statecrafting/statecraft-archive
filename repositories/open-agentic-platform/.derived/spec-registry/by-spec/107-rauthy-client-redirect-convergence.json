@@ -1,0 +1,68 @@
+{
+  "record": {
+    "codeAliases": [
+      "RAUTHY_CLIENT_REDIRECTS"
+    ],
+    "created": "2026-04-18",
+    "dependsOn": [
+      "080-github-identity-onboarding",
+      "106-rauthy-native-oidc-and-membership"
+    ],
+    "domain": "platform",
+    "extends": [
+      {
+        "nature": "additive",
+        "spec": "106-rauthy-native-oidc-and-membership",
+        "unit": {
+          "kind": "file",
+          "path": "platform/services/statecraft/scripts/seed-rauthy.mjs"
+        }
+      }
+    ],
+    "featureBranch": "feat/107-rauthy-client-redirect-convergence",
+    "id": "107-rauthy-client-redirect-convergence",
+    "implementation": "complete",
+    "kind": "platform",
+    "owner": "bart",
+    "refines": [
+      {
+        "aspect": "redirect-uri-ownership",
+        "unit": {
+          "kind": "file",
+          "path": "platform/services/statecraft/web/README.md"
+        }
+      }
+    ],
+    "risk": "medium",
+    "sectionHeadings": [
+      "107 — Rauthy OIDC Client Redirect URI Convergence",
+      "1. Problem Statement",
+      "2. Design",
+      "2.1 Single source of truth",
+      "2.2 Per-client target set",
+      "2.3 Merge-over-replace",
+      "2.4 No-op when already correct",
+      "3. Functional Requirements",
+      "FR-001: Client redirect URI convergence step",
+      "FR-002: Validation step extended",
+      "FR-003: APP_BASE_URL must be present",
+      "FR-004: Docs record ownership",
+      "4. Non-Functional Requirements",
+      "5. Security",
+      "6. Migration",
+      "7. Supersedes / Amends",
+      "8. Test Plan",
+      "Seeder",
+      "Login flow",
+      "Unit",
+      "Implementation Status",
+      "9. Out of scope"
+    ],
+    "specPath": "specs/107-rauthy-client-redirect-convergence/spec.md",
+    "status": "approved",
+    "summary": "Close spec 106 FR-002's remaining manual gap: the seeder grants the `oap` scope to statecraft-server / SPA / OPC clients but does not manage their allowed `redirect_uris`. A production outage on 2026-04-18 showed why — Rauthy rejected `/authorize` with \"Invalid redirect uri\" because the statecraft-server client's allow-list did not include the current `APP_BASE_URL` callback. This spec extends the seeder to converge redirect URIs for every OIDC client statecraft owns, deriving the target set from `APP_BASE_URL` and the OPC desktop deep-link scheme, and merging them with any operator-added entries (so localhost dev URIs are preserved).\n",
+    "title": "Rauthy OIDC Client Redirect URI Convergence"
+  },
+  "shardHash": "1de87b2b172ae5447a7119295759e26c1567f8658c1e589a3ddfe423bc43dee8",
+  "specVersion": "1.1.0"
+}

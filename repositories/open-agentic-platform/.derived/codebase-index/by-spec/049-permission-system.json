@@ -1,0 +1,29 @@
+{
+  "mapping": {
+    "implementingPaths": [
+      {
+        "path": "product/packages/permission-system",
+        "source": "multiple"
+      }
+    ],
+    "resolvedUnits": [
+      {
+        "locations": [
+          {
+            "file": "product/packages/permission-system"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "id": "@opc/permission-system",
+          "kind": "crate"
+        }
+      }
+    ],
+    "specId": "049-permission-system",
+    "specStatus": "approved"
+  },
+  "schemaVersion": "1.1.0",
+  "shardHash": "ad0f12d6cdc6dbc46f02abbc893a4814f13579c19fcdf3a4086afa25acac7717"
+}

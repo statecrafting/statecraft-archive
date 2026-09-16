@@ -1,0 +1,66 @@
+{
+  "record": {
+    "coAuthority": [
+      {
+        "unit": {
+          "anchor": "resources",
+          "file": "platform/charts/deployd-api/values.yaml",
+          "kind": "section"
+        },
+        "with_specs": [
+          "145-deployd-durability"
+        ]
+      }
+    ],
+    "codeAliases": [
+      "DEPLOYD_API_MEMORY_HARDENING"
+    ],
+    "created": "2026-05-10",
+    "dependsOn": [
+      "073-axiomregent-unification",
+      "143-presigned-upload-public-endpoint"
+    ],
+    "domain": "platform",
+    "establishes": [
+      {
+        "kind": "file",
+        "path": "platform/services/statecraft/test/spec146-deployd-memory.config.test.ts"
+      }
+    ],
+    "extraFrontmatter": {
+      "closed": "2026-05-15",
+      "slug": "deployd-api-memory-hardening"
+    },
+    "id": "146-deployd-api-memory-hardening",
+    "implementation": "complete",
+    "kind": "platform-delivery",
+    "owner": "bart",
+    "risk": "low",
+    "sectionHeadings": [
+      "146 — deployd-api memory hardening",
+      "1. Background",
+      "1.1 Cluster evidence (2026-05-08)",
+      "1.2 Why the cluster ended up like this",
+      "1.3 Diagnostic chair",
+      "2. Resolution",
+      "2.1 values.yaml — populate the resources block",
+      "2.2 No managed-heap env-var (documented N/A)",
+      "2.3 No request-fan-out concurrency cap (documented N/A)",
+      "2.4 Coordination point with spec 145 (deployd-durability)",
+      "2.5 CI regression assertions",
+      "3. Acceptance criteria",
+      "4. Out of scope",
+      "5. Provenance",
+      "6. Decision log + open questions",
+      "6.1 Why a new spec rather than amend spec 145",
+      "6.2 Why a chart-default rather than per-environment override",
+      "6.3 Open questions"
+    ],
+    "specPath": "specs/146-deployd-api-memory-hardening/spec.md",
+    "status": "approved",
+    "summary": "`platform/charts/deployd-api/values.yaml:20` declares `resources: {}` — empty. The deployment.yaml template renders the block conditionally (`{{- with .Values.resources }}`), so the rendered Deployment carries no `limits` or `requests` whatsoever. `kubectl get pod -n deployd-system -l app=deployd-api -o json` on 2026-05-08 showed `resources: {}` AND `restartCount: 3` AND a recent `lastState.terminated: {exitCode: 137, reason: \"Error\", finishedAt: \"2026-05-08T16:35:38Z\", startedAt: \"2026-05-08T16:25:08Z\"}` — a ~10-minute lifetime ending in SIGKILL, consistent with cold-start hiqlite WAL memory pressure against an unbounded cgroup. This spec populates the resources block on the chart default (1Gi limit / 256Mi request) and adds CI regression assertions. It does NOT add a managed-heap env-var (Rust has none) and does NOT add a request- fan-out concurrency cap (deployd-api-rs has zero application-level fan-out primitives — the OOM is cold-start, not request burst). Both N/A legs are documented rather than fabricated. Filed as the implementing PR for FU-021 on spec 143's §13 diagnostic chair.\n",
+    "title": "deployd-api memory hardening — populate cgroup limits/requests; document Rust runtime N/A legs"
+  },
+  "shardHash": "f41237fdb82d5fdaada48cb6b612ec87b86630b393ceafe692e7a2f886afe309",
+  "specVersion": "1.1.0"
+}

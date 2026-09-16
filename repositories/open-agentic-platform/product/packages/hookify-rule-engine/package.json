@@ -1,0 +1,45 @@
+{
+  "name": "@opc/hookify-rule-engine",
+  "version": "0.1.0",
+  "description": "Declarative hook rule engine for Claude Code lifecycle events",
+  "private": true,
+  "type": "module",
+  "main": "src/index.ts",
+  "types": "src/index.ts",
+  "bin": {
+    "hookify-rule-engine": "./dist/cli.js"
+  },
+  "exports": {
+    ".": "./src/index.ts",
+    "./types": "./src/types.ts",
+    "./parser": "./src/parser.ts",
+    "./conditions": "./src/conditions.ts",
+    "./matcher": "./src/matcher.ts",
+    "./actions": "./src/actions.ts",
+    "./engine": "./src/engine.ts",
+    "./loader": "./src/loader.ts",
+    "./hooks-json": "./src/hooks-json.ts",
+    "./events": "./src/events.ts",
+    "./handlers": "./src/handlers.ts",
+    "./registry": "./src/registry.ts",
+    "./settings-parser": "./src/settings-parser.ts",
+    "./audit": "./src/audit.ts",
+    "./cli": "./src/cli.ts"
+  },
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "test": "vitest run",
+    "lint": "eslint src/"
+  },
+  "devDependencies": {
+    "@types/node": "^24.5.0",
+    "typescript": "^6.0.3",
+    "vitest": "^4.1.5"
+  },
+  "dependencies": {
+    "yaml": "^2.8.4"
+  },
+  "oap": {
+    "spec": "048-hookify-rule-engine"
+  }
+}

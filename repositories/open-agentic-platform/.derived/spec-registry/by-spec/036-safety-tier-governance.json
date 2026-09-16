@@ -1,0 +1,68 @@
+{
+  "record": {
+    "authors": [
+      "open-agentic-platform"
+    ],
+    "codeAliases": [
+      "SAFETY_TIER_GOVERNANCE"
+    ],
+    "created": "2026-03-29",
+    "domain": "opc",
+    "establishes": [
+      {
+        "id": "tool-registry",
+        "kind": "crate"
+      },
+      {
+        "id": "open_agentic_policy_kernel",
+        "kind": "crate"
+      }
+    ],
+    "extraFrontmatter": {
+      "language": "en"
+    },
+    "featureBranch": "036-safety-tier-governance",
+    "id": "036-safety-tier-governance",
+    "implementation": "complete",
+    "kind": "platform",
+    "refines": [
+      {
+        "aspect": "safety-tier-classification",
+        "unit": {
+          "kind": "file",
+          "path": "crates/agent/src/safety.rs"
+        }
+      },
+      {
+        "aspect": "safety-tier-classification",
+        "unit": {
+          "kind": "directory",
+          "path": "crates/axiomregent/src/router"
+        }
+      }
+    ],
+    "sectionHeadings": [
+      "Feature Specification: safety tier governance",
+      "Purpose",
+      "Scope",
+      "In scope",
+      "Out of scope",
+      "Requirements",
+      "Functional",
+      "Non-functional",
+      "Architecture",
+      "Proposed tier assignments for currently-unclassified tools",
+      "Enum reconciliation",
+      "Key integration points",
+      "Success criteria",
+      "Contract notes",
+      "Risk"
+    ],
+    "specPath": "specs/036-safety-tier-governance/spec.md",
+    "status": "approved",
+    "summary": "Formalize the safety tier model (Tier1=Autonomous, Tier2=Gated, Tier3=Manual) in a spec-governed definition, fix 13 tools that incorrectly default to Tier3, reconcile the dual SafetyTier enums, and surface per-tool tier assignments in the governance UI.\n",
+    "title": "safety tier governance"
+  },
+  "shardHash": "cd01a217020ce6a08d170c5adee05316932daeb093491638855e1101c2eeba28",
+  "specVersion": "1.1.0"
+}

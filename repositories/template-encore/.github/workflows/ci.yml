@@ -1,0 +1,170 @@
+# Spec: 009-repo-ci-orchestrator
+#
+# Root CI orchestrator. Branch protection's required check on `main` is
+# the terminal `ci-gate` job — every other gate (the constitutional
+# governance workflows + the path-filtered application workflow) is
+# reusable (`workflow_call:`) and dispatched from here.
+#
+# Routing: a `changes` job runs an inline `git diff` against the base and
+# emits one boolean output per routed workflow (no third-party action — the
+# ACME enterprise Actions allow-list does not permit one; spec 012).
+# Path-filtered routes (currently `encore`) gate on their filter;
+# constitutional gates (spec-spine governance, supply-chain) skip the
+# filter and always run on PRs. On `merge_group` the routes fall back to
+# `true` (no base to diff). The `ci-gate` aggregator treats `skipped` as
+# success and fails the build on any upstream `failure` or `cancelled`.
+#
+# The coupling step inside spec-spine.yml is PR-only by design (it diffs
+# against the PR base); the rest of the governance gate runs for
+# push-to-main too.
+
+name: ci
+
+on:
+  pull_request:
+    branches: [main]
+  push:
+    branches: [main]
+  # GitHub merge queue (spec 012). Each queued PR is tested against the
+  # speculative merged tree before it reaches main, so a green PR can't be
+  # silently invalidated by the one merged ahead of it. INERT until a repo
+  # admin enables the merge queue and requires `ci-gate` on merge_group.
+  merge_group:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pull-requests: read
+
+jobs:
+  # ─── route ─────────────────────────────────────────────────────────────
+  changes:
+    runs-on: ubuntu-latest
+    name: route / changed-paths
+    timeout-minutes: 5
+    outputs:
+      encore: ${{ steps.f.outputs.encore }}
+    steps:
+      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+        with:
+          fetch-depth: 0
+
+      # Inline route computation via `git diff` — no third-party filter
+      # action (spec 012). On merge_group / workflow_dispatch there is no
+      # PR base to diff against, so every route falls back to `true` and
+      # the full suite runs against the (speculative merged) tree.
+      - name: Compute changed-path routes
+        id: f
+        shell: bash
+        env:
+          EVENT: ${{ github.event_name }}
+          PR_BASE_SHA: ${{ github.event.pull_request.base.sha }}
+          PUSH_BEFORE_SHA: ${{ github.event.before }}
+        run: |
+          set -euo pipefail
+          if [ "$EVENT" = "merge_group" ] || [ "$EVENT" = "workflow_dispatch" ]; then
+            echo "encore=true"  >> "$GITHUB_OUTPUT"
+            echo "$EVENT: no base to diff; running all routes"
+            exit 0
+          fi
+          if [ "$EVENT" = "pull_request" ]; then
+            base="$PR_BASE_SHA"
+          else
+            base="$PUSH_BEFORE_SHA"
+          fi
+          zero="0000000000000000000000000000000000000000"
+          if [ -z "$base" ] || [ "$base" = "$zero" ] || ! git cat-file -e "${base}^{commit}" 2>/dev/null; then
+            # Prefer HEAD's parent. On a parentless initial commit (or first
+            # push where before=000...), `git rev-parse HEAD~1` cannot resolve
+            # and, without --verify, echoes the literal "HEAD~1" to stdout,
+            # yielding a two-line base that breaks `git diff`. Use
+            # --verify --quiet (silent, non-zero on failure) and fall back to
+            # the empty-tree object so every file registers as changed and all
+            # routes compute.
+            base="$(git rev-parse --verify --quiet HEAD~1 || git hash-object -t tree /dev/null)"
+          fi
+          changed="$(git diff --name-only "$base" HEAD)"
+          printf '%s\n' "changed files since ${base}:" "$changed"
+          m() { printf '%s\n' "$changed" | grep -qE "$1"; }
+          # `encore` route: the app surface validated by encore-ci.yml
+          # (both Vue SPAs + shared packages + the standalone Encore app +
+          # its install/build composite actions).
+          encore=false
+          if m '^apps/' \
+             || m '^packages/' \
+             || m '^\.github/actions/encore-' \
+             || m '^\.github/workflows/encore-ci\.yml$'; then
+            encore=true
+          fi
+          echo "encore=$encore"  >> "$GITHUB_OUTPUT"
+          echo "routes -> encore=$encore"
+
+  # ─── routed by changed paths ───────────────────────────────────────────
+  # Encore.ts app CI (web type-check + build:web, `encore check`, typed-client
+  # staleness). Routed on the app surface; folded into `ci-gate` so it is a
+  # required check (spec 007).
+  encore:
+    needs: changes
+    if: needs.changes.outputs.encore == 'true'
+    uses: ./.github/workflows/encore-ci.yml
+
+  # ─── constitutional (always-run; spec 009 FR-02) ───────────────────────
+  # `secrets: inherit` passes OAP_SIGNING_KEY (spec 220 FR-003) down to the
+  # reusable spec-spine workflow so the terminal `tenant-emit build-certificate`
+  # step (spec 220 FR-002) can sign with the operator key. A reusable workflow
+  # receives no caller secrets without this; inherited secrets are simply empty
+  # on fork PRs, preserving the emit step's graceful skip.
+  spec-spine:
+    secrets: inherit
+    uses: ./.github/workflows/spec-spine.yml
+
+  supply-chain:
+    uses: ./.github/workflows/ci-supply-chain.yml
+
+  # ─── AI PR review (spec 013 — folded into the gate) ─────────────────────
+  # App-free, subscription-OAuth Claude review dispatched as a reusable
+  # workflow. PR-only — it needs PR context (number, base/head diff);
+  # skipped on push/workflow_dispatch, which ci-gate treats as success.
+  # Job-level `pull-requests: write` overrides ci.yml's read default (the
+  # workflow posts a review comment); `secrets: inherit` passes
+  # CLAUDE_CODE_OAUTH_TOKEN.
+  ai-review:
+    if: github.event_name == 'pull_request'
+    permissions:
+      contents: read
+      pull-requests: write
+    secrets: inherit
+    uses: ./.github/workflows/ai-pr-review.yml
+
+  # ─── aggregator ────────────────────────────────────────────────────────
+  ci-gate:
+    name: ci-gate
+    if: always()
+    needs:
+      - changes
+      - encore
+      - spec-spine
+      - supply-chain
+      - ai-review
+    runs-on: ubuntu-latest
+    timeout-minutes: 2
+    steps:
+      - name: Aggregate upstream results
+        env:
+          RESULTS: ${{ toJSON(needs) }}
+        run: |
+          set -u
+          echo "$RESULTS"
+          # `failure` / `cancelled` block merge; `skipped` (path-filter
+          # said "don't run", or job opted out via its own `if:`) and
+          # `success` pass. The aggregator is the merge contract — keep
+          # it small.
+          if echo "$RESULTS" | jq -e '
+              to_entries
+              | map(.value.result)
+              | any(. == "failure" or . == "cancelled")
+            ' > /dev/null; then
+            echo "::error::one or more upstream jobs failed or were cancelled"
+            exit 1
+          fi
+          echo "all upstream jobs satisfied (success or skipped)"

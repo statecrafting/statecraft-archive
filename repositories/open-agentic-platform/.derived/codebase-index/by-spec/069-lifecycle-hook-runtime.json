@@ -1,0 +1,29 @@
+{
+  "mapping": {
+    "implementingPaths": [
+      {
+        "path": "product/packages/hookify-rule-engine",
+        "source": "spec-edge"
+      }
+    ],
+    "resolvedUnits": [
+      {
+        "locations": [
+          {
+            "file": "product/packages/hookify-rule-engine"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "extends",
+        "unit": {
+          "id": "@opc/hookify-rule-engine",
+          "kind": "crate"
+        }
+      }
+    ],
+    "specId": "069-lifecycle-hook-runtime",
+    "specStatus": "approved"
+  },
+  "schemaVersion": "1.1.0",
+  "shardHash": "0e58ec3167512bc0eaff890039c72dcdb7d4dd0d596c03b4f8e27227cba52560"
+}

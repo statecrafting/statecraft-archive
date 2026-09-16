@@ -1,0 +1,14 @@
+{
+  "mapping": {
+    "implementingPaths": [
+      {
+        "path": "tools/shared/spec-types",
+        "source": "manifest-metadata"
+      }
+    ],
+    "specId": "000-bootstrap-spec-system",
+    "specStatus": "approved"
+  },
+  "schemaVersion": "1.1.0",
+  "shardHash": "4359a8436dca35baeb236b215db24593041ee72f06e54ff9a9d6f0abba4af991"
+}

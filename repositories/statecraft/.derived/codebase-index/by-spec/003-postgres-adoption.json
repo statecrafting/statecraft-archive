@@ -1,0 +1,49 @@
+{
+  "mapping": {
+    "dependsOn": [
+      "002-app-shell"
+    ],
+    "implementingPaths": [
+      {
+        "path": ".env.example",
+        "source": "spec-edge"
+      },
+      {
+        "path": "docker/compose.postgres.yml",
+        "source": "spec-edge"
+      }
+    ],
+    "resolvedUnits": [
+      {
+        "locations": [
+          {
+            "file": ".env.example"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "file",
+          "path": ".env.example"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "docker/compose.postgres.yml"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "file",
+          "path": "docker/compose.postgres.yml"
+        }
+      }
+    ],
+    "specId": "003-postgres-adoption",
+    "specStatus": "approved"
+  },
+  "schemaVersion": "1.1.0",
+  "shardHash": "ccb019dabdde0a91dee92b1bfb12be46830f10c2a2e0261e0239e2babff72805"
+}

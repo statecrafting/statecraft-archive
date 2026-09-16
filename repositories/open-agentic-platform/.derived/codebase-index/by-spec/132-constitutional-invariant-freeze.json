@@ -1,0 +1,36 @@
+{
+  "mapping": {
+    "amends": [
+      "000-bootstrap-spec-system"
+    ],
+    "dependsOn": [
+      "000-bootstrap-spec-system",
+      "001-spec-compiler-mvp"
+    ],
+    "implementingPaths": [
+      {
+        "path": "standards/schemas/spec-spine/registry.schema.json",
+        "source": "spec-edge"
+      }
+    ],
+    "resolvedUnits": [
+      {
+        "locations": [
+          {
+            "file": "standards/schemas/spec-spine/registry.schema.json"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "constrains",
+        "unit": {
+          "kind": "file",
+          "path": "standards/schemas/spec-spine/registry.schema.json"
+        }
+      }
+    ],
+    "specId": "132-constitutional-invariant-freeze",
+    "specStatus": "approved"
+  },
+  "schemaVersion": "1.1.0",
+  "shardHash": "3c5e6a7a914ad821431d4f5559ac2db31db0d129703ee2f7080b3ee92cad35fa"
+}

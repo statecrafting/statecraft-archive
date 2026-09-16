@@ -1,0 +1,66 @@
+{
+  "record": {
+    "amendmentRecord": "amended 2026-05-13 by 147-spec-kind-grammar.\namended 2026-06-18 by spec 217 (engine-swap collapse): the Makefile `spec-lint`\ninvocation this spec governs (the strict --fail-on-warn posture) was repointed\nfrom the deleted in-tree generic spec-lint to the surviving OAP overlay spec-lint\nbinary plus `spec-spine lint` (generic codes). The strict-posture policy is\nunchanged; only the invoked binary moved.\n",
+    "amends": [
+      "006-conformance-lint-mvp"
+    ],
+    "coAuthority": [
+      {
+        "unit": {
+          "anchor": "spec-lint",
+          "file": "Makefile",
+          "kind": "section"
+        },
+        "with_specs": [
+          "102-governed-excellence",
+          "104-makefile-ci-parity-contract",
+          "116-supply-chain-policy-gates",
+          "127-spec-code-coupling-gate",
+          "134-fast-local-ci-mode",
+          "135-fast-ci-as-default"
+        ]
+      }
+    ],
+    "codeAliases": [
+      "SPEC_LINT_STRICT"
+    ],
+    "created": "2026-05-02",
+    "dependsOn": [
+      "006-conformance-lint-mvp",
+      "104-makefile-ci-parity-contract"
+    ],
+    "domain": "tooling",
+    "extraFrontmatter": {
+      "amended": "2026-06-18",
+      "approved": "2026-05-02",
+      "slug": "spec-lint-default-fail-on-warn"
+    },
+    "id": "128-spec-lint-default-fail-on-warn",
+    "implementation": "complete",
+    "kind": "governance",
+    "owner": "bart",
+    "risk": "low",
+    "sectionHeadings": [
+      "128 — spec-lint default to fail-on-warn",
+      "1. Problem Statement",
+      "2. Decision",
+      "3. Scope",
+      "In scope",
+      "Out of scope",
+      "4. Inventory baseline (2026-05-02)",
+      "5. Functional Requirements",
+      "6. Acceptance",
+      "7. Amendment 147 — Severity tiers *(amended by spec 147, 2026-05-13)*",
+      "7.1 Severity tiers",
+      "7.2 Audit-posture continuity",
+      "7.3 W-codes introduced by spec 147",
+      "7.4 Acceptance criteria (additive)"
+    ],
+    "specPath": "specs/128-spec-lint-default-fail-on-warn/spec.md",
+    "status": "approved",
+    "summary": "Spec 006 defines `spec-lint` as advisory by default with an opt-in `--fail-on-warn` flag for repos that choose the strict posture. This spec ratifies OAP's policy choice: the strict posture is on. `make ci` now invokes spec-lint with `--fail-on-warn` and propagates non-zero exit codes (the previous `|| true` is dropped). Behaviour-preserving for the current corpus — zero W-codes fire against the 128-spec corpus as of the 2026-05-02 audit — but closes the silent-drift channel for future changes.\n",
+    "title": "spec-lint default to fail-on-warn — repo opts into the strict posture"
+  },
+  "shardHash": "c78faa715099308434db72f2043d171aa1eab8844f84ea357e272adc99a1aa3a",
+  "specVersion": "1.1.0"
+}

@@ -1,0 +1,12 @@
+{
+  "package": {
+    "edition": "2024",
+    "kind": "rust-lib",
+    "name": "standards-loader",
+    "path": "crates/standards-loader",
+    "specRef": "055-yaml-standards-schema",
+    "version": "0.1.0"
+  },
+  "schemaVersion": "1.1.0",
+  "shardHash": "792fd6707ef8ebd326c551f47aa70b2bff56609f28bd430793b4b70faa234581"
+}

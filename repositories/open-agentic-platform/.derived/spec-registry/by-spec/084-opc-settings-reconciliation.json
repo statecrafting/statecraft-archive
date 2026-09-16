@@ -1,0 +1,69 @@
+{
+  "record": {
+    "authors": [
+      "open-agentic-platform"
+    ],
+    "codeAliases": [
+      "OPC_SETTINGS",
+      "SETTINGS_RECONCILIATION"
+    ],
+    "created": "2026-04-08",
+    "domain": "opc",
+    "establishes": [
+      {
+        "kind": "file",
+        "path": "product/apps/opc/src/lib/settingsManager.ts"
+      }
+    ],
+    "extends": [
+      {
+        "nature": "additive",
+        "spec": "032-opc-inspect-governance-wiring-mvp",
+        "unit": {
+          "kind": "file",
+          "path": "product/apps/opc/src-tauri/src/commands/claude.rs"
+        }
+      },
+      {
+        "nature": "additive",
+        "spec": "032-opc-inspect-governance-wiring-mvp",
+        "unit": {
+          "kind": "file",
+          "path": "product/apps/opc/src/lib/api.ts"
+        }
+      },
+      {
+        "nature": "additive",
+        "spec": "032-opc-inspect-governance-wiring-mvp",
+        "unit": {
+          "kind": "file",
+          "path": "product/apps/opc/src/components/ProjectSettings.tsx"
+        }
+      }
+    ],
+    "extraFrontmatter": {
+      "language": "en"
+    },
+    "featureBranch": "feat/084-opc-settings-reconciliation",
+    "id": "084-opc-settings-reconciliation",
+    "implementation": "complete",
+    "kind": "product",
+    "sectionHeadings": [
+      "084 — OPC Scoped Settings Reconciliation",
+      "Purpose",
+      "Scope",
+      "In Scope",
+      "Out of Scope",
+      "Functional Requirements",
+      "Non-Functional Requirements",
+      "Key Files",
+      "Verification"
+    ],
+    "specPath": "specs/084-opc-settings-reconciliation/spec.md",
+    "status": "approved",
+    "summary": "Extends the OPC desktop three-scope config merge pattern (already working for hooks) to cover full Claude Code settings — permissions, defaultMode, and env. Adds Rust backend commands for scoped settings read/write, a TypeScript merge utility, and a Permissions tab in ProjectSettings UI.\n",
+    "title": "OPC Scoped Settings Reconciliation"
+  },
+  "shardHash": "41c7e3b1d7d1879b15ecf8032610099af9d14c15704a211a7e5c4d4ed5752aec",
+  "specVersion": "1.1.0"
+}

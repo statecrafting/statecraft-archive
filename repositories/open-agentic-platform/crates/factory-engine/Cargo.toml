@@ -1,0 +1,79 @@
+# SPDX-License-Identifier: AGPL-3.0-or-later
+# Copyright (C) 2026 Bartek Kus
+
+[package]
+name = "factory-engine"
+publish = false   # internal workspace crate; binaries ship via release workflows, not crates.io
+version = "0.1.0"
+edition = "2024"
+description = "Factory workflow engine — two-phase orchestration, manifest generation, verification (spec 075)"
+
+[dependencies]
+orchestrator = { path = "../orchestrator" }
+factory-contracts = { path = "../factory-contracts" }
+artifact-extract = { path = "../artifact-extract" }
+provenance-validator = { path = "../provenance-validator" }
+standards-loader = { path = "../standards-loader" }
+policy-kernel = { package = "open_agentic_policy_kernel", path = "../policy-kernel" }
+# Cut D W-10 (spec 102 G-2 follow-up): validate StageRecord.spec_id
+# resolves against the spec spine. Spec 217 engine swap: reads the committed
+# registry shards via the published spec-spine library. default-features=false
+# drops the symbol-resolution tree-sitter dep (clashes with xray 0.26).
+spec-spine-core = { version = "0.10.0", default-features = false }
+spec-spine-types = "0.10.0"
+async-trait = "0.1"
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+serde_yaml = "0.9"
+thiserror = "2"
+tokio = { version = "1", features = ["process", "time", "sync", "macros", "rt-multi-thread", "fs"] }
+tokio-util = { version = "0.7", features = ["rt"] }
+# Spec 139 Phase 3 — VirtualRoot HTTP fetcher + URL encoding for the
+# `/api/factory/artifacts/by-path` query parameters.
+reqwest = { version = "0.13", default-features = false, features = ["json", "rustls"] }
+urlencoding = "2"
+infer = "0.19"
+uuid = { version = "1", features = ["v4", "serde"] }
+sha2 = "0.10"
+# Spec 102 FR-008.1 — Ed25519 signing for governance certificates.
+# Keygen seeds a 32-byte buffer straight from the OS CSPRNG via
+# `getrandom::fill` and hands it to `SigningKey::from_bytes` — the exact
+# operations `SigningKey::generate` performs internally, inlined so we
+# depend on neither dalek's `rand_core` feature nor the rand_core crate
+# (whose 0.9/0.10 line dropped both `OsRng` and the `getrandom` feature).
+ed25519-dalek = "3"
+getrandom = "0.4.2"
+base64 = "0.22"
+jsonschema = "0.47"
+regex = "1"
+walkdir = "2"
+clap = { version = "4", features = ["derive"] }
+chrono = { version = "0.4", features = ["serde"] }
+dirs = "6"
+
+[[bin]]
+name = "factory-harness"
+path = "src/bin/harness.rs"
+
+[[bin]]
+name = "factory-run"
+path = "src/bin/factory_run.rs"
+
+[[bin]]
+name = "verify-certificate"
+path = "src/bin/verify_certificate.rs"
+
+[[bin]]
+name = "build-certificate"
+path = "src/bin/build_certificate.rs"
+
+[[bin]]
+name = "factory-migrate-stakeholder-docs"
+path = "src/bin/migrate_stakeholder_docs.rs"
+
+[dev-dependencies]
+tempfile = "3"
+tokio = { version = "1", features = ["macros", "rt", "time"] }
+
+[package.metadata.oap]
+spec = "075-factory-workflow-engine"

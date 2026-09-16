@@ -1,0 +1,37 @@
+{
+  "name": "cron",
+  "version": "1.0.0",
+  "description": "In-app self-hosted scheduler for Encore CronJobs (self-hosted deploys, where Encore's CronJob primitive is a no-op). Stores schedules in the base app's SQLDatabase(\"app\") (INV-11, no per-service db) and fires due jobs against the app's own endpoints from a polling daemon. Lock backend: Postgres atomic claim by default (small scale); Redis when the data-redis resource is composed and provisioned (large scale), auto-detected via the baseline lib/redis client (typed REDIS_HOST/REDIS_USER/REDIS_PASSWORD). Requires data-postgres; optionally peers with data-redis for the large-scale distributed lock. Companion to OAP spec 230.",
+  "status": "stable",
+  "requires": ["data-postgres"],
+  "requiresOneOf": [],
+  "optionalPeers": ["data-redis"],
+  "conflicts": [],
+  "services": ["scheduler"],
+  "migrations": [
+    {
+      "source": "db/1_create_task_schedules.up.sql",
+      "description": "task_schedules store for the in-app cron scheduler (id, endpoint, schedule, next_run_at, last_run_at), added to the base app database"
+    }
+  ],
+  "secrets": [],
+  "corsEntries": [],
+  "middlewares": [],
+  "files": {},
+  "authExports": [],
+  "packageDeps": {
+    "apps/api": {
+      "cron-parser": "^5.6.1"
+    }
+  },
+  "envVars": {
+    "SCHEDULER_POLL_INTERVAL_MS": {
+      "required": false,
+      "description": "Daemon poll cadence in milliseconds (default 10000)"
+    },
+    "SCHEDULER_BASE_URL": {
+      "required": false,
+      "description": "Base URL the daemon fires job endpoints against (default http://127.0.0.1:4000, the same-process gateway for a single-container self-hosted deploy; override for multi-container topologies)"
+    }
+  }
+}

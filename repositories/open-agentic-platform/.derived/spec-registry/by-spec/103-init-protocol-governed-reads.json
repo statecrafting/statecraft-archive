@@ -1,0 +1,71 @@
+{
+  "record": {
+    "amendmentRecord": "self-amends — Consumer Binaries table (2026-05-23) refreshed to\nadvertise the new `codebase-indexer orphans` subcommand landed in\nspec 101's 2026-05-23 self-amendment. The principle is unchanged;\nthe table is the orchestrator-facing index of available governed-read\nverbs and must track new subcommands as they land.\n\namended by spec 182 (2026-05-30) — the spec-182 deprecation PR\ncorrected the stale `.claude/commands/` path in AGENTS.md's\n\"Available Commands\" listing to `.claude/skills/`. Documentation\npath correction only; 103's governed-reads aspect (FR-01) and the\n`AGENTS.md § New Sessions` protocol body are unchanged. AGENTS.md\nremains the canonical cross-agent protocol authority.\n\namended by spec 217 (2026-06-18, engine-swap collapse): the Consumer\nBinaries table in `.claude/rules/governed-artifact-reads.md` and the\n`AGENTS.md § New Sessions` init protocol were repointed from the four\ndeleted in-tree engine binaries (spec-compiler, registry-consumer,\ncodebase-indexer, spec-code-coupling-check) to the published spec-spine\nCLI (`spec-spine compile|index|registry|couple`) plus the OAP overlay\n(`oap-registry-enrich by-authority`). 103's governed-reads principle is\nunchanged; only the binary names in the consumer table moved.\n\nself-amends (2026-06-01) — added FR-06 (registry freshness) to the\n`AGENTS.md § New Sessions` protocol. The spec registry\n(`.derived/spec-registry/registry.json`) is gitignored — a per-clone\nlocal cache — so FR-03's staleness surface, which compares a committed\n`index.json` hash, has no committed reference for the registry. `/init`\nnow runs `spec-compiler compile` before the registry-consumer reads so\nlifecycle counts reflect current `spec.md` frontmatter, not a stale\ncache. Motivated by a 2026-06-01 session where `/init` under-reported\napproved specs (165/175/187/188/192) from a month-old local registry.\nThe governed-reads aspect (FR-01) is unchanged.\n",
+    "codeAliases": [
+      "INIT_GOVERNED_READS"
+    ],
+    "created": "2026-04-16",
+    "dependsOn": [
+      "000-bootstrap-spec-system",
+      "001-spec-compiler-mvp",
+      "002-registry-consumer-mvp",
+      "101-codebase-index-mvp"
+    ],
+    "domain": "substrate",
+    "establishes": [
+      {
+        "kind": "file",
+        "path": ".claude/rules/governed-artifact-reads.md"
+      }
+    ],
+    "extraFrontmatter": {
+      "amended": "2026-06-18"
+    },
+    "id": "103-init-protocol-governed-reads",
+    "implementation": "complete",
+    "kind": "governance",
+    "owner": "bart",
+    "refines": [
+      {
+        "aspect": "governed-reads",
+        "unit": {
+          "kind": "file",
+          "path": "AGENTS.md"
+        }
+      }
+    ],
+    "risk": "low",
+    "sectionHeadings": [
+      "103 — Init Protocol Governed Reads",
+      "1. Problem Statement",
+      "Why not a CLAUDE.md tip?",
+      "2. Solution",
+      "2.1 Principle — Governed Artifact Reads",
+      "2.2 Amend `AGENTS.md § New Sessions`",
+      "2.3 Add Rule File `.claude/rules/governed-artifact-reads.md`",
+      "2.4 Scope — What Changes, What Does Not",
+      "3. Functional Requirements",
+      "FR-01: Amend Init Protocol",
+      "FR-02: Publish Governed-Reads Rule",
+      "FR-03: Staleness Surface",
+      "FR-04: Missing Artifact Handling",
+      "FR-05: Read-Discipline Applies Beyond Init",
+      "FR-06: Registry Freshness Before Lifecycle Read",
+      "4. Success Criteria",
+      "SC-01: Init Does Not Invoke Python Against Build Artifacts",
+      "SC-02: Rule File Discoverable",
+      "SC-03: Staleness Is Visible, Not Silent",
+      "SC-04: No Raw JSON Path Leaks Into Init",
+      "SC-05: No Regression In Init Coverage",
+      "5. Out of Scope (MVP)",
+      "6. Clarifications",
+      "Amendment — 2026-06-10: AGENTS.md Available Commands refresh"
+    ],
+    "specPath": "specs/103-init-protocol-governed-reads/spec.md",
+    "status": "approved",
+    "summary": "Replace ad-hoc parsing of compiled JSON artifacts in orchestrated workflows (starting with /init) with governed reads through the consumer binaries (registry-consumer, codebase-indexer). Establishes a reusable rule that extends constitution Principle II from authoring discipline to read discipline.\n",
+    "title": "Init Protocol Governed Reads — Consumer Binaries Over Ad-Hoc Parsing"
+  },
+  "shardHash": "ef7be1ee3637dcb438dae62314e28f85f1ca13ef017c8b7b5022c2b48d07f97f",
+  "specVersion": "1.1.0"
+}

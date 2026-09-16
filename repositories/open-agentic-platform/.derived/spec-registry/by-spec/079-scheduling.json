@@ -1,0 +1,48 @@
+{
+  "record": {
+    "authors": [
+      "open-agentic-platform"
+    ],
+    "codeAliases": [
+      "SCHEDULED_AGENT_EXECUTION"
+    ],
+    "created": "2026-04-05",
+    "domain": "opc",
+    "extends": [
+      {
+        "nature": "additive",
+        "spec": "004-spec-to-execution-bridge-mvp",
+        "unit": {
+          "id": "orchestrator",
+          "kind": "crate"
+        }
+      }
+    ],
+    "extraFrontmatter": {
+      "language": "en",
+      "sources": [
+        "claudepal"
+      ]
+    },
+    "featureBranch": "feat/079-scheduling",
+    "id": "079-scheduling",
+    "implementation": "complete",
+    "kind": "product",
+    "sectionHeadings": [
+      "079 — Scheduled Agent Execution",
+      "Purpose",
+      "Scope",
+      "In scope",
+      "Out of scope (deferred)",
+      "Architecture",
+      "Data Model",
+      "Dependencies"
+    ],
+    "specPath": "specs/079-scheduling/spec.md",
+    "status": "approved",
+    "summary": "Adds cron-based and lifecycle-event-triggered scheduling for recurring agent execution.  Schedules are persisted in SQLite, evaluated by a 60-second tick engine, and dispatched through the existing orchestrator infrastructure.\n",
+    "title": "Scheduled Agent Execution"
+  },
+  "shardHash": "8d0865b00e8b7aae3e77b017e86468006d98056a1870e6575958f42866f3b5c4",
+  "specVersion": "1.1.0"
+}

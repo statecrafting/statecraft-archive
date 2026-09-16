@@ -1,0 +1,80 @@
+{
+  "mapping": {
+    "implementingPaths": [
+      {
+        "path": "crates/agent/src/safety.rs",
+        "source": "spec-edge"
+      },
+      {
+        "path": "crates/axiomregent/src/router",
+        "source": "spec-edge"
+      },
+      {
+        "path": "crates/policy-kernel",
+        "source": "spec-edge"
+      },
+      {
+        "path": "crates/tool-registry",
+        "source": "spec-edge"
+      }
+    ],
+    "resolvedUnits": [
+      {
+        "locations": [
+          {
+            "file": "crates/policy-kernel"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "id": "open_agentic_policy_kernel",
+          "kind": "crate"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "crates/tool-registry"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "id": "tool-registry",
+          "kind": "crate"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "crates/axiomregent/src/router"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "refines",
+        "unit": {
+          "kind": "directory",
+          "path": "crates/axiomregent/src/router"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "crates/agent/src/safety.rs"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "refines",
+        "unit": {
+          "kind": "file",
+          "path": "crates/agent/src/safety.rs"
+        }
+      }
+    ],
+    "specId": "036-safety-tier-governance",
+    "specStatus": "approved"
+  },
+  "schemaVersion": "1.1.0",
+  "shardHash": "1e1032f5f98b6fdc108e9fc801ee4bda645eda040f7426371a4580755441e3f6"
+}

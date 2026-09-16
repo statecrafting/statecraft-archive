@@ -1,0 +1,74 @@
+{
+  "mapping": {
+    "amends": [
+      "104-makefile-ci-parity-contract"
+    ],
+    "dependsOn": [
+      "104-makefile-ci-parity-contract"
+    ],
+    "implementingPaths": [
+      {
+        "path": ".claude/skills/validate-and-fix/SKILL.md",
+        "source": "spec-edge"
+      },
+      {
+        "path": "Makefile",
+        "source": "spec-edge"
+      },
+      {
+        "path": "tools/oap/ci-parity-check/src/lib.rs",
+        "source": "spec-edge"
+      }
+    ],
+    "resolvedUnits": [
+      {
+        "locations": [
+          {
+            "file": "tools/oap/ci-parity-check/src/lib.rs"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "extends",
+        "unit": {
+          "kind": "file",
+          "path": "tools/oap/ci-parity-check/src/lib.rs"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": ".claude/skills/validate-and-fix/SKILL.md"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "refines",
+        "unit": {
+          "kind": "file",
+          "path": ".claude/skills/validate-and-fix/SKILL.md"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "Makefile",
+            "span": {
+              "endLine": 792,
+              "startLine": 782
+            }
+          }
+        ],
+        "ownership": true,
+        "sourceField": "co_authority",
+        "unit": {
+          "anchor": "ci-fast",
+          "file": "Makefile",
+          "kind": "section"
+        }
+      }
+    ],
+    "specId": "134-fast-local-ci-mode",
+    "specStatus": "approved"
+  },
+  "schemaVersion": "1.1.0",
+  "shardHash": "43ee3bfb53ac6f527c90f581ca76c65ba15bb9301787a9dcfbe332a31cd8ef70"
+}

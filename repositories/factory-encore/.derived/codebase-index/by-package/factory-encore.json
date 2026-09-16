@@ -1,0 +1,11 @@
+{
+  "package": {
+    "kind": "npm-package",
+    "name": "factory-encore",
+    "path": "",
+    "specRef": "000-factory-kernel",
+    "version": "0.1.0"
+  },
+  "schemaVersion": "1.1.0",
+  "shardHash": "fe8606865e7ea5bb19d23847250754578355e21c7802bddd3b04912c7e8eaaaf"
+}

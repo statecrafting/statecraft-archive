@@ -1,0 +1,28 @@
+{
+  "name": "@opc/e2e",
+  "version": "0.3.4",
+  "private": true,
+  "type": "module",
+  "description": "OPC end-to-end test harness (spec 187): built-binary driver, mock-statecraft duplex server, process-tree introspection. Standalone npm package, excluded from the pnpm workspace (platform-services precedent) so its heavy e2e deps stay out of the per-PR install.",
+  "oap": {
+    "spec": "187-opc-e2e-test-harness"
+  },
+  "scripts": {
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:e2e": "vitest run --config vitest.e2e.config.ts",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "ws": "^8.18.0"
+  },
+  "devDependencies": {
+    "@types/node": "^22.10.0",
+    "@types/ws": "^8.5.13",
+    "typescript": "^5.7.2",
+    "vitest": "^4.1.5"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}

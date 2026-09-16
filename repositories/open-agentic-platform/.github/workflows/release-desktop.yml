@@ -1,0 +1,805 @@
+# Spec: 037-cross-platform-axiomregent
+# Spec: 086-open-source-launch
+# Spec: 117-release-artifact-attestations
+#
+# Release desktop app bundles for all platforms.
+# Triggered by pushing a version tag (e.g. v0.2.1).
+# Builds sidecar binaries first, then uses Tauri Action to produce
+# platform installers and upload them to a GitHub Release.
+#
+# Each installer (DMG / AppImage / NSIS .exe) ships with:
+#   - a per-target CycloneDX SBOM (spec 117)
+#   - a SLSA build-provenance attestation (spec 117)
+#   - an existing .sha256 sidecar consumed by the in-app updater
+# Verify with `gh attestation verify <installer> --repo <owner>/<repo>`.
+
+name: Release Desktop
+
+on:
+  push:
+    tags:
+      - 'opc-v*'   # spec 193 — product-prefixed tag grammar (was bare 'v*')
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: 'Tag to release (e.g. opc-v0.4.0)'
+        required: true
+
+permissions:
+  contents: write
+
+env:
+  CARGO_TERM_COLOR: always
+
+jobs:
+  # ── Stage 0: Fail-fast version guard (no build) ─────────────────────
+  # spec 193 — the committed-source version check hoisted into a standalone
+  # job that needs nothing but a checkout. It reads only tauri.conf.json /
+  # package.json / Cargo.toml / Cargo.lock — all present in a bare checkout,
+  # no sidecar or build output required. Every other job `needs:` this one, so
+  # a tag-vs-committed mismatch dies in ~30s with ZERO sidecar/build minutes
+  # burned, no draft, no tag. The in-`release` pre-build guard (defense-in-depth
+  # for the build runner's own checkout) and the post-build SBOM guard
+  # (build-time drift) are retained below — this job is the fast-fail front gate,
+  # not a replacement for them.
+  version-guard:
+    runs-on: ubuntu-latest
+    name: version-guard
+    steps:
+      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+
+      # Same prefix-aware resolver as the release job (spec 193 tag grammar).
+      - name: Resolve release tag
+        id: tag
+        shell: bash
+        env:
+          TAG_INPUT: ${{ github.event.inputs.tag }}
+        run: |
+          set -euo pipefail
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+            TAG="$TAG_INPUT"
+          else
+            TAG="${GITHUB_REF#refs/tags/}"
+          fi
+          if [ -z "$TAG" ]; then
+            echo "::error::No release tag resolved — did you forget the tag input?"
+            exit 1
+          fi
+          PRODUCT="${TAG%-v*}"      # opc-v0.4.0 -> opc
+          VERSION="${TAG##*-v}"     # opc-v0.4.0 -> 0.4.0
+          VERSION="${VERSION#v}"    # tolerate a stray leading 'v'
+          if [ "$PRODUCT" != "opc" ]; then
+            echo "::error::Release Desktop expects an 'opc-v<semver>' tag; got '$TAG' (product='$PRODUCT'). Bare 'v*' tags were retired in spec 193."
+            exit 1
+          fi
+          echo "version=$VERSION" >> "$GITHUB_OUTPUT"
+
+      - name: Guard — committed version == tag (fail-fast, pre-build)
+        shell: bash
+        run: tools/lint/release-version-guard.sh opc "${{ steps.tag.outputs.version }}"
+
+  # ── Stage 1: Build sidecar binaries ────────────────────────────────
+  sidecar:
+    needs: [version-guard]
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - os: macos-latest
+            target: aarch64-apple-darwin
+          # x86_64-apple-darwin removed — Intel Mac builds dropped (2026-04-15)
+          - os: ubuntu-24.04
+            target: x86_64-unknown-linux-gnu
+          - os: windows-latest
+            target: x86_64-pc-windows-msvc
+
+    runs-on: ${{ matrix.os }}
+    name: sidecar / ${{ matrix.target }}
+
+    steps:
+      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+
+      - name: Rust toolchain
+        uses: dtolnay/rust-toolchain@29eef336d9b2848a0b548edc03f92a220660cdb8 # stable
+        with:
+          toolchain: '1.95.0'
+          targets: ${{ matrix.target }}
+          components: clippy, rustfmt
+
+      - name: Cache Rust dependencies
+        uses: Swatinem/rust-cache@e18b497796c12c097a38f9edb9d0641fb99eee32 # v2
+        with:
+          shared-key: sidecar-${{ matrix.target }}
+
+      # axiomregent depends on openssl-sys via reqwest/octocrab
+      - name: Install OpenSSL dev (Linux)
+        if: runner.os == 'Linux'
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y libssl-dev pkg-config
+
+      # ── axiomregent ──
+      - name: Build axiomregent
+        run: cargo build --release --target ${{ matrix.target }} --manifest-path crates/axiomregent/Cargo.toml
+
+      - name: Stage axiomregent (Unix)
+        if: runner.os != 'Windows'
+        run: |
+          mkdir -p product/apps/opc/src-tauri/binaries
+          cp "target/${{ matrix.target }}/release/axiomregent" \
+             "product/apps/opc/src-tauri/binaries/axiomregent-${{ matrix.target }}"
+          strip "product/apps/opc/src-tauri/binaries/axiomregent-${{ matrix.target }}" || true
+
+      - name: Stage axiomregent (Windows)
+        if: runner.os == 'Windows'
+        shell: cmd
+        run: |
+          if not exist product\apps\opc\src-tauri\binaries mkdir product\apps\opc\src-tauri\binaries
+          copy target\${{ matrix.target }}\release\axiomregent.exe product\apps\opc\src-tauri\binaries\axiomregent-${{ matrix.target }}.exe
+
+      - name: Upload sidecar artifacts
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7
+        with:
+          name: sidecar-${{ matrix.target }}
+          path: product/apps/opc/src-tauri/binaries/
+          retention-days: 5
+
+  # ── Stage 1b: Linux ARM64 sidecar (cross-compiled) ────────────────
+  sidecar-linux-arm64:
+    needs: [version-guard]
+    runs-on: ubuntu-24.04
+    name: sidecar / aarch64-unknown-linux-gnu
+
+    steps:
+      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+
+      - name: Rust toolchain
+        uses: dtolnay/rust-toolchain@29eef336d9b2848a0b548edc03f92a220660cdb8 # stable
+        with:
+          toolchain: '1.95.0'
+          targets: aarch64-unknown-linux-gnu
+          components: clippy, rustfmt
+
+      - name: Cache Rust dependencies
+        uses: Swatinem/rust-cache@e18b497796c12c097a38f9edb9d0641fb99eee32 # v2
+        with:
+          shared-key: sidecar-aarch64-unknown-linux-gnu
+
+      - name: Install cross-compilation tools and OpenSSL
+        uses: ./.github/actions/linux-arm64-cross
+
+      - name: Build axiomregent
+        env:
+          CARGO_TARGET_AARCH64_UNKNOWN_LINUX_GNU_LINKER: aarch64-linux-gnu-gcc
+          CC_aarch64_unknown_linux_gnu: aarch64-linux-gnu-gcc
+          PKG_CONFIG_ALLOW_CROSS: '1'
+          PKG_CONFIG_PATH_aarch64_unknown_linux_gnu: /usr/lib/aarch64-linux-gnu/pkgconfig
+          AARCH64_UNKNOWN_LINUX_GNU_OPENSSL_LIB_DIR: /usr/lib/aarch64-linux-gnu
+          AARCH64_UNKNOWN_LINUX_GNU_OPENSSL_INCLUDE_DIR: /usr/include
+        run: cargo build --release --target aarch64-unknown-linux-gnu --manifest-path crates/axiomregent/Cargo.toml
+
+      - name: Stage binaries
+        run: |
+          mkdir -p product/apps/opc/src-tauri/binaries
+          cp target/aarch64-unknown-linux-gnu/release/axiomregent \
+             product/apps/opc/src-tauri/binaries/axiomregent-aarch64-unknown-linux-gnu
+
+      - name: Upload sidecar artifacts
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7
+        with:
+          name: sidecar-aarch64-unknown-linux-gnu
+          path: product/apps/opc/src-tauri/binaries/
+          retention-days: 5
+
+  # ── Stage 1c: Bundled-sidecar SBOM (generated ONCE) ────────────────
+  # spec 117 §2.1 — axiomregent lives in the ROOT workspace (crates/axiomregent),
+  # whose deps (octocrab/hiqlite/fastembed) are absent from the product/apps/opc
+  # desktop scan. Generate its CycloneDX SBOM exactly ONCE here (lifted from the
+  # retired release-axiomregent.yml: generate-lockfile at root + scan crates/), so
+  # the sidecar SBOM — and its serialNumber / BOM-Link URN — are byte-identical
+  # across the three release matrix legs. Each leg downloads THIS artifact and
+  # BOM-Links it into its per-target installer SBOM (no per-leg regeneration →
+  # deterministic, and ~2× cross-compiles of syft work saved).
+  axiomregent-sbom:
+    needs: [version-guard]
+    runs-on: ubuntu-latest
+    name: axiomregent sidecar SBOM
+    steps:
+      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+
+      - name: Rust toolchain
+        uses: dtolnay/rust-toolchain@29eef336d9b2848a0b548edc03f92a220660cdb8 # pinned for rust-toolchain.toml lockstep
+        with:
+          toolchain: '1.95.0'
+
+      - name: Generate workspace Cargo.lock and stage it into the scan path
+        run: |
+          cargo generate-lockfile --manifest-path Cargo.toml
+          # crates/ is a workspace MEMBER subtree, not the workspace root. The
+          # single authoritative lock lands at repo-root ./Cargo.lock (committed
+          # per spec 116; .gitignore:18 re-includes it, :16 ignores per-member
+          # locks). syft's rust-cargo-lock-cataloger reads a Cargo.lock INSIDE
+          # the scan path and does not walk to an ancestor — so stage the
+          # workspace lock into crates/ (transient; ignored by .gitignore:16).
+          # Without this the scan finds no lock -> 0 components (spec 117 AC-6).
+          cp Cargo.lock crates/Cargo.lock
+
+      - name: Generate axiomregent sidecar SBOM (CycloneDX)
+        uses: anchore/sbom-action@e22c389904149dbc22b58101806040fa8d37a610 # v0.24.0 (ships syft 1.30+; v0.17.8's syft 1.11 returned 0 rust components)
+        with:
+          path: crates
+          format: cyclonedx-json
+          output-file: sbom-axiomregent.cdx.json
+
+      - name: Assert sidecar SBOM is populated (spec 117 AC-6 — no empty BOM-Link)
+        run: |
+          n="$(jq '.components | length' sbom-axiomregent.cdx.json)"
+          echo "axiomregent sidecar SBOM components: $n"
+          [ "$n" -gt 0 ] || { echo "::error::sidecar SBOM has 0 components — scan geometry regressed (spec 117 AC-6)"; exit 1; }
+
+      - name: Upload sidecar SBOM artifact
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7
+        with:
+          name: sbom-axiomregent
+          path: sbom-axiomregent.cdx.json
+          retention-days: 5
+
+  # ── Stage 2: Build & release desktop app ───────────────────────────
+  release:
+    needs: [version-guard, sidecar, sidecar-linux-arm64, axiomregent-sbom]
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - os: macos-latest
+            target: aarch64-apple-darwin
+            args: '--target aarch64-apple-darwin'
+            config: src-tauri/tauri.macos.conf.json
+          # x86_64-apple-darwin removed — Intel Mac builds dropped (2026-04-15)
+          - os: ubuntu-24.04
+            target: x86_64-unknown-linux-gnu
+            args: ''
+            config: src-tauri/tauri.linux.conf.json
+          - os: windows-latest
+            target: x86_64-pc-windows-msvc
+            args: ''
+            config: src-tauri/tauri.windows.conf.json
+
+    runs-on: ${{ matrix.os }}
+    name: release / ${{ matrix.target }}
+    timeout-minutes: 60
+    permissions:
+      contents: write
+      id-token: write       # spec 117 — Sigstore identity
+      attestations: write   # spec 117 — provenance attestation upload
+
+    steps:
+      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+
+      - name: Rust toolchain
+        uses: dtolnay/rust-toolchain@29eef336d9b2848a0b548edc03f92a220660cdb8 # pinned for rust-toolchain.toml lockstep
+        with:
+          toolchain: '1.95.0'
+          targets: ${{ matrix.target }}
+          components: clippy, rustfmt
+
+      - name: Cache Rust dependencies
+        uses: Swatinem/rust-cache@e18b497796c12c097a38f9edb9d0641fb99eee32 # v2
+        with:
+          shared-key: release-${{ matrix.target }}
+
+      - uses: pnpm/action-setup@4f4305e1fe60ad818b8ae6fc4a697cc47eab0b2d # v6
+        with:
+          package_json_file: product/package.json
+      - uses: actions/setup-node@48b55a011bda9f5d6aeb4c2d9c7362e8dae4041e # v6
+        with:
+          node-version: 22
+          cache: pnpm
+          cache-dependency-path: product/pnpm-lock.yaml
+
+      - name: Install frontend dependencies
+        working-directory: product
+        run: pnpm install --frozen-lockfile
+
+      # Linux needs system libraries for Tauri / WebKit
+      - name: Install Linux system dependencies
+        if: runner.os == 'Linux'
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y \
+            libwebkit2gtk-4.1-dev \
+            libappindicator3-dev \
+            librsvg2-dev \
+            patchelf \
+            libgtk-3-dev
+
+      # Download pre-built sidecar binaries from Stage 1
+      - name: Download sidecar binaries
+        uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8
+        with:
+          name: sidecar-${{ matrix.target }}
+          path: product/apps/opc/src-tauri/binaries/
+
+      - name: Mark sidecars executable (Unix)
+        if: runner.os != 'Windows'
+        run: chmod +x product/apps/opc/src-tauri/binaries/*
+
+      # spec 193 — prefix-aware resolver. Tag grammar: <product>-v<semver>
+      # (e.g. opc-v0.4.0). Product derives from the prefix; version is the
+      # suffix after '-v'. Release Desktop only accepts the 'opc' product.
+      - name: Resolve release tag
+        id: tag
+        shell: bash
+        env:
+          TAG_INPUT: ${{ github.event.inputs.tag }}
+        run: |
+          set -euo pipefail
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+            TAG="$TAG_INPUT"
+          else
+            TAG="${GITHUB_REF#refs/tags/}"
+          fi
+          if [ -z "$TAG" ]; then
+            echo "::error::No release tag resolved — did you forget the tag input?"
+            exit 1
+          fi
+          PRODUCT="${TAG%-v*}"      # opc-v0.4.0 -> opc
+          VERSION="${TAG##*-v}"     # opc-v0.4.0 -> 0.4.0
+          VERSION="${VERSION#v}"    # tolerate a stray leading 'v'
+          if [ "$PRODUCT" != "opc" ]; then
+            echo "::error::Release Desktop expects an 'opc-v<semver>' tag; got '$TAG' (product='$PRODUCT'). Bare 'v*' tags were retired in spec 193."
+            exit 1
+          fi
+          {
+            echo "tag=$TAG"
+            echo "product=$PRODUCT"
+            echo "version=$VERSION"
+          } >> "$GITHUB_OUTPUT"
+
+      # spec 193 — pre-build version guard (defense-in-depth). The standalone
+      # `version-guard` job is the fast-fail front gate (this job `needs:` it via
+      # the sidecar matrix), so a mismatch is normally rejected before any build
+      # minutes. This in-job re-check guards the release runner's OWN checkout
+      # against the committed sources (tauri.conf.json / package.json /
+      # Cargo.toml / Cargo.lock) and still runs BEFORE tauri-action, so nothing
+      # is built and no draft is created on the (theoretical) divergent-checkout
+      # path. Structural fix for the 0.3.4-assets-under-a-v0.3.6-envelope bug.
+      - name: Guard — committed version == tag (pre-build)
+        shell: bash
+        run: tools/lint/release-version-guard.sh opc "${{ steps.tag.outputs.version }}"
+
+      # Detect whether Apple code signing secrets are configured.
+      # Secrets can't be used directly in step `if:` conditionals.
+      - name: Detect code signing
+        id: codesign
+        shell: bash
+        run: |
+          if [ -n "$CERT" ]; then
+            echo "apple=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "apple=false" >> "$GITHUB_OUTPUT"
+            echo "::warning::APPLE_CERTIFICATE not set — macOS build will be unsigned"
+          fi
+        env:
+          CERT: ${{ secrets.APPLE_CERTIFICATE }}
+
+      # Signed build — APPLE_CERTIFICATE env var MUST be completely absent
+      # (not empty) to prevent Tauri from calling `security import` with
+      # invalid data.
+      - name: Build and release with Tauri (signed)
+        if: steps.codesign.outputs.apple == 'true'
+        uses: tauri-apps/tauri-action@1deb371b0cd8bd54025b384f1cd735e725c4060f # v1.0.0
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          APPLE_CERTIFICATE: ${{ secrets.APPLE_CERTIFICATE }}
+          APPLE_CERTIFICATE_PASSWORD: ${{ secrets.APPLE_CERTIFICATE_PASSWORD }}
+          APPLE_SIGNING_IDENTITY: ${{ secrets.APPLE_SIGNING_IDENTITY }}
+          APPLE_ID: ${{ secrets.APPLE_ID }}
+          APPLE_PASSWORD: ${{ secrets.APPLE_PASSWORD }}
+          APPLE_TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
+          TAURI_SIGNING_PRIVATE_KEY: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY }}
+          TAURI_SIGNING_PRIVATE_KEY_PASSWORD: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY_PASSWORD }}
+        with:
+          projectPath: product/apps/opc
+          tauriScript: pnpm tauri
+          tagName: ${{ steps.tag.outputs.tag }}
+          releaseName: 'OPC v${{ steps.tag.outputs.version }}'
+          releaseBody: |
+            See the [changelog](https://github.com/${{ github.repository }}/commits/${{ steps.tag.outputs.tag }}) for details.
+
+            ## Downloads
+            | Platform | File |
+            |----------|------|
+            | macOS (Apple Silicon) | `.dmg` (aarch64) |
+            | Linux | `.AppImage`, `.deb`, `.rpm` |
+            | Windows | `.msi`, `.exe` (NSIS) |
+          releaseDraft: true
+          prerelease: false
+          args: ${{ matrix.args }}
+          configPath: ${{ matrix.config }}
+
+      # Unsigned build — no Apple env vars in scope at all.
+      - name: Build and release with Tauri (unsigned)
+        if: steps.codesign.outputs.apple != 'true'
+        uses: tauri-apps/tauri-action@1deb371b0cd8bd54025b384f1cd735e725c4060f # v1.0.0
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          TAURI_SIGNING_PRIVATE_KEY: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY }}
+          TAURI_SIGNING_PRIVATE_KEY_PASSWORD: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY_PASSWORD }}
+        with:
+          projectPath: product/apps/opc
+          tauriScript: pnpm tauri
+          tagName: ${{ steps.tag.outputs.tag }}
+          releaseName: 'OPC v${{ steps.tag.outputs.version }}'
+          releaseBody: |
+            See the [changelog](https://github.com/${{ github.repository }}/commits/${{ steps.tag.outputs.tag }}) for details.
+
+            ## Downloads
+            | Platform | File |
+            |----------|------|
+            | macOS (Apple Silicon) | `.dmg` (aarch64) |
+            | Linux | `.AppImage`, `.deb`, `.rpm` |
+            | Windows | `.msi`, `.exe` (NSIS) |
+          releaseDraft: true
+          prerelease: false
+          args: ${{ matrix.args }}
+          configPath: ${{ matrix.config }}
+
+      # Spec 117 — collect installer paths for the provenance attestation step.
+      # The subject set is EVERY shipped installer, per matrix target:
+      #   macOS  -> dmg ; Linux -> appimage + deb + rpm ; Windows -> nsis + msi.
+      # The prior set (dmg/appimage/nsis only) left .deb/.rpm/.msi UNATTESTED —
+      # `gh attestation verify` returned "no attestation found" for them, which
+      # contradicted RELEASE-VERIFICATION.md's "every binary ships with two
+      # governed attestations" (spec 117 AC-2/AC-4; bundle dir names are the
+      # Tauri v2 convention deb/ rpm/ msi/ — globs are additive, so a target
+      # that produces none is simply a no-match, never an error).
+      - name: Locate installer artifacts
+        id: installers
+        shell: bash
+        run: |
+          set -euo pipefail
+          target_root="product/apps/opc/src-tauri/target"
+          # Multi-line output via GITHUB_OUTPUT heredoc.
+          {
+            echo "paths<<INSTALLERS_EOF"
+            find "$target_root" -type f \( \
+              -path '*/release/bundle/dmg/*.dmg' -o \
+              -path '*/release/bundle/appimage/*.AppImage' -o \
+              -path '*/release/bundle/nsis/*.exe' -o \
+              -path '*/release/bundle/deb/*.deb' -o \
+              -path '*/release/bundle/rpm/*.rpm' -o \
+              -path '*/release/bundle/msi/*.msi' \
+            \) 2>/dev/null
+            echo "INSTALLERS_EOF"
+          } >> "$GITHUB_OUTPUT"
+
+      # Spec 117 §2.1 — CycloneDX SBOM scoped to `product/` (the pnpm workspace
+      # root) so syft reads BOTH ecosystems that ship in the installer:
+      #   - the OPC frontend closure from product/pnpm-lock.yaml (~784 npm), and
+      #   - the src-tauri Rust closure from product/apps/opc/src-tauri/Cargo.lock
+      #     (961 cargo — unchanged; that lock is in scope under either path).
+      # The prior `product/apps/opc` scope sat one level BELOW pnpm-lock.yaml, so
+      # it captured only product/apps/opc/tests-e2e (2 npm TEST deps) and silently
+      # UNDER-reported the frontend that actually ships — the dangerous direction.
+      # The npm set is the whole-workspace closure (a superset of OPC's production
+      # runtime closure incl. dev + sibling packages — same caveat recorded for the
+      # bundled-sidecar SBOM in §2.1). node_modules does not inflate the count:
+      # syft sources every npm component from the lockfiles, so the result is
+      # stable post-`pnpm install`.
+      - name: Generate desktop SBOM (CycloneDX)
+        uses: anchore/sbom-action@e22c389904149dbc22b58101806040fa8d37a610 # v0.24.0 (ships syft 1.30+; v0.17.8's syft 1.11 returned 0 rust components)
+        with:
+          path: product
+          format: cyclonedx-json
+          output-file: product/apps/opc/src-tauri/target/sbom-desktop-${{ matrix.target }}.cdx.json
+
+      # Spec 117 §2.1 — prune build-tree artifacts from the desktop SBOM.
+      # Scanning `product/` post-build also reaches product/apps/opc/src-tauri/
+      # target/. On the MSVC build syft catalogs compiled proc-macro DLLs under
+      # target/release/deps/ as ~230 purl-less `application` components named by
+      # their per-build-hashed path (e.g. serde_derive-<hash>.dll). They are
+      # non-reproducible, duplicate crates already present as pkg:cargo purls, and
+      # do not ship in the installer (macOS/Linux catalog 0 such entries — the
+      # over-report is MSVC-specific). syft's own `--exclude` does NOT drop them:
+      # valid `**/target/**` globs are a silent no-op in syft 1.43.0 and
+      # directory-form patterns error the scan ("must start with one of './',
+      # '*/', or '**/'"). Prune deterministically with jq (already used below for
+      # the BOM-Link — no new binary, byte-stable output). A component is dropped
+      # iff its name or EVERY syft location lies under a `target/` build tree.
+      - name: Prune build-tree artifacts from desktop SBOM (CycloneDX)
+        shell: bash
+        run: |
+          set -euo pipefail
+          sbom="product/apps/opc/src-tauri/target/sbom-desktop-${{ matrix.target }}.cdx.json"
+          jq '
+            def ut($s): ($s|type=="string") and (($s|test("/target/")) or ($s|test("\\\\target\\\\")));
+            .components |= map(
+              [ (.properties // [])[] | select(.name|test("syft:location.*:path")) | .value ] as $paths
+              | select( (ut(.name)|not) and all($paths[]; ut(.)|not) )
+            )
+          ' "$sbom" > "$sbom.tmp" && mv "$sbom.tmp" "$sbom"
+
+      # Spec 117 AC-6 — fail-closed desktop SBOM scope gates (operationalized,
+      # not asserted in prose). Two regressions die here, before upload:
+      #   (1) npm UNDER-report — the frontend closure must be present; a scope
+      #       that slips back below product/pnpm-lock.yaml collapses npm to ~2.
+      #   (2) target/ OVER-report — no component may be sourced from a build tree;
+      #       the prune above must have removed them all (checks name AND every
+      #       syft location, forward- and back-slash).
+      - name: Assert desktop SBOM scope (spec 117 AC-6 — fail-closed)
+        shell: bash
+        run: |
+          set -euo pipefail
+          sbom="product/apps/opc/src-tauri/target/sbom-desktop-${{ matrix.target }}.cdx.json"
+          n_total="$(jq '.components | length' "$sbom")"
+          n_cargo="$(jq '[.components[] | select(.purl // "" | startswith("pkg:cargo"))] | length' "$sbom")"
+          n_npm="$(jq '[.components[] | select(.purl // "" | startswith("pkg:npm"))] | length' "$sbom")"
+          n_target="$(jq '[.components[]
+              | (.name) as $n
+              | [ (.properties // [])[] | select(.name|test("syft:location.*:path")) | .value ] as $p
+              | select( ($n|test("/target/|\\\\target\\\\")) or (any($p[]; test("/target/|\\\\target\\\\"))) )
+            ] | length' "$sbom")"
+          echo "desktop SBOM: total=$n_total cargo=$n_cargo npm=$n_npm build-tree=$n_target"
+          [ "$n_npm" -gt 0 ]    || { echo "::error::desktop SBOM has 0 npm components — frontend closure under-reported; scan scope regressed below product/pnpm-lock.yaml (spec 117 AC-6)"; exit 1; }
+          [ "$n_target" -eq 0 ] || { echo "::error::desktop SBOM has $n_target build-tree (target/) component(s) — non-reproducible artifact over-report; scope/prune regressed (spec 117 AC-6)"; exit 1; }
+
+      # spec 117 §2.1 — bundled-sidecar SBOM. axiomregent lives in the ROOT
+      # workspace (crates/axiomregent), whose deps (octocrab/hiqlite/fastembed)
+      # are absent from the product/apps/opc scan above. The SBOM is generated
+      # ONCE in the axiomregent-sbom job; download that single artifact here and
+      # BOM-Link it into this target's installer SBOM. One source → identical
+      # bytes/serialNumber across all three legs (no per-leg syft regeneration,
+      # no non-deterministic --clobber race).
+      - name: Download bundled-sidecar SBOM
+        uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8
+        with:
+          name: sbom-axiomregent
+          path: product/apps/opc/src-tauri/target/
+      # url is a conformant CycloneDX BOM-Link URN (urn:cdx:<serialNumber>/<version>)
+      # derived from the sidecar SBOM; the file is co-attached to the release below
+      # so the link is human-resolvable too. jq-only → matrix-portable, no new binary.
+      - name: Generate installer SBOM bundled-sidecar BOM-Link (CycloneDX)
+        shell: bash
+        run: |
+          set -euo pipefail
+          sbom="product/apps/opc/src-tauri/target/sbom-desktop-${{ matrix.target }}.cdx.json"
+          side="product/apps/opc/src-tauri/target/sbom-axiomregent.cdx.json"
+          sn="$(jq -r '.serialNumber // empty' "$side" | sed 's#^urn:uuid:##')"
+          ver="$(jq -r '.version // 1' "$side")"
+          if [ -n "$sn" ]; then link="urn:cdx:$sn/$ver"; else link="sbom-axiomregent.cdx.json"; fi
+          jq --arg link "$link" '.externalReferences = ((.externalReferences // []) + [{
+                "type": "bom",
+                "url": $link,
+                "comment": "Bundled axiomregent sidecar SBOM (CycloneDX BOM-Link; co-attached as sbom-axiomregent.cdx.json; spec 117 §2.1)"
+              }])' "$sbom" > "$sbom.tmp" && mv "$sbom.tmp" "$sbom"
+
+      # spec 193 — post-build SBOM assertion. tauri-action has created the
+      # draft by now; verify the generated SBOM's `opc` component version
+      # equals the tag. On mismatch, discard the draft AND its tag so no
+      # inconsistent release survives (no version burned). The pre-build guard
+      # already proved the committed sources; this catches build-time drift.
+      - name: Guard — SBOM version == tag (post-build); discard draft on mismatch
+        shell: bash
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          TAG: ${{ steps.tag.outputs.tag }}
+          VERSION: ${{ steps.tag.outputs.version }}
+        run: |
+          set -euo pipefail
+          sbom="product/apps/opc/src-tauri/target/sbom-desktop-${{ matrix.target }}.cdx.json"
+          if ! tools/lint/release-version-guard.sh opc "$VERSION" "$sbom"; then
+            echo "::error::version guard failed post-build for '$TAG'."
+            # spec 194 — publish-boundary guard. Three states, three messages:
+            # gh-lookup-failed (gone / never created / auth) → do NOT delete and
+            # say so truthfully; draft → discard (no version burned); published →
+            # refuse. gh's stderr surfaces in the log (no 2>/dev/null).
+            if state="$(gh release view "$TAG" --json isDraft -q .isDraft)"; then
+              if [ "$state" = "true" ]; then
+                echo "::error::discarding DRAFT '$TAG' (no version burned)."
+                gh release delete "$TAG" --yes --cleanup-tag --repo "$GITHUB_REPOSITORY" || true
+              else
+                echo "::error::publish-boundary (spec 194): release '$TAG' is published (isDraft='$state') — refusing to delete a published release; resolve manually."
+              fi
+            else
+              rc=$?
+              echo "::error::publish-boundary (spec 194): 'gh release view $TAG' failed (exit $rc; see gh error above) — NOT deleting. Release may already be gone or gh failed to authenticate; resolve manually."
+            fi
+            exit 1
+          fi
+
+      # Spec 117 — provenance attestation over every shipped installer produced
+      # this run (macOS: dmg ; Linux: appimage+deb+rpm ; Windows: nsis+msi). One
+      # attest call takes all of this matrix-target's installers as subjects and
+      # emits a single multi-subject bundle (`bundle-path`); the stage step below
+      # copies that bundle to each installer's sibling `<installer>.intoto.jsonl`.
+      # A multi-subject bundle verifies for ANY of its subjects, so
+      # `gh attestation verify <deb|rpm|msi>` now succeeds too (AC-2/AC-4).
+      - name: Attest installer provenance
+        id: attest-installer
+        uses: actions/attest-build-provenance@0f67c3f4856b2e3261c31976d6725780e5e4c373 # v4.1.1
+        with:
+          subject-path: ${{ steps.installers.outputs.paths }}
+
+      - name: Stage per-installer attestation bundle
+        shell: bash
+        env:
+          BUNDLE: ${{ steps.attest-installer.outputs.bundle-path }}
+        run: |
+          set -euo pipefail
+          target_root="product/apps/opc/src-tauri/target"
+          if [ -z "${BUNDLE:-}" ] || [ ! -f "$BUNDLE" ]; then
+            echo "::error::attest-build-provenance did not emit a bundle path."
+            exit 1
+          fi
+          while IFS= read -r installer; do
+            [ -z "$installer" ] && continue
+            cp "$BUNDLE" "${installer}.intoto.jsonl"
+            echo "→ ${installer}.intoto.jsonl"
+          done < <(find "$target_root" -type f \( \
+            -path '*/release/bundle/dmg/*.dmg' -o \
+            -path '*/release/bundle/appimage/*.AppImage' -o \
+            -path '*/release/bundle/nsis/*.exe' -o \
+            -path '*/release/bundle/deb/*.deb' -o \
+            -path '*/release/bundle/rpm/*.rpm' -o \
+            -path '*/release/bundle/msi/*.msi' \
+          \) 2>/dev/null)
+
+      # Spec 117 — attach the SBOM and per-installer attestation bundles to
+      # the release alongside the installers.
+      - name: Upload SBOM and attestations to release
+        shell: bash
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          TAG: ${{ steps.tag.outputs.tag }}
+        run: |
+          set -euo pipefail
+          # spec 194 — publish-boundary guard. Three states, three messages:
+          # gh-lookup-failed / published / draft. Check gh's exit code FIRST so a
+          # gone/auth failure is not mislabeled "published"; gh's stderr surfaces
+          # in the log (no 2>/dev/null).
+          if state="$(gh release view "$TAG" --json isDraft -q .isDraft)"; then :; else
+            rc=$?
+            echo "::error::publish-boundary (spec 194): 'gh release view $TAG' failed (exit $rc; see gh error above) — failing closed, not uploading SBOM/attestations. Release may be gone or gh failed to authenticate; resolve manually."
+            exit 1
+          fi
+          if [ "$state" != "true" ]; then
+            echo "::error::publish-boundary (spec 194): release '$TAG' is published (isDraft='$state') — refusing to upload SBOM/attestations. Automation mutates drafts only; attach to a published release manually."
+            exit 1
+          fi
+          target_root="product/apps/opc/src-tauri/target"
+          gh release upload "$TAG" \
+            "product/apps/opc/src-tauri/target/sbom-desktop-${{ matrix.target }}.cdx.json" \
+            --clobber --repo "$GITHUB_REPOSITORY"
+          # spec 117 §2.1 — the bundled-sidecar SBOM itself is attached ONCE by the
+          # post-matrix attach-sidecar-sbom job (not here): uploading it per-leg would
+          # be either redundant (all legs) or fragile (one leg). Each installer SBOM
+          # above already references it via the urn:cdx: BOM-Link regardless.
+          while IFS= read -r att; do
+            [ -z "$att" ] && continue
+            gh release upload "$TAG" "$att" --clobber --repo "$GITHUB_REPOSITORY"
+          done < <(find "$target_root" -type f -name '*.intoto.jsonl' 2>/dev/null)
+
+      # Consumed by the in-app updater (product/apps/opc/src-tauri/src/commands/updater.rs).
+      # Emits a `<installer>.sha256` sidecar for the platform installer the updater
+      # downloads (DMG / NSIS setup.exe / AppImage — see updater.rs:35-39) and
+      # attaches it to the release. This set is DELIBERATELY narrower than the
+      # attestation/SBOM coverage above: .deb/.rpm/.msi are NOT updater targets, so
+      # they get SLSA provenance + SBOM but no .sha256 sidecar. The scoping is
+      # documented in docs/RELEASE-VERIFICATION.md (§Updater integrity) so the
+      # narrower set reads as intentional, not a gap (spec 117).
+      - name: Generate SHA-256 sidecars for installer assets
+        shell: bash
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          TAG: ${{ steps.tag.outputs.tag }}
+        run: |
+          set -euo pipefail
+          # spec 194 — publish-boundary guard. Three states, three messages:
+          # gh-lookup-failed / published / draft. Check gh's exit code FIRST so a
+          # gone/auth failure is not mislabeled "published"; gh's stderr surfaces
+          # in the log (no 2>/dev/null).
+          if state="$(gh release view "$TAG" --json isDraft -q .isDraft)"; then :; else
+            rc=$?
+            echo "::error::publish-boundary (spec 194): 'gh release view $TAG' failed (exit $rc; see gh error above) — failing closed, not uploading SHA-256 sidecars. Release may be gone or gh failed to authenticate; resolve manually."
+            exit 1
+          fi
+          if [ "$state" != "true" ]; then
+            echo "::error::publish-boundary (spec 194): release '$TAG' is published (isDraft='$state') — refusing to upload SHA-256 sidecars. Automation mutates drafts only; attach to a published release manually."
+            exit 1
+          fi
+          target_root="product/apps/opc/src-tauri/target"
+          # Portable across bash 3.2 (macOS) — no `mapfile`.
+          hash_cmd=""
+          if command -v sha256sum >/dev/null 2>&1; then
+            hash_cmd="sha256sum"
+          elif command -v shasum >/dev/null 2>&1; then
+            hash_cmd="shasum -a 256"
+          else
+            echo "::error::Neither sha256sum nor shasum found on runner."
+            exit 1
+          fi
+          found=0
+          while IFS= read -r f; do
+            [ -z "$f" ] && continue
+            found=$((found + 1))
+            dir="$(dirname "$f")"
+            base="$(basename "$f")"
+            sha_file="${f}.sha256"
+            (cd "$dir" && $hash_cmd "$base") > "$sha_file"
+            echo "→ $(cat "$sha_file")"
+            gh release upload "$TAG" "$sha_file" --clobber --repo "$GITHUB_REPOSITORY"
+          done < <(find "$target_root" -type f \( \
+            -path '*/release/bundle/dmg/*.dmg' -o \
+            -path '*/release/bundle/appimage/*.AppImage' -o \
+            -path '*/release/bundle/nsis/*.exe' \
+          \) 2>/dev/null)
+          if [ "$found" -eq 0 ]; then
+            echo "::error::No installer artifact found under $target_root — updater sidecars cannot be generated."
+            exit 1
+          fi
+
+  # ── Stage 3: Attach the bundled-sidecar SBOM ONCE (post-matrix) ─────
+  # spec 117 §2.1 — the byte-identical sbom-axiomregent.cdx.json (generated once in
+  # the axiomregent-sbom job, and BOM-Linked into every per-target installer SBOM)
+  # is attached to the draft release exactly once here, after the matrix. This
+  # avoids both the redundant per-leg --clobber re-upload and the fragility of
+  # gating the upload to a single matrix leg (a leg failure would silently drop the
+  # asset). `needs: [release]` ⇒ runs only when the full matrix succeeded — i.e.
+  # exactly when the draft is complete and publishable.
+  attach-sidecar-sbom:
+    needs: [release]
+    runs-on: ubuntu-latest
+    name: attach bundled-sidecar SBOM
+    permissions:
+      contents: write
+    steps:
+      - name: Resolve release tag
+        id: tag
+        shell: bash
+        env:
+          TAG_INPUT: ${{ github.event.inputs.tag }}
+        run: |
+          set -euo pipefail
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+            TAG="$TAG_INPUT"
+          else
+            TAG="${GITHUB_REF#refs/tags/}"
+          fi
+          PRODUCT="${TAG%-v*}"
+          if [ "$PRODUCT" != "opc" ]; then
+            echo "::error::Release Desktop expects an 'opc-v<semver>' tag; got '$TAG'."
+            exit 1
+          fi
+          echo "tag=$TAG" >> "$GITHUB_OUTPUT"
+
+      - name: Download bundled-sidecar SBOM
+        uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8
+        with:
+          name: sbom-axiomregent
+          path: dist/
+
+      - name: Upload bundled-sidecar SBOM to release (draft-guarded)
+        shell: bash
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          TAG: ${{ steps.tag.outputs.tag }}
+        run: |
+          set -euo pipefail
+          # spec 194 — publish-boundary guard. Three states, three messages:
+          # gh-lookup-failed / published / draft. Check gh's exit code FIRST so a
+          # gone/auth failure is not mislabeled "published"; gh's stderr surfaces
+          # in the log (no 2>/dev/null). --repo is REQUIRED here: this job has no
+          # checkout, so gh cannot infer the repo from a cwd git remote (the exact
+          # omission spec 194's 2026-06-02 amendment fixed in release-tools.yml).
+          if state="$(gh release view "$TAG" --repo "$GITHUB_REPOSITORY" --json isDraft -q .isDraft)"; then :; else
+            rc=$?
+            echo "::error::publish-boundary (spec 194): 'gh release view $TAG' failed (exit $rc; see gh error above) — failing closed, not uploading the sidecar SBOM. Release may be gone or gh failed to authenticate; resolve manually."
+            exit 1
+          fi
+          if [ "$state" != "true" ]; then
+            echo "::error::publish-boundary (spec 194): release '$TAG' is published (isDraft='$state') — refusing to upload the sidecar SBOM. Automation mutates drafts only; attach to a published release manually."
+            exit 1
+          fi
+          gh release upload "$TAG" dist/sbom-axiomregent.cdx.json \
+            --clobber --repo "$GITHUB_REPOSITORY"

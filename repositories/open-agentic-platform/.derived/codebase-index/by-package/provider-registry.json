@@ -1,0 +1,12 @@
+{
+  "package": {
+    "edition": "2024",
+    "kind": "rust-lib",
+    "name": "provider-registry",
+    "path": "crates/provider-registry",
+    "specRef": "042-multi-provider-agent-registry",
+    "version": "0.1.0"
+  },
+  "schemaVersion": "1.1.0",
+  "shardHash": "51a0c47a0c8a1b3df4758271a89572b7fcf944d1480e1bbe51206125b6d0778a"
+}

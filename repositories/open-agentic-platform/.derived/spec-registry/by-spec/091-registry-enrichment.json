@@ -1,0 +1,58 @@
+{
+  "record": {
+    "amendmentRecord": "amended 2026-06-18 by spec 217 (engine-swap collapse): the in-tree spec-compiler that parsed and emitted the enriched fields (depends_on, owner, risk) was deleted; that logic is now in spec-spine-core. The spec-compiler edge is stripped (path deleted); the featuregraph reader edges survive.\n",
+    "codeAliases": [
+      "REGISTRY_ENRICHMENT"
+    ],
+    "created": "2026-04-11",
+    "dependsOn": [
+      "039-feature-id-reconciliation"
+    ],
+    "domain": "tooling",
+    "extends": [
+      {
+        "nature": "additive",
+        "spec": "034-featuregraph-registry-scanner-fix",
+        "unit": {
+          "kind": "file",
+          "path": "crates/featuregraph/src/registry_source.rs"
+        }
+      },
+      {
+        "nature": "additive",
+        "spec": "034-featuregraph-registry-scanner-fix",
+        "unit": {
+          "kind": "file",
+          "path": "crates/featuregraph/src/scanner.rs"
+        }
+      }
+    ],
+    "extraFrontmatter": {
+      "amended": "2026-06-18"
+    },
+    "id": "091-registry-enrichment",
+    "implementation": "complete",
+    "kind": "tooling",
+    "owner": "bart",
+    "risk": "low",
+    "sectionHeadings": [
+      "091 — Spec Registry Enrichment",
+      "Problem",
+      "Implementation Slices",
+      "1. Promote depends_on to first-class compiler field (1 day)",
+      "2. Promote owner to first-class compiler field (0.5 day)",
+      "3. Add risk as a new frontmatter field (0.5 day)",
+      "4. Featuregraph reads enriched fields (1 day)",
+      "5. Recompile registry and validate (0.5 day)",
+      "Acceptance Criteria",
+      "Maintenance Notes",
+      "Dependencies"
+    ],
+    "specPath": "specs/091-registry-enrichment/spec.md",
+    "status": "approved",
+    "summary": "Promote depends_on, owner, and risk from extra frontmatter to first-class spec compiler fields. Validate risk enum values. Update featuregraph to read enriched fields from the compiled registry, enabling downstream spec-driven gating.\n",
+    "title": "Spec Registry Enrichment"
+  },
+  "shardHash": "afd86aa95bb3f1456765e80ee1f27cb0a3866028ac57391da795f829ff849e3e",
+  "specVersion": "1.1.0"
+}

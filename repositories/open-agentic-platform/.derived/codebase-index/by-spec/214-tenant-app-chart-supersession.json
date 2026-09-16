@@ -1,0 +1,460 @@
+{
+  "diagnostics": {
+    "errors": [],
+    "warnings": [
+      {
+        "code": "W-002",
+        "message": "spec '214-tenant-app-chart-supersession' directory unit 'platform/services/tenant-hello' is not a directory",
+        "path": "platform/services/tenant-hello"
+      },
+      {
+        "code": "W-002",
+        "message": "spec '214-tenant-app-chart-supersession' directory unit 'platform/charts/tenant-hello' is not a directory",
+        "path": "platform/charts/tenant-hello"
+      },
+      {
+        "code": "W-002",
+        "message": "spec '214-tenant-app-chart-supersession' file unit '.github/workflows/ci-tenant-hello.yml' does not exist",
+        "path": ".github/workflows/ci-tenant-hello.yml"
+      },
+      {
+        "code": "W-002",
+        "message": "spec '214-tenant-app-chart-supersession' file unit '.github/workflows/cd-tenant-hello.yml' does not exist",
+        "path": ".github/workflows/cd-tenant-hello.yml"
+      }
+    ]
+  },
+  "mapping": {
+    "amends": [
+      "136-tenant-hello-demo-service",
+      "137-tenant-environment-access-gates",
+      "213-tenant-repo-image-build",
+      "151-declarative-cluster-reconciliation"
+    ],
+    "dependsOn": [
+      "136-tenant-hello-demo-service",
+      "137-tenant-environment-access-gates",
+      "138-statecraft-create-realised-scaffold",
+      "119-project-as-unit-of-governance",
+      "199-factory-thin-consumer-sync"
+    ],
+    "implementingPaths": [
+      {
+        "path": ".github/workflows/cd-tenant-app.yml",
+        "source": "spec-edge"
+      },
+      {
+        "path": ".github/workflows/ci-tenant-app.yml",
+        "source": "spec-edge"
+      },
+      {
+        "path": ".github/workflows/ci.yml",
+        "source": "spec-edge"
+      },
+      {
+        "path": "crates/factory-contracts",
+        "source": "spec-edge"
+      },
+      {
+        "path": "crates/featuregraph/tests/golden/features_graph.json",
+        "source": "spec-edge"
+      },
+      {
+        "path": "platform/charts/acme-vue-encore",
+        "source": "spec-edge"
+      },
+      {
+        "path": "platform/infra/hetzner/manifests/ghcr-pull-secret.yaml",
+        "source": "spec-edge"
+      },
+      {
+        "path": "platform/infra/hetzner/manifests/tenants-wildcard-certificate.yaml",
+        "source": "spec-edge"
+      },
+      {
+        "path": "platform/services/deployd-api-rs/src/helm.rs",
+        "source": "spec-edge"
+      },
+      {
+        "path": "platform/services/deployd-api-rs/src/routes.rs",
+        "source": "spec-edge"
+      },
+      {
+        "path": "platform/services/deployd-api-rs/src/store.rs",
+        "source": "spec-edge"
+      },
+      {
+        "path": "platform/services/statecraft/CLAUDE.md",
+        "source": "spec-edge"
+      },
+      {
+        "path": "platform/services/statecraft/api/deploy/chartSelector.test.ts",
+        "source": "spec-edge"
+      },
+      {
+        "path": "platform/services/statecraft/api/deploy/chartSelector.ts",
+        "source": "spec-edge"
+      },
+      {
+        "path": "platform/services/statecraft/api/deploy/deploy.ts",
+        "source": "spec-edge"
+      },
+      {
+        "path": "platform/services/statecraft/api/deploy/deployResolve.test.ts",
+        "source": "spec-edge"
+      },
+      {
+        "path": "platform/services/statecraft/api/deploy/deployResolve.ts",
+        "source": "spec-edge"
+      },
+      {
+        "path": "platform/services/statecraft/api/deploy/hostname.test.ts",
+        "source": "spec-edge"
+      },
+      {
+        "path": "platform/services/statecraft/api/deploy/hostname.ts",
+        "source": "spec-edge"
+      },
+      {
+        "path": "platform/services/statecraft/api/projects/scaffold/templateCache.ts",
+        "source": "spec-edge"
+      },
+      {
+        "path": "specs/137-tenant-environment-access-gates/spec.md",
+        "source": "spec-edge"
+      },
+      {
+        "path": "specs/212-factory-schema-lockstep-ci/spec.md",
+        "source": "spec-edge"
+      }
+    ],
+    "resolvedUnits": [
+      {
+        "locations": [
+          {
+            "file": "platform/charts/acme-vue-encore"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "directory",
+          "path": "platform/charts/acme-vue-encore"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": ".github/workflows/cd-tenant-app.yml"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "file",
+          "path": ".github/workflows/cd-tenant-app.yml"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": ".github/workflows/ci-tenant-app.yml"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "file",
+          "path": ".github/workflows/ci-tenant-app.yml"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "platform/infra/hetzner/manifests/ghcr-pull-secret.yaml"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "file",
+          "path": "platform/infra/hetzner/manifests/ghcr-pull-secret.yaml"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "platform/services/statecraft/api/deploy/deployResolve.test.ts"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "file",
+          "path": "platform/services/statecraft/api/deploy/deployResolve.test.ts"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "platform/services/statecraft/api/deploy/deployResolve.ts"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "file",
+          "path": "platform/services/statecraft/api/deploy/deployResolve.ts"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "platform/services/statecraft/api/deploy/hostname.test.ts"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "file",
+          "path": "platform/services/statecraft/api/deploy/hostname.test.ts"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "platform/services/statecraft/api/deploy/hostname.ts"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "file",
+          "path": "platform/services/statecraft/api/deploy/hostname.ts"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": ".github/workflows/ci.yml"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "extends",
+        "unit": {
+          "kind": "file",
+          "path": ".github/workflows/ci.yml"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "crates/featuregraph/tests/golden/features_graph.json"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "extends",
+        "unit": {
+          "kind": "file",
+          "path": "crates/featuregraph/tests/golden/features_graph.json"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "platform/services/deployd-api-rs/src/helm.rs"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "extends",
+        "unit": {
+          "kind": "file",
+          "path": "platform/services/deployd-api-rs/src/helm.rs"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "platform/services/deployd-api-rs/src/routes.rs"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "extends",
+        "unit": {
+          "kind": "file",
+          "path": "platform/services/deployd-api-rs/src/routes.rs"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "platform/services/deployd-api-rs/src/store.rs"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "extends",
+        "unit": {
+          "kind": "file",
+          "path": "platform/services/deployd-api-rs/src/store.rs"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "platform/services/statecraft/CLAUDE.md"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "extends",
+        "unit": {
+          "kind": "file",
+          "path": "platform/services/statecraft/CLAUDE.md"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "platform/services/statecraft/api/deploy/chartSelector.test.ts"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "extends",
+        "unit": {
+          "kind": "file",
+          "path": "platform/services/statecraft/api/deploy/chartSelector.test.ts"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "platform/services/statecraft/api/deploy/chartSelector.ts"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "extends",
+        "unit": {
+          "kind": "file",
+          "path": "platform/services/statecraft/api/deploy/chartSelector.ts"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "platform/services/statecraft/api/deploy/deploy.ts"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "extends",
+        "unit": {
+          "kind": "file",
+          "path": "platform/services/statecraft/api/deploy/deploy.ts"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "crates/factory-contracts"
+          }
+        ],
+        "ownership": false,
+        "sourceField": "references",
+        "unit": {
+          "id": "factory-contracts",
+          "kind": "crate"
+        }
+      },
+      {
+        "locations": [],
+        "ownership": false,
+        "sourceField": "references",
+        "unit": {
+          "kind": "directory",
+          "path": "platform/charts/tenant-hello"
+        }
+      },
+      {
+        "locations": [],
+        "ownership": false,
+        "sourceField": "references",
+        "unit": {
+          "kind": "directory",
+          "path": "platform/services/tenant-hello"
+        }
+      },
+      {
+        "locations": [],
+        "ownership": false,
+        "sourceField": "references",
+        "unit": {
+          "kind": "file",
+          "path": ".github/workflows/cd-tenant-hello.yml"
+        }
+      },
+      {
+        "locations": [],
+        "ownership": false,
+        "sourceField": "references",
+        "unit": {
+          "kind": "file",
+          "path": ".github/workflows/ci-tenant-hello.yml"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "platform/infra/hetzner/manifests/tenants-wildcard-certificate.yaml"
+          }
+        ],
+        "ownership": false,
+        "sourceField": "references",
+        "unit": {
+          "kind": "file",
+          "path": "platform/infra/hetzner/manifests/tenants-wildcard-certificate.yaml"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "platform/services/statecraft/api/projects/scaffold/templateCache.ts"
+          }
+        ],
+        "ownership": false,
+        "sourceField": "references",
+        "unit": {
+          "kind": "file",
+          "path": "platform/services/statecraft/api/projects/scaffold/templateCache.ts"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "specs/137-tenant-environment-access-gates/spec.md"
+          }
+        ],
+        "ownership": false,
+        "sourceField": "references",
+        "unit": {
+          "kind": "file",
+          "path": "specs/137-tenant-environment-access-gates/spec.md"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "specs/212-factory-schema-lockstep-ci/spec.md"
+          }
+        ],
+        "ownership": false,
+        "sourceField": "references",
+        "unit": {
+          "kind": "file",
+          "path": "specs/212-factory-schema-lockstep-ci/spec.md"
+        }
+      }
+    ],
+    "specId": "214-tenant-app-chart-supersession",
+    "specStatus": "approved"
+  },
+  "schemaVersion": "1.1.0",
+  "shardHash": "c71c63ca39bcf0c61ae136f484405280264988196f879c675096e20dde9bac94"
+}

@@ -1,0 +1,127 @@
+{
+  "record": {
+    "codeAliases": [
+      "INTER_STAGE_SIGNED_MANIFEST",
+      "FACTORY_STAGE_SIGNATURE_CHAIN"
+    ],
+    "created": "2026-05-22",
+    "dependsOn": [
+      "035-agent-governed-execution",
+      "074-factory-ingestion",
+      "075-factory-workflow-engine",
+      "102-governed-excellence"
+    ],
+    "domain": "platform",
+    "establishes": [
+      {
+        "kind": "file",
+        "path": "crates/factory-engine/src/inter_stage_manifest.rs"
+      },
+      {
+        "kind": "file",
+        "path": "crates/factory-engine/tests/spec_170_handoff_chain.rs"
+      },
+      {
+        "kind": "file",
+        "path": "crates/factory-engine/tests/spec_170_certificate_chain.rs"
+      }
+    ],
+    "extends": [
+      {
+        "nature": "additive",
+        "spec": "102-governed-excellence",
+        "unit": {
+          "kind": "file",
+          "path": "crates/factory-engine/src/governance_certificate.rs"
+        }
+      },
+      {
+        "nature": "additive",
+        "spec": "075-factory-workflow-engine",
+        "unit": {
+          "kind": "file",
+          "path": "crates/factory-engine/src/engine.rs"
+        }
+      },
+      {
+        "nature": "additive",
+        "spec": "075-factory-workflow-engine",
+        "unit": {
+          "kind": "file",
+          "path": "crates/factory-engine/src/bin/factory_run.rs"
+        }
+      }
+    ],
+    "extraFrontmatter": {
+      "compliance": [
+        {
+          "controls": [
+            "ASI07"
+          ],
+          "framework": "owasp-asi-2026"
+        }
+      ],
+      "slug": "signed-inter-stage-manifests"
+    },
+    "id": "170-signed-inter-stage-manifests",
+    "implementation": "complete",
+    "kind": "capability",
+    "owner": "bart",
+    "references": [
+      {
+        "role": "decomposition-source",
+        "unit": {
+          "kind": "file",
+          "path": "docs/owasp/factory/AIDE-VELOCITY-OAP-INTENT.md"
+        }
+      },
+      {
+        "role": "substrate-spec",
+        "unit": {
+          "kind": "file",
+          "path": "specs/075-factory-workflow-engine/spec.md"
+        }
+      },
+      {
+        "role": "doctrine-source",
+        "unit": {
+          "kind": "file",
+          "path": "docs/owasp/owasp_top_10_agentic_applications_summary.md"
+        }
+      }
+    ],
+    "refines": [
+      {
+        "aspect": "inter-stage-handoff-signing",
+        "unit": {
+          "kind": "directory",
+          "path": "crates/factory-engine"
+        }
+      }
+    ],
+    "risk": "medium",
+    "sectionHeadings": [
+      "170 — Signed inter-stage manifests in factory-engine",
+      "1. Problem",
+      "2. Decision",
+      "2.1 Key chain",
+      "2.2 Composition with the governance certificate",
+      "2.3 Inter-process / inter-host extensibility",
+      "2.4 Fan-out signing",
+      "3. Functional Requirements",
+      "4. Success Criteria",
+      "5. Scope",
+      "In scope",
+      "Out of scope (deferred)",
+      "6. Compliance",
+      "7. Implementation map",
+      "8. Cross-references"
+    ],
+    "specPath": "specs/170-signed-inter-stage-manifests/spec.md",
+    "status": "approved",
+    "summary": "OWASP ASI07 (Insecure Inter-Agent Communication) prescribes mTLS + cryptographic identity assertions between cooperating agents as the canonical mitigation. OAP's factory-engine (spec 075) runs as a two-phase pipeline (s0–s5 sequential, s6a–s6g fan-out). Today's hand-off between stages is an in-process call or a serialised state blob — no cryptographic identity assertion crosses the boundary.\nThis spec refines spec 075 by requiring every inter- stage hand-off to carry a *signed manifest*: a structured payload identifying the previous stage's output, signed by the dispatching agent's ephemeral key (spec 035 substrate). The receiving stage validates the signature against the run's established key chain (the run's certificate, spec 102, anchors the chain) and refuses to consume an unsigned or mis-signed manifest.\nThe chain composes with spec 102's governance certificate: per-stage signatures aggregate into the certificate's chain, giving an auditor a per-stage- boundary verification surface in addition to the certificate's run-boundary one.\n",
+    "title": "Signed inter-stage manifests in factory-engine — cryptographic identity between stages (ASI07)"
+  },
+  "shardHash": "2a82412724419a7cefe9808031bc29756bce97bcd269b6f7ba7f121aa13e16ae",
+  "specVersion": "1.1.0"
+}

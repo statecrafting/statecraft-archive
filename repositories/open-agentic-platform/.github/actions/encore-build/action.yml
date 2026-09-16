@@ -1,0 +1,115 @@
+name: Encore build (statecraft)
+description: >
+  Composite action: build the React Router frontend, build the Rust runtime
+  helpers, stage them into a locally-tagged runtime base image, install a
+  pinned Encore CLI (cached), and run `encore build docker --base <base>`
+  to produce the final image in a single pass. Caller must run
+  actions/checkout, actions/setup-node, and `npm ci` before invoking this
+  action.
+
+inputs:
+  working-directory:
+    description: Path to the statecraft service root
+    required: false
+    default: platform/services/statecraft
+  encore-version:
+    description: Encore CLI version to install
+    required: true
+  config:
+    description: Path to infra.config.*.json (relative to working-directory)
+    required: true
+  image-tag:
+    description: Full image reference to tag the built image with (e.g. ghcr.io/foo/bar:sha-abc or statecraft-ci:pr-123)
+    required: true
+
+runs:
+  using: composite
+  steps:
+    - name: Build frontend
+      shell: bash
+      working-directory: ${{ inputs.working-directory }}
+      run: cd web && npx react-router build
+
+    # Rust helpers that statecraft's API shells out to at runtime:
+    #   - artifact-extract        (knowledge advance endpoint)
+    #   - factory-project-detect  (project import endpoint)
+    # Built before the Encore image step so they can be baked into the
+    # runtime base image below. Missing-binary failures surface in-cluster
+    # as opaque `failed_precondition` errors, so treat this as part of the
+    # image contract.
+    - name: Rust toolchain
+      uses: dtolnay/rust-toolchain@29eef336d9b2848a0b548edc03f92a220660cdb8 # pinned for rust-toolchain.toml lockstep
+      with:
+        toolchain: '1.95.0'
+
+    - name: Cache Rust build (statecraft helpers)
+      uses: Swatinem/rust-cache@42dc69e1aa15d09112580998cf2ef0119e2e91ae # v2
+      with:
+        workspaces: .
+        shared-key: statecraft-helpers
+
+    - name: Build Rust helpers
+      shell: bash
+      run: |
+        cargo build --release \
+          --manifest-path Cargo.toml \
+          -p artifact-extract \
+          -p factory-project-detect
+
+    # Build the runtime base image. Encore's `--base` flag layers its
+    # compiled JS, native runtime, and the bundle_source tree on top of
+    # this image, so the base only needs to carry git, ca-certificates,
+    # and the two Rust helper binaries.
+    - name: Stage Rust helpers into build context
+      shell: bash
+      working-directory: ${{ inputs.working-directory }}
+      run: |
+        cp ${{ github.workspace }}/target/release/artifact-extract       ./artifact-extract
+        cp ${{ github.workspace }}/target/release/factory-project-detect ./factory-project-detect
+
+    - name: Build runtime base image
+      shell: bash
+      working-directory: ${{ inputs.working-directory }}
+      run: |
+        # Bounded retry to ride out transient Docker Hub / Debian-mirror
+        # network flakes when resolving the `node:22-slim` base image (or
+        # running apt-get). Observed in the merge queue 2026-06-02:
+        #   node:22-slim: failed to resolve source metadata ...
+        #   dial tcp ...:443: i/o timeout
+        # That is a registry timeout, not a build error, so a few retries
+        # with linear backoff are the correct response. Docker layer caching
+        # makes a retry after a FROM-resolution failure cheap.
+        attempt=1
+        max=3
+        while true; do
+          if docker build \
+            --platform linux/amd64 \
+            -f Dockerfile.base \
+            -t statecraft-base:${{ github.sha }} \
+            .; then
+            break
+          fi
+          if [ "$attempt" -ge "$max" ]; then
+            echo "::error::runtime base image build failed after ${max} attempts"
+            exit 1
+          fi
+          echo "::warning::base image build attempt ${attempt} failed; retrying in $((attempt * 10))s"
+          sleep "$((attempt * 10))"
+          attempt=$((attempt + 1))
+        done
+
+    # Install Encore CLI via the dedicated composite action (DRY with
+    # ci-statecraft typecheck which needs the same install for codegen).
+    - name: Install Encore CLI
+      uses: ./.github/actions/encore-install
+      with:
+        encore-version: ${{ inputs.encore-version }}
+
+    - name: Build Docker image (Encore)
+      shell: bash
+      working-directory: ${{ inputs.working-directory }}
+      run: |
+        encore build docker \
+          --config ${{ inputs.config }} \
+          --base statecraft-base:${{ github.sha }} \
+          ${{ inputs.image-tag }}

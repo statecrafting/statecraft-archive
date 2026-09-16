@@ -1,0 +1,80 @@
+{
+  "mapping": {
+    "implementingPaths": [
+      {
+        "path": "crates/agent/src/complexity.rs",
+        "source": "spec-edge"
+      },
+      {
+        "path": "crates/agent/src/dispatch.rs",
+        "source": "spec-edge"
+      },
+      {
+        "path": "crates/agent/src/plan.rs",
+        "source": "spec-edge"
+      },
+      {
+        "path": "crates/orchestrator",
+        "source": "spec-edge"
+      }
+    ],
+    "resolvedUnits": [
+      {
+        "locations": [
+          {
+            "file": "crates/orchestrator"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "extends",
+        "unit": {
+          "id": "orchestrator",
+          "kind": "crate"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "crates/agent/src/complexity.rs"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "extends",
+        "unit": {
+          "kind": "file",
+          "path": "crates/agent/src/complexity.rs"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "crates/agent/src/dispatch.rs"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "extends",
+        "unit": {
+          "kind": "file",
+          "path": "crates/agent/src/dispatch.rs"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "crates/agent/src/plan.rs"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "extends",
+        "unit": {
+          "kind": "file",
+          "path": "crates/agent/src/plan.rs"
+        }
+      }
+    ],
+    "specId": "043-agent-organizer",
+    "specStatus": "approved"
+  },
+  "schemaVersion": "1.1.0",
+  "shardHash": "64a6359683666d84579d1ccf13d6e10b2e0b42fcbf234c601078ded96553498c"
+}

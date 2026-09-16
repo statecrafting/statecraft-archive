@@ -1,0 +1,25 @@
+-- Spec 202 FR-004: index the approval-velocity read on audit_log.
+--
+-- api/factory/approvalVelocity.ts::loadActorApprovalTimestamps counts an
+-- actor's org-scoped `factory.run.gate_approved` rows inside a rolling window
+-- on every gate approval. Its audit_log-side predicates are equality on
+-- actor_user_id + action and a range on created_at:
+--
+--   WHERE action = 'factory.run.gate_approved'
+--     AND target_type = 'factory_runs'
+--     AND actor_user_id = $actor
+--     AND created_at   >= $cutoff
+--
+-- audit_log carried no indexes at all, so this (and every other audit_log
+-- read) was a sequential scan over an append-only, monotonically growing
+-- table. This composite puts the two selective equality columns first and the
+-- range column last, so the planner can seek to
+-- (actor_user_id, 'factory.run.gate_approved', cutoff) and scan forward. It
+-- also serves the common "audit history for one actor" prefix
+-- (actor_user_id) and (actor_user_id, action) lookups.
+--
+-- Plain CREATE INDEX (not CONCURRENTLY): Encore's migration runner wraps each
+-- migration in a transaction, inside which CONCURRENTLY is rejected. On this
+-- pre-alpha corpus the brief write lock during the build is a non-issue.
+CREATE INDEX audit_log_actor_action_created_idx
+    ON public.audit_log USING btree (actor_user_id, action, created_at);

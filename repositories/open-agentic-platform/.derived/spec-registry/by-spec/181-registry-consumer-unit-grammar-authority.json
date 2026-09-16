@@ -1,0 +1,107 @@
+{
+  "record": {
+    "amendmentRecord": "216-spec-spine-library-grammar-adoption",
+    "amends": [
+      "034-featuregraph-registry-scanner-fix"
+    ],
+    "codeAliases": [
+      "AUTHORITY_RESOLVER_UNIT_GRAMMAR"
+    ],
+    "created": "2026-05-24",
+    "dependsOn": [
+      "002-registry-consumer-mvp",
+      "130-spec-coupling-primary-owner",
+      "152-path-co-authority",
+      "154-logical-unit-ownership-grammar",
+      "155-logical-unit-resolution-semantics",
+      "180-opc-shell-codification"
+    ],
+    "domain": "substrate",
+    "extraFrontmatter": {
+      "amended": "2026-06-15",
+      "approved": "2026-05-24",
+      "completed": "2026-05-24",
+      "slug": "registry-consumer-unit-grammar-authority"
+    },
+    "id": "181-registry-consumer-unit-grammar-authority",
+    "implementation": "complete",
+    "kind": "governance",
+    "owner": "bart",
+    "references": [
+      {
+        "role": "forcing-function",
+        "unit": {
+          "kind": "file",
+          "path": "specs/180-opc-shell-codification/spec.md"
+        }
+      },
+      {
+        "role": "unit-grammar-source",
+        "unit": {
+          "kind": "file",
+          "path": "specs/154-logical-unit-ownership-grammar/spec.md"
+        }
+      },
+      {
+        "role": "graph-grammar-source",
+        "unit": {
+          "kind": "file",
+          "path": "specs/130-spec-coupling-primary-owner/spec.md"
+        }
+      },
+      {
+        "role": "section-anchor-source",
+        "unit": {
+          "kind": "file",
+          "path": "specs/152-path-co-authority/spec.md"
+        }
+      },
+      {
+        "role": "mixed-shape-exemplar",
+        "unit": {
+          "kind": "file",
+          "path": "specs/130-spec-coupling-primary-owner/spec.md"
+        }
+      }
+    ],
+    "refines": [
+      {
+        "aspect": "authority-resolver-unit-grammar-parity",
+        "refines_specs": [
+          "002-registry-consumer-mvp"
+        ]
+      }
+    ],
+    "risk": "low",
+    "sectionHeadings": [
+      "181 — registry-consumer authority resolver: unit-grammar parity",
+      "1. Problem",
+      "1.1 Why this is its own spec",
+      "2. Decision",
+      "3. Functional Requirements",
+      "FR-001 — `establishes:` parity",
+      "FR-002 — `extends:` / `refines:` / `co_authority:` parity",
+      "FR-003 — `co_authority:` section-filter preservation",
+      "FR-004 — legacy preservation (no regression)",
+      "FR-005 — new test coverage",
+      "FR-006 — canonical regression case",
+      "FR-007 — incoming-edge derivation untouched",
+      "FR-008 — scope discipline (single-tool change)",
+      "FR-009: `supersedes:` parity (amended by spec 216 Phase 2b)",
+      "4. Acceptance",
+      "5. Scope",
+      "In scope (this spec)",
+      "Out of scope",
+      "6. Ordering and PR sequence",
+      "7. Risks and mitigations",
+      "8. Cross-references"
+    ],
+    "specPath": "specs/181-registry-consumer-unit-grammar-authority/spec.md",
+    "status": "superseded",
+    "summary": "`registry-consumer`'s `authority_for_path` resolver (`tools/spec-spine/registry-consumer/src/lib.rs`) consumes only the legacy frontmatter shapes — `establishes: [<string>]` and `<edge>: [{ paths: [...] }]` for `extends` / `refines` / `co_authority`. Every post-154 spec's authority claims that use the typed unit grammar (`unit: { kind: ..., path: ... }`, per spec 154 §3) are invisible to `by-authority` queries even though the registry holds the claims. The canonical post-154 specs already shipping include 172 (`opc-live-agent-session-introspection`), 174 (`codification-gate`), 178 (`opc-directory-rename`), and 180 (`opc-shell-codification`); none of their authority claims resolve through `by-authority` today. This spec binds parity: the resolver MUST consume both shapes across the four typed authority-bearing edges, preserve the section-anchor filter via spec 154's `kind: section` unit kind on `co_authority`, and demonstrate the parity by surfacing spec 180's `establishes:` claims through `by-authority` after implementation.\n",
+    "supersededBy": "217-spec-spine-engine-swap-collapse",
+    "title": "registry-consumer authority resolver — unit-grammar parity with spec 154"
+  },
+  "shardHash": "b414c236295bfd506c40067b4c1b9d40810aac29ea1a648eeaf445db95c61717",
+  "specVersion": "1.1.0"
+}

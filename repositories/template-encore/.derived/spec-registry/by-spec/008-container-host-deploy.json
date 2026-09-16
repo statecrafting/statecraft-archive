@@ -1,0 +1,60 @@
+{
+  "record": {
+    "codeAliases": [
+      "DEPLOY_HOST_ZIP",
+      "DEPLOY_ENCORE_CONTAINER"
+    ],
+    "created": "2026-06-10",
+    "dependsOn": [
+      "007-encore-ci-cd",
+      "011-workflow-pins-lint",
+      "012-enterprise-actions-governance"
+    ],
+    "domain": "ci-cd",
+    "establishes": [
+      {
+        "kind": "file",
+        "path": ".github/workflows/deploy-reusable.yml"
+      },
+      {
+        "kind": "file",
+        "path": ".github/workflows/deploy-dev.yml"
+      },
+      {
+        "kind": "file",
+        "path": ".github/workflows/deploy-staging.yml"
+      },
+      {
+        "kind": "file",
+        "path": ".github/workflows/deploy-prod.yml"
+      }
+    ],
+    "id": "008-container-host-deploy",
+    "implementation": "complete",
+    "kind": "governance",
+    "owner": "bart",
+    "risk": "medium",
+    "sectionHeadings": [
+      "008 - Container-host deploy: zip/artifact path for dev/staging/prod plus the container-image path example",
+      "1. Purpose",
+      "2. Territory",
+      "3. Behavior",
+      "FR-001 — Zip artifact composition",
+      "FR-002 — Build/deploy split",
+      "FR-003 — Schema application",
+      "FR-004 — Reusable workflow inputs",
+      "FR-005 — Environment-specific callers",
+      "FR-006 — SHA-pinning and the allow-list",
+      "FR-007 - Container-image path (inert)",
+      "FR-008 — Security gate",
+      "4. Acceptance criteria",
+      "5. Out of scope"
+    ],
+    "specPath": "specs/008-container-host-deploy/spec.md",
+    "status": "approved",
+    "summary": "Two cloud-agnostic deployment paths for a generic container host: (1) the zip/artifact path, the compiled Encore artifact (main.mjs + runtime) deployed per environment by the dev/staging/prod workflows over a shared reusable workflow, started with `node main.mjs`; (2) the container-image path, kept as the inert encore-cd.yml.example with a generic container deploy step. All third-party actions SHA-pinned and within the enterprise allow-list.\n",
+    "title": "Container-host deploy: zip/artifact path for dev/staging/prod plus the container-image path example"
+  },
+  "shardHash": "f2e1ef454709a69bb462b468f3f04fc25fe48379314c46dc785f551c1fb6e5a7",
+  "specVersion": "1.1.0"
+}

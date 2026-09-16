@@ -1,0 +1,9 @@
+{
+  "version": 1,
+  "checks": [
+    { "id": "posture-required" },
+    { "id": "confirm-name-required" },
+    { "id": "tenant-active" },
+    { "id": "actor-authenticated" }
+  ]
+}

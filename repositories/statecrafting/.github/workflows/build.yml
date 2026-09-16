@@ -1,0 +1,116 @@
+# Build verification (spec 007): compile every napi-rs addon on every platform
+# the publish matrix ships, and run the addons' behavioral sanity suites there.
+#
+# This exists because publishing is CI-only and tag-triggered: before this gate,
+# a Rust change to a published addon reached npm without ever having been
+# compiled by CI, and a broken build surfaced at publish time, after the version
+# number had already been spent. The matrix here is the spec 002 platform set,
+# identical to publish.yml's, so a green run here is evidence that the publish
+# legs will compile.
+#
+# The build is `--release`, matching publish.yml, because the release profile is
+# what ships: `lto = true` links differently from a debug build and a gate on
+# the debug profile would not be evidence about the artifact.
+#
+# Deliberately NOT gated here: `npm run build:runtime`, the vendored Encore
+# cargo build behind the three `toolchain-<platform>` packages. That tree is
+# upstream MPL-2.0 pinned at a version (`ENCORE_VERSION`), no PR in this repo
+# edits it, and a failure there costs a tag rather than a package version, since
+# publish.yml skips versions already on npm. Spec 007 section 4 records this
+# boundary as a decision rather than an oversight.
+name: build
+on:
+  pull_request:
+    paths:
+      - "addon/**"
+      - ".github/workflows/build.yml"
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: build-${{ github.ref }}
+  cancel-in-progress: true
+jobs:
+  addons:
+    name: addons (${{ matrix.platform }})
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - platform: darwin-arm64
+            runner: macos-14
+            napi_triple: darwin-arm64
+          - platform: linux-x64
+            runner: ubuntu-24.04
+            napi_triple: linux-x64-gnu
+          - platform: linux-arm64
+            runner: ubuntu-24.04-arm
+            napi_triple: linux-arm64-gnu
+    runs-on: ${{ matrix.runner }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+      - name: Install protoc + cmake (linux)
+        if: runner.os == 'Linux'
+        run: sudo apt-get update -q && sudo apt-get install -y -q protobuf-compiler cmake
+      - name: Install protoc + cmake (macOS)
+        if: runner.os == 'macOS'
+        run: brew install protobuf cmake
+
+      # One cache across all four addons: they are separate cargo workspaces but
+      # share a registry and most of their dependency graph. Keyed on every
+      # addon lockfile, so any dependency bump invalidates it.
+      - name: Cache cargo registry + addon target dirs
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.cargo/registry
+            ~/.cargo/git
+            addon/*/target
+          key: addons-${{ matrix.platform }}-${{ hashFiles('addon/*/Cargo.lock') }}
+          restore-keys: |
+            addons-${{ matrix.platform }}-
+
+      # --- hiqlite-native (spec 003) ---------------------------------------
+      # The state layer, and the only addon carrying behavioral sanity suites.
+      # Both are self-contained: they boot a single-voter node against a temp
+      # directory on loopback ports and exit nonzero on any failed check, so CI
+      # verifies behavior here, not just that the crate compiles.
+      - run: npm --prefix addon/hiqlite-native ci
+      - name: Build hiqlite-native
+        run: npm --prefix addon/hiqlite-native run build
+      - name: "Sanity: cache and counters (spec 003)"
+        working-directory: addon/hiqlite-native
+        run: node sanity.mjs
+      - name: "Sanity: the state layer surface (enrahitu spec 032)"
+        working-directory: addon/hiqlite-native
+        run: node sanity-state.mjs
+
+      # --- kernel-native (spec 004) ----------------------------------------
+      - run: npm --prefix addon/kernel-native ci
+      - name: Build kernel-native
+        run: npm --prefix addon/kernel-native run build
+
+      # --- governance-native (spec 005) ------------------------------------
+      - run: npm --prefix addon/governance-native ci
+      - name: Build governance-native
+        run: npm --prefix addon/governance-native run build
+
+      # --- fleet-native (spec 006) -----------------------------------------
+      - run: npm --prefix addon/fleet-native ci
+      - name: Build fleet-native
+        run: npm --prefix addon/fleet-native run build
+
+      # The publish job assembles platform packages by copying a binary named
+      # for the napi triple. Assert the expected filename exists on this leg, so
+      # a triple rename fails here rather than at publish time with a cp error.
+      - name: Assert the publish-time binary names exist
+        run: |
+          set -euo pipefail
+          for addon in hiqlite-native kernel-native governance-native fleet-native; do
+            f="addon/$addon/$addon.${{ matrix.napi_triple }}.node"
+            test -f "$f" || { echo "missing $f"; exit 1; }
+            echo "ok $f"
+          done

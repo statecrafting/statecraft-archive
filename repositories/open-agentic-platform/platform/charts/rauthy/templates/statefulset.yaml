@@ -1,0 +1,258 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: {{ include "rauthy.fullname" . }}
+  labels:
+    {{- include "rauthy.labels" . | nindent 4 }}
+spec:
+  replicas: {{ .Values.replicas }}
+  serviceName: {{ include "rauthy.headlessName" . }}
+  selector:
+    matchLabels:
+      {{- include "rauthy.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      labels:
+        {{- include "rauthy.selectorLabels" . | nindent 8 }}
+    spec:
+      automountServiceAccountToken: false
+      securityContext:
+        fsGroup: 10001
+        runAsUser: 10001
+        runAsGroup: 10001
+        runAsNonRoot: true
+        seccompProfile:
+          type: RuntimeDefault
+      containers:
+        - name: rauthy
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          securityContext:
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+            capabilities:
+              drop:
+                - ALL
+          ports:
+            - name: http
+              containerPort: 8080
+              protocol: TCP
+            - name: raft
+              containerPort: 8100
+              protocol: TCP
+            - name: hql-api
+              containerPort: 8200
+              protocol: TCP
+          env:
+            - name: LOG_LEVEL
+              value: "info"
+            - name: LISTEN_ADDRESS
+              value: "0.0.0.0"
+            - name: LISTEN_PORT_HTTP
+              value: "8080"
+            - name: LISTEN_SCHEME
+              value: "http"
+            {{- if .Values.proxyMode }}
+            - name: PROXY_MODE
+              value: "true"
+            - name: TRUSTED_PROXIES
+              value: {{ join "\n" .Values.trustedProxies | quote }}
+            {{- end }}
+            - name: PUB_URL
+              value: {{ include "rauthy.pubUrl" . | quote }}
+            - name: RP_ID
+              value: {{ include "rauthy.pubUrl" . | quote }}
+            - name: RP_ORIGIN
+              value: {{ printf "https://%s:443" (include "rauthy.pubUrl" .) | quote }}
+            # Rauthy defaults refresh-token `nbf` to `iat + access_token_lifetime - 60`
+            # so a freshly issued refresh token is deliberately "not valid yet" until
+            # the access token is about to expire (token_set.rs:389-394). The
+            # statecraft spec 106 callback refreshes immediately after the code
+            # exchange to materialise the `oap` scope custom claims, which falls
+            # inside that lockout and fails with
+            #   401 JwtToken "Token is not valid yet"
+            # because refresh validation uses clock-skew=0 (validation.rs:70).
+            # Disable the nbf offset so refresh is valid from `iat` onwards.
+            - name: DISABLE_REFRESH_TOKEN_NBF
+              value: {{ .Values.access.disableRefreshTokenNbf | default true | quote }}
+            # deployd-api rejects any bearer token with no `sub` claim
+            # (routes.rs create_deployment: "token missing subject claim").
+            # The `client_credentials` grant is statecraft's machine-to-machine
+            # deploy dispatch path (api/deploy/oidcM2m.ts); Rauthy omits `sub`
+            # from those tokens unless this flag is set, so every M2M-triggered
+            # deploy fails deployd's owner-bind guard. Map `sub = <client id>`
+            # so the tokens carry a subject (Rauthy >= 0.34.0).
+            - name: CLIENT_CREDENTIALS_MAP_SUB
+              value: {{ .Values.access.clientCredentialsMapSub | default true | quote }}
+            {{- if .Values.raft.existingSecret }}
+            - name: SECRET_RAFT
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.raft.existingSecret }}
+                  key: {{ .Values.raft.existingSecretKey }}
+            {{- else }}
+            - name: SECRET_RAFT
+              value: {{ .Values.raft.secret | quote }}
+            {{- end }}
+            {{- if .Values.api.existingSecret }}
+            - name: SECRET_API
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.api.existingSecret }}
+                  key: {{ .Values.api.existingSecretKey }}
+            {{- else }}
+            - name: SECRET_API
+              value: {{ .Values.api.secret | quote }}
+            {{- end }}
+            - name: BOOTSTRAP_ADMIN_EMAIL
+              value: {{ .Values.bootstrap.adminEmail | quote }}
+            - name: ENC_KEYS
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.encryption.existingSecret }}
+                  key: {{ .Values.encryption.existingSecretKeyEnc }}
+            - name: ENC_KEY_ACTIVE
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.encryption.existingSecret }}
+                  key: {{ .Values.encryption.existingSecretKeyActive }}
+            {{- if .Values.bootstrap.existingSecret }}
+            - name: BOOTSTRAP_ADMIN_PASSWORD_PLAIN
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.bootstrap.existingSecret }}
+                  key: {{ .Values.bootstrap.existingSecretKey }}
+            {{- else }}
+            - name: BOOTSTRAP_ADMIN_PASSWORD_PLAIN
+              value: {{ .Values.bootstrap.adminPassword | quote }}
+            {{- end }}
+            - name: HQL_NODE_ID_FROM
+              value: "k8s"
+            - name: HQL_NODES
+              value: {{ include "rauthy.hqlNodes" . | quote }}
+            - name: HQL_DATA_DIR
+              value: "/data/hiqlite"
+            {{- if .Values.raft.existingSecret }}
+            - name: HQL_SECRET_RAFT
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.raft.existingSecret }}
+                  key: {{ .Values.raft.existingSecretKey }}
+            {{- else }}
+            - name: HQL_SECRET_RAFT
+              value: {{ .Values.raft.secret | quote }}
+            {{- end }}
+            {{- if .Values.api.existingSecret }}
+            - name: HQL_SECRET_API
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.api.existingSecret }}
+                  key: {{ .Values.api.existingSecretKey }}
+            {{- else }}
+            - name: HQL_SECRET_API
+              value: {{ .Values.api.secret | quote }}
+            {{- end }}
+            {{- if .Values.smtp.enabled }}
+            # Spec 106 amendment (2026-05-17) — SMTP env vars sourced
+            # from the `rauthy-smtp-secret`. Required for Rauthy's
+            # passwordless magic-link login (spec 137 FR-005 / FR-008
+            # evidence path).
+            #
+            # First-apply finding (2026-05-17 §12.4 follow-up): the env
+            # var that controls TLS negotiation is `SMTP_STARTTLS_ONLY`,
+            # not `SMTP_CONNECTION` (which Rauthy 0.35 does not define).
+            # On port 587 against Gmail, Rauthy's default "try implicit
+            # TLS first" path fails the handshake with
+            # `InvalidMessage(InvalidContentType)` because the server
+            # speaks plaintext until STARTTLS upgrade. Setting
+            # `SMTP_STARTTLS_ONLY=true` skips the implicit-TLS attempt
+            # and the connection negotiates cleanly.
+            #
+            # `starttls_only` and `danger_insecure` are optional keys
+            # (Rauthy defaults: STARTTLS for non-465 ports,
+            # danger_insecure=false).
+            - name: SMTP_FROM
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.smtp.existingSecret }}
+                  key: from
+            - name: SMTP_URL
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.smtp.existingSecret }}
+                  key: url
+            - name: SMTP_PORT
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.smtp.existingSecret }}
+                  key: port
+            - name: SMTP_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.smtp.existingSecret }}
+                  key: username
+            - name: SMTP_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.smtp.existingSecret }}
+                  key: password
+            - name: SMTP_STARTTLS_ONLY
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.smtp.existingSecret }}
+                  key: starttls_only
+                  optional: true
+            - name: SMTP_DANGER_INSECURE
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.smtp.existingSecret }}
+                  key: danger_insecure
+                  optional: true
+            {{- end }}
+          livenessProbe:
+            httpGet:
+              path: /auth/v1/health
+              port: 8080
+            initialDelaySeconds: 10
+            periodSeconds: 15
+            timeoutSeconds: 5
+            failureThreshold: 3
+          readinessProbe:
+            httpGet:
+              path: /auth/v1/health
+              port: 8080
+            initialDelaySeconds: 5
+            periodSeconds: 10
+            timeoutSeconds: 3
+            failureThreshold: 3
+          resources:
+            {{- toYaml .Values.resources | nindent 12 }}
+          volumeMounts:
+            - name: data
+              mountPath: /data
+            - name: config
+              mountPath: /app/config.toml
+              subPath: config.toml
+              readOnly: true
+            # readOnlyRootFilesystem needs a writable /tmp (same pattern as
+            # the statecraft/deployd-api/acme-vue-encore charts).
+            - name: tmp
+              mountPath: /tmp
+      volumes:
+        - name: config
+          configMap:
+            name: {{ include "rauthy.fullname" . }}-config
+        - name: tmp
+          emptyDir: {}
+  volumeClaimTemplates:
+    - metadata:
+        name: data
+      spec:
+        accessModes:
+          - ReadWriteOnce
+        {{- if .Values.persistence.storageClass }}
+        storageClassName: {{ .Values.persistence.storageClass | quote }}
+        {{- end }}
+        resources:
+          requests:
+            storage: {{ .Values.persistence.size }}

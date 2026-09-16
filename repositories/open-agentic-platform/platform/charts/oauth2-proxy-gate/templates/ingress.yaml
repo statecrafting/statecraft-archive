@@ -1,0 +1,40 @@
+{{- if .Values.ingress.enabled -}}
+{{/*
+This Ingress claims the `/oauth2/*` path on the tenant's hostname. The
+tenant chart's own Ingress claims `/` for the same hostname; ingress-nginx
+routes by path prefix.
+
+The tenant Ingress chains here via auth-url / auth-signin annotations
+(rendered conditionally by the acme-vue-encore chart when `gate.enabled`
+is true; see `platform/charts/acme-vue-encore/templates/ingress.yaml`).
+*/}}
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: {{ include "oauth2-proxy-gate.fullname" . }}
+  labels:
+    {{- include "oauth2-proxy-gate.labels" . | nindent 4 }}
+  {{- with .Values.ingress.annotations }}
+  annotations:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+spec:
+  ingressClassName: {{ .Values.ingress.className }}
+  {{- if .Values.ingress.tls.enabled }}
+  tls:
+    - hosts:
+        - {{ .Values.tenant.host | quote }}
+      secretName: {{ required "tenant.tlsSecretName is required when ingress.tls.enabled is true" .Values.tenant.tlsSecretName | quote }}
+  {{- end }}
+  rules:
+    - host: {{ .Values.tenant.host | quote }}
+      http:
+        paths:
+          - path: {{ .Values.ingress.path }}
+            pathType: Prefix
+            backend:
+              service:
+                name: {{ include "oauth2-proxy-gate.fullname" . }}
+                port:
+                  name: http
+{{- end -}}

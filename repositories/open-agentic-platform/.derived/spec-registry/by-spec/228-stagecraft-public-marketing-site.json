@@ -1,0 +1,207 @@
+{
+  "record": {
+    "authors": [
+      "open-agentic-platform"
+    ],
+    "codeAliases": [
+      "STATECRAFT_MARKETING_SITE",
+      "SPEC_REGISTRY_PROJECTION"
+    ],
+    "created": "2026-07-07",
+    "dependsOn": [
+      "160-factory-adapter-statecraft-relocation",
+      "163-statecraft-requirements-view",
+      "103-init-protocol-governed-reads",
+      "217-spec-spine-engine-swap-collapse"
+    ],
+    "domain": "platform",
+    "establishes": [
+      {
+        "kind": "file",
+        "path": "platform/services/statecraft/web/app/components/marketing-chrome.tsx"
+      },
+      {
+        "kind": "file",
+        "path": "platform/services/statecraft/web/app/components/theme-toggle.tsx"
+      },
+      {
+        "kind": "file",
+        "path": "platform/services/statecraft/web/app/components/sign-in-link.tsx"
+      },
+      {
+        "kind": "file",
+        "path": "platform/services/statecraft/web/app/components/client-only.tsx"
+      },
+      {
+        "kind": "file",
+        "path": "platform/services/statecraft/web/app/components/paper-reader.tsx"
+      },
+      {
+        "kind": "file",
+        "path": "platform/services/statecraft/web/app/components/architecture-explorer.tsx"
+      },
+      {
+        "kind": "file",
+        "path": "platform/services/statecraft/web/app/lib/papers.ts"
+      },
+      {
+        "kind": "file",
+        "path": "platform/services/statecraft/web/app/lib/whitepaper-content.ts"
+      },
+      {
+        "kind": "file",
+        "path": "platform/services/statecraft/web/app/lib/ecosystem-papers.ts"
+      },
+      {
+        "kind": "file",
+        "path": "platform/services/statecraft/web/app/lib/explorer-diagrams.ts"
+      },
+      {
+        "kind": "file",
+        "path": "platform/services/statecraft/web/app/lib/spec-registry.ts"
+      },
+      {
+        "kind": "file",
+        "path": "platform/services/statecraft/web/app/lib/spec-details.ts"
+      },
+      {
+        "kind": "file",
+        "path": "platform/services/statecraft/web/app/lib/domain-colors.ts"
+      },
+      {
+        "kind": "file",
+        "path": "platform/services/statecraft/web/app/lib/spec-registry.generated.json"
+      },
+      {
+        "kind": "file",
+        "path": "platform/services/statecraft/web/app/lib/spec-details.generated.json"
+      },
+      {
+        "kind": "file",
+        "path": "platform/services/statecraft/web/app/routes/marketing.tsx"
+      },
+      {
+        "kind": "file",
+        "path": "platform/services/statecraft/web/app/routes/products.tsx"
+      },
+      {
+        "kind": "file",
+        "path": "platform/services/statecraft/web/app/routes/papers.tsx"
+      },
+      {
+        "kind": "file",
+        "path": "platform/services/statecraft/web/app/routes/papers.$slug.tsx"
+      },
+      {
+        "kind": "file",
+        "path": "platform/services/statecraft/web/app/routes/registry.tsx"
+      },
+      {
+        "kind": "file",
+        "path": "platform/services/statecraft/web/app/routes/registry._index.tsx"
+      },
+      {
+        "kind": "file",
+        "path": "platform/services/statecraft/web/app/routes/registry.graph.tsx"
+      },
+      {
+        "kind": "file",
+        "path": "platform/services/statecraft/web/app/routes/registry.dashboard.tsx"
+      },
+      {
+        "kind": "file",
+        "path": "platform/services/statecraft/web/app/routes/registry.$specId.tsx"
+      },
+      {
+        "kind": "file",
+        "path": "platform/services/statecraft/web/app/routes/get-started.tsx"
+      },
+      {
+        "kind": "file",
+        "path": "platform/services/statecraft/web/scripts/gen-spec-registry.mjs"
+      }
+    ],
+    "extends": [
+      {
+        "nature": "additive",
+        "spec": "163-statecraft-requirements-view",
+        "unit": {
+          "kind": "file",
+          "path": "platform/services/statecraft/web/app/routes.ts"
+        }
+      },
+      {
+        "nature": "additive",
+        "spec": "160-factory-adapter-statecraft-relocation",
+        "unit": {
+          "kind": "file",
+          "path": "platform/services/statecraft/web/app/routes/_index.tsx"
+        }
+      },
+      {
+        "nature": "additive",
+        "spec": "160-factory-adapter-statecraft-relocation",
+        "unit": {
+          "kind": "file",
+          "path": "platform/services/statecraft/web/app/app.css"
+        }
+      },
+      {
+        "nature": "additive",
+        "spec": "160-factory-adapter-statecraft-relocation",
+        "unit": {
+          "kind": "file",
+          "path": "platform/services/statecraft/web/app/root.tsx"
+        }
+      },
+      {
+        "nature": "additive",
+        "spec": "160-factory-adapter-statecraft-relocation",
+        "unit": {
+          "kind": "file",
+          "path": "platform/services/statecraft/package.json"
+        }
+      },
+      {
+        "nature": "additive",
+        "spec": "160-factory-adapter-statecraft-relocation",
+        "unit": {
+          "kind": "file",
+          "path": "platform/services/statecraft/package-lock.json"
+        }
+      },
+      {
+        "nature": "additive",
+        "spec": "034-featuregraph-registry-scanner-fix",
+        "unit": {
+          "kind": "file",
+          "path": "crates/featuregraph/tests/golden/features_graph.json"
+        }
+      }
+    ],
+    "extraFrontmatter": {
+      "language": "en"
+    },
+    "featureBranch": "feat/statecraft-marketing-site",
+    "id": "228-statecraft-public-marketing-site",
+    "implementation": "complete",
+    "kind": "platform",
+    "sectionHeadings": [
+      "228. Statecraft public marketing site",
+      "1. Problem",
+      "2. Decision",
+      "3. Governed spec-registry projection",
+      "4. Design system",
+      "5. Sign in and Get started routing",
+      "6. Relationships",
+      "7. Acceptance criteria",
+      "8. Out of scope"
+    ],
+    "specPath": "specs/228-statecraft-public-marketing-site/spec.md",
+    "status": "approved",
+    "summary": "Replaces the thin bounce-to-signin marketing surface of the statecraft web app with a five-section public site, natively ported into the React Router 8 SSR app from two standalone Vite sites (oap-ecosystem and oap-whitepaper). The nav is Overview (product landing) + Products (architecture and repo catalog, merged) + Papers (a multi-paper reader hosting the comprehensive whitepaper plus five focused papers) + Registry (Specs table, relationship Graph, and analytics Dashboard over one dataset, with per-spec detail) + Get Started (the oap-bootstrap self-host walkthrough); Sign in is unchanged (Rauthy OIDC). The Registry pages read a governed build-time projection of OAP's own compiled spec corpus: scripts/gen-spec-registry.mjs shells the spec-spine registry consumer binary (governed-reads compliant, per spec 103) and emits a lean list snapshot plus a rich per-spec detail snapshot; the detail blob is loaded only in a server-side loader so the client receives one spec at a time. The whole surface adopts a shared teal/mono \"governance ledger\" design system (OKLCH tokens, JetBrains Mono, class-based dark mode with a no-flash init) applied without any shadcn dependency. All Sign in affordances route straight to the Rauthy flow; all Get started affordances route to the self-host guide.\n",
+    "title": "Statecraft public marketing site: governed teal/mono port of the ecosystem + whitepaper"
+  },
+  "shardHash": "a0be48ec5adc8f1acc9d92994f2447e62cfaef96a414a24906df7ac5a4222a9d",
+  "specVersion": "1.1.0"
+}

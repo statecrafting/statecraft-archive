@@ -1,0 +1,9 @@
+{
+  "mapping": {
+    "implementingPaths": [],
+    "specId": "006-conformance-lint-mvp",
+    "specStatus": "superseded"
+  },
+  "schemaVersion": "1.1.0",
+  "shardHash": "0b6583e4c8054bb7c87e256ed3b6c38fc978ad0981508a37dc5b7db7189af92f"
+}

@@ -1,0 +1,40 @@
+{
+  "record": {
+    "authors": [
+      "open-agentic-platform"
+    ],
+    "created": "2026-03-22",
+    "domain": "tooling",
+    "extends": [
+      {
+        "nature": "additive",
+        "spec": "002-registry-consumer-mvp"
+      }
+    ],
+    "extraFrontmatter": {
+      "language": "en"
+    },
+    "featureBranch": "019-registry-consumer-readme-examples-contract-mvp",
+    "id": "019-registry-consumer-readme-examples-contract-mvp",
+    "implementation": "complete",
+    "kind": "platform-delivery",
+    "refines": [
+      {
+        "aspect": "contract-tests"
+      }
+    ],
+    "sectionHeadings": [
+      "Feature Specification: README examples contract",
+      "Purpose",
+      "Requirements",
+      "Out of scope"
+    ],
+    "specPath": "specs/019-registry-consumer-readme-examples-contract-mvp/spec.md",
+    "status": "superseded",
+    "summary": "Keep README command examples aligned with verified fixture output: human-facing text vs automation JSON/compact, with integration tests that assert CLI output and README fenced blocks match committed transcripts.\n",
+    "supersededBy": "217-spec-spine-engine-swap-collapse",
+    "title": "Registry consumer README examples contract MVP"
+  },
+  "shardHash": "07f54db09e8464eac345054dde309fbe79ce5352313febd5a375bc1a25d20ba2",
+  "specVersion": "1.1.0"
+}

@@ -1,0 +1,103 @@
+{
+  "record": {
+    "authors": [
+      "open-agentic-platform"
+    ],
+    "codeAliases": [
+      "DUPLEX_FRAME_INTEGRITY"
+    ],
+    "created": "2026-06-11",
+    "dependsOn": [
+      "189-duplex-envelope-version-parity",
+      "198-factory-governance-envelope",
+      "191-schema-parity-ci-job"
+    ],
+    "domain": "platform",
+    "extends": [
+      {
+        "nature": "additive",
+        "spec": "189-duplex-envelope-version-parity",
+        "unit": {
+          "kind": "file",
+          "path": "platform/services/statecraft/api/sync/types.ts"
+        }
+      },
+      {
+        "nature": "additive",
+        "spec": "034-featuregraph-registry-scanner-fix",
+        "unit": {
+          "kind": "file",
+          "path": "crates/featuregraph/tests/golden/features_graph.json"
+        }
+      }
+    ],
+    "extraFrontmatter": {
+      "compliance": [
+        {
+          "controls": [
+            "ASI07"
+          ],
+          "framework": "owasp-asi-2026"
+        }
+      ],
+      "language": "en"
+    },
+    "featureBranch": "feat/206-duplex-frame-integrity",
+    "id": "206-duplex-frame-integrity",
+    "implementation": "pending",
+    "kind": "platform",
+    "references": [
+      {
+        "role": "machinery",
+        "unit": {
+          "kind": "file",
+          "path": "platform/services/statecraft/api/factory/signing.ts"
+        }
+      },
+      {
+        "role": "gate-declaration",
+        "unit": {
+          "kind": "file",
+          "path": "tools/oap/schema-parity-check/envelope-version.mjs"
+        }
+      },
+      {
+        "role": "context",
+        "unit": {
+          "kind": "file",
+          "path": "docs/owasp-agentic-top-10-2026.md"
+        }
+      }
+    ],
+    "refines": [
+      {
+        "aspect": "frame-integrity",
+        "unit": {
+          "kind": "file",
+          "path": "platform/services/statecraft/api/sync/service.ts"
+        }
+      },
+      {
+        "aspect": "frame-integrity",
+        "unit": {
+          "kind": "file",
+          "path": "product/apps/opc/src-tauri/src/commands/sync_client.rs"
+        }
+      }
+    ],
+    "sectionHeadings": [
+      "Feature Specification: Duplex Frame Integrity and Anti-Replay",
+      "Purpose",
+      "Functional requirements (sketch — refine before implementation)",
+      "Acceptance criteria (sketch)",
+      "Out of scope",
+      "Sequencing"
+    ],
+    "specPath": "specs/206-duplex-frame-integrity/spec.md",
+    "status": "draft",
+    "summary": "Harden the OPC↔statecraft duplex channel from version-parity to message integrity. Spec 189 guarantees both ends speak the same envelope schema version; transport security is TLS plus bearer auth at handshake. Within an authenticated stream nothing binds individual frames: no per-frame integrity check, no replay protection, no refusal of unauthenticated frames after negotiation (ASI07 m2/m3/m4). This spec adds a keyed per-frame MAC over payload plus envelope context, an anti-replay window built on the envelope's existing eventId/sequence metadata bound to task windows, and fail-closed downgrade refusal — riding a schema-version bump so spec 189's strict equality remains the single negotiation gate. Session MAC keys are ephemeral and platform-minted at handshake, rotated on grant renewal; this preserves the spec 198 FR-014 posture (OPC holds no long-lived signing keys — an ephemeral channel MAC key is not a signing authority).\n",
+    "title": "Duplex Frame Integrity and Anti-Replay (ASI07)"
+  },
+  "shardHash": "dbdf67478bec25da4300cd6b0681fa551ad85d881e31d3b0b87dbf9c3b57de53",
+  "specVersion": "1.1.0"
+}

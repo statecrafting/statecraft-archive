@@ -1,0 +1,157 @@
+{
+  "record": {
+    "amendmentRecord": "199-factory-thin-consumer-sync",
+    "amends": [
+      "139-factory-artifact-substrate"
+    ],
+    "codeAliases": [
+      "ACME_VUE_NODE_SCAFFOLD_SOURCE_ID_CUTOVER"
+    ],
+    "created": "2026-05-06",
+    "dependsOn": [
+      "112-factory-project-lifecycle",
+      "138-statecraft-create-realised-scaffold",
+      "139-factory-artifact-substrate"
+    ],
+    "domain": "platform",
+    "establishes": [
+      {
+        "kind": "file",
+        "path": "platform/services/statecraft/api/projects/scaffold/types.ts"
+      },
+      {
+        "kind": "file",
+        "path": "platform/services/statecraft/api/projects/scaffoldReadinessBlocker.ts"
+      }
+    ],
+    "extends": [
+      {
+        "nature": "additive",
+        "spec": "139-factory-artifact-substrate",
+        "unit": {
+          "kind": "file",
+          "path": "platform/services/statecraft/api/factory/translator.ts"
+        }
+      },
+      {
+        "nature": "additive",
+        "spec": "139-factory-artifact-substrate",
+        "unit": {
+          "kind": "file",
+          "path": "platform/services/statecraft/api/factory/substrateBrowser.ts"
+        }
+      },
+      {
+        "nature": "additive",
+        "spec": "139-factory-artifact-substrate",
+        "unit": {
+          "kind": "file",
+          "path": "platform/services/statecraft/api/factory/syncWorker.ts"
+        }
+      },
+      {
+        "nature": "additive",
+        "spec": "139-factory-artifact-substrate",
+        "unit": {
+          "kind": "file",
+          "path": "platform/services/statecraft/api/projects/scaffold/scheduler.ts"
+        }
+      },
+      {
+        "nature": "additive",
+        "spec": "139-factory-artifact-substrate",
+        "unit": {
+          "kind": "file",
+          "path": "platform/services/statecraft/api/projects/scaffold/templateCache.ts"
+        }
+      },
+      {
+        "nature": "additive",
+        "spec": "139-factory-artifact-substrate",
+        "unit": {
+          "kind": "file",
+          "path": "platform/services/statecraft/api/projects/create.ts"
+        }
+      },
+      {
+        "nature": "additive",
+        "spec": "139-factory-artifact-substrate",
+        "unit": {
+          "kind": "file",
+          "path": "platform/services/statecraft/api/projects/scaffoldReadiness.ts"
+        }
+      },
+      {
+        "nature": "additive",
+        "spec": "139-factory-artifact-substrate",
+        "unit": {
+          "kind": "file",
+          "path": "platform/services/statecraft/web/app/routes/app.projects.new.tsx"
+        }
+      },
+      {
+        "nature": "additive",
+        "spec": "139-factory-artifact-substrate",
+        "unit": {
+          "kind": "file",
+          "path": "platform/services/statecraft/web/app/lib/projects-api.server.ts"
+        }
+      },
+      {
+        "nature": "additive",
+        "spec": "139-factory-artifact-substrate",
+        "unit": {
+          "kind": "file",
+          "path": "platform/services/statecraft/CLAUDE.md"
+        }
+      }
+    ],
+    "extraFrontmatter": {
+      "amended": "2026-06-09",
+      "approved": "2026-05-06",
+      "closed": "2026-05-06",
+      "slug": "acme-vue-node-scaffold-source-id-cutover"
+    },
+    "id": "140-acme-vue-node-scaffold-source-id-cutover",
+    "implementation": "complete",
+    "kind": "amendment",
+    "owner": "bart",
+    "references": [
+      {
+        "role": "historical",
+        "unit": {
+          "kind": "file",
+          "path": "platform/services/statecraft/api/factory/oapNativeAdapters.ts"
+        }
+      },
+      {
+        "role": "historical",
+        "unit": {
+          "kind": "file",
+          "path": "platform/services/statecraft/api/factory/projection.ts"
+        }
+      }
+    ],
+    "risk": "low",
+    "sectionHeadings": [
+      "140 — acme-vue-node Manifest Cutover to `scaffold_source_id`",
+      "1. Why this amendment",
+      "2. The four changes",
+      "2.1 Emit-side — projection writes `scaffold_source_id`, not `template_remote`",
+      "2.2 Read-side — scaffold layer resolves clone target via `factory_upstreams`",
+      "2.3 Readiness — drop the legacy fallback",
+      "2.4 Migration of existing org substrate",
+      "3. What does NOT change",
+      "4. Risks and follow-ups",
+      "5. Test scenarios",
+      "6. Acceptance criteria",
+      "7. Out of scope"
+    ],
+    "specPath": "specs/140-acme-vue-node-scaffold-source-id-cutover/spec.md",
+    "status": "approved",
+    "summary": "Spec 139 §7.2 declared `template_remote` is replaced by `orchestration_source_id` + `scaffold_source_id`. Phase 2 landed the rename for the OAP-native adapters (`next-prisma`, `rust-axum`, `encore-react`) via `oapNativeSanitise.ts`, but the synthetic `acme-vue-node` adapter that `projection.ts::buildAdapter` emits from template-origin substrate rows still carries `template_remote` only. Five downstream call sites (scheduler, templateCache, create, types, scaffoldReadiness fallback) read that legacy field directly. This amendment finishes §7.2 by routing acme-vue-node through `factory_upstreams` like every other adapter and dropping the legacy field from the read paths.\n",
+    "title": "acme-vue-node manifest cutover to scaffold_source_id (amendment of 139)"
+  },
+  "shardHash": "dc664da97c3ab3d279915525a8352c254df3e503404429696c7266cfdd226fb3",
+  "specVersion": "1.1.0"
+}

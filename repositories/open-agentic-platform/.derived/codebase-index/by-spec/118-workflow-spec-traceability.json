@@ -1,0 +1,51 @@
+{
+  "mapping": {
+    "dependsOn": [
+      "000-bootstrap-spec-system",
+      "101-codebase-index-mvp",
+      "103-init-protocol-governed-reads"
+    ],
+    "implementingPaths": [
+      {
+        "path": ".derived/codebase-index/CODEBASE-INDEX.md",
+        "source": "spec-edge"
+      },
+      {
+        "path": ".github/workflows",
+        "source": "spec-edge"
+      }
+    ],
+    "resolvedUnits": [
+      {
+        "locations": [
+          {
+            "file": ".github/workflows"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "refines",
+        "unit": {
+          "kind": "directory",
+          "path": ".github/workflows"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": ".derived/codebase-index/CODEBASE-INDEX.md"
+          }
+        ],
+        "ownership": false,
+        "sourceField": "references",
+        "unit": {
+          "kind": "file",
+          "path": ".derived/codebase-index/CODEBASE-INDEX.md"
+        }
+      }
+    ],
+    "specId": "118-workflow-spec-traceability",
+    "specStatus": "approved"
+  },
+  "schemaVersion": "1.1.0",
+  "shardHash": "b13b9dba4d3842cfe4d426b2ef1d9a2f2dd17f6748dc20206c5b60da2731af2a"
+}

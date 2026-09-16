@@ -1,0 +1,11 @@
+{
+  "package": {
+    "kind": "npm-package",
+    "name": "@opc/agent-frontmatter",
+    "path": "product/packages/agent-frontmatter",
+    "specRef": "054-agent-frontmatter-schema",
+    "version": "0.1.0"
+  },
+  "schemaVersion": "1.1.0",
+  "shardHash": "ee08fadc479e8ac4af6930fdadb9dcb0041301cfb6be764e88a2884d8ad8309e"
+}

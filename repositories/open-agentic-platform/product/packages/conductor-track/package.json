@@ -1,0 +1,33 @@
+{
+  "name": "@opc/conductor-track",
+  "version": "0.1.0",
+  "description": "Spec-driven work unit lifecycle: tracks with formal state machine, TDD checkpoints, git-aware revert, and plan-implementer binding",
+  "private": true,
+  "type": "module",
+  "main": "src/index.ts",
+  "types": "src/index.ts",
+  "exports": {
+    ".": "./src/index.ts",
+    "./types": "./src/types.ts",
+    "./storage": "./src/storage.ts",
+    "./state-machine": "./src/state-machine.ts",
+    "./conductor": "./src/conductor.ts",
+    "./plan-implementer": "./src/plan-implementer.ts",
+    "./checkpoints": "./src/checkpoints.ts",
+    "./git": "./src/git.ts",
+    "./commands": "./src/commands.ts"
+  },
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "test": "vitest run",
+    "lint": "eslint src/"
+  },
+  "devDependencies": {
+    "@types/node": "^24.5.0",
+    "typescript": "^6.0.3",
+    "vitest": "^4.1.5"
+  },
+  "oap": {
+    "spec": "061-conductor-track-lifecycle"
+  }
+}

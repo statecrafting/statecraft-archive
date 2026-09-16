@@ -1,0 +1,85 @@
+{
+  "mapping": {
+    "dependsOn": [
+      "090-governance-non-optionality",
+      "093-spec-driven-preflight",
+      "097-promotion-grade-mirror"
+    ],
+    "implementingPaths": [
+      {
+        "path": "crates/axiomregent/src/router/mod.rs",
+        "source": "spec-edge"
+      },
+      {
+        "path": "crates/axiomregent/src/router/permissions.rs",
+        "source": "spec-edge"
+      },
+      {
+        "path": "crates/orchestrator/src/lib.rs",
+        "source": "spec-edge"
+      },
+      {
+        "path": "crates/orchestrator/src/promotion.rs",
+        "source": "spec-edge"
+      }
+    ],
+    "resolvedUnits": [
+      {
+        "locations": [
+          {
+            "file": "crates/axiomregent/src/router/mod.rs"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "extends",
+        "unit": {
+          "kind": "file",
+          "path": "crates/axiomregent/src/router/mod.rs"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "crates/axiomregent/src/router/permissions.rs"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "extends",
+        "unit": {
+          "kind": "file",
+          "path": "crates/axiomregent/src/router/permissions.rs"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "crates/orchestrator/src/lib.rs"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "extends",
+        "unit": {
+          "kind": "file",
+          "path": "crates/orchestrator/src/lib.rs"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "crates/orchestrator/src/promotion.rs"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "extends",
+        "unit": {
+          "kind": "file",
+          "path": "crates/orchestrator/src/promotion.rs"
+        }
+      }
+    ],
+    "specId": "098-governance-enforcement-stitching",
+    "specStatus": "approved"
+  },
+  "schemaVersion": "1.1.0",
+  "shardHash": "117761e9079d8ab06974db0a2fab81a12759e1be80fa59e320250293776f072d"
+}

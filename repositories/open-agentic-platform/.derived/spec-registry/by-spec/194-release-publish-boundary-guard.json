@@ -1,0 +1,73 @@
+{
+  "record": {
+    "amendmentRecord": "Amended 2026-06-04 — new guarded mutation site. The axiomregent demotion\n(spec 117 §2.1, amended) adds a post-matrix `attach-sidecar-sbom` job to\nrelease-desktop.yml that `gh release upload`s the bundled-sidecar SBOM once.\nPer this spec's invariant, that new upload carries the same fail-closed\nthree-state draft assertion before the mutation; §4's table gains the row.\nThe invariant and mechanism are unchanged — only the set of guarded sites grew.\n\nself-amends (2026-06-02) — §3 mechanism correction. The\n`release-tools.yml` precondition `gh release view \"$TAG\" --json isDraft`\nwas missing the `--repo \"$GITHUB_REPOSITORY\"` pin that the sibling\n`gh release upload` four lines down in the same step already carries.\nThe `publish` job's only checkout uses `path: src` (the SBOM-scan\ncheckout), so the workspace root has no `.git`; gh's fallback\nrepo-inference from a cwd git remote fails (\"not a git repository\"),\nthe precondition exits non-zero, and the guard fails CLOSED on the\ngh-lookup-failed branch — mislabeling the cause as \"release gone or\nauth failed\" rather than reading the draft's true isDraft state.\nFail-closed preserved draft integrity (no spurious upload onto a\npublished release), but on the wrong reason and before a healthy draft\ncould ever be reached. The fix pins the precondition to the same repo\nas the mutation call so the two gh calls are identical; the three-state\nexit-code-first / published / draft structure is unchanged. Latent\nsince #277; first reached on the 2026-06-02 opc-v0.4.0 tools backfill.\n",
+    "created": "2026-06-01",
+    "dependsOn": [
+      "193-paired-release-cadence",
+      "086-open-source-launch",
+      "117-release-artifact-attestations",
+      "037-cross-platform-axiomregent"
+    ],
+    "domain": "tooling",
+    "extends": [
+      {
+        "nature": "additive",
+        "spec": "034-featuregraph-registry-scanner-fix",
+        "unit": {
+          "kind": "file",
+          "path": "crates/featuregraph/tests/golden/features_graph.json"
+        }
+      }
+    ],
+    "extraFrontmatter": {
+      "amended": "2026-06-04",
+      "approved": "2026-06-01",
+      "compliance": [
+        {
+          "controls": [
+            "ASI04"
+          ],
+          "framework": "owasp-asi-2026"
+        }
+      ],
+      "slug": "release-publish-boundary-guard"
+    },
+    "id": "194-release-publish-boundary-guard",
+    "implementation": "complete",
+    "kind": "governance",
+    "owner": "bart",
+    "refines": [
+      {
+        "aspect": "release-publish-boundary",
+        "unit": {
+          "kind": "file",
+          "path": ".github/workflows/release-desktop.yml"
+        }
+      },
+      {
+        "aspect": "release-publish-boundary",
+        "unit": {
+          "kind": "file",
+          "path": ".github/workflows/release-tools.yml"
+        }
+      }
+    ],
+    "risk": "medium",
+    "sectionHeadings": [
+      "194 — Publish-boundary guard",
+      "1. Problem statement",
+      "2. The invariant",
+      "3. Mechanism — fail-closed draft assertion",
+      "4. Where it applies",
+      "5. Operator runbook note",
+      "6. Acceptance criteria",
+      "7. Out of scope"
+    ],
+    "specPath": "specs/194-release-publish-boundary-guard/spec.md",
+    "status": "approved",
+    "summary": "Establish the publish-boundary invariant for release automation: a GitHub Actions workflow may CREATE a draft release and MUTATE (upload assets to / delete) a release only while it is a draft. Crossing the publish boundary — publishing, uploading to an already-published release, or deleting a published release + tag — requires a human action taken outside the automation. Realises spec 193 §7's deferred \"control the publish path\" item by adding a fail-closed draft assertion before every `gh release upload` and `gh release delete` in release-desktop.yml and release-tools.yml, closing the reactive race where the release-tools `workflow_run` chain (or a mid-build human publish of the desktop draft) could autonomously mutate a published, attested release.\n",
+    "title": "Publish-boundary guard — automation mutates draft releases only (resolves 193 §7)"
+  },
+  "shardHash": "ff452521d5db8eaafaaa06a37b471e9b0a5d2f71734895b14c2e7025907b7f4e",
+  "specVersion": "1.1.0"
+}

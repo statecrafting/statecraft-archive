@@ -1,0 +1,29 @@
+# SPDX-License-Identifier: AGPL-3.0-or-later
+# Copyright (C) 2026 Bartek Kus
+
+[package]
+name = "agent"
+publish = false   # internal workspace crate; binaries ship via release workflows, not crates.io
+version = "0.1.0"
+edition = "2024"
+
+[dependencies]
+agent-frontmatter = { path = "../agent-frontmatter" }
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+anyhow = "1.0"
+thiserror = "2"
+sha2 = "0.10"
+hex = "0.4"
+url = "2.4"
+regex = "1.10"
+uuid = { version = "1", features = ["v4"] }
+serde_yaml = "0.9"
+chrono = { version = "0.4", features = ["serde"] }
+toml = "1.1"
+
+[dev-dependencies]
+tempfile = "3.8"
+
+[package.metadata.oap]
+spec = "035-agent-governed-execution"

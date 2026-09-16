@@ -1,0 +1,87 @@
+{
+  "diagnostics": {
+    "errors": [],
+    "warnings": [
+      {
+        "code": "W-002",
+        "message": "spec '173-opc-multi-session-orchestrator-binding' file unit 'docs/owasp/factory/AIDE-VELOCITY-OAP-INTENT.md' does not exist",
+        "path": "docs/owasp/factory/AIDE-VELOCITY-OAP-INTENT.md"
+      }
+    ]
+  },
+  "mapping": {
+    "dependsOn": [
+      "052-state-persistence",
+      "095-checkpoint-branch-of-thought",
+      "157-opc-session-model"
+    ],
+    "implementingPaths": [
+      {
+        "path": "crates/orchestrator",
+        "source": "spec-edge"
+      },
+      {
+        "path": "specs/095-checkpoint-branch-of-thought/spec.md",
+        "source": "spec-edge"
+      },
+      {
+        "path": "specs/157-opc-session-model/spec.md",
+        "source": "spec-edge"
+      }
+    ],
+    "resolvedUnits": [
+      {
+        "locations": [
+          {
+            "file": "crates/orchestrator"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "refines",
+        "unit": {
+          "kind": "directory",
+          "path": "crates/orchestrator"
+        }
+      },
+      {
+        "locations": [],
+        "ownership": false,
+        "sourceField": "references",
+        "unit": {
+          "kind": "file",
+          "path": "docs/owasp/factory/AIDE-VELOCITY-OAP-INTENT.md"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "specs/095-checkpoint-branch-of-thought/spec.md"
+          }
+        ],
+        "ownership": false,
+        "sourceField": "references",
+        "unit": {
+          "kind": "file",
+          "path": "specs/095-checkpoint-branch-of-thought/spec.md"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "specs/157-opc-session-model/spec.md"
+          }
+        ],
+        "ownership": false,
+        "sourceField": "references",
+        "unit": {
+          "kind": "file",
+          "path": "specs/157-opc-session-model/spec.md"
+        }
+      }
+    ],
+    "specId": "173-opc-multi-session-orchestrator-binding",
+    "specStatus": "approved"
+  },
+  "schemaVersion": "1.1.0",
+  "shardHash": "e52f6fdc093b00b507207e0785a1ca38617b245b467ced7808a924adcae51b42"
+}

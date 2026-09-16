@@ -1,0 +1,47 @@
+id: architecture-001
+category: architecture
+priority: high
+context: >
+  Applies to module boundaries, imports, and dependency direction across
+  the project. Clean architecture boundaries make the codebase navigable
+  and enable independent testing and deployment.
+tags:
+  - typescript
+  - architecture
+  - modules
+
+rules:
+  - verb: ALWAYS
+    subject: "keep imports flowing in one direction (no circular dependencies)"
+    rationale: >
+      Circular imports cause load-order bugs, break tree-shaking, and
+      make it impossible to reason about module initialization. Use
+      dependency inversion or extract shared types to break cycles.
+
+  - verb: PREFER
+    subject: "explicit exports over barrel re-exports for internal modules"
+    rationale: >
+      Barrel files (index.ts that re-exports everything) are convenient
+      for package consumers but create hidden coupling between internal
+      modules. Prefer direct imports within a package.
+
+  - verb: AVOID
+    subject: "deep imports into another package's internal files"
+    rationale: >
+      Importing from a package's internal path couples you to its file
+      structure. Use the package's public API (exports field in
+      package.json) so internal refactors don't break consumers.
+
+  - verb: NEVER
+    subject: "import from a higher layer into a lower layer"
+    rationale: >
+      Lower layers (data, domain) must not depend on higher layers
+      (application, presentation). Violating this inverts the dependency
+      graph and prevents the lower layer from being tested or reused
+      independently.
+
+anti_patterns:
+  - pattern: "import { Button } from '../../components/Button/Button';"
+    correction: "import { Button } from '@app/components';"
+  - pattern: "import { db } from '../../../infrastructure/database';"
+    correction: "Accept the repository interface via constructor injection."

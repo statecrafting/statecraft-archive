@@ -1,0 +1,137 @@
+{{/*
+Spec 224 FR-003 (resolves spec 143 §12 FU-003 for spec 124) : factory-runs
+staleness sweeper, K8s CronJob.
+
+Self-hosted scheduler context (spec 143 §12 L-001): Encore's CronJob
+primitive is a no-op without Encore Cloud, so this K8s CronJob IS the
+production scheduler for the spec 124 factory-runs sweeper. The Encore
+declaration in `api/factory/runsScheduler.ts` (endpoint
+`runFactoryRunsStalenessSweepCron`) is local-dev / future-Encore-Cloud only.
+
+Per-purpose credential mount discipline (mirrors spec 143 FR-010's
+knowledge sweeper): the pod mounts only `statecraft-factory-sweeper-credentials`
+(materialised by `setup.sh` directly on Hetzner, by ESO on cloud
+deployments). It carries exactly the factory-sweeper Rauthy client's
+`CLIENT_ID` + `CLIENT_SECRET`. No cross-purpose mounts.
+
+Auth path: the pod fetches a `client_credentials` JWT from Rauthy, then
+POSTs the sweep endpoint with `Authorization: Bearer <jwt>`. The handler
+validates the JWT and the `platform:factory:sweep` scope (load-bearing per
+spec 143 §12 L-006: must be in *Default Scopes*, not just *Allowed Scopes*).
+The #480 gateway-auth fix (auth handler returns null for M2M tokens instead
+of throwing) is the precondition for this call reaching the endpoint's own
+`validateM2mRequest`.
+*/}}
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: factory-runs-staleness-sweeper
+  labels:
+    app.kubernetes.io/name: factory-runs-staleness-sweeper
+    app.kubernetes.io/part-of: statecraft
+    spec.oap/id: "224-self-hosted-sweeper-cron-revival"
+    spec.oap/fr: "FR-003"
+spec:
+  # FR-003 cadence : every 15 minutes. Cleanup latency = grace
+  # (STATECRAFT_FACTORY_RUN_STALE_AFTER_SEC, 1800s default) + cadence (900s)
+  # = 45min worst case for a stuck-run recovery. Tighter would spawn a pod
+  # every minute (matching the in-process Encore cadence) with no operator
+  # benefit, since the 30min grace already dominates.
+  schedule: "*/15 * * * *"
+  concurrencyPolicy: Forbid
+  successfulJobsHistoryLimit: 3
+  failedJobsHistoryLimit: 3
+  startingDeadlineSeconds: 300
+  jobTemplate:
+    spec:
+      backoffLimit: 0
+      template:
+        metadata:
+          labels:
+            app.kubernetes.io/name: factory-runs-staleness-sweeper
+            app.kubernetes.io/part-of: statecraft
+        spec:
+          restartPolicy: Never
+          # curl-only sweep pod; never calls the K8s API.
+          automountServiceAccountToken: false
+          containers:
+            - name: sweep
+              image: curlimages/curl:8.10.1
+              # Only the per-purpose Secret. The discipline is enforced at
+              # this line: cross-purpose env injection is the failure mode
+              # this template structurally prevents.
+              envFrom:
+                - secretRef:
+                    name: statecraft-factory-sweeper-credentials
+              env:
+                - name: RAUTHY_URL
+                  value: {{ .Values.oidc.endpoint | quote }}
+              command:
+                - sh
+                - -c
+                - |
+                  set -eu
+
+                  # 1. Fetch a client_credentials JWT from Rauthy.
+                  #
+                  #    Two Rauthy-0.35 invariants apply here:
+                  #    - spec 143 §12 L-006 (scope inertia): the `scope=`
+                  #      param is documented-inert under client_credentials;
+                  #      the JWT carries whatever is in the client's Default
+                  #      Scopes regardless. We send `scope=` only for
+                  #      forward-compat with stricter IDPs.
+                  #    - spec 143 §12 L-007 (client-auth-method invariant):
+                  #      Rauthy 0.35 has narrowed RFC 6749 §2.3.1 to
+                  #      `client_secret_post` only and rejects HTTP Basic
+                  #      (`client_secret_basic`) with HTTP 400
+                  #      `'client_secret' is missing`. Credentials go in the
+                  #      body, not the Authorization header.
+                  TOKEN_JSON=$(
+                    curl --fail --silent --show-error \
+                      --max-time 30 \
+                      --request POST \
+                      --header 'Content-Type: application/x-www-form-urlencoded' \
+                      --data-urlencode 'grant_type=client_credentials' \
+                      --data-urlencode 'scope=platform:factory:sweep' \
+                      --data-urlencode "client_id=${CLIENT_ID}" \
+                      --data-urlencode "client_secret=${CLIENT_SECRET}" \
+                      "${RAUTHY_URL}/auth/v1/oidc/token"
+                  )
+
+                  # Stable extraction: Rauthy's response is RFC-6749 JSON;
+                  # access_token is a base64url string with no quotes
+                  # internally, so this sed pattern is deterministic.
+                  ACCESS_TOKEN=$(
+                    printf '%s' "$TOKEN_JSON" \
+                      | sed -n 's/.*"access_token"[[:space:]]*:[[:space:]]*"\([^"]*\)".*/\1/p'
+                  )
+                  if [ -z "$ACCESS_TOKEN" ]; then
+                    echo "ERROR: failed to extract access_token from Rauthy response" >&2
+                    exit 1
+                  fi
+
+                  # 2. Invoke the sweep endpoint. --fail makes any 4xx/5xx a
+                  #    non-zero exit, which surfaces a broken sweeper loudly
+                  #    (stuck runs staying stuck) rather than silently.
+                  curl --fail --silent --show-error \
+                    --max-time 280 \
+                    --request POST \
+                    --header 'Content-Type: application/json' \
+                    --header "Authorization: Bearer ${ACCESS_TOKEN}" \
+                    http://statecraft-api.statecraft-system.svc.cluster.local:80/internal/factory/runs-staleness-sweep
+              resources:
+                requests:
+                  memory: "16Mi"
+                  cpu: "10m"
+                limits:
+                  memory: "32Mi"
+                  cpu: "100m"
+              securityContext:
+                allowPrivilegeEscalation: false
+                readOnlyRootFilesystem: true
+                runAsNonRoot: true
+                runAsUser: 65534
+                runAsGroup: 65534
+                capabilities:
+                  drop:
+                    - ALL

@@ -1,0 +1,64 @@
+{
+  "record": {
+    "codeAliases": [
+      "SPEC_PREFLIGHT"
+    ],
+    "created": "2026-04-11",
+    "dependsOn": [
+      "091-registry-enrichment",
+      "092-workspace-runtime-threading"
+    ],
+    "domain": "opc",
+    "extends": [
+      {
+        "nature": "additive",
+        "spec": "068-permission-runtime",
+        "unit": {
+          "kind": "file",
+          "path": "crates/policy-kernel/src/lib.rs"
+        }
+      },
+      {
+        "nature": "additive",
+        "spec": "034-featuregraph-registry-scanner-fix",
+        "unit": {
+          "kind": "file",
+          "path": "crates/featuregraph/src/preflight.rs"
+        }
+      },
+      {
+        "nature": "additive",
+        "spec": "036-safety-tier-governance",
+        "unit": {
+          "kind": "file",
+          "path": "crates/agent/src/safety.rs"
+        }
+      }
+    ],
+    "id": "093-spec-driven-preflight",
+    "implementation": "complete",
+    "kind": "governance",
+    "owner": "bart",
+    "risk": "high",
+    "sectionHeadings": [
+      "093 — Spec-Driven Preflight and Gating",
+      "1. Problem Statement",
+      "2. Enabling Code Already Present",
+      "3. Implementation Slices",
+      "Slice 1 — Wire governance_preflight as Tauri command",
+      "Slice 2 — Extend ToolCallContext with spec fields",
+      "Slice 3 — Add spec-status gate",
+      "Slice 4 — Add spec-risk gate",
+      "Slice 5 — Add dependency gate to preflight",
+      "Slice 6 — Replace hardcoded tool tiers with .oap/tool-tiers.toml",
+      "4. Acceptance Criteria",
+      "5. Non-Functional Requirements"
+    ],
+    "specPath": "specs/093-spec-driven-preflight/spec.md",
+    "status": "approved",
+    "summary": "Connects the enriched spec registry (from Phase 0) to policy-kernel, featuregraph, and agent safety so that spec status, risk level, and dependency satisfaction gate execution before work starts.\n",
+    "title": "Spec-Driven Preflight and Gating"
+  },
+  "shardHash": "5ba355608e2097aa7ffd0dc494f12dd43fef1845d7eabf608c87db42d5124091",
+  "specVersion": "1.1.0"
+}

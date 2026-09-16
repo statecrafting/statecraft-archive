@@ -1,0 +1,120 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://open-agentic-platform.dev/schemas/coding-standard.schema.json",
+  "title": "Coding Standard",
+  "description": "Machine-readable coding standard defined in YAML (055-yaml-standards-schema).",
+  "type": "object",
+  "required": ["id", "category", "priority", "rules"],
+  "additionalProperties": true,
+  "properties": {
+    "id": {
+      "type": "string",
+      "pattern": "^[a-z0-9]+(-[a-z0-9]+)*$",
+      "description": "Unique identifier in kebab-case."
+    },
+    "category": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Category grouping (e.g., error-handling, naming, testing)."
+    },
+    "priority": {
+      "type": "string",
+      "enum": ["critical", "high", "medium", "low"],
+      "description": "Priority level."
+    },
+    "status": {
+      "type": "string",
+      "enum": ["active", "candidate", "rejected"],
+      "default": "active",
+      "description": "Lifecycle status."
+    },
+    "context": {
+      "type": "string",
+      "description": "When this standard applies."
+    },
+    "tags": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "Tags for filtering."
+    },
+    "rules": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "$ref": "#/definitions/Rule" },
+      "description": "Ordered rules that comprise this standard."
+    },
+    "anti_patterns": {
+      "type": "array",
+      "items": { "$ref": "#/definitions/AntiPattern" },
+      "description": "Code patterns that violate this standard."
+    },
+    "examples": {
+      "type": "array",
+      "items": { "$ref": "#/definitions/Example" },
+      "description": "Good/bad code examples."
+    }
+  },
+  "definitions": {
+    "Rule": {
+      "type": "object",
+      "required": ["verb", "subject", "rationale"],
+      "additionalProperties": false,
+      "properties": {
+        "verb": {
+          "type": "string",
+          "enum": ["ALWAYS", "NEVER", "USE", "PREFER", "AVOID"],
+          "description": "Directive type."
+        },
+        "subject": {
+          "type": "string",
+          "minLength": 1,
+          "description": "What the rule applies to."
+        },
+        "rationale": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Why this rule exists."
+        }
+      }
+    },
+    "AntiPattern": {
+      "type": "object",
+      "required": ["pattern", "correction"],
+      "additionalProperties": false,
+      "properties": {
+        "pattern": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Code pattern to avoid."
+        },
+        "correction": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Corrected version."
+        }
+      }
+    },
+    "Example": {
+      "type": "object",
+      "required": ["good", "bad", "explanation"],
+      "additionalProperties": false,
+      "properties": {
+        "good": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Code that follows the standard."
+        },
+        "bad": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Code that violates the standard."
+        },
+        "explanation": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Why good is preferred."
+        }
+      }
+    }
+  }
+}

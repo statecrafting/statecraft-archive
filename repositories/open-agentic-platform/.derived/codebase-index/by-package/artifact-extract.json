@@ -1,0 +1,12 @@
+{
+  "package": {
+    "edition": "2024",
+    "kind": "rust-lib-bin",
+    "name": "artifact-extract",
+    "path": "crates/artifact-extract",
+    "specRef": "120-factory-extraction-stage",
+    "version": "0.2.0"
+  },
+  "schemaVersion": "1.1.0",
+  "shardHash": "d109acf1b10383ac4fd3ab7251f8a8a58287e8b10f20e6eaa0805b5753242b20"
+}

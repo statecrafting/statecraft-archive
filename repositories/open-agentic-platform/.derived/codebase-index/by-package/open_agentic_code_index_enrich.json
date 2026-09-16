@@ -1,0 +1,12 @@
+{
+  "package": {
+    "edition": "2024",
+    "kind": "rust-lib-bin",
+    "name": "open_agentic_code_index_enrich",
+    "path": "tools/oap/oap-code-index-enrich",
+    "specRef": "101-codebase-index-mvp",
+    "version": "0.1.0"
+  },
+  "schemaVersion": "1.1.0",
+  "shardHash": "0dd6acadb879483769c3c4c1b9565192d79803c3da7db5c48af36e313655d30f"
+}

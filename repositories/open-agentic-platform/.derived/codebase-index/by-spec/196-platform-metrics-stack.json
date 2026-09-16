@@ -1,0 +1,289 @@
+{
+  "mapping": {
+    "dependsOn": [
+      "106-rauthy-native-oidc-and-membership",
+      "151-declarative-cluster-reconciliation",
+      "078-platform-completion-plan"
+    ],
+    "implementingPaths": [
+      {
+        "path": "crates/featuregraph/tests/golden/features_graph.json",
+        "source": "spec-edge"
+      },
+      {
+        "path": "platform/charts/deployd-api/templates/deployment.yaml",
+        "source": "spec-edge"
+      },
+      {
+        "path": "platform/charts/deployd-api/values.yaml",
+        "source": "spec-edge"
+      },
+      {
+        "path": "platform/gitops/clusters/hetzner-dr-stage2/kustomization.yaml",
+        "source": "spec-edge"
+      },
+      {
+        "path": "platform/gitops/clusters/hetzner-prod/infrastructure/ingress-nginx.yaml",
+        "source": "spec-edge"
+      },
+      {
+        "path": "platform/gitops/clusters/hetzner-prod/infrastructure/monitoring-dashboards.yaml",
+        "source": "spec-edge"
+      },
+      {
+        "path": "platform/gitops/clusters/hetzner-prod/infrastructure/monitoring.yaml",
+        "source": "spec-edge"
+      },
+      {
+        "path": "platform/gitops/clusters/hetzner-prod/kustomization.yaml",
+        "source": "spec-edge"
+      },
+      {
+        "path": "platform/gitops/clusters/hetzner-prod/policies-kustomization.yaml",
+        "source": "spec-edge"
+      },
+      {
+        "path": "platform/infra/hetzner/.env.example",
+        "source": "spec-edge"
+      },
+      {
+        "path": "platform/infra/hetzner/setup.sh",
+        "source": "spec-edge"
+      },
+      {
+        "path": "platform/k8s/policies/kustomization.yaml",
+        "source": "spec-edge"
+      },
+      {
+        "path": "platform/k8s/policies/monitoring/networkpolicy-monitoring.yaml",
+        "source": "spec-edge"
+      },
+      {
+        "path": "platform/services/deployd-api-rs/src/main.rs",
+        "source": "spec-edge"
+      },
+      {
+        "path": "platform/services/deployd-api-rs/src/metrics.rs",
+        "source": "spec-edge"
+      },
+      {
+        "path": "platform/services/statecraft/infra.config.json",
+        "source": "spec-edge"
+      }
+    ],
+    "resolvedUnits": [
+      {
+        "locations": [
+          {
+            "file": "platform/gitops/clusters/hetzner-prod/infrastructure/monitoring-dashboards.yaml"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "file",
+          "path": "platform/gitops/clusters/hetzner-prod/infrastructure/monitoring-dashboards.yaml"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "platform/gitops/clusters/hetzner-prod/infrastructure/monitoring.yaml"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "file",
+          "path": "platform/gitops/clusters/hetzner-prod/infrastructure/monitoring.yaml"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "platform/gitops/clusters/hetzner-prod/policies-kustomization.yaml"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "file",
+          "path": "platform/gitops/clusters/hetzner-prod/policies-kustomization.yaml"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "platform/k8s/policies/kustomization.yaml"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "file",
+          "path": "platform/k8s/policies/kustomization.yaml"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "platform/k8s/policies/monitoring/networkpolicy-monitoring.yaml"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "file",
+          "path": "platform/k8s/policies/monitoring/networkpolicy-monitoring.yaml"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "platform/services/deployd-api-rs/src/metrics.rs"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "file",
+          "path": "platform/services/deployd-api-rs/src/metrics.rs"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "crates/featuregraph/tests/golden/features_graph.json"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "extends",
+        "unit": {
+          "kind": "file",
+          "path": "crates/featuregraph/tests/golden/features_graph.json"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "platform/charts/deployd-api/templates/deployment.yaml"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "refines",
+        "unit": {
+          "kind": "file",
+          "path": "platform/charts/deployd-api/templates/deployment.yaml"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "platform/charts/deployd-api/values.yaml"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "refines",
+        "unit": {
+          "kind": "file",
+          "path": "platform/charts/deployd-api/values.yaml"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "platform/gitops/clusters/hetzner-dr-stage2/kustomization.yaml"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "refines",
+        "unit": {
+          "kind": "file",
+          "path": "platform/gitops/clusters/hetzner-dr-stage2/kustomization.yaml"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "platform/gitops/clusters/hetzner-prod/infrastructure/ingress-nginx.yaml"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "refines",
+        "unit": {
+          "kind": "file",
+          "path": "platform/gitops/clusters/hetzner-prod/infrastructure/ingress-nginx.yaml"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "platform/gitops/clusters/hetzner-prod/kustomization.yaml"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "refines",
+        "unit": {
+          "kind": "file",
+          "path": "platform/gitops/clusters/hetzner-prod/kustomization.yaml"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "platform/infra/hetzner/.env.example"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "refines",
+        "unit": {
+          "kind": "file",
+          "path": "platform/infra/hetzner/.env.example"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "platform/infra/hetzner/setup.sh"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "refines",
+        "unit": {
+          "kind": "file",
+          "path": "platform/infra/hetzner/setup.sh"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "platform/services/deployd-api-rs/src/main.rs"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "refines",
+        "unit": {
+          "kind": "file",
+          "path": "platform/services/deployd-api-rs/src/main.rs"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "platform/services/statecraft/infra.config.json"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "refines",
+        "unit": {
+          "kind": "file",
+          "path": "platform/services/statecraft/infra.config.json"
+        }
+      }
+    ],
+    "specId": "196-platform-metrics-stack",
+    "specStatus": "draft"
+  },
+  "schemaVersion": "1.1.0",
+  "shardHash": "a2a1c384ce8edd9cc693e5f2b9dd595667a8ca5d9bf324f48265d234301f62e3"
+}

@@ -1,0 +1,63 @@
+{
+  "mapping": {
+    "amends": [
+      "034-featuregraph-registry-scanner-fix",
+      "047-governance-control-plane",
+      "101-codebase-index-mvp",
+      "104-makefile-ci-parity-contract",
+      "118-workflow-spec-traceability",
+      "129-granular-package-oap-metadata",
+      "131-adversarial-prompt-refusal-policy",
+      "134-fast-local-ci-mode",
+      "135-fast-ci-as-default",
+      "154-logical-unit-ownership-grammar",
+      "156-references-edge-provenance-grammar",
+      "161-knowledge-requirements-provenance-emission",
+      "167-born-with-spec-spine-kernel",
+      "168-per-project-governance-certificate",
+      "169-tool-schema-strictness"
+    ],
+    "implementingPaths": [
+      {
+        "path": "product/apps/opc",
+        "source": "spec-edge"
+      },
+      {
+        "path": "specs/105-scripts-to-binaries-migration/spec.md",
+        "source": "spec-edge"
+      }
+    ],
+    "resolvedUnits": [
+      {
+        "locations": [
+          {
+            "file": "product/apps/opc"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "extends",
+        "unit": {
+          "kind": "directory",
+          "path": "product/apps/opc"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "specs/105-scripts-to-binaries-migration/spec.md"
+          }
+        ],
+        "ownership": false,
+        "sourceField": "references",
+        "unit": {
+          "kind": "file",
+          "path": "specs/105-scripts-to-binaries-migration/spec.md"
+        }
+      }
+    ],
+    "specId": "178-opc-directory-rename",
+    "specStatus": "approved"
+  },
+  "schemaVersion": "1.1.0",
+  "shardHash": "61f63b5754024271fa6ddc223c9a6d69073662d7f4d6defb1c9784e361ea94d1"
+}

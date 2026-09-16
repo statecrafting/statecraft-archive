@@ -1,0 +1,34 @@
+{
+  "mapping": {
+    "amends": [
+      "148-auth-driver-registry",
+      "149-saml-auth-driver",
+      "150-example-tenant-profile"
+    ],
+    "implementingPaths": [
+      {
+        "path": "crates/featuregraph/tests/golden/features_graph.json",
+        "source": "spec-edge"
+      }
+    ],
+    "resolvedUnits": [
+      {
+        "locations": [
+          {
+            "file": "crates/featuregraph/tests/golden/features_graph.json"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "extends",
+        "unit": {
+          "kind": "file",
+          "path": "crates/featuregraph/tests/golden/features_graph.json"
+        }
+      }
+    ],
+    "specId": "229-auth-driver-mock-rauthy-model",
+    "specStatus": "approved"
+  },
+  "schemaVersion": "1.1.0",
+  "shardHash": "beaf6877b925be2b18cf6f87db6335eced2f7e8c88adbad5d201ca6d01fe1ec9"
+}

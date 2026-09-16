@@ -1,0 +1,11 @@
+{
+  "package": {
+    "kind": "npm-package",
+    "name": "statecraft",
+    "path": "",
+    "specRef": "002-app-shell",
+    "version": "0.1.0"
+  },
+  "schemaVersion": "1.1.0",
+  "shardHash": "0b403c2190ccd7ca0518a873f7961fa30a5253b7ac91663115f657bd5bc00142"
+}

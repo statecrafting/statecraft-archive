@@ -1,0 +1,9 @@
+{
+  "package": {
+    "kind": "npm-package",
+    "name": "statecrafting",
+    "path": ""
+  },
+  "schemaVersion": "1.1.0",
+  "shardHash": "d04637862b63e2fe9043e873604dfe6862752ed64183c7343e186fd25534fb01"
+}

@@ -1,0 +1,68 @@
+{
+  "mapping": {
+    "dependsOn": [
+      "001-encore-app-architecture",
+      "003-multi-driver-auth-service",
+      "004-bff-gateway-proxy"
+    ],
+    "implementingPaths": [
+      {
+        "path": "apps/web-internal/src/stores/auth.store.ts",
+        "source": "spec-edge"
+      },
+      {
+        "path": "apps/web/src/lib/encore-client.ts",
+        "source": "spec-edge"
+      },
+      {
+        "path": "apps/web/src/stores/auth.store.ts",
+        "source": "spec-edge"
+      }
+    ],
+    "resolvedUnits": [
+      {
+        "locations": [
+          {
+            "file": "apps/web-internal/src/stores/auth.store.ts"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "file",
+          "path": "apps/web-internal/src/stores/auth.store.ts"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "apps/web/src/lib/encore-client.ts"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "file",
+          "path": "apps/web/src/lib/encore-client.ts"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "apps/web/src/stores/auth.store.ts"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "file",
+          "path": "apps/web/src/stores/auth.store.ts"
+        }
+      }
+    ],
+    "specId": "006-client-encore-integration",
+    "specStatus": "approved"
+  },
+  "schemaVersion": "1.1.0",
+  "shardHash": "bbb5279d8875a2817ac244e4e9740860f8ee7e5d0c22c1f1e5578334bd29171a"
+}

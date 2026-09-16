@@ -1,0 +1,51 @@
+{
+  "record": {
+    "codeAliases": [
+      "BFF_PROXY",
+      "GATEWAY_SERVICE"
+    ],
+    "created": "2026-06-10",
+    "dependsOn": [
+      "001-encore-app-architecture",
+      "002-security-data-invariants",
+      "003-multi-driver-auth-service"
+    ],
+    "domain": "app",
+    "establishes": [
+      {
+        "kind": "file",
+        "path": "apps/api/gateway/"
+      }
+    ],
+    "id": "004-bff-gateway-proxy",
+    "implementation": "complete",
+    "kind": "feature",
+    "owner": "bart",
+    "risk": "high",
+    "sectionHeadings": [
+      "004 — BFF gateway proxy: api.raw /api/v1/data/* to the private backend",
+      "1. Purpose",
+      "2. Territory",
+      "3. Behavior",
+      "3.1 Service shape",
+      "3.2 The INV-10 contract",
+      "Path-traversal sanitisation",
+      "S2S OAuth Bearer injection",
+      "5xx masking",
+      "Timeout to 504",
+      "Per-access audit",
+      "Availability gate",
+      "3.3 Endpoint map",
+      "3.4 Functional requirements",
+      "3.5 Key entities",
+      "4. Acceptance criteria",
+      "5. Out of scope"
+    ],
+    "specPath": "specs/004-bff-gateway-proxy/spec.md",
+    "status": "approved",
+    "summary": "The gateway service: an api.raw catch-all at /api/v1/data/* proxying to the private backend with an S2S OAuth client-credentials token cache, path-traversal sanitisation, 5xx masking, upstream timeout mapped to 504, and per-access audit (INV-10).\n",
+    "title": "BFF gateway proxy: api.raw /api/v1/data/* to the private backend"
+  },
+  "shardHash": "d052dd4982ed0ddc542cffc711d1a757ab51297805372f24dc9e7bb5f0f8e849",
+  "specVersion": "1.1.0"
+}

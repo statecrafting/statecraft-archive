@@ -1,0 +1,58 @@
+id: error-handling-001
+category: error-handling
+priority: high
+context: >
+  Applies to all TypeScript and JavaScript source files that perform
+  async operations or interact with external services.
+tags:
+  - typescript
+  - javascript
+  - async
+  - error-handling
+
+rules:
+  - verb: ALWAYS
+    subject: "wrap async operations in try/catch blocks"
+    rationale: >
+      Unhandled promise rejections crash the process in Node.js and produce
+      opaque errors in browsers. Explicit error handling ensures graceful
+      degradation and actionable error messages.
+
+  - verb: NEVER
+    subject: "use empty catch blocks"
+    rationale: >
+      Swallowing errors silently makes debugging impossible. At minimum,
+      log the error or re-throw with additional context.
+
+  - verb: PREFER
+    subject: "typed error classes over generic Error"
+    rationale: >
+      Typed errors enable callers to handle specific failure modes without
+      string matching on error messages.
+
+anti_patterns:
+  - pattern: "catch (e) {}"
+    correction: "catch (e) { logger.error('Operation failed', { error: e }); }"
+  - pattern: "catch (e) { return null; }"
+    correction: "catch (e) { throw new SpecificError('Context', { cause: e }); }"
+
+examples:
+  - bad: |
+      async function fetchUser(id) {
+        const res = await fetch(`/api/users/${id}`);
+        return res.json();
+      }
+    good: |
+      async function fetchUser(id: string): Promise<User> {
+        try {
+          const res = await fetch(`/api/users/${id}`);
+          if (!res.ok) throw new ApiError(`Fetch user failed: ${res.status}`);
+          return await res.json();
+        } catch (error) {
+          throw new UserFetchError(id, { cause: error });
+        }
+      }
+    explanation: >
+      The good example wraps the fetch in try/catch, checks response status,
+      and throws a typed error with context rather than letting failures
+      propagate as opaque rejections.

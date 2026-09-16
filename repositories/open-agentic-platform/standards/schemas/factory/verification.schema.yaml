@@ -1,0 +1,496 @@
+# ============================================================================
+# Factory Verification Contract Schema
+# ============================================================================
+#
+# Defines what must pass at each pipeline gate. Separates factory-owned
+# checks (cross-stage consistency, spec completeness) from adapter-owned
+# checks (compile, test, lint, architecture invariants).
+#
+# The verification harness reads this contract and executes checks
+# automatically — no agent self-assessment.
+#
+# Schema version: 1.0.0
+# ============================================================================
+
+schema_version: "1.0.0"
+
+# ─────────────────────────────────────────────────────────────────────────────
+# PRE-FLIGHT CHECKS
+# ─────────────────────────────────────────────────────────────────────────────
+# Run before the pipeline starts. All must pass or pipeline aborts.
+#
+pre_flight:
+  owner: process                    # Process layer owns these checks
+
+  checks:
+    - id: "PF-001"
+      name: "Build Specification valid"
+      description: "Build Spec conforms to schema and all required fields present"
+      type: schema-validation
+      target: build-spec
+
+    - id: "PF-002"
+      name: "Adapter manifest valid"
+      description: "Adapter manifest conforms to schema"
+      type: schema-validation
+      target: adapter-manifest
+
+    - id: "PF-003"
+      name: "Adapter capabilities match"
+      description: "Adapter capabilities satisfy Build Spec requirements"
+      type: capability-check
+      rules:
+        - condition: "build_spec.project.variant == 'dual'"
+          requires: "adapter.capabilities.dual_stack == true"
+        - condition: "any auth audience uses 'saml'"
+          requires: "'saml' in adapter.supported_auth[].method"
+        - condition: "any auth audience uses 'oidc'"
+          requires: "'oidc' in adapter.supported_auth[].method"
+        - condition: "build_spec.integrations contains file-storage"
+          requires: "adapter.capabilities.file_uploads == true"
+        - condition: "build_spec.notifications defined"
+          requires: "adapter.capabilities.email_notifications == true"
+        - condition: "build_spec.audit.enabled == true"
+          requires: "adapter.capabilities.audit_logging == true"
+
+    - id: "PF-004"
+      name: "Adapter scaffold exists"
+      description: "Base project scaffold directory exists and is valid"
+      type: file-check
+      target: "adapter.scaffold.source"
+
+    - id: "PF-005"
+      name: "Required agent prompts exist"
+      description: "All required agent prompt files exist"
+      type: file-check
+      targets:
+        - "adapter.agents.api_scaffolder"
+        - "adapter.agents.ui_scaffolder"
+        - "adapter.agents.data_scaffolder"
+        - "adapter.agents.configurer"
+        - "adapter.agents.trimmer"
+
+    - id: "PF-006"
+      name: "Required pattern files exist"
+      description: "All referenced pattern files exist"
+      type: file-check
+      targets: "all values in adapter.patterns"
+
+
+# ─────────────────────────────────────────────────────────────────────────────
+# STAGE GATES
+# ─────────────────────────────────────────────────────────────────────────────
+# Checks run after each process-layer stage completes.
+# All error-severity checks must pass before the next stage begins.
+#
+stage_gates:
+
+  # ── Stage 1: Business Requirements ──
+  - stage: "business-requirements"
+    owner: process
+    checks:
+      - id: "S1-001"
+        name: "BRD produced"
+        description: "Business Requirements Document exists"
+        type: artifact-exists
+        artifact: "requirements/brd.md"
+
+      - id: "S1-002"
+        name: "Entities extracted"
+        description: "At least one entity defined in entity model"
+        type: artifact-content
+        artifact: "requirements/entity-model.json"
+        condition: "entities.length > 0"
+
+      - id: "S1-003"
+        name: "Use cases defined"
+        description: "At least one use case defined"
+        type: artifact-content
+        artifact: "requirements/use-cases.json"
+        condition: "use_cases.length > 0"
+
+      - id: "S1-004"
+        name: "Business rules extracted"
+        description: "Business rules linked to entities"
+        type: artifact-content
+        artifact: "requirements/business-rules.json"
+        condition: "rules.length > 0"
+
+  # ── Stage 2: Service Requirements ──
+  - stage: "service-requirements"
+    owner: process
+    checks:
+      - id: "S2-001"
+        name: "Audiences identified"
+        description: "At least one audience defined with roles"
+        type: artifact-content
+        artifact: "requirements/audiences.json"
+        condition: "audiences.length > 0"
+
+      - id: "S2-002"
+        name: "Sitemap produced"
+        description: "Sitemap with pages and view types"
+        type: artifact-exists
+        artifact: "requirements/sitemap.json"
+
+      - id: "S2-003"
+        name: "Variant determined"
+        description: "Variant derived from audience/sitemap analysis"
+        type: artifact-content
+        artifact: "requirements/sitemap.json"
+        condition: "variant in ['single-public', 'single-internal', 'dual']"
+
+  # ── Stage 3: Data Model ──
+  - stage: "data-model"
+    owner: process
+    checks:
+      - id: "S3-001"
+        name: "Entity model complete"
+        description: "All BRD entities represented in data model"
+        type: cross-reference
+        source: "requirements/brd.md"
+        target: "requirements/entity-model.json"
+        condition: "every BRD entity has a data model entry"
+
+      - id: "S3-002"
+        name: "Relationships defined"
+        description: "All foreign key relationships specified"
+        type: artifact-content
+        artifact: "requirements/entity-model.json"
+        condition: "reference fields have ref_entity and ref_on_delete"
+
+      - id: "S3-003"
+        name: "Business rules mapped"
+        description: "State machine and validation rules linked to entities"
+        type: cross-reference
+        source: "requirements/business-rules.json"
+        target: "requirements/entity-model.json"
+
+  # ── Stage 4: API Specification ──
+  - stage: "api-specification"
+    owner: process
+    checks:
+      - id: "S4-001"
+        name: "Build Specification produced"
+        description: "API section of Build Spec has operations"
+        type: artifact-content
+        artifact: ".factory/build-spec.yaml"
+        condition: "api.resources.length > 0"
+
+      - id: "S4-002"
+        name: "Use case coverage"
+        description: "Every use case has at least one API operation"
+        type: cross-reference
+        source: "requirements/use-cases.json"
+        target: ".factory/build-spec.yaml"
+        condition: "every UC referenced in at least one operation.use_cases"
+
+      - id: "S4-003"
+        name: "Entity CRUD coverage"
+        description: "Every primary entity has at least list and get operations"
+        type: cross-reference
+        source: "requirements/entity-model.json"
+        target: ".factory/build-spec.yaml"
+
+      - id: "S4-004"
+        name: "Auth requirements specified"
+        description: "Every operation has auth and audience defined"
+        type: artifact-content
+        artifact: ".factory/build-spec.yaml"
+        condition: "every operation has auth and audience fields"
+
+      - id: "S4-005"
+        name: "Business rules linked"
+        description: "State machine and validation operations reference their rules"
+        type: artifact-content
+        artifact: ".factory/build-spec.yaml"
+        condition: "operations with state transitions reference state machine rule"
+
+      - id: "S4-006"
+        name: "Field-to-column traceability"
+        description: >
+          Every field name in API request/response shapes traces to a column
+          in the data model. Shortened or renamed fields (e.g., 'status' for
+          'application_status') are rejected — they cause SQL column name
+          mismatches that compile but fail at runtime.
+        type: cross-reference
+        source: ".factory/build-spec.yaml (api.resources.operations.*.request + response)"
+        target: "requirements/entity-model.json"
+        condition: "every field maps to a data model column under the declared naming convention"
+        severity: error
+
+      - id: "S4-007"
+        name: "Enum value alignment"
+        description: >
+          Every enumerated field in the API spec has values exactly matching the
+          data model constraints. If the data model defines CHECK (col IN ('a','b','c')),
+          the spec's allowed values must be exactly ['a','b','c'].
+        type: cross-reference
+        source: ".factory/build-spec.yaml (fields with allowed_values)"
+        target: "requirements/entity-model.json (constraint definitions)"
+        condition: "exact set equality between spec enum values and data model constraints"
+        severity: error
+
+      - id: "S4-008"
+        name: "Response shape consistency"
+        description: "All paginated list operations use the same envelope shape"
+        type: artifact-content
+        artifact: ".factory/build-spec.yaml"
+        condition: "all operations with response_type=paginated use identical envelope field names"
+        severity: warning
+
+  # ── Stage 5: UI Specification ──
+  - stage: "ui-specification"
+    owner: process
+    checks:
+      - id: "S5-001"
+        name: "UI pages defined"
+        description: "At least one page per audience"
+        type: artifact-content
+        artifact: ".factory/build-spec.yaml"
+        condition: "ui.pages.length > 0"
+
+      - id: "S5-002"
+        name: "API reachability"
+        description: "Every API operation is referenced by at least one page data_source"
+        type: cross-reference
+        source: ".factory/build-spec.yaml (api.resources.operations)"
+        target: ".factory/build-spec.yaml (ui.pages.data_sources)"
+
+      - id: "S5-003"
+        name: "Navigation complete"
+        description: "Every non-error page has nav_section and nav_order"
+        type: artifact-content
+        artifact: ".factory/build-spec.yaml"
+        condition: "pages with page_type not in [error, login] have nav_section"
+
+
+# ─────────────────────────────────────────────────────────────────────────────
+# SCAFFOLDING GATES
+# ─────────────────────────────────────────────────────────────────────────────
+# Checks run by the verification harness after each scaffolded feature.
+# These use the adapter's declared build commands.
+#
+scaffolding_gates:
+  owner: adapter                    # Adapter declares the commands; harness runs them
+
+  # After each API feature (one operation scaffolded)
+  per_api_feature:
+    - id: "SF-API-001"
+      name: "Compiles"
+      type: command
+      command: "adapter.commands.compile"
+      must_pass: true
+
+    - id: "SF-API-002"
+      name: "Tests pass"
+      type: command
+      command: "adapter.commands.test"
+      must_pass: true
+
+    - id: "SF-API-003"
+      name: "Files created"
+      type: file-check
+      description: "Expected files exist per adapter directory conventions"
+      files:
+        - "adapter.directory_conventions.api_service (resolved)"
+        - "adapter.directory_conventions.api_controller (resolved)"
+        - "adapter.directory_conventions.api_route (resolved)"
+        - "adapter.directory_conventions.api_test (resolved)"
+
+    - id: "SF-API-004"
+      name: "SQL column names match DDL"
+      description: >
+        Extract SQL string literals from the generated service file. Parse
+        column references from SELECT, WHERE, ORDER BY, INSERT INTO, UPDATE SET,
+        GROUP BY, RETURNING, ON CONFLICT clauses. Verify each referenced column
+        exists in the corresponding DDL migration. Common failures: camelCase in
+        SQL ('applicationStatus' vs 'application_status'), shortened names
+        ('status' vs 'application_status').
+      type: cross-reference
+      source: "adapter.directory_conventions.api_service (resolved for current feature)"
+      target: "adapter.directory_conventions.migration (DDL column definitions)"
+      must_pass: true
+
+    - id: "SF-API-005"
+      name: "Shared types used — no local type divergence"
+      description: >
+        The generated service file imports entity types from the shared types
+        module. It does not define local types with property names that differ
+        from the shared type or the DDL columns.
+      type: grep-absent
+      pattern: "^export (interface|type) \\w+Row "
+      scope: "adapter.directory_conventions.api_service (resolved for current feature)"
+      must_pass: true
+
+  # After each UI feature (one page scaffolded)
+  per_ui_feature:
+    - id: "SF-UI-001"
+      name: "Compiles"
+      type: command
+      command: "adapter.commands.compile"
+      must_pass: true
+
+    - id: "SF-UI-002"
+      name: "Tests pass"
+      type: command
+      command: "adapter.commands.test"
+      must_pass: true
+
+    - id: "SF-UI-003"
+      name: "Files created"
+      type: file-check
+      files:
+        - "adapter.directory_conventions.ui_view (resolved)"
+        - "adapter.directory_conventions.ui_test (resolved)"
+
+  # After seed/fixture generation (6b-seed sub-step)
+  per_data_seed:
+    - id: "SF-SEED-001"
+      name: "Seed file exists"
+      type: file-check
+      description: "Reference data seed file exists per adapter conventions"
+      files:
+        - "adapter.directory_conventions.seed (resolved for 'reference-data')"
+
+    - id: "SF-SEED-002"
+      name: "Fixture file exists"
+      type: file-check
+      description: "Development fixture file exists"
+      files:
+        - "adapter.directory_conventions.seed (resolved for 'dev-fixtures')"
+
+    - id: "SF-SEED-003"
+      name: "Fixture module exists"
+      type: file-check
+      description: "Shared test fixture factory module exists"
+      files:
+        - "adapter.directory_conventions.fixture_module"
+
+    - id: "SF-SEED-004"
+      name: "Seed SQL is valid"
+      type: command
+      command: "adapter.commands.seed"
+      description: "Seed SQL executes without errors against the migrated schema"
+
+  # Retry policy
+  retry:
+    max_retries: 3                  # Per feature
+    strategy: "feed-error-back"     # On failure: send compile/test error to agent, retry
+
+
+# ─────────────────────────────────────────────────────────────────────────────
+# FINAL VALIDATION
+# ─────────────────────────────────────────────────────────────────────────────
+# Comprehensive checks run after all scaffolding, configuration, and
+# trimming are complete. Both process and adapter checks.
+#
+final_validation:
+
+  # Process-owned checks (cross-stage consistency)
+  process_checks:
+    - id: "FV-P-001"
+      name: "Use case to code mapping"
+      description: "Every UC maps to at least one generated API file"
+      type: cross-reference
+
+    - id: "FV-P-002"
+      name: "Test case coverage"
+      description: "Every TC maps to at least one test file"
+      type: cross-reference
+
+    - id: "FV-P-003"
+      name: "Entity to migration mapping"
+      description: "Every data model entity has a corresponding migration"
+      type: cross-reference
+
+    - id: "FV-P-004"
+      name: "Business rule implementation"
+      description: "Every business rule referenced in Build Spec is implemented in code"
+      type: cross-reference
+
+    - id: "FV-P-005"
+      name: "No unfilled placeholders"
+      description: "No {{...}} placeholder patterns remain in source files"
+      type: grep-absent
+      pattern: "\\{\\{[A-Z_]+\\}\\}"
+      scope: "."
+      exclude: ["*.example", "*.schema.*", ".factory/"]
+
+    - id: "FV-P-006"
+      name: "Reference entities have seed data"
+      description: "Every entity with hydration.type=reference has INSERT entries in seed file"
+      type: cross-reference
+
+    - id: "FV-P-007"
+      name: "State machine fixture coverage"
+      description: "Every entity with a state-machine business rule has fixtures covering all states"
+      type: cross-reference
+
+    - id: "FV-P-008"
+      name: "SQL column name alignment"
+      description: >
+        Across all generated service files: every column name referenced in SQL
+        exists in the corresponding DDL migration table. Produces a structured
+        JSON evidence artifact with per-service verification results.
+      type: cross-reference
+      evidence_artifact: ".factory/verification/sql-column-alignment.json"
+
+    - id: "FV-P-009"
+      name: "Enum/union value alignment"
+      description: >
+        Every TypeScript union type or Zod enum that corresponds to a DDL CHECK
+        constraint has an identical value set. Values present in DDL but absent
+        in the type (or vice versa) are failures. Produces structured evidence.
+      type: cross-reference
+      evidence_artifact: ".factory/verification/enum-value-alignment.json"
+
+    - id: "FV-P-010"
+      name: "Response shape alignment"
+      description: >
+        Pagination wrappers are consistent across shared types, service return
+        types, and controller response serialization. A service returning
+        { data, total } while the controller sends { items, count } is a failure.
+      type: cross-reference
+      evidence_artifact: ".factory/verification/response-shape-alignment.json"
+
+    - id: "FV-P-011"
+      name: "DDL column validation test coverage"
+      description: >
+        At least one DDL column validation test exists per generated service
+        file. A shared DDL parsing utility exists. Tests assert against DDL
+        column names read at test time, not hardcoded values.
+      type: file-check
+
+  # Adapter-owned checks (build, test, lint, invariants)
+  adapter_checks:
+    - id: "FV-A-001"
+      name: "Full build"
+      type: command
+      command: "adapter.commands.compile"
+
+    - id: "FV-A-002"
+      name: "All tests pass"
+      type: command
+      command: "adapter.commands.test"
+
+    - id: "FV-A-003"
+      name: "Lint clean"
+      type: command
+      command: "adapter.commands.lint"
+
+    - id: "FV-A-004"
+      name: "Type check"
+      type: command
+      command: "adapter.commands.type_check"
+
+    - id: "FV-A-005"
+      name: "Format check"
+      type: command
+      command: "adapter.commands.format_check"
+
+    - id: "FV-A-006"
+      name: "Architecture invariants"
+      description: "All adapter-declared invariants pass"
+      type: invariant-check
+      source: "adapter.validation.invariants"

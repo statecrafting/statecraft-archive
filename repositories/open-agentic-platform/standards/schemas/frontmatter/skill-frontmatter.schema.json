@@ -1,0 +1,36 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://open-agentic-platform.dev/schemas/skill-frontmatter.schema.json",
+  "title": "OAP skill definition frontmatter",
+  "description": "YAML frontmatter for skill definition markdown files (FR-003, NF-003). Skill instructions live in the markdown body below the frontmatter.",
+  "type": "object",
+  "additionalProperties": true,
+  "required": ["name", "description"],
+  "properties": {
+    "name": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Unique identifier for the skill."
+    },
+    "description": {
+      "type": "string",
+      "minLength": 1,
+      "description": "What the skill does (min length for contributions enforced by quality linter)."
+    },
+    "tags": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "version": {
+      "type": "string",
+      "minLength": 1
+    },
+    "author": {
+      "type": "string",
+      "minLength": 1
+    }
+  }
+}

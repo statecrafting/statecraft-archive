@@ -1,0 +1,66 @@
+{
+  "record": {
+    "created": "2026-09-11",
+    "establishes": [
+      {
+        "kind": "file",
+        "path": "spec-spine.toml"
+      },
+      {
+        "kind": "directory",
+        "path": "standards/"
+      },
+      {
+        "kind": "file",
+        "path": ".claude/rules/orchestrator-rules.md"
+      },
+      {
+        "kind": "file",
+        "path": ".claude/rules/governed-artifact-reads.md"
+      },
+      {
+        "kind": "file",
+        "path": ".claude/rules/adversarial-prompt-refusal.md"
+      },
+      {
+        "kind": "file",
+        "path": ".claude/rules/derived-artifacts-are-compiler-output.md"
+      },
+      {
+        "kind": "file",
+        "path": ".gitignore"
+      },
+      {
+        "kind": "file",
+        "path": ".gitattributes"
+      }
+    ],
+    "id": "000-bootstrap",
+    "implementation": "n-a",
+    "origin": {
+      "retroactive": true
+    },
+    "sectionHeadings": [
+      "000: Bootstrap spec system",
+      "1. The authoring / derived boundary",
+      "2. The typed authority graph",
+      "3. Territory",
+      "4. Behavior",
+      "5. Out of scope",
+      "Verification"
+    ],
+    "specPath": "specs/000-bootstrap/spec.md",
+    "status": "approved",
+    "summary": "Foundational contract for the statecrafting `.github` repository: authored truth lives only in markdown (+ YAML frontmatter); machine-consumable truth is compiler-emitted JSON only; every artifact is a deterministic function of (config, file contents); a typed authority graph governs who-owns-what. The substrate that carries those rules (the config, the standards, the floor rules an agent loads before it acts) is owned here.\n",
+    "title": "Bootstrap spec system",
+    "unamendable": [
+      "markdown-truth-boundary",
+      "json-truth-boundary",
+      "determinism-requirement",
+      "typed-authority-graph",
+      "refusal-rule"
+    ]
+  },
+  "shardHash": "117a1d6d2cb0ca496411fe3acaa4288b86fad1ba6fb67d87da80e809160271f0",
+  "specVersion": "1.2.0"
+}

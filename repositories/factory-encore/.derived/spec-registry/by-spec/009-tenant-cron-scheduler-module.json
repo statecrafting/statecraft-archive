@@ -1,0 +1,71 @@
+{
+  "record": {
+    "codeAliases": [
+      "CRON_SCHEDULER_MODULE",
+      "TASK_SCHEDULES"
+    ],
+    "created": "2026-07-08",
+    "dependsOn": [
+      "001-module-manifest-schema",
+      "002-encore-generator-core",
+      "003-user-management-module",
+      "006-factory-schema-lockstep",
+      "008-data-redis-promotion-dual-composition"
+    ],
+    "domain": "generator",
+    "establishes": [
+      {
+        "kind": "file",
+        "path": "adapters/acme-vue-encore/modules/cron/"
+      }
+    ],
+    "extends": [
+      {
+        "nature": "additive",
+        "spec": "006-factory-schema-lockstep",
+        "unit": {
+          "kind": "file",
+          "path": "adapters/acme-vue-encore/scripts/lockstep/baseline.lock.json"
+        }
+      },
+      {
+        "nature": "additive",
+        "spec": "002-encore-generator-core",
+        "unit": {
+          "kind": "file",
+          "path": "adapters/acme-vue-encore/scripts/lib/born-with.ts"
+        }
+      }
+    ],
+    "id": "009-tenant-cron-scheduler-module",
+    "implementation": "complete",
+    "kind": "feature",
+    "owner": "bart",
+    "risk": "medium",
+    "sectionHeadings": [
+      "009. Tenant self-hosted cron: the in-app scheduler module",
+      "1. Purpose",
+      "2. Territory",
+      "3. The store (shared app database, INV-11)",
+      "FR-001, task_schedules table",
+      "4. The service",
+      "FR-002, service directory",
+      "FR-003, the lock and the scale tiers",
+      "FR-004, the polling daemon",
+      "FR-005, productionized daemon start (no hardcoded loopback)",
+      "FR-006, manifest v2 declaration",
+      "5. Registration",
+      "FR-007, explicit-registration seam (ships now)",
+      "FR-008, auto-extraction bridge (staged residual)",
+      "6. Registration surfaces (catalog + lockstep)",
+      "7. Acceptance criteria",
+      "8. Out of scope"
+    ],
+    "specPath": "specs/009-tenant-cron-scheduler-module/spec.md",
+    "status": "approved",
+    "summary": "The adapter-side companion to OAP spec 230. Encore's CronJob primitive is a no-op on self-hosted deploys (there is no Encore Cloud scheduler), so every tenant CronJob is silent. This module installs an in-app scheduler service into the generated Encore app: a task_schedules store in the base app's single SQLDatabase(\"app\") (INV-11, no per-service db), register/list endpoints, and a polling daemon that fires due jobs against the app's own endpoints. The daemon fires each due job exactly once across replicas via a lock tiered on the tenant's create-project scale choice: a Postgres atomic claim by default (small scale, zero extra infra), a Redis distributed lock when the typed REDIS_HOST connection is configured (large scale). One code path, tier auto-detected by the baseline lib/redis client (REDIS_HOST/REDIS_USER/ REDIS_PASSWORD; there is no REDIS_URL). The module therefore requires data-postgres (always) and optionally peers with data-redis (large tier only). Distinct from stagecraft's own control-plane sweepers (OAP spec 224), which stay on per-sweeper K8s CronJobs.\n",
+    "title": "Tenant self-hosted cron: the in-app scheduler module (postgres small-scale / +redis large-scale)"
+  },
+  "shardHash": "3bef0d3f38b359aa59c69110a33a531c104adfb9c199f85bdb76a5c1984eb7ad",
+  "specVersion": "1.1.0"
+}

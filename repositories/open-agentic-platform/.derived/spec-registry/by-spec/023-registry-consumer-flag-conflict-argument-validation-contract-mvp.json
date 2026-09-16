@@ -1,0 +1,40 @@
+{
+  "record": {
+    "authors": [
+      "open-agentic-platform"
+    ],
+    "created": "2026-03-22",
+    "domain": "tooling",
+    "extends": [
+      {
+        "nature": "additive",
+        "spec": "002-registry-consumer-mvp"
+      }
+    ],
+    "extraFrontmatter": {
+      "language": "en"
+    },
+    "featureBranch": "023-registry-consumer-flag-conflict-argument-validation-contract-mvp",
+    "id": "023-registry-consumer-flag-conflict-argument-validation-contract-mvp",
+    "implementation": "complete",
+    "kind": "platform-delivery",
+    "refines": [
+      {
+        "aspect": "contract-tests"
+      }
+    ],
+    "sectionHeadings": [
+      "Feature Specification: Flag-conflict and argument-validation contract",
+      "Purpose",
+      "Requirements",
+      "Out of scope"
+    ],
+    "specPath": "specs/023-registry-consumer-flag-conflict-argument-validation-contract-mvp/spec.md",
+    "status": "superseded",
+    "summary": "Lock argument-layer behavior contracts for registry-consumer by asserting exact exit codes and stderr transcripts for flag conflicts, missing required args, and invalid enum values.\n",
+    "supersededBy": "217-spec-spine-engine-swap-collapse",
+    "title": "Registry consumer flag-conflict and argument-validation contract MVP"
+  },
+  "shardHash": "326f49e510472f87bd1a167af3543c9fbf756fed848717150a1fe6717069b810",
+  "specVersion": "1.1.0"
+}

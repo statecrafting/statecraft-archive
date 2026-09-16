@@ -1,0 +1,11 @@
+{
+  "package": {
+    "kind": "npm-package",
+    "name": "oap-ctl",
+    "path": "product/packages/oap-ctl",
+    "specRef": "085-remote-control-cli",
+    "version": "0.1.0"
+  },
+  "schemaVersion": "1.1.0",
+  "shardHash": "8ea49a9cbe34f8f180b88f2e7b2ca74fc6bb312b8f6a11aaa69b8d86c0ca2bc7"
+}

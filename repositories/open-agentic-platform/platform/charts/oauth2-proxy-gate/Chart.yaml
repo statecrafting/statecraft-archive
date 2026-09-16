@@ -1,0 +1,18 @@
+# Spec: 137-tenant-environment-access-gates
+#
+# Helm chart that renders a per-environment oauth2-proxy gate in front
+# of a tenant Ingress. One release per gated environment (per Decision 1
+# in spec 137 §Clarifications). The gate authenticates against Rauthy
+# via OIDC; password login is refused by the Rauthy client side
+# (spec 137 FR-004); allowed_emails / allowed_domains is enforced at
+# the oauth2-proxy layer as defense-in-depth (spec 137 FR-005).
+#
+# deployd-api-rs is the only intended caller — it owns the dual-release
+# atomicity contract (spec 137 FR-003): tenant chart + gate chart go up
+# together and roll back together.
+apiVersion: v2
+name: oauth2-proxy-gate
+description: Per-environment passwordless OIDC gate (oauth2-proxy + Rauthy) for a tenant Ingress (spec 137).
+type: application
+version: 0.1.0
+appVersion: "7.7.0"

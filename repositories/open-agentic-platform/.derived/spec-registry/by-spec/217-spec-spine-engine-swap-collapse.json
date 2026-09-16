@@ -1,0 +1,139 @@
+{
+  "record": {
+    "amends": [
+      "003-feature-lifecycle-mvp",
+      "039-feature-id-reconciliation",
+      "091-registry-enrichment",
+      "101-codebase-index-mvp",
+      "102-governed-excellence",
+      "103-init-protocol-governed-reads",
+      "118-workflow-spec-traceability",
+      "127-spec-code-coupling-gate",
+      "128-spec-lint-default-fail-on-warn",
+      "129-granular-package-oap-metadata",
+      "130-spec-coupling-primary-owner",
+      "132-constitutional-invariant-freeze",
+      "147-spec-kind-grammar",
+      "152-path-co-authority",
+      "154-logical-unit-ownership-grammar",
+      "155-logical-unit-resolution-semantics",
+      "156-references-edge-provenance-grammar",
+      "159-v004-lint-fixture-exemption",
+      "161-knowledge-requirements-provenance-emission",
+      "179-domain-frontmatter-field",
+      "182-claude-skills-migration",
+      "184-claude-shared-config-governance",
+      "188-derived-index-merge-serialization"
+    ],
+    "authors": [
+      "open-agentic-platform"
+    ],
+    "codeAliases": [
+      "SPEC_SPINE_ENGINE_SWAP_COLLAPSE"
+    ],
+    "created": "2026-06-15",
+    "dependsOn": [
+      "216-spec-spine-library-grammar-adoption",
+      "130-spec-coupling-primary-owner",
+      "133-amends-aware-coupling-gate",
+      "154-logical-unit-ownership-grammar",
+      "155-logical-unit-resolution-semantics",
+      "101-codebase-index-mvp",
+      "127-spec-code-coupling-gate",
+      "152-path-co-authority",
+      "181-registry-consumer-unit-grammar-authority"
+    ],
+    "domain": "tooling",
+    "establishes": [
+      {
+        "kind": "file",
+        "path": "spec-spine.toml"
+      }
+    ],
+    "extends": [
+      {
+        "nature": "additive",
+        "spec": "034-featuregraph-registry-scanner-fix",
+        "unit": {
+          "kind": "file",
+          "path": "crates/featuregraph/tests/golden/features_graph.json"
+        }
+      }
+    ],
+    "extraFrontmatter": {
+      "approved": "2026-06-24",
+      "language": "en"
+    },
+    "featureBranch": "feat/217-spec-spine-engine-swap-collapse",
+    "id": "217-spec-spine-engine-swap-collapse",
+    "implementation": "complete",
+    "kind": "migration",
+    "sectionHeadings": [
+      "Feature Specification: Spec-Spine Engine Swap and Collapse",
+      "1. Overview",
+      "1.5 Phase 0 dry-run findings: the three-track split (2026-06-17)",
+      "Policy decisions (resolve the cross-repo boundary)",
+      "1.6 Phase-1 seam correction (2026-06-18): the overlay keeps OAP types, it does not re-export library primitives",
+      "1.7 Phase-1 lint seam correction (2026-06-18): library-lint gating defers to the wave",
+      "1.8 Phase-2 dependency-resolution reality and the library pin (2026-06-18)",
+      "2. Phased Delivery Plan",
+      "Phase 0: Prerequisites and the config gate",
+      "Phase 1: Build the OAP overlay layer (no deletion yet)",
+      "Phase 2: Repoint the 8 consumer crates to the library",
+      "Phase 3: Delete the generic engine",
+      "Phase 4: Rewire call sites",
+      "Phase 5: Corpus governance wave",
+      "Phase 6: Verify",
+      "3. Functional Requirements Summary",
+      "4. Acceptance Criteria Summary",
+      "5. Authority-Preservation Gate (Blast Radius)",
+      "6. Supersession and Amendment Wave",
+      "6.1 Full supersession by spec 217",
+      "6.2 Amendment (repoint to library/overlay; artifact or workflow survives)",
+      "6.3 Minor amendment (binary name change only)",
+      "6.4 Bulk lifecycle migration: 003-031 registry-consumer contract series",
+      "6.5 Implementation-PR reconciliation (empirically derived, 2026-06-18)",
+      "7. Coupling: How Spec 217's Own Edits Are Coupling-Clean",
+      "8. Success Criteria"
+    ],
+    "specPath": "specs/217-spec-spine-engine-swap-collapse/spec.md",
+    "status": "approved",
+    "summary": "Delete OAP's in-tree generic spec-spine engine (spec-compiler, registry-consumer, codebase-indexer, spec-code-coupling-check, and the generic half of spec-lint) and replace it with the published external spec-spine library (spec-spine-types, spec-spine-core, spec-spine-cli). OAP retains only its overlay: the 16-kind enum, shape/category, compliance, factory/OWASP machinery, capability/registry/profile, statecraft:// provenance, and the OAP-domain lint codes. The engine swap is mechanical and corpus-governance work, not a research problem: the library compiled OAP's full 217-spec corpus with zero errors on 2026-06-15. A supersession and amendment wave retires the establishing specs for the deleted crates and repoints the surviving overlay specs to the library seam. Done when OAP's own coupling gate is spec-spine couple (green in CI), compile/ lint/index run via the library, and zero generic engine code remains in-tree.\n",
+    "supersedes": [
+      "001-spec-compiler-mvp",
+      "002-registry-consumer-mvp",
+      "006-conformance-lint-mvp",
+      "133-amends-aware-coupling-gate",
+      "176-amends-aware-section-satisfaction-parity",
+      "181-registry-consumer-unit-grammar-authority",
+      "007-registry-consumer-status-report-mvp",
+      "008-registry-consumer-status-report-json-mvp",
+      "009-registry-consumer-status-report-nonzero-mvp",
+      "010-registry-consumer-status-report-json-contract-mvp",
+      "011-registry-consumer-status-report-status-filter-mvp",
+      "012-registry-consumer-list-json-mvp",
+      "013-registry-consumer-show-json-mvp",
+      "014-registry-consumer-show-compact-json-mvp",
+      "015-registry-consumer-list-compact-json-mvp",
+      "016-registry-consumer-status-report-compact-json-mvp",
+      "017-registry-consumer-shared-json-serialization-helper-mvp",
+      "018-registry-consumer-list-show-json-contract-mvp",
+      "019-registry-consumer-readme-examples-contract-mvp",
+      "020-registry-consumer-error-contract-mvp",
+      "021-registry-consumer-field-shape-invariants-contract-mvp",
+      "022-registry-consumer-help-usage-contract-mvp",
+      "023-registry-consumer-flag-conflict-argument-validation-contract-mvp",
+      "024-registry-consumer-version-banner-contract-mvp",
+      "025-registry-consumer-default-path-contract-mvp",
+      "026-registry-consumer-allow-invalid-contract-mvp",
+      "027-registry-consumer-sorting-order-contract-mvp",
+      "028-registry-consumer-channel-discipline-contract-mvp",
+      "029-registry-consumer-contract-governance-gate-mvp",
+      "030-registry-consumer-internal-output-exit-refactor-mvp",
+      "031-registry-consumer-list-ids-only-contract-mvp"
+    ],
+    "title": "Spec-Spine Engine Swap and Collapse: replace OAP's in-tree generic engine with the published spec-spine library"
+  },
+  "shardHash": "e9cec163796c6f2aad6d00f068d7acd5fc6851b80aef85ccd37c42faa53e691d",
+  "specVersion": "1.1.0"
+}

@@ -1,0 +1,35 @@
+# mirrord config — local deployd-api (Rust/axum) against Hetzner cluster.
+#
+# Run:  KUBECONFIG=platform/infra/hetzner/kubeconfig \
+#         mirrord exec -f platform/infra/hetzner/mirrord/deployd-api.yaml -- \
+#         cargo run --manifest-path platform/services/deployd-api-rs/Cargo.toml
+#
+# Traffic to https://deploy.${DOMAIN} is stolen into the local axum process.
+# The process authenticates to the K8s API using the pod's service account
+# token (mounted at /var/run/secrets/kubernetes.io/serviceaccount/), so Helm
+# releases and Deployment reconciliation run with the same RBAC as the pod.
+target:
+  path: deployment/deployd-api
+  namespace: deployd-system
+
+feature:
+  network:
+    incoming: steal
+    outgoing: true
+    dns: true
+
+  fs:
+    # Local by default so hiqlite writes its raft-SQLite dir on the laptop —
+    # we do NOT want to touch the pod's live hiqlite files (locked + stateful).
+    # Overrides expose the service-account token and any file-backed secrets
+    # so the `kube` crate can auth to the cluster's API server.
+    mode: localwithoverrides
+    read_only:
+      - "^/var/run/secrets/kubernetes\\.io(/.*)?$"
+      - "^/mnt/secrets-store(/.*)?$"
+
+  # Pull deployd-api-secrets (HIQLITE_SECRET_*, OIDC_*, KUBERNETES_SERVICE_HOST,
+  # KUBERNETES_SERVICE_PORT, ...) into the local process.
+  env: true
+
+telemetry: false

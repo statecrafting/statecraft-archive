@@ -1,0 +1,55 @@
+{
+  "record": {
+    "created": "2026-07-14",
+    "dependsOn": [
+      "000-bootstrap"
+    ],
+    "establishes": [
+      {
+        "kind": "file",
+        "path": "package.json"
+      },
+      {
+        "kind": "file",
+        "path": "react-router.config.ts"
+      },
+      {
+        "kind": "file",
+        "path": "vite.config.ts"
+      },
+      {
+        "kind": "directory",
+        "path": "app/"
+      },
+      {
+        "kind": "directory",
+        "path": "public/"
+      },
+      {
+        "kind": "directory",
+        "path": "scripts/"
+      },
+      {
+        "kind": "file",
+        "path": ".github/workflows/deploy.yml"
+      }
+    ],
+    "id": "001-site-scaffold",
+    "implementation": "complete",
+    "sectionHeadings": [
+      "001: Site scaffold",
+      "1. Purpose",
+      "2. Harvest source (requires operator-granted read access)",
+      "3. Behavior",
+      "4. Acceptance",
+      "5. Out of scope",
+      "6. Status (2026-07-14): complete, live at https://statecraft.ing"
+    ],
+    "specPath": "specs/001-site-scaffold/spec.md",
+    "status": "approved",
+    "summary": "The marketing and docs site, built as a fully static React Router v7 app (framework mode, prerendered, no SSR at runtime) deployed to GitHub Pages under statecraft.ing. Amended 2026-07-14: React Router v7 replaces the earlier Astro choice, harvesting the OAP-era statecraft web app (ecosystem content, the spec-registry viewer) and keeping the whole product family on one frontend stack. The registry viewer runs over build-time-baked shards from the public repos, so the site stays static and every claim stays checkable. The apex DNS cutover is authorized: the legacy control plane no longer owns the domain.\n",
+    "title": "statecraft.ing: React Router v7 static site, Pages deploy, apex cutover"
+  },
+  "shardHash": "682dd850ced9322c7a546df654d56d1e90c5bb2fe92cc6468d41bc96a09ae88a",
+  "specVersion": "1.2.0"
+}

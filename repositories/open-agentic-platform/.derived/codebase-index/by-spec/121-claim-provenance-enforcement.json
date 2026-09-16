@@ -1,0 +1,203 @@
+{
+  "diagnostics": {
+    "errors": [],
+    "warnings": [
+      {
+        "code": "W-002",
+        "message": "spec '121-claim-provenance-enforcement' file unit 'crates/provenance-validator/src/anchor.rs' does not exist",
+        "path": "crates/provenance-validator/src/anchor.rs"
+      },
+      {
+        "code": "W-002",
+        "message": "spec '121-claim-provenance-enforcement' file unit 'platform/services/statecraft/api/governance/provenancePolicy.ts' does not exist",
+        "path": "platform/services/statecraft/api/governance/provenancePolicy.ts"
+      },
+      {
+        "code": "W-002",
+        "message": "spec '121-claim-provenance-enforcement' file unit 'crates/factory-engine/src/stages/s1_business_requirements.rs' does not exist",
+        "path": "crates/factory-engine/src/stages/s1_business_requirements.rs"
+      },
+      {
+        "code": "W-002",
+        "message": "spec '121-claim-provenance-enforcement' file unit 'crates/factory-engine/skills/business-requirements-analyst.md' does not exist",
+        "path": "crates/factory-engine/skills/business-requirements-analyst.md"
+      },
+      {
+        "code": "W-002",
+        "message": "spec '121-claim-provenance-enforcement' file unit 'crates/factory-engine/skills/validate.md' does not exist",
+        "path": "crates/factory-engine/skills/validate.md"
+      }
+    ]
+  },
+  "mapping": {
+    "dependsOn": [
+      "075-factory-workflow-engine",
+      "091-registry-enrichment",
+      "118-workflow-spec-traceability",
+      "120-factory-extraction-stage"
+    ],
+    "implementingPaths": [
+      {
+        "path": "crates/factory-contracts/src/provenance.rs",
+        "source": "spec-edge"
+      },
+      {
+        "path": "crates/factory-engine/src/stages/quality_gates.rs",
+        "source": "spec-edge"
+      },
+      {
+        "path": "crates/provenance-validator",
+        "source": "manifest-metadata"
+      },
+      {
+        "path": "crates/provenance-validator/Cargo.toml",
+        "source": "spec-edge"
+      },
+      {
+        "path": "crates/provenance-validator/src/allowlist.rs",
+        "source": "spec-edge"
+      },
+      {
+        "path": "crates/provenance-validator/src/citation.rs",
+        "source": "spec-edge"
+      },
+      {
+        "path": "crates/provenance-validator/src/lib.rs",
+        "source": "spec-edge"
+      },
+      {
+        "path": "tools/oap/assumption-cascade-check",
+        "source": "manifest-metadata"
+      }
+    ],
+    "resolvedUnits": [
+      {
+        "locations": [
+          {
+            "file": "crates/factory-contracts/src/provenance.rs"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "file",
+          "path": "crates/factory-contracts/src/provenance.rs"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "crates/provenance-validator/Cargo.toml"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "file",
+          "path": "crates/provenance-validator/Cargo.toml"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "crates/provenance-validator/src/allowlist.rs"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "file",
+          "path": "crates/provenance-validator/src/allowlist.rs"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "crates/provenance-validator/src/citation.rs"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "file",
+          "path": "crates/provenance-validator/src/citation.rs"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "crates/provenance-validator/src/lib.rs"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "file",
+          "path": "crates/provenance-validator/src/lib.rs"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "crates/factory-engine/src/stages/quality_gates.rs"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "extends",
+        "unit": {
+          "kind": "file",
+          "path": "crates/factory-engine/src/stages/quality_gates.rs"
+        }
+      },
+      {
+        "locations": [],
+        "ownership": false,
+        "sourceField": "references",
+        "unit": {
+          "kind": "file",
+          "path": "crates/factory-engine/skills/business-requirements-analyst.md"
+        }
+      },
+      {
+        "locations": [],
+        "ownership": false,
+        "sourceField": "references",
+        "unit": {
+          "kind": "file",
+          "path": "crates/factory-engine/skills/validate.md"
+        }
+      },
+      {
+        "locations": [],
+        "ownership": false,
+        "sourceField": "references",
+        "unit": {
+          "kind": "file",
+          "path": "crates/factory-engine/src/stages/s1_business_requirements.rs"
+        }
+      },
+      {
+        "locations": [],
+        "ownership": false,
+        "sourceField": "references",
+        "unit": {
+          "kind": "file",
+          "path": "crates/provenance-validator/src/anchor.rs"
+        }
+      },
+      {
+        "locations": [],
+        "ownership": false,
+        "sourceField": "references",
+        "unit": {
+          "kind": "file",
+          "path": "platform/services/statecraft/api/governance/provenancePolicy.ts"
+        }
+      }
+    ],
+    "specId": "121-claim-provenance-enforcement",
+    "specStatus": "approved"
+  },
+  "schemaVersion": "1.1.0",
+  "shardHash": "39b2e8efc754516519b447f8f8de473226887ea0823c930ba17d9578e8463e05"
+}

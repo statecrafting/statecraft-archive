@@ -1,0 +1,333 @@
+# ============================================================================
+# Adapter Manifest: acme-vue-encore
+# ============================================================================
+# A neutral, technology-specific adapter: an Encore.ts backend with one or two
+# Vue 3 single-page apps (Pinia + PrimeVue), PostgreSQL via Encore SQLDatabase
+# (tagged-template SQL, no ORM), and OpenID Connect authentication via rauthy.
+#
+# Conformant to contract/schemas/adapter-manifest.schema.yaml (1.1.0).
+#
+# This adapter is the create-time home of the acme-vue-encore product: it ships
+# the deterministic generator (scripts/), the module catalog (modules/), and the
+# create-time orchestration (orchestration/). The generator clones the
+# template-encore lean baseline (see scaffold.source) and composes the requested
+# modules in ("lean baseline + compose"); identity is acme-vue-encore.
+# ============================================================================
+
+schema_version: "1.1.0"
+
+adapter:
+  name: "acme-vue-encore"
+  display_name: "Acme Vue + Encore (PrimeVue, rauthy)"
+  version: "0.1.0"
+  description: >
+    Builds an Encore.ts backend and one or two Vue 3 SPAs on PrimeVue, with
+    PostgreSQL and OpenID Connect authentication via rauthy. The generator
+    clones the template-encore lean baseline and composes optional modules per
+    Build Spec. Supports single and dual deployment topologies.
+
+stack:
+  language: "typescript"
+  runtime: "node-24"
+  backend:
+    framework: "encore-ts"
+    description: >
+      One Encore.ts application. Services are directories under apps/api
+      (for example lib, db, health, auth, gateway, web). Endpoints are declared
+      with api()/api.raw(); the auth handler populates getAuthData(). The gateway
+      service is the backend-for-frontend proxy in the dual topology.
+  frontend:
+    framework: "vue-3"
+    state_management: "pinia"
+    design_system: "primevue"
+    description: >
+      Vue 3 with the Composition API and script setup. PrimeVue components and
+      design tokens. Pinia stores, Vue Router 4. One SPA for a single
+      deployment, two for the dual topology.
+  database:
+    supported: ["postgresql"]
+    migration_tool: "encore-migrations"
+    orm: "none"
+
+capabilities:
+  dual_stack: true
+  bff_pattern: true
+  single_stack: true
+  session_auth: false
+  token_auth: true
+  api_key_auth: false
+  module_system: true
+  file_uploads: false
+  background_jobs: false
+  realtime: false
+  email_notifications: false
+  audit_logging: true
+  direct_sql: true
+  orm_based: false
+  api_proxy: true
+
+supported_auth:
+  - method: "oidc"
+    driver: "rauthy"
+    providers: ["rauthy"]
+    description: >
+      OpenID Connect via rauthy using the openid-client library. Authorization
+      code flow with PKCE (S256). Tokens are validated against the issuer JWKS;
+      the roles and groups claims map to application roles. RP-initiated logout
+      via the end_session_endpoint.
+  - method: "mock"
+    driver: "mock"
+    providers: []
+    description: "Built-in mock driver for development and test only."
+
+supported_session_stores:
+  - type: "postgresql"
+    description: >
+      Database-backed refresh-token rotation and revocation. Access tokens are
+      stateless JWTs carried in httpOnly cookies; the database stores only the
+      refresh-token records.
+
+commands:
+  install: "npm install"
+  compile: "npm run build"
+  test: "npm test && npm --prefix apps/api test"
+  lint: "npm run lint"
+  dev: "npm run dev"
+  format_check: "npm run format:check"
+  # apps/api is a standalone package excluded from the npm workspaces, so the
+  # workspace-wide typecheck/test must be paired with the apps/api ones.
+  type_check: "npm run typecheck && npm run typecheck:api"
+  feature_verify:
+    - "npm run typecheck:api"
+    - "npm test"
+
+directory_conventions:
+  # There is ONE Encore backend at apps/api; services are directories under it.
+  # The {stack} placeholder is the Vue SPA app (web | web-internal); the backend
+  # is always apps/api. Request/response types live in the service's types.ts and
+  # are validated by Encore's typed api() signatures (no separate schema layer).
+  api_service: "apps/api/{resource}/service.ts"
+  api_controller: "apps/api/{resource}/{resource}.ts"
+  api_route: "apps/api/{resource}/encore.service.ts"
+  api_model: "apps/api/{resource}/model.ts"
+  api_types: "apps/api/{resource}/types.ts"
+  api_test: "apps/api/{resource}/{resource}.test.ts"
+  api_middleware: "apps/api/lib/{name}.ts"
+  ui_view: "apps/{stack}/src/views/{PageName}View.vue"
+  ui_store: "apps/{stack}/src/stores/{resource}.store.ts"
+  ui_route_config: "apps/{stack}/src/router/index.ts"
+  ui_test: "apps/{stack}/src/views/{PageName}View.test.ts"
+  ui_component: "apps/{stack}/src/components/{Name}.vue"
+  migration: "apps/api/db/migrations/{n}_{name}.up.sql"
+  env_file: "apps/api/.env.example"
+
+patterns:
+  api:
+    service: "patterns/api/service.md"
+    controller: "patterns/api/endpoint.md"
+    route: "patterns/api/endpoint.md"
+    test: "patterns/api/test.md"
+    middleware: "patterns/api/authorization.md"
+    types: "patterns/api/types.md"
+  ui:
+    view: "patterns/ui/view.md"
+    state: "patterns/ui/state.md"
+    route: "patterns/ui/route.md"
+    test: "patterns/ui/test.md"
+    layout: "patterns/ui/layout.md"
+    component: "patterns/ui/component.md"
+  data:
+    migration: "patterns/data/migration.md"
+    query: "patterns/data/query.md"
+  page_types:
+    landing: "patterns/page-types/landing.md"
+    dashboard: "patterns/page-types/dashboard.md"
+    list: "patterns/page-types/list.md"
+    detail: "patterns/page-types/detail.md"
+    form: "patterns/page-types/form.md"
+    content: "patterns/page-types/content.md"
+    help: "patterns/page-types/help.md"
+    profile: "patterns/page-types/profile.md"
+    login: "patterns/page-types/login.md"
+
+agents:
+  api_scaffolder: "agents/api-scaffolder.md"
+  ui_scaffolder: "agents/ui-scaffolder.md"
+  data_scaffolder: "agents/data-scaffolder.md"
+  configurer: "agents/configurer.md"
+  trimmer: "agents/trimmer.md"
+  reviewer: "agents/reviewer.md"
+
+scaffold:
+  source:
+    kind: "upstream-git"
+    remote: "stagecraft-ing/template-encore"
+    default_ref: "main"
+  description: >
+    The base Encore.ts + Vue 3 (PrimeVue) + rauthy project: the template-encore
+    repository, a neutral single-author evolution of the upstream template (auth is
+    rauthy OIDC + mock; the design system is PrimeVue). The single generator
+    (scripts/setup-app.ts) and the dual generator (scripts/setup-dual-app.ts) emit
+    the scaffold. Create-eligibility is gated on publishing that repository under
+    the remote above; the conventions in this manifest are verified against the
+    tree locally.
+  # Baseline membership (coordinated with template-encore, the lean baseline):
+  #   core (ships IN the baseline apps/api): the lib, db, health, auth, gateway,
+  #     and web services, plus the security-core configuration. These are always
+  #     present; they are not composed.
+  #   composable extras: user-management (the app-managed role catalog + admin
+  #     views) and api-gateway (the connectivity-test view); data-postgres /
+  #     data-redis are declarative knobs. Which extras a profile ships BY DEFAULT
+  #     is declared once below in profiles[].modules (STRUCT-1 single authority,
+  #     read by scripts/setup-app.ts); a run can compose further extras via
+  #     --with. The prior variant-keyed scaffold.modules map was a second
+  #     declaration the generator never read; it has been removed.
+  setup_commands:
+    # apps/api is a standalone package (own lockfile, excluded from the npm
+    # workspaces), so it installs separately; generate-keys writes the dev RS256
+    # JWT signing keys the auth service needs (gitignored; production uses secrets).
+    - "npm install"
+    - "npm --prefix apps/api install"
+    - "npm --prefix apps/api run generate-keys"
+  entry_point: "scripts/setup-app.ts"
+  runtime: "node-24"
+  args_schema:
+    type: object
+    properties:
+      # setup-app.ts profiles only. "dual" is a topology, not a profile: it
+      # routes to scripts/setup-dual-app.ts (see dual_stack below), so it is
+      # intentionally NOT a --profile value here (STRUCT-3).
+      profile:
+        type: string
+        enum: ["minimal", "public", "internal"]
+      dest:
+        type: string
+      source:
+        type: string
+        description: >
+          The template-encore lean-baseline checkout the generator clones from.
+          Defaults to TEMPLATE_ENCORE_SOURCE or a sibling template-encore
+          checkout when omitted.
+      with:
+        type: array
+        items: { type: string }
+    required: ["profile", "dest"]
+  # Profiles map to the template generator: minimal/public/internal run
+  # scripts/setup-app.ts --profile <name> (optional --with <module>); dual runs
+  # scripts/setup-dual-app.ts. The dual generator copies the base (which already
+  # includes the gateway BFF service) and does not compose --with modules.
+  profiles:
+    - name: "minimal"
+      variant: "single"
+      auth_driver: "mock"
+      modules: []
+      default: true
+    - name: "public"
+      variant: "single-public"
+      auth_driver: "rauthy"
+      modules: []
+      default: false
+    - name: "internal"
+      variant: "single-internal"
+      auth_driver: "rauthy"
+      modules: ["user-management"]
+      default: false
+    - name: "dual"
+      variant: "dual"
+      auth_driver: "rauthy"
+      modules: []
+      default: false
+  emits:
+    - path: "apps/"
+      description: "Encore backend and the Vue SPA(s)."
+    - path: "template.json"
+      description: "Scaffold metadata."
+    - path: ".factory/pipeline-state.json"
+      description: "Seed pipeline state."
+
+governance:
+  max_tier: "tier2"
+  file_write_scope:
+    - "apps/**"
+    - "packages/**"
+    - "public/**"
+    - "internal/**"
+    - "package.json"
+    - ".env.*.example"
+  file_write_denied:
+    - ".env"
+    - "**/keys/**"
+    - "**/.git/**"
+    - "node_modules/**"
+  allowed_commands_from: "commands"
+  scaffold_execution:
+    entry_points_from:
+      - "scaffold.entry_point"
+      - "dual_stack.generator"
+    setup_commands_from: "scaffold.setup_commands"
+    isolation: "sandbox-required"
+  agents_from: "agents"
+
+validation:
+  invariants:
+    - id: "INV-001"
+      description: "No ORM imports; data access is raw tagged-template SQL only."
+      check:
+        type: grep-absent
+        pattern: "from ['\"](typeorm|prisma|sequelize|drizzle-orm)['\"]"
+        scope: "apps/"
+      severity: error
+    - id: "INV-002"
+      description: "No raw dynamic SQL; only tagged-template db queries (db.query`...`, db.exec`...`)."
+      check:
+        type: grep-absent
+        pattern: "db\\.(rawQuery|rawExec)\\("
+        scope: "apps/"
+      severity: error
+    - id: "INV-003"
+      description: "No console.log in shipped code."
+      check:
+        type: grep-absent
+        pattern: "console\\.log\\("
+        scope: "apps/"
+      severity: warning
+    - id: "INV-004"
+      description: "No explicit any types."
+      check:
+        type: grep-absent
+        pattern: ": any(\\b|\\[)"
+        scope: "apps/"
+      severity: warning
+    - id: "INV-005"
+      description: "Lint passes with zero warnings."
+      check:
+        type: command-succeeds
+        pattern: "npm run lint"
+        scope: "."
+      severity: error
+
+dual_stack:
+  generator: "scripts/setup-dual-app.ts"
+  audience_to_variant:
+    public: "public"
+    internal: "internal"
+  variants:
+    public:
+      dir: "public"
+      api: "apps/api"
+      web: "apps/web"
+      port_api: 4000
+      port_web: 5173
+      auth_driver: "rauthy"
+      env_example: "apps/api/.env.example"
+    internal:
+      dir: "internal"
+      api: "apps/api"
+      web: "apps/web-internal"
+      port_api: 4000
+      port_web: 5174
+      auth_driver: "rauthy"
+      env_example: ".env.internal.example"
+  data_access:
+    public: "proxy"
+    internal: "direct"

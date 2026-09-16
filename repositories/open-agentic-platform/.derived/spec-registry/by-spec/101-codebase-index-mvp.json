@@ -1,0 +1,71 @@
+{
+  "record": {
+    "amendmentRecord": "amended by spec 188 (2026-05-30, Phase 4a) — the narrow config-slice hash\nis RE-HOMED out of the broad index. It lived at `build.claudeConfigHash`\n(index schema 2.3.0, Phase 3); Phase 4a moves it to its own tracked file\n`.derived/codebase-index/config-hash.json` (schema config-hash.schema.json\n1.0.0) and bumps the index schema 2.3.0 → 3.0.0 (the field is removed; a\nmajor bump because it was required under `additionalProperties:false`).\n`compile` writes the file (self-validated, FR-09 parity); `check-config`\n(§2.4, FR-12) reads it. Behavior is bit-for-bit unchanged — same slice,\nsame hash, same PR-time blocking gate — only the storage location moved.\nThis leaves the broad `index.json` carrying nothing governed, dissolving\nthe cache/contract tension Phase 3 surfaced. Phase 4b (`.gitignore` the\nbroad index) is now IMPLEMENTED (spec 188, 2026-06-16): the broad\n`index.json` is gitignored and rebuilt on demand, never committed, so\nconcurrent PRs never collide on it (clean merge-queue auto-merge). This\nreverses SC-06 (below). See FR-12 and spec 188 §Phase 4.\n\namended by spec 188 (2026-05-30, Phase 3) — index freshness enforcement\nis re-homed. The broad `codebase-indexer check` (whole-index staleness,\nFR-10) drops from a required per-PR gate; PRs are no longer required to\ncarry a fresh broad `index.json`. The broad committed `index.json`\nbecomes a **best-effort regenerable cache** — its byte-freshness on\n`main` is no longer enforced. (A direct-push post-merge heal was\nspecified then **retired** in the same spec when the merge queue brought\nPR-required + signed-commits protection to `main`, which a bot push\ncannot satisfy; a report-only `cd-index-staleness-report.yml` surfaces\ndrift instead — see spec 188 FR-007.) A new narrow `codebase-indexer\ncheck-config` subcommand (§2.4) verifies a dedicated\n`build.claudeConfigHash` sub-hash over ONLY `.claude/settings.json` +\n`.mcp.json` (the spec 184 slice); it is the PR-time blocking gate that\npreserves spec 184's guarantee independently of the broad hash, and —\nbecause it depends only on those two files — it stays valid in a merge\nqueue. Schema bumped 2.2.0 → 2.3.0 (additive `build.claudeConfigHash`;\nre-homed and removed at 3.0.0 by Phase 4a, above). See FR-12.\n\namended by spec 182 (2026-05-26) — FR-08 and Layer 4 add\n`.claude/skills/**/SKILL.md` to the documented inventory inputs;\n`collect_input_files` in `tools/spec-spine/codebase-indexer/src/lib.rs`\nwalks `.claude/skills` alongside `.claude/{agents,commands,rules}`\n(union, not swap) so the indexer hashes the new skill surface\nduring and after the spec 182 migration.\n\nself-amends — §2.4 (2026-05-23) adds the `orphans` subcommand that prints the `traceability.orphanedSpecs` list from `.derived/codebase-index/index.json` to stdout (newline-delimited by default, `--json` for a JSON array). Closes the gap surfaced when `/init` users asked for the orphan list and only the count was rendered.\n\namended by spec 184 (2026-05-26) — `collect_input_files`\nadditionally hashes `.mcp.json` (project-root MCP server config)\nand `.claude/settings.json` (Claude Code shared settings:\npermissions, hooks, statusLine, env, model) when present.\nBoth are optional single-file inputs modeled on the workflow-\nallowlist pattern. Edits to either now trip the staleness gate,\nclosing the self-governance loop for the PostToolUse hook glob\nthat guards every other hashed input. Spec 184 establishes\nauthority over both files.\n\namended 2026-06-18 by spec 217 (engine-swap collapse): the in-tree codebase-indexer this spec established was deleted; the index producer is now spec-spine-core (`spec-spine index`), emitting per-unit shards. The codebase-indexer source units and monolithic index.json reference are stripped (paths deleted); spec 101 continues to govern the codebase-index contract via the surviving OAP overlay schema codebase-index-oap.schema.json.\n",
+    "codeAliases": [
+      "CODEBASE_INDEX"
+    ],
+    "created": "2026-04-14",
+    "dependsOn": [
+      "000-bootstrap-spec-system",
+      "001-spec-compiler-mvp",
+      "003-feature-lifecycle-mvp"
+    ],
+    "domain": "tooling",
+    "establishes": [
+      {
+        "kind": "file",
+        "path": "standards/schemas/spec-spine/codebase-index-oap.schema.json"
+      }
+    ],
+    "extraFrontmatter": {
+      "amended": "2026-06-18"
+    },
+    "id": "101-codebase-index-mvp",
+    "implementation": "complete",
+    "kind": "tooling",
+    "owner": "bart",
+    "risk": "low",
+    "sectionHeadings": [
+      "101 — Codebase Index MVP",
+      "1. Problem Statement",
+      "Why not just read the filesystem?",
+      "2. Solution",
+      "2.1 The Index as a Build Artifact",
+      "2.2 Four-Layer Schema",
+      "2.3 Traceability Convention",
+      "2.4 Indexer Implementation",
+      "2.5 CI Integration",
+      "2.6 Agent Orientation",
+      "3. Functional Requirements",
+      "FR-01: Manifest Parsing",
+      "FR-02: Package.json Parsing",
+      "FR-03: Spec Frontmatter Scanning",
+      "FR-04: Internal Dependency Graph",
+      "FR-05: Cross-Reference Engine",
+      "FR-06: Orphan Detection",
+      "FR-07: Factory Adapter Scanning",
+      "FR-08: Infrastructure Scanning",
+      "FR-09: JSON Schema Validation",
+      "FR-10: Staleness Check",
+      "FR-11: Markdown Rendering",
+      "FR-12: Narrow Config-Slice Check (spec 188 Phase 3; re-homed Phase 4a)",
+      "4. Success Criteria",
+      "SC-01: Deterministic Output",
+      "SC-02: Complete Inventory",
+      "SC-03: Accurate Dependencies",
+      "SC-04: Orphan Coverage",
+      "SC-05: CI Enforcement",
+      "SC-06: Agent Startup Acceleration",
+      "5. Out of Scope (MVP)",
+      "6. Clarifications",
+      "7. Cross-references",
+      "Amendments received"
+    ],
+    "specPath": "specs/101-codebase-index-mvp/spec.md",
+    "status": "approved",
+    "summary": "A deterministic indexer tool that walks the repository tree, parses manifest files and spec frontmatter, and emits a governed .derived/codebase-index/index.json artifact. Provides four-layer structural inventory: crate/package inventory, spec-to-code traceability, factory adapter coverage, and tool/infrastructure catalog. Follows the same compiler-emits-artifact pattern established by spec-compiler (001). Amended by spec 147 (2026-05-13) to surface the `primary: bool` flag on ImplementingPath (sourced from the new `implements:` list-item shape introduced by 147) and to bump the index schema 1.3.0 → 1.4.0. Consumers that don't recognise the flag fall back to spec 130's any-one-claimant heuristic. Further amended by spec 160 (2026-05-22) to repoint the input-hash walk from the legacy `factory/adapters/*` and `factory/process/stages/*` directories (removed in the spec 108 relocation) to the statecraft-resident `platform/services/statecraft/api/factory/adapter-scopes.json` and `platform/services/statecraft/api/factory/process-stages/`. Layer 3 narrative below is preserved as historical record; the live Layer 3 surface moved to `tools/oap/oap-code-index-enrich` in Cut D W-07c.\n",
+    "title": "Codebase Index MVP — Governed Structural Inventory"
+  },
+  "shardHash": "fdb096388188ac28c7cf75d8ead8980b72b940171d766fdf8b7f2508b631d034",
+  "specVersion": "1.1.0"
+}

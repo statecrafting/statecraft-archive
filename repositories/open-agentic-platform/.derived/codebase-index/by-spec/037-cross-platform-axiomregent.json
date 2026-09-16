@@ -1,0 +1,46 @@
+{
+  "mapping": {
+    "implementingPaths": [
+      {
+        "path": "crates/axiomregent",
+        "source": "spec-edge"
+      },
+      {
+        "path": "product/apps/opc/src-tauri/binaries",
+        "source": "spec-edge"
+      }
+    ],
+    "resolvedUnits": [
+      {
+        "locations": [
+          {
+            "file": "crates/axiomregent"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "extends",
+        "unit": {
+          "id": "axiomregent",
+          "kind": "crate"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "product/apps/opc/src-tauri/binaries"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "extends",
+        "unit": {
+          "kind": "directory",
+          "path": "product/apps/opc/src-tauri/binaries"
+        }
+      }
+    ],
+    "specId": "037-cross-platform-axiomregent",
+    "specStatus": "approved"
+  },
+  "schemaVersion": "1.1.0",
+  "shardHash": "c418c46e780f269192cbce61a938afd8df0093c8dacc5ba05c55c172e67ae178"
+}

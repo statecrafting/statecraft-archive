@@ -1,0 +1,80 @@
+{
+  "record": {
+    "authors": [
+      "open-agentic-platform"
+    ],
+    "codeAliases": [
+      "PLATFORM_COMPLETION",
+      "MASTER_PLAN"
+    ],
+    "constrains": [
+      {
+        "kind": "delivery-sequencing",
+        "target_specs": [
+          "074-factory-ingestion",
+          "075-factory-workflow-engine",
+          "076-factory-desktop-panel",
+          "077-statecraft-factory-api",
+          "042-multi-provider-agent-registry",
+          "049-permission-system",
+          "051-worktree-agents",
+          "052-state-persistence",
+          "057-notification-system",
+          "072-multi-cloud-k8s-portability"
+        ]
+      }
+    ],
+    "created": "2026-04-04",
+    "domain": "platform",
+    "extraFrontmatter": {
+      "language": "en"
+    },
+    "featureBranch": "feat/078-platform-completion",
+    "id": "078-platform-completion-plan",
+    "implementation": "n-a",
+    "kind": "platform",
+    "sectionHeadings": [
+      "Platform Completion Plan",
+      "Executive Summary",
+      "Current State Assessment",
+      "What Works (No Changes Needed)",
+      "What Needs Completion (Existing Draft Specs)",
+      "What's New (Factory Integration)",
+      "Phase 1: Foundation (Weeks 1-2)",
+      "Work Items",
+      "Deliverable",
+      "Checkpoint",
+      "Phase 2: Orchestrator Integration (Weeks 3-5)",
+      "Work Items",
+      "Deliverable",
+      "Checkpoint",
+      "Phase 3: Agent Dispatch & Permission Wiring (Weeks 4-6)",
+      "Work Items",
+      "Deliverable",
+      "Checkpoint",
+      "Phase 4: Desktop Integration (Weeks 5-8)",
+      "Work Items",
+      "Deliverable",
+      "Checkpoint",
+      "Phase 5: Platform Integration (Weeks 6-9)",
+      "Work Items",
+      "Deliverable",
+      "Checkpoint",
+      "Phase 6: Hardening & Multi-Cloud (Weeks 9-12)",
+      "Work Items",
+      "Deliverable",
+      "Checkpoint",
+      "Critical Path",
+      "Existing Draft Specs: Completion Summary",
+      "Resource Estimates",
+      "Success Criteria (Platform-Wide)",
+      "Risk Register"
+    ],
+    "specPath": "specs/078-platform-completion-plan/spec.md",
+    "status": "approved",
+    "summary": "Master implementation plan that sequences Factory ingestion (specs 074-077), existing draft spec completion (042, 049, 051, 052, 057, 072), and infrastructure hardening into a phased roadmap that delivers a complete, functioning AI software factory platform.\n",
+    "title": "Platform Completion Plan — Factory Ingestion + Draft Spec Closure"
+  },
+  "shardHash": "ae649c318cb297fe3ac40b7442abfb5996ebe8e2e6300e8326f412859e42ec21",
+  "specVersion": "1.1.0"
+}

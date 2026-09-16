@@ -1,0 +1,29 @@
+{
+  "mapping": {
+    "implementingPaths": [
+      {
+        "path": "product/apps/opc",
+        "source": "spec-edge"
+      }
+    ],
+    "resolvedUnits": [
+      {
+        "locations": [
+          {
+            "file": "product/apps/opc"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "extends",
+        "unit": {
+          "id": "@opc/desktop",
+          "kind": "crate"
+        }
+      }
+    ],
+    "specId": "083-xray-ui-upgrade",
+    "specStatus": "approved"
+  },
+  "schemaVersion": "1.1.0",
+  "shardHash": "d55bc0765b32ce44a144b45abff5446a45beffda7c784fe4ec9e05dec4e152c8"
+}

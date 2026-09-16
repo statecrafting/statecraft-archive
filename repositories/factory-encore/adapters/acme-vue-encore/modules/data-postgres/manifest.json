@@ -1,0 +1,19 @@
+{
+  "name": "data-postgres",
+  "version": "2.0.0",
+  "description": "PostgreSQL persistence is provided by the base app's SQLDatabase(\"app\") (apps/api/db, the `encore-app-architecture` base): Encore owns connection pooling, health, and migration application. The Express pg.Pool config, db-retry, and db-metrics middleware have no Encore analog and are retired. This module is a declarative marker that persistence is built into the base; it ships no apps/api/src/** payload and no separate pg dependency. New tables are added as migrations under a feature module's db/ (see user-management).",
+  "status": "stable",
+  "requires": [],
+  "requiresOneOf": [],
+  "optionalPeers": [],
+  "conflicts": [],
+  "services": [],
+  "secrets": [],
+  "corsEntries": [],
+  "middlewares": [],
+  "migrations": [],
+  "files": {},
+  "authExports": [],
+  "packageDeps": {},
+  "envVars": {}
+}

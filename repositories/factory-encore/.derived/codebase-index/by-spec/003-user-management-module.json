@@ -1,0 +1,33 @@
+{
+  "mapping": {
+    "dependsOn": [
+      "001-module-manifest-schema",
+      "002-encore-generator-core"
+    ],
+    "implementingPaths": [
+      {
+        "path": "adapters/acme-vue-encore/modules/user-management/",
+        "source": "spec-edge"
+      }
+    ],
+    "resolvedUnits": [
+      {
+        "locations": [
+          {
+            "file": "adapters/acme-vue-encore/modules/user-management/"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "file",
+          "path": "adapters/acme-vue-encore/modules/user-management/"
+        }
+      }
+    ],
+    "specId": "003-user-management-module",
+    "specStatus": "approved"
+  },
+  "schemaVersion": "1.1.0",
+  "shardHash": "e5d197ecdd3c62d8cc3a9152397fc77921943cd76617240a2abe3402cb331a28"
+}

@@ -1,0 +1,12 @@
+{
+  "package": {
+    "edition": "2024",
+    "kind": "rust-lib-bin",
+    "name": "open_agentic_ci_parity_check",
+    "path": "tools/oap/ci-parity-check",
+    "specRef": "104-makefile-ci-parity-contract",
+    "version": "0.1.0"
+  },
+  "schemaVersion": "1.1.0",
+  "shardHash": "177bdae5d6340428cab105be084c414b57ecc97ef4a47ac83025a3187a94b01f"
+}

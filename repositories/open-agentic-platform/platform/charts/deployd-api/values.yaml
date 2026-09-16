@@ -1,0 +1,144 @@
+image:
+  # TODO: Set to your GHCR (or other registry) image path before deploying
+  repository: ghcr.io/your-org/open-agentic-platform/deployd-api
+  tag: dev
+
+imagePullSecrets: []
+
+ingress:
+  enabled: true
+  className: nginx
+  host: deployd.localdev.online
+  annotations: {}
+
+serviceAccount:
+  name: deployd-api-sa
+  annotations: {}
+
+# Security review fix (templates/rbac.yaml): opt-in namespace allowlist
+# for deployd-api's workload permissions (secrets/services/configmaps/
+# serviceaccounts/pvc/pods/deployments/statefulsets/ingresses/hpa/pdb/
+# networkpolicies). When non-empty, those permissions are granted ONLY in
+# the listed namespaces (one RoleBinding per namespace against a reusable
+# ClusterRole) instead of cluster-wide. Leave empty ([]) to preserve
+# today's cluster-wide grant -- see templates/rbac.yaml for why that is
+# still the default (deployd-api creates brand-new tenant/preview
+# namespaces on demand and has no code path that grants itself access in
+# a namespace right after creating it).
+rbac:
+  namespaces: []
+  # Opt-in (additive): when true, deployd self-provisions a RoleBinding
+  # granting its own ServiceAccount the workloads ClusterRole in each
+  # target namespace before helm runs there (deployd-api-rs/src/rbac.rs),
+  # and the chart grants the `rolebindings` + `bind` permissions that
+  # requires. Default false preserves today's cluster-wide fallback; this
+  # is the mechanism that will LATER let `namespaces` be flipped to scoped
+  # once validated on a real cluster (that flip is intentionally not made
+  # here).
+  selfProvision: false
+
+podLabels: {}
+
+# Spec 196 FR-003 — declare the /metrics endpoint for annotation-keyed
+# scraping by the platform metrics stack. Harmless where no collector
+# consumes the annotations (e.g. Azure until spec 196 FR-009 resolves).
+podAnnotations:
+  prometheus.io/scrape: "true"
+  prometheus.io/port: "8080"
+  prometheus.io/path: "/metrics"
+
+# region: resources
+# Spec 146: chart-default resources floor. cgroup limit is the load-bearing
+# memory cap (Rust runtime — no managed-heap env-var to set). 1Gi covers
+# steady-state ~250MB plus cold-start hiqlite WAL spikes (~750MB headroom).
+# Operators with workload-specific budgets override per-environment.
+resources:
+  limits:
+    memory: 1Gi
+  requests:
+    memory: 256Mi
+    cpu: 100m
+# endregion resources
+
+persistence:
+  enabled: true
+  size: 1Gi
+  storageClass: ""
+
+# Spec 145: deployd-api durability chain. Backup is opt-in — operators set
+# `endpoint` and `bucket` (and per-provider secret keys) to enable encrypted
+# S3 snapshots. Chart defaults below are safe (no projection without endpoint+
+# bucket); per-env values files override. NFR-002 defaults: 6-hour cron,
+# 28-day S3 retention. See docs/runbooks/deployd-api-durability.md.
+backup:
+  endpoint: ""              # operator-supplied per env (e.g. https://<hcloud-s3-region>.your-objectstorage.com)
+  bucket: ""                # operator-supplied per env
+  region: ""                # operator-supplied per env (e.g. "us-east-1" or hcloud equivalent)
+  pathStyle: true           # most non-AWS S3-compatible endpoints prefer path-style
+  schedule: "0 0 */6 * * *" # NFR-002 default — 6-field cron (Hiqlite parser); operator-overridable
+  keep: 28                  # NFR-002 default — S3 retention days; operator-overridable
+  # ESO operators inherit these four keys by chart default; SPC operators
+  # add them to .Values.secretsMount.objects; k8s-provider operators
+  # populate the pre-existing Secret manually (see runbook).
+  secretKeys:
+    - key: backup-s3-access-key
+      remoteKey: deployd-backup-s3-access-key
+    - key: backup-s3-secret-key
+      remoteKey: deployd-backup-s3-secret-key
+    - key: backup-cryptr-keyring        # multi-line value: <id>/<base64-32> per line
+      remoteKey: deployd-backup-cryptr-keyring
+    - key: backup-cryptr-active-key     # single key id, must match keyring entry
+      remoteKey: deployd-backup-cryptr-active-key
+
+secrets:
+  enabled: true
+  provider: "k8s"  # "k8s" | "eso" | "csi-azure"
+  mountPath: /mnt/secrets-store
+  create: false
+  data: {}
+  # ESO-specific
+  refreshInterval: "1h"
+  storeRef:
+    name: ""
+    kind: ClusterSecretStore
+  keys:
+    - key: DEPLOYD_DB_URL
+      remoteKey: deployd-db-url
+    # store.rs reads these directly (HIQLITE_SECRET_RAFT / HIQLITE_SECRET_API)
+    # and falls back to hardcoded dev defaults when unset today; a
+    # companion deployd-api-rs change is making them required. Every
+    # secrets.provider path MUST populate them:
+    #   - eso (azure/aws/do/gcp): covered here via remoteKey, PROVIDED the
+    #     cloud secret store actually holds a `hiqlite-secret-raft` /
+    #     `hiqlite-secret-api` entry (see infra/terraform's
+    #     keyvault_secrets / platform_bootstrap wiring for Azure).
+    #   - k8s (Hetzner): NOT populated via secrets.data here (create=false
+    #     on Hetzner) -- infra/hetzner/setup.sh materialises them directly
+    #     into the pre-existing `deployd-api-secrets` Secret imperatively.
+    #   - k8s (local dev, create=true): populated in values-local.yaml.
+    #   - csi-azure: unused by any values-*.yaml profile today; the
+    #     SecretProviderClass template has no `secretObjects` sync block,
+    #     so CSI-mounted files never reach `deployd-api-secrets` as env
+    #     vars via the Deployment's `envFrom`. Flagged, not fixed here --
+    #     no profile currently exercises this path.
+    - key: HIQLITE_SECRET_RAFT
+      remoteKey: hiqlite-secret-raft
+    - key: HIQLITE_SECRET_API
+      remoteKey: hiqlite-secret-api
+
+secretsMount:
+  enabled: false
+  objects: []
+
+workloadIdentity:
+  clientId: ""
+
+keyVault:
+  name: ""
+  tenantId: ""
+
+oidc:
+  endpoint: "https://rauthy.localdev.online"
+  audience: "https://api.statecraft.localdev.online"
+
+requiredScope: "deployd:deploy"

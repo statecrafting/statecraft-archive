@@ -1,0 +1,106 @@
+{
+  "record": {
+    "amendmentRecord": "139-factory-artifact-substrate",
+    "created": "2026-04-21",
+    "dependsOn": [
+      "042-multi-provider-agent-registry",
+      "054-agent-frontmatter-schema",
+      "068-permission-runtime",
+      "087-unified-workspace-architecture",
+      "090-governance-non-optionality",
+      "110-statecraft-to-opc-factory-trigger"
+    ],
+    "domain": "platform",
+    "establishes": [
+      {
+        "kind": "directory",
+        "path": "platform/services/statecraft/api/agents"
+      },
+      {
+        "kind": "file",
+        "path": "platform/services/statecraft/api/agents/catalog.ts"
+      },
+      {
+        "kind": "file",
+        "path": "platform/services/statecraft/api/agents/relay.ts"
+      },
+      {
+        "kind": "directory",
+        "path": "platform/services/statecraft/api/agents/frontmatter"
+      },
+      {
+        "kind": "file",
+        "path": "platform/services/statecraft/api/sync/types.ts"
+      },
+      {
+        "kind": "file",
+        "path": "platform/services/statecraft/api/sync/service.ts"
+      },
+      {
+        "kind": "file",
+        "path": "platform/services/statecraft/api/sync/duplex.ts"
+      },
+      {
+        "kind": "file",
+        "path": "platform/services/statecraft/api/sync/relay.ts"
+      },
+      {
+        "kind": "file",
+        "path": "product/apps/opc/src-tauri/src/commands/agents.rs"
+      },
+      {
+        "kind": "file",
+        "path": "product/apps/opc/src-tauri/src/commands/agent_catalog_sync.rs"
+      },
+      {
+        "kind": "file",
+        "path": "product/apps/opc/src-tauri/src/commands/statecraft_client.rs"
+      }
+    ],
+    "extraFrontmatter": {
+      "amended": "2026-05-05",
+      "slug": "org-agent-catalog-sync"
+    },
+    "id": "111-org-agent-catalog-sync",
+    "implementation": "complete",
+    "kind": "platform",
+    "owner": "bart",
+    "references": [
+      {
+        "role": "historical",
+        "unit": {
+          "kind": "file",
+          "path": "platform/services/statecraft/web/app/routes/app.workspace.agents.tsx"
+        }
+      }
+    ],
+    "sectionHeadings": [
+      "111 — Org-managed Agent Catalog Synced from Statecraft to OPC",
+      "1. Problem",
+      "2. Decision",
+      "2.1 Data model",
+      "2.2 New API endpoints (statecraft)",
+      "2.3 Duplex envelope additions",
+      "2.4 Desktop cache & merge semantics",
+      "2.5 Web UI",
+      "2.6 Policy bundle + governance",
+      "3. Model API keys stay on OPC (design decision)",
+      "4. Non-goals",
+      "5. Open questions",
+      "6. Verification",
+      "7. Rollout",
+      "7.2 Phase 2 — shared type generator contract",
+      "7.3 Phase 3 — duplex envelope contract",
+      "7.4 Phase 4 — web UI contract",
+      "7.5 Phase 5 — desktop cache + dispatch contract",
+      "7.6 Phase 5 verification surface",
+      "7.7 Phase 6 — local→remote publish contract"
+    ],
+    "specPath": "specs/111-org-agent-catalog-sync/spec.md",
+    "status": "approved",
+    "summary": "Treats agents as organisational assets stored in statecraft and pushed to OPC via the duplex channel (spec 087 §5.3). Workspaces author, version, and govern agent definitions in the web UI; connected OPC instances receive them as a workspace-scoped catalog that local SQLite caches. The local `.claude/agents/` path remains available as a fallback for offline/personal agents; the authoritative catalog is remote. Documents the decision to keep model API keys on OPC machines.\n",
+    "title": "Org-managed Agent Catalog Synced from Statecraft to OPC"
+  },
+  "shardHash": "1a98b65cfd164b6311dc83b3fc86b45f358211ded62f91dbc068451eaa14b569",
+  "specVersion": "1.1.0"
+}

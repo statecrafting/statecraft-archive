@@ -1,0 +1,92 @@
+{
+  "record": {
+    "amends": [
+      "130-spec-coupling-primary-owner",
+      "154-logical-unit-ownership-grammar",
+      "133-amends-aware-coupling-gate",
+      "181-registry-consumer-unit-grammar-authority",
+      "188-derived-index-merge-serialization"
+    ],
+    "authors": [
+      "open-agentic-platform"
+    ],
+    "codeAliases": [
+      "SPEC_SPINE_LIBRARY_GRAMMAR_ADOPTION"
+    ],
+    "created": "2026-06-14",
+    "dependsOn": [
+      "001-spec-compiler-mvp",
+      "130-spec-coupling-primary-owner",
+      "132-constitutional-invariant-freeze",
+      "133-amends-aware-coupling-gate",
+      "153-invariant-freeze-additive-evolution",
+      "154-logical-unit-ownership-grammar"
+    ],
+    "domain": "tooling",
+    "extends": [
+      {
+        "nature": "additive",
+        "spec": "034-featuregraph-registry-scanner-fix",
+        "unit": {
+          "kind": "file",
+          "path": "crates/featuregraph/tests/golden/features_graph.json"
+        }
+      },
+      {
+        "nature": "additive",
+        "spec": "130-spec-coupling-primary-owner",
+        "unit": {
+          "kind": "file",
+          "path": "standards/schemas/spec-spine/registry.schema.json"
+        }
+      }
+    ],
+    "extraFrontmatter": {
+      "language": "en"
+    },
+    "featureBranch": "feat/216-spec-spine-library-grammar-adoption",
+    "id": "216-spec-spine-library-grammar-adoption",
+    "implementation": "complete",
+    "kind": "governance",
+    "refines": [
+      {
+        "aspect": "amends-supersedes-frontmatter-grammar",
+        "unit": {
+          "kind": "file",
+          "path": "tools/shared/spec-types/src/lib.rs"
+        }
+      }
+    ],
+    "sectionHeadings": [
+      "Feature Specification: Spec-Spine Library Grammar Adoption",
+      "Overview",
+      "Phase 1: `amends` is bare-id only (implementable now)",
+      "1.1 Current state (the real mechanism, not an object-form arm)",
+      "1.2 Decision",
+      "1.3 Functional Requirements (Phase 1)",
+      "1.4 Non-goals (Phase 1)",
+      "1.5 Acceptance Criteria (Phase 1)",
+      "Phase 2: `supersedes` partial-supersession reconciliation (sequenced)",
+      "2.1 The asymmetry",
+      "2.2 Why this is sequenced, not folded into Phase 1",
+      "Grammar reconciliation (settled here)",
+      "2.3 Phase 2a: typed `supersedes` parse + structured emission (implementable now)",
+      "Functional Requirements (Phase 2a)",
+      "Acceptance Criteria (Phase 2a)",
+      "2.4 Phase 2b: coupling-gate supersession filtering (consumer side)",
+      "Where the data lives (a prerequisite the §2.3-era sketch under-specified)",
+      "Functional Requirements (Phase 2b)",
+      "Blast radius (verified 2026-06-15, governed reads + `codebase-indexer render`)",
+      "Acceptance Criteria (Phase 2b)",
+      "Coupling (Phase 2b)",
+      "Success Criteria",
+      "Coupling and migration"
+    ],
+    "specPath": "specs/216-spec-spine-library-grammar-adoption/spec.md",
+    "status": "approved",
+    "summary": "Converge OAP's spec-compiler frontmatter grammar onto the standalone spec-spine library, which models `amends` and `supersedes` as typed fields and rejects malformed entries at deserialization. OAP's compiler parses both through `optional_string_list`, which silently drops any non-string entry: an object-form `amends`/`supersedes` records nothing and confers no authority. That silent drop was the spec 125 defect PR #358 corrected. Phase 1 (this spec, implementable now) narrows `amends` to bare-id and replaces the silent drop with a loud V-033 compile error, a behaviour-preserving convergence for the real corpus (zero live object-form `amends` remain after PR #358). Phase 2 (sequenced) reconciles `supersedes`, whose silent drop discards the structured partial-supersession form the library honours and the relationship graph (specs 130/154) documents: that is an authority-transfer change and carries the real review weight.\n",
+    "title": "Spec-Spine Library Grammar Adoption (amends bare-id; supersedes-partial reconciliation)"
+  },
+  "shardHash": "5d750057e6627d55444e3a3bb46bc32c897884846d8b4a110ebb22a2bcfae478",
+  "specVersion": "1.1.0"
+}

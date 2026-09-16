@@ -1,0 +1,27 @@
+# Root kustomize bundle for the throwaway DR cluster's flux-system Kustomization.
+#
+# Spec 151 Finding F7 future-prevention: distinct bootstrap path keeps the
+# GitHub deploy-key title separate from production's, so DR exercises cannot
+# rotate production's deploy key as a side effect. The throwaway cluster
+# reconciles the SAME content production reconciles — Flux Kustomization CRs
+# imported from `../hetzner-prod/` which point at hetzner-prod subpaths. No
+# duplicated YAML.
+#
+# See `README.md` in this directory for the full F7 history and rationale.
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+resources:
+  # flux-system/ is bootstrap-managed for this distinct path. Created on first
+  # `flux bootstrap --path=platform/gitops/clusters/hetzner-dr-stage2`. Until
+  # that bootstrap runs once, this resource reference points at a non-existent
+  # subdirectory and `kubectl kustomize` will fail — same pre-bootstrap state
+  # `../hetzner-prod/` was in before its own first bootstrap.
+  - flux-system
+  # Import the production tree's Kustomization CRs via relative path. They
+  # declare paths into `./platform/gitops/clusters/hetzner-prod/{infrastructure,
+  # manifests}`, so the DR cluster's Flux reconciles identical content. The F8
+  # dependsOn machinery (healthChecks: cert-manager → dependsOn: infrastructure)
+  # is inherited by reference, not copied.
+  - ../hetzner-prod/infrastructure-kustomization.yaml
+  - ../hetzner-prod/manifests-kustomization.yaml
+  - ../hetzner-prod/policies-kustomization.yaml

@@ -1,0 +1,92 @@
+# Spec 196 — OAP Platform Overview dashboard (SC-010 surface).
+#
+# Provisioned as code via the kube-prometheus-stack Grafana sidecar
+# (label `grafana_dashboard: "1"`); Grafana state stays disposable.
+# The chart's bundled kube-mixin dashboards are OFF (they depend on
+# the defaultRules recording rules FR-008 prunes) — this ConfigMap is
+# the explicit, governed dashboard set.
+#
+# The statecraft panel's expression is PROVISIONAL: spec 196 SC-001
+# deliberately does not guess Encore's exact remote_write series name —
+# the validating run records the concrete series, and SC-010 reuses it
+# verbatim. `e_requests_total` is the best-known candidate; correct
+# this panel when V001 (tasks.md) pins the real name.
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: oap-platform-overview-dashboard
+  namespace: monitoring
+  labels:
+    grafana_dashboard: "1"
+data:
+  oap-platform-overview.json: |
+    {
+      "uid": "oap-platform-overview",
+      "title": "OAP Platform Overview",
+      "tags": ["oap", "spec-196"],
+      "timezone": "browser",
+      "schemaVersion": 39,
+      "refresh": "1m",
+      "time": { "from": "now-6h", "to": "now" },
+      "panels": [
+        {
+          "id": 1,
+          "type": "timeseries",
+          "title": "statecraft requests/s (remote_write)",
+          "description": "PROVISIONAL expr — SC-001 records the validated Encore series name; correct this panel to it (tasks.md V001/V010).",
+          "gridPos": { "h": 8, "w": 12, "x": 0, "y": 0 },
+          "targets": [
+            { "refId": "A", "expr": "sum(rate(e_requests_total[5m]))" }
+          ]
+        },
+        {
+          "id": 2,
+          "type": "stat",
+          "title": "deployd-api build info",
+          "description": "SC-002 anchor series for deployd-api (spec 196 FR-003).",
+          "gridPos": { "h": 8, "w": 12, "x": 12, "y": 0 },
+          "targets": [
+            { "refId": "A", "expr": "deployd_api_build_info" }
+          ],
+          "options": { "textMode": "name" }
+        },
+        {
+          "id": 3,
+          "type": "timeseries",
+          "title": "Flux reconciles/s",
+          "description": "SC-002 anchor for the Flux controllers (previously emitted-but-unconsumed).",
+          "gridPos": { "h": 8, "w": 12, "x": 0, "y": 8 },
+          "targets": [
+            { "refId": "A", "expr": "sum(rate(controller_runtime_reconcile_total[5m]))" }
+          ]
+        },
+        {
+          "id": 4,
+          "type": "timeseries",
+          "title": "ingress-nginx requests/s",
+          "description": "SC-002 anchor for ingress-nginx.",
+          "gridPos": { "h": 8, "w": 12, "x": 12, "y": 8 },
+          "targets": [
+            { "refId": "A", "expr": "sum(rate(nginx_ingress_controller_requests[5m]))" }
+          ]
+        },
+        {
+          "id": 5,
+          "type": "timeseries",
+          "title": "node load1",
+          "gridPos": { "h": 8, "w": 12, "x": 0, "y": 16 },
+          "targets": [
+            { "refId": "A", "expr": "node_load1" }
+          ]
+        },
+        {
+          "id": 6,
+          "type": "stat",
+          "title": "pods not Running/Succeeded",
+          "gridPos": { "h": 8, "w": 12, "x": 12, "y": 16 },
+          "targets": [
+            { "refId": "A", "expr": "sum(kube_pod_status_phase{phase!=\"Running\", phase!=\"Succeeded\"})" }
+          ]
+        }
+      ]
+    }

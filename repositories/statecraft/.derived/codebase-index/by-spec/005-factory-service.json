@@ -1,0 +1,32 @@
+{
+  "mapping": {
+    "dependsOn": [
+      "004-tenants-github-app"
+    ],
+    "implementingPaths": [
+      {
+        "path": "backend/factory/",
+        "source": "spec-edge"
+      }
+    ],
+    "resolvedUnits": [
+      {
+        "locations": [
+          {
+            "file": "backend/factory/"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "directory",
+          "path": "backend/factory/"
+        }
+      }
+    ],
+    "specId": "005-factory-service",
+    "specStatus": "approved"
+  },
+  "schemaVersion": "1.1.0",
+  "shardHash": "79bddc57d9e41ee1d348b044789605a47aea299a5a634facf531c97d0e1db4d3"
+}

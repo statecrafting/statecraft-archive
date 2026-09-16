@@ -1,0 +1,92 @@
+#!/usr/bin/env bash
+# Opt-in pre-commit hook: refuses commits when the codebase-index has
+# drifted relative to current inputs.
+#
+# Enable in this clone:
+#   git config core.hooksPath .githooks
+#
+# Disable:
+#   git config --unset core.hooksPath
+#
+# Why this exists
+# ---------------
+# The index content hash covers more than spec.md edits (see spec-spine.toml
+# [index] extra_hashed_inputs + the always-hashed core). Inputs include:
+#   Cargo.toml (workspace + each crate/tool), package.json,
+#   pnpm-workspace.yaml, specs/*/spec.md, the adapter-scopes snapshot,
+#   .claude/{agents,commands,rules,skills}/**, .claude/settings.json,
+#   .mcp.json, standards/schemas/**, .github/workflows/*.yml, spec-spine.toml.
+# Most non-trivial PRs touch at least one of these and need fresh
+# .derived/codebase-index shards in the diff. The CI staleness check fails
+# after merge attempts otherwise; this hook moves the failure to the
+# earliest possible point.
+#
+# Behaviour: read-only — never mutates the working tree or staging area.
+# If the index is stale the commit is refused with a one-line fix.
+# Bypass for emergencies: `git commit --no-verify`.
+
+set -eu
+
+if ! command -v spec-spine >/dev/null 2>&1; then
+  cat >&2 <<'EOF'
+[pre-commit] spec-spine CLI not found on PATH.
+            Run `make setup` (one-time) or `cargo install spec-spine-cli --version 0.10.0 --locked`.
+            To bypass for this commit only: git commit --no-verify
+EOF
+  exit 1
+fi
+
+if ! spec-spine index check >/dev/null 2>&1; then
+  cat >&2 <<'EOF'
+[pre-commit] codebase index is stale relative to current inputs.
+
+  The index hashes Cargo.toml, package.json, pnpm-workspace.yaml,
+  specs/*/spec.md, standards/schemas/**, .claude/** + settings.json,
+  .mcp.json, .github/workflows/*.yml, and spec-spine.toml. At least one
+  of these changed and the committed .derived/codebase-index shards no
+  longer match.
+
+  Fix:
+    make pr-prep
+    git add .derived/codebase-index
+
+  Bypass (NOT recommended, CI will fail):
+    git commit --no-verify
+EOF
+  exit 1
+fi
+
+# ── Spec 158: workflow-ref SHA-pin enforcement ────────────────────────
+# Same script invoked from ci-supply-chain.yml. Rejects un-pinned
+# `uses:` refs at commit time so the contract holds across pushed
+# history, not only at merge. The hook fails closed: if the lint
+# script is missing or unexecutable, the commit is refused.
+WORKFLOW_PINS=tools/lint/workflow-pins.sh
+
+if [ ! -x "$WORKFLOW_PINS" ]; then
+  cat >&2 <<'EOF'
+[pre-commit] workflow-pins lint missing or not executable.
+            Expected: tools/lint/workflow-pins.sh
+            To bypass for this commit only: git commit --no-verify
+EOF
+  exit 1
+fi
+
+WORKFLOW_PINS_ERR="$(mktemp -t workflow-pins.XXXXXX)"
+trap 'rm -f "$WORKFLOW_PINS_ERR"' EXIT
+
+if ! "$WORKFLOW_PINS" >"$WORKFLOW_PINS_ERR" 2>&1; then
+  {
+    echo "[pre-commit] workflow-pins lint refused this commit."
+    echo
+    cat "$WORKFLOW_PINS_ERR"
+    echo
+    echo "  Fix: replace each un-pinned ref with its full 40-hex commit SHA."
+    echo "  Resolve the SHA with:"
+    echo "    gh api repos/<owner>/<repo>/commits/<tag-or-branch> -q .sha"
+    echo
+    echo "  Bypass (NOT recommended — CI will fail):"
+    echo "    git commit --no-verify"
+  } >&2
+  exit 1
+fi

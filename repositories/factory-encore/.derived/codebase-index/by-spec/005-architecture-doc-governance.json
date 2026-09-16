@@ -1,0 +1,83 @@
+{
+  "mapping": {
+    "dependsOn": [
+      "002-encore-generator-core"
+    ],
+    "implementingPaths": [
+      {
+        "path": "adapters/acme-vue-encore/orchestration/",
+        "source": "spec-edge"
+      },
+      {
+        "path": "adapters/acme-vue-encore/scripts/codemaps/",
+        "source": "spec-edge"
+      },
+      {
+        "path": "adapters/acme-vue-encore/scripts/readmes/",
+        "source": "spec-edge"
+      },
+      {
+        "path": "docs/",
+        "source": "spec-edge"
+      }
+    ],
+    "resolvedUnits": [
+      {
+        "locations": [
+          {
+            "file": "adapters/acme-vue-encore/orchestration/"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "file",
+          "path": "adapters/acme-vue-encore/orchestration/"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "adapters/acme-vue-encore/scripts/codemaps/"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "file",
+          "path": "adapters/acme-vue-encore/scripts/codemaps/"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "adapters/acme-vue-encore/scripts/readmes/"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "file",
+          "path": "adapters/acme-vue-encore/scripts/readmes/"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "docs/"
+          }
+        ],
+        "ownership": false,
+        "sourceField": "references",
+        "unit": {
+          "kind": "file",
+          "path": "docs/"
+        }
+      }
+    ],
+    "specId": "005-architecture-doc-governance",
+    "specStatus": "approved"
+  },
+  "schemaVersion": "1.1.0",
+  "shardHash": "f90873c50dca76000bb29f8e6678cfd2a092d3b5b222d0b56edc978c337cdd90"
+}

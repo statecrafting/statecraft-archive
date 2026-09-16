@@ -1,0 +1,286 @@
+{
+  "diagnostics": {
+    "errors": [],
+    "warnings": [
+      {
+        "code": "W-002",
+        "message": "spec '119-project-as-unit-of-governance' directory unit 'platform/services/statecraft/api/workspaces' is not a directory",
+        "path": "platform/services/statecraft/api/workspaces"
+      }
+    ]
+  },
+  "mapping": {
+    "amends": [
+      "000-bootstrap-spec-system",
+      "087-unified-workspace-architecture",
+      "092-workspace-runtime-threading",
+      "094-unified-artifact-store",
+      "099-workspace-scoped-persistence"
+    ],
+    "dependsOn": [
+      "000-bootstrap-spec-system",
+      "087-unified-workspace-architecture",
+      "092-workspace-runtime-threading",
+      "094-unified-artifact-store",
+      "099-workspace-scoped-persistence",
+      "113-statecraft-projects-rename-and-clone",
+      "114-async-project-clone-pipeline",
+      "115-knowledge-extraction-pipeline"
+    ],
+    "implementingPaths": [
+      {
+        "path": "crates/factory-contracts",
+        "source": "spec-edge"
+      },
+      {
+        "path": "crates/orchestrator",
+        "source": "spec-edge"
+      },
+      {
+        "path": "crates/run",
+        "source": "spec-edge"
+      },
+      {
+        "path": "platform/services/statecraft/api/db",
+        "source": "spec-edge"
+      },
+      {
+        "path": "platform/services/statecraft/api/knowledge",
+        "source": "spec-edge"
+      },
+      {
+        "path": "platform/services/statecraft/api/projects",
+        "source": "spec-edge"
+      },
+      {
+        "path": "platform/services/statecraft/api/sync",
+        "source": "spec-edge"
+      },
+      {
+        "path": "product/apps/opc",
+        "source": "spec-edge"
+      },
+      {
+        "path": "specs/000-bootstrap-spec-system",
+        "source": "spec-edge"
+      },
+      {
+        "path": "specs/087-unified-workspace-architecture",
+        "source": "spec-edge"
+      },
+      {
+        "path": "specs/092-workspace-runtime-threading",
+        "source": "spec-edge"
+      },
+      {
+        "path": "specs/094-unified-artifact-store",
+        "source": "spec-edge"
+      },
+      {
+        "path": "specs/099-workspace-scoped-persistence",
+        "source": "spec-edge"
+      },
+      {
+        "path": "standards/spec/contract.md",
+        "source": "spec-edge"
+      }
+    ],
+    "resolvedUnits": [
+      {
+        "locations": [
+          {
+            "file": "platform/services/statecraft/api/db"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "directory",
+          "path": "platform/services/statecraft/api/db"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "platform/services/statecraft/api/knowledge"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "directory",
+          "path": "platform/services/statecraft/api/knowledge"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "platform/services/statecraft/api/projects"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "directory",
+          "path": "platform/services/statecraft/api/projects"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "platform/services/statecraft/api/sync"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "directory",
+          "path": "platform/services/statecraft/api/sync"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "standards/spec/contract.md"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "file",
+          "path": "standards/spec/contract.md"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "crates/factory-contracts"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "extends",
+        "unit": {
+          "id": "factory-contracts",
+          "kind": "crate"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "crates/orchestrator"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "extends",
+        "unit": {
+          "id": "orchestrator",
+          "kind": "crate"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "crates/run"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "extends",
+        "unit": {
+          "id": "run",
+          "kind": "crate"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "specs/087-unified-workspace-architecture"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "extends",
+        "unit": {
+          "kind": "directory",
+          "path": "specs/087-unified-workspace-architecture"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "specs/092-workspace-runtime-threading"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "extends",
+        "unit": {
+          "kind": "directory",
+          "path": "specs/092-workspace-runtime-threading"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "specs/094-unified-artifact-store"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "extends",
+        "unit": {
+          "kind": "directory",
+          "path": "specs/094-unified-artifact-store"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "specs/099-workspace-scoped-persistence"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "extends",
+        "unit": {
+          "kind": "directory",
+          "path": "specs/099-workspace-scoped-persistence"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "product/apps/opc"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "refines",
+        "unit": {
+          "id": "@opc/desktop",
+          "kind": "crate"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "specs/000-bootstrap-spec-system"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "refines",
+        "unit": {
+          "kind": "directory",
+          "path": "specs/000-bootstrap-spec-system"
+        }
+      },
+      {
+        "locations": [],
+        "ownership": false,
+        "sourceField": "references",
+        "unit": {
+          "kind": "directory",
+          "path": "platform/services/statecraft/api/workspaces"
+        }
+      }
+    ],
+    "specId": "119-project-as-unit-of-governance",
+    "specStatus": "approved"
+  },
+  "schemaVersion": "1.1.0",
+  "shardHash": "35dcd32c00a187c89ff269e9ec901997f7c660126ad7e874bb35ebd26f3c91b0"
+}

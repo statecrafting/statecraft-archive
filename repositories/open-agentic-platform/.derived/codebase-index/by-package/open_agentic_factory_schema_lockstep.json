@@ -1,0 +1,12 @@
+{
+  "package": {
+    "edition": "2024",
+    "kind": "rust-lib-bin",
+    "name": "open_agentic_factory_schema_lockstep",
+    "path": "tools/oap/factory-schema-lockstep",
+    "specRef": "212-factory-schema-lockstep-ci",
+    "version": "0.1.0"
+  },
+  "schemaVersion": "1.1.0",
+  "shardHash": "ca9ff96ed0dabf12773f9bfe07662edcdf85043efc43a3ff56d19d2cb07aff74"
+}

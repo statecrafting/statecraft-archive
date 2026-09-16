@@ -1,0 +1,6 @@
+apiVersion: v2
+name: rauthy
+description: Rauthy OIDC/OAuth2 identity provider (Raft HA via hiqlite)
+type: application
+version: 0.1.0
+appVersion: "0.27.2"

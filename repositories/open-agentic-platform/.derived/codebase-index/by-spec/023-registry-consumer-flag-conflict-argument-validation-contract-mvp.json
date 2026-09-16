@@ -1,0 +1,9 @@
+{
+  "mapping": {
+    "implementingPaths": [],
+    "specId": "023-registry-consumer-flag-conflict-argument-validation-contract-mvp",
+    "specStatus": "superseded"
+  },
+  "schemaVersion": "1.1.0",
+  "shardHash": "710a3553b3ef1bbcf90d7c629386444ba79c207a99a54045c9ba6c80c75c94bf"
+}

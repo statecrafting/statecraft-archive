@@ -1,0 +1,198 @@
+{
+  "record": {
+    "amendmentRecord": "Amended 2026-06-16 by 214-tenant-app-chart-supersession (Stage 2): the\nexample GitOps READMEs drop tenant-hello from their illustrative\napplication-HelmRelease lists, since 214 retired the synthetic tenant-hello\nservice. Documentation-only; no manifest or reconciliation change.\n",
+    "coAuthority": [
+      {
+        "unit": {
+          "anchor": "bootstrap",
+          "file": "platform/infra/hetzner/setup.sh",
+          "kind": "section"
+        },
+        "with_specs": [
+          "072-multi-cloud-k8s-portability",
+          "106-rauthy-native-oidc-and-membership",
+          "137-tenant-environment-access-gates",
+          "143-presigned-upload-public-endpoint"
+        ]
+      },
+      {
+        "unit": {
+          "anchor": "env-vars",
+          "file": "platform/infra/hetzner/.env.example",
+          "kind": "section"
+        },
+        "with_specs": [
+          "072-multi-cloud-k8s-portability",
+          "106-rauthy-native-oidc-and-membership",
+          "143-presigned-upload-public-endpoint"
+        ]
+      },
+      {
+        "unit": {
+          "anchor": "k3s-version",
+          "file": "platform/infra/hetzner/cluster.yaml",
+          "kind": "section"
+        },
+        "with_specs": [
+          "072-multi-cloud-k8s-portability"
+        ]
+      },
+      {
+        "unit": {
+          "anchor": "cert-nginx-strikes",
+          "file": "platform/infra/hetzner/post-create.sh",
+          "kind": "section"
+        },
+        "with_specs": [
+          "106-rauthy-native-oidc-and-membership"
+        ]
+      },
+      {
+        "unit": {
+          "anchor": "rauthy-deploy",
+          "file": "platform/Makefile",
+          "kind": "section"
+        },
+        "with_specs": [
+          "104-makefile-ci-parity-contract"
+        ]
+      }
+    ],
+    "codeAliases": [
+      "GITOPS_RECONCILIATION"
+    ],
+    "created": "2026-05-17",
+    "dependsOn": [
+      "087-unified-workspace-architecture",
+      "143-presigned-upload-public-endpoint"
+    ],
+    "domain": "platform",
+    "establishes": [
+      {
+        "kind": "file",
+        "path": "platform/gitops/clusters/hetzner-prod/README.md"
+      },
+      {
+        "kind": "file",
+        "path": "platform/gitops/clusters/hetzner-prod/infrastructure/README.md"
+      },
+      {
+        "kind": "file",
+        "path": "platform/gitops/clusters/hetzner-prod/manifests/README.md"
+      },
+      {
+        "kind": "file",
+        "path": "platform/gitops/clusters/hetzner-prod/secrets/README.md"
+      },
+      {
+        "kind": "file",
+        "path": ".sops.yaml"
+      },
+      {
+        "kind": "file",
+        "path": "tools/spec-spine/spec-compiler/tests/v004_consolidation_excludes.rs"
+      },
+      {
+        "kind": "file",
+        "path": "platform/gitops/clusters/hetzner-prod/infrastructure/reflector.yaml"
+      },
+      {
+        "kind": "file",
+        "path": "platform/gitops/clusters/hetzner-prod/manifests/tenants-wildcard-certificate.yaml"
+      },
+      {
+        "kind": "file",
+        "path": "platform/gitops/clusters/hetzner-prod/infrastructure/cert-manager.yaml"
+      },
+      {
+        "kind": "file",
+        "path": "platform/gitops/clusters/hetzner-prod/infrastructure/ingress-nginx.yaml"
+      },
+      {
+        "kind": "file",
+        "path": "platform/gitops/clusters/hetzner-prod/manifests/cert-manager-clusterissuers.yaml"
+      },
+      {
+        "kind": "file",
+        "path": "platform/gitops/clusters/hetzner-prod/infrastructure/rauthy.yaml"
+      },
+      {
+        "kind": "file",
+        "path": "platform/gitops/clusters/hetzner-prod/kustomization.yaml"
+      },
+      {
+        "kind": "file",
+        "path": "platform/gitops/clusters/hetzner-prod/infrastructure-kustomization.yaml"
+      },
+      {
+        "kind": "file",
+        "path": "platform/gitops/clusters/hetzner-prod/manifests-kustomization.yaml"
+      },
+      {
+        "kind": "file",
+        "path": "platform/gitops/clusters/hetzner-dr-stage2/README.md"
+      },
+      {
+        "kind": "file",
+        "path": "platform/gitops/clusters/hetzner-dr-stage2/kustomization.yaml"
+      },
+      {
+        "kind": "file",
+        "path": "specs/151-declarative-cluster-reconciliation/execution/drift-detection.md"
+      }
+    ],
+    "extends": [
+      {
+        "nature": "additive",
+        "spec": "001-spec-compiler-mvp",
+        "unit": {
+          "kind": "file",
+          "path": "tools/spec-spine/spec-compiler/src/lib.rs"
+        }
+      }
+    ],
+    "extraFrontmatter": {
+      "amended": "2026-06-16",
+      "approved": "2026-05-18"
+    },
+    "id": "151-declarative-cluster-reconciliation",
+    "implementation": "pending",
+    "kind": "platform",
+    "owner": "bart",
+    "risk": "high",
+    "sectionHeadings": [
+      "Feature Specification: Declarative cluster reconciliation via Flux v2 GitOps",
+      "Purpose and charter",
+      "Current state vs intent",
+      "Cluster mutation contract *(normative)*",
+      "Functional Requirements *(MVP)*",
+      "Success Criteria",
+      "Out of scope (MVP)",
+      "Clarifications",
+      "Session 2026-05-17",
+      "Risks",
+      "Cross-references",
+      "Why this spec is filed as `draft`",
+      "Implementation scope — a plan-time decision",
+      "Phase 1 prep landed (2026-05-18)",
+      "Phase 1 closure code landed (2026-05-18)",
+      "Phase 1 closure operational landing (2026-05-18)",
+      "Phase 2 — reflector + wildcard-cert annotations (T-008–T-013)",
+      "Phase 2 operational landing (2026-05-18)",
+      "Phase 3 — cert-manager + ingress-nginx + ClusterIssuers (T-014–T-018)",
+      "Phase 3 follow-up — remove Hetzner DNS dormant path (2026-05-18)",
+      "Phase 3 operational landing (2026-05-18)",
+      "Phase 4 — rauthy chart to Flux (T-019/T-020/T-021)",
+      "Phase 4 operational landing (2026-05-18)",
+      "Phase 5 — drift detection documentation (T-022, 2026-05-18)",
+      "Phase 5 — SC-005 live evidence (2026-05-18)",
+      "Amendment 2026-06-29 (reset-prep housekeeping)"
+    ],
+    "specPath": "specs/151-declarative-cluster-reconciliation/spec.md",
+    "status": "approved",
+    "summary": "Replace `platform/infra/hetzner/setup.sh`'s imperative cluster-mutation monolith with a declarative GitOps reconciliation layer. Flux v2 runs in-cluster, watches `platform/gitops/`, and reconciles HelmReleases, Kustomizations, Certificates, and SOPS-encrypted Secrets continuously. setup.sh shrinks to one-time bootstrap. Application image rollouts migrate from `helm upgrade --set image.tag` against the cluster to CD writing the new tag into the gitops tree as a commit to main — Flux reconciles; helm-controller rolls pods; CD never touches the cluster. Phase 2 unblocks spec 137 Phase 6 by landing the reflector + wildcard-cert annotations as the first declarative reconciliation under the new tree.\n",
+    "title": "Declarative cluster reconciliation — GitOps for cluster-side state via Flux v2"
+  },
+  "shardHash": "37b1a51a5771bd3121a0d2d9eede59c55252a1f2ebfcb3cd800d92b0614b97cd",
+  "specVersion": "1.1.0"
+}

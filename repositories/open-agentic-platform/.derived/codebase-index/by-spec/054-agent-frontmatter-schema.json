@@ -1,0 +1,59 @@
+{
+  "mapping": {
+    "dependsOn": [
+      "035-agent-governed-execution",
+      "036-safety-tier-governance",
+      "067-tool-definition-registry",
+      "068-permission-runtime",
+      "071-skill-command-factory",
+      "093-spec-driven-preflight",
+      "098-governance-enforcement-stitching"
+    ],
+    "implementingPaths": [
+      {
+        "path": "crates/agent-frontmatter",
+        "source": "multiple"
+      },
+      {
+        "path": "product/packages/agent-frontmatter",
+        "source": "manifest-metadata"
+      },
+      {
+        "path": "standards/schemas/frontmatter/agent-frontmatter.schema.json",
+        "source": "spec-edge"
+      }
+    ],
+    "resolvedUnits": [
+      {
+        "locations": [
+          {
+            "file": "crates/agent-frontmatter"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "id": "agent-frontmatter",
+          "kind": "crate"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "standards/schemas/frontmatter/agent-frontmatter.schema.json"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "file",
+          "path": "standards/schemas/frontmatter/agent-frontmatter.schema.json"
+        }
+      }
+    ],
+    "specId": "054-agent-frontmatter-schema",
+    "specStatus": "approved"
+  },
+  "schemaVersion": "1.1.0",
+  "shardHash": "06788df45f071ded548be7ae46e57c1fa59a5d22853b9fd9b2320ee3a7918679"
+}

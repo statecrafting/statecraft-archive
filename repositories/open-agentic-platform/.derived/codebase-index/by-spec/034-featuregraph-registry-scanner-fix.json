@@ -1,0 +1,57 @@
+{
+  "mapping": {
+    "implementingPaths": [
+      {
+        "path": "crates/featuregraph",
+        "source": "manifest-metadata"
+      },
+      {
+        "path": "crates/featuregraph/src/graph.rs",
+        "source": "comment-header"
+      },
+      {
+        "path": "crates/featuregraph/src/lib.rs",
+        "source": "comment-header"
+      },
+      {
+        "path": "crates/featuregraph/src/locate.rs",
+        "source": "comment-header"
+      },
+      {
+        "path": "crates/featuregraph/src/preflight.rs",
+        "source": "comment-header"
+      },
+      {
+        "path": "crates/featuregraph/src/scanner.rs",
+        "source": "multiple"
+      },
+      {
+        "path": "crates/featuregraph/src/tools.rs",
+        "source": "comment-header"
+      },
+      {
+        "path": "crates/featuregraph/tests/golden.rs",
+        "source": "comment-header"
+      }
+    ],
+    "resolvedUnits": [
+      {
+        "locations": [
+          {
+            "file": "crates/featuregraph/src/scanner.rs"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "refines",
+        "unit": {
+          "kind": "file",
+          "path": "crates/featuregraph/src/scanner.rs"
+        }
+      }
+    ],
+    "specId": "034-featuregraph-registry-scanner-fix",
+    "specStatus": "approved"
+  },
+  "schemaVersion": "1.1.0",
+  "shardHash": "36e78aae22bd0c28f9af3c164e40f297ad3221bd9c59350d6755e1aa206e31a9"
+}

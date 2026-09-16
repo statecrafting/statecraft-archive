@@ -1,0 +1,54 @@
+{
+  "record": {
+    "authors": [
+      "open-agentic-platform"
+    ],
+    "codeAliases": [
+      "WORKTREE_AGENTS"
+    ],
+    "created": "2026-03-29",
+    "domain": "opc",
+    "establishes": [
+      {
+        "id": "@opc/worktree-agents",
+        "kind": "crate"
+      },
+      {
+        "kind": "file",
+        "path": "product/apps/opc/src-tauri/src/commands/worktree_agents.rs"
+      }
+    ],
+    "extraFrontmatter": {
+      "language": "en"
+    },
+    "featureBranch": "051-worktree-agents",
+    "id": "051-worktree-agents",
+    "implementation": "complete",
+    "kind": "platform",
+    "sectionHeadings": [
+      "Feature Specification: Background Agents with Git Worktree Isolation",
+      "Purpose",
+      "Scope",
+      "In scope",
+      "Out of scope",
+      "Requirements",
+      "Functional",
+      "Non-functional",
+      "Architecture",
+      "Component structure",
+      "Spawn flow",
+      "Completion and merge flow",
+      "Worktree layout",
+      "Implementation approach",
+      "Success criteria",
+      "Dependencies",
+      "Risk"
+    ],
+    "specPath": "specs/051-worktree-agents/spec.md",
+    "status": "approved",
+    "summary": "Background agent system supporting up to N concurrent agents, each running in an isolated git worktree with its own branch. Agents run in skip-permissions mode with inactivity timeouts and lifecycle events. On completion, users get a diff preview and merge choice.\n",
+    "title": "Background Agents with Git Worktree Isolation"
+  },
+  "shardHash": "1762fba2c703e90467aff0a0aa61611b98bc6652ae96c3a4b2a022deed7bec8a",
+  "specVersion": "1.1.0"
+}

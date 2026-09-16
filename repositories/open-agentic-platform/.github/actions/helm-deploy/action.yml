@@ -1,0 +1,222 @@
+name: Helm deploy
+description: >
+  Deploy to Kubernetes via Helm with automatic debug output on failure.
+  Handles kubeconfig setup, GHCR pull secret, helm upgrade --install,
+  rollout verification, and structured failure diagnostics.
+
+inputs:
+  namespace:
+    description: Kubernetes namespace for the release
+    required: true
+  release-name:
+    description: Helm release name
+    required: true
+  chart-path:
+    description: Path to the Helm chart directory
+    required: true
+  values-files:
+    description: Comma-separated list of values files (e.g. "values.yaml,values-hetzner.yaml")
+    required: true
+  helm-set-args:
+    description: Full --set argument string passed verbatim to helm upgrade
+    required: true
+  app-label:
+    description: Value of the app= label used for kubectl selectors
+    required: true
+  kubeconfig-b64:
+    description: Base64-encoded kubeconfig content
+    required: true
+  ghcr-pat:
+    description: GHCR personal access token for image pulls
+    required: true
+  ghcr-username:
+    description: GHCR username (typically github.actor)
+    required: true
+  pull-secret-name:
+    description: Name of the docker-registry pull secret to create/update
+    required: true
+  timeout:
+    description: helm --wait --timeout value
+    required: false
+    default: '300s'
+
+runs:
+  using: composite
+  steps:
+    - name: Set up kubeconfig
+      shell: bash
+      # L7: kubeconfig flows through KUBECONFIG_B64 env (not the inline
+      # `${{ inputs.kubeconfig-b64 }}` reference) so secret masking propagates
+      # through the composite-action boundary the same way it does at the
+      # top-level workflow scope.
+      env:
+        KUBECONFIG_B64: ${{ inputs.kubeconfig-b64 }}
+      run: |
+        mkdir -p ~/.kube
+        printf '%s' "$KUBECONFIG_B64" | base64 -d > ~/.kube/config
+        chmod 600 ~/.kube/config
+
+    - name: Ensure GHCR pull secret
+      shell: bash
+      # GHCR_PAT flows through an env var (not the inline
+      # `${{ inputs.ghcr-pat }}` reference) so the secret is never
+      # substituted into the rendered workflow script text, matching the
+      # kubeconfig-b64 handling above. That only keeps it out of the
+      # step's *source*, though: `--docker-password="$GHCR_PAT"` below
+      # still expands the secret onto kubectl's argv at run time, which
+      # is visible to anything reading /proc/<pid>/cmdline or `ps` on this
+      # runner for the process's lifetime (`kubectl create secret
+      # docker-registry` has no stdin/file password flag to avoid this).
+      env:
+        GHCR_PAT: ${{ inputs.ghcr-pat }}
+      run: |
+        kubectl -n ${{ inputs.namespace }} create secret docker-registry ${{ inputs.pull-secret-name }} \
+          --docker-server=ghcr.io \
+          --docker-username=${{ inputs.ghcr-username }} \
+          --docker-password="$GHCR_PAT" \
+          --dry-run=client -o yaml | kubectl apply -f -
+
+    - name: Reclaim helm field-manager ownership
+      shell: bash
+      # Server-side-apply field-manager defence. When a Deployment under
+      # this release has been touched by manual `kubectl set image`,
+      # `kubectl rollout restart`, or `kubectl patch` between helm runs
+      # (e.g. during a hotfix), the kubectl operation registers a
+      # field-manager entry that owns fields helm later tries to apply.
+      # The next `helm upgrade` then fails with an opaque message:
+      #   "Apply failed with N conflict: conflict with kubectl-set
+      #    using apps/v1: .spec.template.spec.containers[name=...].image"
+      #
+      # Symptom seen 2026-05-08 on the spec-143 push: cd-statecraft
+      # failed because the 2026-05-07 hotfix used `kubectl set image
+      # deployment/statecraft-api` to ship hotfix-2026-05-07-knowledge-list,
+      # leaving kubectl-set as a field manager that helm couldn't
+      # reclaim.
+      #
+      # First-revision implementation (commit 5dbb056) tried a JSON
+      # patch to nuke managedFields entirely. That worked at first
+      # glance but left the resource in a state where K8s assigned a
+      # synthetic `before-first-apply` manager to the orphaned fields,
+      # which helm's server-side apply still couldn't force-claim from.
+      # The conflict transformed from kubectl-set → before-first-apply
+      # but didn't go away.
+      #
+      # Current implementation: transfer ownership to helm via SSA
+      # force-conflicts. We re-apply the live deployment spec under
+      # `--field-manager=helm --force-conflicts`, which makes helm the
+      # owner of every field currently on the resource. Helm's
+      # subsequent upgrade then sees its own manager and applies its
+      # new manifest cleanly. No `helm upgrade --force` — that flag is
+      # too aggressive (it recreates Services and PVCs, churning IPs
+      # and risking data loss on persistent volumes).
+      run: |
+        set -euo pipefail
+        # SSA force-conflicts CANNOT take over Update-operation claims.
+        # K8s rule: Apply vs Update conflicts always favour Update —
+        # --force-conflicts only resolves Apply-vs-Apply conflicts.
+        # The blessed migration path for Update-pollution is to remove
+        # the offending entries from .metadata.managedFields directly
+        # (https://kubernetes.io/docs/reference/using-api/server-side-apply/#upgrading-from-client-side-apply-to-server-side-apply).
+        #
+        # We strip Update-operation entries from kubectl-* and
+        # before-first-apply (the synthetic owner the API server creates
+        # for Update fields that lost their original Update manager).
+        # We preserve helm's Apply entry and k3s's Update entry on the
+        # status subresource — those are legitimate.
+        #
+        # Symptom history on cd-statecraft, spec-143 push:
+        #   25549778525 — original kubectl-set Update conflict
+        #   25550587712 — strip selector matched nothing
+        #   25551135913 — JSON-patch nuke left empty managedFields,
+        #                 K8s synthesised before-first-apply
+        #   25551655650 — detection missed empty-managedFields case
+        #   25552118489 — SSA --force-conflicts as helm took the Apply
+        #                 side but Update side persists per K8s rule
+        #   THIS REVISION — directly filter managedFields metadata,
+        #                 remove the Update entries, leave helm + k3s.
+        DEPS=$(kubectl -n ${{ inputs.namespace }} get deployments \
+          -o jsonpath='{.items[*].metadata.name}' 2>/dev/null || true)
+        for dep in $DEPS; do
+          # Build the filtered managedFields array. Keep entries where
+          # operation == Apply (helm), or manager == k3s (cluster-
+          # internal Update on .status). Drop everything else (kubectl-*
+          # Updates, before-first-apply Updates).
+          FILTERED=$(kubectl -n ${{ inputs.namespace }} get deployment "$dep" \
+            -o json --show-managed-fields \
+            | jq -c '[.metadata.managedFields[]
+                | select(.operation == "Apply" or .manager == "k3s")]')
+
+          # If filtering changed the array, patch the resource.
+          ORIGINAL=$(kubectl -n ${{ inputs.namespace }} get deployment "$dep" \
+            -o json --show-managed-fields \
+            | jq -c '.metadata.managedFields')
+
+          if [ "$FILTERED" != "$ORIGINAL" ]; then
+            echo "==> Pruning Update-operation pollution from ${{ inputs.namespace }}/$dep"
+            kubectl -n ${{ inputs.namespace }} patch deployment "$dep" \
+              --type=json \
+              -p="[{\"op\":\"replace\",\"path\":\"/metadata/managedFields\",\"value\":$FILTERED}]"
+          fi
+        done
+
+    - name: Deploy via Helm
+      shell: bash
+      run: |
+        # Clear any stuck "pending-*" release lock left by a cancelled/failed prior run.
+        STATUS=$(helm status ${{ inputs.release-name }} --namespace ${{ inputs.namespace }} -o json 2>/dev/null | jq -r '.info.status' || echo "")
+        case "$STATUS" in
+          pending-install|pending-upgrade|pending-rollback)
+            echo "Release stuck in $STATUS — rolling back before retry."
+            helm rollback ${{ inputs.release-name }} --namespace ${{ inputs.namespace }} --no-hooks || \
+              helm uninstall ${{ inputs.release-name }} --namespace ${{ inputs.namespace }}
+            ;;
+        esac
+
+        # Build -f flags from comma-separated values-files input
+        VALUES_FLAGS=""
+        IFS=',' read -ra FILES <<< "${{ inputs.values-files }}"
+        for f in "${FILES[@]}"; do
+          VALUES_FLAGS="${VALUES_FLAGS} -f ${f}"
+        done
+
+        helm upgrade --install ${{ inputs.release-name }} ${{ inputs.chart-path }} \
+          --namespace ${{ inputs.namespace }} \
+          ${VALUES_FLAGS} \
+          ${{ inputs.helm-set-args }} \
+          --wait --timeout ${{ inputs.timeout }}
+
+    - name: Verify rollout
+      shell: bash
+      run: |
+        kubectl -n ${{ inputs.namespace }} rollout status deployment/${{ inputs.app-label }} --timeout=120s
+        kubectl -n ${{ inputs.namespace }} get pods -l app=${{ inputs.app-label }}
+
+    - name: Debug failed deploy
+      if: failure()
+      shell: bash
+      run: |
+        echo "=== Pod status ==="
+        kubectl -n ${{ inputs.namespace }} get pods -l app=${{ inputs.app-label }} -o wide
+        echo ""
+        echo "=== Pod describe ==="
+        kubectl -n ${{ inputs.namespace }} describe pods -l app=${{ inputs.app-label }}
+        echo ""
+        echo "=== Pod logs (latest) ==="
+        kubectl -n ${{ inputs.namespace }} logs -l app=${{ inputs.app-label }} --tail=100 --all-containers
+        echo ""
+        # Helm hook diagnostics: capture logs from any Job-controlled pods in
+        # the namespace (migrate, seed, etc.) that don't carry the app= label
+        # the main selector targets. Without this, pre-upgrade hook failures
+        # surface as opaque "Job Failed. failed: N/M" with no SQL/script error.
+        echo "=== Helm hook job pods (logs + describe) ==="
+        for pod in $(kubectl -n ${{ inputs.namespace }} get pods \
+            -o jsonpath='{range .items[?(@.metadata.ownerReferences[0].kind=="Job")]}{.metadata.name}{"\n"}{end}' \
+            2>/dev/null); do
+          echo "--- $pod (describe tail) ---"
+          kubectl -n ${{ inputs.namespace }} describe pod "$pod" 2>/dev/null | tail -30 || true
+          echo "--- $pod (logs) ---"
+          kubectl -n ${{ inputs.namespace }} logs "$pod" --tail=300 --all-containers 2>/dev/null || true
+        done
+        echo ""
+        echo "=== Events ==="
+        kubectl -n ${{ inputs.namespace }} get events --sort-by='.lastTimestamp' | tail -30

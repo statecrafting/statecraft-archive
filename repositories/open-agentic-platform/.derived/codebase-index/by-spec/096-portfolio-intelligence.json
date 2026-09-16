@@ -1,0 +1,67 @@
+{
+  "mapping": {
+    "dependsOn": [
+      "091-registry-enrichment",
+      "093-spec-driven-preflight"
+    ],
+    "implementingPaths": [
+      {
+        "path": "crates/featuregraph/src/enrichment.rs",
+        "source": "multiple"
+      },
+      {
+        "path": "crates/featuregraph/src/preflight.rs",
+        "source": "spec-edge"
+      },
+      {
+        "path": "crates/xray",
+        "source": "spec-edge"
+      }
+    ],
+    "resolvedUnits": [
+      {
+        "locations": [
+          {
+            "file": "crates/featuregraph/src/enrichment.rs"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "file",
+          "path": "crates/featuregraph/src/enrichment.rs"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "crates/xray"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "extends",
+        "unit": {
+          "id": "xray",
+          "kind": "crate"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "crates/featuregraph/src/preflight.rs"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "extends",
+        "unit": {
+          "kind": "file",
+          "path": "crates/featuregraph/src/preflight.rs"
+        }
+      }
+    ],
+    "specId": "096-portfolio-intelligence",
+    "specStatus": "approved"
+  },
+  "schemaVersion": "1.1.0",
+  "shardHash": "98de9163fabcd89b87ba56db13017aed993fc7fc8746723aed9460a7b85d1faf"
+}

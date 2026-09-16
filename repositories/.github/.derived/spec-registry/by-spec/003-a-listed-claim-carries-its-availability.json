@@ -1,0 +1,68 @@
+{
+  "record": {
+    "amends": [
+      "001-the-profile-is-the-org-front-door"
+    ],
+    "created": "2026-09-11",
+    "dependsOn": [
+      "001-the-profile-is-the-org-front-door"
+    ],
+    "extends": [
+      {
+        "nature": "superseding",
+        "spec": "001-the-profile-is-the-org-front-door",
+        "unit": {
+          "kind": "file",
+          "path": "profile/README.md"
+        }
+      }
+    ],
+    "id": "003-a-listed-claim-carries-its-availability",
+    "implementation": "in-progress",
+    "sectionHeadings": [
+      "003: A listed claim carries its availability",
+      "1. Purpose",
+      "2. Territory",
+      "3. Behavior",
+      "3.1 The page carries five things, in this order",
+      "3.2 Three facts, stated independently, never as one verdict",
+      "3.3 Evidence claims are bounded to what is independently checkable",
+      "3.4 The license section separates the label from the promise",
+      "3.5 Nothing here adopts the September 2026 realignment",
+      "3.6 Corrections, the roster and the lead land separately",
+      "3.7 One vocabulary with statecraft.ing",
+      "4. Proposed copy, part one: factual corrections",
+      "4.1 The thesis block",
+      "4.2 statecraft",
+      "4.3 statecraft-cli",
+      "4.4 spec-spine",
+      "4.5 enrahitu: the facts, whichever way D-3 goes",
+      "4.6 The tenant toolkit",
+      "4.7 The primitives",
+      "4.8 statecrafting",
+      "4.9 The license section",
+      "5. Proposed copy, part two: new blocks that need no thesis or roster decision",
+      "5.1 Start here, between the thesis and the projects",
+      "5.2 The key, immediately under `## Projects`",
+      "6. Proposed copy, part three: copy a recorded decision releases",
+      "6.1 rahi (D-2, roster step): a new group, \"The chassis\", after \"The template\"",
+      "6.2 hqgit: withdrawn (D-2)",
+      "6.3 enrahitu's paragraph (D-3, corrections step)",
+      "6.4 The lead (D-1, lead step): waits on G-03",
+      "7. Out of scope",
+      "8. Decisions",
+      "9. What this asks of other repositories",
+      "10. Sources",
+      "11. What was run",
+      "12. Revision history",
+      "13. Implementation notes",
+      "Verification"
+    ],
+    "specPath": "specs/003-a-listed-claim-carries-its-availability/spec.md",
+    "status": "approved",
+    "summary": "The landing page lists repositories in the present tense and closes with a license rationale that is, in two places, not true of the files on disk. This spec amends 001 section 3.1 so that every entry states what is implemented, what is released, and what is hosted as three separate facts (the compact vocabulary of decision G-12, none of them a product verdict), the page gains a first adoption path that runs locally with no account, the license section names the three licenses that actually ship and says what each requires rather than what it prevents, and three overclaims are withdrawn (signed-by-code, a gate in every repository, a released CLI that carries the local engine). The owner's decisions of 2026-09-12 (PROF-01 to PROF-04) settle the roster, enrahitu's first sentence, the adoption path, the superseding edge and the license heading. The copy lands in three steps: corrections on their own, rahi in the same window as statecraft.ing lists it, and the lead once G-03 is recorded. hqgit stays off the page. It adopts nothing from the September 2026 realignment.\n",
+    "title": "A listed claim carries its availability"
+  },
+  "shardHash": "ffa5821ce15f535783a77ecd219d6ded0a0fb634db357f609ba5da806a4ff1b9",
+  "specVersion": "1.2.0"
+}

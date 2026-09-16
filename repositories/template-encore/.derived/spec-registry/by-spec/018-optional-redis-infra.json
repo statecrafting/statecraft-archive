@@ -1,0 +1,51 @@
+{
+  "record": {
+    "codeAliases": [
+      "REDIS_HOST",
+      "REDIS_USER",
+      "REDIS_PASSWORD",
+      "getRedis"
+    ],
+    "created": "2026-07-08",
+    "dependsOn": [
+      "001-encore-app-architecture",
+      "002-security-data-invariants",
+      "008-container-host-deploy"
+    ],
+    "domain": "app",
+    "establishes": [
+      {
+        "kind": "file",
+        "path": "apps/api/lib/redis.ts"
+      },
+      {
+        "kind": "file",
+        "path": "apps/api/lib/redis.test.ts"
+      }
+    ],
+    "id": "018-optional-redis-infra",
+    "implementation": "complete",
+    "kind": "feature",
+    "owner": "bart",
+    "risk": "low",
+    "sectionHeadings": [
+      "018 - Optional Redis infrastructure: a typed baseline client and the opt-in infra.config redis contract",
+      "1. Purpose",
+      "2. The contract",
+      "2.1 Connection env (fully typed, parallel to Postgres)",
+      "2.2 The infra.config redis block (composed, not baseline)",
+      "2.3 The baseline client seam",
+      "3. Requirements",
+      "Functional Requirements",
+      "Success Criteria",
+      "4. Relationships",
+      "5. Out of scope"
+    ],
+    "specPath": "specs/018-optional-redis-infra/spec.md",
+    "status": "approved",
+    "summary": "Redis is an optional, opt-in infrastructure resource for the baseline app. When present it is provisioned externally (in OAP dev by deployd; in staging/prod by the tenant) and reached over a fully typed connection triple, REDIS_HOST / REDIS_USER / REDIS_PASSWORD, exactly parallel to the app's Postgres SQL_HOST / SQL_USERNAME / SQL_PASSWORD contract. This spec ships the single baseline seam that reads that triple: apps/api/lib/redis.ts, a lazily constructed ioredis client that stays dormant (opens no socket) unless REDIS_HOST is set. The Encore infra.config `redis` block that declares the resource is not baseline: it is composed into a produced app only when the factory data-redis module is selected (factory-encore spec 008), so the lean baseline carries the client but not the resource. Redis is explicitly NOT the rate-limit backend (that is Postgres, INV-6) and NOT a session store (sessions are stateless JWT, INV-3 / INV-7); its first concrete consumer is the cron scheduler's large-scale distributed lock, which peers with this resource optionally.\n",
+    "title": "Optional Redis infrastructure: a typed baseline client and the opt-in infra.config redis contract"
+  },
+  "shardHash": "dfc3c6c52bfb23576adf87a94480d38147b691c6e7a07838fb7fec448bbd1620",
+  "specVersion": "1.1.0"
+}

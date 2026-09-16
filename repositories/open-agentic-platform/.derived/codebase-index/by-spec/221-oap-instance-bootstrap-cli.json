@@ -1,0 +1,144 @@
+{
+  "mapping": {
+    "dependsOn": [
+      "106-rauthy-native-oidc-and-membership",
+      "151-declarative-cluster-reconciliation",
+      "137-tenant-environment-access-gates",
+      "143-presigned-upload-public-endpoint",
+      "072-multi-cloud-k8s-portability",
+      "116-supply-chain-policy-gates"
+    ],
+    "implementingPaths": [
+      {
+        "path": "crates/featuregraph/tests/golden/features_graph.json",
+        "source": "spec-edge"
+      },
+      {
+        "path": "platform/charts/deployd-api/values-hetzner.yaml",
+        "source": "spec-edge"
+      },
+      {
+        "path": "platform/charts/statecraft/values-hetzner.yaml",
+        "source": "spec-edge"
+      },
+      {
+        "path": "platform/infra/hetzner/setup.sh",
+        "source": "spec-edge"
+      },
+      {
+        "path": "platform/services/statecraft/api/github/webhook.ts",
+        "source": "spec-edge"
+      },
+      {
+        "path": "platform/services/statecraft/scripts/seed-rauthy.mjs",
+        "source": "spec-edge"
+      },
+      {
+        "path": "specs/219-tenant-tail-verifier-toolkit/spec.md",
+        "source": "spec-edge"
+      }
+    ],
+    "resolvedUnits": [
+      {
+        "locations": [
+          {
+            "file": "crates/featuregraph/tests/golden/features_graph.json"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "extends",
+        "unit": {
+          "kind": "file",
+          "path": "crates/featuregraph/tests/golden/features_graph.json"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "platform/infra/hetzner/setup.sh",
+            "span": {
+              "endLine": 229,
+              "startLine": 193
+            }
+          }
+        ],
+        "ownership": true,
+        "sourceField": "co_authority",
+        "unit": {
+          "anchor": "bootstrap",
+          "file": "platform/infra/hetzner/setup.sh",
+          "kind": "section"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "platform/charts/deployd-api/values-hetzner.yaml"
+          }
+        ],
+        "ownership": false,
+        "sourceField": "references",
+        "unit": {
+          "kind": "file",
+          "path": "platform/charts/deployd-api/values-hetzner.yaml"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "platform/charts/statecraft/values-hetzner.yaml"
+          }
+        ],
+        "ownership": false,
+        "sourceField": "references",
+        "unit": {
+          "kind": "file",
+          "path": "platform/charts/statecraft/values-hetzner.yaml"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "platform/services/statecraft/api/github/webhook.ts"
+          }
+        ],
+        "ownership": false,
+        "sourceField": "references",
+        "unit": {
+          "kind": "file",
+          "path": "platform/services/statecraft/api/github/webhook.ts"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "platform/services/statecraft/scripts/seed-rauthy.mjs"
+          }
+        ],
+        "ownership": false,
+        "sourceField": "references",
+        "unit": {
+          "kind": "file",
+          "path": "platform/services/statecraft/scripts/seed-rauthy.mjs"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "specs/219-tenant-tail-verifier-toolkit/spec.md"
+          }
+        ],
+        "ownership": false,
+        "sourceField": "references",
+        "unit": {
+          "kind": "file",
+          "path": "specs/219-tenant-tail-verifier-toolkit/spec.md"
+        }
+      }
+    ],
+    "specId": "221-oap-instance-bootstrap-cli",
+    "specStatus": "approved"
+  },
+  "schemaVersion": "1.1.0",
+  "shardHash": "00a70c6d7b27f56b897e0f4da37d43c4b90ea083bf2f7016cb9d9a047bc896ef"
+}

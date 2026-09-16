@@ -1,0 +1,319 @@
+# Spec: 177-ci-orchestrator-pr-gate
+#
+# Single PR-time orchestrator. Branch protection's required check on
+# `main` is the terminal `ci-gate` job — every other PR-gate workflow
+# (the `ci-*.yml` fleet plus `spec-conformance.yml`) is reusable
+# (`workflow_call:`) and dispatched from here.
+#
+# Routing: a `changes` job runs dorny/paths-filter against the diff and
+# emits one boolean output per routed workflow. Each routed reusable is
+# gated on its filter; constitutional gates (spec 177 §2.2) skip the
+# filter and always run on PRs. The `ci-gate` aggregator treats `skipped`
+# as success — that's the entire point of conditional dispatch — and
+# fails the build on any upstream `failure` or `cancelled`.
+#
+# `ci-spec-code-coupling` is PR-only by design (spec 127 reads PR
+# base/head SHAs); the other always-on workflows run for push-to-main
+# too, mirroring their pre-spec-177 push-trigger coverage.
+
+name: ci
+
+on:
+  pull_request:
+    branches: [main]
+  push:
+    branches: [main]
+  # Spec 188 Phase 2 — GitHub merge queue. Each queued PR is tested against
+  # the speculative merged tree, so a green PR can't be silently invalidated
+  # by the one ahead of it, and conflicts that pass alone but break together
+  # (e.g. the spec-id-186 collision class) are caught before reaching main.
+  # INERT until a repo admin enables the merge queue in branch protection
+  # and requires `ci-gate` on merge_group — honouring FR-006's "Phase 2
+  # strictly after Phase 3" as an ops ordering.
+  merge_group:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pull-requests: read
+
+jobs:
+  # ─── route ─────────────────────────────────────────────────────────────
+  changes:
+    runs-on: ubuntu-latest
+    name: route / paths-filter
+    timeout-minutes: 5
+    # Spec 188 Phase 2: on `merge_group` the paths-filter step is skipped
+    # (a merge group has no PR base to diff against), so every output falls
+    # back to `true` and the full suite runs against the speculative merged
+    # tree. On `pull_request` the filter drives them as before.
+    outputs:
+      axiomregent: ${{ steps.f.outputs.axiomregent == 'true' || github.event_name == 'merge_group' }}
+      crates: ${{ steps.f.outputs.crates == 'true' || github.event_name == 'merge_group' }}
+      deployd_api_rs: ${{ steps.f.outputs.deployd_api_rs == 'true' || github.event_name == 'merge_group' }}
+      desktop: ${{ steps.f.outputs.desktop == 'true' || github.event_name == 'merge_group' }}
+      factory_schema_lockstep: ${{ steps.f.outputs.factory_schema_lockstep == 'true' || github.event_name == 'merge_group' }}
+      opc_bench: ${{ steps.f.outputs.opc_bench == 'true' || github.event_name == 'merge_group' }}
+      featuregraph: ${{ steps.f.outputs.featuregraph == 'true' || github.event_name == 'merge_group' }}
+      orchestrator: ${{ steps.f.outputs.orchestrator == 'true' || github.event_name == 'merge_group' }}
+      parity: ${{ steps.f.outputs.parity == 'true' || github.event_name == 'merge_group' }}
+      policy_kernel: ${{ steps.f.outputs.policy_kernel == 'true' || github.event_name == 'merge_group' }}
+      schema_parity: ${{ steps.f.outputs.schema_parity == 'true' || github.event_name == 'merge_group' }}
+      statecraft: ${{ steps.f.outputs.statecraft == 'true' || github.event_name == 'merge_group' }}
+      statecraft_encore: ${{ steps.f.outputs.statecraft_encore == 'true' || github.event_name == 'merge_group' }}
+      tenant_app: ${{ steps.f.outputs.tenant_app == 'true' || github.event_name == 'merge_group' }}
+      tenant_hello: ${{ steps.f.outputs.tenant_hello == 'true' || github.event_name == 'merge_group' }}
+    steps:
+      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+      - uses: dorny/paths-filter@7b450fff21473bca461d4b92ce414b9d0420d706 # v4.0.2
+        id: f
+        # Run on pull_request and push (both have a base to diff); skip only
+        # on merge_group, which has none — the outputs fall back to `true`.
+        if: github.event_name != 'merge_group'
+        with:
+          filters: |
+            axiomregent:
+              - 'crates/axiomregent/**'
+              - 'crates/agent/**'
+              - 'crates/featuregraph/**'
+              - 'crates/xray/**'
+              - 'crates/run/**'
+              - 'crates/policy-kernel/**'
+              - '.github/workflows/ci-axiomregent.yml'
+            crates:
+              - 'Cargo.toml'
+              - 'Cargo.lock'
+              - 'crates/**'
+              - 'tools/spec-spine/**'
+              - 'tools/oap/**'
+              - 'tools/shared/**'
+              - '.github/workflows/ci-crates.yml'
+            deployd_api_rs:
+              - 'platform/services/deployd-api-rs/**'
+              - 'platform/charts/**'
+              - '.github/workflows/ci-deployd-api-rs.yml'
+            desktop:
+              - 'product/apps/opc/**'
+              - 'crates/**'
+              - 'product/packages/**'
+              - '.github/workflows/ci-desktop.yml'
+            opc_bench:
+              - 'product/apps/opc/src-tauri/**'
+              - '.github/workflows/ci-opc-bench.yml'
+            factory_schema_lockstep:
+              # The lockstep surface (spec 212): the OAP contract schemas, the
+              # checker tool, this spec's pin (spec.md), and the lane itself.
+              - 'standards/schemas/factory/**'
+              - 'tools/oap/factory-schema-lockstep/**'
+              - 'specs/212-factory-schema-lockstep-ci/spec.md'
+              - '.github/workflows/ci-factory-schema-lockstep.yml'
+            featuregraph:
+              - 'specs/**'
+              - 'spec-spine.toml'
+              - 'crates/featuregraph/**'
+              - '.github/workflows/ci-featuregraph-golden.yml'
+            orchestrator:
+              - 'crates/orchestrator/**'
+              - 'crates/provider-registry/**'
+              - 'crates/standards-loader/**'
+              - '.github/workflows/ci-orchestrator.yml'
+            parity:
+              - '.github/workflows/**'
+              - 'Makefile'
+              - 'tools/oap/ci-parity-check/**'
+            policy_kernel:
+              - 'crates/policy-kernel/**'
+              - '.github/workflows/ci-policy-kernel.yml'
+            schema_parity:
+              - 'crates/factory-contracts/**'
+              - 'platform/services/statecraft/api/knowledge/**'
+              - 'platform/services/statecraft/api/governance/**'
+              - 'platform/services/statecraft/api/sync/**'
+              - 'product/apps/opc/src-tauri/src/commands/sync_client.rs'
+              - 'tools/oap/schema-parity-check/**'
+              - '.github/workflows/ci-schema-parity.yml'
+            statecraft:
+              - 'platform/services/statecraft/**'
+              - '.github/workflows/ci-statecraft.yml'
+            statecraft_encore:
+              # The DB-bound encore-test lane (spec 211): same service
+              # surface as `statecraft`, plus its own workflow file.
+              - 'platform/services/statecraft/**'
+              - '.github/workflows/ci-statecraft-encore.yml'
+            tenant_app:
+              - 'platform/charts/acme-vue-encore/**'
+              - '.github/workflows/ci-tenant-app.yml'
+
+  # ─── routed by paths-filter ────────────────────────────────────────────
+  # Push-to-main trim (2026-06-10, spec 177 amendment): branch protection
+  # requires the merge queue, so every push-to-main commit IS the merge
+  # candidate the `merge_group` run just validated — tree-identical. The
+  # heavy validation jobs therefore skip on `push` (ci-gate treats skipped
+  # as success). Deliberately still running on push: opc-bench (saves the
+  # main baseline consumed by workflow_dispatch diagnostics), parity
+  # (cheap; guards Makefile↔workflow drift), and the constitutional set
+  # (spec-conformance incl. the re-homed check-config, supply-chain).
+  # cd-*.yml deploy workflows and build-axiomregent.yml are separate files
+  # and unaffected. workflow_dispatch still runs everything.
+  axiomregent:
+    needs: changes
+    if: github.event_name != 'push' && needs.changes.outputs.axiomregent == 'true'
+    uses: ./.github/workflows/ci-axiomregent.yml
+
+  crates:
+    needs: changes
+    if: github.event_name != 'push' && needs.changes.outputs.crates == 'true'
+    uses: ./.github/workflows/ci-crates.yml
+
+  deployd-api-rs:
+    needs: changes
+    if: github.event_name != 'push' && needs.changes.outputs.deployd_api_rs == 'true'
+    uses: ./.github/workflows/ci-deployd-api-rs.yml
+
+  desktop:
+    needs: changes
+    if: github.event_name != 'push' && needs.changes.outputs.desktop == 'true'
+    uses: ./.github/workflows/ci-desktop.yml
+
+  # Spec 180 §5.3 — Tier 2 bench gate for the filesystem-scanning OPC usage
+  # handler. Path-filtered on the src-tauri subtree; composes into ci-gate.
+  opc-bench:
+    needs: changes
+    if: needs.changes.outputs.opc_bench == 'true'
+    uses: ./.github/workflows/ci-opc-bench.yml
+
+  factory-schema-lockstep:
+    needs: changes
+    if: github.event_name != 'push' && needs.changes.outputs.factory_schema_lockstep == 'true'
+    # secrets: inherit passes UPSTREAM_SOURCES_RO_TOKEN to the reusable lane (the
+    # private factory fetch); the lane is fail-visible without it.
+    uses: ./.github/workflows/ci-factory-schema-lockstep.yml
+    secrets: inherit
+
+  featuregraph-golden:
+    needs: changes
+    if: github.event_name != 'push' && needs.changes.outputs.featuregraph == 'true'
+    uses: ./.github/workflows/ci-featuregraph-golden.yml
+
+  orchestrator:
+    needs: changes
+    if: github.event_name != 'push' && needs.changes.outputs.orchestrator == 'true'
+    uses: ./.github/workflows/ci-orchestrator.yml
+
+  parity:
+    needs: changes
+    if: needs.changes.outputs.parity == 'true'
+    uses: ./.github/workflows/ci-parity.yml
+
+  policy-kernel:
+    needs: changes
+    if: github.event_name != 'push' && needs.changes.outputs.policy_kernel == 'true'
+    uses: ./.github/workflows/ci-policy-kernel.yml
+
+  schema-parity:
+    needs: changes
+    if: github.event_name != 'push' && needs.changes.outputs.schema_parity == 'true'
+    uses: ./.github/workflows/ci-schema-parity.yml
+
+  statecraft:
+    needs: changes
+    if: github.event_name != 'push' && needs.changes.outputs.statecraft == 'true'
+    uses: ./.github/workflows/ci-statecraft.yml
+
+  statecraft-encore:
+    needs: changes
+    if: github.event_name != 'push' && needs.changes.outputs.statecraft_encore == 'true'
+    uses: ./.github/workflows/ci-statecraft-encore.yml
+
+  tenant-app:
+    needs: changes
+    if: github.event_name != 'push' && needs.changes.outputs.tenant_app == 'true'
+    uses: ./.github/workflows/ci-tenant-app.yml
+
+  # ─── constitutional (always-run, spec 177 §2.2) ────────────────────────
+  spec-conformance:
+    uses: ./.github/workflows/spec-conformance.yml
+
+  spec-code-coupling:
+    # PR-only: spec 127 reads PR base/head SHAs.
+    if: github.event_name == 'pull_request'
+    uses: ./.github/workflows/ci-spec-code-coupling.yml
+
+  supply-chain:
+    uses: ./.github/workflows/ci-supply-chain.yml
+
+  # Spec 188 Phase 3's NARROW config-hash gate (the claude-config slice over
+  # .claude/settings.json + .mcp.json, spec 184) is re-homed into the
+  # spec-conformance job (2026-06-10): conformance already runs the spec-spine
+  # engine smokes, so the standalone ci-config-hash.yml job paid ~3 min of
+  # runner spin-up for a 50ms check. The guarantee is unchanged (spec 217
+  # swapped the in-tree config-hash check for `spec-spine index check --slice
+  # claude-config`), still constitutional/always-on (including push), and it
+  # runs BEFORE conformance's index build so it validates the COMMITTED slice
+  # sidecar, not a freshly regenerated one.
+
+  # Spec 177 + 085 — AI PR review folded into the gate. It was a standalone
+  # workflow that was green-but-dead on every PR back to ~#220 (auth failure
+  # swallowed by `|| echo`) until #265 fixed it; folding it here makes the
+  # terminal ci-gate `needs:` it, so a failed or absent review blocks merge
+  # (green ci-gate ⇒ actually reviewed). PR-only — it needs PR context
+  # (number, base/head diff), like spec-code-coupling; skipped on
+  # push/merge_group, which ci-gate treats as success. Job-level
+  # `pull-requests: write` overrides ci.yml's read default for this job only
+  # (the workflow posts a review comment); `secrets: inherit` passes
+  # CLAUDE_CODE_OAUTH_TOKEN. Parity-exempt (spec 104): an AI review has no
+  # `make ci-strict` mirror — it is the first gate without a local mirror,
+  # documented as an intentional carve-out there.
+  ai-review:
+    if: github.event_name == 'pull_request'
+    permissions:
+      contents: read
+      pull-requests: write
+    secrets: inherit
+    uses: ./.github/workflows/ai-pr-review.yml
+
+  # ─── aggregator ────────────────────────────────────────────────────────
+  ci-gate:
+    name: ci-gate
+    if: always()
+    needs:
+      - changes
+      - axiomregent
+      - crates
+      - deployd-api-rs
+      - desktop
+      - factory-schema-lockstep
+      - opc-bench
+      - featuregraph-golden
+      - orchestrator
+      - parity
+      - policy-kernel
+      - schema-parity
+      - statecraft
+      - statecraft-encore
+      - tenant-app
+      - spec-conformance
+      - spec-code-coupling
+      - supply-chain
+      - ai-review
+    runs-on: ubuntu-latest
+    timeout-minutes: 2
+    steps:
+      - name: Aggregate upstream results
+        env:
+          RESULTS: ${{ toJSON(needs) }}
+        run: |
+          set -u
+          echo "$RESULTS"
+          # `failure` / `cancelled` block merge; `skipped` (path-filter said
+          # "don't run", or job opted out via its own `if:`) and `success`
+          # pass. The aggregator is the merge contract — keep it small.
+          if echo "$RESULTS" | jq -e '
+              to_entries
+              | map(.value.result)
+              | any(. == "failure" or . == "cancelled")
+            ' > /dev/null; then
+            echo "::error::one or more upstream jobs failed or were cancelled"
+            exit 1
+          fi
+          echo "all upstream jobs satisfied (success or skipped)"

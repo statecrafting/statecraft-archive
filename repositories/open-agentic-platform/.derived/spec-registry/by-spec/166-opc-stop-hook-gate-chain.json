@@ -1,0 +1,134 @@
+{
+  "record": {
+    "codeAliases": [
+      "OPC_STOP_GATES",
+      "CONVERSATION_TIME_GATES"
+    ],
+    "created": "2026-05-22",
+    "dependsOn": [
+      "101-codebase-index-mvp",
+      "103-init-protocol-governed-reads",
+      "127-spec-code-coupling-gate",
+      "128-spec-lint-default-fail-on-warn",
+      "131-adversarial-prompt-refusal-policy",
+      "133-amends-aware-coupling-gate",
+      "134-fast-local-ci-mode",
+      "135-fast-ci-as-default"
+    ],
+    "domain": "opc",
+    "establishes": [
+      {
+        "kind": "file",
+        "path": "product/apps/opc/src-tauri/resources/claude-hooks.json"
+      },
+      {
+        "kind": "directory",
+        "path": "product/apps/opc/src-tauri/resources/claude-hooks"
+      }
+    ],
+    "extends": [
+      {
+        "nature": "additive",
+        "spec": "032-opc-inspect-governance-wiring-mvp",
+        "unit": {
+          "kind": "file",
+          "path": "product/apps/opc/src/lib/hooksManager.ts"
+        }
+      },
+      {
+        "nature": "additive",
+        "spec": "032-opc-inspect-governance-wiring-mvp",
+        "unit": {
+          "kind": "file",
+          "path": "product/apps/opc/src/lib/hooksManager.spec166.test.ts"
+        }
+      },
+      {
+        "nature": "additive",
+        "spec": "032-opc-inspect-governance-wiring-mvp",
+        "unit": {
+          "kind": "file",
+          "path": "product/apps/opc/src/types/hooks.ts"
+        }
+      },
+      {
+        "nature": "additive",
+        "spec": "032-opc-inspect-governance-wiring-mvp",
+        "unit": {
+          "kind": "file",
+          "path": "product/apps/opc/src-tauri/tauri.conf.json"
+        }
+      }
+    ],
+    "extraFrontmatter": {
+      "compliance": [
+        {
+          "controls": [
+            "ASI01",
+            "ASI06"
+          ],
+          "framework": "owasp-asi-2026"
+        }
+      ],
+      "slug": "opc-stop-hook-gate-chain"
+    },
+    "id": "166-opc-stop-hook-gate-chain",
+    "implementation": "complete",
+    "kind": "platform",
+    "owner": "bart",
+    "references": [
+      {
+        "role": "decomposition-source",
+        "unit": {
+          "kind": "file",
+          "path": "docs/owasp/factory/AIDE-VELOCITY-OAP-INTENT.md"
+        }
+      },
+      {
+        "role": "aide-analogue",
+        "unit": {
+          "kind": "file",
+          "path": "docs/owasp/factory/AIDE-VELOCITY-HARNESS-blueprint-spec.md"
+        }
+      },
+      {
+        "role": "existing-gate-binaries",
+        "unit": {
+          "kind": "file",
+          "path": "Makefile"
+        }
+      },
+      {
+        "role": "governed-read-discipline",
+        "unit": {
+          "kind": "file",
+          "path": "specs/103-init-protocol-governed-reads/spec.md"
+        }
+      }
+    ],
+    "risk": "medium",
+    "sectionHeadings": [
+      "166 — OPC Stop-hook gate chain",
+      "1. Problem",
+      "2. Decision",
+      "2.1 Hook chain",
+      "2.2 Governed-read discipline",
+      "2.3 Wiring location",
+      "2.4 Conversation-time vs PR-time",
+      "3. Functional Requirements",
+      "4. Success Criteria",
+      "5. Scope",
+      "In scope",
+      "Out of scope (deferred)",
+      "6. Relationship to existing OAP gates",
+      "7. Compliance",
+      "8. Cross-references"
+    ],
+    "specPath": "specs/166-opc-stop-hook-gate-chain/spec.md",
+    "status": "approved",
+    "summary": "OAP runs governance gates at PR time today (`make pr-prep`, `make ci`, the spec-code coupling gate, spec-lint default-fail-on-warn). AIDE-VELOCITY- HARNESS's structural leverage is that gates fire at *conversation end*, inside the Claude Code session, before any commit is made. The harness's six mandatory Stop hooks (docs-sync, step-output validation, step-gates, security-gate, harness-sync, finding-codified) catch drift before it reaches a PR.\nOPC should adopt the same pattern. This spec wires `make pr-prep`-class checks as PostToolUse (cheap, staleness signal) and Stop (blocking, full validation) hooks in OPC's Claude Code surface. The binaries already exist; the wiring is new. Hooks read through the governed-artifact-reads discipline (spec 103) — they invoke `codebase-indexer check`, `spec-code-coupling-check`, `spec-lint`, and the V004 lint binary, never ad-hoc `python`/`jq`/`awk` over `.derived/**/*.json`.\nSpec 166 refines spec 127 by adding a second firing seam (Stop-time) without removing the existing PR-time seam. Both fire; the user gets drift signal at the earliest available moment.\n",
+    "title": "OPC Stop-hook gate chain — conversation-time drift gates"
+  },
+  "shardHash": "fb906abaa0494d6f1a9680b7c958a49320643c14fbaf74b5988449cde6c116a6",
+  "specVersion": "1.1.0"
+}

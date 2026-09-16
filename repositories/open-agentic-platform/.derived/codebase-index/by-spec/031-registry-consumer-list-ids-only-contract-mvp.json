@@ -1,0 +1,9 @@
+{
+  "mapping": {
+    "implementingPaths": [],
+    "specId": "031-registry-consumer-list-ids-only-contract-mvp",
+    "specStatus": "superseded"
+  },
+  "schemaVersion": "1.1.0",
+  "shardHash": "9c657bac9d55c4c77091b6c98370e6155f55a0152fb682930e54c8661d4559d3"
+}

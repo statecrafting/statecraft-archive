@@ -1,0 +1,10 @@
+{
+  "package": {
+    "kind": "npm-package",
+    "name": "@template/web",
+    "path": "apps/web",
+    "version": "1.0.0"
+  },
+  "schemaVersion": "1.1.0",
+  "shardHash": "974f8260b73788e2226c76c6a84f7948197b5d7f10ed4df7eab77513e991d6ec"
+}

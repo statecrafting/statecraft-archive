@@ -1,0 +1,9 @@
+{
+  "mapping": {
+    "implementingPaths": [],
+    "specId": "003-feature-lifecycle-mvp",
+    "specStatus": "approved"
+  },
+  "schemaVersion": "1.1.0",
+  "shardHash": "fe08c797f5d6144b77ee806d64f3bd38991ef0f08e5a3da5b5e02fa2cd9086b3"
+}

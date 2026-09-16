@@ -1,0 +1,42 @@
+{
+  "record": {
+    "authors": [
+      "open-agentic-platform"
+    ],
+    "created": "2026-03-22",
+    "domain": "tooling",
+    "extraFrontmatter": {
+      "language": "en"
+    },
+    "featureBranch": "002-registry-consumer-mvp",
+    "id": "002-registry-consumer-mvp",
+    "implementation": "complete",
+    "kind": "platform",
+    "sectionHeadings": [
+      "Feature Specification: Registry consumer MVP",
+      "Purpose and charter",
+      "Normative dependency",
+      "Architectural placement",
+      "User Scenarios & Testing *(mandatory)*",
+      "User Story 1 — List features for scripts and contributors (Priority: P1)",
+      "User Story 2 — Resolve a feature by id (Priority: P1)",
+      "User Story 3 — Unsafe / stale registry handling (Priority: P2)",
+      "Edge Cases",
+      "Requirements *(mandatory)*",
+      "Functional Requirements",
+      "Exit codes *(normative for CLI)*",
+      "Key Entities",
+      "Success Criteria *(mandatory)*",
+      "Measurable Outcomes",
+      "Clarifications",
+      "Session 2026-03-22"
+    ],
+    "specPath": "specs/002-registry-consumer-mvp/spec.md",
+    "status": "superseded",
+    "summary": "Define the first official read-only consumer of .derived/spec-registry/registry.json: who may read it, what guarantees downstream tools rely on, and a normative CLI for listing, filtering, and lookups; optional Rust library is non-normative for MVP.\n",
+    "supersededBy": "217-spec-spine-engine-swap-collapse",
+    "title": "Registry consumer MVP (read-only spec runtime surface)"
+  },
+  "shardHash": "bee880665cb346cbaa01614e99782325d41a2b5761b8ab85eb3a31c63414f9ff",
+  "specVersion": "1.1.0"
+}

@@ -1,0 +1,100 @@
+{
+  "record": {
+    "created": "2026-09-11",
+    "dependsOn": [
+      "000-bootstrap"
+    ],
+    "establishes": [
+      {
+        "kind": "file",
+        "path": "AGENTS.md"
+      },
+      {
+        "kind": "file",
+        "path": "CLAUDE.md"
+      },
+      {
+        "kind": "file",
+        "path": "Makefile"
+      },
+      {
+        "kind": "file",
+        "path": ".mcp.json"
+      },
+      {
+        "kind": "file",
+        "path": ".gitattributes"
+      },
+      {
+        "kind": "file",
+        "path": ".claude/settings.json"
+      },
+      {
+        "kind": "directory",
+        "path": ".claude/rules/"
+      },
+      {
+        "kind": "directory",
+        "path": ".claude/agents/"
+      },
+      {
+        "kind": "directory",
+        "path": ".claude/skills/"
+      },
+      {
+        "kind": "directory",
+        "path": ".githooks/"
+      },
+      {
+        "kind": "directory",
+        "path": "standards/spec/"
+      },
+      {
+        "kind": "file",
+        "path": ".github/workflows/govern.yml"
+      }
+    ],
+    "extends": [
+      {
+        "nature": "additive",
+        "spec": "000-bootstrap",
+        "unit": {
+          "kind": "file",
+          "path": "spec-spine.toml"
+        }
+      },
+      {
+        "nature": "additive",
+        "spec": "001-packages-thesis",
+        "unit": {
+          "kind": "file",
+          "path": "README.md"
+        }
+      }
+    ],
+    "id": "008-session-harness",
+    "implementation": "complete",
+    "sectionHeadings": [
+      "008: The session harness",
+      "1. Purpose",
+      "2. Territory",
+      "3. Behavior",
+      "3.1 The kit is copied, not adapted",
+      "3.2 The hooks read and never write, with one exception",
+      "3.3 The gate has one definition",
+      "3.4 What is hashed is what is claimed",
+      "3.5 The governance workflow transfers from spec 000",
+      "3.6 The merge driver is opt-in and never replaces the gate",
+      "4. Out of scope",
+      "5. Acceptance",
+      "6. Implementation record",
+      "Verification"
+    ],
+    "specPath": "specs/008-session-harness/spec.md",
+    "status": "approved",
+    "summary": "This repository was born governed but not harnessed: it had a corpus, a config and a CI gate, and nothing that told an agent how to work in it. Sessions therefore improvised the loop, and the one surface that decides what an agent may do was the one surface no spec claimed. Install the spec-spine kit (ten skills, four agents, four rules, the hooks, the composite gate) and claim every file it is judged by, so an edit to the harness is a governed change like any other. The CI gate moves from the hand-rolled `spec-spine.yml` to the kit's `govern.yml`, which runs the same `make gate` chain a session runs locally. `spec-spine.toml` gains the version floor the kit's verbs require, and its three `dir/**` hashed-input patterns are corrected: written that way they matched directories only, so the constitution, the contract and every workflow had never entered a single content hash.\n",
+    "title": "The session harness: what an agent may do here, claimed by a spec"
+  },
+  "shardHash": "e9302d57979fb1d595eac0051751dcda7b2c4a9580c0d52c33649cfbe9578476",
+  "specVersion": "1.2.0"
+}

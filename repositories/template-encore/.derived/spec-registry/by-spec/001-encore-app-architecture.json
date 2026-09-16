@@ -1,0 +1,80 @@
+{
+  "record": {
+    "codeAliases": [
+      "ENCORE_APP",
+      "ENCORE_API_SCAFFOLD"
+    ],
+    "created": "2026-06-10",
+    "domain": "app",
+    "establishes": [
+      {
+        "kind": "file",
+        "path": "apps/api/encore.app"
+      },
+      {
+        "kind": "file",
+        "path": "apps/api/tsconfig.json"
+      },
+      {
+        "kind": "file",
+        "path": "apps/api/infra.config.json"
+      },
+      {
+        "kind": "file",
+        "path": "apps/api/vitest.config.ts"
+      },
+      {
+        "kind": "file",
+        "path": "apps/api/Dockerfile.base"
+      },
+      {
+        "kind": "file",
+        "path": "apps/api/Dockerfile.hotfix"
+      },
+      {
+        "kind": "file",
+        "path": "apps/api/.env.example"
+      },
+      {
+        "kind": "file",
+        "path": "apps/api/scripts/"
+      },
+      {
+        "kind": "file",
+        "path": "apps/api/health/"
+      }
+    ],
+    "id": "001-encore-app-architecture",
+    "implementation": "complete",
+    "kind": "architecture",
+    "owner": "bart",
+    "references": [
+      {
+        "role": "derived architecture view",
+        "unit": {
+          "kind": "file",
+          "path": "CODEMAP.md"
+        }
+      }
+    ],
+    "risk": "medium",
+    "sectionHeadings": [
+      "001 — Encore.ts application architecture: standalone apps/api and service decomposition",
+      "1. Purpose",
+      "2. Territory",
+      "3. Behavior",
+      "3.1 Standalone application layout",
+      "3.2 Service decomposition",
+      "3.3 Locked decisions",
+      "3.4 Application scaffold inventory",
+      "4. Acceptance criteria",
+      "5. Out of scope"
+    ],
+    "specPath": "specs/001-encore-app-architecture/spec.md",
+    "status": "approved",
+    "summary": "The backend is a standalone Encore.ts application at apps/api — deliberately outside the npm workspace — decomposed into lib, db, health, auth, gateway, and web services. Locked decisions: stateless RS256 JWT, a single SQLDatabase(\"app\"), /api/v1 path prefix, port 4000, global_cors, and `encore build docker --base` for container images.\n",
+    "title": "Encore.ts application architecture: standalone apps/api and service decomposition"
+  },
+  "shardHash": "eac3742791273631f1e3dc59390f5eb5f03b05dcecb93df789ba300acc444097",
+  "specVersion": "1.1.0"
+}

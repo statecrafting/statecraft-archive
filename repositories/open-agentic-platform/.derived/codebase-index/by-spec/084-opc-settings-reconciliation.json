@@ -1,0 +1,80 @@
+{
+  "mapping": {
+    "implementingPaths": [
+      {
+        "path": "product/apps/opc/src-tauri/src/commands/claude.rs",
+        "source": "spec-edge"
+      },
+      {
+        "path": "product/apps/opc/src/components/ProjectSettings.tsx",
+        "source": "spec-edge"
+      },
+      {
+        "path": "product/apps/opc/src/lib/api.ts",
+        "source": "spec-edge"
+      },
+      {
+        "path": "product/apps/opc/src/lib/settingsManager.ts",
+        "source": "spec-edge"
+      }
+    ],
+    "resolvedUnits": [
+      {
+        "locations": [
+          {
+            "file": "product/apps/opc/src/lib/settingsManager.ts"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "file",
+          "path": "product/apps/opc/src/lib/settingsManager.ts"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "product/apps/opc/src-tauri/src/commands/claude.rs"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "extends",
+        "unit": {
+          "kind": "file",
+          "path": "product/apps/opc/src-tauri/src/commands/claude.rs"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "product/apps/opc/src/components/ProjectSettings.tsx"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "extends",
+        "unit": {
+          "kind": "file",
+          "path": "product/apps/opc/src/components/ProjectSettings.tsx"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "product/apps/opc/src/lib/api.ts"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "extends",
+        "unit": {
+          "kind": "file",
+          "path": "product/apps/opc/src/lib/api.ts"
+        }
+      }
+    ],
+    "specId": "084-opc-settings-reconciliation",
+    "specStatus": "approved"
+  },
+  "schemaVersion": "1.1.0",
+  "shardHash": "8f509dab9cf454183f42081ea77227935301e3ff4be02331865eb46b2107d7ed"
+}

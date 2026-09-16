@@ -1,0 +1,92 @@
+### Rust
+debug/
+target/
+**/*.rs.bk
+*.pdb
+
+### Node
+logs
+*.log
+npm-debug.log*
+.pnpm-debug.log*
+
+# Runtime data
+pids
+*.pid
+*.seed
+*.pid.lock
+
+# Compiled binary addons
+build/Release
+
+# Dependency directories
+node_modules/
+
+# TypeScript cache
+*.tsbuildinfo
+
+# npm caches / pack output
+.npm
+*.tgz
+
+### Secrets
+# The operator .env carries NPM_TOKEN and never enters git.
+.env*
+!.env.example
+
+### OS junk
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+Icon
+._*
+.DocumentRevisions-V100
+.fseventsd
+.Spotlight-V100
+.TemporaryItems
+.Trashes
+.VolumeIcon.icns
+.com.apple.timemachine.donotpresent
+
+# Windows
+Thumbs.db
+Thumbs.db:encryptable
+ehthumbs.db
+[Dd]esktop.ini
+$RECYCLE.BIN/
+*.stackdump
+*.lnk
+
+### IDE / tooling
+.idea/
+.vscode-test
+_tmp/
+.worktrees/
+.local/
+.claude/settings.local.json
+.claude/scheduled_tasks.lock
+.claude/agent-memory/
+
+### spec-spine derived artifacts
+# The compiler owns .derived/; only the committed shards are tracked.
+.derived/spec-registry/*
+!.derived/spec-registry/by-spec/
+.derived/codebase-index/*
+!.derived/codebase-index/by-spec/
+!.derived/codebase-index/by-package/
+!.derived/codebase-index/config-hash.json
+!.derived/codebase-index/slices.json
+
+### napi platform-package payloads
+# Built by the publish workflow and injected into the
+# @statecrafting/toolchain-<platform> packages at pack time. Only the
+# manifests + READMEs are tracked; the binaries never enter git.
+packages/toolchain-*/encore-runtime.node
+packages/toolchain-*/tsparser-encore
+
+### vendored Encore build workspace
+# The vendored encore.dev JS runtime is a published artifact: its built dist/
+# IS the runtime and must be tracked, so it is exempted from the global
+# node/dist rules above.
+!vendor/encore/runtimes/js/encore.dev/dist/

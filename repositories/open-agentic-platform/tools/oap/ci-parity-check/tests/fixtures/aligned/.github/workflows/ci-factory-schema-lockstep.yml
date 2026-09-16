@@ -1,0 +1,10 @@
+# Aligned fixture for ci-parity-check tests (spec 104 §5.2 / spec 212 AC-7).
+# The factory-schema-lockstep run line's significant tokens are all mirrored
+# by the sibling Makefile's `factory-schema-lockstep` recipe → zero drift.
+name: CI factory schema lockstep
+on: [push]
+jobs:
+  factory-schema-lockstep:
+    runs-on: ubuntu-latest
+    steps:
+      - run: ./tools/oap/factory-schema-lockstep/target/release/factory-schema-lockstep --oap-dir standards/schemas/factory --factory-dir .factory/contract/schemas

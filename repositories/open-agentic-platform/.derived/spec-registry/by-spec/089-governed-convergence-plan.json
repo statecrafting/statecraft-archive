@@ -1,0 +1,73 @@
+{
+  "record": {
+    "codeAliases": [
+      "GOVERNED_CONVERGENCE"
+    ],
+    "constrains": [
+      {
+        "kind": "sequencing-plan",
+        "target_specs": [
+          "090-governance-non-optionality",
+          "091-registry-enrichment",
+          "092-workspace-runtime-threading",
+          "093-spec-driven-preflight",
+          "094-unified-artifact-store",
+          "095-checkpoint-branch-of-thought",
+          "096-portfolio-intelligence",
+          "097-promotion-grade-mirror"
+        ]
+      }
+    ],
+    "created": "2026-04-11",
+    "dependsOn": [
+      "082-artifact-integrity-platform-hardening",
+      "087-unified-workspace-architecture",
+      "080-github-identity-onboarding"
+    ],
+    "domain": "substrate",
+    "id": "089-governed-convergence-plan",
+    "implementation": "n-a",
+    "kind": "process",
+    "owner": "bart",
+    "risk": "critical",
+    "sectionHeadings": [
+      "089 — Governed Convergence Plan",
+      "1. Problem Statement",
+      "2. Validated Gap Analysis",
+      "Gap 1: Governance is Architecturally Central but Operationally Optional",
+      "Gap 2: Specs Do Not Drive Live Execution Boundaries",
+      "Gap 3: Orchestrator + Artifacts Are Not a Memory Model",
+      "Gap 4: Checkpoints Are Safety/Rewind, Not Branch-of-Thought",
+      "Gap 5: Portfolio Reasoning Primitives Are Unlinked",
+      "Gap 6: Capability Supply Chain Is Infrastructure, Not Marketplace",
+      "Gap 7: Platform Mirror Is Best-Effort, Not Promotion-Grade",
+      "3. Spec Dependency Map",
+      "Relationship to Existing Specs",
+      "Draft Spec Activation Schedule",
+      "4. Implementation Phases",
+      "Phase 0: Foundation Hardening",
+      "Spec 090 — Governance Non-Optionality",
+      "Spec 091 — Spec Registry Enrichment",
+      "Phase 1: Workspace Envelope",
+      "Spec 092 — Workspace Runtime Threading",
+      "Phase 2: Spec-Driven Preflight and Gating",
+      "Spec 093 — Spec-Driven Preflight and Gating",
+      "Phase 3: Artifact Memory and Checkpoint Branching",
+      "Spec 094 — Unified Artifact Store with Provenance",
+      "Spec 095 — Checkpoint Branch-of-Thought",
+      "Phase 4: Portfolio Intelligence and Promotion-Grade Continuity",
+      "Spec 096 — Portfolio Intelligence",
+      "Spec 097 — Promotion-Grade Platform Mirror",
+      "5. Phase Summary",
+      "6. End State",
+      "7. Dependencies",
+      "8. Risks"
+    ],
+    "specPath": "specs/089-governed-convergence-plan/spec.md",
+    "status": "approved",
+    "summary": "Master sequencing plan that converges seven architectural primitives — governance enforcement, workspace envelope, spec-driven execution, artifact memory, checkpoint branching, portfolio intelligence, and promotion-grade continuity — into the non-optional default path of the system across six implementation phases.\n",
+    "title": "Governed Convergence Plan — Binding Primitives into Default Product Truth"
+  },
+  "shardHash": "f4b70d122b3df85334db905877961f89b2cc16d6378f54ecc347ca32d5958165",
+  "specVersion": "1.1.0"
+}

@@ -1,0 +1,9 @@
+{
+  "mapping": {
+    "implementingPaths": [],
+    "specId": "027-registry-consumer-sorting-order-contract-mvp",
+    "specStatus": "superseded"
+  },
+  "schemaVersion": "1.1.0",
+  "shardHash": "572d0e72ae41bdf48e461f93d58a3d1c5570c6e66de1548bba82eb8c0e2d3e02"
+}

@@ -1,0 +1,146 @@
+{
+  "record": {
+    "amendmentRecord": "self-amends — §9 (2026-05-17) extends the Rauthy chart with SMTP env-var wire-up and surfaces the manual Google Auth Provider registration step in setup.sh's Phase 1 output. Both are infra-side prerequisites for spec 137 Phase 6 evidence (E2/E3 magic-link, E4 federated Google).",
+    "codeAliases": [
+      "RAUTHY_OIDC_NATIVE",
+      "A2C_MEMBERSHIP"
+    ],
+    "created": "2026-04-17",
+    "dependsOn": [
+      "080-github-identity-onboarding",
+      "087-unified-workspace-architecture"
+    ],
+    "domain": "platform",
+    "establishes": [
+      {
+        "kind": "file",
+        "path": "platform/services/statecraft/api/auth/membershipResolver.ts"
+      }
+    ],
+    "extends": [
+      {
+        "nature": "additive",
+        "spec": "080-github-identity-onboarding",
+        "unit": {
+          "kind": "file",
+          "path": "platform/services/statecraft/api/auth/rauthy.ts"
+        }
+      },
+      {
+        "nature": "additive",
+        "spec": "080-github-identity-onboarding",
+        "unit": {
+          "kind": "file",
+          "path": "platform/services/statecraft/api/auth/rauthyCallback.ts"
+        }
+      },
+      {
+        "nature": "additive",
+        "spec": "080-github-identity-onboarding",
+        "unit": {
+          "kind": "file",
+          "path": "platform/services/statecraft/web/app/routes/signin.tsx"
+        }
+      },
+      {
+        "nature": "additive",
+        "spec": "087-unified-workspace-architecture",
+        "unit": {
+          "kind": "directory",
+          "path": "platform/charts/rauthy"
+        }
+      },
+      {
+        "nature": "additive",
+        "spec": "087-unified-workspace-architecture",
+        "unit": {
+          "kind": "file",
+          "path": "platform/infra/hetzner/setup.sh"
+        }
+      },
+      {
+        "nature": "additive",
+        "spec": "087-unified-workspace-architecture",
+        "unit": {
+          "kind": "file",
+          "path": "platform/infra/hetzner/.env.example"
+        }
+      }
+    ],
+    "extraFrontmatter": {
+      "amended": "2026-05-17"
+    },
+    "featureBranch": "feat/106-rauthy-native-oidc-and-membership",
+    "id": "106-rauthy-native-oidc-and-membership",
+    "implementation": "complete",
+    "kind": "platform",
+    "owner": "bart",
+    "references": [
+      {
+        "role": "historical",
+        "unit": {
+          "kind": "file",
+          "path": "platform/services/statecraft/api/auth/rauthySeed.ts"
+        }
+      },
+      {
+        "unit": {
+          "kind": "file",
+          "path": "platform/infra/hetzner/manifests/letsencrypt-prod-dns01-cloudflare-issuer.yaml"
+        }
+      },
+      {
+        "unit": {
+          "kind": "file",
+          "path": "platform/infra/hetzner/manifests/tenants-wildcard-certificate.yaml"
+        }
+      }
+    ],
+    "risk": "high",
+    "sectionHeadings": [
+      "106 — Rauthy-Native OIDC + Layered Membership Resolution",
+      "1. Problem Statement",
+      "2. Design Principles",
+      "3. Architecture",
+      "3.1 Session mint path (one path only)",
+      "3.2 Membership resolution strategy (A2c)",
+      "3.3 Trust boundaries",
+      "4. Functional Requirements",
+      "FR-001: Rauthy upstream provider configuration",
+      "FR-002: Idempotent Rauthy seeder on statecraft startup",
+      "FR-003: Corrected Rauthy admin client",
+      "FR-004: Rewritten login callback",
+      "FR-005: Membership resolution strategy chain",
+      "FR-006: Personal Access Token storage and lifecycle",
+      "FR-007: Settings UI for PAT management",
+      "FR-008: Removal of direct-GitHub OAuth from statecraft",
+      "5. Non-Functional Requirements",
+      "6. Security",
+      "7. Migration",
+      "8. Supersedes / Amends",
+      "9. Open Questions",
+      "FR-005 addendum: webhook-driven live membership sync",
+      "10. Test Plan",
+      "Seeder",
+      "OIDC flow",
+      "Membership resolver",
+      "PAT lifecycle",
+      "Security",
+      "11. Out of scope",
+      "12. Amendment 2026-05-17 — Rauthy SMTP + federated upstream for tenant gates",
+      "12.1 SMTP — wired via Helm + setup.sh",
+      "12.2 Google upstream — manual via Rauthy admin UI (v1)",
+      "12.3 Why this is the right home",
+      "12.4 Wildcard tenant cert — `*.tenants.<base>` via cert-manager DNS-01",
+      "13. Amendment (2026-06-29): self-healing installation reconcile",
+      "Security hardening amendment (2026-07-02)",
+      "M2M subject-claim amendment (2026-07-09)"
+    ],
+    "specPath": "specs/106-rauthy-native-oidc-and-membership/spec.md",
+    "status": "approved",
+    "summary": "Close the implementation gap between spec 080's design and what actually shipped. Move GitHub from statecraft-direct OAuth to Rauthy's upstream IDP, remove the imaginary admin-mint JWT endpoint, drive custom claims through Rauthy's scope + user-attribute model, and resolve org memberships through a layered strategy — GitHub App installation token first, per-user PAT second, with fail-loud if neither is available.\n",
+    "title": "Rauthy-Native OIDC + Layered Membership Resolution (App Installation + PAT)"
+  },
+  "shardHash": "cd96a2b25a25a95e3e1a72afd8af3fb7007bb615f22fafa15110e3dadb8e122d",
+  "specVersion": "1.1.0"
+}

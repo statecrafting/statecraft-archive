@@ -1,0 +1,8 @@
+image:
+  repository: ""  # Set to DOCR URL
+
+secrets:
+  provider: "eso"
+  storeRef:
+    name: do-vault
+    kind: ClusterSecretStore

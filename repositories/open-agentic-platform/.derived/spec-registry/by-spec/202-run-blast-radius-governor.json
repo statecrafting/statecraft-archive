@@ -1,0 +1,247 @@
+{
+  "record": {
+    "authors": [
+      "open-agentic-platform"
+    ],
+    "codeAliases": [
+      "RUN_BLAST_RADIUS_GOVERNOR"
+    ],
+    "created": "2026-06-11",
+    "dependsOn": [
+      "198-factory-governance-envelope",
+      "166-opc-stop-hook-gate-chain",
+      "172-opc-live-agent-session-introspection",
+      "075-factory-workflow-engine"
+    ],
+    "domain": "platform",
+    "establishes": [
+      {
+        "kind": "file",
+        "path": "crates/factory-contracts/src/run_budget.rs"
+      },
+      {
+        "kind": "file",
+        "path": "crates/factory-contracts/src/governance_envelope.rs"
+      },
+      {
+        "kind": "file",
+        "path": "crates/orchestrator/src/budget_gate.rs"
+      },
+      {
+        "kind": "file",
+        "path": "platform/services/statecraft/api/factory/queueStormGate.ts"
+      },
+      {
+        "kind": "file",
+        "path": "platform/services/statecraft/api/factory/queueStormGate.test.ts"
+      },
+      {
+        "kind": "file",
+        "path": "platform/services/statecraft/api/factory/approvalVelocity-pure.ts"
+      },
+      {
+        "kind": "file",
+        "path": "platform/services/statecraft/api/factory/approvalVelocity.ts"
+      },
+      {
+        "kind": "file",
+        "path": "platform/services/statecraft/api/factory/approvalVelocity-pure.test.ts"
+      },
+      {
+        "kind": "file",
+        "path": "platform/services/statecraft/api/factory/approvalVelocity.test.ts"
+      },
+      {
+        "kind": "file",
+        "path": "platform/services/statecraft/api/db/migrations/3_audit_log_actor_action_created_idx.up.sql"
+      }
+    ],
+    "extends": [
+      {
+        "nature": "additive",
+        "spec": "198-factory-governance-envelope",
+        "unit": {
+          "kind": "file",
+          "path": "standards/schemas/factory/governance-envelope.schema.yaml"
+        }
+      },
+      {
+        "nature": "additive",
+        "spec": "034-featuregraph-registry-scanner-fix",
+        "unit": {
+          "kind": "file",
+          "path": "crates/featuregraph/tests/golden/features_graph.json"
+        }
+      }
+    ],
+    "extraFrontmatter": {
+      "compliance": [
+        {
+          "controls": [
+            "ASI02",
+            "ASI08"
+          ],
+          "framework": "owasp-asi-2026"
+        }
+      ],
+      "language": "en"
+    },
+    "featureBranch": "feat/202-run-blast-radius-governor",
+    "id": "202-run-blast-radius-governor",
+    "implementation": "complete",
+    "kind": "governance",
+    "references": [
+      {
+        "role": "enforcer",
+        "unit": {
+          "id": "factory-engine",
+          "kind": "crate"
+        }
+      },
+      {
+        "role": "context",
+        "unit": {
+          "kind": "file",
+          "path": "platform/services/statecraft/api/factory/runsScheduler.ts"
+        }
+      },
+      {
+        "role": "context",
+        "unit": {
+          "kind": "file",
+          "path": "docs/owasp-agentic-top-10-2026.md"
+        }
+      },
+      {
+        "role": "pause-channel-precedent",
+        "unit": {
+          "kind": "file",
+          "path": "product/apps/opc/src-tauri/src/commands/run_governance.rs"
+        }
+      },
+      {
+        "role": "trip-pattern-library",
+        "unit": {
+          "kind": "file",
+          "path": "crates/orchestrator/src/circuit_breaker.rs"
+        }
+      }
+    ],
+    "refines": [
+      {
+        "aspect": "run-budget-metering",
+        "unit": {
+          "kind": "file",
+          "path": "crates/orchestrator/src/lib.rs"
+        }
+      },
+      {
+        "aspect": "run-budget-metering",
+        "unit": {
+          "kind": "file",
+          "path": "crates/orchestrator/Cargo.toml"
+        }
+      },
+      {
+        "aspect": "run-budget-contract-exports",
+        "unit": {
+          "kind": "file",
+          "path": "crates/factory-contracts/src/lib.rs"
+        }
+      },
+      {
+        "aspect": "schema-version-pin",
+        "unit": {
+          "kind": "file",
+          "path": "crates/factory-contracts/src/build_spec.rs"
+        }
+      },
+      {
+        "aspect": "run-budget-metering",
+        "unit": {
+          "kind": "file",
+          "path": "crates/factory-engine/src/engine.rs"
+        }
+      },
+      {
+        "aspect": "run-budget-metering",
+        "unit": {
+          "kind": "file",
+          "path": "crates/factory-engine/src/bin/factory_run.rs"
+        }
+      },
+      {
+        "aspect": "run-budget-metering",
+        "unit": {
+          "kind": "file",
+          "path": "product/apps/opc/src-tauri/src/commands/factory.rs"
+        }
+      },
+      {
+        "aspect": "budget-consumption-certificate-binding",
+        "unit": {
+          "kind": "file",
+          "path": "crates/factory-engine/src/governance_certificate.rs"
+        }
+      },
+      {
+        "aspect": "queue-storm-detection",
+        "unit": {
+          "kind": "file",
+          "path": "platform/services/statecraft/api/factory/runs.ts"
+        }
+      },
+      {
+        "aspect": "queue-storm-audit-actions",
+        "unit": {
+          "kind": "file",
+          "path": "platform/services/statecraft/api/factory/auditActions.ts"
+        }
+      },
+      {
+        "aspect": "encore-test-lane-assignment",
+        "unit": {
+          "kind": "file",
+          "path": "platform/services/statecraft/vite.config.ts"
+        }
+      },
+      {
+        "aspect": "queue-storm-env-knob-docs",
+        "unit": {
+          "kind": "file",
+          "path": "platform/services/statecraft/CLAUDE.md"
+        }
+      },
+      {
+        "aspect": "approval-velocity-surface",
+        "unit": {
+          "kind": "file",
+          "path": "platform/services/statecraft/api/factory/approvalSummary.ts"
+        }
+      },
+      {
+        "aspect": "approval-velocity-audit-action",
+        "unit": {
+          "kind": "file",
+          "path": "platform/services/statecraft/api/factory/auditActions.ts"
+        }
+      }
+    ],
+    "sectionHeadings": [
+      "Feature Specification: Run Blast-Radius Governor",
+      "Purpose",
+      "Code reality: the metering surfaces (surveyed 2026-06-12)",
+      "Functional requirements",
+      "Overlaps with existing machinery (refine, do not duplicate)",
+      "Acceptance criteria",
+      "Out of scope",
+      "Sequencing"
+    ],
+    "specPath": "specs/202-run-blast-radius-governor/spec.md",
+    "status": "approved",
+    "summary": "Close the one ASI 2026 control whose residual is stated but unowned. Spec 198's all-ten table marks ASI08 (Cascading Failures) \"partial — residual stated\" and names blast-radius caps as follow-on; this spec is that follow-on. Existing levers (halt-on-failure, stop-hook 166, HITL gate predicates 198 FR-008, introspection 172) are reactive gates — they fire on an observed failure or at a declared checkpoint. What is missing is the quantitative ceiling between gates: per-run and per-stage budgets (tool invocations, file mutations, spawned work, wall-clock, cost), metered by the engine and circuit-breaking fail-closed when exceeded, plus fan-out and feedback-loop detection (ASI08 m6/m7, ASI02 m5 adaptive tool budgeting). A run that exceeds its admitted budget pauses at the next instruction boundary and requires a human resume; consumption actuals are bound into the governance certificate so the receipt shows how close the run came to its ceiling.\n",
+    "title": "Run Blast-Radius Governor (ASI08 cascading-failure caps)"
+  },
+  "shardHash": "2c75202d423b5bd66f95d6acd1302798cfa4117b6e7b156111db10207e350525",
+  "specVersion": "1.1.0"
+}

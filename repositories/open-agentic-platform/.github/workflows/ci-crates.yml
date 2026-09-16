@@ -1,0 +1,93 @@
+# Spec: 067-tool-definition-registry
+# Spec: 071-skill-command-factory
+# Spec: 075-factory-workflow-engine
+# Spec: 054-agent-frontmatter-schema
+# Spec: 042-multi-provider-agent-registry
+# Spec: 135-fast-ci-as-default
+# Spec: 177-ci-orchestrator-pr-gate
+#
+# CI for the root Cargo workspace. Spec 135 FR-05 collapsed the previous
+# 7-element matrix into a single workspace job: `cargo --workspace
+# --manifest-path Cargo.toml` validates every workspace member
+# (crates/*, tools/spec-spine/*, tools/oap/*, tools/shared/*) in one
+# pass, closing the ghost-crate gap on the GitHub side.
+#
+# Dispatched from `.github/workflows/ci.yml` on PRs touching the root
+# workspace (spec 177); manual via workflow_dispatch.
+
+name: CI crates
+
+on:
+  workflow_call:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+env:
+  CARGO_TERM_COLOR: always
+
+jobs:
+  workspace:
+    # Self-hosted runner enabler (2026-06-10, dormant until the repo var is
+    # set): on merge_group/push the queue's serialized latency is the
+    # bottleneck (~13 min/PR), so a registered self-hosted runner with warm
+    # caches can take those events; pull_request stays on hosted runners.
+    # Trust note: merge_group runs the speculative merge of an ENQUEUED PR,
+    # so enqueueing — a maintainer-only action — is the trust decision that
+    # admits code to the self-hosted runner; unreviewed fork PRs never reach
+    # it at pull_request time. The var value is used verbatim as the runner
+    # label (a typo strands the job until the queue times out) — operator
+    # responsibility, set via `gh variable set OAP_RUNNER_HEAVY --body
+    # self-hosted`. Unset var → empty string → falls back to ubuntu-latest;
+    # behavior is unchanged until opted in.
+    runs-on: ${{ (github.event_name != 'pull_request' && vars.OAP_RUNNER_HEAVY) || 'ubuntu-latest' }}
+    name: crates workspace
+    timeout-minutes: 30
+
+    steps:
+      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+
+      # FR-05a (spec 135, amendment 2026-06-11): the workspace debug build
+      # plus the two release fixture-producer builds exhausted the
+      # ubuntu-latest image's free disk margin (merge_group run 27355231139,
+      # ENOSPC mid-build). The local composite reclaims ~25 GB on hosted
+      # runners only (guard inside the action); see
+      # .github/actions/free-disk-space/action.yml.
+      - uses: ./.github/actions/free-disk-space
+
+      # Surviving workspace tests read the committed governance artifacts:
+      # crates/featuregraph/tests/golden.rs ingests the spec registry shards
+      # via load_committed_registry. They're gitignored pre-commit, so cargo
+      # test --workspace on a fresh CI clone compiles them first. The
+      # install/compile/index sequence mirrors the Makefile so ci-parity-check
+      # stays satisfied.
+      - name: Rust toolchain (pre-compile fixtures)
+        uses: dtolnay/rust-toolchain@29eef336d9b2848a0b548edc03f92a220660cdb8 # pinned for rust-toolchain.toml lockstep
+        with:
+          toolchain: '1.95.0'
+
+      - name: Install spec-spine CLI
+        run: cargo install spec-spine-cli --version 0.10.0 --locked
+
+      - name: Emit spec registry (test fixture)
+        run: spec-spine compile
+
+      - name: Emit codebase index (test fixture)
+        run: spec-spine index
+
+      - name: CI crates workspace
+        uses: ./.github/actions/rust-ci
+        with:
+          manifest-path: Cargo.toml
+          workspace: 'true'
+          cache-shared-key: ci-crates-workspace
+
+      # Spec 111 §2.1 Phase 2 — statecraft's `CatalogFrontmatter` wraps a
+      # ts-rs mirror of the Rust `UnifiedFrontmatter`. `cargo test` on the
+      # workspace auto-regenerates the TS files via the agent-frontmatter
+      # crate; this step fails the build if the committed mirror drifts
+      # from the Rust source of truth. With workspace mode this runs
+      # unconditionally — agent-frontmatter is always part of the test set.
+      - name: agent-frontmatter TS drift gate
+        run: make ci-agent-frontmatter-ts

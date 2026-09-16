@@ -1,0 +1,86 @@
+# Spec 151 Phase 3 — ingress-nginx HelmRelease (T-017).
+#
+# Replaces the imperative `helm upgrade --install ingress-nginx` block
+# in `platform/infra/hetzner/post-create.sh`. Operational parity: same
+# chart, same version, same namespace, same five `--set` values —
+# only the install mechanism shifts from imperative to helm-controller.
+#
+# Cutover identity (zero-downtime pattern from Phase 2):
+#
+#   release name + namespace = `ingress-nginx` / `ingress-nginx`
+#   chart version            = `4.15.1` (matches the live install)
+#   values                   = DaemonSet + hostPort + ClusterIP service
+#                              + forwarded-headers config (see below)
+#
+# Service shape: the production install is a DaemonSet with
+# `hostPort.enabled=true` and `service.type=ClusterIP` — NOT a
+# LoadBalancer Service. Tenant traffic reaches the nodes directly via
+# hostPort 80/443; the apex DNS records point at the node IPs.
+# (tasks.md T-017's "LoadBalancer service shape" wording is imprecise;
+# preserve the actual current shape, which is the hostPort-DaemonSet
+# pattern that fits Hetzner-cluster topology without an external LB.)
+#
+# Forwarded headers: `use-forwarded-headers` + `compute-full-forwarded-for`
+# are required for Cloudflare-fronted requests so backend pods see the
+# real client IP via the `X-Forwarded-For` chain.
+---
+apiVersion: source.toolkit.fluxcd.io/v1
+kind: HelmRepository
+metadata:
+  name: ingress-nginx
+  namespace: flux-system
+spec:
+  interval: 24h
+  url: https://kubernetes.github.io/ingress-nginx
+---
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: ingress-nginx
+  namespace: ingress-nginx
+spec:
+  interval: 1h
+  chart:
+    spec:
+      chart: ingress-nginx
+      # Pinned to match the live install. Bumps are deliberate edits.
+      version: "4.15.1"
+      sourceRef:
+        kind: HelmRepository
+        name: ingress-nginx
+        namespace: flux-system
+      interval: 24h
+  install:
+    timeout: 5m
+    remediation:
+      retries: 3
+  upgrade:
+    timeout: 5m
+    remediation:
+      retries: 3
+  values:
+    controller:
+      kind: DaemonSet
+      hostPort:
+        enabled: true
+      service:
+        type: ClusterIP
+      # Spec 196 FR-003 — the controller's Prometheus exporter was not
+      # enabled before the metrics stack existed to consume it
+      # (`controller.metrics` defaults off; the spec's filing-time
+      # "already exposes /metrics" claim held for the Flux controllers
+      # only). Annotation-based scrape: spec 196's Prometheus runs an
+      # annotation-keyed pod job over this namespace; inbound
+      # containment is the ingress←monitoring:10254 NetworkPolicy
+      # (networkpolicy-allow-metrics-egress.yaml).
+      metrics:
+        enabled: true
+      podAnnotations:
+        prometheus.io/scrape: "true"
+        prometheus.io/port: "10254"
+      config:
+        # Quoted string values to match post-create.sh's
+        # `--set controller.config.use-forwarded-headers='"true"'`
+        # idiom (nginx ConfigMap expects string-typed values).
+        use-forwarded-headers: "true"
+        compute-full-forwarded-for: "true"

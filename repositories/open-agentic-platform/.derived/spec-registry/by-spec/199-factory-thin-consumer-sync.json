@@ -1,0 +1,174 @@
+{
+  "record": {
+    "amends": [
+      "075-factory-workflow-engine",
+      "112-factory-project-lifecycle",
+      "124-opc-factory-run-platform-integration",
+      "139-factory-artifact-substrate",
+      "140-acme-vue-node-scaffold-source-id-cutover",
+      "141-acme-vue-node-source-id-template-name-alignment"
+    ],
+    "authors": [
+      "open-agentic-platform"
+    ],
+    "codeAliases": [
+      "FACTORY_THIN_CONSUMER_SYNC"
+    ],
+    "created": "2026-06-09",
+    "dependsOn": [
+      "198-factory-governance-envelope",
+      "139-factory-artifact-substrate",
+      "197-factory-contract-open-standard-extensions"
+    ],
+    "domain": "platform",
+    "establishes": [
+      {
+        "kind": "file",
+        "path": "platform/services/statecraft/api/factory/adapterView.ts"
+      }
+    ],
+    "extends": [
+      {
+        "nature": "additive",
+        "spec": "074-factory-ingestion",
+        "unit": {
+          "id": "factory-contracts",
+          "kind": "crate"
+        }
+      },
+      {
+        "nature": "additive",
+        "spec": "034-featuregraph-registry-scanner-fix",
+        "unit": {
+          "kind": "file",
+          "path": "crates/featuregraph/tests/golden/features_graph.json"
+        }
+      }
+    ],
+    "extraFrontmatter": {
+      "language": "en"
+    },
+    "featureBranch": "feat/199-factory-thin-consumer-sync",
+    "id": "199-factory-thin-consumer-sync",
+    "implementation": "complete",
+    "kind": "platform",
+    "references": [
+      {
+        "role": "consumer",
+        "unit": {
+          "id": "factory-engine",
+          "kind": "crate"
+        }
+      },
+      {
+        "role": "context",
+        "unit": {
+          "kind": "file",
+          "path": "platform/services/statecraft/api/projects/opcBundle.ts"
+        }
+      },
+      {
+        "role": "context",
+        "unit": {
+          "kind": "file",
+          "path": "platform/services/statecraft/api/projects/scaffold/scheduler.ts"
+        }
+      },
+      {
+        "role": "historical",
+        "unit": {
+          "kind": "file",
+          "path": "platform/services/statecraft/api/factory/projection.ts"
+        }
+      }
+    ],
+    "refines": [
+      {
+        "aspect": "thin-consumer-substrate-reads",
+        "unit": {
+          "kind": "file",
+          "path": "platform/services/statecraft/api/factory/browse.ts"
+        }
+      },
+      {
+        "aspect": "thin-consumer-substrate-reads",
+        "unit": {
+          "kind": "file",
+          "path": "platform/services/statecraft/api/factory/substrateBrowser.ts"
+        }
+      },
+      {
+        "aspect": "owned-source-classification",
+        "unit": {
+          "kind": "file",
+          "path": "platform/services/statecraft/api/factory/translator.ts"
+        }
+      },
+      {
+        "aspect": "binary-ingest-guard",
+        "unit": {
+          "kind": "file",
+          "path": "platform/services/statecraft/api/factory/translator.test.ts"
+        }
+      },
+      {
+        "aspect": "binary-ingest-guard",
+        "unit": {
+          "kind": "file",
+          "path": "platform/services/statecraft/api/factory/syncPipeline.ts"
+        }
+      },
+      {
+        "aspect": "binary-ingest-guard",
+        "unit": {
+          "kind": "file",
+          "path": "platform/services/statecraft/api/factory/syncWorker.ts"
+        }
+      }
+    ],
+    "sectionHeadings": [
+      "Feature Specification: Thin-Consumer Factory Sync for Owned Sources",
+      "Purpose and charter",
+      "P-1 (refined): conform-by-standard; enforce, don't compensate",
+      "Problem statement (current state)",
+      "Requirements",
+      "FR-001 — Statecraft is a thin consumer of owned factory content (normative)",
+      "FR-002 — Adapter identity from the manifest (retire the synthetic `acme-vue-node`)",
+      "FR-003 — Substrate origin derives from the configured source",
+      "FR-004 — Retire `buildProcess`; serve process content opaque by kind",
+      "FR-005 — Serve substrate verbatim by kind (retire the projection translation)",
+      "FR-006 — Migrate every projection consumer; honour the admission gate",
+      "FR-007 — Remove ingest mutation and dead code",
+      "FR-008 — Classification works for the owned layout without legacy coupling",
+      "FR-009 — Preserve the factory↔template split; scaffold source resolved at admission",
+      "Acceptance criteria",
+      "Out of scope",
+      "Phasing (proposed; refine in plan.md)",
+      "Cross-repo coordination",
+      "Implementation log"
+    ],
+    "specPath": "specs/199-factory-thin-consumer-sync/spec.md",
+    "status": "approved",
+    "summary": "Move the statecraft factory sync off the retired legacy-factory layout and make it a thin CONSUMER of the owned factory/template sources. Statecraft stores upstream content verbatim in the substrate and serves it by kind and by the adapter's own (schema-validated) manifest — it stops TRANSLATING content OAP authors and controls. Adapter identity comes from the manifest (acme-vue-encore self-declares), substrate origin derives from the configured source, and the categorical \"7-stage-build\" projection — a statecraft invention with no contract backing, coupled to the dead `Factory Agent/` directory shape — is retired. Process content is served opaque by kind; the run's governance lives in the admission envelope (spec 198), which this spec consumes. No backward compatibility is preserved; factory/template are the baseline.\n",
+    "supersedes": [
+      {
+        "note": "Retires the categorical factory_{adapters,contracts,processes} projection wire shape and its translation layer (projection.ts buildProcess / buildAdapter). Storage was already retired by spec 139; this retires the read-time translation that 139 kept for compat.\n",
+        "scope": "partial",
+        "spec": "108-factory-as-platform-feature"
+      },
+      {
+        "note": "Retires §2.2's manifest-carried flat scaffold_source_id (injected at ingest by the sanitise layer this spec removes). Replaced by resolution-at-admission from the manifest's org-agnostic scaffold.source.remote (FR-009).\n",
+        "scope": "partial",
+        "spec": "140-acme-vue-node-scaffold-source-id-cutover"
+      },
+      {
+        "note": "Retires §2.1's scaffold_source_id ↔ template.json::templateName alignment doctrine. templateName reverts to the template's own name (template); the org-scoped source id is resolved at admission, never carried by upstream content.\n",
+        "scope": "partial",
+        "spec": "141-acme-vue-node-source-id-template-name-alignment"
+      }
+    ],
+    "title": "Thin-Consumer Factory Sync for Owned Sources"
+  },
+  "shardHash": "8c32807bbd49a1b1cd04bba49c31fff0da97847a6b6cb28bb64612a46c5a0893",
+  "specVersion": "1.1.0"
+}

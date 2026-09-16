@@ -1,0 +1,63 @@
+{
+  "record": {
+    "authors": [
+      "open-agentic-platform"
+    ],
+    "codeAliases": [
+      "COHERENCE_SCORE"
+    ],
+    "created": "2026-03-29",
+    "domain": "opc",
+    "establishes": [
+      {
+        "kind": "file",
+        "path": "crates/policy-kernel/src/coherence.rs"
+      }
+    ],
+    "extends": [
+      {
+        "nature": "additive",
+        "spec": "036-safety-tier-governance",
+        "unit": {
+          "id": "open_agentic_policy_kernel",
+          "kind": "crate"
+        }
+      }
+    ],
+    "extraFrontmatter": {
+      "language": "en",
+      "sources": [
+        "ruflo"
+      ]
+    },
+    "featureBranch": "063-coherence-scoring",
+    "id": "063-coherence-scoring",
+    "implementation": "complete",
+    "kind": "platform",
+    "sectionHeadings": [
+      "Feature Specification: Coherence Scoring with Privilege Degradation",
+      "Purpose",
+      "Scope",
+      "In scope",
+      "Out of scope",
+      "Requirements",
+      "Functional",
+      "Non-functional",
+      "Architecture",
+      "Coherence score computation",
+      "Privilege level capabilities",
+      "Proof chain",
+      "Integration flow",
+      "Implementation approach",
+      "Success criteria",
+      "Dependencies",
+      "Risk"
+    ],
+    "specPath": "specs/063-coherence-scoring/spec.md",
+    "status": "approved",
+    "summary": "Coherence scoring system that computes a 0-1 score from violation rate, rework frequency, and intent drift. The score maps to privilege levels: full (>0.7), restricted (0.5-0.7), read-only (0.3-0.5), suspended (<0.3). Capabilities degrade progressively rather than failing binary pass/fail. Includes a proof chain audit trail with cryptographic hash-chained records and a conformance kit for acceptance testing of coherence enforcement.\n",
+    "title": "Coherence Scoring with Privilege Degradation"
+  },
+  "shardHash": "eaa0cdd158b07b13ee57bf2e91726adddf48f48309f6550fb33b808db93dddc8",
+  "specVersion": "1.1.0"
+}

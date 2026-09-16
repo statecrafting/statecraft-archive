@@ -1,0 +1,59 @@
+{
+  "record": {
+    "codeAliases": [
+      "DOCUMENTATION_WEBSITE"
+    ],
+    "created": "2026-06-25",
+    "dependsOn": [
+      "118-workflow-spec-traceability"
+    ],
+    "domain": "tooling",
+    "establishes": [
+      {
+        "kind": "directory",
+        "path": "website"
+      },
+      {
+        "kind": "file",
+        "path": ".github/workflows/deploy-docs.yml"
+      }
+    ],
+    "extends": [
+      {
+        "nature": "additive",
+        "spec": "034-featuregraph-registry-scanner-fix",
+        "unit": {
+          "kind": "file",
+          "path": "crates/featuregraph/tests/golden/features_graph.json"
+        }
+      }
+    ],
+    "extraFrontmatter": {
+      "slug": "documentation-website"
+    },
+    "id": "223-documentation-website",
+    "implementation": "complete",
+    "kind": "product",
+    "owner": "bart",
+    "risk": "low",
+    "sectionHeadings": [
+      "Feature Specification: Documentation website",
+      "Purpose",
+      "Functional requirements",
+      "FR-001: Authored documentation under `website/`",
+      "FR-002: GitHub Pages deploy workflow",
+      "FR-003: SHA-pinned action references",
+      "FR-004: Workflow-to-spec traceability header",
+      "FR-005: Reader-facing, not machine truth",
+      "Acceptance criteria",
+      "Out of scope",
+      "Dependencies and sequencing"
+    ],
+    "specPath": "specs/223-documentation-website/spec.md",
+    "status": "approved",
+    "summary": "The repository ships a public documentation website built with Docusaurus v3 under website/, and a GitHub Pages deploy workflow (.github/workflows/deploy-docs.yml) that builds and publishes it on every push to main touching website/**. The site is authored content (getting-started, concepts, architecture, the spec-spine workflow, platform, OPC desktop, security, and reference sections) rendered as a static site; it is a reader-facing surface, not a source of machine truth. This spec gives that website and its deploy pipeline an owning spec so both trace under the spec-code coupling gate (127) and the workflow-to-spec traceability convention (118), closing the gap where a 62-file feature and a CI workflow had shipped with no governing spec.\n",
+    "title": "Documentation website (Docusaurus v3) on GitHub Pages"
+  },
+  "shardHash": "8d06f55f71a9cc620d54309dbb3d96bcd4914a8db099be40b38b0e5d6f6815f2",
+  "specVersion": "1.1.0"
+}

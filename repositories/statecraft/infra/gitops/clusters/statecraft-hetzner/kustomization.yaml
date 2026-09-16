@@ -1,0 +1,27 @@
+# Root kustomize bundle for the statecraft-hetzner cluster (spec 010).
+#
+# Explicit resource list (NOT kustomize auto-recursion): the flux-system
+# GitRepository's Kustomization watches this path, and auto-recursion would
+# flatten every tier into one server-side-apply batch, so a Certificate whose
+# CRD is not yet installed would abort the whole batch (including the
+# cert-manager HelmRelease that installs the CRD) into a permanent retry loop.
+# Instead this delegates to four sub-Flux-Kustomizations with dependsOn:
+#
+#   namespaces  -> (no deps)
+#   secrets     -> dependsOn namespaces; SOPS-decrypts into those namespaces
+#   infrastructure -> dependsOn namespaces; healthCheck gates on cert-manager
+#   manifests   -> dependsOn infrastructure; ClusterIssuers need the CRDs
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+resources:
+  # Bootstrap-managed (flux bootstrap writes gotk-components + gotk-sync here);
+  # re-applying via this list is idempotent with the bootstrap install.
+  - flux-system
+  - namespaces-kustomization.yaml
+  - secrets-kustomization.yaml
+  - infrastructure-kustomization.yaml
+  - manifests-kustomization.yaml
+  # The control-plane tier (spec 009). This one line is the only spec 010
+  # touch the relocation of spec 009's manifests required; the tier file and
+  # everything under statecraft/ are spec 009's.
+  - statecraft-kustomization.yaml

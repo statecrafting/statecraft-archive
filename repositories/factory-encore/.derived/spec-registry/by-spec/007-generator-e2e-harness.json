@@ -1,0 +1,65 @@
+{
+  "record": {
+    "codeAliases": [
+      "GENERATOR_E2E_HARNESS"
+    ],
+    "created": "2026-06-28",
+    "dependsOn": [
+      "002-encore-generator-core",
+      "006-factory-schema-lockstep"
+    ],
+    "domain": "ci-cd",
+    "establishes": [
+      {
+        "kind": "file",
+        "path": "adapters/acme-vue-encore/e2e/run-e2e.sh"
+      },
+      {
+        "kind": "file",
+        "path": "adapters/acme-vue-encore/e2e/lib/common.sh"
+      },
+      {
+        "kind": "file",
+        "path": ".github/workflows/generator-e2e.yml"
+      },
+      {
+        "kind": "file",
+        "path": ".github/workflows/generator-e2e-nightly.yml"
+      },
+      {
+        "kind": "file",
+        "path": ".github/workflows/generator-e2e-drift.yml"
+      }
+    ],
+    "id": "007-generator-e2e-harness",
+    "implementation": "complete",
+    "kind": "governance",
+    "owner": "bart",
+    "risk": "medium",
+    "sectionHeadings": [
+      "007. Generator e2e harness: structural PR gate + build-matrix nightly + against-main drift sweep",
+      "1. Purpose",
+      "2. Territory",
+      "3. Behavior",
+      "3.1 The matrix",
+      "FR-001: Stagecraft-faithful production",
+      "3.2 Two verification layers",
+      "FR-002: Structural verification (always, Node-only)",
+      "FR-003: Build verification (default; the real compile gate)",
+      "3.3 Three CI lanes",
+      "FR-004: Structural PR gate (cheap, required)",
+      "FR-005: Build-matrix nightly against the pinned ref (non-gating)",
+      "FR-006: Against-main drift sweep (non-gating, issue-routed)",
+      "3.4 The gate must be able to go red",
+      "FR-007: The runner exit code propagates the matrix verdict",
+      "4. Acceptance criteria",
+      "5. Out of scope"
+    ],
+    "specPath": "specs/007-generator-e2e-harness/spec.md",
+    "status": "approved",
+    "summary": "The lockstep gate (spec 006) pins the baseline's invariant hashes but never compiles the composed module payloads against the live template-encore baseline, so module-vs-baseline drift (an audit-API rename, a renamed `user_account` column) passes lockstep and only breaks at `encore check`. This spec stands up an end-to-end harness that drives the generator (spec 002) directly against a template-encore checkout across the full profile x module matrix (22 produced apps) and verifies each, replicating stagecraft's scaffold contract with no stagecraft and no OAP in the loop. It runs on three lanes, mirroring OAP's expensive-e2e posture: a cheap structural matrix gated per-PR on the generator surface and folded into the terminal ci-gate; a full build-matrix nightly against the pinned ref (non-gating, issue-on-failure); and a weekly against-main drift sweep that opens a deduplicated tracking issue on divergence.\n",
+    "title": "Generator e2e harness: structural PR gate + build-matrix nightly + against-main drift sweep"
+  },
+  "shardHash": "db3b9117a3ef17789b77e32f64570d2f86ef65b87ccd3adbd41292718ea4f227",
+  "specVersion": "1.1.0"
+}

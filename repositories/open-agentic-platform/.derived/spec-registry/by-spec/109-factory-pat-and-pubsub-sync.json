@@ -1,0 +1,98 @@
+{
+  "record": {
+    "created": "2026-04-21",
+    "dependsOn": [
+      "080-github-identity-onboarding",
+      "106-rauthy-native-oidc-and-membership",
+      "108-factory-as-platform-feature"
+    ],
+    "domain": "platform",
+    "establishes": [
+      {
+        "kind": "file",
+        "path": "platform/services/statecraft/api/factory/upstreamPat.ts"
+      },
+      {
+        "kind": "file",
+        "path": "platform/services/statecraft/api/factory/syncWorker.ts"
+      },
+      {
+        "kind": "file",
+        "path": "platform/services/statecraft/api/factory/syncRuns.ts"
+      },
+      {
+        "kind": "file",
+        "path": "platform/services/statecraft/api/factory/syncRunsScheduler.ts"
+      },
+      {
+        "kind": "file",
+        "path": "platform/services/statecraft/api/factory/tokenResolver.ts"
+      },
+      {
+        "kind": "file",
+        "path": "platform/services/statecraft/api/projects/projectPat.ts"
+      }
+    ],
+    "extends": [
+      {
+        "nature": "additive",
+        "spec": "108-factory-as-platform-feature",
+        "unit": {
+          "kind": "file",
+          "path": "platform/services/statecraft/api/factory/factory.ts"
+        }
+      },
+      {
+        "nature": "additive",
+        "spec": "108-factory-as-platform-feature",
+        "unit": {
+          "kind": "file",
+          "path": "platform/services/statecraft/web/app/routes/app.factory.upstreams.tsx"
+        }
+      },
+      {
+        "nature": "additive",
+        "spec": "106-rauthy-native-oidc-and-membership",
+        "unit": {
+          "kind": "file",
+          "path": "platform/services/statecraft/web/app/routes/app.project.$projectId.settings.github-pat.tsx"
+        }
+      }
+    ],
+    "extraFrontmatter": {
+      "slug": "factory-pat-and-pubsub-sync"
+    },
+    "id": "109-factory-pat-and-pubsub-sync",
+    "implementation": "complete",
+    "kind": "platform",
+    "owner": "bart",
+    "sectionHeadings": [
+      "109 — Factory PAT Broker + PubSub Sync Worker",
+      "1. Problem",
+      "2. Decision",
+      "3. Data Model",
+      "4. Token Resolution",
+      "Factory upstream sync",
+      "Project repo operations",
+      "5. PubSub Sync Worker",
+      "5.1 Staleness sweeper (amendment 2026-06-29)",
+      "6. Encore APIs",
+      "Factory upstream PAT",
+      "Factory sync (replaces Phase 3's inline endpoint)",
+      "Project PAT",
+      "7. UI",
+      "`/app/factory/upstreams`",
+      "`/app/factory` (Overview)",
+      "`/app/project/:id/settings/github-pat`",
+      "8. Security",
+      "9. Non-Goals",
+      "10. Rollout"
+    ],
+    "specPath": "specs/109-factory-pat-and-pubsub-sync/spec.md",
+    "status": "approved",
+    "summary": "Finishes spec 108 §10 by making Factory sync asynchronous (PubSub-driven) and wires Personal Access Tokens into the two repo access surfaces the platform owns: (a) org-level PAT for the Factory upstream sources (legacy-factory + template), and (b) per-project PAT for project repos that live outside the org and cannot be reached via the OAP GitHub App. Resolves the spec 108 §10 inline-vs-PubSub open question.\n",
+    "title": "Factory PAT Broker + PubSub Sync Worker"
+  },
+  "shardHash": "5ed022e5af8b491d296a97d49d41b494ae453360f6a1bf9c9bae0930bbda88f4",
+  "specVersion": "1.1.0"
+}

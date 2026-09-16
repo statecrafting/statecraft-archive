@@ -1,0 +1,54 @@
+{
+  "app": { "name": "statecraft", "org": "statecrafting" },
+  "capabilities": [],
+  "services": {
+    "admin": { "tier": "ts", "capabilities": [] },
+    "auth": { "tier": "ts", "capabilities": [] },
+    "factory": { "tier": "ts", "capabilities": [] },
+    "fleet": { "tier": "ts", "capabilities": [] },
+    "governance": { "tier": "ts", "capabilities": [] },
+    "health": { "tier": "ts", "capabilities": [] },
+    "hiq": { "tier": "ts", "capabilities": [] },
+    "idp": { "tier": "ts", "capabilities": [] },
+    "lib": { "tier": "ts", "role": "library", "capabilities": [] },
+    "obs": { "tier": "ts", "capabilities": [] },
+    "tenants": { "tier": "ts", "capabilities": [] },
+    "web": { "tier": "ts", "capabilities": [] }
+  },
+  "resources": {
+    "counters": [{ "name": "counters" }],
+    "databases": [{ "name": "app", "engine": "coreledger-postgres" }],
+    "kv": [{ "name": "cache" }],
+    "secrets": [
+      { "name": "fleet_s3_access_key_id" },
+      { "name": "fleet_s3_restic_password" },
+      { "name": "fleet_s3_secret_access_key" },
+      { "name": "github_app_id" },
+      { "name": "github_app_private_key_b64" },
+      { "name": "github_webhook_secret" },
+      { "name": "governanceanchorkey" },
+      { "name": "jwt_private_key" },
+      { "name": "jwt_public_key" },
+      { "name": "jwt_refresh_private_key" },
+      { "name": "jwt_refresh_public_key" },
+      { "name": "rauthy_api_key" },
+      { "name": "rauthy_client_secret" }
+    ]
+  },
+  "agents": [],
+  "trust": { "levels": ["full", "restricted", "read-only", "suspended"] },
+  "gate": {
+    "checks": [
+      "actor-authenticated",
+      "confirm-name-required",
+      "posture-required",
+      "tenant-active"
+    ]
+  },
+  "ledger": {
+    "recordSchema": "attestation/v1",
+    "signing": { "algorithm": "ed25519", "keyRef": "GovernanceAnchorKey" }
+  },
+  "observability": { "metricsPath": "/metrics", "otel": true },
+  "auth": { "idp": "rauthy-embedded", "operatorRole": "statecraft_operator" }
+}

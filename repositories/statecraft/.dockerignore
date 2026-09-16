@@ -1,0 +1,26 @@
+# Docker build context for the control-plane image (spec 009). docker/Dockerfile.base
+# COPYs the tree into /workspace, so keep node_modules, backend/, .encore/build,
+# addon/ (the built .node), docker/, package*.json and infra.config.docker.json;
+# exclude source/governance cruft the runtime never reads.
+.git
+.github
+.claude
+.derived
+specs
+standards
+AGENTS.md
+CLAUDE.md
+README.md
+LICENSE
+# Local secrets / state must never enter the image.
+.env
+.env.*
+keys
+.data
+scratchpad
+# SPA source: the built bundle lives in backend/web/dist; the source + its deps
+# are not needed in the image.
+frontend
+# Test + coverage artifacts.
+**/*.test.ts
+coverage

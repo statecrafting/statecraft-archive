@@ -1,0 +1,62 @@
+{
+  "record": {
+    "codeAliases": [
+      "DECOMPOSITION_EMBEDDING_CACHE"
+    ],
+    "created": "2026-05-31",
+    "dependsOn": [
+      "165-opc-decomposition-pipeline"
+    ],
+    "domain": "opc",
+    "establishes": [
+      {
+        "kind": "file",
+        "path": "crates/opc-decomposition-pipeline/src/embedding_cache.rs"
+      }
+    ],
+    "extends": [
+      {
+        "nature": "additive",
+        "spec": "165-opc-decomposition-pipeline",
+        "unit": {
+          "kind": "file",
+          "path": "crates/opc-decomposition-pipeline/src/stages/clustering.rs"
+        }
+      }
+    ],
+    "extraFrontmatter": {
+      "slug": "decomposition-embedding-cache"
+    },
+    "id": "192-decomposition-embedding-cache",
+    "implementation": "complete",
+    "kind": "capability",
+    "owner": "bart",
+    "references": [
+      {
+        "role": "substrate",
+        "unit": {
+          "kind": "file",
+          "path": "specs/165-opc-decomposition-pipeline/spec.md"
+        }
+      }
+    ],
+    "risk": "low",
+    "sectionHeadings": [
+      "192 — Decomposition embedding cache",
+      "1. Problem",
+      "2. Decision",
+      "3. Functional Requirements",
+      "4. Success Criteria",
+      "5. Scope",
+      "In scope",
+      "Out of scope (deferred)",
+      "6. Cross-references"
+    ],
+    "specPath": "specs/192-decomposition-embedding-cache/spec.md",
+    "status": "approved",
+    "summary": "A content-addressed, on-disk embedding cache for the decomposition pipeline's semantic-clustering stage (spec 165 stage 3). When the `embeddings` feature is enabled, stage 3 embeds each source file's content via fastembed; embedding is the dominant cost. This spec caches each embedding under `<output_root>/.embedding-cache/<sha256>.json`, keyed by the file's content hash, so unchanged files are never re-embedded across runs — the cross-run analogue of spec 165's stage-output cache (FR-007). The cache is the lightweight realisation of spec 165 landing-1's deferred follow-up F-006; it does not require the axiomregent persistent index, which remains a further future option for cross-tool sharing.\n",
+    "title": "Decomposition embedding cache — content-addressed cross-run reuse for stage-3 clustering"
+  },
+  "shardHash": "0c07c5f3beabb3e0eb9fa3cf2c4cca6cbb9f303e1e92b446cedc964777ef9fe9",
+  "specVersion": "1.1.0"
+}

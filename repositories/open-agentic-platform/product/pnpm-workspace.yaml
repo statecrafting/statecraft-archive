@@ -1,0 +1,37 @@
+packages:
+  - "apps/*"
+  - "packages/*"
+
+# GHSA-gv7w-rqvm-qjhr (2026-06-12 advisory wave, esbuild <0.28.1):
+# ignored-with-rationale rather than overridden. The patched 0.28.1
+# regresses down-level transforms ("Transforming destructuring to the
+# configured target environment ... is not supported yet") against the
+# OPC Tauri target set (chrome87/safari14), breaking `vite build`. The
+# advisory's vector is the Deno-module binary fetch trusting
+# NPM_CONFIG_REGISTRY at install time — not our lockfile-pinned pnpm
+# install path. Revisit (drop the ignore, take the patched release)
+# when esbuild ships a fix for the transform regression. Spec 116
+# supply-chain gate response, recorded in the spec's implementation log.
+auditConfig:
+  ignoreGhsas:
+    - "GHSA-gv7w-rqvm-qjhr"
+
+# GHSA-hmw2-7cc7-3qxx (form-data <4.0.6), GHSA-fx2h-pf6j-xcff (vite
+# <=6.4.2), GHSA-wcpc-wj8m-hjx6 (protobufjs <=7.6.0): the patched
+# releases are clean in-major bumps with no known regression against the
+# OPC build, so these are OVERRIDDEN to the fixed line rather than
+# ignored (contrast the esbuild ignore above, kept because its patch
+# regresses down-level transforms). Spec 116 supply-chain gate response
+# (advisory-response-overrides).
+overrides:
+  form-data: "^4.0.6"
+  vite: "^6.4.3"
+  protobufjs: "^7.6.1"
+
+onlyBuiltDependencies:
+  - "@parcel/watcher"
+  - "better-sqlite3"
+  - "core-js"
+  - "esbuild"
+  - "protobufjs"
+  - "sharp"

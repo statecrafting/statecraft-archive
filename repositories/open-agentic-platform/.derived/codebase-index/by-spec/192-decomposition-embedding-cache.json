@@ -1,0 +1,66 @@
+{
+  "mapping": {
+    "dependsOn": [
+      "165-opc-decomposition-pipeline"
+    ],
+    "implementingPaths": [
+      {
+        "path": "crates/opc-decomposition-pipeline/src/embedding_cache.rs",
+        "source": "multiple"
+      },
+      {
+        "path": "crates/opc-decomposition-pipeline/src/stages/clustering.rs",
+        "source": "spec-edge"
+      },
+      {
+        "path": "specs/165-opc-decomposition-pipeline/spec.md",
+        "source": "spec-edge"
+      }
+    ],
+    "resolvedUnits": [
+      {
+        "locations": [
+          {
+            "file": "crates/opc-decomposition-pipeline/src/embedding_cache.rs"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "file",
+          "path": "crates/opc-decomposition-pipeline/src/embedding_cache.rs"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "crates/opc-decomposition-pipeline/src/stages/clustering.rs"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "extends",
+        "unit": {
+          "kind": "file",
+          "path": "crates/opc-decomposition-pipeline/src/stages/clustering.rs"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "specs/165-opc-decomposition-pipeline/spec.md"
+          }
+        ],
+        "ownership": false,
+        "sourceField": "references",
+        "unit": {
+          "kind": "file",
+          "path": "specs/165-opc-decomposition-pipeline/spec.md"
+        }
+      }
+    ],
+    "specId": "192-decomposition-embedding-cache",
+    "specStatus": "approved"
+  },
+  "schemaVersion": "1.1.0",
+  "shardHash": "29bc71b4d308d560627cccd2f9293241557b6019462ac72f88286f2c127fb2f4"
+}

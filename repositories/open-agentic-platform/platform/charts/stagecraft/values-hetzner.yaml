@@ -1,0 +1,35 @@
+image:
+  repository: ghcr.io/statecrafting/open-agentic-platform/statecraft
+  # tag is intentionally unset — CD owns the helm release and passes
+  # --set image.tag=sha-${SHA} on every deploy. Pinning a value here
+  # would clobber CD's authoritative tag. See spec 143 §12 L-003.
+  pullPolicy: Always
+
+imagePullSecrets:
+  - name: ghcr-credentials
+
+ingress:
+  enabled: true
+  className: nginx
+  # Injected by setup.sh via --set from $DOMAIN
+  host: ""
+  annotations:
+    cert-manager.io/cluster-issuer: "letsencrypt-prod"
+    nginx.ingress.kubernetes.io/proxy-body-size: "10m"
+
+secrets:
+  provider: "k8s"
+  create: false
+
+oidc:
+  # Injected by setup.sh via --set from $DOMAIN
+  endpoint: ""
+  # Injected by setup.sh via --set from $DOMAIN
+  deploydAudience: ""
+  deploydScope: "deployd:deploy"
+
+# Rauthy seed hook (spec 106 FR-002). Declares the oap_* custom user
+# attributes and the `oap` scope. Without this, Rauthy's user_attr_values
+# INSERT hits a FOREIGN KEY violation because user_attr_config is empty.
+seedRauthy:
+  enabled: true

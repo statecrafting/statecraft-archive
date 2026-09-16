@@ -1,0 +1,64 @@
+# Spec: 104-makefile-ci-parity-contract
+# Spec: 177-ci-orchestrator-pr-gate
+# Spec: 189-duplex-envelope-version-parity
+# Spec: 191-schema-parity-ci-job
+#
+# Schema-parity gate — enforcing workflow.
+#
+# Mirrors `make ci-schema-parity`: emit the Rust structural fingerprints
+# from crates/factory-contracts via `cargo test`, then walk the statecraft
+# TS descriptors and compare (`bun run tools/oap/schema-parity-check/index.mjs`).
+# The walker also checks protocol-wide envelope-version parity (spec 189):
+# desktop `ENVELOPE_SCHEMA_VERSION` (sync_client.rs) vs server (sync/types.ts).
+#
+# Runtime is bun: the walker imports `.ts` at runtime, and the only file it
+# imports (api/knowledge/extractionOutput.ts) is dependency-free, so no
+# `npm install` is required — bun imports it directly. The `bun run` command
+# is identical to the Makefile recipe so the spec-104 run-mirror holds.
+#
+# Dispatched from ci.yml on changes to the files the gate compares (spec 177).
+# This workflow is in ci-parity-check's ENFORCING_WORKFLOWS (spec 104) —
+# `make ci-strict` mirrors it via the ci-schema-parity target.
+
+name: CI schema parity
+
+on:
+  workflow_call:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+env:
+  CARGO_TERM_COLOR: always
+
+jobs:
+  schema-parity:
+    runs-on: ubuntu-latest
+    name: schema-parity / rust↔ts fingerprint + envelope-version
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+
+      - name: Rust toolchain
+        uses: dtolnay/rust-toolchain@29eef336d9b2848a0b548edc03f92a220660cdb8 # pinned for rust-toolchain.toml lockstep
+        with:
+          toolchain: '1.95.0'
+
+      - name: Cache Rust dependencies
+        uses: Swatinem/rust-cache@42dc69e1aa15d09112580998cf2ef0119e2e91ae # v2
+        with:
+          shared-key: schema-parity
+
+      - name: Set up bun
+        uses: oven-sh/setup-bun@0c5077e51419868618aeaa5fe8019c62421857d6 # v2.2.0
+        with:
+          bun-version: latest
+
+      # Emit the Rust structural fingerprints into .derived/schema-parity/.
+      - name: Emit Rust fingerprints
+        run: cargo test --manifest-path crates/factory-contracts/Cargo.toml --lib -- knowledge::tests::writes_fingerprint_file provenance::tests::writes_provenance_fingerprint_file stakeholder_docs::tests::writes_stakeholder_docs_fingerprint_file
+
+      # Walk TS descriptors + envelope-version parity; compare to the fingerprints.
+      - name: Walk TS descriptors and compare
+        run: bun run tools/oap/schema-parity-check/index.mjs

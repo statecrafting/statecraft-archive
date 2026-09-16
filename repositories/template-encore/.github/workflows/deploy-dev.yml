@@ -1,0 +1,27 @@
+name: Deploy to Dev
+
+# Container deploy for the `dev` environment. Thin caller of the reusable
+# workflow; secrets/vars resolve from the GitHub `dev` environment.
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [dev]
+    paths-ignore:
+      - '*.md'
+      - '.gitignore'
+      - 'docs/**'
+
+permissions:
+  contents: read
+  actions: read
+  packages: write
+  id-token: write
+  security-events: write
+
+jobs:
+  deploy:
+    uses: ./.github/workflows/deploy-reusable.yml
+    with:
+      environment: dev
+    secrets: inherit

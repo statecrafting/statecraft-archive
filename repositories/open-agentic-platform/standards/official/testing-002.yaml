@@ -1,0 +1,35 @@
+id: testing-002
+category: testing
+priority: medium
+context: >
+  Applies to test setup, fixtures, and mock management. Good test hygiene
+  reduces flakiness and speeds up debugging when a test fails.
+tags:
+  - typescript
+  - javascript
+  - testing
+  - mocking
+
+rules:
+  - verb: ALWAYS
+    subject: "clean up side effects in afterEach or afterAll hooks"
+    rationale: >
+      Leaked timers, open handles, or mutated globals from one test can
+      cause the next test to fail with a misleading error message.
+
+  - verb: PREFER
+    subject: "dependency injection over module-level mocking"
+    rationale: >
+      Injecting dependencies makes tests explicit about what is real and
+      what is faked. Module-level mocks are fragile across bundler changes
+      and can mask import-time side effects.
+
+  - verb: AVOID
+    subject: "mocking what you don't own"
+    rationale: >
+      Mocking third-party APIs couples tests to the library's internal
+      interface. Prefer thin adapter layers that you own and can mock safely.
+
+anti_patterns:
+  - pattern: "vi.mock('node:fs')"
+    correction: "Inject a FileSystem interface and provide a test implementation"

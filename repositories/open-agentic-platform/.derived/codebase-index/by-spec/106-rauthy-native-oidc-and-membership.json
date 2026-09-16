@@ -1,0 +1,188 @@
+{
+  "diagnostics": {
+    "errors": [],
+    "warnings": [
+      {
+        "code": "W-002",
+        "message": "spec '106-rauthy-native-oidc-and-membership' file unit 'platform/services/statecraft/api/auth/rauthySeed.ts' does not exist",
+        "path": "platform/services/statecraft/api/auth/rauthySeed.ts"
+      }
+    ]
+  },
+  "mapping": {
+    "dependsOn": [
+      "080-github-identity-onboarding",
+      "087-unified-workspace-architecture"
+    ],
+    "implementingPaths": [
+      {
+        "path": "platform/charts/rauthy",
+        "source": "spec-edge"
+      },
+      {
+        "path": "platform/infra/hetzner/.env.example",
+        "source": "spec-edge"
+      },
+      {
+        "path": "platform/infra/hetzner/manifests/letsencrypt-prod-dns01-cloudflare-issuer.yaml",
+        "source": "spec-edge"
+      },
+      {
+        "path": "platform/infra/hetzner/manifests/tenants-wildcard-certificate.yaml",
+        "source": "spec-edge"
+      },
+      {
+        "path": "platform/infra/hetzner/setup.sh",
+        "source": "spec-edge"
+      },
+      {
+        "path": "platform/services/statecraft/api/auth/membershipResolver.ts",
+        "source": "spec-edge"
+      },
+      {
+        "path": "platform/services/statecraft/api/auth/rauthy.ts",
+        "source": "spec-edge"
+      },
+      {
+        "path": "platform/services/statecraft/api/auth/rauthyCallback.ts",
+        "source": "spec-edge"
+      },
+      {
+        "path": "platform/services/statecraft/web/app/routes/signin.tsx",
+        "source": "spec-edge"
+      }
+    ],
+    "resolvedUnits": [
+      {
+        "locations": [
+          {
+            "file": "platform/services/statecraft/api/auth/membershipResolver.ts"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "file",
+          "path": "platform/services/statecraft/api/auth/membershipResolver.ts"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "platform/charts/rauthy"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "extends",
+        "unit": {
+          "kind": "directory",
+          "path": "platform/charts/rauthy"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "platform/infra/hetzner/.env.example"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "extends",
+        "unit": {
+          "kind": "file",
+          "path": "platform/infra/hetzner/.env.example"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "platform/infra/hetzner/setup.sh"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "extends",
+        "unit": {
+          "kind": "file",
+          "path": "platform/infra/hetzner/setup.sh"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "platform/services/statecraft/api/auth/rauthy.ts"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "extends",
+        "unit": {
+          "kind": "file",
+          "path": "platform/services/statecraft/api/auth/rauthy.ts"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "platform/services/statecraft/api/auth/rauthyCallback.ts"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "extends",
+        "unit": {
+          "kind": "file",
+          "path": "platform/services/statecraft/api/auth/rauthyCallback.ts"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "platform/services/statecraft/web/app/routes/signin.tsx"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "extends",
+        "unit": {
+          "kind": "file",
+          "path": "platform/services/statecraft/web/app/routes/signin.tsx"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "platform/infra/hetzner/manifests/letsencrypt-prod-dns01-cloudflare-issuer.yaml"
+          }
+        ],
+        "ownership": false,
+        "sourceField": "references",
+        "unit": {
+          "kind": "file",
+          "path": "platform/infra/hetzner/manifests/letsencrypt-prod-dns01-cloudflare-issuer.yaml"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "platform/infra/hetzner/manifests/tenants-wildcard-certificate.yaml"
+          }
+        ],
+        "ownership": false,
+        "sourceField": "references",
+        "unit": {
+          "kind": "file",
+          "path": "platform/infra/hetzner/manifests/tenants-wildcard-certificate.yaml"
+        }
+      },
+      {
+        "locations": [],
+        "ownership": false,
+        "sourceField": "references",
+        "unit": {
+          "kind": "file",
+          "path": "platform/services/statecraft/api/auth/rauthySeed.ts"
+        }
+      }
+    ],
+    "specId": "106-rauthy-native-oidc-and-membership",
+    "specStatus": "approved"
+  },
+  "schemaVersion": "1.1.0",
+  "shardHash": "c2ecd71cf1d70a0388ba709bfa72ae68fdbb14ec02cdc77075fefe315c8f4604"
+}

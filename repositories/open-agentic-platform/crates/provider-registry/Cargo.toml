@@ -1,0 +1,49 @@
+# SPDX-License-Identifier: AGPL-3.0-or-later
+# Copyright (C) 2026 Bartek Kus
+
+[package]
+name = "provider-registry"
+publish = false   # internal workspace crate; binaries ship via release workflows, not crates.io
+version = "0.1.0"
+edition = "2024"
+description = "Multi-provider LLM registry with governed dispatch — spec 042"
+
+[features]
+default = ["anthropic", "openai"]
+anthropic = []
+openai = []
+gemini = []
+bedrock = ["dep:aws-sdk-bedrockruntime", "dep:aws-config"]
+
+[dependencies]
+async-trait = "0.1"
+bytes = "1"
+async-stream = "0.3"
+dashmap = "6"
+eventsource-stream = "0.2"
+futures-core = "0.3"
+futures-util = "0.3"
+pin-project-lite = "0.2"
+policy-kernel = { package = "open_agentic_policy_kernel", path = "../policy-kernel", default-features = false }
+reqwest = { version = "0.13", features = ["json", "stream"] }
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+thiserror = "2"
+tokio = { version = "1", features = ["sync", "time", "rt", "macros"] }
+tokio-util = { version = "0.7", features = ["rt"] }
+uuid = { version = "1", features = ["v4"] }
+
+# Optional: Bedrock
+#
+# default-features = false + explicit feature list excludes aws-sdk-bedrockruntime's
+# legacy `rustls` feature, which pulls aws-smithy-http-client/legacy-rustls-ring →
+# rustls 0.21 → rustls-webpki 0.101.7 (RUSTSEC-2026-0098/0099/0104). The modern
+# `default-https-client` path uses rustls 0.23 → rustls-webpki 0.103.x.
+aws-sdk-bedrockruntime = { version = "1", optional = true, default-features = false, features = ["default-https-client", "rt-tokio"] }
+aws-config = { version = "1", optional = true, default-features = false, features = ["default-https-client", "rt-tokio", "credentials-process", "sso"] }
+
+[dev-dependencies]
+tokio = { version = "1", features = ["macros", "rt-multi-thread"] }
+
+[package.metadata.oap]
+spec = "042-multi-provider-agent-registry"

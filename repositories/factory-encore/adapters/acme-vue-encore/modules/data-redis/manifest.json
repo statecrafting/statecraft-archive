@@ -1,0 +1,38 @@
+{
+  "name": "data-redis",
+  "version": "3.0.0",
+  "description": "Provisions an optional Encore infra.config `redis` resource: a `redis` block in the generated apps/api/infra.config.json, reached over the fully typed REDIS_HOST / REDIS_USER / REDIS_PASSWORD connection (parallel to the Postgres SQL_* contract; no REDIS_URL). Redis is NOT a rate-limit backend (that is Postgres, INV-6) and NOT a session store (sessions are stateless JWT, INV-3/INV-7). The baseline lib/redis.ts client reads the triple; the first concrete consumer is the cron scheduler's large-scale distributed lock (cron optionally peers with this module).",
+  "status": "stable",
+  "requires": [],
+  "requiresOneOf": [],
+  "optionalPeers": ["cron"],
+  "conflicts": [],
+  "services": [],
+  "secrets": [],
+  "corsEntries": [],
+  "middlewares": [],
+  "migrations": [],
+  "files": {},
+  "authExports": [],
+  "packageDeps": {},
+  "infraResources": {
+    "redis": {
+      "cluster": "cache"
+    }
+  },
+  "envVars": {
+    "REDIS_HOST": {
+      "required": false,
+      "description": "Redis host or host:port (default port 6379). Injected by the deploy substrate when the redis resource is provisioned (OAP dev via deployd previewRedis; staging/prod by the tenant)."
+    },
+    "REDIS_USER": {
+      "required": false,
+      "description": "Redis ACL username."
+    },
+    "REDIS_PASSWORD": {
+      "required": false,
+      "sensitive": true,
+      "description": "Redis ACL password, declared in the composed infra.config redis block as { \"$env\": \"REDIS_PASSWORD\" }."
+    }
+  }
+}

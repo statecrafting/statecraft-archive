@@ -1,0 +1,58 @@
+# Spec 151 Phase 2 — kubernetes-reflector HelmRelease.
+#
+# Replaces the imperative `helm upgrade --install reflector` block that
+# spec 137 Phase 4↔5 integration added to setup.sh (spec 137 tasks.md
+# T075). Operational parity: same chart, same version, same namespace,
+# default values — only the install mechanism changes (helm-controller
+# reconciles instead of an operator invocation).
+#
+# Reflector watches Secrets carrying its annotations and clones them
+# across namespaces. Spec 137's wildcard tenant cert (Phase 4↔5,
+# tasks.md T076) carries the annotations on `spec.secretTemplate`;
+# cert-manager propagates them onto the generated
+# `tenants-wildcard-tls` Secret in `cert-manager` namespace; reflector
+# clones into every namespace matching the catch-all
+# `reflection-auto-namespaces: ".+"` regex. Tenant Ingresses (rendered
+# by deployd-api in per-app namespaces) reference
+# `secretName: tenants-wildcard-tls` and find their local copy at TLS-
+# terminate time.
+#
+# CRD dependency: reflector defines no CRDs and consumes none from
+# cert-manager — it reads core/v1 Secret objects. No dependsOn needed
+# against cert-manager's HelmRelease (Phase 3).
+---
+apiVersion: source.toolkit.fluxcd.io/v1
+kind: HelmRepository
+metadata:
+  name: emberstack
+  namespace: flux-system
+spec:
+  interval: 24h
+  url: https://emberstack.github.io/helm-charts
+---
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: reflector
+  namespace: kube-system
+spec:
+  interval: 1h
+  chart:
+    spec:
+      chart: reflector
+      # Pinned to match the imperative install in setup.sh (spec 137
+      # T075). Bumps are deliberate edits in their own PRs.
+      version: "9.1.6"
+      sourceRef:
+        kind: HelmRepository
+        name: emberstack
+        namespace: flux-system
+      interval: 24h
+  install:
+    timeout: 5m
+    remediation:
+      retries: 3
+  upgrade:
+    timeout: 5m
+    remediation:
+      retries: 3

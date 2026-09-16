@@ -1,0 +1,22 @@
+{
+  "compilerOptions": {
+    "target": "ES2022",
+    "module": "ESNext",
+    "moduleResolution": "Bundler",
+    "lib": ["ES2023"],
+    "types": ["node"],
+    "strict": true,
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "noEmit": true,
+    "forceConsistentCasingInFileNames": true,
+    "resolveJsonModule": true,
+    "verbatimModuleSyntax": true
+  },
+  // Local typecheck scope: the pure-Node harness primitives + the driver
+  // abstraction (no wdio dep). wdio.conf.ts and fixtures/** import the
+  // WebdriverIO toolchain, which the nightly workflow installs and exercises
+  // (FR-T5); they are intentionally outside the local typecheck.
+  "include": ["harness/**/*.ts"],
+  "exclude": ["node_modules", "fixtures", "wdio.conf.ts"]
+}

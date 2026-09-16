@@ -1,0 +1,172 @@
+{
+  "record": {
+    "codeAliases": [
+      "DEPLOYD_DURABILITY"
+    ],
+    "created": "2026-05-10",
+    "dependsOn": [
+      "073-axiomregent-unification",
+      "086-open-source-launch",
+      "144-hiqlite-default-features"
+    ],
+    "domain": "platform",
+    "extends": [
+      {
+        "nature": "additive",
+        "spec": "073-axiomregent-unification",
+        "unit": {
+          "kind": "file",
+          "path": "platform/services/deployd-api-rs/Cargo.toml"
+        }
+      },
+      {
+        "nature": "additive",
+        "spec": "073-axiomregent-unification",
+        "unit": {
+          "kind": "file",
+          "path": "platform/services/deployd-api-rs/src/main.rs"
+        }
+      },
+      {
+        "nature": "additive",
+        "spec": "073-axiomregent-unification",
+        "unit": {
+          "kind": "file",
+          "path": "platform/services/deployd-api-rs/src/store.rs"
+        }
+      },
+      {
+        "nature": "additive",
+        "spec": "073-axiomregent-unification",
+        "unit": {
+          "kind": "file",
+          "path": "platform/services/deployd-api-rs/src/config.rs"
+        }
+      },
+      {
+        "nature": "additive",
+        "spec": "073-axiomregent-unification",
+        "unit": {
+          "kind": "file",
+          "path": "platform/services/deployd-api-rs/src/auth.rs"
+        }
+      },
+      {
+        "nature": "additive",
+        "spec": "136-tenant-hello-demo-service",
+        "unit": {
+          "kind": "file",
+          "path": "platform/charts/deployd-api/values.yaml"
+        }
+      },
+      {
+        "nature": "additive",
+        "spec": "136-tenant-hello-demo-service",
+        "unit": {
+          "kind": "file",
+          "path": "platform/charts/deployd-api/values-hetzner.yaml"
+        }
+      },
+      {
+        "nature": "additive",
+        "spec": "136-tenant-hello-demo-service",
+        "unit": {
+          "kind": "file",
+          "path": "platform/charts/deployd-api/values-azure.yaml"
+        }
+      },
+      {
+        "nature": "additive",
+        "spec": "136-tenant-hello-demo-service",
+        "unit": {
+          "kind": "file",
+          "path": "platform/charts/deployd-api/values-aws.yaml"
+        }
+      },
+      {
+        "nature": "additive",
+        "spec": "136-tenant-hello-demo-service",
+        "unit": {
+          "kind": "file",
+          "path": "platform/charts/deployd-api/values-gcp.yaml"
+        }
+      },
+      {
+        "nature": "additive",
+        "spec": "136-tenant-hello-demo-service",
+        "unit": {
+          "kind": "file",
+          "path": "platform/charts/deployd-api/values-do.yaml"
+        }
+      },
+      {
+        "nature": "additive",
+        "spec": "136-tenant-hello-demo-service",
+        "unit": {
+          "kind": "file",
+          "path": "platform/charts/deployd-api/values-local.yaml"
+        }
+      },
+      {
+        "nature": "additive",
+        "spec": "136-tenant-hello-demo-service",
+        "unit": {
+          "kind": "file",
+          "path": "platform/charts/deployd-api/templates/deployment.yaml"
+        }
+      },
+      {
+        "nature": "additive",
+        "spec": "136-tenant-hello-demo-service",
+        "unit": {
+          "kind": "file",
+          "path": "platform/charts/deployd-api/templates/external-secret.yaml"
+        }
+      },
+      {
+        "nature": "additive",
+        "spec": "136-tenant-hello-demo-service",
+        "unit": {
+          "kind": "file",
+          "path": ".github/workflows/cd-deployd-api-rs.yml"
+        }
+      }
+    ],
+    "extraFrontmatter": {
+      "closed": "2026-05-15",
+      "slug": "deployd-durability"
+    },
+    "id": "145-deployd-durability",
+    "implementation": "complete",
+    "kind": "platform-delivery",
+    "owner": "bart",
+    "risk": "medium",
+    "sectionHeadings": [
+      "145 — deployd-api durability chain",
+      "1. Background",
+      "1.1 Coordination with spec 146 (deployd-api memory hardening)",
+      "2. Resolution",
+      "2.1 Chart — flip Hetzner persistence on; audit other env files",
+      "2.2 Chart — narrow the container-start `rm` scope",
+      "2.3 Cargo — enable `backup`, `s3`, `auto-heal`; env-translation layer",
+      "2.4 Restore — operator-driven DR mode",
+      "2.5 Operational runbook",
+      "3. Requirements",
+      "3.1 Functional requirements",
+      "3.2 Non-functional requirements",
+      "3.3 Acceptance criteria",
+      "4. Out of scope",
+      "5. Provenance",
+      "6. Decision log + open questions",
+      "Resolved 2026-05-10 (initial — operator decisions, pre-implementation)",
+      "Resolved 2026-05-10 (Phase 0 — implementation-time, this amendment pass)",
+      "Security hardening amendment (2026-07-02)"
+    ],
+    "specPath": "specs/145-deployd-durability/spec.md",
+    "status": "approved",
+    "summary": "The `deployments` and `deployment_events` tables in deployd-api-rs's Hiqlite store are the audit trail of who deployed what, when, with what scope, and what outcome — not reconstructable from K8s state for rolled-back releases, and not reconstructable at all for the append-only event log. Today three reinforcing layers of \"off\" make this data ephemeral on the actively-shipping Hetzner deploy: the env values file disables the chart's PVC, the container start-up command runs `rm -rf /var/lib/deployd/data/*` on every boot, and the Cargo manifest enables only `[\"sqlite\"]` so there is no off-cluster durability path. This spec lands the four coupled fixes as one unit: flip persistence on, narrow the data-dir scrub back to the targeted stale-lock cleanup it replaced, enable Hiqlite `backup`+`s3`+`auto-heal` with operator-supplied S3 credentials, and add restore-on-startup so a fresh pod against an empty volume rehydrates from the most recent encrypted snapshot. Splitting the four lands a half-fix.\n",
+    "title": "deployd-api durability chain — PVC + scrub-narrowing + Hiqlite backup/s3 + restore-on-startup"
+  },
+  "shardHash": "ae7c81b36a72c200d28708ecfea3a123b17782741ae9bd5dbbf988574bbfcfa7",
+  "specVersion": "1.1.0"
+}

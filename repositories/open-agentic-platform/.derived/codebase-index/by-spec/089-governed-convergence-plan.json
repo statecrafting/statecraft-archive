@@ -1,0 +1,14 @@
+{
+  "mapping": {
+    "dependsOn": [
+      "082-artifact-integrity-platform-hardening",
+      "087-unified-workspace-architecture",
+      "080-github-identity-onboarding"
+    ],
+    "implementingPaths": [],
+    "specId": "089-governed-convergence-plan",
+    "specStatus": "approved"
+  },
+  "schemaVersion": "1.1.0",
+  "shardHash": "a35c8f3c52b533c8ef639662733e247fd0d692c19d97e22cb610f0d294404d0a"
+}

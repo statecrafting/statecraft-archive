@@ -1,0 +1,38 @@
+{
+  "record": {
+    "amendmentRecord": "147-spec-kind-grammar",
+    "authors": [
+      "open-agentic-platform"
+    ],
+    "created": "2026-03-22",
+    "domain": "tooling",
+    "extraFrontmatter": {
+      "amended": "2026-05-13",
+      "language": "en"
+    },
+    "featureBranch": "006-conformance-lint-mvp",
+    "id": "006-conformance-lint-mvp",
+    "implementation": "complete",
+    "kind": "platform",
+    "origin": {
+      "retroactive": true
+    },
+    "sectionHeadings": [
+      "Feature Specification: Conformance lint",
+      "Purpose and charter",
+      "Normative dependency",
+      "Warning codes *(MVP catalog)*",
+      "Heuristic details *(non-exhaustive)*",
+      "Success Criteria *(mandatory)*",
+      "Clarifications",
+      "Session 2026-03-22"
+    ],
+    "specPath": "specs/006-conformance-lint-mvp/spec.md",
+    "status": "superseded",
+    "summary": "Non-blocking conformance checks for the 003–005 authored protocol: warning codes, heuristics for lifecycle and execution hygiene, and a spec-lint tool that never substitutes for Feature 001 structural validation or registry truth. Amended by spec 128 (2026-05-02) to ratify the `--fail-on-warn` strict posture for OAP's CI invocation. Amended by spec 147 (2026-05-13) to register W-130/W-131/W-132 against the new kind-grammar surface and to add a registration-site `severity` field on Warning (warning/info tiers) per spec 128 §7. Info-tier diagnostics emit alongside warning-tier but are exempt from `--fail-on-warn`.\n",
+    "supersededBy": "217-spec-spine-engine-swap-collapse",
+    "title": "Conformance lint (optional workflow warnings)"
+  },
+  "shardHash": "6dca4c50f3a4d93a1162b5eab85ddb04fdecd5841c02ca6243009d76810834eb",
+  "specVersion": "1.1.0"
+}

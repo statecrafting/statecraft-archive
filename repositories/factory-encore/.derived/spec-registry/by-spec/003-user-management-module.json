@@ -1,0 +1,46 @@
+{
+  "record": {
+    "codeAliases": [
+      "USER_MANAGEMENT_MODULE"
+    ],
+    "created": "2026-06-10",
+    "dependsOn": [
+      "001-module-manifest-schema",
+      "002-encore-generator-core"
+    ],
+    "domain": "generator",
+    "establishes": [
+      {
+        "kind": "file",
+        "path": "adapters/acme-vue-encore/modules/user-management/"
+      }
+    ],
+    "id": "003-user-management-module",
+    "implementation": "complete",
+    "kind": "feature",
+    "owner": "bart",
+    "risk": "medium",
+    "sectionHeadings": [
+      "003. User-management: the reference Encore service module",
+      "1. Purpose",
+      "2. Territory",
+      "3. Behavior",
+      "FR-001 — Service directory structure",
+      "FR-002 — Role model: app-managed tables",
+      "FR-003 — Admin endpoints",
+      "FR-004 — Input validation on `assignAppRoles`",
+      "FR-005 — Audit on every mutation (INV-8)",
+      "FR-006 — Auth service isolation",
+      "FR-007 — Manifest v2 declaration",
+      "FR-008 — JSONC-aware CORS merge",
+      "4. Acceptance criteria",
+      "5. Out of scope"
+    ],
+    "specPath": "specs/003-user-management-module/spec.md",
+    "status": "approved",
+    "summary": "The reference service module: a self-contained user-management Encore service with app_role/user_role tables, typed api() admin endpoints, tagged-template SQL model, role catalog, audit on every mutation (INV-8), and its own SQL schema file. Demonstrates the shape every feature module follows: manifest.json + files/<service-dir>.\n",
+    "title": "User-management: the reference Encore service module"
+  },
+  "shardHash": "b03abae8d3f49cf0cd5c65665840f46e68799424777cb2ff3ddd0add77ce275c",
+  "specVersion": "1.1.0"
+}

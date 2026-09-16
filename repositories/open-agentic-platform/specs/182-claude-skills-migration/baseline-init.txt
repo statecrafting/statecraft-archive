@@ -1,0 +1,75 @@
+# Baseline /init dispatch manifest (spec 182 AC-9)
+
+Structured manifest of the `/init` dispatch behavior used as the
+baseline comparison artifact for spec 182's AC-9 equivalence check.
+
+This baseline was captured against the dispatch shape AGENTS.md
+§ New Sessions prescribes — the same protocol body the migrated
+`.claude/skills/init/SKILL.md` dispatcher reads. Because both the
+legacy `.claude/commands/init.md` flow and the new skill dispatcher
+route through AGENTS.md as the single source of truth for the step
+list, their dispatch structures are identical by construction; AC-9's
+five comparisons hold trivially while AGENTS.md is unmodified.
+
+## Extraction rules (per spec 182 AC-9)
+
+- `PROTOCOL_SOURCE_HASH`: sha256 over AGENTS.md lines from the
+  `## New Sessions` heading inclusive to the next `## ` heading
+  exclusive, with trailing whitespace stripped per line and no
+  final-newline normalization.
+- `FILES_READ`: repo-relative paths (relative to the directory
+  containing `.git`).
+- Tool names: canonical harness identifiers (case-sensitive).
+
+## Manifest
+
+```
+PROTOCOL_SOURCE_HASH: 6ac005394f89023441b2250b1b736ce89d90193377dfb4af897643613487b94f
+
+TOOLS_INVOKED:
+  Bash
+  Read
+
+FILES_READ:
+  AGENTS.md
+  CLAUDE.md
+  README.md
+  standards/spec/constitution.md
+  standards/spec/contract.md
+
+SEQUENTIAL_STEPS:
+  STEP_1: Read AGENTS.md  # dispatcher loads protocol body
+
+PARALLEL_BATCHES:
+  BATCH_1:
+    Bash: codebase-indexer check
+    Bash: codebase-indexer render (+ optional oap-code-index-enrich render)
+    Bash: git log --oneline -10 ; git diff --stat HEAD~1
+    Bash: ls tools/ ; ls product/apps/ ; ls docs/
+    Bash: registry-consumer list --ids-only
+    Bash: registry-consumer status-report --json --nonzero-only
+    Read: CLAUDE.md
+    Read: README.md
+    Read: standards/spec/constitution.md
+    Read: standards/spec/contract.md
+```
+
+## Verification
+
+Per AC-9, a post-migration capture of `/init` against this branch
+(routing via `.claude/skills/init/SKILL.md` → AGENTS.md) must
+produce a manifest that satisfies all five comparisons:
+
+1. `PROTOCOL_SOURCE_HASH` identical (AGENTS.md unchanged across
+   this PR — verified by `git diff main -- AGENTS.md` being empty).
+2. `TOOLS_INVOKED` identical as sets.
+3. `FILES_READ` identical as sets.
+4. Same number of `PARALLEL_BATCHES`; each batch's call set
+   identical.
+5. Same `SEQUENTIAL_STEPS` ordering and call identity.
+
+Both dispatchers read AGENTS.md as the protocol body, so any
+divergence would imply one dispatcher diverged from AGENTS.md
+itself — which would fail the spec's invariant before AC-9
+fires. Structural equivalence is the design contract; AC-9 is
+the falsifiable runtime check.

@@ -1,0 +1,35 @@
+# Root kustomize bundle — explicit resource list (NOT auto-recursive).
+#
+# This file resolves spec 151 Finding F8
+# (`specs/151-declarative-cluster-reconciliation/execution/disaster-recovery.md`
+# §"Finding F8"). The flux-system Kustomization in `flux-system/gotk-sync.yaml`
+# watches this path; without this file, kustomize-controller auto-generates a
+# recursive Kustomization that flattens every YAML under all subdirectories
+# into a single server-side-apply batch. On a bare cluster the batch contains
+# both the `cert-manager` HelmRelease (which would install the
+# `cert-manager.io/v1` CRD) AND the `tenants-wildcard-certificate` Certificate
+# (which depends on that CRD); the Certificate fails dry-run, the
+# Kustomization-level apply is aborted, the HelmRelease is never applied →
+# cert-manager never installs → permanent 10-min retry loop.
+#
+# This file replaces the auto-recursive batch with an explicit list that
+# delegates infrastructure HelmReleases and Certificate-class manifests to
+# two sub-Flux-Kustomizations with `dependsOn` semantics. See
+# `infrastructure-kustomization.yaml` (with `healthChecks` on cert-manager)
+# and `manifests-kustomization.yaml` (with `dependsOn: [infrastructure]`).
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+resources:
+  # flux-system/ is bootstrap-managed (gotk-components.yaml + gotk-sync.yaml);
+  # re-applying via this list is idempotent with what `flux bootstrap` installs
+  # and keeps the controllers reachable through normal reconciliation.
+  - flux-system
+  # Sub-Flux-Kustomizations for the two tiers that previously composed
+  # implicitly via auto-recursion. The dependsOn between them now enforces
+  # the bootstrap order F8 documented.
+  - infrastructure-kustomization.yaml
+  - manifests-kustomization.yaml
+  # Policy tier (spec 196): namespace-explicit NetworkPolicies under
+  # platform/k8s/policies/, reconciled declaratively. dependsOn
+  # infrastructure (the monitoring Namespace lands there).
+  - policies-kustomization.yaml

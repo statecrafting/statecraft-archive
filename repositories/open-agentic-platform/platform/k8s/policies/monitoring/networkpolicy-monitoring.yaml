@@ -1,0 +1,179 @@
+# Spec 196 FR-006 — monitoring-namespace NetworkPolicies.
+#
+# The `monitoring` namespace ships WITH an enforced default-deny from
+# day one — the first namespace in this deployment to carry one
+# (post-create.sh applies only resourcequota/limitrange to the app
+# namespaces and skips default-deny "for MVP"; the in-tree
+# namespace-baseline manifest was, until this spec, applied nowhere).
+# The flows below are the complete named allow set; anything else in
+# or out of `monitoring` is dropped.
+#
+# The security-critical rule is `allow-remote-write-from-statecraft`:
+# Encore's prometheus exporter has no auth field, so the remote_write
+# receiver is UNAUTHENTICATED — its inbound surface must be reachable
+# from `statecraft-system` (and Grafana/operator pods inside
+# `monitoring`) ONLY. SC-008's negative probes (generic namespace +
+# each scrape-target namespace) verify exactly this. There is
+# deliberately NO ingress-to-Prometheus allow from the scrape-target
+# namespaces: scraping is Prometheus-initiated egress (FR-006 (b));
+# granting the reverse inbound would expose the receiver to
+# flux-system/deployd-system/ingress-nginx and undercut SC-008.
+#
+# Applied declaratively by the `policies` Flux Kustomization
+# (platform/gitops/clusters/hetzner-prod/policies-kustomization.yaml)
+# via the explicit list in platform/k8s/policies/kustomization.yaml —
+# not by post-create.sh (spec 151 retires imperative cluster mutation,
+# FR-005 keeps this spec on the declarative path).
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: default-deny-all
+  namespace: monitoring
+spec:
+  podSelector: {}
+  policyTypes:
+    - Ingress
+    - Egress
+---
+# Intra-namespace traffic: Grafana → Prometheus queries, Prometheus →
+# kube-state-metrics scrapes, sidecar ↔ Grafana, operator ↔ workloads.
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: allow-intra-namespace
+  namespace: monitoring
+spec:
+  podSelector: {}
+  policyTypes:
+    - Ingress
+    - Egress
+  ingress:
+    - from:
+        - podSelector: {}
+  egress:
+    - to:
+        - podSelector: {}
+---
+# FR-006 (a) — the push half: statecraft's Encore remote_write may
+# reach the receiver port. No other namespace gets this (SC-008).
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: allow-remote-write-from-statecraft
+  namespace: monitoring
+spec:
+  podSelector:
+    matchLabels:
+      app.kubernetes.io/name: prometheus
+  policyTypes:
+    - Ingress
+  ingress:
+    - from:
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: statecraft-system
+      ports:
+        - port: 9090
+          protocol: TCP
+---
+# FR-006 (c) — Grafana UI is reachable only through ingress-nginx
+# (SC-009). Prometheus itself has no ingress object and no allow here:
+# the receiver is never exposed at ingress (spec 196 §Risks).
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: allow-grafana-from-ingress-nginx
+  namespace: monitoring
+spec:
+  podSelector:
+    matchLabels:
+      app.kubernetes.io/name: grafana
+  policyTypes:
+    - Ingress
+  ingress:
+    - from:
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: ingress-nginx
+      ports:
+        - port: 3000
+          protocol: TCP
+---
+# FR-006 (b) — the pull half plus operational egress, port-bounded:
+#   53            DNS
+#   443 / 6443    kube-apiserver (service discovery, operator) and
+#                 Grafana → Rauthy OIDC (token exchange via the
+#                 Cloudflare-fronted issuer)
+#   8080          Flux controllers + deployd-api /metrics
+#   9153          CoreDNS metrics
+#   9100 / 10250  node-exporter (hostNetwork) / kubelet+cAdvisor —
+#                 host-IP endpoints, so they cannot be namespace- or
+#                 pod-scoped; the port bound is the containment
+#   10254         ingress-nginx controller metrics
+# Destination-side containment for the pod-addressable targets does NOT
+# currently exist: networkpolicy-allow-metrics-egress.yaml was withdrawn
+# by the 2026-06-12 incident fix (corrected FR-006 — a lone cross-ns
+# allow policy isolates a namespace that declares no other posture).
+# It returns with each target namespace's own default-deny, under that
+# namespace's owning spec.
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: allow-monitoring-egress
+  namespace: monitoring
+spec:
+  podSelector: {}
+  policyTypes:
+    - Egress
+  egress:
+    - ports:
+        - port: 53
+          protocol: UDP
+        - port: 53
+          protocol: TCP
+    - ports:
+        - port: 443
+          protocol: TCP
+        - port: 6443
+          protocol: TCP
+        - port: 8080
+          protocol: TCP
+        - port: 9100
+          protocol: TCP
+        - port: 9153
+          protocol: TCP
+        - port: 10250
+          protocol: TCP
+        - port: 10254
+          protocol: TCP
+---
+# FR-006 addendum (2026-07-08): allow ingress-nginx to reach the ephemeral
+# cert-manager HTTP-01 solver pods (port 8089) so a monitoring-namespace
+# ingress (Grafana) can obtain and renew its Let's Encrypt certificate. The
+# default-deny above otherwise REJECTs ingress-nginx -> solver (this cluster's
+# netpol controller rejects rather than drops, per the 2026-06-12 incident
+# addendum), stalling the ACME challenge with a 502 and blocking Grafana over
+# TLS entirely (SC-009/SC-010). Scoped to the solver label + port only: the
+# receiver isolation (SC-008) is untouched, since Prometheus is not a solver
+# pod and 8089 is not the receiver port. Solver pods are short-lived and exist
+# only while an HTTP-01 challenge is in flight.
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: allow-acme-solver-from-ingress-nginx
+  namespace: monitoring
+spec:
+  podSelector:
+    matchLabels:
+      acme.cert-manager.io/http01-solver: "true"
+  policyTypes:
+    - Ingress
+  ingress:
+    - from:
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: ingress-nginx
+      ports:
+        - port: 8089
+          protocol: TCP

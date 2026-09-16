@@ -1,0 +1,40 @@
+{
+  "record": {
+    "authors": [
+      "open-agentic-platform"
+    ],
+    "created": "2026-03-22",
+    "domain": "tooling",
+    "extends": [
+      {
+        "nature": "additive",
+        "spec": "002-registry-consumer-mvp"
+      }
+    ],
+    "extraFrontmatter": {
+      "language": "en"
+    },
+    "featureBranch": "029-registry-consumer-contract-governance-gate-mvp",
+    "id": "029-registry-consumer-contract-governance-gate-mvp",
+    "implementation": "complete",
+    "kind": "platform-delivery",
+    "refines": [
+      {
+        "aspect": "contract-tests"
+      }
+    ],
+    "sectionHeadings": [
+      "Feature Specification: Contract governance gate",
+      "Purpose",
+      "Requirements",
+      "Out of scope"
+    ],
+    "specPath": "specs/029-registry-consumer-contract-governance-gate-mvp/spec.md",
+    "status": "superseded",
+    "summary": "Codify controlled-extension governance for registry-consumer via explicit stabilization boundary, change classification rubric, reviewer checklist, contract baseline definition, and CI validation gate language.\n",
+    "supersededBy": "217-spec-spine-engine-swap-collapse",
+    "title": "Registry consumer change classification and contract-governance gate MVP"
+  },
+  "shardHash": "7e4909883090eb3dd97b5be0eb4a94296a59503893ae53baf72f7760b488fc27",
+  "specVersion": "1.1.0"
+}

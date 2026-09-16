@@ -1,0 +1,61 @@
+{
+  "record": {
+    "authors": [
+      "open-agentic-platform"
+    ],
+    "codeAliases": [
+      "PROVIDER_REGISTRY"
+    ],
+    "created": "2026-03-29",
+    "dependsOn": [
+      "035-agent-governed-execution",
+      "036-safety-tier-governance",
+      "068-permission-runtime",
+      "090-governance-non-optionality",
+      "098-governance-enforcement-stitching"
+    ],
+    "domain": "opc",
+    "establishes": [
+      {
+        "id": "provider-registry",
+        "kind": "crate"
+      }
+    ],
+    "extraFrontmatter": {
+      "language": "en",
+      "revised": "2026-04-15"
+    },
+    "featureBranch": "042-multi-provider-agent-registry",
+    "id": "042-multi-provider-agent-registry",
+    "implementation": "complete",
+    "kind": "platform",
+    "risk": "medium",
+    "sectionHeadings": [
+      "Feature Specification: Multi-Provider Agent Registry",
+      "Revision history",
+      "Purpose",
+      "Scope",
+      "In scope",
+      "Out of scope",
+      "Requirements",
+      "Functional",
+      "Non-functional",
+      "Architecture",
+      "Crate location",
+      "Key type definitions (Rust)",
+      "Governance integration",
+      "Orchestrator integration",
+      "Event normalisation flow",
+      "Implementation approach",
+      "Success criteria",
+      "Dependencies",
+      "Risk"
+    ],
+    "specPath": "specs/042-multi-provider-agent-registry/spec.md",
+    "status": "approved",
+    "summary": "Rust crate providing a unified ProviderAdapter trait and ProviderRegistry that normalises multiple LLM backends (Anthropic, OpenAI, Gemini, Bedrock) behind a common AgentEvent stream. Every provider dispatch is governed via PolicyEvaluator and ToolCallContext integration. Replaces the prior TypeScript scaffold with native Rust execution, eliminating the Node.js sidecar subprocess in the desktop app's orchestrator path.\n",
+    "title": "Multi-Provider Agent Registry"
+  },
+  "shardHash": "c32dcd019bd7099ad024ef9fc05dfeeb01f01e8387478e2719092772078191b2",
+  "specVersion": "1.1.0"
+}

@@ -1,0 +1,68 @@
+# Verify (statecraft spec 002): build the app shell and run its test gauntlet
+# in CI, the same builds a stamped app's toolchain performs. Nothing is built
+# from source here: the Encore toolchain and the hiqlite addon resolve as
+# prebuilt binaries from the pinned @enrahitu/* packages, and the governance
+# and fleet addons likewise from the pinned @statecrafting/* packages
+# (statecrafting specs 005/006). No vendored runtime build, no cargo, no
+# protoc. A
+# Postgres service backs the CoreLedger Postgres-driver arm (spec 003): the
+# parameterized ledger suite runs on both drivers every CI run via
+# TEST_POSTGRES_URL, so "scaling is a driver swap" stays continuously proven.
+name: verify
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: verify-${{ github.ref }}
+  cancel-in-progress: true
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:16-alpine
+        env:
+          POSTGRES_USER: statecraft
+          POSTGRES_PASSWORD: statecraft
+          POSTGRES_DB: statecraft_test
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U statecraft -d statecraft_test"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+    steps:
+      - uses: actions/checkout@93cb6efe18208431cddfb8368fd83d5badbf9bfd # v5.0.1
+      - uses: actions/setup-node@a0853c24544627f65ddf259abe73b1d18a591444 # v5.0.0
+        with:
+          node-version: 24
+          cache: npm
+          cache-dependency-path: |
+            package-lock.json
+            frontend/package-lock.json
+            frontend-admin/package-lock.json
+      # No cargo cache and no addon build: governance-native and fleet-native
+      # are published @statecrafting packages now (statecrafting specs 005/006),
+      # so npm ci installs their prebuilt per-platform binaries.
+      - run: npm ci
+      - run: npm --prefix frontend ci
+      - run: npm --prefix frontend-admin ci
+      - name: Build web (SPA into backend/web/dist)
+        run: npm run build:web
+      - name: Build admin dashboard (into backend/web/dist-admin, spec 012)
+        run: npm run build:web-admin
+      - name: Build app (generates encore.gen)
+        run: npm run build:app
+      - name: App model freshness (spec 012)
+        run: npm run check:model
+      - name: Typecheck and test (both CoreLedger drivers)
+        env:
+          TEST_POSTGRES_URL: postgres://statecraft:statecraft@localhost:5432/statecraft_test
+        run: npm run typecheck && npm test
+      - name: Frontend typecheck + component tests (spec 007)
+        run: npm --prefix frontend run typecheck && npm --prefix frontend test

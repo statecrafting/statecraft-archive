@@ -1,0 +1,11 @@
+{
+  "package": {
+    "kind": "npm-package",
+    "name": "@statecrafting/toolchain-linux-x64",
+    "path": "packages/toolchain-linux-x64",
+    "specRef": "002-toolchain",
+    "version": "0.4.0"
+  },
+  "schemaVersion": "1.1.0",
+  "shardHash": "54f2ecf6d2feeb9142f67eb79a5fcdda93bf81e1a1752c203f97cc81c09f0ab1"
+}

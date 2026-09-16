@@ -1,0 +1,91 @@
+{
+  "record": {
+    "amendmentRecord": "Amended 2026-05-24 by 155-logical-unit-resolution-semantics.\nRe-amended 2026-06-14 by 216-spec-spine-library-grammar-adoption: the\n2026-06-14 bare-id `amends` clarification callout added to §5 (PR #358) is\nformalised here as a spec-recorded amendment. Spec 216 Phase 1 converges the\nspec-compiler onto the bare-id `amends` grammar this section documents; a\nnon-string `amends` entry is now a hard V-033 compile error rather than a\nsilent empty-list collapse.\nRe-amended 2026-06-15 by 216-spec-spine-library-grammar-adoption (Phase 2b):\nthe codebase-index `TraceMapping` (this spec's index unit surface) gains an\nadditive `supersedes` field carrying each spec's partial-supersession edges\nwith the `unit:` resolved to its physical path(s), so the coupling gate can\nfilter superseded predecessors from `authorities(P)`. Index schema bumped\n3.0.0 -> 3.1.0 (additive; `codebase-index.schema.json` widened), and the\nindexer's `unit:`-to-path resolution (spec_scanner) is reused for the new\nfield. FR-010 of spec 216.\namended 2026-06-18 by spec 217 (engine-swap collapse): the in-tree spec-compiler, codebase-indexer, and spec-code-coupling-check that implemented unit-grammar resolution were deleted; that logic is now in spec-spine-core. All edges on those deleted paths are stripped; the surviving edges (registry schema, spec-lint overlay, featuregraph golden) carry this spec's live authority, and the codebase-index schema edge is dropped with the in-tree codebase-index.schema.json (Workstream D).\n",
+    "codeAliases": [
+      "LOGICAL_UNIT_OWNERSHIP",
+      "UNIT_GRAMMAR"
+    ],
+    "created": "2026-05-20",
+    "dependsOn": [
+      "130-spec-coupling-primary-owner",
+      "153-invariant-freeze-additive-evolution"
+    ],
+    "domain": "substrate",
+    "extends": [
+      {
+        "nature": "additive",
+        "spec": "130-spec-coupling-primary-owner",
+        "unit": {
+          "kind": "file",
+          "path": "standards/schemas/spec-spine/registry.schema.json"
+        }
+      },
+      {
+        "nature": "additive",
+        "spec": "006-conformance-lint-mvp",
+        "unit": {
+          "kind": "file",
+          "path": "tools/spec-spine/spec-lint/src/lib.rs"
+        }
+      },
+      {
+        "nature": "additive",
+        "spec": "006-conformance-lint-mvp",
+        "unit": {
+          "kind": "file",
+          "path": "tools/spec-spine/spec-lint/tests/lint.rs"
+        }
+      },
+      {
+        "nature": "additive",
+        "spec": "034-featuregraph-registry-scanner-fix",
+        "unit": {
+          "kind": "file",
+          "path": "crates/featuregraph/tests/golden/features_graph.json"
+        }
+      }
+    ],
+    "extraFrontmatter": {
+      "amended": "2026-06-18",
+      "approved": "2026-05-20",
+      "closed": "2026-05-22",
+      "slug": "logical-unit-ownership-grammar"
+    },
+    "id": "154-logical-unit-ownership-grammar",
+    "implementation": "complete",
+    "kind": "governance",
+    "owner": "bart",
+    "risk": "medium",
+    "sectionHeadings": [
+      "154 — Logical-unit ownership grammar",
+      "1. Problem",
+      "2. Decision",
+      "3. Unit kinds — semantics and resolution",
+      "3.1 `crate:`",
+      "3.2 `symbol:`",
+      "3.3 `module:`",
+      "3.4 `section:`",
+      "3.5 `directory:`",
+      "3.6 `file:`",
+      "3.7 Standard exclusions",
+      "4. The `references:` relationship — ninth edge, non-owning",
+      "5. Relationship-field shape",
+      "6. Authority computation under unit ownership",
+      "7. Rename semantics",
+      "8. Backwards-compatibility contract",
+      "9. Scope",
+      "In scope (this commit)",
+      "Out of scope (deferred to later Tier 2 segments)",
+      "10. Acceptance",
+      "11. Cross-references",
+      "12. Closure — Segments 1–6 landed",
+      "Amendments received"
+    ],
+    "specPath": "specs/154-logical-unit-ownership-grammar/spec.md",
+    "status": "approved",
+    "summary": "Spec 130 §2 defines eight relationship fields (establishes, extends, refines, supersedes, amends, co_authority, constrains, origin) that carry **file paths** as values. Path-based ownership conflates *what behavior does this spec govern* (logical identity) with *where does that behavior currently sit* (physical location). Any path-shape edit reads as a spec-relevant change even when no contract changes. Tier 1 of the spec-spine cleanup pass surfaced this concretely via a Spec-Drift-Waiver covering five paths of pure structural movement.\nThis spec adds a **logical-unit grammar** for the values inside relationship fields. Six unit kinds — crate, symbol, module, section, directory, file — express ownership as logical identity. The codebase-indexer resolves units to physical locations at index time; the coupling gate fires on logical-unit drift, not path churn. Refactor invariance becomes a structural property of ownership.\nThis spec also adds a ninth relationship — `references:` — declaratively non-owning. References are visible to the indexer for provenance and navigation but ignored by the coupling gate.\nPath-string values remain valid (parsed as `file:` units) for backwards compatibility until the corpus migration completes and legacy form is excised in a later segment of the Tier 2 sequence.\n",
+    "title": "Logical-unit ownership grammar — value typing for relationship-graph fields"
+  },
+  "shardHash": "9746152fb0be3e1a898dd48f0fb0d15d98535283e16c0f3d2fa4f21e30ddbfeb",
+  "specVersion": "1.1.0"
+}

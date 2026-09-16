@@ -1,0 +1,107 @@
+{
+  "mapping": {
+    "dependsOn": [
+      "000-bootstrap-spec-system",
+      "047-governance-control-plane",
+      "104-makefile-ci-parity-contract"
+    ],
+    "implementingPaths": [
+      {
+        "path": ".github/workflows/ci-supply-chain.yml",
+        "source": "spec-edge"
+      },
+      {
+        "path": "Makefile",
+        "source": "spec-edge"
+      },
+      {
+        "path": "deny.toml",
+        "source": "spec-edge"
+      },
+      {
+        "path": "platform/services/statecraft/package.json",
+        "source": "spec-edge"
+      },
+      {
+        "path": "product/pnpm-workspace.yaml",
+        "source": "spec-edge"
+      }
+    ],
+    "resolvedUnits": [
+      {
+        "locations": [
+          {
+            "file": ".github/workflows/ci-supply-chain.yml"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "file",
+          "path": ".github/workflows/ci-supply-chain.yml"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "deny.toml"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "file",
+          "path": "deny.toml"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "platform/services/statecraft/package.json"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "refines",
+        "unit": {
+          "kind": "file",
+          "path": "platform/services/statecraft/package.json"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "product/pnpm-workspace.yaml"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "refines",
+        "unit": {
+          "kind": "file",
+          "path": "product/pnpm-workspace.yaml"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "Makefile",
+            "span": {
+              "endLine": 692,
+              "startLine": 690
+            }
+          }
+        ],
+        "ownership": true,
+        "sourceField": "co_authority",
+        "unit": {
+          "anchor": "supply-chain",
+          "file": "Makefile",
+          "kind": "section"
+        }
+      }
+    ],
+    "specId": "116-supply-chain-policy-gates",
+    "specStatus": "approved"
+  },
+  "schemaVersion": "1.1.0",
+  "shardHash": "c080be43159c87321ff8eb5c21dbe00ec486e88dd31155235b22a1d8b4b4169d"
+}

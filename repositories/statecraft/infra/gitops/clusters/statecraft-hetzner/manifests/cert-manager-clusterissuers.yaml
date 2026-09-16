@@ -1,0 +1,55 @@
+# cert-manager ClusterIssuers (spec 010).
+#
+# The DNS-01 Cloudflare issuer is the DEFAULT for every platform host, not
+# just the tenant wildcard. Rationale (spec 010 acceptance): this is a
+# greenfield bring-up with the old cluster gone, so DNS points nowhere until
+# cutover. HTTP-01 cannot solve a challenge for an unreachable host, but DNS-01
+# proves control via a Cloudflare TXT record with no ingress reachability, so
+# every host's cert issues BEFORE DNS is pointed at the cluster. Ingresses
+# annotate `cert-manager.io/cluster-issuer: letsencrypt-prod-dns01-cloudflare`.
+#
+# `letsencrypt-prod` (HTTP-01) is kept as the second issuer per the spec, but
+# it is not the default any host uses; it is available for hosts that later
+# want HTTP-01 once DNS is live.
+#
+# The DNS-01 issuer needs the `cloudflare-api-token` Secret (key `api-token`)
+# in the cert-manager namespace, SOPS-decrypted by the `secrets` tier. Until it
+# exists the ClusterIssuer is Ready=False and self-heals when the Secret lands.
+---
+apiVersion: cert-manager.io/v1
+kind: ClusterIssuer
+metadata:
+  name: letsencrypt-prod-dns01-cloudflare
+  labels:
+    statecraft.spec: "010-statecraft-cluster"
+spec:
+  acme:
+    server: https://acme-v02.api.letsencrypt.org/directory
+    email: admin@statecraft.ing
+    privateKeySecretRef:
+      name: letsencrypt-prod-dns01-cloudflare-account
+    solvers:
+      # No dnsZones selector: this issuer answers DNS-01 for every host the
+      # Cloudflare token can edit (statecraft.ing and its subdomains).
+      - dns01:
+          cloudflare:
+            apiTokenSecretRef:
+              name: cloudflare-api-token
+              key: api-token
+---
+apiVersion: cert-manager.io/v1
+kind: ClusterIssuer
+metadata:
+  name: letsencrypt-prod
+  labels:
+    statecraft.spec: "010-statecraft-cluster"
+spec:
+  acme:
+    server: https://acme-v02.api.letsencrypt.org/directory
+    email: admin@statecraft.ing
+    privateKeySecretRef:
+      name: letsencrypt-prod
+    solvers:
+      - http01:
+          ingress:
+            class: nginx

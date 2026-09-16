@@ -1,0 +1,55 @@
+{
+  "record": {
+    "amendmentRecord": "amended 2026-05-24 by spec 176 (amends-aware-section-satisfaction-parity): fixed the section-scoped satisfaction predicate in check_coupling_section_aware to also honour amends:/amendmentRecord: substitutes, matching whole-file coupling behaviour.\namended 2026-06-18 by spec 217 (engine-swap collapse): the in-tree spec-code-coupling-check that implemented section-matching was deleted; that logic is now in spec-spine-core. The extends-133 coupling-check edge and co_authority section unit on the deleted path are stripped; this spec's surviving authority is the spec-types overlay (extends-130, the named-anchor grammar).\n",
+    "codeAliases": [
+      "PATH_CO_AUTHORITY"
+    ],
+    "created": "2026-05-19",
+    "dependsOn": [
+      "130-spec-coupling-primary-owner",
+      "133-amends-aware-coupling-gate"
+    ],
+    "domain": "substrate",
+    "extends": [
+      {
+        "nature": "additive",
+        "spec": "130-spec-coupling-primary-owner",
+        "unit": {
+          "kind": "file",
+          "path": "tools/shared/spec-types/src/lib.rs"
+        }
+      }
+    ],
+    "extraFrontmatter": {
+      "amended": "2026-06-18",
+      "approved": "2026-05-19",
+      "slug": "path-co-authority"
+    },
+    "id": "152-path-co-authority",
+    "implementation": "complete",
+    "kind": "governance",
+    "owner": "bart",
+    "risk": "low",
+    "sectionHeadings": [
+      "152 — Path Co-Authority",
+      "1. Concern",
+      "2. Named-anchor sectioning",
+      "2.1 Anchor syntax",
+      "2.2 Diff-to-section matching",
+      "2.3 Co-authority satisfaction",
+      "3. Empty-authority-by-rule",
+      "3.1 Pattern syntax",
+      "3.2 Empty-authority-by-rule patterns",
+      "3.3 Adding new patterns",
+      "4. Relationship to the bypass file",
+      "5. Gate integration",
+      "6. Cross-references"
+    ],
+    "specPath": "specs/152-path-co-authority/spec.md",
+    "status": "approved",
+    "summary": "Named-anchor sectioning, diff-to-section matching, and the empty-authority-by-rule mechanism. The substrate that lets one path be governed by multiple specs with non-overlapping authority (canonical example: the repo-root Makefile, where each of ~eight specs governs a distinct target group), and lets specific paths legitimately have no governing spec (vendored code, generated artifacts, well-known boilerplate). Replaces the file-level bypass list that previously sat outside the spec spine.\n",
+    "title": "Path Co-Authority — named-anchor sectioning and empty-authority-by-rule"
+  },
+  "shardHash": "b8e01f98650cc504919a05417d6ffb674b828bd3b5b82ba9d83ea2e5d5004f48",
+  "specVersion": "1.1.0"
+}

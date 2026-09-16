@@ -1,0 +1,25 @@
+{
+  "name": "security-core",
+  "version": "2.0.0",
+  "description": "Cross-cutting security configuration for the Encore base app. Helmet/CSP, CORS, rate limiting, and structured logging are provided by apps/api/lib (security-headers, rate-limit, logger) and Encore's typed endpoints; body parsing is implicit in typed api() handlers. The Express session/body-parser/etag/pagination/correlation-id plugins and the session-store factory are retired (no apps/api/src/** tree under Encore; sessions removed by INV-3/INV-7). This module is now a thin declarative overlay documenting the CORS origin knob the base app's encore.app global_cors consumes.",
+  "status": "stable",
+  "requires": [],
+  "requiresOneOf": [],
+  "optionalPeers": [],
+  "conflicts": [],
+  "services": [],
+  "secrets": [],
+  "corsEntries": [],
+  "middlewares": [],
+  "migrations": [],
+  "files": {},
+  "authExports": [],
+  "packageDeps": {},
+  "envVars": {
+    "CORS_ORIGIN": {
+      "value": "http://localhost:5173",
+      "required": false,
+      "description": "Allowed CORS origin(s), comma-separated; consumed by the base app's encore.app global_cors configuration"
+    }
+  }
+}

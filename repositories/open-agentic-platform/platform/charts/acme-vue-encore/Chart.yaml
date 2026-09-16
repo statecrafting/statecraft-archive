@@ -1,0 +1,20 @@
+# Spec: 214-tenant-app-chart-supersession
+#
+# Helm chart for the factory's real reference tenant: a template
+# scaffold (acme-vue-encore) serving an Encore.ts API on port 4000 with the
+# Vue SPA bundled into the same image. Supersedes the synthetic reference
+# tenant chart (spec 136) per spec 214; gate-seam render parity was proven
+# before the retirement (FR-011). Encodes:
+# non-root + readOnlyRootFilesystem pods (stateless; durable state only in
+# the declared database, spec 136 C-001/FR-012), split liveness/readiness
+# probes on the scaffold's actual /health/* surface (Clarification 1), the
+# spec 137 access-gate Ingress seam (ported from the prior chart's gate seam),
+# runtime config via env vars (Encore bakes infra.config.json at build time
+# and resolves $env at start; FR-003), and an opt-in preview-grade Postgres
+# (FR-006).
+apiVersion: v2
+name: acme-vue-encore
+description: Reference Helm chart for factory-produced Encore.ts + Vue tenant apps (spec 214). Supersedes the synthetic reference tenant (spec 136).
+type: application
+version: 0.1.0
+appVersion: "0.1.0"

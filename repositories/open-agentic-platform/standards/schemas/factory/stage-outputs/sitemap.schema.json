@@ -1,0 +1,78 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "sitemap.schema.json",
+  "title": "Sitemap - Stage 2 Output",
+  "description": "Every page the application needs, with routing, audience, and data-source bindings.",
+  "type": "object",
+  "required": ["variant", "pages"],
+  "additionalProperties": false,
+  "properties": {
+    "variant": {
+      "type": "string",
+      "enum": ["single-public", "single-internal", "dual"],
+      "description": "Deployment topology derived from page view_type values."
+    },
+    "pages": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "$ref": "#/$defs/page" }
+    }
+  },
+  "$defs": {
+    "page": {
+      "type": "object",
+      "required": ["id", "title", "path", "page_type", "audience", "view_type", "requires_auth"],
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Stable, unique page identifier used for cross-referencing."
+        },
+        "title": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Display title shown to users."
+        },
+        "path": {
+          "type": "string",
+          "pattern": "^/",
+          "description": "URL path (must start with /)."
+        },
+        "page_type": {
+          "type": "string",
+          "enum": [
+            "landing",
+            "dashboard",
+            "list",
+            "detail",
+            "form",
+            "content",
+            "help",
+            "profile",
+            "login",
+            "error"
+          ]
+        },
+        "audience": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Audience name from audiences.json."
+        },
+        "view_type": {
+          "type": "string",
+          "enum": ["public", "public-authenticated", "private-authenticated"],
+          "description": "Visibility class that drives variant derivation."
+        },
+        "requires_auth": {
+          "type": "boolean"
+        },
+        "data_sources": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "Operation IDs this page calls for data."
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,37 @@
+{
+  "record": {
+    "created": "2026-07-20",
+    "dependsOn": [
+      "000-bootstrap",
+      "001-packages-thesis"
+    ],
+    "establishes": [
+      {
+        "kind": "directory",
+        "path": "addon/fleet-native/"
+      }
+    ],
+    "id": "006-fleet-native",
+    "implementation": "complete",
+    "sectionHeadings": [
+      "006: The fleet placement core as a napi-rs native addon",
+      "1. Purpose",
+      "2. Territory",
+      "3. Behavior",
+      "3.1 License: AGPL-3.0, and why the shield holds",
+      "3.2 The napi surface",
+      "3.3 Publishing",
+      "4. Ownership: an edge transfer",
+      "5. Acceptance",
+      "6. Out of scope",
+      "7. The ladder closes",
+      "Amendment (2026-07-23): the ingress allow becomes per-app (0.2.0)"
+    ],
+    "specPath": "specs/006-fleet-native/spec.md",
+    "status": "approved",
+    "summary": "The fifth and last package of the spec 001 ladder: `@statecrafting/fleet-native`, the control plane's fleet placement core. Native kube-rs construction of the EnRaHiTu placement shape (Namespace, Deployment, PVC, Service, Ingress, NetworkPolicy) plus deploy / status / update / backup / remove, behind a JSON-in / JSON-out async napi surface. It arrives by edge transfer from statecraft `addon/fleet-native/`, unchanged in behavior and unchanged in license: AGPL-3.0, because it is the fleet engine and no stamped app touches it. statecraft spec 006 keeps `backend/fleet/`; only this one path moves.\n",
+    "title": "The fleet placement core as a napi-rs native addon"
+  },
+  "shardHash": "0d05fb543a0b6af2618dbe068e89b56fce40b4e5d49ba01e643a9e00f2778131",
+  "specVersion": "1.2.0"
+}

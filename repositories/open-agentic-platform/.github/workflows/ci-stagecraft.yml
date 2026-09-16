@@ -1,0 +1,132 @@
+# Spec: 077-statecraft-factory-api
+# Spec: 087-unified-workspace-architecture
+# Spec: 177-ci-orchestrator-pr-gate
+#
+# CI for statecraft: type-check, test, and Encore docker build.
+#
+# Hardening notes (ci-hardening branch):
+#   - M3: typecheck job runs real Encore codegen instead of writing fake
+#     `any`-typed stubs. The previous stubs made `~encore/clients` resolve
+#     to `any`, so tsc was effectively type-loose for every cross-service
+#     import. Now we install the Encore CLI and trigger codegen via
+#     `encore build docker` with a tight timeout (just long enough to
+#     populate encore.gen) — full image is built by the parallel
+#     encore-build job.
+#   - M5: per-job timeout-minutes set on every job.
+#
+# Dispatched from `.github/workflows/ci.yml` on PRs touching the
+# statecraft service (spec 177); manual via workflow_dispatch.
+
+name: CI statecraft
+
+on:
+  workflow_call:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+env:
+  ENCORE_VERSION: '1.57.9'
+
+jobs:
+  check-and-test:
+    runs-on: ubuntu-latest
+    name: typecheck + test
+    timeout-minutes: 25
+
+    steps:
+      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+
+      - uses: actions/setup-node@48b55a011bda9f5d6aeb4c2d9c7362e8dae4041e # v6
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: platform/services/statecraft/package-lock.json
+
+      - name: Install dependencies
+        run: npm ci
+        working-directory: platform/services/statecraft
+
+      - name: Install Encore CLI
+        uses: ./.github/actions/encore-install
+        with:
+          encore-version: ${{ env.ENCORE_VERSION }}
+
+      # Encore parses every service before codegen runs, and `web/api.gateway.ts`
+      # registers `api.static({ dir: "./build/client/assets" })`. The parser
+      # fails fast if that directory is missing, so the React Router build
+      # MUST land before the codegen step below. Same first step as the
+      # encore-build composite action.
+      - name: Build frontend
+        shell: bash
+        working-directory: platform/services/statecraft
+        run: cd web && npx react-router build
+
+      # M3 fix — populate encore.gen via real codegen.
+      # `encore build docker` parses every service before any Docker work
+      # begins, writing encore.gen as a side effect. We launch the build
+      # in the background, poll for the generated client surface to land,
+      # then kill the daemon. ~30-60s on warm runners; capped at 180s.
+      - name: Generate encore.gen (real codegen)
+        shell: bash
+        working-directory: platform/services/statecraft
+        run: |
+          set -euo pipefail
+          # Background build — discarded as soon as encore.gen is populated.
+          encore build docker \
+            --config ./infra.config.json \
+            statecraft-typecheck:0 >/tmp/encore-build.log 2>&1 &
+          BUILD_PID=$!
+          GEN_FILE="encore.gen/clients/index.d.ts"
+          MARKER='from "../internal/clients'
+          for i in $(seq 1 180); do
+            if [ -f "$GEN_FILE" ] && grep -q "$MARKER" "$GEN_FILE" 2>/dev/null; then
+              echo "encore.gen populated after ${i}s."
+              break
+            fi
+            sleep 1
+          done
+          kill "$BUILD_PID" 2>/dev/null || true
+          pkill -f "encore daemon" 2>/dev/null || true
+          if ! grep -q "$MARKER" "$GEN_FILE" 2>/dev/null; then
+            echo "::error::encore.gen codegen did not produce a real client surface."
+            tail -50 /tmp/encore-build.log || true
+            exit 1
+          fi
+
+      - name: TypeScript type check
+        run: npx tsc --noEmit
+        working-directory: platform/services/statecraft
+
+      - name: Vitest
+        run: npm test
+        working-directory: platform/services/statecraft
+
+  # Parity gate with cd-statecraft.yml: run `encore build docker` against the
+  # production infra config so schema-parser errors and missing resource
+  # registrations fail the PR instead of the post-merge deploy.
+  encore-build:
+    runs-on: ubuntu-latest
+    name: encore build docker
+    timeout-minutes: 25
+
+    steps:
+      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+
+      - uses: actions/setup-node@48b55a011bda9f5d6aeb4c2d9c7362e8dae4041e # v6
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: platform/services/statecraft/package-lock.json
+
+      - name: Install dependencies
+        run: npm ci
+        working-directory: platform/services/statecraft
+
+      - name: Encore build (validate schema + infra config)
+        uses: ./.github/actions/encore-build
+        with:
+          encore-version: ${{ env.ENCORE_VERSION }}
+          config: ./infra.config.json
+          image-tag: statecraft-ci:${{ github.run_id }}

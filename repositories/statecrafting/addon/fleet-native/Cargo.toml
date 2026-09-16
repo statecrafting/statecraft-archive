@@ -1,0 +1,52 @@
+[package]
+name = "fleet-native"
+version = "0.2.0"
+edition = "2021"
+publish = false
+license = "AGPL-3.0"
+description = "the control plane's fleet placement core as a napi-rs addon: native kube-rs construction of the EnRaHiTu placement shape (Deployment + PVC + Service + Ingress + Namespace + NetworkPolicy) plus deploy/status/update/backup/remove, for an Encore.ts fleet service."
+
+# Standalone crate: no root Cargo workspace exists in this repo. The empty
+# workspace table pins the workspace root here so cargo never walks upward
+# (spec-spine.toml standalone_rust_workspaces).
+[workspace]
+
+[package.metadata.spec-spine]
+spec = "006-fleet-native"
+
+[lib]
+# cdylib for the napi addon; rlib so `cargo test` builds a normal harness over
+# the pure resource builders (the kube I/O + napi layers are cfg'd out under
+# `--no-default-features`, so the shape tests need no cluster and no Node C API).
+crate-type = ["cdylib", "rlib"]
+
+[dependencies]
+# Resource shapes are always compiled (the pure builder core, statecraft spec 006 §4 golden
+# tests). k8s-openapi v1_32 matches the deployd-api-rs harvest reference and the
+# hetzner-k3s v1.33 apiserver.
+k8s-openapi = { version = "0.28", features = ["v1_32"] }
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+
+# The live-cluster I/O layer (kube_ops) and the napi bindings (napi_api) are
+# gated behind `node`, so `cargo test --no-default-features` compiles only the
+# pure core: no kube/tokio/hyper/Node linkage. kube 4 + the client feature
+# mirror the deployd-api-rs dependency (statecraft spec 006 §1).
+kube = { version = "4", features = ["client"], optional = true }
+tokio = { version = "1", features = ["rt", "rt-multi-thread", "macros", "time"], optional = true }
+napi = { version = "3", default-features = false, features = ["napi8", "tokio_rt"], optional = true }
+napi-derive = { version = "3", optional = true }
+
+[build-dependencies]
+napi-build = "2"
+
+[features]
+# `node` pulls in the napi bindings + the kube I/O layer and is on by default so
+# `napi build` and a plain `cargo build` produce the working addon.
+# `cargo test --no-default-features` exercises the pure resource builders.
+default = ["node"]
+node = ["dep:napi", "dep:napi-derive", "dep:kube", "dep:tokio"]
+
+[profile.release]
+lto = true
+strip = true

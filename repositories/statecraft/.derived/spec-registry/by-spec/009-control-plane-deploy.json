@@ -1,0 +1,81 @@
+{
+  "record": {
+    "created": "2026-07-16",
+    "dependsOn": [
+      "002-app-shell",
+      "008-governance-attestation",
+      "010-statecraft-cluster"
+    ],
+    "establishes": [
+      {
+        "kind": "file",
+        "path": ".github/workflows/image.yml"
+      },
+      {
+        "kind": "file",
+        "path": ".github/workflows/ai-pr-review.yml"
+      },
+      {
+        "kind": "file",
+        "path": ".github/workflows/ai-changelog.yml"
+      },
+      {
+        "kind": "file",
+        "path": ".dockerignore"
+      },
+      {
+        "kind": "directory",
+        "path": "infra/gitops/clusters/statecraft-hetzner/statecraft/"
+      },
+      {
+        "kind": "file",
+        "path": "infra/gitops/clusters/statecraft-hetzner/statecraft-kustomization.yaml"
+      }
+    ],
+    "id": "009-control-plane-deploy",
+    "implementation": "in-progress",
+    "sectionHeadings": [
+      "009: The control-plane deploy",
+      "1. Purpose",
+      "2. What the realignment changes",
+      "2.1 The image is embedded-rauthy and self-seeds",
+      "2.2 Five of the eleven Encore secrets are discarded if injected",
+      "2.3 The shared-rauthy secret set is void",
+      "2.4 `auth.statecraft.ing` does not return",
+      "2.5 The deferred Grafana OIDC item is void",
+      "3. Territory",
+      "4. Behavior",
+      "4.1 Image",
+      "4.2 Topology",
+      "4.3 The volume is the identity anchor",
+      "4.4 Environment",
+      "4.5 Identity seeding: what first boot cannot do",
+      "4.6 Break-glass",
+      "4.7 Observability",
+      "4.8 Upstream gaps this deploy surfaces",
+      "4.9 Ported CI",
+      "5. Acceptance",
+      "5.1 Bring-up outcome, 2026-07-21",
+      "6. Human checkpoints",
+      "7. Out of scope",
+      "Amendment (2026-07-22): re-pin to the spec 012 image",
+      "Amendment (2026-07-22): spec 012 frontend-admin adoption, deploy env",
+      "Amendment (2026-07-22, second pin): the spec 011 walk-fix image",
+      "Amendment (2026-07-22): fleet placement RBAC",
+      "Amendment (2026-07-23, third pin): the fleet placement enablers",
+      "Amendment (2026-07-23, fourth pin): fleet-native 0.2.0",
+      "Amendment (2026-07-25): the fail-loud test, run at last, and what it found",
+      "Finding 1: rauthy is never asked to stop, and it costs restarts",
+      "Finding 2: the backup errors are replayed history, not failing backups",
+      "Amendment (2026-07-25, fifth pin): the stop handler reaches production",
+      "Acceptance, verified live 2026-07-26",
+      "Correction to Finding 2: the backup noise was downstream of Finding 1"
+    ],
+    "specPath": "specs/009-control-plane-deploy/spec.md",
+    "status": "approved",
+    "summary": "Stand the control plane up on the spec 010 cluster as a platform-grade K8s deployment at app.statecraft.ing. Rewritten ground-up 2026-07-19 to the two-plane thesis (001 section 3), which unpauses it. The rewrite inverts the deploy's job: the published image is embedded-rauthy and self-seeds its own identity on first boot, so the shared-rauthy secret set is void, five of the eleven Encore secrets are discarded by the entrypoint if injected, and the /data volume becomes the identity anchor of the platform. What the deploy still owes the container: nine real secrets, the non-secret env, a Postgres URL, an ingress, and one seeder pass for the only thing first boot cannot seed (the upstream GitHub provider, which rauthy has no declarative bootstrap for). Operator surfaces gate on the custom statecraft_operator role, seeded here; rauthy_admin stays break-glass. Live bring-up is a human checkpoint.\n",
+    "title": "The control-plane deploy: one governed container on the statecraft cluster"
+  },
+  "shardHash": "fff5eab9390f7878a82260e9b002dec222a51389b9e7da59fe94738b213007e9",
+  "specVersion": "1.2.0"
+}

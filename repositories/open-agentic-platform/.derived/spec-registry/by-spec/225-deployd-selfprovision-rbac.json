@@ -1,0 +1,84 @@
+{
+  "record": {
+    "authors": [
+      "open-agentic-platform"
+    ],
+    "codeAliases": [
+      "DEPLOYD_SELF_PROVISION_RBAC"
+    ],
+    "created": "2026-07-04",
+    "dependsOn": [
+      "136-tenant-hello-demo-service",
+      "145-deployd-durability"
+    ],
+    "domain": "platform",
+    "establishes": [
+      {
+        "kind": "file",
+        "path": "platform/charts/deployd-api/templates/rbac.yaml"
+      },
+      {
+        "kind": "file",
+        "path": "platform/services/deployd-api-rs/src/rbac.rs"
+      }
+    ],
+    "extends": [
+      {
+        "nature": "additive",
+        "spec": "034-featuregraph-registry-scanner-fix",
+        "unit": {
+          "kind": "file",
+          "path": "crates/featuregraph/tests/golden/features_graph.json"
+        }
+      },
+      {
+        "nature": "additive",
+        "spec": "136-tenant-hello-demo-service",
+        "unit": {
+          "kind": "file",
+          "path": "platform/services/deployd-api-rs/src/routes.rs"
+        }
+      }
+    ],
+    "extraFrontmatter": {
+      "language": "en"
+    },
+    "featureBranch": "225-deployd-selfprovision-rbac",
+    "id": "225-deployd-selfprovision-rbac",
+    "implementation": "complete",
+    "kind": "platform",
+    "refines": [
+      {
+        "aspect": "deployd-selfprovision-rbac",
+        "unit": {
+          "kind": "file",
+          "path": "platform/charts/deployd-api/values-hetzner.yaml"
+        }
+      }
+    ],
+    "sectionHeadings": [
+      "Feature Specification: deployd Self-Provisioned Per-Namespace RBAC",
+      "Context",
+      "User Scenarios & Testing *(mandatory)*",
+      "User Story 1 - deployd's blast radius is bounded to the namespaces it manages (Priority: P1)",
+      "Edge Cases",
+      "Requirements *(mandatory)*",
+      "Functional Requirements: mechanism (shipped in #503, documented here)",
+      "Functional Requirements: the flip (this PR)",
+      "Functional Requirements: the teardown follow-up (delivered)",
+      "Key Entities",
+      "Success Criteria *(mandatory)*",
+      "Measurable Outcomes",
+      "Cutover",
+      "Validation (2026-07-04, oap-hetzner-master1)",
+      "Review follow-ups (2026-07-04)",
+      "Post-delivery hygiene (follow-up to the FR-007 PR)"
+    ],
+    "specPath": "specs/225-deployd-selfprovision-rbac/spec.md",
+    "status": "approved",
+    "summary": "deployd-api creates tenant/preview namespaces on demand and runs `helm upgrade --install` inside them. Its workload permissions (secrets, deployments, services, ...) were granted CLUSTER-WIDE via a single ClusterRoleBinding, so deployd could touch workloads in every namespace on the cluster, not just the ones it manages. #503 split the RBAC into a cluster-scoped `deployd-controller-namespaces` role (namespace CRUD only) and a namespaced `deployd-controller-workloads` role, and added an opt-in self-provisioning mechanism (`DEPLOYD_SELF_PROVISION_RBAC`): when on, deployd grants its own ServiceAccount the workloads role via a RoleBinding it creates in each target namespace, right before helm runs there. #503 deliberately left the cluster-wide fallback in place because dropping it was gated on real-cluster validation of the `bind`-verb escalation. This spec is the design home for that mechanism and lands the validated flip: with `rbac.selfProvision: true` the chart no longer renders the cluster-wide workloads ClusterRoleBinding, so deployd's standing workload authority is reduced from every namespace to only the namespaces it actually deploys into. The chart default is unchanged (fallback intact); the flip is enabled per-environment via values.\n",
+    "title": "deployd Self-Provisioned Per-Namespace RBAC (drop the cluster-wide workloads grant)"
+  },
+  "shardHash": "0a18b7c61064b723067be2df9bf4ffb805053249cf7f84e5e3a8f8638825f59a",
+  "specVersion": "1.1.0"
+}

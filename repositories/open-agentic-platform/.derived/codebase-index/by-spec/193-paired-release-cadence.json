@@ -1,0 +1,177 @@
+{
+  "mapping": {
+    "amends": [
+      "037-cross-platform-axiomregent",
+      "086-open-source-launch",
+      "117-release-artifact-attestations"
+    ],
+    "dependsOn": [
+      "037-cross-platform-axiomregent",
+      "086-open-source-launch",
+      "117-release-artifact-attestations",
+      "116-supply-chain-policy-gates",
+      "158-workflow-ref-sha-pinning-lint"
+    ],
+    "implementingPaths": [
+      {
+        "path": ".github/workflows/ci-supply-chain.yml",
+        "source": "spec-edge"
+      },
+      {
+        "path": ".github/workflows/release-desktop.yml",
+        "source": "spec-edge"
+      },
+      {
+        "path": ".github/workflows/release-tools.yml",
+        "source": "spec-edge"
+      },
+      {
+        "path": "crates/featuregraph/tests/golden/features_graph.json",
+        "source": "spec-edge"
+      },
+      {
+        "path": "product/apps/opc/package.json",
+        "source": "spec-edge"
+      },
+      {
+        "path": "product/apps/opc/src-tauri/Cargo.toml",
+        "source": "spec-edge"
+      },
+      {
+        "path": "product/apps/opc/src-tauri/tauri.conf.json",
+        "source": "spec-edge"
+      },
+      {
+        "path": "tools/lint/release-version-guard-test.sh",
+        "source": "spec-edge"
+      },
+      {
+        "path": "tools/lint/release-version-guard.sh",
+        "source": "spec-edge"
+      }
+    ],
+    "resolvedUnits": [
+      {
+        "locations": [
+          {
+            "file": "tools/lint/release-version-guard-test.sh"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "file",
+          "path": "tools/lint/release-version-guard-test.sh"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "tools/lint/release-version-guard.sh"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "file",
+          "path": "tools/lint/release-version-guard.sh"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "crates/featuregraph/tests/golden/features_graph.json"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "extends",
+        "unit": {
+          "kind": "file",
+          "path": "crates/featuregraph/tests/golden/features_graph.json"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": ".github/workflows/ci-supply-chain.yml"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "refines",
+        "unit": {
+          "kind": "file",
+          "path": ".github/workflows/ci-supply-chain.yml"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": ".github/workflows/release-desktop.yml"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "refines",
+        "unit": {
+          "kind": "file",
+          "path": ".github/workflows/release-desktop.yml"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": ".github/workflows/release-tools.yml"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "refines",
+        "unit": {
+          "kind": "file",
+          "path": ".github/workflows/release-tools.yml"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "product/apps/opc/package.json"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "refines",
+        "unit": {
+          "kind": "file",
+          "path": "product/apps/opc/package.json"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "product/apps/opc/src-tauri/Cargo.toml"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "refines",
+        "unit": {
+          "kind": "file",
+          "path": "product/apps/opc/src-tauri/Cargo.toml"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "product/apps/opc/src-tauri/tauri.conf.json"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "refines",
+        "unit": {
+          "kind": "file",
+          "path": "product/apps/opc/src-tauri/tauri.conf.json"
+        }
+      }
+    ],
+    "specId": "193-paired-release-cadence",
+    "specStatus": "approved"
+  },
+  "schemaVersion": "1.1.0",
+  "shardHash": "dd91032ef9e44fc89196ce1e366e4a4234d93517af13a82f11ce25e2f693e598"
+}

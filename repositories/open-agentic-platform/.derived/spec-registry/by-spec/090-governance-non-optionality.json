@@ -1,0 +1,71 @@
+{
+  "record": {
+    "codeAliases": [
+      "GOVERNANCE_NON_OPTION"
+    ],
+    "created": "2026-04-11",
+    "dependsOn": [
+      "033-axiomregent-activation",
+      "068-permission-runtime"
+    ],
+    "domain": "opc",
+    "extends": [
+      {
+        "nature": "additive",
+        "spec": "033-axiomregent-activation",
+        "unit": {
+          "kind": "file",
+          "path": "crates/axiomregent/src/lease.rs"
+        }
+      },
+      {
+        "nature": "additive",
+        "spec": "068-permission-runtime",
+        "unit": {
+          "kind": "file",
+          "path": "crates/policy-kernel/src/permission.rs"
+        }
+      },
+      {
+        "nature": "additive",
+        "spec": "068-permission-runtime",
+        "unit": {
+          "kind": "file",
+          "path": "crates/policy-kernel/src/merge.rs"
+        }
+      },
+      {
+        "nature": "additive",
+        "spec": "035-agent-governed-execution",
+        "unit": {
+          "kind": "file",
+          "path": "product/apps/opc/src-tauri/src/commands/orchestrator.rs"
+        }
+      }
+    ],
+    "id": "090-governance-non-optionality",
+    "implementation": "complete",
+    "kind": "governance",
+    "owner": "bart",
+    "risk": "high",
+    "sectionHeadings": [
+      "090 — Governance Non-Optionality",
+      "Problem",
+      "Implementation Slices",
+      "1. Eliminate silent orchestrator bypass (1 day)",
+      "2. Fix web_server port detection race (0.5 day)",
+      "3. Fix LeaseStore default (0.5 day)",
+      "4. Add governance degradation logging (1 day)",
+      "5. Cross-platform axiomregent binary (3 days, extends spec 037)",
+      "6. Guard DefaultMode::Bypass at policy tier (1 day)",
+      "Acceptance Criteria",
+      "Dependencies"
+    ],
+    "specPath": "specs/090-governance-non-optionality/spec.md",
+    "status": "approved",
+    "summary": "Eliminate all silent bypass surfaces so governance is the non-optional default. Four bypass paths (orchestrator inline, web_server env race, LeaseStore permissive default, DefaultMode::Bypass at non-policy tier) are closed or guarded. Axiomregent cross-platform builds reduce the platform gap.\n",
+    "title": "Governance Non-Optionality"
+  },
+  "shardHash": "f4b1330978f498bd69bdcd6a0285122a49a5d399ff66f82c51f7ba28719ae7f4",
+  "specVersion": "1.1.0"
+}

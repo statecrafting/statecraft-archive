@@ -1,0 +1,34 @@
+{
+  "mapping": {
+    "dependsOn": [
+      "002-launch-content",
+      "003-product-family-registry",
+      "004-marketing-surfaces"
+    ],
+    "implementingPaths": [
+      {
+        "path": "specs/006-claim-inventory-and-realignment/",
+        "source": "spec-edge"
+      }
+    ],
+    "resolvedUnits": [
+      {
+        "locations": [
+          {
+            "file": "specs/006-claim-inventory-and-realignment/"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "directory",
+          "path": "specs/006-claim-inventory-and-realignment/"
+        }
+      }
+    ],
+    "specId": "006-claim-inventory-and-realignment",
+    "specStatus": "draft"
+  },
+  "schemaVersion": "1.1.0",
+  "shardHash": "180b7493335f419e3835d39709c23e7204d0c4552cbc5a33180d607daaba3d72"
+}

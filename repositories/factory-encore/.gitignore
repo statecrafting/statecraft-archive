@@ -1,0 +1,24 @@
+.DS_Store
+.idea/
+.vscode/
+
+# Node / generator toolchain
+node_modules/
+dist/
+build/
+*.tsbuildinfo
+.vite/
+
+# spec-spine compile cache: build-meta.json embeds a wall-clock builtAt, so it is
+# not byte-deterministic (constitution Principle 2) and would dirty the tree on
+# every compile/init. The deterministic registry shards stay tracked; the index
+# hash (spec-spine index check) is the real staleness gate, not this file.
+.derived/spec-registry/build-meta.json
+
+# Environment files: never commit real values. Example variants are allowed.
+.env*
+!.env.example
+!.env.*.example
+
+# Claude Code: track the shared agent infrastructure, never the local override.
+.claude/settings.local.json

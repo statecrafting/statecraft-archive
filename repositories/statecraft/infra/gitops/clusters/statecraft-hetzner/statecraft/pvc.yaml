@@ -1,0 +1,38 @@
+# The /data volume: the platform's identity plane (spec 009 section 4.3).
+#
+# THIS IS THE MOST IMPORTANT OBJECT IN THIS DIRECTORY. It holds both RS256
+# signing keypairs, the OIDC client secret, rauthy's encryption keys, and
+# rauthy's entire hiqlite database (users, roles, the client, and the upstream
+# provider). All of it is generated in-container on first boot and exists
+# nowhere else: unlike the retired shared-rauthy topology, it is NOT
+# reconstructible from SOPS ciphertext in this repository.
+#
+# Losing it is not a restart, it is the loss of the platform's identity plane:
+# every session and token invalid, every user gone, the upstream provider
+# unconfigured, and a new client secret matching nothing.
+#
+# RULE: never delete this PVC as a remediation step. Recreating the pod is
+# safe; recreating the volume is a re-founding (spec 009 section 4.3 rule 1).
+#
+# ReadWriteOnce on hcloud-volumes, which is also why the Deployment is
+# single-replica with the Recreate strategy: a second replica would be a
+# second IdP, not a second copy.
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: statecraft-data
+  namespace: statecraft-system
+  labels:
+    statecraft.spec: "009-control-plane-deploy"
+  annotations:
+    # Belt and braces against a `prune: true` tier: Flux will not garbage
+    # collect a resource carrying this, so removing the manifest from git
+    # cannot silently take the identity plane with it.
+    kustomize.toolkit.fluxcd.io/prune: disabled
+spec:
+  accessModes:
+    - ReadWriteOnce
+  storageClassName: hcloud-volumes
+  resources:
+    requests:
+      storage: 10Gi

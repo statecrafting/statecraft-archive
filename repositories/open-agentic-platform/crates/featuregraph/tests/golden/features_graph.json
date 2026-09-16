@@ -1,0 +1,4759 @@
+{
+  "schema_version": "1.0",
+  "graph_fingerprint": "sha256:0b54e84c8807b05069a4b4845dca94ccaec9285006146198a2646d2f0e050eb2",
+  "features": [
+    {
+      "feature_id": "000-bootstrap-spec-system",
+      "title": "Bootstrap spec system (markdown → compiled JSON registry)",
+      "spec_path": "specs/000-bootstrap-spec-system/spec.md",
+      "status": "approved",
+      "implementation": "complete",
+      "governance": "",
+      "owner": "",
+      "group": "",
+      "depends_on": [],
+      "impl_files": [],
+      "test_files": [],
+      "violations": []
+    },
+    {
+      "feature_id": "001-spec-compiler-mvp",
+      "title": "Spec compiler MVP (registry.json + build-meta.json)",
+      "spec_path": "specs/001-spec-compiler-mvp/spec.md",
+      "status": "superseded",
+      "implementation": "complete",
+      "governance": "",
+      "owner": "",
+      "group": "",
+      "depends_on": [],
+      "impl_files": [],
+      "test_files": [],
+      "violations": []
+    },
+    {
+      "feature_id": "002-registry-consumer-mvp",
+      "title": "Registry consumer MVP (read-only spec runtime surface)",
+      "spec_path": "specs/002-registry-consumer-mvp/spec.md",
+      "status": "superseded",
+      "implementation": "complete",
+      "governance": "",
+      "owner": "",
+      "group": "",
+      "depends_on": [],
+      "impl_files": [],
+      "test_files": [],
+      "violations": []
+    },
+    {
+      "feature_id": "003-feature-lifecycle-mvp",
+      "title": "Feature lifecycle & status semantics (registry status model)",
+      "spec_path": "specs/003-feature-lifecycle-mvp/spec.md",
+      "status": "approved",
+      "implementation": "complete",
+      "governance": "",
+      "owner": "",
+      "group": "",
+      "depends_on": [],
+      "impl_files": [],
+      "test_files": [],
+      "violations": []
+    },
+    {
+      "feature_id": "004-spec-to-execution-bridge-mvp",
+      "title": "Spec-to-execution bridge (changeset / task execution protocol)",
+      "spec_path": "specs/004-spec-to-execution-bridge-mvp/spec.md",
+      "status": "approved",
+      "implementation": "complete",
+      "governance": "",
+      "owner": "",
+      "group": "",
+      "depends_on": [],
+      "impl_files": [
+        "crates/axiomregent/src/run_tools.rs",
+        "crates/run/src/config.rs",
+        "crates/run/src/lib.rs",
+        "crates/run/src/registry.rs",
+        "crates/run/src/runner.rs",
+        "crates/run/src/state.rs"
+      ],
+      "test_files": [],
+      "violations": [
+        {
+          "code": "SPEC_PATH_MISMATCH",
+          "severity": "warning",
+          "path": "crates/axiomregent/src/run_tools.rs",
+          "feature_id": "004-spec-to-execution-bridge-mvp",
+          "message": "File declares spec spec/run/skills.md but registry says specs/004-spec-to-execution-bridge-mvp/spec.md",
+          "suggested_fix": "Update header to Spec: specs/004-spec-to-execution-bridge-mvp/spec.md"
+        },
+        {
+          "code": "SPEC_PATH_MISMATCH",
+          "severity": "warning",
+          "path": "crates/run/src/config.rs",
+          "feature_id": "004-spec-to-execution-bridge-mvp",
+          "message": "File declares spec spec/run/skills.md but registry says specs/004-spec-to-execution-bridge-mvp/spec.md",
+          "suggested_fix": "Update header to Spec: specs/004-spec-to-execution-bridge-mvp/spec.md"
+        },
+        {
+          "code": "SPEC_PATH_MISMATCH",
+          "severity": "warning",
+          "path": "crates/run/src/lib.rs",
+          "feature_id": "004-spec-to-execution-bridge-mvp",
+          "message": "File declares spec spec/run/skills.md but registry says specs/004-spec-to-execution-bridge-mvp/spec.md",
+          "suggested_fix": "Update header to Spec: specs/004-spec-to-execution-bridge-mvp/spec.md"
+        },
+        {
+          "code": "SPEC_PATH_MISMATCH",
+          "severity": "warning",
+          "path": "crates/run/src/registry.rs",
+          "feature_id": "004-spec-to-execution-bridge-mvp",
+          "message": "File declares spec spec/run/skills.md but registry says specs/004-spec-to-execution-bridge-mvp/spec.md",
+          "suggested_fix": "Update header to Spec: specs/004-spec-to-execution-bridge-mvp/spec.md"
+        },
+        {
+          "code": "SPEC_PATH_MISMATCH",
+          "severity": "warning",
+          "path": "crates/run/src/runner.rs",
+          "feature_id": "004-spec-to-execution-bridge-mvp",
+          "message": "File declares spec spec/run/skills.md but registry says specs/004-spec-to-execution-bridge-mvp/spec.md",
+          "suggested_fix": "Update header to Spec: specs/004-spec-to-execution-bridge-mvp/spec.md"
+        },
+        {
+          "code": "SPEC_PATH_MISMATCH",
+          "severity": "warning",
+          "path": "crates/run/src/state.rs",
+          "feature_id": "004-spec-to-execution-bridge-mvp",
+          "message": "File declares spec spec/run/skills.md but registry says specs/004-spec-to-execution-bridge-mvp/spec.md",
+          "suggested_fix": "Update header to Spec: specs/004-spec-to-execution-bridge-mvp/spec.md"
+        }
+      ]
+    },
+    {
+      "feature_id": "005-verification-reconciliation-mvp",
+      "title": "Verification and reconciliation (repository state)",
+      "spec_path": "specs/005-verification-reconciliation-mvp/spec.md",
+      "status": "approved",
+      "implementation": "complete",
+      "governance": "",
+      "owner": "",
+      "group": "",
+      "depends_on": [],
+      "impl_files": [],
+      "test_files": [],
+      "violations": []
+    },
+    {
+      "feature_id": "006-conformance-lint-mvp",
+      "title": "Conformance lint (optional workflow warnings)",
+      "spec_path": "specs/006-conformance-lint-mvp/spec.md",
+      "status": "superseded",
+      "implementation": "complete",
+      "governance": "",
+      "owner": "",
+      "group": "",
+      "depends_on": [],
+      "impl_files": [],
+      "test_files": [],
+      "violations": []
+    },
+    {
+      "feature_id": "007-registry-consumer-status-report-mvp",
+      "title": "Registry consumer status reporting UX",
+      "spec_path": "specs/007-registry-consumer-status-report-mvp/spec.md",
+      "status": "superseded",
+      "implementation": "complete",
+      "governance": "",
+      "owner": "",
+      "group": "",
+      "depends_on": [],
+      "impl_files": [],
+      "test_files": [],
+      "violations": []
+    },
+    {
+      "feature_id": "008-registry-consumer-status-report-json-mvp",
+      "title": "Registry consumer status-report JSON output",
+      "spec_path": "specs/008-registry-consumer-status-report-json-mvp/spec.md",
+      "status": "superseded",
+      "implementation": "complete",
+      "governance": "",
+      "owner": "",
+      "group": "",
+      "depends_on": [],
+      "impl_files": [],
+      "test_files": [],
+      "violations": []
+    },
+    {
+      "feature_id": "009-registry-consumer-status-report-nonzero-mvp",
+      "title": "Registry consumer status-report nonzero filtering",
+      "spec_path": "specs/009-registry-consumer-status-report-nonzero-mvp/spec.md",
+      "status": "superseded",
+      "implementation": "complete",
+      "governance": "",
+      "owner": "",
+      "group": "",
+      "depends_on": [],
+      "impl_files": [],
+      "test_files": [],
+      "violations": []
+    },
+    {
+      "feature_id": "010-registry-consumer-status-report-json-contract-mvp",
+      "title": "Registry consumer status-report JSON contract tests",
+      "spec_path": "specs/010-registry-consumer-status-report-json-contract-mvp/spec.md",
+      "status": "superseded",
+      "implementation": "complete",
+      "governance": "",
+      "owner": "",
+      "group": "",
+      "depends_on": [],
+      "impl_files": [],
+      "test_files": [],
+      "violations": []
+    },
+    {
+      "feature_id": "011-registry-consumer-status-report-status-filter-mvp",
+      "title": "Registry consumer status-report status filter",
+      "spec_path": "specs/011-registry-consumer-status-report-status-filter-mvp/spec.md",
+      "status": "superseded",
+      "implementation": "complete",
+      "governance": "",
+      "owner": "",
+      "group": "",
+      "depends_on": [],
+      "impl_files": [],
+      "test_files": [],
+      "violations": []
+    },
+    {
+      "feature_id": "012-registry-consumer-list-json-mvp",
+      "title": "Registry consumer list JSON output",
+      "spec_path": "specs/012-registry-consumer-list-json-mvp/spec.md",
+      "status": "superseded",
+      "implementation": "complete",
+      "governance": "",
+      "owner": "",
+      "group": "",
+      "depends_on": [],
+      "impl_files": [],
+      "test_files": [],
+      "violations": []
+    },
+    {
+      "feature_id": "013-registry-consumer-show-json-mvp",
+      "title": "Registry consumer show JSON contract",
+      "spec_path": "specs/013-registry-consumer-show-json-mvp/spec.md",
+      "status": "superseded",
+      "implementation": "complete",
+      "governance": "",
+      "owner": "",
+      "group": "",
+      "depends_on": [],
+      "impl_files": [],
+      "test_files": [],
+      "violations": []
+    },
+    {
+      "feature_id": "014-registry-consumer-show-compact-json-mvp",
+      "title": "Registry consumer show compact JSON",
+      "spec_path": "specs/014-registry-consumer-show-compact-json-mvp/spec.md",
+      "status": "superseded",
+      "implementation": "complete",
+      "governance": "",
+      "owner": "",
+      "group": "",
+      "depends_on": [],
+      "impl_files": [],
+      "test_files": [],
+      "violations": []
+    },
+    {
+      "feature_id": "015-registry-consumer-list-compact-json-mvp",
+      "title": "Registry consumer list compact JSON",
+      "spec_path": "specs/015-registry-consumer-list-compact-json-mvp/spec.md",
+      "status": "superseded",
+      "implementation": "complete",
+      "governance": "",
+      "owner": "",
+      "group": "",
+      "depends_on": [],
+      "impl_files": [],
+      "test_files": [],
+      "violations": []
+    },
+    {
+      "feature_id": "016-registry-consumer-status-report-compact-json-mvp",
+      "title": "Registry consumer status-report compact JSON",
+      "spec_path": "specs/016-registry-consumer-status-report-compact-json-mvp/spec.md",
+      "status": "superseded",
+      "implementation": "complete",
+      "governance": "",
+      "owner": "",
+      "group": "",
+      "depends_on": [],
+      "impl_files": [],
+      "test_files": [],
+      "violations": []
+    },
+    {
+      "feature_id": "017-registry-consumer-shared-json-serialization-helper-mvp",
+      "title": "Registry consumer shared JSON serialization helper",
+      "spec_path": "specs/017-registry-consumer-shared-json-serialization-helper-mvp/spec.md",
+      "status": "superseded",
+      "implementation": "complete",
+      "governance": "",
+      "owner": "",
+      "group": "",
+      "depends_on": [],
+      "impl_files": [],
+      "test_files": [],
+      "violations": []
+    },
+    {
+      "feature_id": "018-registry-consumer-list-show-json-contract-mvp",
+      "title": "Registry consumer list/show JSON contract tests",
+      "spec_path": "specs/018-registry-consumer-list-show-json-contract-mvp/spec.md",
+      "status": "superseded",
+      "implementation": "complete",
+      "governance": "",
+      "owner": "",
+      "group": "",
+      "depends_on": [],
+      "impl_files": [],
+      "test_files": [],
+      "violations": []
+    },
+    {
+      "feature_id": "019-registry-consumer-readme-examples-contract-mvp",
+      "title": "Registry consumer README examples contract MVP",
+      "spec_path": "specs/019-registry-consumer-readme-examples-contract-mvp/spec.md",
+      "status": "superseded",
+      "implementation": "complete",
+      "governance": "",
+      "owner": "",
+      "group": "",
+      "depends_on": [],
+      "impl_files": [],
+      "test_files": [],
+      "violations": []
+    },
+    {
+      "feature_id": "020-registry-consumer-error-contract-mvp",
+      "title": "Registry consumer error contract MVP",
+      "spec_path": "specs/020-registry-consumer-error-contract-mvp/spec.md",
+      "status": "superseded",
+      "implementation": "complete",
+      "governance": "",
+      "owner": "",
+      "group": "",
+      "depends_on": [],
+      "impl_files": [],
+      "test_files": [],
+      "violations": []
+    },
+    {
+      "feature_id": "021-registry-consumer-field-shape-invariants-contract-mvp",
+      "title": "Registry consumer field-shape invariants contract MVP",
+      "spec_path": "specs/021-registry-consumer-field-shape-invariants-contract-mvp/spec.md",
+      "status": "superseded",
+      "implementation": "complete",
+      "governance": "",
+      "owner": "",
+      "group": "",
+      "depends_on": [],
+      "impl_files": [],
+      "test_files": [],
+      "violations": []
+    },
+    {
+      "feature_id": "022-registry-consumer-help-usage-contract-mvp",
+      "title": "Registry consumer help/usage output contract MVP",
+      "spec_path": "specs/022-registry-consumer-help-usage-contract-mvp/spec.md",
+      "status": "superseded",
+      "implementation": "complete",
+      "governance": "",
+      "owner": "",
+      "group": "",
+      "depends_on": [],
+      "impl_files": [],
+      "test_files": [],
+      "violations": []
+    },
+    {
+      "feature_id": "023-registry-consumer-flag-conflict-argument-validation-contract-mvp",
+      "title": "Registry consumer flag-conflict and argument-validation contract MVP",
+      "spec_path": "specs/023-registry-consumer-flag-conflict-argument-validation-contract-mvp/spec.md",
+      "status": "superseded",
+      "implementation": "complete",
+      "governance": "",
+      "owner": "",
+      "group": "",
+      "depends_on": [],
+      "impl_files": [],
+      "test_files": [],
+      "violations": []
+    },
+    {
+      "feature_id": "024-registry-consumer-version-banner-contract-mvp",
+      "title": "Registry consumer version/banner contract MVP",
+      "spec_path": "specs/024-registry-consumer-version-banner-contract-mvp/spec.md",
+      "status": "superseded",
+      "implementation": "complete",
+      "governance": "",
+      "owner": "",
+      "group": "",
+      "depends_on": [],
+      "impl_files": [],
+      "test_files": [],
+      "violations": []
+    },
+    {
+      "feature_id": "025-registry-consumer-default-path-contract-mvp",
+      "title": "Registry consumer default-path contract MVP",
+      "spec_path": "specs/025-registry-consumer-default-path-contract-mvp/spec.md",
+      "status": "superseded",
+      "implementation": "complete",
+      "governance": "",
+      "owner": "",
+      "group": "",
+      "depends_on": [],
+      "impl_files": [],
+      "test_files": [],
+      "violations": []
+    },
+    {
+      "feature_id": "026-registry-consumer-allow-invalid-contract-mvp",
+      "title": "Registry consumer allow-invalid contract MVP",
+      "spec_path": "specs/026-registry-consumer-allow-invalid-contract-mvp/spec.md",
+      "status": "superseded",
+      "implementation": "complete",
+      "governance": "",
+      "owner": "",
+      "group": "",
+      "depends_on": [],
+      "impl_files": [],
+      "test_files": [],
+      "violations": []
+    },
+    {
+      "feature_id": "027-registry-consumer-sorting-order-contract-mvp",
+      "title": "Registry consumer sorting-order contract MVP",
+      "spec_path": "specs/027-registry-consumer-sorting-order-contract-mvp/spec.md",
+      "status": "superseded",
+      "implementation": "complete",
+      "governance": "",
+      "owner": "",
+      "group": "",
+      "depends_on": [],
+      "impl_files": [],
+      "test_files": [],
+      "violations": []
+    },
+    {
+      "feature_id": "028-registry-consumer-channel-discipline-contract-mvp",
+      "title": "Registry consumer stderr/stdout channel discipline contract MVP",
+      "spec_path": "specs/028-registry-consumer-channel-discipline-contract-mvp/spec.md",
+      "status": "superseded",
+      "implementation": "complete",
+      "governance": "",
+      "owner": "",
+      "group": "",
+      "depends_on": [],
+      "impl_files": [],
+      "test_files": [],
+      "violations": []
+    },
+    {
+      "feature_id": "029-registry-consumer-contract-governance-gate-mvp",
+      "title": "Registry consumer change classification and contract-governance gate MVP",
+      "spec_path": "specs/029-registry-consumer-contract-governance-gate-mvp/spec.md",
+      "status": "superseded",
+      "implementation": "complete",
+      "governance": "",
+      "owner": "",
+      "group": "",
+      "depends_on": [],
+      "impl_files": [],
+      "test_files": [],
+      "violations": []
+    },
+    {
+      "feature_id": "030-registry-consumer-internal-output-exit-refactor-mvp",
+      "title": "Registry consumer internal output/exit refactor MVP",
+      "spec_path": "specs/030-registry-consumer-internal-output-exit-refactor-mvp/spec.md",
+      "status": "superseded",
+      "implementation": "complete",
+      "governance": "",
+      "owner": "",
+      "group": "",
+      "depends_on": [],
+      "impl_files": [],
+      "test_files": [],
+      "violations": []
+    },
+    {
+      "feature_id": "031-registry-consumer-list-ids-only-contract-mvp",
+      "title": "Registry consumer list ids-only contract MVP",
+      "spec_path": "specs/031-registry-consumer-list-ids-only-contract-mvp/spec.md",
+      "status": "superseded",
+      "implementation": "complete",
+      "governance": "",
+      "owner": "",
+      "group": "",
+      "depends_on": [],
+      "impl_files": [],
+      "test_files": [],
+      "violations": []
+    },
+    {
+      "feature_id": "032-opc-inspect-governance-wiring-mvp",
+      "title": "OPC inspect + governance wiring MVP",
+      "spec_path": "specs/032-opc-inspect-governance-wiring-mvp/spec.md",
+      "status": "approved",
+      "implementation": "complete",
+      "governance": "",
+      "owner": "",
+      "group": "",
+      "depends_on": [],
+      "impl_files": [
+        "crates/xray/src/canonical.rs",
+        "crates/xray/src/digest.rs",
+        "crates/xray/src/docs.rs",
+        "crates/xray/src/hash.rs",
+        "crates/xray/src/invariant_tests.rs",
+        "crates/xray/src/language.rs",
+        "crates/xray/src/lib.rs",
+        "crates/xray/src/loc.rs",
+        "crates/xray/src/main.rs",
+        "crates/xray/src/schema.rs",
+        "crates/xray/src/tools.rs",
+        "crates/xray/src/traversal.rs",
+        "crates/xray/src/write.rs"
+      ],
+      "test_files": [
+        "crates/xray/tests/golden_scan.rs",
+        "crates/xray/tests/index_format_test.rs"
+      ],
+      "violations": [
+        {
+          "code": "SPEC_PATH_MISMATCH",
+          "severity": "warning",
+          "path": "crates/xray/src/canonical.rs",
+          "feature_id": "032-opc-inspect-governance-wiring-mvp",
+          "message": "File declares spec spec/xray/analysis.md but registry says specs/032-opc-inspect-governance-wiring-mvp/spec.md",
+          "suggested_fix": "Update header to Spec: specs/032-opc-inspect-governance-wiring-mvp/spec.md"
+        },
+        {
+          "code": "SPEC_PATH_MISMATCH",
+          "severity": "warning",
+          "path": "crates/xray/src/digest.rs",
+          "feature_id": "032-opc-inspect-governance-wiring-mvp",
+          "message": "File declares spec spec/xray/analysis.md but registry says specs/032-opc-inspect-governance-wiring-mvp/spec.md",
+          "suggested_fix": "Update header to Spec: specs/032-opc-inspect-governance-wiring-mvp/spec.md"
+        },
+        {
+          "code": "SPEC_PATH_MISMATCH",
+          "severity": "warning",
+          "path": "crates/xray/src/docs.rs",
+          "feature_id": "032-opc-inspect-governance-wiring-mvp",
+          "message": "File declares spec spec/xray/analysis.md but registry says specs/032-opc-inspect-governance-wiring-mvp/spec.md",
+          "suggested_fix": "Update header to Spec: specs/032-opc-inspect-governance-wiring-mvp/spec.md"
+        },
+        {
+          "code": "SPEC_PATH_MISMATCH",
+          "severity": "warning",
+          "path": "crates/xray/src/hash.rs",
+          "feature_id": "032-opc-inspect-governance-wiring-mvp",
+          "message": "File declares spec spec/xray/analysis.md but registry says specs/032-opc-inspect-governance-wiring-mvp/spec.md",
+          "suggested_fix": "Update header to Spec: specs/032-opc-inspect-governance-wiring-mvp/spec.md"
+        },
+        {
+          "code": "SPEC_PATH_MISMATCH",
+          "severity": "warning",
+          "path": "crates/xray/src/invariant_tests.rs",
+          "feature_id": "032-opc-inspect-governance-wiring-mvp",
+          "message": "File declares spec spec/xray/analysis.md but registry says specs/032-opc-inspect-governance-wiring-mvp/spec.md",
+          "suggested_fix": "Update header to Spec: specs/032-opc-inspect-governance-wiring-mvp/spec.md"
+        },
+        {
+          "code": "SPEC_PATH_MISMATCH",
+          "severity": "warning",
+          "path": "crates/xray/src/language.rs",
+          "feature_id": "032-opc-inspect-governance-wiring-mvp",
+          "message": "File declares spec spec/xray/analysis.md but registry says specs/032-opc-inspect-governance-wiring-mvp/spec.md",
+          "suggested_fix": "Update header to Spec: specs/032-opc-inspect-governance-wiring-mvp/spec.md"
+        },
+        {
+          "code": "SPEC_PATH_MISMATCH",
+          "severity": "warning",
+          "path": "crates/xray/src/lib.rs",
+          "feature_id": "032-opc-inspect-governance-wiring-mvp",
+          "message": "File declares spec spec/xray/analysis.md but registry says specs/032-opc-inspect-governance-wiring-mvp/spec.md",
+          "suggested_fix": "Update header to Spec: specs/032-opc-inspect-governance-wiring-mvp/spec.md"
+        },
+        {
+          "code": "SPEC_PATH_MISMATCH",
+          "severity": "warning",
+          "path": "crates/xray/src/loc.rs",
+          "feature_id": "032-opc-inspect-governance-wiring-mvp",
+          "message": "File declares spec spec/xray/analysis.md but registry says specs/032-opc-inspect-governance-wiring-mvp/spec.md",
+          "suggested_fix": "Update header to Spec: specs/032-opc-inspect-governance-wiring-mvp/spec.md"
+        },
+        {
+          "code": "SPEC_PATH_MISMATCH",
+          "severity": "warning",
+          "path": "crates/xray/src/main.rs",
+          "feature_id": "032-opc-inspect-governance-wiring-mvp",
+          "message": "File declares spec spec/xray/analysis.md but registry says specs/032-opc-inspect-governance-wiring-mvp/spec.md",
+          "suggested_fix": "Update header to Spec: specs/032-opc-inspect-governance-wiring-mvp/spec.md"
+        },
+        {
+          "code": "SPEC_PATH_MISMATCH",
+          "severity": "warning",
+          "path": "crates/xray/src/schema.rs",
+          "feature_id": "032-opc-inspect-governance-wiring-mvp",
+          "message": "File declares spec spec/xray/analysis.md but registry says specs/032-opc-inspect-governance-wiring-mvp/spec.md",
+          "suggested_fix": "Update header to Spec: specs/032-opc-inspect-governance-wiring-mvp/spec.md"
+        },
+        {
+          "code": "SPEC_PATH_MISMATCH",
+          "severity": "warning",
+          "path": "crates/xray/src/tools.rs",
+          "feature_id": "032-opc-inspect-governance-wiring-mvp",
+          "message": "File declares spec spec/xray/analysis.md but registry says specs/032-opc-inspect-governance-wiring-mvp/spec.md",
+          "suggested_fix": "Update header to Spec: specs/032-opc-inspect-governance-wiring-mvp/spec.md"
+        },
+        {
+          "code": "SPEC_PATH_MISMATCH",
+          "severity": "warning",
+          "path": "crates/xray/src/traversal.rs",
+          "feature_id": "032-opc-inspect-governance-wiring-mvp",
+          "message": "File declares spec spec/xray/analysis.md but registry says specs/032-opc-inspect-governance-wiring-mvp/spec.md",
+          "suggested_fix": "Update header to Spec: specs/032-opc-inspect-governance-wiring-mvp/spec.md"
+        },
+        {
+          "code": "SPEC_PATH_MISMATCH",
+          "severity": "warning",
+          "path": "crates/xray/src/write.rs",
+          "feature_id": "032-opc-inspect-governance-wiring-mvp",
+          "message": "File declares spec spec/xray/analysis.md but registry says specs/032-opc-inspect-governance-wiring-mvp/spec.md",
+          "suggested_fix": "Update header to Spec: specs/032-opc-inspect-governance-wiring-mvp/spec.md"
+        },
+        {
+          "code": "SPEC_PATH_MISMATCH",
+          "severity": "warning",
+          "path": "crates/xray/tests/golden_scan.rs",
+          "feature_id": "032-opc-inspect-governance-wiring-mvp",
+          "message": "File declares spec spec/xray/scan-policy.md but registry says specs/032-opc-inspect-governance-wiring-mvp/spec.md",
+          "suggested_fix": "Update header to Spec: specs/032-opc-inspect-governance-wiring-mvp/spec.md"
+        },
+        {
+          "code": "SPEC_PATH_MISMATCH",
+          "severity": "warning",
+          "path": "crates/xray/tests/index_format_test.rs",
+          "feature_id": "032-opc-inspect-governance-wiring-mvp",
+          "message": "File declares spec spec/xray/analysis.md but registry says specs/032-opc-inspect-governance-wiring-mvp/spec.md",
+          "suggested_fix": "Update header to Spec: specs/032-opc-inspect-governance-wiring-mvp/spec.md"
+        }
+      ]
+    },
+    {
+      "feature_id": "033-axiomregent-activation",
+      "title": "axiomregent sidecar activation and governance surface",
+      "spec_path": "specs/033-axiomregent-activation/spec.md",
+      "status": "approved",
+      "implementation": "complete",
+      "governance": "medium",
+      "owner": "bart",
+      "group": "",
+      "depends_on": [],
+      "impl_files": [
+        "crates/axiomregent/src/config/mod.rs",
+        "crates/axiomregent/src/io/mod.rs",
+        "crates/axiomregent/src/lease.rs",
+        "crates/axiomregent/src/lib.rs",
+        "crates/axiomregent/src/main.rs",
+        "crates/axiomregent/src/router/mod.rs",
+        "crates/axiomregent/src/util/mod.rs",
+        "crates/axiomregent/src/util/paths.rs",
+        "crates/axiomregent/src/util/stable.rs",
+        "crates/axiomregent/src/workspace/mod.rs"
+      ],
+      "test_files": [],
+      "violations": [
+        {
+          "code": "SPEC_PATH_MISMATCH",
+          "severity": "warning",
+          "path": "crates/axiomregent/src/config/mod.rs",
+          "feature_id": "033-axiomregent-activation",
+          "message": "File declares spec spec/core/router.md but registry says specs/033-axiomregent-activation/spec.md",
+          "suggested_fix": "Update header to Spec: specs/033-axiomregent-activation/spec.md"
+        },
+        {
+          "code": "SPEC_PATH_MISMATCH",
+          "severity": "warning",
+          "path": "crates/axiomregent/src/io/mod.rs",
+          "feature_id": "033-axiomregent-activation",
+          "message": "File declares spec spec/core/router.md but registry says specs/033-axiomregent-activation/spec.md",
+          "suggested_fix": "Update header to Spec: specs/033-axiomregent-activation/spec.md"
+        },
+        {
+          "code": "SPEC_PATH_MISMATCH",
+          "severity": "warning",
+          "path": "crates/axiomregent/src/lease.rs",
+          "feature_id": "033-axiomregent-activation",
+          "message": "File declares spec spec/core/snapshot-workspace.md but registry says specs/033-axiomregent-activation/spec.md",
+          "suggested_fix": "Update header to Spec: specs/033-axiomregent-activation/spec.md"
+        },
+        {
+          "code": "SPEC_PATH_MISMATCH",
+          "severity": "warning",
+          "path": "crates/axiomregent/src/lib.rs",
+          "feature_id": "033-axiomregent-activation",
+          "message": "File declares spec spec/core/router.md but registry says specs/033-axiomregent-activation/spec.md",
+          "suggested_fix": "Update header to Spec: specs/033-axiomregent-activation/spec.md"
+        },
+        {
+          "code": "SPEC_PATH_MISMATCH",
+          "severity": "warning",
+          "path": "crates/axiomregent/src/main.rs",
+          "feature_id": "033-axiomregent-activation",
+          "message": "File declares spec spec/core/router.md but registry says specs/033-axiomregent-activation/spec.md",
+          "suggested_fix": "Update header to Spec: specs/033-axiomregent-activation/spec.md"
+        },
+        {
+          "code": "SPEC_PATH_MISMATCH",
+          "severity": "warning",
+          "path": "crates/axiomregent/src/router/mod.rs",
+          "feature_id": "033-axiomregent-activation",
+          "message": "File declares spec spec/core/router.md but registry says specs/033-axiomregent-activation/spec.md",
+          "suggested_fix": "Update header to Spec: specs/033-axiomregent-activation/spec.md"
+        },
+        {
+          "code": "SPEC_PATH_MISMATCH",
+          "severity": "warning",
+          "path": "crates/axiomregent/src/util/mod.rs",
+          "feature_id": "033-axiomregent-activation",
+          "message": "File declares spec spec/core/router.md but registry says specs/033-axiomregent-activation/spec.md",
+          "suggested_fix": "Update header to Spec: specs/033-axiomregent-activation/spec.md"
+        },
+        {
+          "code": "SPEC_PATH_MISMATCH",
+          "severity": "warning",
+          "path": "crates/axiomregent/src/util/paths.rs",
+          "feature_id": "033-axiomregent-activation",
+          "message": "File declares spec spec/core/router.md but registry says specs/033-axiomregent-activation/spec.md",
+          "suggested_fix": "Update header to Spec: specs/033-axiomregent-activation/spec.md"
+        },
+        {
+          "code": "SPEC_PATH_MISMATCH",
+          "severity": "warning",
+          "path": "crates/axiomregent/src/util/stable.rs",
+          "feature_id": "033-axiomregent-activation",
+          "message": "File declares spec spec/core/router.md but registry says specs/033-axiomregent-activation/spec.md",
+          "suggested_fix": "Update header to Spec: specs/033-axiomregent-activation/spec.md"
+        },
+        {
+          "code": "SPEC_PATH_MISMATCH",
+          "severity": "warning",
+          "path": "crates/axiomregent/src/workspace/mod.rs",
+          "feature_id": "033-axiomregent-activation",
+          "message": "File declares spec spec/core/snapshot-workspace.md but registry says specs/033-axiomregent-activation/spec.md",
+          "suggested_fix": "Update header to Spec: specs/033-axiomregent-activation/spec.md"
+        }
+      ]
+    },
+    {
+      "feature_id": "034-featuregraph-registry-scanner-fix",
+      "title": "featuregraph scanner reads compiled registry",
+      "spec_path": "specs/034-featuregraph-registry-scanner-fix/spec.md",
+      "status": "approved",
+      "implementation": "complete",
+      "governance": "low",
+      "owner": "bart",
+      "group": "",
+      "depends_on": [],
+      "impl_files": [
+        "crates/axiomregent/src/feature_tools.rs",
+        "crates/featuregraph/src/graph.rs",
+        "crates/featuregraph/src/lib.rs",
+        "crates/featuregraph/src/locate.rs",
+        "crates/featuregraph/src/preflight.rs",
+        "crates/featuregraph/src/registry_source.rs",
+        "crates/featuregraph/src/scanner.rs",
+        "crates/featuregraph/src/tools.rs"
+      ],
+      "test_files": [
+        "crates/featuregraph/tests/golden.rs"
+      ],
+      "violations": [
+        {
+          "code": "SPEC_PATH_MISMATCH",
+          "severity": "warning",
+          "path": "crates/axiomregent/src/feature_tools.rs",
+          "feature_id": "034-featuregraph-registry-scanner-fix",
+          "message": "File declares spec spec/core/featuregraph.md but registry says specs/034-featuregraph-registry-scanner-fix/spec.md",
+          "suggested_fix": "Update header to Spec: specs/034-featuregraph-registry-scanner-fix/spec.md"
+        }
+      ]
+    },
+    {
+      "feature_id": "035-agent-governed-execution",
+      "title": "agent execution through governed dispatch",
+      "spec_path": "specs/035-agent-governed-execution/spec.md",
+      "status": "approved",
+      "implementation": "complete",
+      "governance": "",
+      "owner": "",
+      "group": "",
+      "depends_on": [],
+      "impl_files": [
+        "crates/agent/src/agent.rs",
+        "crates/agent/src/canonical.rs",
+        "crates/agent/src/executor.rs",
+        "crates/agent/src/id.rs",
+        "crates/agent/src/lib.rs",
+        "crates/agent/src/safety.rs",
+        "crates/agent/src/schemas.rs",
+        "crates/agent/src/validator.rs",
+        "crates/axiomregent/src/agent_tools.rs",
+        "crates/axiomregent/src/internal_client.rs"
+      ],
+      "test_files": [
+        "crates/agent/tests/golden_tests.rs"
+      ],
+      "violations": [
+        {
+          "code": "SPEC_PATH_MISMATCH",
+          "severity": "warning",
+          "path": "crates/agent/src/agent.rs",
+          "feature_id": "035-agent-governed-execution",
+          "message": "File declares spec spec/agent/automation.md but registry says specs/035-agent-governed-execution/spec.md",
+          "suggested_fix": "Update header to Spec: specs/035-agent-governed-execution/spec.md"
+        },
+        {
+          "code": "SPEC_PATH_MISMATCH",
+          "severity": "warning",
+          "path": "crates/agent/src/canonical.rs",
+          "feature_id": "035-agent-governed-execution",
+          "message": "File declares spec spec/agent/automation.md but registry says specs/035-agent-governed-execution/spec.md",
+          "suggested_fix": "Update header to Spec: specs/035-agent-governed-execution/spec.md"
+        },
+        {
+          "code": "SPEC_PATH_MISMATCH",
+          "severity": "warning",
+          "path": "crates/agent/src/executor.rs",
+          "feature_id": "035-agent-governed-execution",
+          "message": "File declares spec spec/agent/automation.md but registry says specs/035-agent-governed-execution/spec.md",
+          "suggested_fix": "Update header to Spec: specs/035-agent-governed-execution/spec.md"
+        },
+        {
+          "code": "SPEC_PATH_MISMATCH",
+          "severity": "warning",
+          "path": "crates/agent/src/id.rs",
+          "feature_id": "035-agent-governed-execution",
+          "message": "File declares spec spec/agent/automation.md but registry says specs/035-agent-governed-execution/spec.md",
+          "suggested_fix": "Update header to Spec: specs/035-agent-governed-execution/spec.md"
+        },
+        {
+          "code": "SPEC_PATH_MISMATCH",
+          "severity": "warning",
+          "path": "crates/agent/src/lib.rs",
+          "feature_id": "035-agent-governed-execution",
+          "message": "File declares spec spec/agent/automation.md but registry says specs/035-agent-governed-execution/spec.md",
+          "suggested_fix": "Update header to Spec: specs/035-agent-governed-execution/spec.md"
+        },
+        {
+          "code": "SPEC_PATH_MISMATCH",
+          "severity": "warning",
+          "path": "crates/agent/src/safety.rs",
+          "feature_id": "035-agent-governed-execution",
+          "message": "File declares spec spec/agent/automation.md but registry says specs/035-agent-governed-execution/spec.md",
+          "suggested_fix": "Update header to Spec: specs/035-agent-governed-execution/spec.md"
+        },
+        {
+          "code": "SPEC_PATH_MISMATCH",
+          "severity": "warning",
+          "path": "crates/agent/src/schemas.rs",
+          "feature_id": "035-agent-governed-execution",
+          "message": "File declares spec spec/agent/automation.md but registry says specs/035-agent-governed-execution/spec.md",
+          "suggested_fix": "Update header to Spec: specs/035-agent-governed-execution/spec.md"
+        },
+        {
+          "code": "SPEC_PATH_MISMATCH",
+          "severity": "warning",
+          "path": "crates/agent/src/validator.rs",
+          "feature_id": "035-agent-governed-execution",
+          "message": "File declares spec spec/agent/automation.md but registry says specs/035-agent-governed-execution/spec.md",
+          "suggested_fix": "Update header to Spec: specs/035-agent-governed-execution/spec.md"
+        },
+        {
+          "code": "SPEC_PATH_MISMATCH",
+          "severity": "warning",
+          "path": "crates/agent/tests/golden_tests.rs",
+          "feature_id": "035-agent-governed-execution",
+          "message": "File declares spec spec/agent/automation.md but registry says specs/035-agent-governed-execution/spec.md",
+          "suggested_fix": "Update header to Spec: specs/035-agent-governed-execution/spec.md"
+        },
+        {
+          "code": "SPEC_PATH_MISMATCH",
+          "severity": "warning",
+          "path": "crates/axiomregent/src/agent_tools.rs",
+          "feature_id": "035-agent-governed-execution",
+          "message": "File declares spec spec/agent/automation.md but registry says specs/035-agent-governed-execution/spec.md",
+          "suggested_fix": "Update header to Spec: specs/035-agent-governed-execution/spec.md"
+        },
+        {
+          "code": "SPEC_PATH_MISMATCH",
+          "severity": "warning",
+          "path": "crates/axiomregent/src/internal_client.rs",
+          "feature_id": "035-agent-governed-execution",
+          "message": "File declares spec spec/agent/automation.md but registry says specs/035-agent-governed-execution/spec.md",
+          "suggested_fix": "Update header to Spec: specs/035-agent-governed-execution/spec.md"
+        }
+      ]
+    },
+    {
+      "feature_id": "036-safety-tier-governance",
+      "title": "safety tier governance",
+      "spec_path": "specs/036-safety-tier-governance/spec.md",
+      "status": "approved",
+      "implementation": "complete",
+      "governance": "",
+      "owner": "",
+      "group": "",
+      "depends_on": [],
+      "impl_files": [],
+      "test_files": [],
+      "violations": []
+    },
+    {
+      "feature_id": "037-cross-platform-axiomregent",
+      "title": "cross-platform axiomregent binaries",
+      "spec_path": "specs/037-cross-platform-axiomregent/spec.md",
+      "status": "approved",
+      "implementation": "complete",
+      "governance": "",
+      "owner": "",
+      "group": "",
+      "depends_on": [],
+      "impl_files": [],
+      "test_files": [],
+      "violations": []
+    },
+    {
+      "feature_id": "038-titor-tauri-command-wiring",
+      "title": "titor Tauri command wiring",
+      "spec_path": "specs/038-titor-tauri-command-wiring/spec.md",
+      "status": "superseded",
+      "implementation": "n-a",
+      "governance": "",
+      "owner": "",
+      "group": "",
+      "depends_on": [],
+      "impl_files": [],
+      "test_files": [],
+      "violations": []
+    },
+    {
+      "feature_id": "039-feature-id-reconciliation",
+      "title": "Feature ID reconciliation (codeAliases)",
+      "spec_path": "specs/039-feature-id-reconciliation/spec.md",
+      "status": "approved",
+      "implementation": "complete",
+      "governance": "",
+      "owner": "",
+      "group": "",
+      "depends_on": [],
+      "impl_files": [],
+      "test_files": [],
+      "violations": []
+    },
+    {
+      "feature_id": "040-blockoli-semantic-search-wiring",
+      "title": "Blockoli semantic search — Tauri command wiring",
+      "spec_path": "specs/040-blockoli-semantic-search-wiring/spec.md",
+      "status": "superseded",
+      "implementation": "n-a",
+      "governance": "",
+      "owner": "",
+      "group": "",
+      "depends_on": [],
+      "impl_files": [],
+      "test_files": [],
+      "violations": []
+    },
+    {
+      "feature_id": "041-checkpoint-restore-ui",
+      "title": "Checkpoint / Restore UI — desktop panel",
+      "spec_path": "specs/041-checkpoint-restore-ui/spec.md",
+      "status": "approved",
+      "implementation": "complete",
+      "governance": "",
+      "owner": "",
+      "group": "",
+      "depends_on": [],
+      "impl_files": [],
+      "test_files": [],
+      "violations": []
+    },
+    {
+      "feature_id": "042-multi-provider-agent-registry",
+      "title": "Multi-Provider Agent Registry",
+      "spec_path": "specs/042-multi-provider-agent-registry/spec.md",
+      "status": "approved",
+      "implementation": "complete",
+      "governance": "medium",
+      "owner": "",
+      "group": "",
+      "depends_on": [
+        "035-agent-governed-execution",
+        "036-safety-tier-governance",
+        "068-permission-runtime",
+        "090-governance-non-optionality",
+        "098-governance-enforcement-stitching"
+      ],
+      "impl_files": [],
+      "test_files": [],
+      "violations": []
+    },
+    {
+      "feature_id": "043-agent-organizer",
+      "title": "agent organizer and meta-orchestrator",
+      "spec_path": "specs/043-agent-organizer/spec.md",
+      "status": "approved",
+      "implementation": "complete",
+      "governance": "",
+      "owner": "",
+      "group": "",
+      "depends_on": [],
+      "impl_files": [],
+      "test_files": [],
+      "violations": []
+    },
+    {
+      "feature_id": "044-multi-agent-orchestration",
+      "title": "multi-agent orchestration with file-based artifact passing",
+      "spec_path": "specs/044-multi-agent-orchestration/spec.md",
+      "status": "superseded",
+      "implementation": "n-a",
+      "governance": "",
+      "owner": "",
+      "group": "",
+      "depends_on": [],
+      "impl_files": [],
+      "test_files": [],
+      "violations": []
+    },
+    {
+      "feature_id": "045-claude-code-sdk-bridge",
+      "title": "Claude Code SDK bridge",
+      "spec_path": "specs/045-claude-code-sdk-bridge/spec.md",
+      "status": "approved",
+      "implementation": "complete",
+      "governance": "",
+      "owner": "",
+      "group": "",
+      "depends_on": [],
+      "impl_files": [],
+      "test_files": [],
+      "violations": []
+    },
+    {
+      "feature_id": "046-context-compaction",
+      "title": "Context Compaction for Session Resumption",
+      "spec_path": "specs/046-context-compaction/spec.md",
+      "status": "approved",
+      "implementation": "complete",
+      "governance": "",
+      "owner": "",
+      "group": "",
+      "depends_on": [],
+      "impl_files": [],
+      "test_files": [],
+      "violations": []
+    },
+    {
+      "feature_id": "047-governance-control-plane",
+      "title": "governance control plane (policy compiler)",
+      "spec_path": "specs/047-governance-control-plane/spec.md",
+      "status": "approved",
+      "implementation": "complete",
+      "governance": "",
+      "owner": "",
+      "group": "",
+      "depends_on": [],
+      "impl_files": [],
+      "test_files": [],
+      "violations": []
+    },
+    {
+      "feature_id": "048-hookify-rule-engine",
+      "title": "Declarative Hook Rule Engine",
+      "spec_path": "specs/048-hookify-rule-engine/spec.md",
+      "status": "approved",
+      "implementation": "complete",
+      "governance": "",
+      "owner": "",
+      "group": "",
+      "depends_on": [],
+      "impl_files": [],
+      "test_files": [],
+      "violations": []
+    },
+    {
+      "feature_id": "049-permission-system",
+      "title": "Permission Request System with Memory and Wildcards",
+      "spec_path": "specs/049-permission-system/spec.md",
+      "status": "approved",
+      "implementation": "complete",
+      "governance": "",
+      "owner": "",
+      "group": "",
+      "depends_on": [],
+      "impl_files": [],
+      "test_files": [],
+      "violations": []
+    },
+    {
+      "feature_id": "050-tool-renderer-system",
+      "title": "Config-Driven Tool Rendering System",
+      "spec_path": "specs/050-tool-renderer-system/spec.md",
+      "status": "approved",
+      "implementation": "complete",
+      "governance": "",
+      "owner": "",
+      "group": "",
+      "depends_on": [],
+      "impl_files": [],
+      "test_files": [],
+      "violations": []
+    },
+    {
+      "feature_id": "051-worktree-agents",
+      "title": "Background Agents with Git Worktree Isolation",
+      "spec_path": "specs/051-worktree-agents/spec.md",
+      "status": "approved",
+      "implementation": "complete",
+      "governance": "",
+      "owner": "",
+      "group": "",
+      "depends_on": [],
+      "impl_files": [],
+      "test_files": [],
+      "violations": []
+    },
+    {
+      "feature_id": "052-state-persistence",
+      "title": "State Persistence for Resumable Workflows",
+      "spec_path": "specs/052-state-persistence/spec.md",
+      "status": "approved",
+      "implementation": "complete",
+      "governance": "",
+      "owner": "",
+      "group": "",
+      "depends_on": [],
+      "impl_files": [],
+      "test_files": [],
+      "violations": []
+    },
+    {
+      "feature_id": "053-verification-profiles",
+      "title": "Verification Profiles",
+      "spec_path": "specs/053-verification-profiles/spec.md",
+      "status": "approved",
+      "implementation": "complete",
+      "governance": "",
+      "owner": "",
+      "group": "",
+      "depends_on": [],
+      "impl_files": [],
+      "test_files": [],
+      "violations": []
+    },
+    {
+      "feature_id": "054-agent-frontmatter-schema",
+      "title": "Unified Agent and Skill Frontmatter Schema",
+      "spec_path": "specs/054-agent-frontmatter-schema/spec.md",
+      "status": "approved",
+      "implementation": "complete",
+      "governance": "medium",
+      "owner": "",
+      "group": "",
+      "depends_on": [
+        "035-agent-governed-execution",
+        "036-safety-tier-governance",
+        "067-tool-definition-registry",
+        "068-permission-runtime",
+        "071-skill-command-factory",
+        "093-spec-driven-preflight",
+        "098-governance-enforcement-stitching"
+      ],
+      "impl_files": [],
+      "test_files": [],
+      "violations": []
+    },
+    {
+      "feature_id": "055-yaml-standards-schema",
+      "title": "YAML Standards Schema",
+      "spec_path": "specs/055-yaml-standards-schema/spec.md",
+      "status": "approved",
+      "implementation": "complete",
+      "governance": "low",
+      "owner": "",
+      "group": "",
+      "depends_on": [
+        "054-agent-frontmatter-schema",
+        "053-verification-profiles",
+        "035-agent-governed-execution"
+      ],
+      "impl_files": [],
+      "test_files": [],
+      "violations": []
+    },
+    {
+      "feature_id": "056-session-memory",
+      "title": "Session Memory / Project-Object Persistence",
+      "spec_path": "specs/056-session-memory/spec.md",
+      "status": "approved",
+      "implementation": "complete",
+      "governance": "",
+      "owner": "",
+      "group": "",
+      "depends_on": [],
+      "impl_files": [],
+      "test_files": [],
+      "violations": []
+    },
+    {
+      "feature_id": "057-notification-system",
+      "title": "Notification Orchestrator",
+      "spec_path": "specs/057-notification-system/spec.md",
+      "status": "approved",
+      "implementation": "complete",
+      "governance": "",
+      "owner": "",
+      "group": "",
+      "depends_on": [],
+      "impl_files": [],
+      "test_files": [],
+      "violations": []
+    },
+    {
+      "feature_id": "058-file-mention-system",
+      "title": "@-Mention Autocomplete for Files and Agents",
+      "spec_path": "specs/058-file-mention-system/spec.md",
+      "status": "approved",
+      "implementation": "complete",
+      "governance": "",
+      "owner": "",
+      "group": "",
+      "depends_on": [],
+      "impl_files": [],
+      "test_files": [],
+      "violations": []
+    },
+    {
+      "feature_id": "059-git-panel",
+      "title": "Comprehensive Git Panel",
+      "spec_path": "specs/059-git-panel/spec.md",
+      "status": "approved",
+      "implementation": "complete",
+      "governance": "",
+      "owner": "",
+      "group": "",
+      "depends_on": [],
+      "impl_files": [],
+      "test_files": [],
+      "violations": []
+    },
+    {
+      "feature_id": "060-panel-event-bus",
+      "title": "Typed Inter-Panel Event Bus",
+      "spec_path": "specs/060-panel-event-bus/spec.md",
+      "status": "approved",
+      "implementation": "complete",
+      "governance": "",
+      "owner": "",
+      "group": "",
+      "depends_on": [],
+      "impl_files": [],
+      "test_files": [],
+      "violations": []
+    },
+    {
+      "feature_id": "061-conductor-track-lifecycle",
+      "title": "Conductor Track Lifecycle",
+      "spec_path": "specs/061-conductor-track-lifecycle/spec.md",
+      "status": "approved",
+      "implementation": "complete",
+      "governance": "",
+      "owner": "",
+      "group": "",
+      "depends_on": [],
+      "impl_files": [],
+      "test_files": [],
+      "violations": []
+    },
+    {
+      "feature_id": "062-multi-model-chaining",
+      "title": "Multi-Model Chaining",
+      "spec_path": "specs/062-multi-model-chaining/spec.md",
+      "status": "approved",
+      "implementation": "complete",
+      "governance": "",
+      "owner": "",
+      "group": "",
+      "depends_on": [],
+      "impl_files": [],
+      "test_files": [],
+      "violations": []
+    },
+    {
+      "feature_id": "063-coherence-scoring",
+      "title": "Coherence Scoring with Privilege Degradation",
+      "spec_path": "specs/063-coherence-scoring/spec.md",
+      "status": "approved",
+      "implementation": "complete",
+      "governance": "",
+      "owner": "",
+      "group": "",
+      "depends_on": [],
+      "impl_files": [],
+      "test_files": [],
+      "violations": []
+    },
+    {
+      "feature_id": "064-websocket-reconnection",
+      "title": "WebSocket Session Reconnection",
+      "spec_path": "specs/064-websocket-reconnection/spec.md",
+      "status": "approved",
+      "implementation": "complete",
+      "governance": "",
+      "owner": "",
+      "group": "",
+      "depends_on": [],
+      "impl_files": [],
+      "test_files": [],
+      "violations": []
+    },
+    {
+      "feature_id": "065-encrypted-keychain",
+      "title": "Encrypted Keychain and Credential Storage",
+      "spec_path": "specs/065-encrypted-keychain/spec.md",
+      "status": "approved",
+      "implementation": "complete",
+      "governance": "",
+      "owner": "",
+      "group": "",
+      "depends_on": [],
+      "impl_files": [],
+      "test_files": [],
+      "violations": []
+    },
+    {
+      "feature_id": "066-vscode-extension",
+      "title": "VS Code Extension (Sidebar Webview)",
+      "spec_path": "specs/066-vscode-extension/spec.md",
+      "status": "approved",
+      "implementation": "deferred",
+      "governance": "",
+      "owner": "",
+      "group": "",
+      "depends_on": [],
+      "impl_files": [],
+      "test_files": [],
+      "violations": []
+    },
+    {
+      "feature_id": "067-tool-definition-registry",
+      "title": "Tool Definition Registry",
+      "spec_path": "specs/067-tool-definition-registry/spec.md",
+      "status": "approved",
+      "implementation": "complete",
+      "governance": "",
+      "owner": "",
+      "group": "",
+      "depends_on": [],
+      "impl_files": [],
+      "test_files": [],
+      "violations": []
+    },
+    {
+      "feature_id": "068-permission-runtime",
+      "title": "Permission Runtime and Settings Layering",
+      "spec_path": "specs/068-permission-runtime/spec.md",
+      "status": "approved",
+      "implementation": "complete",
+      "governance": "",
+      "owner": "",
+      "group": "",
+      "depends_on": [],
+      "impl_files": [],
+      "test_files": [],
+      "violations": []
+    },
+    {
+      "feature_id": "069-lifecycle-hook-runtime",
+      "title": "Lifecycle Hook Runtime",
+      "spec_path": "specs/069-lifecycle-hook-runtime/spec.md",
+      "status": "approved",
+      "implementation": "complete",
+      "governance": "",
+      "owner": "",
+      "group": "",
+      "depends_on": [],
+      "impl_files": [],
+      "test_files": [],
+      "violations": []
+    },
+    {
+      "feature_id": "070-prompt-assembly-cache",
+      "title": "Prompt Assembly and Cache Boundaries",
+      "spec_path": "specs/070-prompt-assembly-cache/spec.md",
+      "status": "approved",
+      "implementation": "complete",
+      "governance": "",
+      "owner": "",
+      "group": "",
+      "depends_on": [],
+      "impl_files": [],
+      "test_files": [],
+      "violations": []
+    },
+    {
+      "feature_id": "071-skill-command-factory",
+      "title": "Skill and Command Factory",
+      "spec_path": "specs/071-skill-command-factory/spec.md",
+      "status": "approved",
+      "implementation": "complete",
+      "governance": "",
+      "owner": "",
+      "group": "",
+      "depends_on": [],
+      "impl_files": [
+        "crates/axiomregent/src/skill_provider.rs"
+      ],
+      "test_files": [],
+      "violations": []
+    },
+    {
+      "feature_id": "072-multi-cloud-k8s-portability",
+      "title": "Multi-Cloud Kubernetes Portability",
+      "spec_path": "specs/072-multi-cloud-k8s-portability/spec.md",
+      "status": "approved",
+      "implementation": "complete",
+      "governance": "",
+      "owner": "",
+      "group": "",
+      "depends_on": [],
+      "impl_files": [],
+      "test_files": [],
+      "violations": []
+    },
+    {
+      "feature_id": "073-axiomregent-unification",
+      "title": "Axiomregent Unification: Crate Absorption, Hiqlite Storage, and GitHub Org Integration",
+      "spec_path": "specs/073-axiomregent-unification/spec.md",
+      "status": "approved",
+      "implementation": "complete",
+      "governance": "",
+      "owner": "",
+      "group": "",
+      "depends_on": [],
+      "impl_files": [],
+      "test_files": [],
+      "violations": []
+    },
+    {
+      "feature_id": "074-factory-ingestion",
+      "title": "Factory Ingestion as First-Class Delivery Engine",
+      "spec_path": "specs/074-factory-ingestion/spec.md",
+      "status": "approved",
+      "implementation": "complete",
+      "governance": "",
+      "owner": "",
+      "group": "",
+      "depends_on": [],
+      "impl_files": [],
+      "test_files": [],
+      "violations": []
+    },
+    {
+      "feature_id": "075-factory-workflow-engine",
+      "title": "Factory Workflow Engine — Orchestrator Fan-Out, Manifest Generation, and Verification",
+      "spec_path": "specs/075-factory-workflow-engine/spec.md",
+      "status": "approved",
+      "implementation": "complete",
+      "governance": "",
+      "owner": "",
+      "group": "",
+      "depends_on": [],
+      "impl_files": [],
+      "test_files": [],
+      "violations": []
+    },
+    {
+      "feature_id": "076-factory-desktop-panel",
+      "title": "Factory Desktop Panel — Pipeline Visualization, Artifact Inspection, and Gate Dialogs",
+      "spec_path": "specs/076-factory-desktop-panel/spec.md",
+      "status": "approved",
+      "implementation": "complete",
+      "governance": "",
+      "owner": "",
+      "group": "",
+      "depends_on": [],
+      "impl_files": [],
+      "test_files": [],
+      "violations": []
+    },
+    {
+      "feature_id": "077-statecraft-factory-api",
+      "title": "Statecraft Factory Lifecycle API — Project Init, Stage Confirmation, Audit Trail",
+      "spec_path": "specs/077-statecraft-factory-api/spec.md",
+      "status": "approved",
+      "implementation": "complete",
+      "governance": "",
+      "owner": "",
+      "group": "",
+      "depends_on": [],
+      "impl_files": [],
+      "test_files": [],
+      "violations": []
+    },
+    {
+      "feature_id": "078-platform-completion-plan",
+      "title": "Platform Completion Plan — Factory Ingestion + Draft Spec Closure",
+      "spec_path": "specs/078-platform-completion-plan/spec.md",
+      "status": "approved",
+      "implementation": "n-a",
+      "governance": "",
+      "owner": "",
+      "group": "",
+      "depends_on": [],
+      "impl_files": [],
+      "test_files": [],
+      "violations": []
+    },
+    {
+      "feature_id": "079-scheduling",
+      "title": "Scheduled Agent Execution",
+      "spec_path": "specs/079-scheduling/spec.md",
+      "status": "approved",
+      "implementation": "complete",
+      "governance": "",
+      "owner": "",
+      "group": "",
+      "depends_on": [],
+      "impl_files": [],
+      "test_files": [],
+      "violations": []
+    },
+    {
+      "feature_id": "080-github-identity-onboarding",
+      "title": "GitHub Identity and Org Onboarding — App Installation, OAuth Login, Rauthy Sessions",
+      "spec_path": "specs/080-github-identity-onboarding/spec.md",
+      "status": "approved",
+      "implementation": "complete",
+      "governance": "medium",
+      "owner": "bart",
+      "group": "",
+      "depends_on": [],
+      "impl_files": [],
+      "test_files": [],
+      "violations": []
+    },
+    {
+      "feature_id": "081-factory-test-hydration",
+      "title": "Factory Test Data Hydration",
+      "spec_path": "specs/081-factory-test-hydration/spec.md",
+      "status": "approved",
+      "implementation": "complete",
+      "governance": "",
+      "owner": "",
+      "group": "",
+      "depends_on": [],
+      "impl_files": [],
+      "test_files": [],
+      "violations": []
+    },
+    {
+      "feature_id": "082-artifact-integrity-platform-hardening",
+      "title": "Artifact Integrity, Cross-Run Persistence, and Seam Auth Hardening",
+      "spec_path": "specs/082-artifact-integrity-platform-hardening/spec.md",
+      "status": "approved",
+      "implementation": "complete",
+      "governance": "high",
+      "owner": "bart",
+      "group": "",
+      "depends_on": [],
+      "impl_files": [],
+      "test_files": [],
+      "violations": []
+    },
+    {
+      "feature_id": "083-xray-ui-upgrade",
+      "title": "Xray v1.2.0 UI Surface",
+      "spec_path": "specs/083-xray-ui-upgrade/spec.md",
+      "status": "approved",
+      "implementation": "complete",
+      "governance": "",
+      "owner": "",
+      "group": "",
+      "depends_on": [],
+      "impl_files": [],
+      "test_files": [],
+      "violations": []
+    },
+    {
+      "feature_id": "084-opc-settings-reconciliation",
+      "title": "OPC Scoped Settings Reconciliation",
+      "spec_path": "specs/084-opc-settings-reconciliation/spec.md",
+      "status": "approved",
+      "implementation": "complete",
+      "governance": "",
+      "owner": "",
+      "group": "",
+      "depends_on": [],
+      "impl_files": [],
+      "test_files": [],
+      "violations": []
+    },
+    {
+      "feature_id": "085-remote-control-cli",
+      "title": "Remote Control CLI (oap-ctl)",
+      "spec_path": "specs/085-remote-control-cli/spec.md",
+      "status": "approved",
+      "implementation": "complete",
+      "governance": "",
+      "owner": "",
+      "group": "",
+      "depends_on": [],
+      "impl_files": [],
+      "test_files": [],
+      "violations": []
+    },
+    {
+      "feature_id": "086-open-source-launch",
+      "title": "Open Source Launch Readiness",
+      "spec_path": "specs/086-open-source-launch/spec.md",
+      "status": "approved",
+      "implementation": "deferred",
+      "governance": "",
+      "owner": "",
+      "group": "",
+      "depends_on": [],
+      "impl_files": [],
+      "test_files": [],
+      "violations": []
+    },
+    {
+      "feature_id": "087-unified-workspace-architecture",
+      "title": "Unified Project Architecture",
+      "spec_path": "specs/087-unified-workspace-architecture/spec.md",
+      "status": "approved",
+      "implementation": "complete",
+      "governance": "high",
+      "owner": "bart",
+      "group": "",
+      "depends_on": [
+        "074-factory-ingestion",
+        "075-factory-workflow-engine",
+        "076-factory-desktop-panel",
+        "077-statecraft-factory-api",
+        "078-platform-completion-plan",
+        "080-github-identity-onboarding",
+        "082-artifact-integrity-platform-hardening"
+      ],
+      "impl_files": [],
+      "test_files": [],
+      "violations": []
+    },
+    {
+      "feature_id": "088-factory-upstream-sync",
+      "title": "Factory Upstream Sync Protocol",
+      "spec_path": "specs/088-factory-upstream-sync/spec.md",
+      "status": "superseded",
+      "implementation": "complete",
+      "governance": "",
+      "owner": "bart",
+      "group": "",
+      "depends_on": [
+        "074-factory-ingestion",
+        "075-factory-workflow-engine"
+      ],
+      "impl_files": [],
+      "test_files": [],
+      "violations": []
+    },
+    {
+      "feature_id": "089-governed-convergence-plan",
+      "title": "Governed Convergence Plan — Binding Primitives into Default Product Truth",
+      "spec_path": "specs/089-governed-convergence-plan/spec.md",
+      "status": "approved",
+      "implementation": "n-a",
+      "governance": "critical",
+      "owner": "bart",
+      "group": "",
+      "depends_on": [
+        "082-artifact-integrity-platform-hardening",
+        "087-unified-workspace-architecture",
+        "080-github-identity-onboarding"
+      ],
+      "impl_files": [],
+      "test_files": [],
+      "violations": []
+    },
+    {
+      "feature_id": "090-governance-non-optionality",
+      "title": "Governance Non-Optionality",
+      "spec_path": "specs/090-governance-non-optionality/spec.md",
+      "status": "approved",
+      "implementation": "complete",
+      "governance": "high",
+      "owner": "bart",
+      "group": "",
+      "depends_on": [
+        "033-axiomregent-activation",
+        "068-permission-runtime"
+      ],
+      "impl_files": [],
+      "test_files": [],
+      "violations": []
+    },
+    {
+      "feature_id": "091-registry-enrichment",
+      "title": "Spec Registry Enrichment",
+      "spec_path": "specs/091-registry-enrichment/spec.md",
+      "status": "approved",
+      "implementation": "complete",
+      "governance": "low",
+      "owner": "bart",
+      "group": "",
+      "depends_on": [
+        "039-feature-id-reconciliation"
+      ],
+      "impl_files": [],
+      "test_files": [],
+      "violations": []
+    },
+    {
+      "feature_id": "092-workspace-runtime-threading",
+      "title": "Project Runtime Threading",
+      "spec_path": "specs/092-workspace-runtime-threading/spec.md",
+      "status": "approved",
+      "implementation": "complete",
+      "governance": "high",
+      "owner": "bart",
+      "group": "",
+      "depends_on": [
+        "087-unified-workspace-architecture",
+        "090-governance-non-optionality"
+      ],
+      "impl_files": [],
+      "test_files": [],
+      "violations": []
+    },
+    {
+      "feature_id": "093-spec-driven-preflight",
+      "title": "Spec-Driven Preflight and Gating",
+      "spec_path": "specs/093-spec-driven-preflight/spec.md",
+      "status": "approved",
+      "implementation": "complete",
+      "governance": "high",
+      "owner": "bart",
+      "group": "",
+      "depends_on": [
+        "091-registry-enrichment",
+        "092-workspace-runtime-threading"
+      ],
+      "impl_files": [],
+      "test_files": [],
+      "violations": []
+    },
+    {
+      "feature_id": "094-unified-artifact-store",
+      "title": "Unified Artifact Store with Provenance",
+      "spec_path": "specs/094-unified-artifact-store/spec.md",
+      "status": "approved",
+      "implementation": "complete",
+      "governance": "high",
+      "owner": "bart",
+      "group": "",
+      "depends_on": [
+        "082-artifact-integrity-platform-hardening",
+        "092-workspace-runtime-threading"
+      ],
+      "impl_files": [],
+      "test_files": [],
+      "violations": []
+    },
+    {
+      "feature_id": "095-checkpoint-branch-of-thought",
+      "title": "Checkpoint Branch-of-Thought",
+      "spec_path": "specs/095-checkpoint-branch-of-thought/spec.md",
+      "status": "approved",
+      "implementation": "complete",
+      "governance": "high",
+      "owner": "bart",
+      "group": "",
+      "depends_on": [
+        "092-workspace-runtime-threading",
+        "094-unified-artifact-store"
+      ],
+      "impl_files": [],
+      "test_files": [],
+      "violations": []
+    },
+    {
+      "feature_id": "096-portfolio-intelligence",
+      "title": "Portfolio Intelligence — xray-featuregraph Bridge",
+      "spec_path": "specs/096-portfolio-intelligence/spec.md",
+      "status": "approved",
+      "implementation": "complete",
+      "governance": "medium",
+      "owner": "bart",
+      "group": "",
+      "depends_on": [
+        "091-registry-enrichment",
+        "093-spec-driven-preflight"
+      ],
+      "impl_files": [
+        "crates/featuregraph/src/enrichment.rs"
+      ],
+      "test_files": [],
+      "violations": []
+    },
+    {
+      "feature_id": "097-promotion-grade-mirror",
+      "title": "Promotion-Grade Platform Mirror",
+      "spec_path": "specs/097-promotion-grade-mirror/spec.md",
+      "status": "approved",
+      "implementation": "complete",
+      "governance": "high",
+      "owner": "bart",
+      "group": "",
+      "depends_on": [
+        "080-github-identity-onboarding",
+        "082-artifact-integrity-platform-hardening",
+        "092-workspace-runtime-threading",
+        "094-unified-artifact-store"
+      ],
+      "impl_files": [
+        "crates/orchestrator/src/promotion.rs"
+      ],
+      "test_files": [],
+      "violations": []
+    },
+    {
+      "feature_id": "098-governance-enforcement-stitching",
+      "title": "Governance Enforcement Stitching",
+      "spec_path": "specs/098-governance-enforcement-stitching/spec.md",
+      "status": "approved",
+      "implementation": "complete",
+      "governance": "high",
+      "owner": "bart",
+      "group": "",
+      "depends_on": [
+        "090-governance-non-optionality",
+        "093-spec-driven-preflight",
+        "097-promotion-grade-mirror"
+      ],
+      "impl_files": [],
+      "test_files": [],
+      "violations": []
+    },
+    {
+      "feature_id": "099-workspace-scoped-persistence",
+      "title": "Project-Scoped Persistence",
+      "spec_path": "specs/099-workspace-scoped-persistence/spec.md",
+      "status": "approved",
+      "implementation": "complete",
+      "governance": "medium",
+      "owner": "bart",
+      "group": "",
+      "depends_on": [
+        "092-workspace-runtime-threading",
+        "094-unified-artifact-store",
+        "097-promotion-grade-mirror"
+      ],
+      "impl_files": [],
+      "test_files": [],
+      "violations": []
+    },
+    {
+      "feature_id": "100-post-convergence-remediation",
+      "title": "Post-Convergence Remediation",
+      "spec_path": "specs/100-post-convergence-remediation/spec.md",
+      "status": "approved",
+      "implementation": "complete",
+      "governance": "high",
+      "owner": "bart",
+      "group": "",
+      "depends_on": [
+        "089-governed-convergence-plan"
+      ],
+      "impl_files": [],
+      "test_files": [],
+      "violations": []
+    },
+    {
+      "feature_id": "101-codebase-index-mvp",
+      "title": "Codebase Index MVP — Governed Structural Inventory",
+      "spec_path": "specs/101-codebase-index-mvp/spec.md",
+      "status": "approved",
+      "implementation": "complete",
+      "governance": "low",
+      "owner": "bart",
+      "group": "",
+      "depends_on": [
+        "000-bootstrap-spec-system",
+        "001-spec-compiler-mvp",
+        "003-feature-lifecycle-mvp"
+      ],
+      "impl_files": [],
+      "test_files": [],
+      "violations": []
+    },
+    {
+      "feature_id": "102-governed-excellence",
+      "title": "Governed Excellence — Production Hardening for the Best Governed OS for AI-Native Delivery",
+      "spec_path": "specs/102-governed-excellence/spec.md",
+      "status": "approved",
+      "implementation": "complete",
+      "governance": "high",
+      "owner": "bart",
+      "group": "",
+      "depends_on": [
+        "089-governed-convergence-plan",
+        "100-post-convergence-remediation",
+        "101-codebase-index-mvp"
+      ],
+      "impl_files": [],
+      "test_files": [],
+      "violations": []
+    },
+    {
+      "feature_id": "103-init-protocol-governed-reads",
+      "title": "Init Protocol Governed Reads — Consumer Binaries Over Ad-Hoc Parsing",
+      "spec_path": "specs/103-init-protocol-governed-reads/spec.md",
+      "status": "approved",
+      "implementation": "complete",
+      "governance": "low",
+      "owner": "bart",
+      "group": "",
+      "depends_on": [
+        "000-bootstrap-spec-system",
+        "001-spec-compiler-mvp",
+        "002-registry-consumer-mvp",
+        "101-codebase-index-mvp"
+      ],
+      "impl_files": [],
+      "test_files": [],
+      "violations": []
+    },
+    {
+      "feature_id": "104-makefile-ci-parity-contract",
+      "title": "Makefile as CI Parity Contract — Drift-Checked Local Mirror of GitHub Actions",
+      "spec_path": "specs/104-makefile-ci-parity-contract/spec.md",
+      "status": "approved",
+      "implementation": "complete",
+      "governance": "low",
+      "owner": "bart",
+      "group": "",
+      "depends_on": [
+        "000-bootstrap-spec-system",
+        "006-conformance-lint-mvp"
+      ],
+      "impl_files": [],
+      "test_files": [],
+      "violations": []
+    },
+    {
+      "feature_id": "105-scripts-to-binaries-migration",
+      "title": "Retire scripts/ — Migrate To Rust Binaries Or Make Recipes By Nature",
+      "spec_path": "specs/105-scripts-to-binaries-migration/spec.md",
+      "status": "approved",
+      "implementation": "complete",
+      "governance": "medium",
+      "owner": "bart",
+      "group": "",
+      "depends_on": [
+        "000-bootstrap-spec-system",
+        "037-cross-platform-axiomregent",
+        "073-axiomregent-unification",
+        "075-factory-workflow-engine",
+        "104-makefile-ci-parity-contract"
+      ],
+      "impl_files": [],
+      "test_files": [],
+      "violations": []
+    },
+    {
+      "feature_id": "106-rauthy-native-oidc-and-membership",
+      "title": "Rauthy-Native OIDC + Layered Membership Resolution (App Installation + PAT)",
+      "spec_path": "specs/106-rauthy-native-oidc-and-membership/spec.md",
+      "status": "approved",
+      "implementation": "complete",
+      "governance": "high",
+      "owner": "bart",
+      "group": "",
+      "depends_on": [
+        "080-github-identity-onboarding",
+        "087-unified-workspace-architecture"
+      ],
+      "impl_files": [],
+      "test_files": [],
+      "violations": []
+    },
+    {
+      "feature_id": "107-rauthy-client-redirect-convergence",
+      "title": "Rauthy OIDC Client Redirect URI Convergence",
+      "spec_path": "specs/107-rauthy-client-redirect-convergence/spec.md",
+      "status": "approved",
+      "implementation": "complete",
+      "governance": "medium",
+      "owner": "bart",
+      "group": "",
+      "depends_on": [
+        "080-github-identity-onboarding",
+        "106-rauthy-native-oidc-and-membership"
+      ],
+      "impl_files": [],
+      "test_files": [],
+      "violations": []
+    },
+    {
+      "feature_id": "108-factory-as-platform-feature",
+      "title": "Factory as a First-Class Platform Feature",
+      "spec_path": "specs/108-factory-as-platform-feature/spec.md",
+      "status": "approved",
+      "implementation": "complete",
+      "governance": "",
+      "owner": "bart",
+      "group": "",
+      "depends_on": [
+        "074-factory-ingestion",
+        "075-factory-workflow-engine",
+        "087-unified-workspace-architecture",
+        "088-factory-upstream-sync"
+      ],
+      "impl_files": [],
+      "test_files": [],
+      "violations": []
+    },
+    {
+      "feature_id": "109-factory-pat-and-pubsub-sync",
+      "title": "Factory PAT Broker + PubSub Sync Worker",
+      "spec_path": "specs/109-factory-pat-and-pubsub-sync/spec.md",
+      "status": "approved",
+      "implementation": "complete",
+      "governance": "",
+      "owner": "bart",
+      "group": "",
+      "depends_on": [
+        "080-github-identity-onboarding",
+        "106-rauthy-native-oidc-and-membership",
+        "108-factory-as-platform-feature"
+      ],
+      "impl_files": [],
+      "test_files": [],
+      "violations": []
+    },
+    {
+      "feature_id": "110-statecraft-to-opc-factory-trigger",
+      "title": "Statecraft-initiated Factory Run Trigger over the Duplex Channel",
+      "spec_path": "specs/110-statecraft-to-opc-factory-trigger/spec.md",
+      "status": "approved",
+      "implementation": "complete",
+      "governance": "",
+      "owner": "bart",
+      "group": "",
+      "depends_on": [
+        "075-factory-workflow-engine",
+        "076-factory-desktop-panel",
+        "077-statecraft-factory-api",
+        "087-unified-workspace-architecture",
+        "092-workspace-runtime-threading",
+        "094-unified-artifact-store",
+        "108-factory-as-platform-feature",
+        "109-factory-pat-and-pubsub-sync"
+      ],
+      "impl_files": [],
+      "test_files": [],
+      "violations": []
+    },
+    {
+      "feature_id": "111-org-agent-catalog-sync",
+      "title": "Org-managed Agent Catalog Synced from Statecraft to OPC",
+      "spec_path": "specs/111-org-agent-catalog-sync/spec.md",
+      "status": "approved",
+      "implementation": "complete",
+      "governance": "",
+      "owner": "bart",
+      "group": "",
+      "depends_on": [
+        "042-multi-provider-agent-registry",
+        "054-agent-frontmatter-schema",
+        "068-permission-runtime",
+        "087-unified-workspace-architecture",
+        "090-governance-non-optionality",
+        "110-statecraft-to-opc-factory-trigger"
+      ],
+      "impl_files": [],
+      "test_files": [],
+      "violations": []
+    },
+    {
+      "feature_id": "112-factory-project-lifecycle",
+      "title": "Factory Project Lifecycle — Create, Import, Open",
+      "spec_path": "specs/112-factory-project-lifecycle/spec.md",
+      "status": "approved",
+      "implementation": "in-progress",
+      "governance": "",
+      "owner": "bart",
+      "group": "",
+      "depends_on": [
+        "074-factory-ingestion",
+        "075-factory-workflow-engine",
+        "087-unified-workspace-architecture",
+        "094-unified-artifact-store",
+        "108-factory-as-platform-feature",
+        "109-factory-pat-and-pubsub-sync",
+        "110-statecraft-to-opc-factory-trigger",
+        "111-org-agent-catalog-sync"
+      ],
+      "impl_files": [],
+      "test_files": [],
+      "violations": []
+    },
+    {
+      "feature_id": "113-statecraft-projects-rename-and-clone",
+      "title": "Statecraft Projects Rename + In-Org Project Clone",
+      "spec_path": "specs/113-statecraft-projects-rename-and-clone/spec.md",
+      "status": "approved",
+      "implementation": "complete",
+      "governance": "medium",
+      "owner": "bart",
+      "group": "",
+      "depends_on": [
+        "087-unified-workspace-architecture",
+        "108-factory-as-platform-feature",
+        "109-factory-pat-and-pubsub-sync",
+        "112-factory-project-lifecycle"
+      ],
+      "impl_files": [],
+      "test_files": [],
+      "violations": []
+    },
+    {
+      "feature_id": "114-async-project-clone-pipeline",
+      "title": "Async Project Clone Pipeline",
+      "spec_path": "specs/114-async-project-clone-pipeline/spec.md",
+      "status": "approved",
+      "implementation": "complete",
+      "governance": "medium",
+      "owner": "bart",
+      "group": "",
+      "depends_on": [
+        "109-factory-pat-and-pubsub-sync",
+        "112-factory-project-lifecycle",
+        "113-statecraft-projects-rename-and-clone"
+      ],
+      "impl_files": [],
+      "test_files": [],
+      "violations": []
+    },
+    {
+      "feature_id": "115-knowledge-extraction-pipeline",
+      "title": "Knowledge Extraction Pipeline",
+      "spec_path": "specs/115-knowledge-extraction-pipeline/spec.md",
+      "status": "approved",
+      "implementation": "complete",
+      "governance": "high",
+      "owner": "bart",
+      "group": "",
+      "depends_on": [
+        "036-safety-tier-governance",
+        "047-governance-control-plane",
+        "087-unified-workspace-architecture",
+        "114-async-project-clone-pipeline"
+      ],
+      "impl_files": [],
+      "test_files": [],
+      "violations": []
+    },
+    {
+      "feature_id": "116-supply-chain-policy-gates",
+      "title": "Supply-Chain Policy Gates — cargo-deny + dependency audit in CI",
+      "spec_path": "specs/116-supply-chain-policy-gates/spec.md",
+      "status": "approved",
+      "implementation": "complete",
+      "governance": "medium",
+      "owner": "bart",
+      "group": "",
+      "depends_on": [
+        "000-bootstrap-spec-system",
+        "047-governance-control-plane",
+        "104-makefile-ci-parity-contract"
+      ],
+      "impl_files": [],
+      "test_files": [],
+      "violations": []
+    },
+    {
+      "feature_id": "117-release-artifact-attestations",
+      "title": "Release Artifact Attestations — SBOM + build provenance for every shipped binary",
+      "spec_path": "specs/117-release-artifact-attestations/spec.md",
+      "status": "approved",
+      "implementation": "complete",
+      "governance": "medium",
+      "owner": "bart",
+      "group": "",
+      "depends_on": [
+        "000-bootstrap-spec-system",
+        "037-cross-platform-axiomregent",
+        "086-open-source-launch",
+        "104-makefile-ci-parity-contract"
+      ],
+      "impl_files": [],
+      "test_files": [],
+      "violations": []
+    },
+    {
+      "feature_id": "118-workflow-spec-traceability",
+      "title": "Workflow-to-Spec Traceability — surface \"# Spec:\" headers in the codebase index",
+      "spec_path": "specs/118-workflow-spec-traceability/spec.md",
+      "status": "approved",
+      "implementation": "complete",
+      "governance": "low",
+      "owner": "bart",
+      "group": "",
+      "depends_on": [
+        "000-bootstrap-spec-system",
+        "101-codebase-index-mvp",
+        "103-init-protocol-governed-reads"
+      ],
+      "impl_files": [],
+      "test_files": [],
+      "violations": []
+    },
+    {
+      "feature_id": "119-project-as-unit-of-governance",
+      "title": "Project as Unit of Governance — Workspace Collapse",
+      "spec_path": "specs/119-project-as-unit-of-governance/spec.md",
+      "status": "approved",
+      "implementation": "complete",
+      "governance": "high",
+      "owner": "bart",
+      "group": "",
+      "depends_on": [
+        "000-bootstrap-spec-system",
+        "087-unified-workspace-architecture",
+        "092-workspace-runtime-threading",
+        "094-unified-artifact-store",
+        "099-workspace-scoped-persistence",
+        "113-statecraft-projects-rename-and-clone",
+        "114-async-project-clone-pipeline",
+        "115-knowledge-extraction-pipeline"
+      ],
+      "impl_files": [],
+      "test_files": [],
+      "violations": []
+    },
+    {
+      "feature_id": "120-factory-extraction-stage",
+      "title": "Factory Extraction Stage",
+      "spec_path": "specs/120-factory-extraction-stage/spec.md",
+      "status": "approved",
+      "implementation": "complete",
+      "governance": "high",
+      "owner": "bart",
+      "group": "",
+      "depends_on": [
+        "074-factory-ingestion",
+        "075-factory-workflow-engine",
+        "077-statecraft-factory-api",
+        "094-unified-artifact-store",
+        "110-statecraft-to-opc-factory-trigger",
+        "115-knowledge-extraction-pipeline"
+      ],
+      "impl_files": [],
+      "test_files": [],
+      "violations": []
+    },
+    {
+      "feature_id": "121-claim-provenance-enforcement",
+      "title": "Claim Provenance Enforcement",
+      "spec_path": "specs/121-claim-provenance-enforcement/spec.md",
+      "status": "approved",
+      "implementation": "complete",
+      "governance": "critical",
+      "owner": "bart",
+      "group": "",
+      "depends_on": [
+        "075-factory-workflow-engine",
+        "091-registry-enrichment",
+        "118-workflow-spec-traceability",
+        "120-factory-extraction-stage"
+      ],
+      "impl_files": [],
+      "test_files": [],
+      "violations": []
+    },
+    {
+      "feature_id": "122-stakeholder-doc-inversion",
+      "title": "Stakeholder-Doc Inversion and Stage CD Comparator",
+      "spec_path": "specs/122-stakeholder-doc-inversion/spec.md",
+      "status": "approved",
+      "implementation": "complete",
+      "governance": "critical",
+      "owner": "bart",
+      "group": "",
+      "depends_on": [
+        "075-factory-workflow-engine",
+        "087-unified-workspace-architecture",
+        "119-project-as-unit-of-governance",
+        "120-factory-extraction-stage",
+        "121-claim-provenance-enforcement"
+      ],
+      "impl_files": [],
+      "test_files": [],
+      "violations": []
+    },
+    {
+      "feature_id": "123-agent-catalog-org-rescope",
+      "title": "Agent Catalog Org-Rescope — Projects Consume, Org Governs",
+      "spec_path": "specs/123-agent-catalog-org-rescope/spec.md",
+      "status": "approved",
+      "implementation": "complete",
+      "governance": "high",
+      "owner": "bart",
+      "group": "",
+      "depends_on": [
+        "042-multi-provider-agent-registry",
+        "054-agent-frontmatter-schema",
+        "068-permission-runtime",
+        "075-factory-workflow-engine",
+        "087-unified-workspace-architecture",
+        "090-governance-non-optionality",
+        "098-governance-enforcement-stitching",
+        "108-factory-as-platform-feature",
+        "111-org-agent-catalog-sync",
+        "119-project-as-unit-of-governance",
+        "122-stakeholder-doc-inversion"
+      ],
+      "impl_files": [],
+      "test_files": [],
+      "violations": []
+    },
+    {
+      "feature_id": "124-opc-factory-run-platform-integration",
+      "title": "OPC Factory-Run Platform Integration",
+      "spec_path": "specs/124-opc-factory-run-platform-integration/spec.md",
+      "status": "approved",
+      "implementation": "complete",
+      "governance": "high",
+      "owner": "bart",
+      "group": "",
+      "depends_on": [
+        "087-unified-workspace-architecture",
+        "106-rauthy-native-oidc-and-membership",
+        "107-rauthy-client-redirect-convergence",
+        "108-factory-as-platform-feature",
+        "109-factory-pat-and-pubsub-sync",
+        "123-agent-catalog-org-rescope"
+      ],
+      "impl_files": [],
+      "test_files": [],
+      "violations": []
+    },
+    {
+      "feature_id": "125-schema-parity-walker-rebuild",
+      "title": "Schema-Parity Walker — Rebuild for Hand-Rolled Validators",
+      "spec_path": "specs/125-schema-parity-walker-rebuild/spec.md",
+      "status": "approved",
+      "implementation": "complete",
+      "governance": "medium",
+      "owner": "bart",
+      "group": "",
+      "depends_on": [
+        "120-factory-extraction-stage",
+        "121-claim-provenance-enforcement",
+        "122-stakeholder-doc-inversion"
+      ],
+      "impl_files": [],
+      "test_files": [],
+      "violations": []
+    },
+    {
+      "feature_id": "126-desktop-agent-picker-ui",
+      "title": "Desktop Agent Picker — Bindings vs Full Catalog",
+      "spec_path": "specs/126-desktop-agent-picker-ui/spec.md",
+      "status": "approved",
+      "implementation": "complete",
+      "governance": "low",
+      "owner": "bart",
+      "group": "",
+      "depends_on": [
+        "111-org-agent-catalog-sync",
+        "123-agent-catalog-org-rescope",
+        "124-opc-factory-run-platform-integration"
+      ],
+      "impl_files": [],
+      "test_files": [],
+      "violations": []
+    },
+    {
+      "feature_id": "127-spec-code-coupling-gate",
+      "title": "Spec/Code Coupling Workflow — CI job, make target, contributor flow",
+      "spec_path": "specs/127-spec-code-coupling-gate/spec.md",
+      "status": "approved",
+      "implementation": "complete",
+      "governance": "medium",
+      "owner": "bart",
+      "group": "",
+      "depends_on": [
+        "103-init-protocol-governed-reads",
+        "104-makefile-ci-parity-contract",
+        "118-workflow-spec-traceability",
+        "130-spec-coupling-primary-owner",
+        "133-amends-aware-coupling-gate"
+      ],
+      "impl_files": [],
+      "test_files": [],
+      "violations": []
+    },
+    {
+      "feature_id": "128-spec-lint-default-fail-on-warn",
+      "title": "spec-lint default to fail-on-warn — repo opts into the strict posture",
+      "spec_path": "specs/128-spec-lint-default-fail-on-warn/spec.md",
+      "status": "approved",
+      "implementation": "complete",
+      "governance": "low",
+      "owner": "bart",
+      "group": "",
+      "depends_on": [
+        "006-conformance-lint-mvp",
+        "104-makefile-ci-parity-contract"
+      ],
+      "impl_files": [],
+      "test_files": [],
+      "violations": []
+    },
+    {
+      "feature_id": "129-granular-package-oap-metadata",
+      "title": "Granular [package.metadata.oap] — file-level spec annotation via comment headers",
+      "spec_path": "specs/129-granular-package-oap-metadata/spec.md",
+      "status": "approved",
+      "implementation": "complete",
+      "governance": "medium",
+      "owner": "bart",
+      "group": "",
+      "depends_on": [
+        "101-codebase-index-mvp",
+        "118-workflow-spec-traceability"
+      ],
+      "impl_files": [],
+      "test_files": [],
+      "violations": []
+    },
+    {
+      "feature_id": "130-spec-coupling-primary-owner",
+      "title": "Spec Relationship Graph — eight first-class edges between specs and code",
+      "spec_path": "specs/130-spec-coupling-primary-owner/spec.md",
+      "status": "approved",
+      "implementation": "complete",
+      "governance": "low",
+      "owner": "bart",
+      "group": "",
+      "depends_on": [
+        "000-bootstrap-spec-system",
+        "001-spec-compiler-mvp",
+        "101-codebase-index-mvp"
+      ],
+      "impl_files": [],
+      "test_files": [],
+      "violations": []
+    },
+    {
+      "feature_id": "131-adversarial-prompt-refusal-policy",
+      "title": "CONST-005 — Adversarial-prompt refusal: spec/code coherence",
+      "spec_path": "specs/131-adversarial-prompt-refusal-policy/spec.md",
+      "status": "approved",
+      "implementation": "complete",
+      "governance": "medium",
+      "owner": "bart",
+      "group": "",
+      "depends_on": [
+        "047-governance-control-plane",
+        "127-spec-code-coupling-gate",
+        "130-spec-coupling-primary-owner"
+      ],
+      "impl_files": [],
+      "test_files": [],
+      "violations": []
+    },
+    {
+      "feature_id": "132-constitutional-invariant-freeze",
+      "title": "Constitutional invariant freeze — `unamendable` anchors and V-011",
+      "spec_path": "specs/132-constitutional-invariant-freeze/spec.md",
+      "status": "approved",
+      "implementation": "complete",
+      "governance": "medium",
+      "owner": "bart",
+      "group": "",
+      "depends_on": [
+        "000-bootstrap-spec-system",
+        "001-spec-compiler-mvp"
+      ],
+      "impl_files": [],
+      "test_files": [],
+      "violations": []
+    },
+    {
+      "feature_id": "133-amends-aware-coupling-gate",
+      "title": "Coupling Gate — authority derivation, satisfaction semantics, constraint evaluation",
+      "spec_path": "specs/133-amends-aware-coupling-gate/spec.md",
+      "status": "superseded",
+      "implementation": "complete",
+      "governance": "low",
+      "owner": "bart",
+      "group": "",
+      "depends_on": [
+        "101-codebase-index-mvp",
+        "130-spec-coupling-primary-owner"
+      ],
+      "impl_files": [],
+      "test_files": [],
+      "violations": []
+    },
+    {
+      "feature_id": "134-fast-local-ci-mode",
+      "title": "Fast Local CI Mode — Two-Mode Parity Contract",
+      "spec_path": "specs/134-fast-local-ci-mode/spec.md",
+      "status": "approved",
+      "implementation": "complete",
+      "governance": "low",
+      "owner": "bart",
+      "group": "",
+      "depends_on": [
+        "104-makefile-ci-parity-contract"
+      ],
+      "impl_files": [],
+      "test_files": [],
+      "violations": []
+    },
+    {
+      "feature_id": "135-fast-ci-as-default",
+      "title": "Fast CI as Default — Crates Workspace Convergence + Target Rename",
+      "spec_path": "specs/135-fast-ci-as-default/spec.md",
+      "status": "approved",
+      "implementation": "complete",
+      "governance": "low",
+      "owner": "bart",
+      "group": "",
+      "depends_on": [
+        "104-makefile-ci-parity-contract",
+        "134-fast-local-ci-mode",
+        "130-spec-coupling-primary-owner"
+      ],
+      "impl_files": [],
+      "test_files": [],
+      "violations": []
+    },
+    {
+      "feature_id": "136-tenant-hello-demo-service",
+      "title": "Tenant-hello — statecraft-deployable tenant reference service",
+      "spec_path": "specs/136-tenant-hello-demo-service/spec.md",
+      "status": "approved",
+      "implementation": "complete",
+      "governance": "low",
+      "owner": "bart",
+      "group": "",
+      "depends_on": [
+        "087-unified-workspace-architecture",
+        "078-platform-completion-plan"
+      ],
+      "impl_files": [],
+      "test_files": [],
+      "violations": []
+    },
+    {
+      "feature_id": "137-tenant-environment-access-gates",
+      "title": "Tenant environment access gates — passwordless OIDC via Rauthy",
+      "spec_path": "specs/137-tenant-environment-access-gates/spec.md",
+      "status": "approved",
+      "implementation": "in-progress",
+      "governance": "medium",
+      "owner": "bart",
+      "group": "",
+      "depends_on": [
+        "136-tenant-hello-demo-service",
+        "087-unified-workspace-architecture"
+      ],
+      "impl_files": [],
+      "test_files": [],
+      "violations": []
+    },
+    {
+      "feature_id": "138-statecraft-create-realised-scaffold",
+      "title": "Statecraft Create — realised scaffold subflow (amendment of 112)",
+      "spec_path": "specs/138-statecraft-create-realised-scaffold/spec.md",
+      "status": "approved",
+      "implementation": "complete",
+      "governance": "low",
+      "owner": "bart",
+      "group": "",
+      "depends_on": [
+        "112-factory-project-lifecycle",
+        "108-factory-as-platform-feature",
+        "109-factory-pat-and-pubsub-sync"
+      ],
+      "impl_files": [],
+      "test_files": [],
+      "violations": []
+    },
+    {
+      "feature_id": "139-factory-artifact-substrate",
+      "title": "Factory artifact substrate — verbatim mirror, per-org override, unified Agent/Skill/Adapter/Contract storage",
+      "spec_path": "specs/139-factory-artifact-substrate/spec.md",
+      "status": "approved",
+      "implementation": "complete",
+      "governance": "high",
+      "owner": "bart",
+      "group": "",
+      "depends_on": [
+        "082-artifact-integrity-platform-hardening",
+        "094-unified-artifact-store",
+        "108-factory-as-platform-feature",
+        "111-org-agent-catalog-sync",
+        "112-factory-project-lifecycle",
+        "123-agent-catalog-org-rescope",
+        "124-opc-factory-run-platform-integration"
+      ],
+      "impl_files": [],
+      "test_files": [],
+      "violations": []
+    },
+    {
+      "feature_id": "140-acme-vue-node-scaffold-source-id-cutover",
+      "title": "acme-vue-node manifest cutover to scaffold_source_id (amendment of 139)",
+      "spec_path": "specs/140-acme-vue-node-scaffold-source-id-cutover/spec.md",
+      "status": "approved",
+      "implementation": "complete",
+      "governance": "low",
+      "owner": "bart",
+      "group": "",
+      "depends_on": [
+        "112-factory-project-lifecycle",
+        "138-statecraft-create-realised-scaffold",
+        "139-factory-artifact-substrate"
+      ],
+      "impl_files": [],
+      "test_files": [],
+      "violations": []
+    },
+    {
+      "feature_id": "141-acme-vue-node-source-id-template-name-alignment",
+      "title": "Align acme-vue-node scaffold_source_id with template.json::templateName",
+      "spec_path": "specs/141-acme-vue-node-source-id-template-name-alignment/spec.md",
+      "status": "approved",
+      "implementation": "complete",
+      "governance": "low",
+      "owner": "bart",
+      "group": "",
+      "depends_on": [
+        "140-acme-vue-node-scaffold-source-id-cutover"
+      ],
+      "impl_files": [],
+      "test_files": [],
+      "violations": []
+    },
+    {
+      "feature_id": "142-factory-id-columns-text-cutover",
+      "title": "Align factory adapter/process ID column types with substrate-projected synthetic IDs",
+      "spec_path": "specs/142-factory-id-columns-text-cutover/spec.md",
+      "status": "approved",
+      "implementation": "complete",
+      "governance": "low",
+      "owner": "bart",
+      "group": "",
+      "depends_on": [
+        "139-factory-artifact-substrate"
+      ],
+      "impl_files": [],
+      "test_files": [],
+      "violations": []
+    },
+    {
+      "feature_id": "143-presigned-upload-public-endpoint",
+      "title": "Presigned upload public endpoint — browser-reachable object store for direct uploads",
+      "spec_path": "specs/143-presigned-upload-public-endpoint/spec.md",
+      "status": "draft",
+      "implementation": "in-progress",
+      "governance": "medium",
+      "owner": "bart",
+      "group": "",
+      "depends_on": [
+        "087-unified-workspace-architecture",
+        "115-knowledge-extraction-pipeline"
+      ],
+      "impl_files": [],
+      "test_files": [],
+      "violations": []
+    },
+    {
+      "feature_id": "144-hiqlite-default-features",
+      "title": "Hiqlite default-features hygiene — stop unifying upstream defaults across the crates workspace",
+      "spec_path": "specs/144-hiqlite-default-features/spec.md",
+      "status": "approved",
+      "implementation": "complete",
+      "governance": "low",
+      "owner": "bart",
+      "group": "",
+      "depends_on": [
+        "073-axiomregent-unification",
+        "052-state-persistence"
+      ],
+      "impl_files": [],
+      "test_files": [],
+      "violations": []
+    },
+    {
+      "feature_id": "145-deployd-durability",
+      "title": "deployd-api durability chain — PVC + scrub-narrowing + Hiqlite backup/s3 + restore-on-startup",
+      "spec_path": "specs/145-deployd-durability/spec.md",
+      "status": "approved",
+      "implementation": "complete",
+      "governance": "medium",
+      "owner": "bart",
+      "group": "",
+      "depends_on": [
+        "073-axiomregent-unification",
+        "086-open-source-launch",
+        "144-hiqlite-default-features"
+      ],
+      "impl_files": [],
+      "test_files": [],
+      "violations": []
+    },
+    {
+      "feature_id": "146-deployd-api-memory-hardening",
+      "title": "deployd-api memory hardening — populate cgroup limits/requests; document Rust runtime N/A legs",
+      "spec_path": "specs/146-deployd-api-memory-hardening/spec.md",
+      "status": "approved",
+      "implementation": "complete",
+      "governance": "low",
+      "owner": "bart",
+      "group": "",
+      "depends_on": [
+        "073-axiomregent-unification",
+        "143-presigned-upload-public-endpoint"
+      ],
+      "impl_files": [],
+      "test_files": [],
+      "violations": []
+    },
+    {
+      "feature_id": "147-spec-kind-grammar",
+      "title": "Spec-kind grammar: typed kinds, shape and category dimensions, governance-lifecycle fields, and primary-owner promotion",
+      "spec_path": "specs/147-spec-kind-grammar/spec.md",
+      "status": "approved",
+      "implementation": "complete",
+      "governance": "high",
+      "owner": "open-agentic-platform",
+      "group": "",
+      "depends_on": [],
+      "impl_files": [],
+      "test_files": [],
+      "violations": []
+    },
+    {
+      "feature_id": "148-auth-driver-registry",
+      "title": "Auth driver registry — pluggable identity-provider integration contract",
+      "spec_path": "specs/148-auth-driver-registry/spec.md",
+      "status": "approved",
+      "implementation": "complete",
+      "governance": "medium",
+      "owner": "open-agentic-platform",
+      "group": "",
+      "depends_on": [
+        "147-spec-kind-grammar"
+      ],
+      "impl_files": [],
+      "test_files": [],
+      "violations": []
+    },
+    {
+      "feature_id": "149-saml-auth-driver",
+      "title": "SAML auth driver capability — IdP integration for SAML 2.0 tenants",
+      "spec_path": "specs/149-saml-auth-driver/spec.md",
+      "status": "approved",
+      "implementation": "complete",
+      "governance": "medium",
+      "owner": "open-agentic-platform",
+      "group": "",
+      "depends_on": [],
+      "impl_files": [],
+      "test_files": [],
+      "violations": []
+    },
+    {
+      "feature_id": "150-example-tenant-profile",
+      "title": "Example tenant profile — proving-ground tenant for spec-kind grammar",
+      "spec_path": "specs/150-example-tenant-profile/spec.md",
+      "status": "approved",
+      "implementation": "complete",
+      "governance": "low",
+      "owner": "open-agentic-platform",
+      "group": "",
+      "depends_on": [
+        "147-spec-kind-grammar"
+      ],
+      "impl_files": [],
+      "test_files": [],
+      "violations": []
+    },
+    {
+      "feature_id": "151-declarative-cluster-reconciliation",
+      "title": "Declarative cluster reconciliation — GitOps for cluster-side state via Flux v2",
+      "spec_path": "specs/151-declarative-cluster-reconciliation/spec.md",
+      "status": "approved",
+      "implementation": "pending",
+      "governance": "high",
+      "owner": "bart",
+      "group": "",
+      "depends_on": [
+        "087-unified-workspace-architecture",
+        "143-presigned-upload-public-endpoint"
+      ],
+      "impl_files": [],
+      "test_files": [],
+      "violations": []
+    },
+    {
+      "feature_id": "152-path-co-authority",
+      "title": "Path Co-Authority — named-anchor sectioning and empty-authority-by-rule",
+      "spec_path": "specs/152-path-co-authority/spec.md",
+      "status": "approved",
+      "implementation": "complete",
+      "governance": "low",
+      "owner": "bart",
+      "group": "",
+      "depends_on": [
+        "130-spec-coupling-primary-owner",
+        "133-amends-aware-coupling-gate"
+      ],
+      "impl_files": [],
+      "test_files": [],
+      "violations": []
+    },
+    {
+      "feature_id": "153-invariant-freeze-additive-evolution",
+      "title": "Invariant-freeze semantics — backward-compatibility framing",
+      "spec_path": "specs/153-invariant-freeze-additive-evolution/spec.md",
+      "status": "approved",
+      "implementation": "complete",
+      "governance": "low",
+      "owner": "bart",
+      "group": "",
+      "depends_on": [
+        "130-spec-coupling-primary-owner"
+      ],
+      "impl_files": [],
+      "test_files": [],
+      "violations": []
+    },
+    {
+      "feature_id": "154-logical-unit-ownership-grammar",
+      "title": "Logical-unit ownership grammar — value typing for relationship-graph fields",
+      "spec_path": "specs/154-logical-unit-ownership-grammar/spec.md",
+      "status": "approved",
+      "implementation": "complete",
+      "governance": "medium",
+      "owner": "bart",
+      "group": "",
+      "depends_on": [
+        "130-spec-coupling-primary-owner",
+        "153-invariant-freeze-additive-evolution"
+      ],
+      "impl_files": [],
+      "test_files": [],
+      "violations": []
+    },
+    {
+      "feature_id": "155-logical-unit-resolution-semantics",
+      "title": "Logical-unit resolution semantics — precision fixes surfaced by Segment 3 design",
+      "spec_path": "specs/155-logical-unit-resolution-semantics/spec.md",
+      "status": "approved",
+      "implementation": "complete",
+      "governance": "low",
+      "owner": "bart",
+      "group": "",
+      "depends_on": [
+        "154-logical-unit-ownership-grammar"
+      ],
+      "impl_files": [],
+      "test_files": [],
+      "violations": []
+    },
+    {
+      "feature_id": "156-references-edge-provenance-grammar",
+      "title": "References-edge provenance grammar — typed external pointers as a sibling field",
+      "spec_path": "specs/156-references-edge-provenance-grammar/spec.md",
+      "status": "approved",
+      "implementation": "complete",
+      "governance": "low",
+      "owner": "bart",
+      "group": "",
+      "depends_on": [
+        "154-logical-unit-ownership-grammar"
+      ],
+      "impl_files": [],
+      "test_files": [],
+      "violations": []
+    },
+    {
+      "feature_id": "157-opc-session-model",
+      "title": "OPC session model — multi-session-per-project-path, JSONL-authoritative",
+      "spec_path": "specs/157-opc-session-model/spec.md",
+      "status": "approved",
+      "implementation": "complete",
+      "governance": "low",
+      "owner": "bart",
+      "group": "",
+      "depends_on": [
+        "045-claude-code-sdk-bridge"
+      ],
+      "impl_files": [],
+      "test_files": [],
+      "violations": []
+    },
+    {
+      "feature_id": "158-workflow-ref-sha-pinning-lint",
+      "title": "Workflow-ref SHA-pinning lint — promote convention to contract (amends 116)",
+      "spec_path": "specs/158-workflow-ref-sha-pinning-lint/spec.md",
+      "status": "approved",
+      "implementation": "complete",
+      "governance": "low",
+      "owner": "bart",
+      "group": "",
+      "depends_on": [
+        "116-supply-chain-policy-gates",
+        "104-makefile-ci-parity-contract"
+      ],
+      "impl_files": [],
+      "test_files": [],
+      "violations": []
+    },
+    {
+      "feature_id": "159-v004-lint-fixture-exemption",
+      "title": "V-004 carve-out for lint test fixtures (amends 000)",
+      "spec_path": "specs/159-v004-lint-fixture-exemption/spec.md",
+      "status": "approved",
+      "implementation": "complete",
+      "governance": "low",
+      "owner": "bart",
+      "group": "",
+      "depends_on": [
+        "000-bootstrap-spec-system",
+        "001-spec-compiler-mvp",
+        "158-workflow-ref-sha-pinning-lint"
+      ],
+      "impl_files": [],
+      "test_files": [],
+      "violations": []
+    },
+    {
+      "feature_id": "160-factory-adapter-statecraft-relocation",
+      "title": "Factory / adapter relocation into statecraft",
+      "spec_path": "specs/160-factory-adapter-statecraft-relocation/spec.md",
+      "status": "approved",
+      "implementation": "complete",
+      "governance": "medium",
+      "owner": "bart",
+      "group": "",
+      "depends_on": [
+        "074-factory-ingestion",
+        "075-factory-workflow-engine",
+        "077-statecraft-factory-api",
+        "108-factory-as-platform-feature"
+      ],
+      "impl_files": [],
+      "test_files": [],
+      "violations": []
+    },
+    {
+      "feature_id": "161-knowledge-requirements-provenance-emission",
+      "title": "Knowledge → Requirements provenance: emission contract and Requirements-view rendering",
+      "spec_path": "specs/161-knowledge-requirements-provenance-emission/spec.md",
+      "status": "approved",
+      "implementation": "complete",
+      "governance": "medium",
+      "owner": "bart",
+      "group": "",
+      "depends_on": [
+        "154-logical-unit-ownership-grammar",
+        "156-references-edge-provenance-grammar",
+        "120-factory-extraction-stage"
+      ],
+      "impl_files": [],
+      "test_files": [],
+      "violations": []
+    },
+    {
+      "feature_id": "162-sandbox-execution-contract",
+      "title": "Sandbox execution contract — ephemeral isolation invariants for factory-engine adapter codegen (ASI05)",
+      "spec_path": "specs/162-sandbox-execution-contract/spec.md",
+      "status": "approved",
+      "implementation": "complete",
+      "governance": "high",
+      "owner": "bart",
+      "group": "",
+      "depends_on": [
+        "075-factory-workflow-engine",
+        "102-governed-excellence",
+        "108-factory-as-platform-feature"
+      ],
+      "impl_files": [],
+      "test_files": [],
+      "violations": []
+    },
+    {
+      "feature_id": "163-statecraft-requirements-view",
+      "title": "Spec-spine Requirements view in statecraft",
+      "spec_path": "specs/163-statecraft-requirements-view/spec.md",
+      "status": "approved",
+      "implementation": "complete",
+      "governance": "medium",
+      "owner": "bart",
+      "group": "",
+      "depends_on": [
+        "087-unified-workspace-architecture",
+        "103-init-protocol-governed-reads",
+        "130-spec-coupling-primary-owner",
+        "147-spec-kind-grammar",
+        "152-path-co-authority",
+        "154-logical-unit-ownership-grammar",
+        "156-references-edge-provenance-grammar",
+        "161-knowledge-requirements-provenance-emission"
+      ],
+      "impl_files": [],
+      "test_files": [],
+      "violations": []
+    },
+    {
+      "feature_id": "164-statecraft-development-lifecycle-board",
+      "title": "Pipelines → Development rename, lifecycle-state board over spec-spine states",
+      "spec_path": "specs/164-statecraft-development-lifecycle-board/spec.md",
+      "status": "approved",
+      "implementation": "complete",
+      "governance": "medium",
+      "owner": "bart",
+      "group": "",
+      "depends_on": [
+        "075-factory-workflow-engine",
+        "077-statecraft-factory-api",
+        "102-governed-excellence",
+        "127-spec-code-coupling-gate",
+        "133-amends-aware-coupling-gate",
+        "147-spec-kind-grammar",
+        "163-statecraft-requirements-view"
+      ],
+      "impl_files": [],
+      "test_files": [],
+      "violations": []
+    },
+    {
+      "feature_id": "165-opc-decomposition-pipeline",
+      "title": "OPC decomposition pipeline — reverse-engineering and born-with spec spawning",
+      "spec_path": "specs/165-opc-decomposition-pipeline/spec.md",
+      "status": "approved",
+      "implementation": "complete",
+      "governance": "high",
+      "owner": "bart",
+      "group": "",
+      "depends_on": [
+        "032-opc-inspect-governance-wiring-mvp",
+        "073-axiomregent-unification",
+        "095-checkpoint-branch-of-thought",
+        "115-knowledge-extraction-pipeline",
+        "120-factory-extraction-stage",
+        "147-spec-kind-grammar",
+        "154-logical-unit-ownership-grammar",
+        "156-references-edge-provenance-grammar",
+        "161-knowledge-requirements-provenance-emission"
+      ],
+      "impl_files": [],
+      "test_files": [],
+      "violations": []
+    },
+    {
+      "feature_id": "166-opc-stop-hook-gate-chain",
+      "title": "OPC Stop-hook gate chain — conversation-time drift gates",
+      "spec_path": "specs/166-opc-stop-hook-gate-chain/spec.md",
+      "status": "approved",
+      "implementation": "complete",
+      "governance": "medium",
+      "owner": "bart",
+      "group": "",
+      "depends_on": [
+        "101-codebase-index-mvp",
+        "103-init-protocol-governed-reads",
+        "127-spec-code-coupling-gate",
+        "128-spec-lint-default-fail-on-warn",
+        "131-adversarial-prompt-refusal-policy",
+        "133-amends-aware-coupling-gate",
+        "134-fast-local-ci-mode",
+        "135-fast-ci-as-default"
+      ],
+      "impl_files": [],
+      "test_files": [],
+      "violations": []
+    },
+    {
+      "feature_id": "167-born-with-spec-spine-kernel",
+      "title": "Born-with spec-spine kernel emission — every produced project ships with a spine",
+      "spec_path": "specs/167-born-with-spec-spine-kernel/spec.md",
+      "status": "approved",
+      "implementation": "in-progress",
+      "governance": "high",
+      "owner": "bart",
+      "group": "",
+      "depends_on": [
+        "000-bootstrap-spec-system",
+        "001-spec-compiler-mvp",
+        "075-factory-workflow-engine",
+        "120-factory-extraction-stage",
+        "127-spec-code-coupling-gate",
+        "147-spec-kind-grammar",
+        "165-opc-decomposition-pipeline"
+      ],
+      "impl_files": [],
+      "test_files": [],
+      "violations": []
+    },
+    {
+      "feature_id": "168-per-project-governance-certificate",
+      "title": "Per-project governance certificate emission and tenant-side verifier",
+      "spec_path": "specs/168-per-project-governance-certificate/spec.md",
+      "status": "approved",
+      "implementation": "complete",
+      "governance": "medium",
+      "owner": "bart",
+      "group": "",
+      "depends_on": [
+        "075-factory-workflow-engine",
+        "102-governed-excellence",
+        "167-born-with-spec-spine-kernel"
+      ],
+      "impl_files": [],
+      "test_files": [],
+      "violations": []
+    },
+    {
+      "feature_id": "169-tool-schema-strictness",
+      "title": "Per-tool JSON-Schema strictness enforcement — reject permissive ToolDef schemas",
+      "spec_path": "specs/169-tool-schema-strictness/spec.md",
+      "status": "approved",
+      "implementation": "complete",
+      "governance": "medium",
+      "owner": "bart",
+      "group": "",
+      "depends_on": [
+        "036-safety-tier-governance",
+        "049-permission-system",
+        "067-tool-definition-registry",
+        "068-permission-runtime"
+      ],
+      "impl_files": [],
+      "test_files": [],
+      "violations": []
+    },
+    {
+      "feature_id": "170-signed-inter-stage-manifests",
+      "title": "Signed inter-stage manifests in factory-engine — cryptographic identity between stages (ASI07)",
+      "spec_path": "specs/170-signed-inter-stage-manifests/spec.md",
+      "status": "approved",
+      "implementation": "complete",
+      "governance": "medium",
+      "owner": "bart",
+      "group": "",
+      "depends_on": [
+        "035-agent-governed-execution",
+        "074-factory-ingestion",
+        "075-factory-workflow-engine",
+        "102-governed-excellence"
+      ],
+      "impl_files": [],
+      "test_files": [],
+      "violations": []
+    },
+    {
+      "feature_id": "171-opc-structural-diff-plan-ui",
+      "title": "Deterministic structural-diff plan UI in OPC — anti-anthropomorphic-trust rendering (ASI09)",
+      "spec_path": "specs/171-opc-structural-diff-plan-ui/spec.md",
+      "status": "approved",
+      "implementation": "complete",
+      "governance": "medium",
+      "owner": "bart",
+      "group": "",
+      "depends_on": [
+        "032-opc-inspect-governance-wiring-mvp",
+        "076-factory-desktop-panel",
+        "102-governed-excellence",
+        "126-desktop-agent-picker-ui"
+      ],
+      "impl_files": [],
+      "test_files": [],
+      "violations": []
+    },
+    {
+      "feature_id": "172-opc-live-agent-session-introspection",
+      "title": "Live agent-session introspection in OPC — connected-agent visibility and force-disconnect (ASI10)",
+      "spec_path": "specs/172-opc-live-agent-session-introspection/spec.md",
+      "status": "approved",
+      "implementation": "complete",
+      "governance": "medium",
+      "owner": "bart",
+      "group": "",
+      "depends_on": [
+        "032-opc-inspect-governance-wiring-mvp",
+        "043-agent-organizer",
+        "052-state-persistence",
+        "057-notification-system",
+        "067-tool-definition-registry",
+        "157-opc-session-model"
+      ],
+      "impl_files": [],
+      "test_files": [],
+      "violations": []
+    },
+    {
+      "feature_id": "173-opc-multi-session-orchestrator-binding",
+      "title": "OPC multi-session-by-project-path — orchestrator binding (formalisation)",
+      "spec_path": "specs/173-opc-multi-session-orchestrator-binding/spec.md",
+      "status": "approved",
+      "implementation": "complete",
+      "governance": "low",
+      "owner": "bart",
+      "group": "",
+      "depends_on": [
+        "052-state-persistence",
+        "095-checkpoint-branch-of-thought",
+        "157-opc-session-model"
+      ],
+      "impl_files": [],
+      "test_files": [],
+      "violations": []
+    },
+    {
+      "feature_id": "174-codification-gate",
+      "title": "Codification gate — every CRITICAL/HIGH finding writes itself into the spec spine before closure",
+      "spec_path": "specs/174-codification-gate/spec.md",
+      "status": "approved",
+      "implementation": "complete",
+      "governance": "medium",
+      "owner": "bart",
+      "group": "",
+      "depends_on": [
+        "033-axiomregent-activation",
+        "047-governance-control-plane",
+        "073-axiomregent-unification",
+        "121-claim-provenance-enforcement",
+        "127-spec-code-coupling-gate",
+        "166-opc-stop-hook-gate-chain"
+      ],
+      "impl_files": [],
+      "test_files": [],
+      "violations": []
+    },
+    {
+      "feature_id": "175-statecraft-project-dashboard-observability",
+      "title": "Statecraft project dashboard — observability refinement of `_index`",
+      "spec_path": "specs/175-statecraft-project-dashboard-observability/spec.md",
+      "status": "approved",
+      "implementation": "complete",
+      "governance": "medium",
+      "owner": "bart",
+      "group": "",
+      "depends_on": [
+        "087-unified-workspace-architecture",
+        "102-governed-excellence",
+        "115-knowledge-extraction-pipeline",
+        "124-opc-factory-run-platform-integration",
+        "127-spec-code-coupling-gate",
+        "147-spec-kind-grammar",
+        "163-statecraft-requirements-view",
+        "164-statecraft-development-lifecycle-board",
+        "168-per-project-governance-certificate"
+      ],
+      "impl_files": [],
+      "test_files": [],
+      "violations": []
+    },
+    {
+      "feature_id": "176-amends-aware-section-satisfaction-parity",
+      "title": "Amends-aware satisfaction parity between whole-file and section-scoped authority checks",
+      "spec_path": "specs/176-amends-aware-section-satisfaction-parity/spec.md",
+      "status": "superseded",
+      "implementation": "complete",
+      "governance": "low",
+      "owner": "bart",
+      "group": "",
+      "depends_on": [
+        "133-amends-aware-coupling-gate",
+        "152-path-co-authority"
+      ],
+      "impl_files": [],
+      "test_files": [],
+      "violations": []
+    },
+    {
+      "feature_id": "177-ci-orchestrator-pr-gate",
+      "title": "CI orchestrator — collapse PR-gate workflow fleet behind a single ci-gate",
+      "spec_path": "specs/177-ci-orchestrator-pr-gate/spec.md",
+      "status": "approved",
+      "implementation": "complete",
+      "governance": "medium",
+      "owner": "bart",
+      "group": "",
+      "depends_on": [
+        "104-makefile-ci-parity-contract",
+        "116-supply-chain-policy-gates",
+        "118-workflow-spec-traceability",
+        "127-spec-code-coupling-gate",
+        "135-fast-ci-as-default",
+        "152-path-co-authority",
+        "158-workflow-ref-sha-pinning-lint"
+      ],
+      "impl_files": [],
+      "test_files": [],
+      "violations": []
+    },
+    {
+      "feature_id": "178-opc-directory-rename",
+      "title": "Rename product/apps/desktop → product/apps/opc",
+      "spec_path": "specs/178-opc-directory-rename/spec.md",
+      "status": "approved",
+      "implementation": "complete",
+      "governance": "low",
+      "owner": "open-agentic-platform",
+      "group": "",
+      "depends_on": [],
+      "impl_files": [],
+      "test_files": [],
+      "violations": []
+    },
+    {
+      "feature_id": "179-domain-frontmatter-field",
+      "title": "Domain frontmatter field — tract authority lens over the unified spec spine",
+      "spec_path": "specs/179-domain-frontmatter-field/spec.md",
+      "status": "approved",
+      "implementation": "complete",
+      "governance": "low",
+      "owner": "bart",
+      "group": "",
+      "depends_on": [
+        "000-bootstrap-spec-system",
+        "001-spec-compiler-mvp",
+        "002-registry-consumer-mvp",
+        "006-conformance-lint-mvp",
+        "147-spec-kind-grammar"
+      ],
+      "impl_files": [],
+      "test_files": [],
+      "violations": []
+    },
+    {
+      "feature_id": "180-opc-shell-codification",
+      "title": "OPC shell codification — broad authority on the un-bound desktop shell, narrow Tier 1 invariants on the tab/IPC seam",
+      "spec_path": "specs/180-opc-shell-codification/spec.md",
+      "status": "approved",
+      "implementation": "complete",
+      "governance": "medium",
+      "owner": "bart",
+      "group": "",
+      "depends_on": [
+        "032-opc-inspect-governance-wiring-mvp",
+        "132-constitutional-invariant-freeze",
+        "133-amends-aware-coupling-gate",
+        "147-spec-kind-grammar",
+        "152-path-co-authority",
+        "153-invariant-freeze-additive-evolution",
+        "154-logical-unit-ownership-grammar",
+        "156-references-edge-provenance-grammar",
+        "166-opc-stop-hook-gate-chain",
+        "172-opc-live-agent-session-introspection",
+        "174-codification-gate",
+        "177-ci-orchestrator-pr-gate"
+      ],
+      "impl_files": [],
+      "test_files": [],
+      "violations": []
+    },
+    {
+      "feature_id": "181-registry-consumer-unit-grammar-authority",
+      "title": "registry-consumer authority resolver — unit-grammar parity with spec 154",
+      "spec_path": "specs/181-registry-consumer-unit-grammar-authority/spec.md",
+      "status": "superseded",
+      "implementation": "complete",
+      "governance": "low",
+      "owner": "bart",
+      "group": "",
+      "depends_on": [
+        "002-registry-consumer-mvp",
+        "130-spec-coupling-primary-owner",
+        "152-path-co-authority",
+        "154-logical-unit-ownership-grammar",
+        "155-logical-unit-resolution-semantics",
+        "180-opc-shell-codification"
+      ],
+      "impl_files": [],
+      "test_files": [],
+      "violations": []
+    },
+    {
+      "feature_id": "182-claude-skills-migration",
+      "title": "Migrate .claude/commands/ to .claude/skills/ (modern Claude Code surface)",
+      "spec_path": "specs/182-claude-skills-migration/spec.md",
+      "status": "approved",
+      "implementation": "complete",
+      "governance": "low",
+      "owner": "bart",
+      "group": "",
+      "depends_on": [],
+      "impl_files": [],
+      "test_files": [],
+      "violations": []
+    },
+    {
+      "feature_id": "183-opc-boot-precondition-gate",
+      "title": "OPC boot precondition gate — sidecar liveness + materialised org session, with precondition-loss restore",
+      "spec_path": "specs/183-opc-boot-precondition-gate/spec.md",
+      "status": "approved",
+      "implementation": "complete",
+      "governance": "medium",
+      "owner": "bart",
+      "group": "",
+      "depends_on": [
+        "032-opc-inspect-governance-wiring-mvp",
+        "073-axiomregent-unification",
+        "087-unified-workspace-architecture",
+        "106-rauthy-native-oidc-and-membership",
+        "112-factory-project-lifecycle",
+        "133-amends-aware-coupling-gate",
+        "147-spec-kind-grammar",
+        "180-opc-shell-codification"
+      ],
+      "impl_files": [],
+      "test_files": [],
+      "violations": []
+    },
+    {
+      "feature_id": "184-claude-shared-config-governance",
+      "title": "Claude Code shared config governance — .mcp.json and .claude/settings.json as hashed inputs",
+      "spec_path": "specs/184-claude-shared-config-governance/spec.md",
+      "status": "approved",
+      "implementation": "complete",
+      "governance": "low",
+      "owner": "bart",
+      "group": "",
+      "depends_on": [],
+      "impl_files": [],
+      "test_files": [],
+      "violations": []
+    },
+    {
+      "feature_id": "185-sandbox-local-container-backend",
+      "title": "Local-container sandbox backend — rootless Podman / Docker via bollard (companion to spec 162 ASI05)",
+      "spec_path": "specs/185-sandbox-local-container-backend/spec.md",
+      "status": "approved",
+      "implementation": "complete",
+      "governance": "medium",
+      "owner": "bart",
+      "group": "",
+      "depends_on": [
+        "162-sandbox-execution-contract",
+        "075-factory-workflow-engine",
+        "102-governed-excellence"
+      ],
+      "impl_files": [],
+      "test_files": [],
+      "violations": []
+    },
+    {
+      "feature_id": "186-sandbox-k8s-backend",
+      "title": "K8s sandbox backend — kube-rs + PodSecurity + RuntimeClass selection (companion to spec 162 ASI05)",
+      "spec_path": "specs/186-sandbox-k8s-backend/spec.md",
+      "status": "approved",
+      "implementation": "complete",
+      "governance": "medium",
+      "owner": "bart",
+      "group": "",
+      "depends_on": [
+        "162-sandbox-execution-contract",
+        "075-factory-workflow-engine",
+        "102-governed-excellence"
+      ],
+      "impl_files": [],
+      "test_files": [],
+      "violations": []
+    },
+    {
+      "feature_id": "187-opc-e2e-test-harness",
+      "title": "OPC end-to-end test harness — built-binary driver, mock-statecraft, process-tree introspection",
+      "spec_path": "specs/187-opc-e2e-test-harness/spec.md",
+      "status": "approved",
+      "implementation": "in-progress",
+      "governance": "medium",
+      "owner": "bart",
+      "group": "",
+      "depends_on": [
+        "032-opc-inspect-governance-wiring-mvp",
+        "073-axiomregent-unification",
+        "087-unified-workspace-architecture",
+        "134-fast-local-ci-mode",
+        "147-spec-kind-grammar",
+        "177-ci-orchestrator-pr-gate",
+        "183-opc-boot-precondition-gate"
+      ],
+      "impl_files": [],
+      "test_files": [],
+      "violations": []
+    },
+    {
+      "feature_id": "188-derived-index-merge-serialization",
+      "title": "Derived-index merge serialization — merge driver + merge queue + narrow config-hash gate (broad index demoted to best-effort cache)",
+      "spec_path": "specs/188-derived-index-merge-serialization/spec.md",
+      "status": "approved",
+      "implementation": "complete",
+      "governance": "medium",
+      "owner": "bart",
+      "group": "",
+      "depends_on": [],
+      "impl_files": [],
+      "test_files": [],
+      "violations": []
+    },
+    {
+      "feature_id": "189-duplex-envelope-version-parity",
+      "title": "Duplex envelope schema-version parity — a cross-language tripwire for ENVELOPE_SCHEMA_VERSION",
+      "spec_path": "specs/189-duplex-envelope-version-parity/spec.md",
+      "status": "approved",
+      "implementation": "complete",
+      "governance": "low",
+      "owner": "bart",
+      "group": "",
+      "depends_on": [
+        "087-unified-workspace-architecture",
+        "119-project-as-unit-of-governance",
+        "120-factory-extraction-stage",
+        "125-schema-parity-walker-rebuild",
+        "183-opc-boot-precondition-gate"
+      ],
+      "impl_files": [],
+      "test_files": [],
+      "violations": []
+    },
+    {
+      "feature_id": "190-ci-desktop-route-path-fix",
+      "title": "Fix ci.yml desktop paths-filter stranded by the spec-178 product/apps rename",
+      "spec_path": "specs/190-ci-desktop-route-path-fix/spec.md",
+      "status": "approved",
+      "implementation": "complete",
+      "governance": "low",
+      "owner": "bart",
+      "group": "",
+      "depends_on": [
+        "177-ci-orchestrator-pr-gate",
+        "178-opc-directory-rename"
+      ],
+      "impl_files": [],
+      "test_files": [],
+      "violations": []
+    },
+    {
+      "feature_id": "191-schema-parity-ci-job",
+      "title": "Wire ci-schema-parity as an enforcing CI job (bun runtime)",
+      "spec_path": "specs/191-schema-parity-ci-job/spec.md",
+      "status": "approved",
+      "implementation": "complete",
+      "governance": "low",
+      "owner": "bart",
+      "group": "",
+      "depends_on": [
+        "104-makefile-ci-parity-contract",
+        "125-schema-parity-walker-rebuild",
+        "158-workflow-ref-sha-pinning-lint",
+        "177-ci-orchestrator-pr-gate",
+        "189-duplex-envelope-version-parity"
+      ],
+      "impl_files": [],
+      "test_files": [],
+      "violations": []
+    },
+    {
+      "feature_id": "192-decomposition-embedding-cache",
+      "title": "Decomposition embedding cache — content-addressed cross-run reuse for stage-3 clustering",
+      "spec_path": "specs/192-decomposition-embedding-cache/spec.md",
+      "status": "approved",
+      "implementation": "complete",
+      "governance": "low",
+      "owner": "bart",
+      "group": "",
+      "depends_on": [
+        "165-opc-decomposition-pipeline"
+      ],
+      "impl_files": [],
+      "test_files": [],
+      "violations": []
+    },
+    {
+      "feature_id": "193-paired-release-cadence",
+      "title": "Paired release cadence + version-consistency guard (amends 037, 086, 117)",
+      "spec_path": "specs/193-paired-release-cadence/spec.md",
+      "status": "approved",
+      "implementation": "complete",
+      "governance": "medium",
+      "owner": "bart",
+      "group": "",
+      "depends_on": [
+        "037-cross-platform-axiomregent",
+        "086-open-source-launch",
+        "117-release-artifact-attestations",
+        "116-supply-chain-policy-gates",
+        "158-workflow-ref-sha-pinning-lint"
+      ],
+      "impl_files": [],
+      "test_files": [],
+      "violations": []
+    },
+    {
+      "feature_id": "194-release-publish-boundary-guard",
+      "title": "Publish-boundary guard — automation mutates draft releases only (resolves 193 §7)",
+      "spec_path": "specs/194-release-publish-boundary-guard/spec.md",
+      "status": "approved",
+      "implementation": "complete",
+      "governance": "medium",
+      "owner": "bart",
+      "group": "",
+      "depends_on": [
+        "193-paired-release-cadence",
+        "086-open-source-launch",
+        "117-release-artifact-attestations",
+        "037-cross-platform-axiomregent"
+      ],
+      "impl_files": [],
+      "test_files": [],
+      "violations": []
+    },
+    {
+      "feature_id": "195-release-tools-dispatch-build-ref",
+      "title": "Release Tools dispatch build-ref — build from a commit, never the (absent) draft tag",
+      "spec_path": "specs/195-release-tools-dispatch-build-ref/spec.md",
+      "status": "approved",
+      "implementation": "complete",
+      "governance": "medium",
+      "owner": "bart",
+      "group": "",
+      "depends_on": [
+        "086-open-source-launch",
+        "117-release-artifact-attestations",
+        "194-release-publish-boundary-guard"
+      ],
+      "impl_files": [],
+      "test_files": [],
+      "violations": []
+    },
+    {
+      "feature_id": "196-platform-metrics-stack",
+      "title": "Platform metrics stack — Prometheus + Grafana for the platform control plane",
+      "spec_path": "specs/196-platform-metrics-stack/spec.md",
+      "status": "draft",
+      "implementation": "complete",
+      "governance": "medium",
+      "owner": "bart",
+      "group": "",
+      "depends_on": [
+        "106-rauthy-native-oidc-and-membership",
+        "151-declarative-cluster-reconciliation",
+        "078-platform-completion-plan"
+      ],
+      "impl_files": [],
+      "test_files": [],
+      "violations": []
+    },
+    {
+      "feature_id": "197-factory-contract-open-standard-extensions",
+      "title": "Open-Standard Factory Contract Extensions (Build Spec 1.1.0)",
+      "spec_path": "specs/197-factory-contract-open-standard-extensions/spec.md",
+      "status": "approved",
+      "implementation": "complete",
+      "governance": "",
+      "owner": "",
+      "group": "",
+      "depends_on": [],
+      "impl_files": [],
+      "test_files": [],
+      "violations": []
+    },
+    {
+      "feature_id": "198-factory-governance-envelope",
+      "title": "Factory Governance Envelope (ASI Admission Contract)",
+      "spec_path": "specs/198-factory-governance-envelope/spec.md",
+      "status": "approved",
+      "implementation": "complete",
+      "governance": "",
+      "owner": "",
+      "group": "",
+      "depends_on": [
+        "102-governed-excellence",
+        "139-factory-artifact-substrate",
+        "074-factory-ingestion"
+      ],
+      "impl_files": [],
+      "test_files": [],
+      "violations": []
+    },
+    {
+      "feature_id": "199-factory-thin-consumer-sync",
+      "title": "Thin-Consumer Factory Sync for Owned Sources",
+      "spec_path": "specs/199-factory-thin-consumer-sync/spec.md",
+      "status": "approved",
+      "implementation": "complete",
+      "governance": "",
+      "owner": "",
+      "group": "",
+      "depends_on": [
+        "198-factory-governance-envelope",
+        "139-factory-artifact-substrate",
+        "197-factory-contract-open-standard-extensions"
+      ],
+      "impl_files": [],
+      "test_files": [],
+      "violations": []
+    },
+    {
+      "feature_id": "200-substrate-override-async-scanner",
+      "title": "Substrate Override Async Scanner (ASI06 model-assisted detection)",
+      "spec_path": "specs/200-substrate-override-async-scanner/spec.md",
+      "status": "approved",
+      "implementation": "complete",
+      "governance": "",
+      "owner": "",
+      "group": "",
+      "depends_on": [
+        "198-factory-governance-envelope",
+        "139-factory-artifact-substrate"
+      ],
+      "impl_files": [],
+      "test_files": [],
+      "violations": []
+    },
+    {
+      "feature_id": "201-anti-blind-approval-ui",
+      "title": "Anti-Blind-Approval UI (ASI09 human-agent trust surfaces)",
+      "spec_path": "specs/201-anti-blind-approval-ui/spec.md",
+      "status": "approved",
+      "implementation": "complete",
+      "governance": "",
+      "owner": "",
+      "group": "",
+      "depends_on": [
+        "198-factory-governance-envelope",
+        "166-opc-stop-hook-gate-chain"
+      ],
+      "impl_files": [],
+      "test_files": [],
+      "violations": []
+    },
+    {
+      "feature_id": "202-run-blast-radius-governor",
+      "title": "Run Blast-Radius Governor (ASI08 cascading-failure caps)",
+      "spec_path": "specs/202-run-blast-radius-governor/spec.md",
+      "status": "approved",
+      "implementation": "complete",
+      "governance": "",
+      "owner": "",
+      "group": "",
+      "depends_on": [
+        "198-factory-governance-envelope",
+        "166-opc-stop-hook-gate-chain",
+        "172-opc-live-agent-session-introspection",
+        "075-factory-workflow-engine"
+      ],
+      "impl_files": [],
+      "test_files": [],
+      "violations": []
+    },
+    {
+      "feature_id": "203-produced-app-sbom-attestation",
+      "title": "Produced-App SBOM and Dependency-Audit Attestation (ASI04 forward)",
+      "spec_path": "specs/203-produced-app-sbom-attestation/spec.md",
+      "status": "approved",
+      "implementation": "in-progress",
+      "governance": "",
+      "owner": "",
+      "group": "",
+      "depends_on": [
+        "167-born-with-spec-spine-kernel",
+        "168-per-project-governance-certificate",
+        "112-factory-project-lifecycle",
+        "116-supply-chain-policy-gates"
+      ],
+      "impl_files": [],
+      "test_files": [],
+      "violations": []
+    },
+    {
+      "feature_id": "204-session-memory-write-contract",
+      "title": "Session-Memory Write Contract (ASI06 cockpit surface)",
+      "spec_path": "specs/204-session-memory-write-contract/spec.md",
+      "status": "approved",
+      "implementation": "complete",
+      "governance": "",
+      "owner": "",
+      "group": "",
+      "depends_on": [
+        "056-session-memory",
+        "198-factory-governance-envelope"
+      ],
+      "impl_files": [],
+      "test_files": [],
+      "violations": []
+    },
+    {
+      "feature_id": "205-agent-nhi-identity",
+      "title": "Per-Agent Non-Human Identity and Task-Scoped Credentials (ASI03)",
+      "spec_path": "specs/205-agent-nhi-identity/spec.md",
+      "status": "draft",
+      "implementation": "pending",
+      "governance": "",
+      "owner": "",
+      "group": "",
+      "depends_on": [
+        "106-rauthy-native-oidc-and-membership",
+        "137-tenant-environment-access-gates",
+        "198-factory-governance-envelope"
+      ],
+      "impl_files": [],
+      "test_files": [],
+      "violations": []
+    },
+    {
+      "feature_id": "206-duplex-frame-integrity",
+      "title": "Duplex Frame Integrity and Anti-Replay (ASI07)",
+      "spec_path": "specs/206-duplex-frame-integrity/spec.md",
+      "status": "draft",
+      "implementation": "pending",
+      "governance": "",
+      "owner": "",
+      "group": "",
+      "depends_on": [
+        "189-duplex-envelope-version-parity",
+        "198-factory-governance-envelope",
+        "191-schema-parity-ci-job"
+      ],
+      "impl_files": [],
+      "test_files": [],
+      "violations": []
+    },
+    {
+      "feature_id": "207-tamper-evident-audit-chain",
+      "title": "Tamper-Evident Audit Log Chain (ASI observability principle)",
+      "spec_path": "specs/207-tamper-evident-audit-chain/spec.md",
+      "status": "approved",
+      "implementation": "complete",
+      "governance": "",
+      "owner": "",
+      "group": "",
+      "depends_on": [
+        "047-governance-control-plane",
+        "068-permission-runtime",
+        "102-governed-excellence",
+        "198-factory-governance-envelope"
+      ],
+      "impl_files": [],
+      "test_files": [],
+      "violations": []
+    },
+    {
+      "feature_id": "208-org-agent-kill-switch",
+      "title": "Org-Wide Agent Kill Switch and Quarantine (ASI10 containment)",
+      "spec_path": "specs/208-org-agent-kill-switch/spec.md",
+      "status": "draft",
+      "implementation": "pending",
+      "governance": "",
+      "owner": "",
+      "group": "",
+      "depends_on": [
+        "198-factory-governance-envelope",
+        "172-opc-live-agent-session-introspection",
+        "106-rauthy-native-oidc-and-membership"
+      ],
+      "impl_files": [],
+      "test_files": [],
+      "violations": []
+    },
+    {
+      "feature_id": "209-tenant-kernel-ci-enforcement",
+      "title": "Tenant Kernel CI Enforcement Activation (ASI04 continuous validation)",
+      "spec_path": "specs/209-tenant-kernel-ci-enforcement/spec.md",
+      "status": "approved",
+      "implementation": "complete",
+      "governance": "",
+      "owner": "",
+      "group": "",
+      "depends_on": [
+        "167-born-with-spec-spine-kernel",
+        "168-per-project-governance-certificate",
+        "112-factory-project-lifecycle"
+      ],
+      "impl_files": [],
+      "test_files": [],
+      "violations": []
+    },
+    {
+      "feature_id": "210-build-spec-agentic-posture",
+      "title": "Build Spec Agentic-Posture Declaration (Least Agency for produced apps)",
+      "spec_path": "specs/210-build-spec-agentic-posture/spec.md",
+      "status": "approved",
+      "implementation": "complete",
+      "governance": "",
+      "owner": "",
+      "group": "",
+      "depends_on": [
+        "197-factory-contract-open-standard-extensions",
+        "198-factory-governance-envelope",
+        "203-produced-app-sbom-attestation",
+        "168-per-project-governance-certificate"
+      ],
+      "impl_files": [],
+      "test_files": [],
+      "violations": []
+    },
+    {
+      "feature_id": "211-encore-test-ci-job",
+      "title": "Encore-Test CI Job (ASI09 verification integrity — the encore-test CI gap, closed)",
+      "spec_path": "specs/211-encore-test-ci-job/spec.md",
+      "status": "approved",
+      "implementation": "complete",
+      "governance": "",
+      "owner": "",
+      "group": "",
+      "depends_on": [
+        "104-makefile-ci-parity-contract",
+        "135-fast-ci-as-default",
+        "177-ci-orchestrator-pr-gate",
+        "198-factory-governance-envelope",
+        "201-anti-blind-approval-ui"
+      ],
+      "impl_files": [],
+      "test_files": [],
+      "violations": []
+    },
+    {
+      "feature_id": "212-factory-schema-lockstep-ci",
+      "title": "Factory Schema Lockstep CI (cross-repo contract parity, automated)",
+      "spec_path": "specs/212-factory-schema-lockstep-ci/spec.md",
+      "status": "approved",
+      "implementation": "complete",
+      "governance": "",
+      "owner": "",
+      "group": "",
+      "depends_on": [],
+      "impl_files": [],
+      "test_files": [],
+      "violations": []
+    },
+    {
+      "feature_id": "213-tenant-repo-image-build",
+      "title": "Tenant Repo Image Build and Artifact-Ref Record",
+      "spec_path": "specs/213-tenant-repo-image-build/spec.md",
+      "status": "draft",
+      "implementation": "pending",
+      "governance": "",
+      "owner": "",
+      "group": "",
+      "depends_on": [
+        "112-factory-project-lifecycle",
+        "136-tenant-hello-demo-service",
+        "138-statecraft-create-realised-scaffold"
+      ],
+      "impl_files": [],
+      "test_files": [],
+      "violations": []
+    },
+    {
+      "feature_id": "214-tenant-app-chart-supersession",
+      "title": "Tenant App Chart Supersession (template scaffold becomes the reference tenant)",
+      "spec_path": "specs/214-tenant-app-chart-supersession/spec.md",
+      "status": "approved",
+      "implementation": "complete",
+      "governance": "",
+      "owner": "",
+      "group": "",
+      "depends_on": [
+        "136-tenant-hello-demo-service",
+        "137-tenant-environment-access-gates",
+        "138-statecraft-create-realised-scaffold",
+        "119-project-as-unit-of-governance",
+        "199-factory-thin-consumer-sync"
+      ],
+      "impl_files": [],
+      "test_files": [],
+      "violations": []
+    },
+    {
+      "feature_id": "215-statecraft-deploy-trigger-ux",
+      "title": "Statecraft Deploy Trigger UX (Preview in Deployd / View Deployd)",
+      "spec_path": "specs/215-statecraft-deploy-trigger-ux/spec.md",
+      "status": "approved",
+      "implementation": "complete",
+      "governance": "",
+      "owner": "",
+      "group": "",
+      "depends_on": [
+        "213-tenant-repo-image-build",
+        "214-tenant-app-chart-supersession",
+        "112-factory-project-lifecycle",
+        "137-tenant-environment-access-gates"
+      ],
+      "impl_files": [],
+      "test_files": [],
+      "violations": []
+    },
+    {
+      "feature_id": "216-spec-spine-library-grammar-adoption",
+      "title": "Spec-Spine Library Grammar Adoption (amends bare-id; supersedes-partial reconciliation)",
+      "spec_path": "specs/216-spec-spine-library-grammar-adoption/spec.md",
+      "status": "approved",
+      "implementation": "complete",
+      "governance": "",
+      "owner": "",
+      "group": "",
+      "depends_on": [
+        "001-spec-compiler-mvp",
+        "130-spec-coupling-primary-owner",
+        "132-constitutional-invariant-freeze",
+        "133-amends-aware-coupling-gate",
+        "153-invariant-freeze-additive-evolution",
+        "154-logical-unit-ownership-grammar"
+      ],
+      "impl_files": [],
+      "test_files": [],
+      "violations": []
+    },
+    {
+      "feature_id": "217-spec-spine-engine-swap-collapse",
+      "title": "Spec-Spine Engine Swap and Collapse: replace OAP's in-tree generic engine with the published spec-spine library",
+      "spec_path": "specs/217-spec-spine-engine-swap-collapse/spec.md",
+      "status": "approved",
+      "implementation": "complete",
+      "governance": "",
+      "owner": "",
+      "group": "",
+      "depends_on": [
+        "216-spec-spine-library-grammar-adoption",
+        "130-spec-coupling-primary-owner",
+        "133-amends-aware-coupling-gate",
+        "154-logical-unit-ownership-grammar",
+        "155-logical-unit-resolution-semantics",
+        "101-codebase-index-mvp",
+        "127-spec-code-coupling-gate",
+        "152-path-co-authority",
+        "181-registry-consumer-unit-grammar-authority"
+      ],
+      "impl_files": [],
+      "test_files": [],
+      "violations": []
+    },
+    {
+      "feature_id": "218-run-cert-corpus-binding",
+      "title": "Run Certificate Corpus Binding (chain edge to the ledger seal)",
+      "spec_path": "specs/218-run-cert-corpus-binding/spec.md",
+      "status": "approved",
+      "implementation": "complete",
+      "governance": "",
+      "owner": "",
+      "group": "",
+      "depends_on": [
+        "102-governed-excellence",
+        "168-per-project-governance-certificate"
+      ],
+      "impl_files": [],
+      "test_files": [],
+      "violations": []
+    },
+    {
+      "feature_id": "219-tenant-tail-verifier-toolkit",
+      "title": "Tenant-Tail Verifier Toolkit (the vended tenant verification surface)",
+      "spec_path": "specs/219-tenant-tail-verifier-toolkit/spec.md",
+      "status": "approved",
+      "implementation": "complete",
+      "governance": "",
+      "owner": "",
+      "group": "",
+      "depends_on": [
+        "102-governed-excellence",
+        "168-per-project-governance-certificate",
+        "198-factory-governance-envelope",
+        "170-signed-inter-stage-manifests",
+        "121-claim-provenance-enforcement"
+      ],
+      "impl_files": [],
+      "test_files": [],
+      "violations": []
+    },
+    {
+      "feature_id": "220-tenant-emit-governance-certificate",
+      "title": "Tenant-Emit Governance Certificate (the emitter, its firing, and the tenant signer identity)",
+      "spec_path": "specs/220-tenant-emit-governance-certificate/spec.md",
+      "status": "approved",
+      "implementation": "complete",
+      "governance": "",
+      "owner": "",
+      "group": "",
+      "depends_on": [
+        "102-governed-excellence",
+        "168-per-project-governance-certificate",
+        "167-born-with-spec-spine-kernel",
+        "198-factory-governance-envelope",
+        "209-tenant-kernel-ci-enforcement",
+        "218-run-cert-corpus-binding",
+        "219-tenant-tail-verifier-toolkit"
+      ],
+      "impl_files": [],
+      "test_files": [],
+      "violations": []
+    },
+    {
+      "feature_id": "221-oap-instance-bootstrap-cli",
+      "title": "OAP fork-parameterization + oap-bootstrap pointer (FR-040)",
+      "spec_path": "specs/221-oap-instance-bootstrap-cli/spec.md",
+      "status": "approved",
+      "implementation": "complete",
+      "governance": "medium",
+      "owner": "",
+      "group": "",
+      "depends_on": [
+        "106-rauthy-native-oidc-and-membership",
+        "151-declarative-cluster-reconciliation",
+        "137-tenant-environment-access-gates",
+        "143-presigned-upload-public-endpoint",
+        "072-multi-cloud-k8s-portability",
+        "116-supply-chain-policy-gates"
+      ],
+      "impl_files": [],
+      "test_files": [],
+      "violations": []
+    },
+    {
+      "feature_id": "222-registry-shard-freshness-gate",
+      "title": "Registry-shard freshness gate (PR-time staleness block for committed by-spec shards)",
+      "spec_path": "specs/222-registry-shard-freshness-gate/spec.md",
+      "status": "approved",
+      "implementation": "complete",
+      "governance": "",
+      "owner": "",
+      "group": "",
+      "depends_on": [
+        "217-spec-spine-engine-swap-collapse",
+        "188-derived-index-merge-serialization"
+      ],
+      "impl_files": [],
+      "test_files": [],
+      "violations": []
+    },
+    {
+      "feature_id": "223-documentation-website",
+      "title": "Documentation website (Docusaurus v3) on GitHub Pages",
+      "spec_path": "specs/223-documentation-website/spec.md",
+      "status": "approved",
+      "implementation": "complete",
+      "governance": "low",
+      "owner": "bart",
+      "group": "",
+      "depends_on": [
+        "118-workflow-spec-traceability"
+      ],
+      "impl_files": [],
+      "test_files": [],
+      "violations": []
+    },
+    {
+      "feature_id": "224-self-hosted-sweeper-cron-revival",
+      "title": "Self-Hosted Sweeper Cron Revival (K8s CronJobs for Encore no-op sweepers)",
+      "spec_path": "specs/224-self-hosted-sweeper-cron-revival/spec.md",
+      "status": "approved",
+      "implementation": "in-progress",
+      "governance": "",
+      "owner": "",
+      "group": "",
+      "depends_on": [
+        "124-opc-factory-run-platform-integration",
+        "143-presigned-upload-public-endpoint",
+        "087-unified-workspace-architecture",
+        "115-knowledge-extraction-pipeline",
+        "106-rauthy-native-oidc-and-membership"
+      ],
+      "impl_files": [],
+      "test_files": [],
+      "violations": []
+    },
+    {
+      "feature_id": "225-deployd-selfprovision-rbac",
+      "title": "deployd Self-Provisioned Per-Namespace RBAC (drop the cluster-wide workloads grant)",
+      "spec_path": "specs/225-deployd-selfprovision-rbac/spec.md",
+      "status": "approved",
+      "implementation": "complete",
+      "governance": "",
+      "owner": "",
+      "group": "",
+      "depends_on": [
+        "136-tenant-hello-demo-service",
+        "145-deployd-durability"
+      ],
+      "impl_files": [],
+      "test_files": [],
+      "violations": []
+    },
+    {
+      "feature_id": "226-project-teardown-completeness",
+      "title": "Complete Project Teardown (opt-in repo delete, deployment teardown, namespace deletion)",
+      "spec_path": "specs/226-project-teardown-completeness/spec.md",
+      "status": "approved",
+      "implementation": "pending",
+      "governance": "",
+      "owner": "",
+      "group": "",
+      "depends_on": [
+        "119-project-as-unit-of-governance",
+        "225-deployd-selfprovision-rbac",
+        "215-statecraft-deploy-trigger-ux",
+        "214-tenant-app-chart-supersession",
+        "136-tenant-hello-demo-service",
+        "137-tenant-environment-access-gates",
+        "113-statecraft-projects-rename-and-clone",
+        "080-github-identity-onboarding"
+      ],
+      "impl_files": [],
+      "test_files": [],
+      "violations": []
+    },
+    {
+      "feature_id": "227-create-project-infra-config-projection",
+      "title": "Create Project as an Encore-infra-config projection: derived catalog, two-axis selector, dev-provisioned Redis",
+      "spec_path": "specs/227-create-project-infra-config-projection/spec.md",
+      "status": "approved",
+      "implementation": "complete",
+      "governance": "",
+      "owner": "",
+      "group": "",
+      "depends_on": [
+        "138-statecraft-create-realised-scaffold",
+        "199-factory-thin-consumer-sync",
+        "160-factory-adapter-statecraft-relocation",
+        "213-tenant-repo-image-build",
+        "214-tenant-app-chart-supersession",
+        "225-deployd-selfprovision-rbac"
+      ],
+      "impl_files": [],
+      "test_files": [],
+      "violations": []
+    },
+    {
+      "feature_id": "228-statecraft-public-marketing-site",
+      "title": "Statecraft public marketing site: governed teal/mono port of the ecosystem + whitepaper",
+      "spec_path": "specs/228-statecraft-public-marketing-site/spec.md",
+      "status": "approved",
+      "implementation": "complete",
+      "governance": "",
+      "owner": "",
+      "group": "",
+      "depends_on": [
+        "160-factory-adapter-statecraft-relocation",
+        "163-statecraft-requirements-view",
+        "103-init-protocol-governed-reads",
+        "217-spec-spine-engine-swap-collapse"
+      ],
+      "impl_files": [],
+      "test_files": [],
+      "violations": []
+    },
+    {
+      "feature_id": "229-auth-driver-mock-rauthy-model",
+      "title": "Auth-driver model correction: mock|rauthy app axis, upstream IdPs federate inside Rauthy",
+      "spec_path": "specs/229-auth-driver-mock-rauthy-model/spec.md",
+      "status": "approved",
+      "implementation": "pending",
+      "governance": "",
+      "owner": "",
+      "group": "",
+      "depends_on": [],
+      "impl_files": [],
+      "test_files": [],
+      "violations": []
+    },
+    {
+      "feature_id": "230-tenant-cron-scheduler-module",
+      "title": "Tenant self-hosted cron: in-app scheduler module (postgres small-scale / +redis large-scale), the create-project Infra axis",
+      "spec_path": "specs/230-tenant-cron-scheduler-module/spec.md",
+      "status": "approved",
+      "implementation": "pending",
+      "governance": "",
+      "owner": "",
+      "group": "",
+      "depends_on": [
+        "227-create-project-infra-config-projection"
+      ],
+      "impl_files": [],
+      "test_files": [],
+      "violations": []
+    },
+    {
+      "feature_id": "231-reusable-primitive-reconsumption",
+      "title": "Reusable-primitive re-consumption (policy-kernel delegates to the extracted Apache-2.0 cores)",
+      "spec_path": "specs/231-reusable-primitive-reconsumption/spec.md",
+      "status": "approved",
+      "implementation": "complete",
+      "governance": "",
+      "owner": "",
+      "group": "",
+      "depends_on": [
+        "047-governance-control-plane"
+      ],
+      "impl_files": [],
+      "test_files": [],
+      "violations": []
+    }
+  ],
+  "violations": [
+    {
+      "code": "DANGLING_FEATURE_ID",
+      "severity": "error",
+      "path": "product/apps/opc/src-tauri/src/web_server.rs",
+      "feature_id": "SCHEDULING",
+      "message": "Feature SCHEDULING not found in registry",
+      "suggested_fix": "Add feature to build/spec-registry/registry.json (via spec-compiler) or spec/features.yaml, or register as alias"
+    },
+    {
+      "code": "DANGLING_FEATURE_ID",
+      "severity": "error",
+      "path": "product/apps/opc/src/components/ScheduleDialog.tsx",
+      "feature_id": "SCHEDULING",
+      "message": "Feature SCHEDULING not found in registry",
+      "suggested_fix": "Add feature to build/spec-registry/registry.json (via spec-compiler) or spec/features.yaml, or register as alias"
+    },
+    {
+      "code": "DANGLING_FEATURE_ID",
+      "severity": "error",
+      "path": "product/apps/opc/src/components/SchedulePanel.tsx",
+      "feature_id": "SCHEDULING",
+      "message": "Feature SCHEDULING not found in registry",
+      "suggested_fix": "Add feature to build/spec-registry/registry.json (via spec-compiler) or spec/features.yaml, or register as alias"
+    },
+    {
+      "code": "INVALID_HEADER_FORMAT",
+      "severity": "error",
+      "path": ".githooks/enable-merge-driver.sh",
+      "message": "Malformed Spec directive: # Spec: 188-derived-index-merge-serialization",
+      "suggested_fix": "Fix header format"
+    },
+    {
+      "code": "INVALID_HEADER_FORMAT",
+      "severity": "error",
+      "path": ".githooks/merge-derived-index.sh",
+      "message": "Malformed Spec directive: # Spec: 188-derived-index-merge-serialization",
+      "suggested_fix": "Fix header format"
+    },
+    {
+      "code": "INVALID_HEADER_FORMAT",
+      "severity": "error",
+      "path": "crates/agent/src/complexity.rs",
+      "message": "Malformed Feature directive: // Feature: 043-agent-organizer — deterministic complexity scoring (specs/043-agent-organizer/spec.md § Architecture)",
+      "suggested_fix": "Fix header format"
+    },
+    {
+      "code": "INVALID_HEADER_FORMAT",
+      "severity": "error",
+      "path": "crates/agent/src/dispatch.rs",
+      "message": "Malformed Feature directive: // Feature: 043-agent-organizer — dispatch protocol (specs/043-agent-organizer/spec.md § Dispatch protocol)",
+      "suggested_fix": "Fix header format"
+    },
+    {
+      "code": "INVALID_HEADER_FORMAT",
+      "severity": "error",
+      "path": "crates/agent/src/plan.rs",
+      "message": "Malformed Feature directive: // Feature: 043-agent-organizer — ExecutionPlan JSON contract (specs/043-agent-organizer/spec.md)",
+      "suggested_fix": "Fix header format"
+    },
+    {
+      "code": "INVALID_HEADER_FORMAT",
+      "severity": "error",
+      "path": "crates/agent/src/prompt/assembler.rs",
+      "message": "Malformed Feature directive: // Feature: 070-PROMPT_ASSEMBLY_CACHE",
+      "suggested_fix": "Fix header format"
+    },
+    {
+      "code": "INVALID_HEADER_FORMAT",
+      "severity": "error",
+      "path": "crates/agent/src/prompt/compaction.rs",
+      "message": "Malformed Feature directive: // Feature: 070-PROMPT_ASSEMBLY_CACHE",
+      "suggested_fix": "Fix header format"
+    },
+    {
+      "code": "INVALID_HEADER_FORMAT",
+      "severity": "error",
+      "path": "crates/agent/src/prompt/mod.rs",
+      "message": "Malformed Feature directive: // Feature: 070-PROMPT_ASSEMBLY_CACHE",
+      "suggested_fix": "Fix header format"
+    },
+    {
+      "code": "INVALID_HEADER_FORMAT",
+      "severity": "error",
+      "path": "crates/agent/src/prompt/tests.rs",
+      "message": "Malformed Feature directive: // Feature: 070-PROMPT_ASSEMBLY_CACHE",
+      "suggested_fix": "Fix header format"
+    },
+    {
+      "code": "INVALID_HEADER_FORMAT",
+      "severity": "error",
+      "path": "crates/agent/src/registry.rs",
+      "message": "Malformed Feature directive: // Feature: 043-agent-organizer — registry integration (specs/043-agent-organizer/spec.md FR-007, FR-010)",
+      "suggested_fix": "Fix header format"
+    },
+    {
+      "code": "INVALID_HEADER_FORMAT",
+      "severity": "error",
+      "path": "crates/agent/src/verification/config.rs",
+      "message": "Malformed Spec directive: // Spec: spec/verification.yaml",
+      "suggested_fix": "Fix header format"
+    },
+    {
+      "code": "INVALID_HEADER_FORMAT",
+      "severity": "error",
+      "path": "crates/agent/src/verification/engine.rs",
+      "message": "Malformed Spec directive: // Spec: spec/verification.yaml",
+      "suggested_fix": "Fix header format"
+    },
+    {
+      "code": "INVALID_HEADER_FORMAT",
+      "severity": "error",
+      "path": "crates/agent/src/verification/mod.rs",
+      "message": "Malformed Spec directive: // Spec: spec/verification.yaml",
+      "suggested_fix": "Fix header format"
+    },
+    {
+      "code": "INVALID_HEADER_FORMAT",
+      "severity": "error",
+      "path": "crates/agent/src/verification/runner.rs",
+      "message": "Malformed Spec directive: // Spec: spec/verification.yaml",
+      "suggested_fix": "Fix header format"
+    },
+    {
+      "code": "INVALID_HEADER_FORMAT",
+      "severity": "error",
+      "path": "crates/factory-engine/src/bin/build_certificate.rs",
+      "message": "Multiple Spec directives found",
+      "suggested_fix": "Remove extra Spec directives"
+    },
+    {
+      "code": "INVALID_HEADER_FORMAT",
+      "severity": "error",
+      "path": "crates/factory-engine/src/bin/verify_certificate.rs",
+      "message": "Multiple Spec directives found",
+      "suggested_fix": "Remove extra Spec directives"
+    },
+    {
+      "code": "INVALID_HEADER_FORMAT",
+      "severity": "error",
+      "path": "crates/factory-engine/src/standards_resolver.rs",
+      "message": "Malformed Feature directive: // Feature: 055-yaml-standards-schema",
+      "suggested_fix": "Fix header format"
+    },
+    {
+      "code": "INVALID_HEADER_FORMAT",
+      "severity": "error",
+      "path": "crates/orchestrator/src/artifact.rs",
+      "message": "Malformed Spec directive: // Spec: specs/044-multi-agent-orchestration/spec.md, specs/094-unified-artifact-store/spec.md",
+      "suggested_fix": "Fix header format"
+    },
+    {
+      "code": "INVALID_HEADER_FORMAT",
+      "severity": "error",
+      "path": "crates/standards-loader/src/formatter.rs",
+      "message": "Malformed Feature directive: // Feature: 055-yaml-standards-schema",
+      "suggested_fix": "Fix header format"
+    },
+    {
+      "code": "INVALID_HEADER_FORMAT",
+      "severity": "error",
+      "path": "crates/standards-loader/src/lib.rs",
+      "message": "Malformed Feature directive: // Feature: 055-yaml-standards-schema",
+      "suggested_fix": "Fix header format"
+    },
+    {
+      "code": "INVALID_HEADER_FORMAT",
+      "severity": "error",
+      "path": "crates/standards-loader/src/loader.rs",
+      "message": "Malformed Feature directive: // Feature: 055-yaml-standards-schema",
+      "suggested_fix": "Fix header format"
+    },
+    {
+      "code": "INVALID_HEADER_FORMAT",
+      "severity": "error",
+      "path": "crates/standards-loader/src/resolver.rs",
+      "message": "Malformed Feature directive: // Feature: 055-yaml-standards-schema",
+      "suggested_fix": "Fix header format"
+    },
+    {
+      "code": "INVALID_HEADER_FORMAT",
+      "severity": "error",
+      "path": "crates/standards-loader/src/types.rs",
+      "message": "Malformed Feature directive: // Feature: 055-yaml-standards-schema",
+      "suggested_fix": "Fix header format"
+    },
+    {
+      "code": "INVALID_HEADER_FORMAT",
+      "severity": "error",
+      "path": "product/apps/opc/src-tauri/resources/claude-hooks/_lib.sh",
+      "message": "Malformed Spec directive: # Spec: 166-opc-stop-hook-gate-chain",
+      "suggested_fix": "Fix header format"
+    },
+    {
+      "code": "INVALID_HEADER_FORMAT",
+      "severity": "error",
+      "path": "product/apps/opc/src-tauri/resources/claude-hooks/post-edit-index.sh",
+      "message": "Malformed Spec directive: # Spec: 166-opc-stop-hook-gate-chain (FR-002)",
+      "suggested_fix": "Fix header format"
+    },
+    {
+      "code": "INVALID_HEADER_FORMAT",
+      "severity": "error",
+      "path": "product/apps/opc/src-tauri/resources/claude-hooks/post-edit-spec-lint.sh",
+      "message": "Malformed Spec directive: # Spec: 166-opc-stop-hook-gate-chain (FR-002)",
+      "suggested_fix": "Fix header format"
+    },
+    {
+      "code": "INVALID_HEADER_FORMAT",
+      "severity": "error",
+      "path": "product/apps/opc/src-tauri/resources/claude-hooks/stop-codification.sh",
+      "message": "Malformed Spec directive: # Spec: 174-codification-gate (FR-001, FR-008)",
+      "suggested_fix": "Fix header format"
+    },
+    {
+      "code": "INVALID_HEADER_FORMAT",
+      "severity": "error",
+      "path": "product/apps/opc/src-tauri/resources/claude-hooks/stop-coupling.sh",
+      "message": "Malformed Spec directive: # Spec: 166-opc-stop-hook-gate-chain (FR-003, platform-mandatory)",
+      "suggested_fix": "Fix header format"
+    },
+    {
+      "code": "INVALID_HEADER_FORMAT",
+      "severity": "error",
+      "path": "product/apps/opc/src-tauri/resources/claude-hooks/stop-index.sh",
+      "message": "Malformed Spec directive: # Spec: 166-opc-stop-hook-gate-chain (FR-003, platform-mandatory)",
+      "suggested_fix": "Fix header format"
+    },
+    {
+      "code": "INVALID_HEADER_FORMAT",
+      "severity": "error",
+      "path": "product/apps/opc/src-tauri/resources/claude-hooks/stop-spec-lint.sh",
+      "message": "Malformed Spec directive: # Spec: 166-opc-stop-hook-gate-chain (FR-003)",
+      "suggested_fix": "Fix header format"
+    },
+    {
+      "code": "INVALID_HEADER_FORMAT",
+      "severity": "error",
+      "path": "product/apps/opc/src-tauri/resources/claude-hooks/stop-workflow-pins.sh",
+      "message": "Malformed Spec directive: # Spec: 166-opc-stop-hook-gate-chain (FR-003, conditional)",
+      "suggested_fix": "Fix header format"
+    },
+    {
+      "code": "INVALID_HEADER_FORMAT",
+      "severity": "error",
+      "path": "product/apps/opc/src-tauri/resources/claude-hooks/tests/run-tests.sh",
+      "message": "Malformed Spec directive: # Spec: 166-opc-stop-hook-gate-chain: hook wrapper test suite.",
+      "suggested_fix": "Fix header format"
+    },
+    {
+      "code": "INVALID_HEADER_FORMAT",
+      "severity": "error",
+      "path": "product/apps/opc/src/lib/hooksManager.spec166.test.ts",
+      "message": "Malformed Spec directive: // Spec: 166-opc-stop-hook-gate-chain",
+      "suggested_fix": "Fix header format"
+    },
+    {
+      "code": "INVALID_HEADER_FORMAT",
+      "severity": "error",
+      "path": "product/packages/prompt-assembly/src/assembler.test.ts",
+      "message": "Malformed Feature directive: // Feature: 070-prompt-assembly-cache",
+      "suggested_fix": "Fix header format"
+    },
+    {
+      "code": "INVALID_HEADER_FORMAT",
+      "severity": "error",
+      "path": "product/packages/prompt-assembly/src/assembler.ts",
+      "message": "Malformed Feature directive: // Feature: 070-prompt-assembly-cache",
+      "suggested_fix": "Fix header format"
+    },
+    {
+      "code": "INVALID_HEADER_FORMAT",
+      "severity": "error",
+      "path": "product/packages/prompt-assembly/src/compaction.test.ts",
+      "message": "Malformed Feature directive: // Feature: 070-prompt-assembly-cache",
+      "suggested_fix": "Fix header format"
+    },
+    {
+      "code": "INVALID_HEADER_FORMAT",
+      "severity": "error",
+      "path": "product/packages/prompt-assembly/src/compaction.ts",
+      "message": "Malformed Feature directive: // Feature: 070-prompt-assembly-cache",
+      "suggested_fix": "Fix header format"
+    },
+    {
+      "code": "INVALID_HEADER_FORMAT",
+      "severity": "error",
+      "path": "product/packages/prompt-assembly/src/defaults.test.ts",
+      "message": "Malformed Feature directive: // Feature: 070-prompt-assembly-cache",
+      "suggested_fix": "Fix header format"
+    },
+    {
+      "code": "INVALID_HEADER_FORMAT",
+      "severity": "error",
+      "path": "product/packages/prompt-assembly/src/defaults.ts",
+      "message": "Malformed Feature directive: // Feature: 070-prompt-assembly-cache",
+      "suggested_fix": "Fix header format"
+    },
+    {
+      "code": "INVALID_HEADER_FORMAT",
+      "severity": "error",
+      "path": "product/packages/prompt-assembly/src/index.ts",
+      "message": "Malformed Feature directive: // Feature: 070-prompt-assembly-cache",
+      "suggested_fix": "Fix header format"
+    },
+    {
+      "code": "INVALID_HEADER_FORMAT",
+      "severity": "error",
+      "path": "product/packages/prompt-assembly/src/types.ts",
+      "message": "Malformed Feature directive: // Feature: 070-prompt-assembly-cache",
+      "suggested_fix": "Fix header format"
+    },
+    {
+      "code": "INVALID_HEADER_FORMAT",
+      "severity": "error",
+      "path": "product/packages/skill-command-factory/src/factory.test.ts",
+      "message": "Malformed Feature directive: // Feature: 071-skill-command-factory",
+      "suggested_fix": "Fix header format"
+    },
+    {
+      "code": "INVALID_HEADER_FORMAT",
+      "severity": "error",
+      "path": "product/packages/skill-command-factory/src/factory.ts",
+      "message": "Malformed Feature directive: // Feature: 071-skill-command-factory",
+      "suggested_fix": "Fix header format"
+    },
+    {
+      "code": "INVALID_HEADER_FORMAT",
+      "severity": "error",
+      "path": "product/packages/skill-command-factory/src/filter.test.ts",
+      "message": "Malformed Feature directive: // Feature: 071-skill-command-factory",
+      "suggested_fix": "Fix header format"
+    },
+    {
+      "code": "INVALID_HEADER_FORMAT",
+      "severity": "error",
+      "path": "product/packages/skill-command-factory/src/filter.ts",
+      "message": "Malformed Feature directive: // Feature: 071-skill-command-factory",
+      "suggested_fix": "Fix header format"
+    },
+    {
+      "code": "INVALID_HEADER_FORMAT",
+      "severity": "error",
+      "path": "product/packages/skill-command-factory/src/index.ts",
+      "message": "Malformed Feature directive: // Feature: 071-skill-command-factory",
+      "suggested_fix": "Fix header format"
+    },
+    {
+      "code": "INVALID_HEADER_FORMAT",
+      "severity": "error",
+      "path": "product/packages/skill-command-factory/src/parser.test.ts",
+      "message": "Malformed Feature directive: // Feature: 071-skill-command-factory",
+      "suggested_fix": "Fix header format"
+    },
+    {
+      "code": "INVALID_HEADER_FORMAT",
+      "severity": "error",
+      "path": "product/packages/skill-command-factory/src/parser.ts",
+      "message": "Malformed Feature directive: // Feature: 071-skill-command-factory",
+      "suggested_fix": "Fix header format"
+    },
+    {
+      "code": "INVALID_HEADER_FORMAT",
+      "severity": "error",
+      "path": "product/packages/skill-command-factory/src/plugin-loader.test.ts",
+      "message": "Malformed Feature directive: // Feature: 071-skill-command-factory",
+      "suggested_fix": "Fix header format"
+    },
+    {
+      "code": "INVALID_HEADER_FORMAT",
+      "severity": "error",
+      "path": "product/packages/skill-command-factory/src/plugin-loader.ts",
+      "message": "Malformed Feature directive: // Feature: 071-skill-command-factory",
+      "suggested_fix": "Fix header format"
+    },
+    {
+      "code": "INVALID_HEADER_FORMAT",
+      "severity": "error",
+      "path": "product/packages/skill-command-factory/src/tool-def.test.ts",
+      "message": "Malformed Feature directive: // Feature: 071-skill-command-factory",
+      "suggested_fix": "Fix header format"
+    },
+    {
+      "code": "INVALID_HEADER_FORMAT",
+      "severity": "error",
+      "path": "product/packages/skill-command-factory/src/tool-def.ts",
+      "message": "Malformed Feature directive: // Feature: 071-skill-command-factory",
+      "suggested_fix": "Fix header format"
+    },
+    {
+      "code": "INVALID_HEADER_FORMAT",
+      "severity": "error",
+      "path": "product/packages/skill-command-factory/src/types.ts",
+      "message": "Malformed Feature directive: // Feature: 071-skill-command-factory",
+      "suggested_fix": "Fix header format"
+    },
+    {
+      "code": "INVALID_HEADER_FORMAT",
+      "severity": "error",
+      "path": "tools/lint/release-version-guard-test.sh",
+      "message": "Malformed Spec directive: # Spec: 193-paired-release-cadence",
+      "suggested_fix": "Fix header format"
+    },
+    {
+      "code": "INVALID_HEADER_FORMAT",
+      "severity": "error",
+      "path": "tools/lint/release-version-guard.sh",
+      "message": "Malformed Spec directive: # Spec: 193-paired-release-cadence (amends 037, 086, 117)",
+      "suggested_fix": "Fix header format"
+    },
+    {
+      "code": "INVALID_HEADER_FORMAT",
+      "severity": "error",
+      "path": "tools/lint/workflow-pins-test.sh",
+      "message": "Malformed Spec directive: # Spec: 158-workflow-ref-sha-pinning-lint (amends 116)",
+      "suggested_fix": "Fix header format"
+    },
+    {
+      "code": "INVALID_HEADER_FORMAT",
+      "severity": "error",
+      "path": "tools/lint/workflow-pins.sh",
+      "message": "Malformed Spec directive: # Spec: 158-workflow-ref-sha-pinning-lint (amends 116)",
+      "suggested_fix": "Fix header format"
+    }
+  ]
+}

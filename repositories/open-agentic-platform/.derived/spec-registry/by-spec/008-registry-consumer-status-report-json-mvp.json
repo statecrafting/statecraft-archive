@@ -1,0 +1,41 @@
+{
+  "record": {
+    "authors": [
+      "open-agentic-platform"
+    ],
+    "created": "2026-03-22",
+    "domain": "tooling",
+    "extends": [
+      {
+        "nature": "additive",
+        "spec": "007-registry-consumer-status-report-mvp"
+      }
+    ],
+    "extraFrontmatter": {
+      "language": "en"
+    },
+    "featureBranch": "008-registry-consumer-status-report-json-mvp",
+    "id": "008-registry-consumer-status-report-json-mvp",
+    "implementation": "complete",
+    "kind": "platform-delivery",
+    "sectionHeadings": [
+      "Feature Specification: Registry consumer status-report JSON output",
+      "Milestone baseline",
+      "Purpose and charter",
+      "In scope",
+      "Out of scope",
+      "Requirements *(mandatory)*",
+      "Functional Requirements",
+      "Key Entities",
+      "Success Criteria *(mandatory)*",
+      "Clarifications"
+    ],
+    "specPath": "specs/008-registry-consumer-status-report-json-mvp/spec.md",
+    "status": "superseded",
+    "summary": "Add machine-readable JSON output to `registry-consumer status-report` so scripts and CI can consume lifecycle/status distribution without parsing human-formatted text.\n",
+    "supersededBy": "217-spec-spine-engine-swap-collapse",
+    "title": "Registry consumer status-report JSON output"
+  },
+  "shardHash": "6adeddcbb12bb68f6de99ba2f8a84a9856cbd1c368f96ce0168eb7f923014582",
+  "specVersion": "1.1.0"
+}

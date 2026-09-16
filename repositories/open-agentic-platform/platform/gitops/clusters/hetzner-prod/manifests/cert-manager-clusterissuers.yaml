@@ -1,0 +1,92 @@
+# Spec 151 Phase 3 — cert-manager ClusterIssuers (T-015).
+#
+# Two active ClusterIssuers in production today:
+#
+#   1. `letsencrypt-prod` (HTTP-01 via nginx) — the DEFAULT for every
+#      platform Ingress (statecraft, deployd, rauthy, minio). Originated
+#      in `post-create.sh`'s heredoc; migrated here for declarative
+#      ownership. The HTTP-01 challenge requires ingress-nginx to be
+#      Ready before issuance succeeds — Flux's natural retry handles
+#      the transient window on a fresh-cluster bootstrap.
+#
+#   2. `letsencrypt-prod-dns01-cloudflare` (DNS-01 via Cloudflare) —
+#      issues the wildcard tenant cert (spec 106 §12.4 / spec 137 Phase
+#      4↔5). Originated in
+#      `platform/infra/hetzner/manifests/letsencrypt-prod-dns01-cloudflare-issuer.yaml`;
+#      migrated here. Depends on the `cloudflare-api-token` Secret
+#      (key `api-token`) existing in the `cert-manager` namespace.
+#      The Secret is created imperatively by `setup.sh` from
+#      `$CLOUDFLARE_DNS_API_TOKEN` — that piece stays imperative until
+#      spec 153 lands the SOPS-encrypted per-purpose Secret migration.
+#      Until the Secret exists, cert-manager marks the ClusterIssuer
+#      Ready=False; it auto-recovers when the Secret arrives.
+#
+# Hetzner DNS path removed (spec 151 Phase 3 follow-up cleanup,
+# 2026-05-18). The `cert-manager-webhook-hetzner` chart + the
+# `letsencrypt-dns01` ClusterIssuer that previously lived dormant in
+# `post-create.sh` were never functional in this deployment:
+# `statecraft.ing`'s authoritative nameservers are at Cloudflare, no
+# Hetzner DNS zone exists for the domain, and the DNS-01 validation
+# chain would fail at the webhook's API call (no zone) and at Let's
+# Encrypt's query (Cloudflare is authoritative, doesn't have the TXT
+# record the webhook wrote elsewhere). Cloudflare is the committed
+# authoritative DNS / edge provider; any migration away from it is a
+# major architectural change with no current plan.
+#
+# Cutover identity (zero-downtime pattern from Phase 2):
+#
+#   Both ClusterIssuers' `metadata.name` matches what the imperative
+#   apply created. cert-manager treats them as the same objects;
+#   their ACME account state (`privateKeySecretRef`) persists across
+#   the cutover. No re-registration with Let's Encrypt; no certificate
+#   re-issuance.
+#
+# Domain: hardcoded to `statecraft.ing` because this tree under
+# `clusters/hetzner-prod/` is cluster-specific by convention (same
+# rationale as the wildcard Certificate manifest).
+---
+apiVersion: cert-manager.io/v1
+kind: ClusterIssuer
+metadata:
+  name: letsencrypt-prod
+  labels:
+    oap.spec: "151-declarative-cluster-reconciliation"
+spec:
+  acme:
+    server: https://acme-v02.api.letsencrypt.org/directory
+    email: admin@statecraft.ing
+    privateKeySecretRef:
+      name: letsencrypt-prod
+    solvers:
+      - http01:
+          ingress:
+            class: nginx
+---
+# Co-ownership note: this ClusterIssuer was originally authored under
+# spec 106 (PR #155). Spec 151 Phase 3 migrates it to declarative
+# reconciliation; spec 106 remains the primary owner per spec 130
+# primary-owner heuristic.
+apiVersion: cert-manager.io/v1
+kind: ClusterIssuer
+metadata:
+  name: letsencrypt-prod-dns01-cloudflare
+  labels:
+    oap.spec: "106-rauthy-native-oidc-and-membership"
+spec:
+  acme:
+    server: https://acme-v02.api.letsencrypt.org/directory
+    email: admin@statecraft.ing
+    privateKeySecretRef:
+      name: letsencrypt-prod-dns01-cloudflare-account
+    solvers:
+      - dns01:
+          cloudflare:
+            apiTokenSecretRef:
+              name: cloudflare-api-token
+              key: api-token
+        selector:
+          # Only this issuer answers DNS-01 challenges for tenant
+          # hostnames. `letsencrypt-prod` (HTTP-01) keeps handling
+          # statecraft / deployd / rauthy / minio Ingresses.
+          dnsZones:
+            - "tenants.statecraft.ing"

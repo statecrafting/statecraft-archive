@@ -1,0 +1,121 @@
+{
+  "mapping": {
+    "dependsOn": [
+      "104-makefile-ci-parity-contract",
+      "125-schema-parity-walker-rebuild",
+      "158-workflow-ref-sha-pinning-lint",
+      "177-ci-orchestrator-pr-gate",
+      "189-duplex-envelope-version-parity"
+    ],
+    "implementingPaths": [
+      {
+        "path": ".github/workflows/ci-schema-parity.yml",
+        "source": "spec-edge"
+      },
+      {
+        "path": ".github/workflows/ci.yml",
+        "source": "spec-edge"
+      },
+      {
+        "path": "crates/featuregraph/tests/golden/features_graph.json",
+        "source": "spec-edge"
+      },
+      {
+        "path": "tools/oap/ci-parity-check/src/lib.rs",
+        "source": "spec-edge"
+      },
+      {
+        "path": "tools/oap/ci-parity-check/tests/fixtures/aligned/.github/workflows/ci-schema-parity.yml",
+        "source": "spec-edge"
+      },
+      {
+        "path": "tools/oap/ci-parity-check/tests/fixtures/divergent/.github/workflows/ci-schema-parity.yml",
+        "source": "spec-edge"
+      }
+    ],
+    "resolvedUnits": [
+      {
+        "locations": [
+          {
+            "file": ".github/workflows/ci-schema-parity.yml"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "file",
+          "path": ".github/workflows/ci-schema-parity.yml"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "tools/oap/ci-parity-check/tests/fixtures/aligned/.github/workflows/ci-schema-parity.yml"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "file",
+          "path": "tools/oap/ci-parity-check/tests/fixtures/aligned/.github/workflows/ci-schema-parity.yml"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "tools/oap/ci-parity-check/tests/fixtures/divergent/.github/workflows/ci-schema-parity.yml"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "file",
+          "path": "tools/oap/ci-parity-check/tests/fixtures/divergent/.github/workflows/ci-schema-parity.yml"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": ".github/workflows/ci.yml"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "extends",
+        "unit": {
+          "kind": "file",
+          "path": ".github/workflows/ci.yml"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "crates/featuregraph/tests/golden/features_graph.json"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "extends",
+        "unit": {
+          "kind": "file",
+          "path": "crates/featuregraph/tests/golden/features_graph.json"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "tools/oap/ci-parity-check/src/lib.rs"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "extends",
+        "unit": {
+          "kind": "file",
+          "path": "tools/oap/ci-parity-check/src/lib.rs"
+        }
+      }
+    ],
+    "specId": "191-schema-parity-ci-job",
+    "specStatus": "approved"
+  },
+  "schemaVersion": "1.1.0",
+  "shardHash": "8bb15bb7db736d81e267d32ac283cbf9a223c2e0307548cdd62fa28ef5de8307"
+}

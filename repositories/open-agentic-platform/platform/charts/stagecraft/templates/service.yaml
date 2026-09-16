@@ -1,0 +1,10 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: statecraft-api
+spec:
+  selector:
+    app: statecraft-api
+  ports:
+    - port: 80
+      targetPort: 4000

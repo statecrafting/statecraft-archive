@@ -1,0 +1,91 @@
+{
+  "record": {
+    "amendmentRecord": "self-amended (2026-06-10) — AC-8 verification recorded; cross-repo\nsection updated for the POC absorption; the richer-command-set timing\nclaim corrected (the adapter rename landed via spec 199 / PR #313\nWITHOUT the typed-command promotion, which remains future work).\n",
+    "authors": [
+      "open-agentic-platform"
+    ],
+    "codeAliases": [
+      "BUILD_SPEC_OPEN_STANDARD_EXT"
+    ],
+    "created": "2026-06-08",
+    "domain": "platform",
+    "extends": [
+      {
+        "nature": "additive",
+        "spec": "074-factory-ingestion",
+        "unit": {
+          "id": "factory-contracts",
+          "kind": "crate"
+        }
+      }
+    ],
+    "extraFrontmatter": {
+      "amended": "2026-06-10",
+      "language": "en"
+    },
+    "featureBranch": "feat/197-factory-contract-open-standard-extensions",
+    "id": "197-factory-contract-open-standard-extensions",
+    "implementation": "complete",
+    "kind": "platform",
+    "references": [
+      {
+        "role": "consumer",
+        "unit": {
+          "id": "factory-engine",
+          "kind": "crate"
+        }
+      },
+      {
+        "role": "context",
+        "unit": {
+          "id": "orchestrator",
+          "kind": "crate"
+        }
+      },
+      {
+        "role": "historical",
+        "unit": {
+          "kind": "directory",
+          "path": "factory"
+        }
+      }
+    ],
+    "refines": [
+      {
+        "aspect": "open-standard-contract-fields",
+        "unit": {
+          "kind": "file",
+          "path": "standards/schemas/factory/build-spec.schema.yaml"
+        }
+      },
+      {
+        "aspect": "open-standard-contract-fields",
+        "unit": {
+          "kind": "file",
+          "path": "standards/schemas/factory/stage-outputs/audiences.schema.json"
+        }
+      }
+    ],
+    "sectionHeadings": [
+      "Feature Specification: Open-Standard Factory Contract Extensions (Build Spec 1.1.0)",
+      "Purpose and charter",
+      "The governing principle (open standard)",
+      "Requirements",
+      "FR-001 — Open-standard principle is normative",
+      "FR-002 — Per-audience `provisioning_model` (required)",
+      "FR-003 — Per-integration `implementation_status`",
+      "FR-004 — Defer `security.assurance_level`",
+      "FR-005 — Explicit rejections (recorded, not contract fields)",
+      "FR-006 — Version bump + dual-surface lockstep",
+      "FR-007 — Manifest commands drift + version consts (hygiene)",
+      "Acceptance criteria",
+      "Cross-repo coordination"
+    ],
+    "specPath": "specs/197-factory-contract-open-standard-extensions/spec.md",
+    "status": "approved",
+    "summary": "Evolve the factory Build Spec contract from 1.0.0 to 1.1.0 with two generalizable fields — a REQUIRED per-audience provisioning_model and an optional per-integration implementation_status — under a governing principle: the factory contract is an open, reusable standard, so only org-agnostic concepts may enter it. GoA-specific concepts (classification labels, the external service catalog) are explicitly kept OUT of the contract, in the adapter/org layer. Aligns the canonical schema in standards/schemas/factory/ and the factory-contracts Rust types, fixes the manifest commands drift, and is mirrored by the owned factory source (factory) and its POC.\n",
+    "title": "Open-Standard Factory Contract Extensions (Build Spec 1.1.0)"
+  },
+  "shardHash": "2c9a50e96b6b5761f1b99704f9023935a2177a40f01af5872db73393a1ab1295",
+  "specVersion": "1.1.0"
+}

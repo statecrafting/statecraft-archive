@@ -1,0 +1,113 @@
+{
+  "record": {
+    "created": "2026-07-14",
+    "dependsOn": [
+      "001-statecraft-thesis"
+    ],
+    "establishes": [
+      {
+        "kind": "file",
+        "path": "package.json"
+      },
+      {
+        "kind": "file",
+        "path": "package-lock.json"
+      },
+      {
+        "kind": "file",
+        "path": "encore.app"
+      },
+      {
+        "kind": "file",
+        "path": "tsconfig.json"
+      },
+      {
+        "kind": "file",
+        "path": "vitest.config.ts"
+      },
+      {
+        "kind": "file",
+        "path": "vitest.setup.ts"
+      },
+      {
+        "kind": "file",
+        "path": "infra.config.dev.json"
+      },
+      {
+        "kind": "file",
+        "path": "infra.config.json"
+      },
+      {
+        "kind": "file",
+        "path": ".github/workflows/verify.yml"
+      },
+      {
+        "kind": "directory",
+        "path": "backend/"
+      },
+      {
+        "kind": "directory",
+        "path": "backend/auth/"
+      },
+      {
+        "kind": "directory",
+        "path": "backend/core/"
+      },
+      {
+        "kind": "directory",
+        "path": "backend/health/"
+      },
+      {
+        "kind": "directory",
+        "path": "backend/hiq/"
+      },
+      {
+        "kind": "directory",
+        "path": "backend/idp/"
+      },
+      {
+        "kind": "directory",
+        "path": "backend/lib/"
+      },
+      {
+        "kind": "directory",
+        "path": "backend/web/"
+      },
+      {
+        "kind": "directory",
+        "path": "scripts/"
+      },
+      {
+        "kind": "directory",
+        "path": "docker/"
+      },
+      {
+        "kind": "directory",
+        "path": ".statecraft/"
+      }
+    ],
+    "id": "002-app-shell",
+    "implementation": "complete",
+    "sectionHeadings": [
+      "002: App shell",
+      "0. Cross-repo gate (read first)",
+      "1. Purpose",
+      "2. How the chassis was brought in",
+      "3. Constraints",
+      "4. Acceptance",
+      "Status (2026-07-15)",
+      "Update 2026-07-16 (the `frontend/` edge was a phantom; dropped)",
+      "5. Out of scope",
+      "Amendment (2026-07-21): spec 011 tenant lifecycle",
+      "Amendment (2026-07-22): the toolchain + hiqlite repoint to @statecrafting",
+      "Amendment (2026-07-22): spec 012 frontend-admin adoption, chassis plumbing",
+      "Amendment (2026-07-25): the entrypoint's stop handler (a convergent hunk)"
+    ],
+    "specPath": "specs/002-app-shell/spec.md",
+    "status": "approved",
+    "summary": "statecraft becomes a running EnRaHiTu app: the slimmed chassis from statecrafting/enrahitu is brought into this repo (the two-directory backend/ + frontend/ layout, CoreLedger, auth baseline, rauthy proxy, health, packaging, verify workflow; the Encore toolchain and the hiqlite addon arrive as pinned @enrahitu/* npm packages, not vendored source), stamped with app name \"statecraft\". After this spec the control plane boots, authenticates, and tests green; every later service spec (004+) adds Encore services onto this shell. This is deliberate dogfooding: the platform is stamped from the same template it will stamp for customers.\n",
+    "title": "The control plane's EnRaHiTu app shell"
+  },
+  "shardHash": "5ff1f3c483c76fa408f42f87d6468ffb86301fadda252944e2ad54de9481ecf2",
+  "specVersion": "1.2.0"
+}

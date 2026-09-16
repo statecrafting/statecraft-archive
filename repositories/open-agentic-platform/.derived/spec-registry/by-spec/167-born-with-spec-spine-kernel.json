@@ -1,0 +1,163 @@
+{
+  "record": {
+    "amendmentRecord": "amended by spec 178 (2026-05-24): mechanical regeneration of\ncrates/featuregraph/tests/golden/features_graph.json reflecting the\nproduct/apps/desktop/* → product/apps/opc/* path rename in spec\nfrontmatter. No semantic change to this spec's claims; fixture content\nupdated 1:1 with the rename per the atomicity contract encoded by spec 177\n(featuregraph-golden is a required ci-gate check so renames carry their\nfixture refresh inside the rename PR). The body record below carries the\nauthoritative dated callout; this frontmatter entry reconciles the prior\namended: \"2026-05-23\" date to the body's 2026-05-24 record.\nself-amended (2026-06-11) — distribution-shape correction. §2.1, §2.2,\n§2.4, FR-002/004/005/008/009, SC-001 and §7 are re-narrated so the\ncanonical born-with kernel is the published spec-spine npm distribution\nshape (pinned devDependency + spec-spine.toml + born-clean corpus +\ncommitted .derived/ + spec-spine.yml CI), proven shipping reality\n(template PR #56, 2026-06), retiring §2.2's vendored\ntools/spec-spine/ binaries. The emission layer is corrected from the\ndormant factory-engine Rust transition to the live statecraft prebuilt\nCreate flow; the one additive write (the .kernel-version stamp) lands in\nthe follow-up implementation PR. implementation flipped complete →\nin-progress: the contract is amended ahead of the code swap. Distribution\nshape stays adapter-determined (npm is the first realized mode); spec 209\nowns enforcement activation, not this amendment.\nself-amended (2026-06-12) — PR-2 implementation. The .kernel-version stamp\nis now WRITTEN by the live statecraft Create flow\n(platform/services/statecraft/api/projects/scaffold/kernelVersionStamp.ts,\nwired into perRequestScaffold.ts before push): it records the resolved\nspec-spine npm pin (read from the scaffolded package.json; root for single\nprofiles, public/ for dual), adapter identity + manifest hash, source SHA,\nand toolchain_mode: pinned-toolchain (spec 168 E2). The vendored-binary CI\ntemplate (templates/kernel/tenant-ci.yml.tmpl) + its render_tenant_workflow,\nand the synthetic scaffold-claim generator (kernel_emission/adapter_specs.rs\n+ build_scaffold_claim_spec) are retired; their establishes rows are removed\nwith the files. The Rust emit_kernel path remains the adapter-determined\nfallback (OQ-6). 167 claims the new helper via an extends edge into spec\n112's scaffold path (plan G4); 112 + 168 carry appended narrative entries.\n",
+    "codeAliases": [
+      "BORN_WITH_KERNEL",
+      "SPEC_SPINE_KERNEL_EMISSION"
+    ],
+    "created": "2026-05-22",
+    "dependsOn": [
+      "000-bootstrap-spec-system",
+      "001-spec-compiler-mvp",
+      "075-factory-workflow-engine",
+      "120-factory-extraction-stage",
+      "127-spec-code-coupling-gate",
+      "147-spec-kind-grammar",
+      "165-opc-decomposition-pipeline"
+    ],
+    "domain": "platform",
+    "establishes": [
+      {
+        "kind": "directory",
+        "path": "crates/factory-engine/src/kernel_emission"
+      },
+      {
+        "kind": "file",
+        "path": "crates/factory-engine/src/kernel_emission/mod.rs"
+      },
+      {
+        "kind": "file",
+        "path": "crates/factory-engine/src/kernel_emission/version.rs"
+      },
+      {
+        "kind": "file",
+        "path": "crates/factory-engine/src/kernel_emission/gather.rs"
+      },
+      {
+        "kind": "file",
+        "path": "crates/factory-engine/src/kernel_emission/templates.rs"
+      },
+      {
+        "kind": "file",
+        "path": "crates/factory-engine/src/kernel_emission/emit.rs"
+      },
+      {
+        "kind": "file",
+        "path": "crates/factory-engine/templates/kernel/tenant.makefile.tmpl"
+      },
+      {
+        "kind": "file",
+        "path": "crates/factory-engine/tests/kernel_emission_integration.rs"
+      }
+    ],
+    "extends": [
+      {
+        "nature": "additive",
+        "spec": "120-factory-extraction-stage",
+        "unit": {
+          "kind": "directory",
+          "path": "crates/factory-engine"
+        }
+      },
+      {
+        "nature": "additive",
+        "spec": "075-factory-workflow-engine",
+        "unit": {
+          "kind": "file",
+          "path": "crates/factory-engine/src/engine.rs"
+        }
+      },
+      {
+        "nature": "additive",
+        "spec": "075-factory-workflow-engine",
+        "unit": {
+          "kind": "file",
+          "path": "crates/factory-engine/src/lib.rs"
+        }
+      },
+      {
+        "nature": "additive",
+        "spec": "112-factory-project-lifecycle",
+        "unit": {
+          "kind": "file",
+          "path": "platform/services/statecraft/api/projects/scaffold/kernelVersionStamp.ts"
+        }
+      },
+      {
+        "nature": "additive",
+        "spec": "034-featuregraph-registry-scanner-fix",
+        "unit": {
+          "kind": "file",
+          "path": "crates/featuregraph/tests/golden/features_graph.json"
+        }
+      }
+    ],
+    "extraFrontmatter": {
+      "amended": "2026-06-12",
+      "slug": "born-with-spec-spine-kernel"
+    },
+    "id": "167-born-with-spec-spine-kernel",
+    "implementation": "in-progress",
+    "kind": "capability",
+    "owner": "bart",
+    "references": [
+      {
+        "role": "decomposition-source",
+        "unit": {
+          "kind": "file",
+          "path": "docs/owasp/factory/AIDE-VELOCITY-OAP-INTENT.md"
+        }
+      },
+      {
+        "role": "kernel-source",
+        "unit": {
+          "kind": "file",
+          "path": "specs/000-bootstrap-spec-system/spec.md"
+        }
+      },
+      {
+        "role": "contract-substrate",
+        "unit": {
+          "kind": "directory",
+          "path": "standards/spec"
+        }
+      },
+      {
+        "role": "gate-substrate",
+        "unit": {
+          "kind": "file",
+          "path": "tools/spec-spine/spec-code-coupling-check/Cargo.toml"
+        }
+      }
+    ],
+    "risk": "high",
+    "sectionHeadings": [
+      "167 — Born-with spec-spine kernel emission",
+      "1. Problem",
+      "2. Decision",
+      "2.1 Kernel contents",
+      "2.1.6 Seed-corpus theory",
+      "2.2 Distribution shape: pinned npm devDependency",
+      "2.3 Kernel version anchoring",
+      "2.4 Emission layer: the live Create flow",
+      "3. Functional Requirements",
+      "4. Success Criteria",
+      "5. Scope",
+      "In scope",
+      "Out of scope (deferred to follow-up spec)",
+      "6. Cross-references",
+      "7. Implementation status",
+      "7.1 Implementation status (2026-05-23, vendored-binary cut — superseded distribution mode)",
+      "Done (vendored-binary cut)",
+      "Deferred at the vendored-binary cut (historical)",
+      "7.2 Follow-up implementation plan (2026-06-11, npm distribution shape)",
+      "Amendments received"
+    ],
+    "specPath": "specs/167-born-with-spec-spine-kernel/spec.md",
+    "status": "approved",
+    "summary": "When the factory produces a new project from an adapter, the resulting repo MUST ship with a pre-populated spec-spine kernel in the published `spec-spine` npm distribution shape: a pinned `spec-spine` devDependency, a root `spec-spine.toml`, a born-clean `specs/` corpus (`000-bootstrap` approved) with template-appropriate `standards/spec/`, committed `.derived/` artifacts compiled from the tenant's own corpus, and a `spec-spine.yml` CI gate invoking `npx --no-install spec-spine {compile,lint,index check,couple}` — the tenant-side analogue of the coupling gate (127/130/133). No spec-spine binaries are vendored into the tenant tree; the pinned npm devDependency *is* the pinned-toolchain. (Amended 2026-06-11: the original vendored-binary `tools/spec-spine/` shape is retired; see §2.2 and §7.)\nThe kernel is *versioned* and *content-hash-anchored*. When OAP refines its own spec-spine (e.g., the 130/152 relationship-graph work), tenants born earlier carry an older kernel. The kernel hash recorded in the tenant's repo is the substrate for spec 167's companion kernel-update propagation (deferred to follow-up spec).\nSpec 167 turns OAP from \"a substrate that runs spec- spined work\" into \"a substrate that *produces* spec- spined projects by construction.\" Every project the factory emits inherits the discipline as a matter of birth.\n",
+    "title": "Born-with spec-spine kernel emission — every produced project ships with a spine"
+  },
+  "shardHash": "74377482ed658172bca0ef33afb8db6d9cf151cbd7b21bfdd4600b9daa8337c3",
+  "specVersion": "1.1.0"
+}

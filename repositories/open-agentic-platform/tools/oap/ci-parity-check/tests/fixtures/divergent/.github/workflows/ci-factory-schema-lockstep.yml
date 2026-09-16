@@ -1,0 +1,12 @@
+# Divergent fixture for ci-parity-check tests (spec 104 §5.2 / spec 212 AC-7).
+# This workflow runs the factory-schema-lockstep checker, but the sibling
+# divergent Makefile has NO mirroring recipe → check_parity MUST report drift
+# on the lockstep binary-path token. Proves the run-mirror gate detects a
+# missing factory-schema-lockstep mirror.
+name: CI factory schema lockstep
+on: [push]
+jobs:
+  factory-schema-lockstep:
+    runs-on: ubuntu-latest
+    steps:
+      - run: ./tools/oap/factory-schema-lockstep/target/release/factory-schema-lockstep --oap-dir standards/schemas/factory --factory-dir .factory/contract/schemas

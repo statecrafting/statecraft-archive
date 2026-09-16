@@ -1,0 +1,37 @@
+# Flux Kustomization: the control-plane tier (spec 009).
+#
+# The fifth tier, and the only one that places an application rather than
+# substrate. Relocated here from a top-level `deploy/` on 2026-07-20 (spec 009
+# section 3): the fleet builds tenant resources programmatically in Rust rather
+# than from a chart, so these manifests are the platform's own and belong in
+# the one Flux tree instead of a second location for Kubernetes YAML.
+#
+# dependsOn infrastructure, which gates Ready on the cert-manager HelmRelease,
+# so Postgres, ingress-nginx, and the ClusterIssuers exist before the control
+# plane is placed. It deliberately does NOT depend on `manifests`: the
+# ClusterIssuers that tier owns are needed by the Ingress's Certificate, but
+# `manifests` already dependsOn infrastructure, and adding a second edge would
+# serialize two tiers that can settle independently.
+#
+# `wait: false` on purpose, unlike the other tiers. First boot generates two
+# RS256 keypairs, an OIDC client secret, and rauthy's whole hiqlite database
+# before the app answers, and the Deployment cannot become Ready until the
+# operator has created the pull secret and the SOPS Secret. Tying this tier's
+# Ready to that would wedge the whole reconciliation on a human step.
+apiVersion: kustomize.toolkit.fluxcd.io/v1
+kind: Kustomization
+metadata:
+  name: statecraft
+  namespace: flux-system
+spec:
+  interval: 10m
+  retryInterval: 1m
+  timeout: 10m
+  path: ./infra/gitops/clusters/statecraft-hetzner/statecraft
+  prune: true
+  sourceRef:
+    kind: GitRepository
+    name: flux-system
+  dependsOn:
+    - name: infrastructure
+  wait: false

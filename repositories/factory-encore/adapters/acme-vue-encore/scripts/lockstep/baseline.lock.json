@@ -1,0 +1,35 @@
+{
+  "$comment": "Cross-repo lockstep pin (spec 006). Binds the acme-vue-encore generator + module catalog to the template-encore baseline structure and to the frozen app-invariant spec hashes (the `encore-app-architecture` and `security-data-invariants` invariants). The invariant-hash pin was deferred through Phase 1 and Phase 2 (`encore-app-architecture` absorbed the static-serving wiring from spec 004 in Phase 2, so pinning its hash earlier would have locked a value about to change) and is now ACTIVE: the Phase 3 handshake flipped invariantPin.status to 'pinned', filled the invariant spec.md SHA-256 content hashes, and bumped pinnedRef to the finalized template-encore main. Re-hash drift on either invariant now fails the gate (FR-002). pinnedRef advanced b37d3d7 -> c7603ee (2026-06-24) with the invariant hashes re-hashed identical and the core services unchanged, then c7603ee -> 89326a5 (2026-07-04). Unlike the earlier hash-identical refreshes, this advance deliberately re-blesses CHANGED invariant hashes: template-encore reworked security-data-invariants INV-6 from the Redis rate-limiter-flexible middleware to Postgres-native fixed-window rate limiting (a new UNLOGGED rate_limit_counter table + migrations, apiRateLimit now also on the gateway service) and a user_account email column change, and renumbered its corpus to serial 000-016, which together rewrote both invariant spec.md files. The intervening main commits were reviewed, the pinned core services are all present and unchanged at 89326a5, and the module catalog is factory-encore's own (unaffected by the baseline move). Advancing the pin here is the coupling-gated decision (spec 006) to adopt that baseline; a future ref or hash bump remains an equally deliberate edit. Then 89326a5 -> ddba5e9 (2026-07-08), a hash-identical advance (like the b37d3d7 -> c7603ee refresh): template-encore spec 018 added the optional baseline Redis client apps/api/lib/redis.ts + the ioredis dep without touching either invariant spec, so both invariant hashes re-verified byte-identical at ddba5e9; the generator adopts this baseline so the data-redis promotion (spec 008 FR-001) can compose the infra.config redis block against a baseline that carries the typed lib/redis client. Note: invariantPin.specs and hashes keep template-encore's numbered paths (specs/001-..., specs/002-...) because the checker fetches those exact paths at pinnedRef; the 000-016 renumber kept both invariants at 001/002, so the paths still resolve.",
+  "upstreamSource": "github.com/stagecraft-ing/template-encore",
+  "pinnedRef": "ddba5e94240ec2acfccce25cce137d46ac00e303",
+  "invariantPin": {
+    "status": "pinned",
+    "reason": "Phase 3 handshake (2026-06-23): both invariants finalized in template-encore at b37d3d7; pin advanced to c7603ee (main) on 2026-06-24 with both hashes re-verified identical, then to 89326a5 (main) on 2026-07-04. The 89326a5 advance re-blesses CHANGED hashes: template-encore moved INV-6 to Postgres-native rate limiting and renumbered its corpus (000-016), rewriting both invariant spec.md files. Each value is the SHA-256 of the invariant spec.md at the pinned ref (matching check.ts sha256File); a re-hash mismatch is reported as DRIFT and fails the gate.",
+    "specs": [
+      "specs/001-encore-app-architecture/spec.md",
+      "specs/002-security-data-invariants/spec.md"
+    ],
+    "hashes": {
+      "specs/001-encore-app-architecture/spec.md": "32216375418bdd33ec3c86f0fd3b2985678f728f3ebdd440b53b4dd2383ab418",
+      "specs/002-security-data-invariants/spec.md": "a04d6625eafb7adc6d422588cee0100f91890c0a4eca69cd477d99c642738b53"
+    }
+  },
+  "baselineStructure": {
+    "coreServices": [
+      "apps/api/auth",
+      "apps/api/db",
+      "apps/api/gateway",
+      "apps/api/health",
+      "apps/api/lib",
+      "apps/api/web"
+    ],
+    "modules": [
+      "api-gateway",
+      "cron",
+      "data-postgres",
+      "data-redis",
+      "security-core",
+      "user-management"
+    ]
+  }
+}

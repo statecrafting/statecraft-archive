@@ -1,0 +1,32 @@
+{
+  "mapping": {
+    "dependsOn": [
+      "001-statecraft-thesis"
+    ],
+    "implementingPaths": [
+      {
+        "path": "backend/governance/",
+        "source": "spec-edge"
+      }
+    ],
+    "resolvedUnits": [
+      {
+        "locations": [
+          {
+            "file": "backend/governance/"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "directory",
+          "path": "backend/governance/"
+        }
+      }
+    ],
+    "specId": "008-governance-attestation",
+    "specStatus": "approved"
+  },
+  "schemaVersion": "1.1.0",
+  "shardHash": "46bd8f933ce189a9339e5830fb6c6105e18d5c2607673af1ae33ef74788d185b"
+}

@@ -1,0 +1,32 @@
+{
+  "name": "api-gateway",
+  "version": "2.0.0",
+  "description": "BFF API gateway opt-in. The proxy is the in-app gateway service (apps/api/gateway: proxy.ts + token-cache.ts), already present in the base app, and its service-to-service OAuth secrets (GATEWAY_OAUTH_CLIENT_ID / GATEWAY_OAUTH_CLIENT_SECRET) are already declared by the base (apps/api/lib/secrets.ts + infra.config.json) - so this module contributes no secrets of its own. It documents the private-backend config knobs and contributes the frontend /connectivity test page. No apps/api/src/** payload under Encore.",
+  "status": "stable",
+  "requires": ["security-core"],
+  "requiresOneOf": [],
+  "optionalPeers": [],
+  "conflicts": [],
+  "services": [],
+  "secrets": [],
+  "corsEntries": [],
+  "middlewares": [],
+  "migrations": [],
+  "files": {
+    "apps/web/src/views/ConnectivityTestView.vue": "apps/web/src/views/ConnectivityTestView.vue"
+  },
+  "authExports": [],
+  "webSnippetFile": "web.snippet.ts",
+  "packageDeps": {},
+  "envVars": {
+    "PRIVATE_API_BASE_URL": {
+      "required": false,
+      "description": "Private backend base URL the gateway proxies to (include the API path prefix, e.g. https://private-api.example.com/api/v1)"
+    },
+    "GATEWAY_TIMEOUT_MS": {
+      "value": "30000",
+      "required": false,
+      "description": "Gateway proxy request timeout in ms"
+    }
+  }
+}

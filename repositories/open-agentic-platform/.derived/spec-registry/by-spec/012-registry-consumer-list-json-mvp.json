@@ -1,0 +1,38 @@
+{
+  "record": {
+    "authors": [
+      "open-agentic-platform"
+    ],
+    "created": "2026-03-22",
+    "domain": "tooling",
+    "extends": [
+      {
+        "nature": "additive",
+        "spec": "002-registry-consumer-mvp"
+      }
+    ],
+    "extraFrontmatter": {
+      "language": "en"
+    },
+    "featureBranch": "012-registry-consumer-list-json-mvp",
+    "id": "012-registry-consumer-list-json-mvp",
+    "implementation": "complete",
+    "kind": "platform-delivery",
+    "sectionHeadings": [
+      "Feature Specification: Registry consumer list JSON output",
+      "Purpose and charter",
+      "In scope",
+      "Out of scope",
+      "Requirements *(mandatory)*",
+      "Success criteria",
+      "Clarifications"
+    ],
+    "specPath": "specs/012-registry-consumer-list-json-mvp/spec.md",
+    "status": "superseded",
+    "summary": "Add `list --json` so scripts and tooling receive a stable JSON array of feature objects, reusing existing filters and sort order without changing registry schema.\n",
+    "supersededBy": "217-spec-spine-engine-swap-collapse",
+    "title": "Registry consumer list JSON output"
+  },
+  "shardHash": "7665f1ec092c7e443f9da4a2503552044ef76e4fa5178e38ec92ef1e712b266d",
+  "specVersion": "1.1.0"
+}

@@ -1,0 +1,50 @@
+{
+  "record": {
+    "authors": [
+      "open-agentic-platform"
+    ],
+    "created": "2026-03-29",
+    "domain": "opc",
+    "establishes": [
+      {
+        "kind": "file",
+        "path": "product/apps/opc/src/features/checkpoint/CheckpointSurface.tsx"
+      },
+      {
+        "kind": "file",
+        "path": "product/apps/opc/src/features/checkpoint/useCheckpointFlow.ts"
+      },
+      {
+        "kind": "file",
+        "path": "product/apps/opc/src/features/checkpoint/types.ts"
+      }
+    ],
+    "featureBranch": "041-checkpoint-restore-ui",
+    "id": "041-checkpoint-restore-ui",
+    "implementation": "complete",
+    "kind": "product",
+    "sectionHeadings": [
+      "Feature Specification: Checkpoint / Restore UI — desktop panel",
+      "Purpose",
+      "Scope",
+      "In scope",
+      "Out of scope",
+      "Requirements",
+      "Functional",
+      "Non-functional",
+      "Architecture",
+      "Tab integration",
+      "Feature structure",
+      "State machine",
+      "Tauri command invocation",
+      "Success criteria",
+      "Risk"
+    ],
+    "specPath": "specs/041-checkpoint-restore-ui/spec.md",
+    "status": "approved",
+    "summary": "Add a dedicated Checkpoint panel to the desktop app that exposes titor's temporal safety capabilities through a project-scoped UI: initialize tracking, create named checkpoints, list/restore/diff/verify checkpoints.\n",
+    "title": "Checkpoint / Restore UI — desktop panel"
+  },
+  "shardHash": "e2e9d8df34325cdfc6837348ad1ef32c04467855f3748c68653a4e4180092a65",
+  "specVersion": "1.1.0"
+}

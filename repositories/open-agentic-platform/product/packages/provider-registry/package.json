@@ -1,0 +1,44 @@
+{
+  "name": "@opc/provider-registry",
+  "version": "0.1.0",
+  "description": "Multi-provider LLM registry (spec 042) — normalized AgentEvent and ProviderRegistry",
+  "private": true,
+  "type": "module",
+  "main": "src/index.ts",
+  "types": "src/index.ts",
+  "exports": {
+    ".": "./src/index.ts",
+    "./types": "./src/types.ts",
+    "./adapters/anthropic": "./src/adapters/anthropic.ts",
+    "./adapters/claude-code-sdk": "./src/adapters/claude-code-sdk.ts",
+    "./adapters/openai": "./src/adapters/openai.ts",
+    "./adapters/gemini": "./src/adapters/gemini.ts",
+    "./adapters/bedrock": "./src/adapters/bedrock.ts",
+    "./normalization/anthropic-events": "./src/normalization/anthropic-events.ts",
+    "./normalization/claude-code-events": "./src/normalization/claude-code-events.ts",
+    "./normalization/openai-events": "./src/normalization/openai-events.ts",
+    "./normalization/gemini-events": "./src/normalization/gemini-events.ts",
+    "./normalization/bedrock-events": "./src/normalization/bedrock-events.ts"
+  },
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "test": "vitest run",
+    "lint": "eslint src/"
+  },
+  "devDependencies": {
+    "@types/node": "^22.15.30",
+    "typescript": "^6.0.3",
+    "vitest": "^4.1.5"
+  },
+  "dependencies": {
+    "@anthropic-ai/sdk": "^0.95.0",
+    "@aws-sdk/client-bedrock-runtime": "^3.1044.0",
+    "@google/generative-ai": "^0.24.1",
+    "@opc/claude-code-bridge": "workspace:*",
+    "@opc/permission-system": "workspace:*",
+    "openai": "^4.104.0"
+  },
+  "oap": {
+    "spec": "042-multi-provider-agent-registry"
+  }
+}

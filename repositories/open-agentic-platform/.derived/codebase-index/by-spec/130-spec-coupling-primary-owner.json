@@ -1,0 +1,64 @@
+{
+  "mapping": {
+    "dependsOn": [
+      "000-bootstrap-spec-system",
+      "001-spec-compiler-mvp",
+      "101-codebase-index-mvp"
+    ],
+    "implementingPaths": [
+      {
+        "path": "standards/schemas/spec-spine/registry.schema.json",
+        "source": "spec-edge"
+      },
+      {
+        "path": "tools/shared/spec-types/src/lib.rs",
+        "source": "spec-edge"
+      }
+    ],
+    "resolvedUnits": [
+      {
+        "locations": [
+          {
+            "file": "standards/schemas/spec-spine/registry.schema.json"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "file",
+          "path": "standards/schemas/spec-spine/registry.schema.json"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "tools/shared/spec-types/src/lib.rs"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "file",
+          "path": "tools/shared/spec-types/src/lib.rs"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "standards/schemas/spec-spine/registry.schema.json"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "constrains",
+        "unit": {
+          "kind": "file",
+          "path": "standards/schemas/spec-spine/registry.schema.json"
+        }
+      }
+    ],
+    "specId": "130-spec-coupling-primary-owner",
+    "specStatus": "approved"
+  },
+  "schemaVersion": "1.1.0",
+  "shardHash": "96935114b35799d1524a84bf61085a2e2a8b7f17e7535d679a6a198ef69d882d"
+}

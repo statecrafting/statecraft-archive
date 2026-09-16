@@ -1,0 +1,57 @@
+{
+  "record": {
+    "created": "2026-05-01",
+    "dependsOn": [
+      "111-org-agent-catalog-sync",
+      "123-agent-catalog-org-rescope",
+      "124-opc-factory-run-platform-integration"
+    ],
+    "domain": "opc",
+    "extends": [
+      {
+        "nature": "additive",
+        "spec": "123-agent-catalog-org-rescope",
+        "unit": {
+          "kind": "file",
+          "path": "product/apps/opc/src/components/AgentPicker.tsx"
+        }
+      },
+      {
+        "nature": "additive",
+        "spec": "123-agent-catalog-org-rescope",
+        "unit": {
+          "kind": "file",
+          "path": "product/apps/opc/src/lib/agentPicker.ts"
+        }
+      }
+    ],
+    "extraFrontmatter": {
+      "approved": "2026-05-01",
+      "slug": "desktop-agent-picker-ui"
+    },
+    "id": "126-desktop-agent-picker-ui",
+    "implementation": "complete",
+    "kind": "desktop",
+    "owner": "bart",
+    "risk": "low",
+    "sectionHeadings": [
+      "126 — Desktop Agent Picker — Bindings vs Full Catalog",
+      "1. Problem Statement",
+      "2. Decision",
+      "3. Component Surface",
+      "4. UI Structure",
+      "5. Data Flow",
+      "6. Integration Points",
+      "7. Non-Goals",
+      "8. Acceptance",
+      "9. Open Questions",
+      "10. Implementation Notes (2026-05-01)"
+    ],
+    "specPath": "specs/126-desktop-agent-picker-ui/spec.md",
+    "status": "approved",
+    "summary": "Closes spec 123 T073, which was a no-op because the desktop AgentPicker surface didn't exist yet. Add a single AgentPicker component to the desktop that surfaces \"Active for this project\" (org agents bound via `project_agent_bindings`) versus \"All org agents\" (full catalog, ad-hoc browse). Calls the spec 123 desktop commands `list_active_agents(project_id)` and `list_org_agents(org_id)`. Renders the spec 123 invariants (`status: retired_upstream`, `pinned_version`, `pinned_content_hash`) faithfully so an operator can tell at a glance whether a binding is current. Does not reach into spec 124's run pipeline; the picker's output is an `AgentReference` (spec 123 `factory-contracts`) that callers consume.\n",
+    "title": "Desktop Agent Picker — Bindings vs Full Catalog"
+  },
+  "shardHash": "96985f35e82891f9252bcb60f0f36f7a10141595aa161857a743501620f7b6ed",
+  "specVersion": "1.1.0"
+}

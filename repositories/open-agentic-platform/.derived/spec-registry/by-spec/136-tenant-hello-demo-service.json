@@ -1,0 +1,136 @@
+{
+  "record": {
+    "amendmentRecord": "Amended 2026-06-16 by 214-tenant-app-chart-supersession (Stage 2): records\nthe partial supersession of the tenant-hello service, chart, and CI/CD\nworkflows (declared in 214's supersedes) now that acme-vue-encore is the sole\ntenant shape, and refines the C-004 statelessness clause to \"stateless pods;\ndurable state lives only in the declared database\" (FR-012) so the contract\nmatches the real database-backed template shape. The C-001..C-005 contract\ntext otherwise stands as the tenant-codebase reference.\n",
+    "created": "2026-05-04",
+    "dependsOn": [
+      "087-unified-workspace-architecture",
+      "078-platform-completion-plan"
+    ],
+    "domain": "platform",
+    "establishes": [
+      {
+        "kind": "file",
+        "path": "platform/services/statecraft/api/deploy/chartSelector.ts"
+      },
+      {
+        "kind": "file",
+        "path": "platform/services/statecraft/api/deploy/chartSelector.test.ts"
+      }
+    ],
+    "extends": [
+      {
+        "nature": "additive",
+        "spec": "073-axiomregent-unification",
+        "unit": {
+          "kind": "file",
+          "path": "platform/services/deployd-api-rs/src/helm.rs"
+        }
+      },
+      {
+        "nature": "additive",
+        "spec": "073-axiomregent-unification",
+        "unit": {
+          "kind": "file",
+          "path": "platform/services/deployd-api-rs/src/k8s.rs"
+        }
+      },
+      {
+        "nature": "additive",
+        "spec": "073-axiomregent-unification",
+        "unit": {
+          "kind": "file",
+          "path": "platform/services/deployd-api-rs/src/routes.rs"
+        }
+      },
+      {
+        "nature": "additive",
+        "spec": "073-axiomregent-unification",
+        "unit": {
+          "kind": "file",
+          "path": "platform/services/deployd-api-rs/src/main.rs"
+        }
+      },
+      {
+        "nature": "additive",
+        "spec": "073-axiomregent-unification",
+        "unit": {
+          "kind": "file",
+          "path": "platform/services/deployd-api-rs/Dockerfile"
+        }
+      },
+      {
+        "nature": "additive",
+        "spec": "073-axiomregent-unification",
+        "unit": {
+          "kind": "file",
+          "path": ".github/workflows/cd-deployd-api-rs.yml"
+        }
+      },
+      {
+        "nature": "additive",
+        "spec": "073-axiomregent-unification",
+        "unit": {
+          "kind": "file",
+          "path": ".github/workflows/ci-deployd-api-rs.yml"
+        }
+      }
+    ],
+    "extraFrontmatter": {
+      "amended": "2026-06-16",
+      "approved": "2026-05-06",
+      "completed": "2026-05-17"
+    },
+    "id": "136-tenant-hello-demo-service",
+    "implementation": "complete",
+    "kind": "platform",
+    "owner": "bart",
+    "references": [
+      {
+        "role": "superseded-removed",
+        "unit": {
+          "kind": "directory",
+          "path": "platform/services/tenant-hello"
+        }
+      },
+      {
+        "role": "superseded-removed",
+        "unit": {
+          "kind": "directory",
+          "path": "platform/charts/tenant-hello"
+        }
+      },
+      {
+        "role": "superseded-removed",
+        "unit": {
+          "kind": "file",
+          "path": ".github/workflows/cd-tenant-hello.yml"
+        }
+      },
+      {
+        "role": "superseded-removed",
+        "unit": {
+          "kind": "file",
+          "path": ".github/workflows/ci-tenant-hello.yml"
+        }
+      }
+    ],
+    "risk": "low",
+    "sectionHeadings": [
+      "Feature Specification: Tenant-hello demo service",
+      "Purpose and charter",
+      "Current state vs intent",
+      "Tenant codebase contract *(normative)*",
+      "Functional Requirements *(MVP)*",
+      "Success Criteria",
+      "Clarifications",
+      "Session 2026-05-04",
+      "Session 2026-07-09: deployd-api builder/runtime glibc parity"
+    ],
+    "specPath": "specs/136-tenant-hello-demo-service/spec.md",
+    "status": "approved",
+    "summary": "Document `platform/services/tenant-hello` as the deliberately-minimal reference of what a project codebase looks like when statecraft is responsible for deploying it. The express service itself is trivial; the spec exists to pin the contract a tenant codebase must honour to round-trip through statecraft (containerised entrypoint, health probe, port-from-env, no privileged dependencies) and to call out the current gap between \"tenant codebase exists\" and \"statecraft can deploy it end-to-end.\"\n",
+    "title": "Tenant-hello — statecraft-deployable tenant reference service"
+  },
+  "shardHash": "78ceb613d45ded5fc99bcf46ef9b7f76e5014fa2d096ea8d60f82876df695659",
+  "specVersion": "1.1.0"
+}

@@ -1,0 +1,39 @@
+{
+  "name": "@statecrafting/governance-native",
+  "version": "0.2.0",
+  "license": "AGPL-3.0",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/statecrafting/statecrafting.git",
+    "directory": "addon/governance-native"
+  },
+  "spec-spine": { "spec": "005-governance-native" },
+  "description": "The control plane's governance spine (canonical JSON, attest-ledger record chain, action gate, trust window) as a napi-rs native addon. AGPL-3.0: a control-plane internal, not substrate for stamped apps. Prebuilt per-platform binaries ship as optional dependencies (statecrafting spec 005).",
+  "type": "commonjs",
+  "main": "index.js",
+  "types": "index.d.ts",
+  "engines": { "node": ">=24" },
+  "files": [
+    "LICENSE",
+    "index.js",
+    "index.d.ts"
+  ],
+  "napi": {
+    "binaryName": "governance-native",
+    "targets": [
+      "aarch64-apple-darwin",
+      "x86_64-unknown-linux-gnu",
+      "aarch64-unknown-linux-gnu"
+    ]
+  },
+  "scripts": {
+    "build": "napi build --platform --release",
+    "build:debug": "napi build --platform",
+    "test:rust": "cargo test --no-default-features",
+    "create-npm-dirs": "napi create-npm-dirs",
+    "artifacts": "napi artifacts"
+  },
+  "devDependencies": {
+    "@napi-rs/cli": "3.1.5"
+  }
+}

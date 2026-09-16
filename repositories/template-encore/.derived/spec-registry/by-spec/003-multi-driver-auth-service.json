@@ -1,0 +1,44 @@
+{
+  "record": {
+    "codeAliases": [
+      "AUTH_SERVICE",
+      "AUTH_GATEWAY"
+    ],
+    "created": "2026-06-10",
+    "dependsOn": [
+      "001-encore-app-architecture",
+      "002-security-data-invariants"
+    ],
+    "domain": "app",
+    "establishes": [
+      {
+        "kind": "file",
+        "path": "apps/api/auth/"
+      }
+    ],
+    "id": "003-multi-driver-auth-service",
+    "implementation": "complete",
+    "kind": "feature",
+    "owner": "bart",
+    "risk": "high",
+    "sectionHeadings": [
+      "003 - Multi-driver auth service: Encore authHandler/Gateway, mock/rauthy OIDC SSO, JWT issuance and refresh rotation",
+      "1. Purpose",
+      "2. Territory",
+      "3. Behavior",
+      "3.1 Service shape",
+      "3.2 Endpoint map",
+      "3.3 Invariant enforcement",
+      "3.4 Functional requirements",
+      "3.5 Key entities",
+      "4. Acceptance criteria",
+      "5. Out of scope"
+    ],
+    "specPath": "specs/003-multi-driver-auth-service/spec.md",
+    "status": "approved",
+    "summary": "The auth service: a dual-mode Encore authHandler (httpOnly session cookie + Bearer), a Gateway binding it, two SSO drivers (mock, rauthy OIDC) selected by AUTH_DRIVER, RS256 JWT issuance, refresh-token rotation and revocation, CSRF protection, rate limiting, and auth-event audit.\n",
+    "title": "Multi-driver auth service: Encore authHandler/Gateway, mock/rauthy OIDC SSO, JWT issuance and refresh rotation"
+  },
+  "shardHash": "fc8e4385ddc9a3a157c27bfd90495cb064aa6e5dc3d783918e433935317709da",
+  "specVersion": "1.1.0"
+}

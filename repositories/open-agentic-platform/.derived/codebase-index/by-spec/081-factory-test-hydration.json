@@ -1,0 +1,30 @@
+{
+  "diagnostics": {
+    "errors": [],
+    "warnings": [
+      {
+        "code": "W-002",
+        "message": "spec '081-factory-test-hydration' directory unit 'factory' is not a directory",
+        "path": "factory"
+      }
+    ]
+  },
+  "mapping": {
+    "implementingPaths": [],
+    "resolvedUnits": [
+      {
+        "locations": [],
+        "ownership": false,
+        "sourceField": "references",
+        "unit": {
+          "kind": "directory",
+          "path": "factory"
+        }
+      }
+    ],
+    "specId": "081-factory-test-hydration",
+    "specStatus": "approved"
+  },
+  "schemaVersion": "1.1.0",
+  "shardHash": "7fbdd68ea79c2155903724d2446ea04d06c816a250ed5e9decd210d70c0a9dc2"
+}

@@ -1,0 +1,26 @@
+[package]
+name = "open_agentic_ci_parity_check"
+publish = false   # internal workspace crate; binaries ship via release workflows, not crates.io
+version = "0.1.0"
+edition = "2024"
+description = "Drift-check: assert the root Makefile's ci targets mirror enforcing GitHub Actions workflow run: blocks (spec 104)"
+rust-version = "1.85"
+
+[[bin]]
+name = "ci-parity-check"
+path = "src/main.rs"
+
+[lib]
+name = "open_agentic_ci_parity_check"
+path = "src/lib.rs"
+
+[dependencies]
+clap = { version = "4", features = ["derive"] }
+serde = { version = "1", features = ["derive"] }
+serde_yaml = "0.9"
+
+[dev-dependencies]
+tempfile = "3"
+
+[package.metadata.oap]
+spec = "104-makefile-ci-parity-contract"

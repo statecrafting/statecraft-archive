@@ -1,0 +1,11 @@
+{
+  "package": {
+    "kind": "npm-package",
+    "name": "@opc/ui",
+    "path": "product/packages/ui",
+    "specRef": "032-opc-inspect-governance-wiring-mvp",
+    "version": "0.1.0"
+  },
+  "schemaVersion": "1.1.0",
+  "shardHash": "d9b78076f35b5096b753c21ae3b6aeaa0341e58ae31ff32c91e713bb48d7156e"
+}

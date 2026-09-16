@@ -1,0 +1,13 @@
+# Divergent fixture for ci-parity-check tests (spec 104 §5.2 / spec 211 AC-4).
+# This workflow runs the encore-lane coverage guard, but the sibling
+# divergent Makefile has NO mirroring recipe → check_parity MUST report
+# drift on the lane-guard script token. Proves the run-mirror gate detects
+# a missing ci-statecraft-encore mirror.
+name: CI statecraft encore
+on: [push]
+jobs:
+  encore-test:
+    runs-on: ubuntu-latest
+    steps:
+      - run: node scripts/encore-test-lane.mjs list > /tmp/encore-lane-files.txt
+      - run: node scripts/encore-test-lane.mjs check --report /tmp/encore-test-report.json

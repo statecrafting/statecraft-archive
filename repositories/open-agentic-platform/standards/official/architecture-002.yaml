@@ -1,0 +1,43 @@
+id: architecture-002
+category: architecture
+priority: medium
+context: >
+  Applies to function and module design. Small, focused units are easier
+  to test, review, and reuse.
+tags:
+  - typescript
+  - javascript
+  - architecture
+  - design
+
+rules:
+  - verb: PREFER
+    subject: "pure functions over stateful methods"
+    rationale: >
+      Pure functions (same input → same output, no side effects) are
+      trivially testable, cacheable, and composable. Reserve state for
+      the boundaries where side effects are unavoidable.
+
+  - verb: AVOID
+    subject: "functions with more than three parameters"
+    rationale: >
+      Long parameter lists are hard to read and easy to misorder. Group
+      related parameters into an options object with named properties.
+
+  - verb: PREFER
+    subject: "composition over inheritance for code reuse"
+    rationale: >
+      Inheritance creates tight coupling and fragile base class problems.
+      Compose behaviors via functions, mixins, or delegation to keep
+      components independently evolvable.
+
+  - verb: ALWAYS
+    subject: "co-locate related files (component, test, styles, types)"
+    rationale: >
+      Spreading related files across distant directories forces developers
+      to jump between locations for every change. Co-location keeps the
+      blast radius visible.
+
+anti_patterns:
+  - pattern: "class UserService extends BaseService extends LoggingMixin {}"
+    correction: "class UserService { constructor(private logger: Logger, private repo: UserRepo) {} }"

@@ -1,0 +1,24 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://open-agentic-platform.local/specs/000-bootstrap-spec-system/build-meta.schema.json",
+  "title": "Open Agentic Platform — non-deterministic build metadata (ephemeral)",
+  "description": "Emitted alongside registry.json. Not part of byte-identical determinism checks.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["builtAt"],
+  "properties": {
+    "builtAt": {
+      "type": "string",
+      "format": "date-time",
+      "description": "UTC timestamp when the compiler run finished (wall clock)."
+    },
+    "compilerId": {
+      "type": "string",
+      "description": "Optional duplicate for log correlation without opening registry.json."
+    },
+    "compilerVersion": {
+      "type": "string",
+      "description": "Optional duplicate for log correlation."
+    }
+  }
+}

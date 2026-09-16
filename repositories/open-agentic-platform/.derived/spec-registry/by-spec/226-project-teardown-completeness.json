@@ -1,0 +1,116 @@
+{
+  "record": {
+    "authors": [
+      "open-agentic-platform"
+    ],
+    "codeAliases": [
+      "deleteRepo",
+      "destroyDeployments",
+      "deleteNamespaces"
+    ],
+    "created": "2026-07-04",
+    "dependsOn": [
+      "119-project-as-unit-of-governance",
+      "225-deployd-selfprovision-rbac",
+      "215-statecraft-deploy-trigger-ux",
+      "214-tenant-app-chart-supersession",
+      "136-tenant-hello-demo-service",
+      "137-tenant-environment-access-gates",
+      "113-statecraft-projects-rename-and-clone",
+      "080-github-identity-onboarding"
+    ],
+    "domain": "platform",
+    "extends": [
+      {
+        "nature": "additive",
+        "spec": "034-featuregraph-registry-scanner-fix",
+        "unit": {
+          "kind": "file",
+          "path": "crates/featuregraph/tests/golden/features_graph.json"
+        }
+      }
+    ],
+    "extraFrontmatter": {
+      "language": "en"
+    },
+    "featureBranch": "226-project-teardown-completeness",
+    "id": "226-project-teardown-completeness",
+    "implementation": "pending",
+    "kind": "platform",
+    "references": [
+      {
+        "role": "teardown-entry-point",
+        "unit": {
+          "kind": "file",
+          "path": "platform/services/statecraft/api/projects/projects.ts"
+        }
+      },
+      {
+        "role": "repo-delete-helper",
+        "unit": {
+          "kind": "file",
+          "path": "platform/services/statecraft/api/projects/cloneHelpers.ts"
+        }
+      },
+      {
+        "role": "deployment-teardown-trigger",
+        "unit": {
+          "kind": "file",
+          "path": "platform/services/statecraft/api/deploy/deploydClient.ts"
+        }
+      },
+      {
+        "role": "deployd-teardown-handler",
+        "unit": {
+          "kind": "file",
+          "path": "platform/services/deployd-api-rs/src/routes.rs"
+        }
+      },
+      {
+        "role": "deployd-namespace-capability",
+        "unit": {
+          "kind": "file",
+          "path": "platform/services/deployd-api-rs/src/rbac.rs"
+        }
+      },
+      {
+        "role": "repo-provenance-schema",
+        "unit": {
+          "kind": "file",
+          "path": "platform/services/statecraft/api/db/schema.ts"
+        }
+      }
+    ],
+    "sectionHeadings": [
+      "Feature Specification: Complete Project Teardown",
+      "Context",
+      "Why three independent, opt-in toggles",
+      "Toggle to resource to code-path mapping",
+      "User Scenarios & Testing *(mandatory)*",
+      "User Story 1 - Default delete stays a safe DB + storage purge (Priority: P1)",
+      "User Story 2 - Delete the GitHub repository, only when OAP created it (Priority: P1)",
+      "User Story 3 - Tear down live deployments and (opt-in) the namespace (Priority: P1)",
+      "Edge Cases",
+      "Requirements *(mandatory)*",
+      "Functional Requirements: the delete contract",
+      "Functional Requirements: repo delete (toggle 1)",
+      "Functional Requirements: deployment teardown (toggle 2)",
+      "Functional Requirements: namespace deletion (toggle 3, promotes spec 225 deferred item)",
+      "Functional Requirements: auditability",
+      "Functional Requirements: authorization",
+      "Key Entities",
+      "Success Criteria *(mandatory)*",
+      "Measurable Outcomes",
+      "Confirmation and irreversibility contract",
+      "Implementation staging",
+      "Review follow-ups (AI review of #515)",
+      "Review follow-ups (AI review of #516)"
+    ],
+    "specPath": "specs/226-project-teardown-completeness/spec.md",
+    "status": "approved",
+    "summary": "`deleteProject` is a DB + storage delete only. It orphans two real-world resources: the GitHub repository (it drops the `project_repos` link row but never deletes the repo) and any live Kubernetes deployment (CASCADE removes the `environments` row but nothing calls deployd's teardown, so the helm release and tenant namespace linger). This spec makes project teardown complete by adding three opt-in, default-off destructive toggles to the delete request: (1) delete the GitHub repository (provenance-gated to repos OAP created), (2) tear down live deployments (helm uninstall across the project's environments), and (3) delete the tenant namespace(s). Each toggle is best-effort after the DB commit, mirroring the existing storage-sweep posture, and each is independently opt-in because all three are irreversible (repo restore is not guaranteed; namespace deletion with PVCs is permanent data loss). Toggle (3) promotes spec 225's deferred \"Namespace deletion on teardown\" item into a first-class, gated contract.\n",
+    "title": "Complete Project Teardown (opt-in repo delete, deployment teardown, namespace deletion)"
+  },
+  "shardHash": "541b2f1bf4cfde786b3a2f4e61ce3d279b0c94f5022ea7d6e0e48a81caf63c13",
+  "specVersion": "1.1.0"
+}

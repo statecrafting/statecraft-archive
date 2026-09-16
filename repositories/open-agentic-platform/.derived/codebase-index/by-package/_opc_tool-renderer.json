@@ -1,0 +1,11 @@
+{
+  "package": {
+    "kind": "npm-package",
+    "name": "@opc/tool-renderer",
+    "path": "product/packages/tool-renderer",
+    "specRef": "050-tool-renderer-system",
+    "version": "0.1.0"
+  },
+  "schemaVersion": "1.1.0",
+  "shardHash": "1bdd0d16454c294a09674d4650c2df17b7dc60546494cccb04f9483546e705cb"
+}

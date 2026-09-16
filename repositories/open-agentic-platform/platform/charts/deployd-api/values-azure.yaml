@@ -1,0 +1,15 @@
+image:
+  repository: statecraftdevacr.azurecr.io/deployd-api
+
+serviceAccount:
+  annotations:
+    azure.workload.identity/client-id: ""
+
+podLabels:
+  azure.workload.identity/use: "true"
+
+secrets:
+  provider: "eso"
+  storeRef:
+    name: azure-keyvault
+    kind: ClusterSecretStore

@@ -1,0 +1,272 @@
+{
+  "mapping": {
+    "dependsOn": [
+      "073-axiomregent-unification",
+      "086-open-source-launch",
+      "144-hiqlite-default-features"
+    ],
+    "implementingPaths": [
+      {
+        "path": ".github/workflows/cd-deployd-api-rs.yml",
+        "source": "spec-edge"
+      },
+      {
+        "path": "platform/charts/deployd-api/templates/deployment.yaml",
+        "source": "spec-edge"
+      },
+      {
+        "path": "platform/charts/deployd-api/templates/external-secret.yaml",
+        "source": "spec-edge"
+      },
+      {
+        "path": "platform/charts/deployd-api/values-aws.yaml",
+        "source": "spec-edge"
+      },
+      {
+        "path": "platform/charts/deployd-api/values-azure.yaml",
+        "source": "spec-edge"
+      },
+      {
+        "path": "platform/charts/deployd-api/values-do.yaml",
+        "source": "spec-edge"
+      },
+      {
+        "path": "platform/charts/deployd-api/values-gcp.yaml",
+        "source": "spec-edge"
+      },
+      {
+        "path": "platform/charts/deployd-api/values-hetzner.yaml",
+        "source": "spec-edge"
+      },
+      {
+        "path": "platform/charts/deployd-api/values-local.yaml",
+        "source": "spec-edge"
+      },
+      {
+        "path": "platform/charts/deployd-api/values.yaml",
+        "source": "spec-edge"
+      },
+      {
+        "path": "platform/services/deployd-api-rs/Cargo.toml",
+        "source": "spec-edge"
+      },
+      {
+        "path": "platform/services/deployd-api-rs/src/auth.rs",
+        "source": "spec-edge"
+      },
+      {
+        "path": "platform/services/deployd-api-rs/src/config.rs",
+        "source": "spec-edge"
+      },
+      {
+        "path": "platform/services/deployd-api-rs/src/main.rs",
+        "source": "spec-edge"
+      },
+      {
+        "path": "platform/services/deployd-api-rs/src/store.rs",
+        "source": "spec-edge"
+      }
+    ],
+    "resolvedUnits": [
+      {
+        "locations": [
+          {
+            "file": ".github/workflows/cd-deployd-api-rs.yml"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "extends",
+        "unit": {
+          "kind": "file",
+          "path": ".github/workflows/cd-deployd-api-rs.yml"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "platform/charts/deployd-api/templates/deployment.yaml"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "extends",
+        "unit": {
+          "kind": "file",
+          "path": "platform/charts/deployd-api/templates/deployment.yaml"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "platform/charts/deployd-api/templates/external-secret.yaml"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "extends",
+        "unit": {
+          "kind": "file",
+          "path": "platform/charts/deployd-api/templates/external-secret.yaml"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "platform/charts/deployd-api/values-aws.yaml"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "extends",
+        "unit": {
+          "kind": "file",
+          "path": "platform/charts/deployd-api/values-aws.yaml"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "platform/charts/deployd-api/values-azure.yaml"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "extends",
+        "unit": {
+          "kind": "file",
+          "path": "platform/charts/deployd-api/values-azure.yaml"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "platform/charts/deployd-api/values-do.yaml"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "extends",
+        "unit": {
+          "kind": "file",
+          "path": "platform/charts/deployd-api/values-do.yaml"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "platform/charts/deployd-api/values-gcp.yaml"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "extends",
+        "unit": {
+          "kind": "file",
+          "path": "platform/charts/deployd-api/values-gcp.yaml"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "platform/charts/deployd-api/values-hetzner.yaml"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "extends",
+        "unit": {
+          "kind": "file",
+          "path": "platform/charts/deployd-api/values-hetzner.yaml"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "platform/charts/deployd-api/values-local.yaml"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "extends",
+        "unit": {
+          "kind": "file",
+          "path": "platform/charts/deployd-api/values-local.yaml"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "platform/charts/deployd-api/values.yaml"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "extends",
+        "unit": {
+          "kind": "file",
+          "path": "platform/charts/deployd-api/values.yaml"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "platform/services/deployd-api-rs/Cargo.toml"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "extends",
+        "unit": {
+          "kind": "file",
+          "path": "platform/services/deployd-api-rs/Cargo.toml"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "platform/services/deployd-api-rs/src/auth.rs"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "extends",
+        "unit": {
+          "kind": "file",
+          "path": "platform/services/deployd-api-rs/src/auth.rs"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "platform/services/deployd-api-rs/src/config.rs"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "extends",
+        "unit": {
+          "kind": "file",
+          "path": "platform/services/deployd-api-rs/src/config.rs"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "platform/services/deployd-api-rs/src/main.rs"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "extends",
+        "unit": {
+          "kind": "file",
+          "path": "platform/services/deployd-api-rs/src/main.rs"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "platform/services/deployd-api-rs/src/store.rs"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "extends",
+        "unit": {
+          "kind": "file",
+          "path": "platform/services/deployd-api-rs/src/store.rs"
+        }
+      }
+    ],
+    "specId": "145-deployd-durability",
+    "specStatus": "approved"
+  },
+  "schemaVersion": "1.1.0",
+  "shardHash": "0eb7c284fd9131bb370aa66bf0fdbe74c486c1d337fc47dccfb60a0f2b072ae5"
+}

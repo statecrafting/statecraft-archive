@@ -1,0 +1,29 @@
+# Spec: 135-fast-ci-as-default
+#
+# FR-05a (amendment 2026-06-11): reclaim roughly 25 GB of preinstalled
+# toolchains on GitHub-hosted runners before disk-heavy cargo jobs.
+# Two ENOSPC data points motivated this: merge_group run 27355231139
+# (ci-crates workspace build, "No space left on device" mid-test) and
+# merge_group run 27371047814 (spec-conformance governance-gate step,
+# rustc LLVM "IO failure on output stream"). The hosted-runner guard
+# lives INSIDE this action so no caller can accidentally delete paths
+# on an operator's self-hosted machine (the ci-crates runs-on enabler
+# can route merge_group jobs to self-hosted runners once
+# OAP_RUNNER_HEAVY is set). Plain shell, no third-party action: flat
+# supply-chain surface, no new pinned ref under the spec 158 lint.
+# Requires checkout first (local composite resolves from the workspace).
+
+name: Free disk space
+description: Delete unused preinstalled toolchains on GitHub-hosted runners (no-op on self-hosted)
+
+runs:
+  using: composite
+  steps:
+    - name: Free disk space (hosted runners only)
+      if: runner.environment == 'github-hosted'
+      shell: bash
+      run: |
+        df -h /
+        sudo rm -rf /usr/share/dotnet /usr/local/lib/android /opt/ghc /usr/local/.ghcup /opt/hostedtoolcache/CodeQL
+        sudo docker image prune --all --force >/dev/null || true
+        df -h /

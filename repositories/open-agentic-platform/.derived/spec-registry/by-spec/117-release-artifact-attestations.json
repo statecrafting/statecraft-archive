@@ -1,0 +1,66 @@
+{
+  "record": {
+    "amendmentRecord": "Re-amended 2026-06-04 — axiomregent demotion. axiomregent is no longer an\nindependently released product (037, amended); release-axiomregent.yml is\nremoved. The standalone axiomregent SBOM/attestation surface this spec\nestablished on that workflow is retired, and the §2 goal \"the desktop installer\nSBOM includes the bundled sidecar's contents\" — previously unmet — is now BOUND\nto the desktop flow: axiomregent's CycloneDX SBOM is generated within\nrelease-desktop.yml and linked into the per-target installer SBOM via a\nCycloneDX externalReferences BOM-Link, with the sidecar SBOM attached to the\nsame release. Because the sidecar is built at OPC's release commit\n(build-ref == bundle-ref), single-commit provenance covers it — no build-ref→\nbundle-ref span clause is needed. The prior amendment (193) added the\nversion-alignment gate; that is unchanged for OPC.\nSame-day correction: the bundled-sidecar SBOM recipe (§2.1) as merged scanned\n`crates/` while the workspace lock lands at repo-root ./Cargo.lock, yielding 0\ncomponents; it now stages the lock into the scan path and AC-6 is enforced\nin-workflow by a component-count gate (see §2.1 provenance correction + AC-6\nlesson #4).\nSame-day correction #2 (desktop installer SBOM scope + attestation subject set):\nthe per-target desktop SBOM scanned `product/apps/opc`, one level BELOW the pnpm\nworkspace lock (product/pnpm-lock.yaml), so it captured only tests-e2e test deps\n(2 npm) and UNDER-reported the shipped frontend closure (~784 npm); the same\npost-build scan reached INTO src-tauri/target/, OVER-reporting non-reproducible\nMSVC proc-macro DLLs as ~230 purl-less components on Windows. Both are one\nmis-scoped scan — corrected to scope `product/` (reaches pnpm-lock.yaml;\nsrc-tauri/Cargo.lock cargo coverage unchanged at 961) and prune build-tree\nartifacts with jq (syft `--exclude` is a no-op for target/ in syft 1.43.0). Two\nfail-closed AC-6 gates now enforce npm>0 and zero build-tree components.\nSeparately the provenance attestation + per-installer .intoto.jsonl subject set\nis extended from dmg/appimage/nsis to ALSO cover deb/rpm/msi, so every shipped\ninstaller is attested (AC-2/AC-4); the .sha256 updater sidecars remain\ndeliberately updater-scoped (dmg/nsis/appimage). See §2.2 desktop-scope\ncorrection, §4.2, AC-6 lesson #5, and the amended AC-2/AC-4/AC-6.\n",
+    "codeAliases": [
+      "RELEASE_ATTESTATIONS"
+    ],
+    "created": "2026-04-28",
+    "dependsOn": [
+      "000-bootstrap-spec-system",
+      "037-cross-platform-axiomregent",
+      "086-open-source-launch",
+      "104-makefile-ci-parity-contract"
+    ],
+    "domain": "tooling",
+    "extraFrontmatter": {
+      "amended": "2026-06-04",
+      "slug": "release-artifact-attestations"
+    },
+    "id": "117-release-artifact-attestations",
+    "implementation": "complete",
+    "kind": "governance",
+    "owner": "bart",
+    "refines": [
+      {
+        "aspect": "artifact-attestation",
+        "unit": {
+          "kind": "file",
+          "path": ".github/workflows/release-desktop.yml"
+        }
+      },
+      {
+        "aspect": "artifact-attestation",
+        "unit": {
+          "kind": "file",
+          "path": ".github/workflows/release-tools.yml"
+        }
+      }
+    ],
+    "risk": "medium",
+    "sectionHeadings": [
+      "117 — Release Artifact Attestations",
+      "1. Problem Statement",
+      "2. Goals",
+      "2.1 Sidecar-SBOM binding (amended 2026-06-04)",
+      "2.2 Desktop installer SBOM scope correction (2026-06-04)",
+      "3. Scope",
+      "In scope",
+      "Out of scope",
+      "4. Workflow Shape",
+      "4.1 release-axiomregent.yml — RETIRED (amended 2026-06-04)",
+      "4.2 release-desktop.yml (per-target release job)",
+      "4.3 release-tools.yml (publish job)",
+      "5. Verification Flow (RELEASE-VERIFICATION.md)",
+      "6. Acceptance Criteria",
+      "7. Risks and Mitigations",
+      "8. Sequencing With M8 (release-tools workflow_run trigger)",
+      "9. Pre-Public-Release Posture"
+    ],
+    "specPath": "specs/117-release-artifact-attestations/spec.md",
+    "status": "approved",
+    "summary": "Every binary shipped via release-{desktop,tools}.yml is paired with a CycloneDX SBOM and a GitHub-signed build provenance attestation. SBOMs and attestations are uploaded as release assets. The desktop installer SHA-256 sidecars (already present) are kept; the attestations cover the binaries themselves and document the toolchain, dependencies, and build environment that produced them. The OPC installer SBOM includes the bundled axiomregent sidecar's contents — generated in the desktop flow and bound via a CycloneDX externalReferences BOM-Link (amended 2026-06-04, after axiomregent was demoted to an internal bundled component and release-axiomregent.yml retired).\n",
+    "title": "Release Artifact Attestations — SBOM + build provenance for every shipped binary"
+  },
+  "shardHash": "8cbc8020e42ff6b8332b3b5f1116f1048f3e2d456e0fd5a77e46deb71aff1088",
+  "specVersion": "1.1.0"
+}

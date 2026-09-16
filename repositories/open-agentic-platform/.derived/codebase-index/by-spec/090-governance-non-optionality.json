@@ -1,0 +1,84 @@
+{
+  "mapping": {
+    "dependsOn": [
+      "033-axiomregent-activation",
+      "068-permission-runtime"
+    ],
+    "implementingPaths": [
+      {
+        "path": "crates/axiomregent/src/lease.rs",
+        "source": "spec-edge"
+      },
+      {
+        "path": "crates/policy-kernel/src/merge.rs",
+        "source": "spec-edge"
+      },
+      {
+        "path": "crates/policy-kernel/src/permission.rs",
+        "source": "spec-edge"
+      },
+      {
+        "path": "product/apps/opc/src-tauri/src/commands/orchestrator.rs",
+        "source": "spec-edge"
+      }
+    ],
+    "resolvedUnits": [
+      {
+        "locations": [
+          {
+            "file": "crates/axiomregent/src/lease.rs"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "extends",
+        "unit": {
+          "kind": "file",
+          "path": "crates/axiomregent/src/lease.rs"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "crates/policy-kernel/src/merge.rs"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "extends",
+        "unit": {
+          "kind": "file",
+          "path": "crates/policy-kernel/src/merge.rs"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "crates/policy-kernel/src/permission.rs"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "extends",
+        "unit": {
+          "kind": "file",
+          "path": "crates/policy-kernel/src/permission.rs"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "product/apps/opc/src-tauri/src/commands/orchestrator.rs"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "extends",
+        "unit": {
+          "kind": "file",
+          "path": "product/apps/opc/src-tauri/src/commands/orchestrator.rs"
+        }
+      }
+    ],
+    "specId": "090-governance-non-optionality",
+    "specStatus": "approved"
+  },
+  "schemaVersion": "1.1.0",
+  "shardHash": "8e3a6215ae9d2fc98ee776b249054c519260e5973eec3d1720009c7a20eba051"
+}

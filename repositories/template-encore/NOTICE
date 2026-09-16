@@ -1,0 +1,27 @@
+Vue + Encore Enterprise Template
+Copyright 2026 Statecrafting
+
+This product is licensed under the Apache License, Version 2.0 (see LICENSE).
+
+It bundles, depends on, or builds against third-party software distributed
+under its own license. Attribution and license notices below are preserved as
+required by those licenses.
+
+-------------------------------------------------------------------------------
+Encore (encore.dev)
+  License: Mozilla Public License 2.0
+  Source:  https://github.com/encoredev/encore
+
+  MPL-2.0 is a file-level copyleft license. Modifications to MPL-licensed
+  source files must be released under MPL-2.0; this template uses Encore as a
+  dependency without modifying its source.
+
+-------------------------------------------------------------------------------
+lightningcss (transitive build dependency)
+  License: Mozilla Public License 2.0
+  Source:  https://github.com/parcel-bundler/lightningcss
+
+-------------------------------------------------------------------------------
+Other dependencies are distributed under permissive licenses (MIT, ISC,
+Apache-2.0). See each package's license file under node_modules/<package>/ for
+the full terms.

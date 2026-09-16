@@ -1,0 +1,84 @@
+{
+  "mapping": {
+    "dependsOn": [
+      "082-artifact-integrity-platform-hardening",
+      "092-workspace-runtime-threading"
+    ],
+    "implementingPaths": [
+      {
+        "path": "crates/factory-engine/src/artifact_store.rs",
+        "source": "spec-edge"
+      },
+      {
+        "path": "crates/orchestrator/src/artifact.rs",
+        "source": "multiple"
+      },
+      {
+        "path": "crates/orchestrator/src/lib.rs",
+        "source": "spec-edge"
+      },
+      {
+        "path": "crates/orchestrator/src/promotion.rs",
+        "source": "spec-edge"
+      }
+    ],
+    "resolvedUnits": [
+      {
+        "locations": [
+          {
+            "file": "crates/orchestrator/src/promotion.rs"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "file",
+          "path": "crates/orchestrator/src/promotion.rs"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "crates/factory-engine/src/artifact_store.rs"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "extends",
+        "unit": {
+          "kind": "file",
+          "path": "crates/factory-engine/src/artifact_store.rs"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "crates/orchestrator/src/artifact.rs"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "extends",
+        "unit": {
+          "kind": "file",
+          "path": "crates/orchestrator/src/artifact.rs"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "crates/orchestrator/src/lib.rs"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "extends",
+        "unit": {
+          "kind": "file",
+          "path": "crates/orchestrator/src/lib.rs"
+        }
+      }
+    ],
+    "specId": "094-unified-artifact-store",
+    "specStatus": "approved"
+  },
+  "schemaVersion": "1.1.0",
+  "shardHash": "449fb0ae560ed6ee9b346a52abadbfbe76f3a8c3bea1712bc778a3466cf6ecc0"
+}

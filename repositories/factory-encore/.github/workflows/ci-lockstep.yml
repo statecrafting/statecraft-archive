@@ -1,0 +1,77 @@
+# Spec: 006-factory-schema-lockstep
+#
+# Cross-repo lockstep gate. The generator clones the template-encore lean
+# baseline, so it must not drift from that baseline's core-service / module
+# shape, nor (once pinned) from its frozen app invariants (the
+# `encore-app-architecture` and `security-data-invariants` invariants). This gate
+# fetches the baseline at the pinned ref from the
+# committed lockfile and runs the checker. It is fail-visible, never
+# skipped-green: a fetch failure or any drift fails the job. The invariant-hash
+# pin is ACTIVE (status: pinned, since the Phase 3 handshake): the checker
+# re-hashes each invariant spec.md at the pinned ref and fails on any mismatch;
+# baseline structure and catalog binding are enforced too. Both repos are
+# public, so no token is required.
+
+name: ci-lockstep
+
+on:
+  workflow_call:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  lockstep:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    env:
+      LOCKFILE: adapters/acme-vue-encore/scripts/lockstep/baseline.lock.json
+    steps:
+      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-node@48b55a011bda9f5d6aeb4c2d9c7362e8dae4041e # v6.4.0
+        with:
+          node-version: 24
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Read the pinned baseline ref + remote
+        id: pin
+        run: |
+          set -euo pipefail
+          ref="$(node -p "require('./${LOCKFILE}').pinnedRef")"
+          src="$(node -p "require('./${LOCKFILE}').upstreamSource")"
+          if [ -z "$ref" ] || [ -z "$src" ]; then
+            echo "::error::could not read pinnedRef/upstreamSource from ${LOCKFILE} (lockstep is fail-visible, never skipped-green)"
+            exit 1
+          fi
+          echo "ref=$ref" >> "$GITHUB_OUTPUT"
+          echo "src=$src" >> "$GITHUB_OUTPUT"
+          echo "pinned baseline: $src @ $ref"
+
+      - name: Fetch template-encore baseline at the pinned ref (sparse)
+        run: |
+          set -euo pipefail
+          rm -rf .baseline
+          mkdir .baseline
+          cd .baseline
+          git init -q
+          git remote add origin "https://${{ steps.pin.outputs.src }}.git"
+          git config core.sparseCheckout true
+          git sparse-checkout init --cone
+          git sparse-checkout set specs apps modules
+          if ! git fetch --depth 1 origin "${{ steps.pin.outputs.ref }}" 2> fetch.err; then
+            cat fetch.err >&2
+            echo "::error::cannot fetch template-encore at the pinned ref; lockstep is fail-visible, never skipped-green"
+            exit 1
+          fi
+          git checkout -q FETCH_HEAD
+          test -d specs || { echo "::error::baseline specs/ absent at the pinned ref"; exit 1; }
+
+      - name: Assert generator/baseline lockstep
+        run: npm run lockstep -- --source .baseline

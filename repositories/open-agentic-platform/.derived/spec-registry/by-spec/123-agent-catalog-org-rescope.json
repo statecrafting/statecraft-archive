@@ -1,0 +1,195 @@
+{
+  "record": {
+    "amendmentRecord": "139-factory-artifact-substrate",
+    "amends": [
+      "119-project-as-unit-of-governance"
+    ],
+    "codeAliases": [
+      "AGENT_CATALOG_ORG"
+    ],
+    "created": "2026-05-01",
+    "dependsOn": [
+      "042-multi-provider-agent-registry",
+      "054-agent-frontmatter-schema",
+      "068-permission-runtime",
+      "075-factory-workflow-engine",
+      "087-unified-workspace-architecture",
+      "090-governance-non-optionality",
+      "098-governance-enforcement-stitching",
+      "108-factory-as-platform-feature",
+      "111-org-agent-catalog-sync",
+      "119-project-as-unit-of-governance",
+      "122-stakeholder-doc-inversion"
+    ],
+    "domain": "platform",
+    "extends": [
+      {
+        "nature": "wrapping",
+        "spec": "119-project-as-unit-of-governance",
+        "unit": {
+          "kind": "file",
+          "path": "platform/services/statecraft/api/agents/catalog.ts"
+        }
+      },
+      {
+        "nature": "wrapping",
+        "spec": "119-project-as-unit-of-governance",
+        "unit": {
+          "kind": "file",
+          "path": "platform/services/statecraft/api/agents/relay.ts"
+        }
+      },
+      {
+        "nature": "wrapping",
+        "spec": "119-project-as-unit-of-governance",
+        "unit": {
+          "kind": "file",
+          "path": "platform/services/statecraft/api/agents/bindings.ts"
+        }
+      },
+      {
+        "nature": "wrapping",
+        "spec": "119-project-as-unit-of-governance",
+        "unit": {
+          "kind": "file",
+          "path": "platform/services/statecraft/api/sync/duplex.ts"
+        }
+      },
+      {
+        "nature": "wrapping",
+        "spec": "119-project-as-unit-of-governance",
+        "unit": {
+          "kind": "file",
+          "path": "platform/services/statecraft/web/app/routes/app.agents._index.tsx"
+        }
+      },
+      {
+        "nature": "wrapping",
+        "spec": "119-project-as-unit-of-governance",
+        "unit": {
+          "kind": "file",
+          "path": "platform/services/statecraft/web/app/routes/app.agents.tsx"
+        }
+      },
+      {
+        "nature": "wrapping",
+        "spec": "119-project-as-unit-of-governance",
+        "unit": {
+          "kind": "file",
+          "path": "platform/services/statecraft/web/app/routes/app.agents.new.tsx"
+        }
+      },
+      {
+        "nature": "wrapping",
+        "spec": "119-project-as-unit-of-governance",
+        "unit": {
+          "kind": "file",
+          "path": "platform/services/statecraft/web/app/routes/app.agents.$agentId.tsx"
+        }
+      },
+      {
+        "nature": "wrapping",
+        "spec": "119-project-as-unit-of-governance",
+        "unit": {
+          "kind": "file",
+          "path": "platform/services/statecraft/web/app/routes/app.agents.$agentId.publish.tsx"
+        }
+      },
+      {
+        "nature": "wrapping",
+        "spec": "119-project-as-unit-of-governance",
+        "unit": {
+          "kind": "file",
+          "path": "platform/services/statecraft/web/app/routes/app.agents.$agentId.history.tsx"
+        }
+      },
+      {
+        "nature": "wrapping",
+        "spec": "119-project-as-unit-of-governance",
+        "unit": {
+          "kind": "file",
+          "path": "platform/services/statecraft/web/app/routes/app.project.$projectId.agents._index.tsx"
+        }
+      },
+      {
+        "nature": "wrapping",
+        "spec": "119-project-as-unit-of-governance",
+        "unit": {
+          "kind": "file",
+          "path": "platform/services/statecraft/web/app/routes/app.project.$projectId.agents.tsx"
+        }
+      },
+      {
+        "nature": "wrapping",
+        "spec": "119-project-as-unit-of-governance",
+        "unit": {
+          "kind": "file",
+          "path": "product/apps/opc/src-tauri/src/commands/agent_catalog_sync.rs"
+        }
+      },
+      {
+        "nature": "wrapping",
+        "spec": "119-project-as-unit-of-governance",
+        "unit": {
+          "kind": "file",
+          "path": "crates/factory-engine/src/agent_resolver.rs"
+        }
+      }
+    ],
+    "extraFrontmatter": {
+      "amended": "2026-05-05",
+      "slug": "agent-catalog-org-rescope"
+    },
+    "id": "123-agent-catalog-org-rescope",
+    "implementation": "complete",
+    "kind": "governance",
+    "owner": "bart",
+    "risk": "high",
+    "sectionHeadings": [
+      "123 — Agent Catalog Org-Rescope",
+      "1. Problem",
+      "1.1 Symptoms of the mismatch",
+      "1.2 What 119 still gets right",
+      "2. Decision",
+      "2.1 Why \"no overrides\" is non-negotiable",
+      "3. Scope of Amendment to Spec 119",
+      "4. Data Model",
+      "4.1 `agent_catalog` — keyed by org",
+      "4.2 `agent_catalog_audit` — same rescope",
+      "4.3 `agent_policies` — no-op (reconciled at implementation time)",
+      "4.4 `project_agent_bindings` — new join table",
+      "4.5 Backfill of bindings from prior project-scoped catalog",
+      "5. API Surface",
+      "5.1 Org catalog endpoints",
+      "5.2 Project binding endpoints",
+      "5.3 Removed endpoints",
+      "6. Web UI",
+      "6.1 New top-nav surface",
+      "6.2 Project consumer surface",
+      "6.3 OPC desktop consumption",
+      "7. Duplex Envelopes",
+      "7.1 Catalog envelopes (spec 111 §2.3, rescoped)",
+      "7.2 New: project-binding envelopes",
+      "7.3 Schema-version handling",
+      "8. Code Surface",
+      "8.1 Statecraft API",
+      "8.2 Factory engine",
+      "8.3 Desktop",
+      "9. Migration",
+      "9.1 Pre-flight",
+      "9.2 Cutover (single migration `30_agent_catalog_org_rescope`)",
+      "9.3 Invariants",
+      "9.4 Spec 119 amendment edits",
+      "10. Out of Scope",
+      "11. Acceptance Criteria",
+      "12. Open Questions",
+      "13. References"
+    ],
+    "specPath": "specs/123-agent-catalog-org-rescope/spec.md",
+    "status": "approved",
+    "summary": "Move the agent catalog back to org scope. Spec 119 collapsed workspace into project and rescoped agents to project_id along with knowledge, runs, grants, and connectors; the rescoping was correct for project-cohabiting data but wrong for agents, which are reusable governed capabilities consumed by org-level surfaces (Factory, policy bundles, audit). This spec amends 119 to restore agents to org scope without disturbing the rest of the collapse. Projects become catalog *consumers* via a `project_agent_bindings` join table that pins an org agent at a specific version. No per-binding override of the agent definition: bespoke needs fork a new org agent. Duplex sync (spec 111 §7) snaps back to org-scoped envelopes for the catalog itself; project-binding deltas flow as a separate envelope.\n",
+    "title": "Agent Catalog Org-Rescope — Projects Consume, Org Governs"
+  },
+  "shardHash": "45a56045793a71e35176606e0c22b792ded4630f58b28b36967f02fa080067bc",
+  "specVersion": "1.1.0"
+}

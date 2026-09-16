@@ -1,0 +1,322 @@
+{
+  "diagnostics": {
+    "errors": [],
+    "warnings": [
+      {
+        "code": "W-002",
+        "message": "spec '165-opc-decomposition-pipeline' file unit 'docs/owasp/factory/AIDE-VELOCITY-OAP-INTENT.md' does not exist",
+        "path": "docs/owasp/factory/AIDE-VELOCITY-OAP-INTENT.md"
+      }
+    ]
+  },
+  "mapping": {
+    "dependsOn": [
+      "032-opc-inspect-governance-wiring-mvp",
+      "073-axiomregent-unification",
+      "095-checkpoint-branch-of-thought",
+      "115-knowledge-extraction-pipeline",
+      "120-factory-extraction-stage",
+      "147-spec-kind-grammar",
+      "154-logical-unit-ownership-grammar",
+      "156-references-edge-provenance-grammar",
+      "161-knowledge-requirements-provenance-emission"
+    ],
+    "implementingPaths": [
+      {
+        "path": "crates/axiomregent",
+        "source": "spec-edge"
+      },
+      {
+        "path": "crates/featuregraph/tests/golden/features_graph.json",
+        "source": "spec-edge"
+      },
+      {
+        "path": "crates/opc-decomposition-pipeline",
+        "source": "multiple"
+      },
+      {
+        "path": "crates/opc-decomposition-pipeline/src/lib.rs",
+        "source": "comment-header"
+      },
+      {
+        "path": "crates/opc-decomposition-pipeline/tests/end_to_end.rs",
+        "source": "comment-header"
+      },
+      {
+        "path": "crates/xray",
+        "source": "spec-edge"
+      },
+      {
+        "path": "product/apps/opc/src-tauri/Cargo.toml",
+        "source": "spec-edge"
+      },
+      {
+        "path": "product/apps/opc/src-tauri/src/commands/decomposition.rs",
+        "source": "multiple"
+      },
+      {
+        "path": "product/apps/opc/src-tauri/src/commands/mod.rs",
+        "source": "spec-edge"
+      },
+      {
+        "path": "product/apps/opc/src-tauri/src/lib.rs",
+        "source": "spec-edge"
+      },
+      {
+        "path": "product/apps/opc/src/components/DecompositionPanel.tsx",
+        "source": "spec-edge"
+      },
+      {
+        "path": "product/apps/opc/src/components/TabContent.tsx",
+        "source": "spec-edge"
+      },
+      {
+        "path": "product/apps/opc/src/contexts/TabContext.tsx",
+        "source": "spec-edge"
+      },
+      {
+        "path": "product/apps/opc/src/features/decomposition",
+        "source": "spec-edge"
+      },
+      {
+        "path": "product/apps/opc/src/lib/api.ts",
+        "source": "spec-edge"
+      },
+      {
+        "path": "specs/120-factory-extraction-stage/spec.md",
+        "source": "spec-edge"
+      },
+      {
+        "path": "specs/161-knowledge-requirements-provenance-emission/spec.md",
+        "source": "spec-edge"
+      },
+      {
+        "path": "specs/163-statecraft-requirements-view/spec.md",
+        "source": "spec-edge"
+      }
+    ],
+    "resolvedUnits": [
+      {
+        "locations": [
+          {
+            "file": "crates/opc-decomposition-pipeline"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "directory",
+          "path": "crates/opc-decomposition-pipeline"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "product/apps/opc/src/features/decomposition"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "directory",
+          "path": "product/apps/opc/src/features/decomposition"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "product/apps/opc/src-tauri/src/commands/decomposition.rs"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "file",
+          "path": "product/apps/opc/src-tauri/src/commands/decomposition.rs"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "product/apps/opc/src/components/DecompositionPanel.tsx"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "file",
+          "path": "product/apps/opc/src/components/DecompositionPanel.tsx"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "crates/featuregraph/tests/golden/features_graph.json"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "extends",
+        "unit": {
+          "kind": "file",
+          "path": "crates/featuregraph/tests/golden/features_graph.json"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "product/apps/opc/src-tauri/Cargo.toml"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "extends",
+        "unit": {
+          "kind": "file",
+          "path": "product/apps/opc/src-tauri/Cargo.toml"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "product/apps/opc/src-tauri/src/commands/mod.rs"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "extends",
+        "unit": {
+          "kind": "file",
+          "path": "product/apps/opc/src-tauri/src/commands/mod.rs"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "product/apps/opc/src-tauri/src/lib.rs"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "extends",
+        "unit": {
+          "kind": "file",
+          "path": "product/apps/opc/src-tauri/src/lib.rs"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "product/apps/opc/src/components/TabContent.tsx"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "refines",
+        "unit": {
+          "kind": "file",
+          "path": "product/apps/opc/src/components/TabContent.tsx"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "product/apps/opc/src/contexts/TabContext.tsx"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "refines",
+        "unit": {
+          "kind": "file",
+          "path": "product/apps/opc/src/contexts/TabContext.tsx"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "product/apps/opc/src/lib/api.ts"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "refines",
+        "unit": {
+          "kind": "file",
+          "path": "product/apps/opc/src/lib/api.ts"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "crates/axiomregent"
+          }
+        ],
+        "ownership": false,
+        "sourceField": "references",
+        "unit": {
+          "kind": "directory",
+          "path": "crates/axiomregent"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "crates/xray"
+          }
+        ],
+        "ownership": false,
+        "sourceField": "references",
+        "unit": {
+          "kind": "directory",
+          "path": "crates/xray"
+        }
+      },
+      {
+        "locations": [],
+        "ownership": false,
+        "sourceField": "references",
+        "unit": {
+          "kind": "file",
+          "path": "docs/owasp/factory/AIDE-VELOCITY-OAP-INTENT.md"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "specs/120-factory-extraction-stage/spec.md"
+          }
+        ],
+        "ownership": false,
+        "sourceField": "references",
+        "unit": {
+          "kind": "file",
+          "path": "specs/120-factory-extraction-stage/spec.md"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "specs/161-knowledge-requirements-provenance-emission/spec.md"
+          }
+        ],
+        "ownership": false,
+        "sourceField": "references",
+        "unit": {
+          "kind": "file",
+          "path": "specs/161-knowledge-requirements-provenance-emission/spec.md"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "specs/163-statecraft-requirements-view/spec.md"
+          }
+        ],
+        "ownership": false,
+        "sourceField": "references",
+        "unit": {
+          "kind": "file",
+          "path": "specs/163-statecraft-requirements-view/spec.md"
+        }
+      }
+    ],
+    "specId": "165-opc-decomposition-pipeline",
+    "specStatus": "approved"
+  },
+  "schemaVersion": "1.1.0",
+  "shardHash": "f13b29d0f428f4cc858c8a1860935614901a5f6ade03cc137089875eceb05310"
+}

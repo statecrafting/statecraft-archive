@@ -1,0 +1,41 @@
+{
+  "mapping": {
+    "implementingPaths": [
+      {
+        "path": "crates/orchestrator",
+        "source": "spec-edge"
+      },
+      {
+        "path": "product/apps/opc/src-tauri/src/web_server.rs",
+        "source": "comment-header"
+      },
+      {
+        "path": "product/apps/opc/src/components/ScheduleDialog.tsx",
+        "source": "comment-header"
+      },
+      {
+        "path": "product/apps/opc/src/components/SchedulePanel.tsx",
+        "source": "comment-header"
+      }
+    ],
+    "resolvedUnits": [
+      {
+        "locations": [
+          {
+            "file": "crates/orchestrator"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "extends",
+        "unit": {
+          "id": "orchestrator",
+          "kind": "crate"
+        }
+      }
+    ],
+    "specId": "079-scheduling",
+    "specStatus": "approved"
+  },
+  "schemaVersion": "1.1.0",
+  "shardHash": "098c7c72f81b1e79802838c77469f6e59e95aae412a31636fdc0e081b8b27559"
+}

@@ -1,0 +1,59 @@
+{
+  "entities": [
+    {
+      "name": "Event",
+      "description": "A conference or event that attendees can register for.",
+      "fields": [
+        { "name": "id", "type": "uuid", "primary": true, "required": true, "default": "uuid" },
+        { "name": "slug", "type": "string", "required": true, "unique": true, "max_length": 120 },
+        { "name": "name", "type": "string", "required": true, "max_length": 200 },
+        { "name": "description", "type": "text" },
+        { "name": "venue", "type": "string", "max_length": 200 },
+        { "name": "startsAt", "type": "datetime", "required": true },
+        { "name": "endsAt", "type": "datetime", "required": true },
+        { "name": "capacity", "type": "integer", "required": true },
+        { "name": "status", "type": "enum", "required": true, "default": "draft", "enum_values": ["draft", "published", "closed"] },
+        { "name": "createdAt", "type": "timestamp", "required": true, "default": "now" }
+      ],
+      "business_rules": ["BR-004"]
+    },
+    {
+      "name": "Session",
+      "description": "A talk or track session within an event.",
+      "fields": [
+        { "name": "id", "type": "uuid", "primary": true, "required": true, "default": "uuid" },
+        { "name": "eventId", "type": "reference", "required": true, "ref_entity": "Event" },
+        { "name": "title", "type": "string", "required": true, "max_length": 200 },
+        { "name": "abstract", "type": "text" },
+        { "name": "room", "type": "string", "max_length": 80 },
+        { "name": "startsAt", "type": "datetime", "required": true },
+        { "name": "endsAt", "type": "datetime", "required": true },
+        { "name": "capacity", "type": "integer" }
+      ]
+    },
+    {
+      "name": "Attendee",
+      "description": "A person who registers for events.",
+      "fields": [
+        { "name": "id", "type": "uuid", "primary": true, "required": true, "default": "uuid" },
+        { "name": "email", "type": "string", "required": true, "unique": true, "max_length": 254 },
+        { "name": "fullName", "type": "string", "required": true, "max_length": 160 },
+        { "name": "organization", "type": "string", "max_length": 200 },
+        { "name": "createdAt", "type": "timestamp", "required": true, "default": "now" }
+      ]
+    },
+    {
+      "name": "Registration",
+      "description": "An attendee's registration for an event.",
+      "fields": [
+        { "name": "id", "type": "uuid", "primary": true, "required": true, "default": "uuid" },
+        { "name": "eventId", "type": "reference", "required": true, "ref_entity": "Event" },
+        { "name": "attendeeId", "type": "reference", "required": true, "ref_entity": "Attendee" },
+        { "name": "status", "type": "enum", "required": true, "default": "draft", "enum_values": ["draft", "submitted", "confirmed", "waitlisted", "cancelled"] },
+        { "name": "submittedAt", "type": "datetime" },
+        { "name": "createdAt", "type": "timestamp", "required": true, "default": "now" }
+      ],
+      "business_rules": ["BR-001", "BR-002", "BR-003"]
+    }
+  ]
+}

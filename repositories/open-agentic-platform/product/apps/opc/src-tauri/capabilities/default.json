@@ -1,0 +1,79 @@
+{
+  "$schema": "../gen/schemas/desktop-schema.json",
+  "identifier": "default",
+  "description": "Capability for the main window",
+  "windows": ["main"],
+  "permissions": [
+    "core:default",
+    "dialog:default",
+    "dialog:allow-open",
+    "dialog:allow-save",
+    "shell:allow-execute",
+    "shell:allow-spawn",
+    "shell:allow-open",
+    {
+      "identifier": "shell:allow-execute",
+      "allow": [
+        {
+          "name": "claude",
+          "sidecar": false,
+          "args": true
+        }
+      ]
+    },
+    {
+      "identifier": "shell:allow-spawn",
+      "allow": [
+        {
+          "name": "claude",
+          "sidecar": false,
+          "args": true
+        }
+      ]
+    },
+    "fs:default",
+    "fs:allow-mkdir",
+    "fs:allow-read",
+    "fs:allow-write",
+    "fs:allow-remove",
+    "fs:allow-rename",
+    "fs:allow-exists",
+    "fs:allow-copy-file",
+    "fs:allow-read-dir",
+    "fs:allow-read-text-file",
+    "fs:allow-write-text-file",
+    "fs:scope-app-recursive",
+    {
+      "identifier": "fs:scope",
+      "allow": [
+        "$HOME/.oap/**",
+        "$HOME/oap-projects/**"
+      ]
+    },
+    "http:default",
+    "http:allow-fetch",
+    "process:default",
+    "notification:default",
+    "clipboard-manager:default",
+    "global-shortcut:default",
+    "updater:default",
+    "core:window:allow-minimize",
+    "core:window:allow-maximize",
+    "core:window:allow-unmaximize", 
+    "core:window:allow-close",
+    "core:window:allow-is-maximized",
+    "core:window:allow-start-dragging",
+    "window-state:default",
+    "window-state:allow-restore-state",
+    "window-state:allow-save-window-state",
+    "autostart:default",
+    "autostart:allow-enable",
+    "autostart:allow-disable",
+    "autostart:allow-is-enabled",
+    "log:default",
+    "log:allow-log",
+    "deep-link:default",
+    "opener:default",
+    "os:default"
+  ]
+}

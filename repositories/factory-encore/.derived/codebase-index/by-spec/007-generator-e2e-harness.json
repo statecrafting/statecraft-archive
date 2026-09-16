@@ -1,0 +1,101 @@
+{
+  "mapping": {
+    "dependsOn": [
+      "002-encore-generator-core",
+      "006-factory-schema-lockstep"
+    ],
+    "implementingPaths": [
+      {
+        "path": ".github/workflows/generator-e2e-drift.yml",
+        "source": "spec-edge"
+      },
+      {
+        "path": ".github/workflows/generator-e2e-nightly.yml",
+        "source": "spec-edge"
+      },
+      {
+        "path": ".github/workflows/generator-e2e.yml",
+        "source": "spec-edge"
+      },
+      {
+        "path": "adapters/acme-vue-encore/e2e/lib/common.sh",
+        "source": "spec-edge"
+      },
+      {
+        "path": "adapters/acme-vue-encore/e2e/run-e2e.sh",
+        "source": "spec-edge"
+      }
+    ],
+    "resolvedUnits": [
+      {
+        "locations": [
+          {
+            "file": ".github/workflows/generator-e2e-drift.yml"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "file",
+          "path": ".github/workflows/generator-e2e-drift.yml"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": ".github/workflows/generator-e2e-nightly.yml"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "file",
+          "path": ".github/workflows/generator-e2e-nightly.yml"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": ".github/workflows/generator-e2e.yml"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "file",
+          "path": ".github/workflows/generator-e2e.yml"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "adapters/acme-vue-encore/e2e/lib/common.sh"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "file",
+          "path": "adapters/acme-vue-encore/e2e/lib/common.sh"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "adapters/acme-vue-encore/e2e/run-e2e.sh"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "file",
+          "path": "adapters/acme-vue-encore/e2e/run-e2e.sh"
+        }
+      }
+    ],
+    "specId": "007-generator-e2e-harness",
+    "specStatus": "approved"
+  },
+  "schemaVersion": "1.1.0",
+  "shardHash": "aeee19c0c769dfa2125b489e71dfb67a8eb68720bf2e1e9dab4b152923909981"
+}

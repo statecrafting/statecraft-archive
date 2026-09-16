@@ -1,0 +1,12 @@
+{
+  "package": {
+    "edition": "2024",
+    "kind": "rust-lib-bin",
+    "name": "open_agentic_registry_enrich",
+    "path": "tools/oap/oap-registry-enrich",
+    "specRef": "102-governed-excellence",
+    "version": "0.1.0"
+  },
+  "schemaVersion": "1.1.0",
+  "shardHash": "10bcbc71eca76df6c336ac8e38440e80f63af884a9906e16c3b0f3f4c2c5e602"
+}

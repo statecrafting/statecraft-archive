@@ -1,0 +1,159 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://vue-encore-enterprise-template.dev/schemas/agent-frontmatter.schema.json",
+  "title": "Unified Agent and Skill Frontmatter (spec 018)",
+  "description": "YAML frontmatter for agent and skill definition markdown files. Subsumes Claude Code agents, skill commands, and factory pipeline agents.",
+  "type": "object",
+  "additionalProperties": true,
+  "required": ["name"],
+  "properties": {
+    "name": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Unique identifier (kebab-case recommended). Alias: 'id'."
+    },
+    "id": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Alias for 'name'. Used by factory agents."
+    },
+    "description": {
+      "type": "string",
+      "minLength": 1,
+      "description": "What the agent does and when it should run. Minimum 50 characters recommended."
+    },
+    "type": {
+      "type": "string",
+      "enum": ["prompt", "agent", "headless", "process", "scaffold"],
+      "default": "prompt",
+      "description": "Agent execution type. 'prompt'/'agent'/'headless' from SkillType; 'process'/'scaffold' from factory."
+    },
+    "model": {
+      "type": "string",
+      "minLength": 1,
+      "description": "LLM model identifier. Alias: 'model_hint'."
+    },
+    "model_hint": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Alias for 'model'. Used by factory agents."
+    },
+    "tags": {
+      "type": "array",
+      "items": { "type": "string", "minLength": 1 },
+      "description": "Catalog tags for grouping and filtering."
+    },
+    "display_name": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Human-friendly display name. Alias: 'role'."
+    },
+    "role": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Alias for 'display_name'. Used by factory agents."
+    },
+    "trigger": {
+      "type": "string",
+      "description": "Trigger condition for automatic routing."
+    },
+    "allowed_tools": {
+      "oneOf": [
+        { "type": "string", "const": "*" },
+        { "type": "array", "items": { "type": "string", "minLength": 1 } }
+      ],
+      "default": "*",
+      "description": "Tool allow-list. '*' permits all tools. Alias: 'tools'."
+    },
+    "tools": {
+      "oneOf": [
+        { "type": "string", "const": "*" },
+        { "type": "array", "items": { "type": "string", "minLength": 1 } }
+      ],
+      "description": "Alias for 'allowed_tools'. Used by Claude Code agents."
+    },
+    "safety_tier": {
+      "oneOf": [
+        { "type": "string", "enum": ["tier1", "tier2", "tier3"] },
+        { "type": "integer", "minimum": 1, "maximum": 3 }
+      ],
+      "description": "Safety tier classification. Maps to ToolTier. Alias: 'tier'."
+    },
+    "tier": {
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 3,
+      "description": "Alias for 'safety_tier'. Used by factory agents."
+    },
+    "mutation": {
+      "type": "string",
+      "enum": ["read-only", "read-write", "full"],
+      "description": "Mutation capability. Derived from safety_tier when absent."
+    },
+    "hooks": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "required": ["name", "type", "run"],
+          "properties": {
+            "name": { "type": "string", "minLength": 1 },
+            "type": { "type": "string", "enum": ["bash", "agent", "prompt"] },
+            "if": { "type": "string" },
+            "run": { "type": "string", "minLength": 1 }
+          }
+        }
+      },
+      "description": "Hook declarations keyed by event name."
+    },
+    "governance": {
+      "type": "string",
+      "enum": ["none", "advisory", "enforced"],
+      "default": "none",
+      "description": "Governance requirement. Connects to spec 098."
+    },
+    "max_spec_risk": {
+      "type": "string",
+      "enum": ["low", "medium", "high", "critical"],
+      "description": "Maximum spec risk level. Connects to spec 093."
+    },
+    "version": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Semantic version."
+    },
+    "author": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Attribution."
+    },
+    "priority": {
+      "type": "integer",
+      "description": "Trigger ordering priority."
+    },
+    "icon": {
+      "type": "string",
+      "description": "Desktop display icon."
+    },
+    "stage": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 255,
+      "description": "Factory pipeline stage number."
+    },
+    "context_budget": {
+      "type": "string",
+      "description": "Factory token budget hint."
+    },
+    "standards_category": {
+      "type": "string",
+      "description": "Standards category filter (spec 018)."
+    },
+    "standards_tags": {
+      "type": "array",
+      "items": { "type": "string", "minLength": 1 },
+      "description": "Standards tag filter (spec 018)."
+    }
+  }
+}

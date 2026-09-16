@@ -1,0 +1,49 @@
+{
+  "mapping": {
+    "dependsOn": [
+      "001-encore-app-architecture"
+    ],
+    "implementingPaths": [
+      {
+        "path": "apps/api/db/",
+        "source": "spec-edge"
+      },
+      {
+        "path": "apps/api/lib/",
+        "source": "spec-edge"
+      }
+    ],
+    "resolvedUnits": [
+      {
+        "locations": [
+          {
+            "file": "apps/api/db/"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "file",
+          "path": "apps/api/db/"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "apps/api/lib/"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "file",
+          "path": "apps/api/lib/"
+        }
+      }
+    ],
+    "specId": "002-security-data-invariants",
+    "specStatus": "approved"
+  },
+  "schemaVersion": "1.1.0",
+  "shardHash": "bcc5d57f8f70ddf717aa7641585ef6e788a53c606f627893ea1729671fe27b42"
+}

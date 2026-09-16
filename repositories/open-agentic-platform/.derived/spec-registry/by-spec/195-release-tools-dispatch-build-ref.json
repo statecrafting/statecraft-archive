@@ -1,0 +1,64 @@
+{
+  "record": {
+    "created": "2026-06-01",
+    "dependsOn": [
+      "086-open-source-launch",
+      "117-release-artifact-attestations",
+      "194-release-publish-boundary-guard"
+    ],
+    "domain": "tooling",
+    "extends": [
+      {
+        "nature": "additive",
+        "spec": "034-featuregraph-registry-scanner-fix",
+        "unit": {
+          "kind": "file",
+          "path": "crates/featuregraph/tests/golden/features_graph.json"
+        }
+      }
+    ],
+    "extraFrontmatter": {
+      "approved": "2026-06-01",
+      "compliance": [
+        {
+          "controls": [
+            "ASI04"
+          ],
+          "framework": "owasp-asi-2026"
+        }
+      ],
+      "slug": "release-tools-dispatch-build-ref"
+    },
+    "id": "195-release-tools-dispatch-build-ref",
+    "implementation": "complete",
+    "kind": "governance",
+    "owner": "bart",
+    "refines": [
+      {
+        "aspect": "release-tools-dispatch-build-ref",
+        "unit": {
+          "kind": "file",
+          "path": ".github/workflows/release-tools.yml"
+        }
+      }
+    ],
+    "risk": "medium",
+    "sectionHeadings": [
+      "195 — Release Tools dispatch build-ref",
+      "1. Problem statement",
+      "2. The fix",
+      "Why a commit, not the tag",
+      "3. Operator usage",
+      "4. Where it applies",
+      "5. Acceptance criteria",
+      "6. Out of scope",
+      "7. Deferred — reactive auto-attach on dispatch-cut releases (operator decision)"
+    ],
+    "specPath": "specs/195-release-tools-dispatch-build-ref/spec.md",
+    "status": "approved",
+    "summary": "Fix the release-tools workflow_dispatch backfill path: build the CLI tool archives from a commit SHA, never from `refs/tags/$TAG`. A draft release has no git tag yet (drafts don't tag until publish), so deriving the checkout ref from the tag fails `actions/checkout` at a nonexistent ref — making the manual `gh workflow run release-tools.yml -f tag=opc-v0.4.0` backfill unusable for exactly the draft releases it exists to complete. Add an optional `ref` workflow_dispatch input (commit SHA) and default it to the dispatch commit (github.sha); the reactive workflow_run path's head_sha behaviour is unchanged. Coherent SLSA provenance (spec 117) requires the tools build from the same commit as the desktop binaries.\n",
+    "title": "Release Tools dispatch build-ref — build from a commit, never the (absent) draft tag"
+  },
+  "shardHash": "74109645481f0a8a9e460d361694082cfc3f101a115f6e5bde66563f4b1428ed",
+  "specVersion": "1.1.0"
+}

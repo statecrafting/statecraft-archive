@@ -1,0 +1,17 @@
+{
+  "mapping": {
+    "amends": [
+      "133-amends-aware-coupling-gate",
+      "152-path-co-authority"
+    ],
+    "dependsOn": [
+      "133-amends-aware-coupling-gate",
+      "152-path-co-authority"
+    ],
+    "implementingPaths": [],
+    "specId": "176-amends-aware-section-satisfaction-parity",
+    "specStatus": "superseded"
+  },
+  "schemaVersion": "1.1.0",
+  "shardHash": "cd64c83fec4fe557d6a94e1e3d5b4bc24e44f2cfe8b9b4de1abd0ce757002e41"
+}

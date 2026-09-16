@@ -1,0 +1,201 @@
+{
+  "record": {
+    "amends": [
+      "168-per-project-governance-certificate"
+    ],
+    "authors": [
+      "open-agentic-platform"
+    ],
+    "codeAliases": [
+      "TENANT_EMIT_GOVERNANCE_CERTIFICATE",
+      "TENANT_CERT_EMIT"
+    ],
+    "created": "2026-06-20",
+    "dependsOn": [
+      "102-governed-excellence",
+      "168-per-project-governance-certificate",
+      "167-born-with-spec-spine-kernel",
+      "198-factory-governance-envelope",
+      "209-tenant-kernel-ci-enforcement",
+      "218-run-cert-corpus-binding",
+      "219-tenant-tail-verifier-toolkit"
+    ],
+    "domain": "platform",
+    "establishes": [
+      {
+        "kind": "file",
+        "path": "platform/services/statecraft/api/projects/scaffold/tenantSigningKey.ts"
+      },
+      {
+        "kind": "file",
+        "path": "platform/services/statecraft/api/projects/scaffold/tenantSigningKey.test.ts"
+      },
+      {
+        "kind": "file",
+        "path": "platform/services/statecraft/api/projects/scaffold/regenerateProducedClient.test.ts"
+      }
+    ],
+    "extends": [
+      {
+        "nature": "additive",
+        "spec": "034-featuregraph-registry-scanner-fix",
+        "unit": {
+          "kind": "file",
+          "path": "crates/featuregraph/tests/golden/features_graph.json"
+        }
+      },
+      {
+        "nature": "additive",
+        "spec": "168-per-project-governance-certificate",
+        "unit": {
+          "kind": "file",
+          "path": "crates/factory-engine/src/bin/build_certificate.rs"
+        }
+      },
+      {
+        "nature": "additive",
+        "spec": "218-run-cert-corpus-binding",
+        "unit": {
+          "kind": "file",
+          "path": "crates/factory-engine/src/bin/build_certificate.rs"
+        }
+      },
+      {
+        "nature": "additive",
+        "spec": "168-per-project-governance-certificate",
+        "unit": {
+          "kind": "file",
+          "path": "crates/factory-engine/tests/tenant_emission_integration.rs"
+        }
+      },
+      {
+        "nature": "additive",
+        "spec": "112-factory-project-lifecycle",
+        "unit": {
+          "kind": "file",
+          "path": "platform/services/statecraft/api/projects/create.ts"
+        }
+      },
+      {
+        "nature": "additive",
+        "spec": "112-factory-project-lifecycle",
+        "unit": {
+          "kind": "file",
+          "path": "platform/services/statecraft/api/projects/scaffold/perRequestScaffold.ts"
+        }
+      },
+      {
+        "nature": "additive",
+        "spec": "112-factory-project-lifecycle",
+        "unit": {
+          "kind": "file",
+          "path": "platform/services/statecraft/api/projects/scaffold/templateCache.ts"
+        }
+      },
+      {
+        "nature": "additive",
+        "spec": "140-acme-vue-node-scaffold-source-id-cutover",
+        "unit": {
+          "kind": "file",
+          "path": "platform/services/statecraft/api/projects/scaffold/types.ts"
+        }
+      },
+      {
+        "nature": "additive",
+        "spec": "116-supply-chain-policy-gates",
+        "unit": {
+          "kind": "file",
+          "path": "platform/services/statecraft/package.json"
+        }
+      }
+    ],
+    "extraFrontmatter": {
+      "compliance": [
+        {
+          "controls": [
+            "ASI04",
+            "ASI09"
+          ],
+          "framework": "owasp-asi-2026"
+        }
+      ],
+      "language": "en"
+    },
+    "featureBranch": "feat/220-tenant-emit-governance-certificate",
+    "id": "220-tenant-emit-governance-certificate",
+    "implementation": "complete",
+    "kind": "capability",
+    "references": [
+      {
+        "role": "context",
+        "unit": {
+          "kind": "file",
+          "path": "crates/factory-engine/src/governance_certificate.rs"
+        }
+      },
+      {
+        "role": "context",
+        "unit": {
+          "kind": "file",
+          "path": "crates/factory-engine/src/platform_jws.rs"
+        }
+      },
+      {
+        "role": "context",
+        "unit": {
+          "kind": "file",
+          "path": "specs/168-per-project-governance-certificate/spec.md"
+        }
+      },
+      {
+        "role": "context",
+        "unit": {
+          "kind": "file",
+          "path": "specs/209-tenant-kernel-ci-enforcement/spec.md"
+        }
+      },
+      {
+        "role": "context",
+        "unit": {
+          "kind": "file",
+          "path": "specs/219-tenant-tail-verifier-toolkit/spec.md"
+        }
+      }
+    ],
+    "refines": [
+      {
+        "aspect": "emitter-pin-tenant-emit",
+        "unit": {
+          "kind": "file",
+          "path": "crates/factory-engine/templates/kernel/toolchain.yaml.tmpl"
+        }
+      },
+      {
+        "aspect": "toolchain-render-tests-emitter-pin",
+        "unit": {
+          "kind": "file",
+          "path": "crates/factory-engine/src/kernel_emission/templates.rs"
+        }
+      }
+    ],
+    "sectionHeadings": [
+      "Feature Specification: Tenant-Emit Governance Certificate",
+      "Relationship to spec 168 (capability landed; delivery deferred to here)",
+      "Purpose",
+      "What exists today (grounding the scope)",
+      "Functional requirements",
+      "Acceptance criteria",
+      "Out of scope",
+      "Decisions (the OQs, resolved)",
+      "Coordination with spec 203 (Dev1, produced-app SBOM attestation)",
+      "Sequencing",
+      "Implementation status (2026-07-01)"
+    ],
+    "specPath": "specs/220-tenant-emit-governance-certificate/spec.md",
+    "status": "approved",
+    "summary": "The residual R-2 emit leg. Spec 168 made the certificate emitter capable of tenant-mode emission (a required signer, the run-dir post-hoc path) and spec 219 vended the verify-only half (tenant-tail). But the emitter never reached a produced app: tenant-tail is verify-only by construction, and spec 209 FR-003 explicitly deferred the emitter, its firing, and the tenant signer identity to this spec. A born-with app can therefore re-check a certificate it is handed but cannot produce one of its own, so spec 209's verify-certificate CI step is wired but dormant and the audit chain still terminates at the tenant boundary. Spec 220 closes that: it delivers a tenant-side emitter (the post-hoc build-certificate path, which needs only a laid-out run directory and a signing key, not OAP's pipeline orchestration), fires it as the terminal step of a tenant run (the spec 168 FR-002 \"automatic at completion\" guarantee), and defines the tenant signer identity and key custody (an operator-supplied Ed25519 secret outside the agent's write scope, an attributable principal, anonymous signing forbidden). The emitted certificate is Ed25519-signed and self-authenticating but carries no platform countersign (a tenant run is outside OAP's admission/grant flow), so it verifies offline as \"verifiable-but-unsealed\" under tenant-tail verify-certificate. This activates spec 209's dormant verify step and extends the independently-verifiable audit chain one commit past handoff.\n",
+    "title": "Tenant-Emit Governance Certificate (the emitter, its firing, and the tenant signer identity)"
+  },
+  "shardHash": "638b4d802d35a90780c5a9d4063c30f479d5386f2ad4113160a6856f75c27974",
+  "specVersion": "1.1.0"
+}

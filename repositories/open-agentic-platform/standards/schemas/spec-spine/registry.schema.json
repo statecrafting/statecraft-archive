@@ -1,0 +1,531 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://open-agentic-platform.local/specs/000-bootstrap-spec-system/registry.schema.json",
+  "title": "Open Agentic Platform — compiled spec registry (deterministic MVP)",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["specVersion", "build", "features", "validation"],
+  "properties": {
+    "specVersion": {
+      "type": "string",
+      "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+$"
+    },
+    "build": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["compilerId", "compilerVersion", "inputRoot", "contentHash"],
+      "properties": {
+        "compilerId": { "type": "string", "minLength": 1 },
+        "compilerVersion": { "type": "string", "minLength": 1 },
+        "inputRoot": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Repository-relative root used for this compilation. Canonical full-repo value is \".\"; normalization rules: Feature 000 research D8 and Feature 001 spec."
+        },
+        "contentHash": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        }
+      }
+    },
+    "features": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/featureRecord" }
+    },
+    "validation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["passed", "violations"],
+      "properties": {
+        "passed": { "type": "boolean" },
+        "violations": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/violation" }
+        }
+      }
+    },
+    "factoryProjects": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/factoryProjectRecord" }
+    }
+  },
+  "$defs": {
+    "featureRecord": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "title", "status", "created", "summary", "specPath", "sectionHeadings"],
+      "properties": {
+        "id": {
+          "type": "string",
+          "pattern": "^[0-9]{3}-[a-z0-9]+(-[a-z0-9]+)*$"
+        },
+        "title": { "type": "string", "minLength": 1 },
+        "status": {
+          "type": "string",
+          "enum": ["draft", "approved", "superseded", "retired"]
+        },
+        "implementation": {
+          "type": "string",
+          "enum": ["pending", "in-progress", "complete", "n/a", "deferred"]
+        },
+        "created": { "type": "string", "format": "date" },
+        "summary": { "type": "string", "minLength": 1 },
+        "specPath": { "type": "string", "pattern": "^specs/[0-9]{3}-[^/]+/spec\\.md$" },
+        "sectionHeadings": {
+          "type": "array",
+          "items": { "type": "string", "minLength": 1 }
+        },
+        "authors": {
+          "type": "array",
+          "items": { "type": "string", "minLength": 1 }
+        },
+        "kind": { "type": "string" },
+        "domain": {
+          "type": "string",
+          "enum": ["opc", "platform", "substrate", "tooling"],
+          "description": "Spec 179 — tract-authority lens. Closed enum; V-030 validates membership at error severity."
+        },
+        "featureBranch": { "type": "string" },
+        "extraFrontmatter": {
+          "type": "object",
+          "maxProperties": 8,
+          "additionalProperties": { "$ref": "#/$defs/extraFrontmatterValue" }
+        },
+        "codeAliases": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "pattern": "^[A-Z][A-Z0-9_]{2,63}$"
+          },
+          "uniqueItems": true
+        },
+        "dependsOn": {
+          "type": "array",
+          "items": { "type": "string", "minLength": 1 }
+        },
+        "owner": { "type": "string", "minLength": 1 },
+        "risk": {
+          "type": "string",
+          "enum": ["low", "medium", "high", "critical"]
+        },
+        "compliance": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["framework", "controls"],
+            "properties": {
+              "framework": { "type": "string", "minLength": 1 },
+              "controls": {
+                "type": "array",
+                "items": { "type": "string", "minLength": 1 }
+              }
+            }
+          }
+        },
+        "amends": {
+          "type": "array",
+          "description": "Spec 132 — IDs of specs this spec amends. Companion to `amendsSections`.",
+          "items": { "type": "string", "minLength": 1 }
+        },
+        "amendsSections": {
+          "type": "array",
+          "description": "Spec 132 — section anchors this spec claims to amend in the specs named in `amends`. V-011 rejects any anchor that appears in the amended spec's `unamendable` list.",
+          "items": { "type": "string", "minLength": 1 }
+        },
+        "unamendable": {
+          "type": "array",
+          "description": "Spec 132 — section anchors that future amendments cannot touch. An amending spec referencing one of these via `amendsSections` produces V-011.",
+          "items": { "type": "string", "minLength": 1 }
+        },
+        "shape": {
+          "type": "string",
+          "description": "Spec 147 — kind-refinement. Validated against the declared (kind, shape) table; novel pairs surface W-131 from spec-lint."
+        },
+        "category": {
+          "type": "array",
+          "description": "Spec 147 — cross-cutting tag list. Unconventional values surface W-130 from spec-lint.",
+          "items": { "type": "string", "minLength": 1 }
+        },
+        "supersedes": {
+          "type": "array",
+          "description": "Spec 147/130/216: specs this spec replaces. An item is a bare spec-id string (full-scope shorthand) or a `{spec, scope, unit?, note?, rationale?}` object (spec 216 Phase 2a). Full-scope objects normalise to bare strings at emission; partial-scope objects carry the per-unit (or prose `note:`) scope of the authority transfer.",
+          "items": {
+            "oneOf": [
+              { "type": "string", "minLength": 1 },
+              { "$ref": "#/$defs/supersedeScopedItem" }
+            ]
+          }
+        },
+        "supersededBy": {
+          "type": "string",
+          "description": "Spec 147 — successor spec id; V-019 enforces presence and resolution when status=superseded."
+        },
+        "retirementRationale": {
+          "type": "object",
+          "description": "Spec 147 — structured retirement record; V-018 enforces presence when status=retired.",
+          "additionalProperties": true
+        },
+        "implements": {
+          "description": "Spec 147 — either a scalar registry-id (kind=capability) or a list of {path, primary?} code-path claims. V-014 enforces shape consistency; V-015 enforces registry resolution; V-016 enforces corpus-wide `primary:` uniqueness.",
+          "oneOf": [
+            { "type": "string", "minLength": 1 },
+            {
+              "type": "array",
+              "items": { "$ref": "#/$defs/implementsItem" }
+            }
+          ]
+        },
+        "provides": {
+          "type": "object",
+          "description": "Spec 147 — capability contribution declaration; required when kind=capability per V-013.",
+          "additionalProperties": true
+        },
+        "composition": {
+          "type": "object",
+          "description": "Spec 147 — capability-graph namespace. `composition.requires` is required by V-013 for kind=capability and kind=profile.",
+          "additionalProperties": true
+        },
+        "selectableBy": {
+          "type": "string",
+          "description": "Spec 147 — env var name selecting this capability among alternatives. V-015 verifies equality with target registry's selector when present.",
+          "pattern": "^[A-Z][A-Z0-9_]*$"
+        },
+        "selector": {
+          "type": "string",
+          "description": "Spec 147 — required when kind=registry per V-013. Env var consumers use to pick an implementation.",
+          "pattern": "^[A-Z][A-Z0-9_]*$"
+        },
+        "default": {
+          "type": "string",
+          "description": "Spec 147 — optional default for registry selector when no value is provided."
+        },
+        "productionForbidden": {
+          "type": "array",
+          "description": "Spec 147 — selector values forbidden in production environments.",
+          "items": { "type": "string", "minLength": 1 }
+        },
+        "memberContract": {
+          "type": "string",
+          "description": "Spec 147 — required when kind=registry per V-013. Spec id or trait name that registry members must satisfy."
+        },
+        "identity": {
+          "type": "object",
+          "description": "Spec 147 — required when kind=profile per V-013. Structured tenant identity record.",
+          "additionalProperties": true
+        },
+        "selects": {
+          "type": "object",
+          "description": "Spec 147 — required when kind=profile per V-013. Map of registry-spec-id → capability-spec-id. V-017 enforces validity.",
+          "additionalProperties": { "type": "string", "minLength": 1 }
+        },
+        "policy": {
+          "type": "object",
+          "description": "Spec 147 — optional structured policy values applied by the profile. Compile-time validation is structural only; semantic validation lives in the policy-kernel.",
+          "additionalProperties": true
+        },
+        "establishes": {
+          "type": "array",
+          "description": "Spec 130 (relationship graph) — code paths this spec brought into existence. Authoritative on those paths until superseded. Items may be a bare path string (legacy / `file:` unit) or a `{unit: <logical-unit>}` object (spec 154).",
+          "items": {
+            "oneOf": [
+              { "type": "string", "minLength": 1 },
+              { "$ref": "#/$defs/relationshipUnitItem" }
+            ]
+          }
+        },
+        "extends": {
+          "type": "array",
+          "description": "Spec 130 — extensions to another spec's authority surface. Each item references the predecessor spec, the subset of its surface this spec extends, and the nature (additive | wrapping).",
+          "items": { "$ref": "#/$defs/extendsItem" }
+        },
+        "refines": {
+          "type": "array",
+          "description": "Spec 130 — refinements that tighten behavior across paths. Each item carries an aspect tag and optionally lists the specs it refines.",
+          "items": { "$ref": "#/$defs/refinesItem" }
+        },
+        "coAuthority": {
+          "type": "array",
+          "description": "Spec 130 — co-authority on a named section of a shared path. The diff-to-section matcher lives in spec 152 (path-co-authority).",
+          "items": { "$ref": "#/$defs/coAuthorityItem" }
+        },
+        "constrains": {
+          "type": "array",
+          "description": "Spec 130 — meta-authority over how others may shape code. Constraint specs are not behavior authorities; the gate evaluates them separately.",
+          "items": { "$ref": "#/$defs/constrainsItem" }
+        },
+        "origin": {
+          "type": "object",
+          "description": "Spec 130 — bootstrap or retroactive marker. `retroactive: true` indicates the spec's `implements:` carries forward as its surface without curated relationship annotation.",
+          "additionalProperties": false,
+          "properties": {
+            "retroactive": { "type": "boolean" },
+            "paths": {
+              "type": "array",
+              "items": { "type": "string", "minLength": 1 }
+            }
+          }
+        },
+        "references": {
+          "type": "array",
+          "description": "Spec 154 — ninth relationship, declaratively non-owning. Items are units the spec mentions for evidence / illustration / provenance without claiming authority. The coupling gate ignores `references:`; the codebase-indexer surfaces them for navigation.",
+          "items": { "$ref": "#/$defs/referenceItem" }
+        }
+      }
+    },
+    "implementsItem": {
+      "type": "object",
+      "description": "Spec 147 — one entry in `implements:` list form.",
+      "additionalProperties": false,
+      "required": ["path"],
+      "properties": {
+        "path": { "type": "string", "minLength": 1 },
+        "primary": { "type": "boolean" }
+      }
+    },
+    "extendsItem": {
+      "type": "object",
+      "description": "Spec 130 — one entry in `extends:`. Spec 154 added optional `unit:` for typed logical-unit ownership; the legacy `paths:` form remains valid.",
+      "additionalProperties": false,
+      "required": ["spec"],
+      "properties": {
+        "spec": { "type": "string", "minLength": 1 },
+        "paths": {
+          "type": "array",
+          "items": { "type": "string", "minLength": 1 }
+        },
+        "nature": { "type": "string", "enum": ["additive", "wrapping"] },
+        "unit": { "$ref": "#/$defs/logicalUnit" }
+      }
+    },
+    "refinesItem": {
+      "type": "object",
+      "description": "Spec 130 — one entry in `refines:`. Spec 154 added optional `unit:`; either `paths:` (legacy) or `unit:` (new) is acceptable, but at least one of them must be present in addition to `aspect`.",
+      "additionalProperties": false,
+      "required": ["aspect"],
+      "anyOf": [
+        { "required": ["paths"] },
+        { "required": ["unit"] }
+      ],
+      "properties": {
+        "paths": {
+          "type": "array",
+          "items": { "type": "string", "minLength": 1 }
+        },
+        "aspect": { "type": "string", "minLength": 1 },
+        "refines_specs": {
+          "type": "array",
+          "items": { "type": "string", "minLength": 1 }
+        },
+        "unit": { "$ref": "#/$defs/logicalUnit" }
+      }
+    },
+    "coAuthorityItem": {
+      "type": "object",
+      "description": "Spec 130/152 — one entry in `co_authority:`. `section` names a per-file-type anchor (Makefile target group, markdown heading, workflow jobs.<name>, source-file `// region: <name>`). Spec 154 added optional `unit:` for the new section-unit form; either the legacy (`paths` + `section`) pair or the new `unit:` is acceptable.",
+      "additionalProperties": false,
+      "anyOf": [
+        { "required": ["paths", "section"] },
+        { "required": ["unit"] }
+      ],
+      "properties": {
+        "paths": {
+          "type": "array",
+          "items": { "type": "string", "minLength": 1 }
+        },
+        "section": { "type": "string", "minLength": 1 },
+        "with_specs": {
+          "type": "array",
+          "items": { "type": "string", "minLength": 1 }
+        },
+        "unit": { "$ref": "#/$defs/logicalUnit" }
+      }
+    },
+    "constrainsItem": {
+      "type": "object",
+      "description": "Spec 130 — one entry in `constrains:`. The relationship-level discriminator is `kind:` (legacy) or `flavor:` (spec 154 §5 — renamed to free `kind:` for `unit.kind`); both are accepted during the compat window. Authors target either code paths (`paths:`) or other specs (`target_specs:`); `spec:` is the single-target shorthand. Spec 154 also added optional `unit:` for the new unit-typed form.",
+      "additionalProperties": false,
+      "anyOf": [
+        { "required": ["kind"] },
+        { "required": ["flavor"] }
+      ],
+      "properties": {
+        "spec": { "type": "string", "minLength": 1 },
+        "kind": { "type": "string", "minLength": 1 },
+        "flavor": { "type": "string", "minLength": 1 },
+        "paths": {
+          "type": "array",
+          "items": { "type": "string", "minLength": 1 }
+        },
+        "target_specs": {
+          "type": "array",
+          "description": "Spec 130 — list of spec ids this constraint targets. Use when the constraint applies to several specs as peers rather than to code paths or a single spec.",
+          "items": { "type": "string", "minLength": 1 }
+        },
+        "unit": { "$ref": "#/$defs/logicalUnit" }
+      }
+    },
+    "logicalUnit": {
+      "description": "Spec 154 — one logical-unit declaration. Six kinds capture the observed ownership shapes across the corpus (crate, symbol, module, section, directory, file). The `crate:` kind binds the workspace-member manifest name; spec-compiler validates that name against the root Cargo.toml [workspace] members (V-021). `directory:` and `file:` paths are validated against worktree existence (V-022, V-023). Symbol / module / section anchor resolution is deferred to the codebase-indexer (Tier 2 Segment 3).",
+      "oneOf": [
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["kind", "id"],
+          "properties": {
+            "kind": { "const": "crate" },
+            "id": { "type": "string", "minLength": 1 }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["kind", "id"],
+          "properties": {
+            "kind": { "const": "symbol" },
+            "id": { "type": "string", "minLength": 1 }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["kind", "id"],
+          "properties": {
+            "kind": { "const": "module" },
+            "id": { "type": "string", "minLength": 1 }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["kind", "file", "anchor"],
+          "properties": {
+            "kind": { "const": "section" },
+            "file": { "type": "string", "minLength": 1 },
+            "anchor": { "type": "string", "minLength": 1 }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["kind", "path"],
+          "properties": {
+            "kind": { "const": "directory" },
+            "path": { "type": "string", "minLength": 1 }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["kind", "path"],
+          "properties": {
+            "kind": { "const": "file" },
+            "path": { "type": "string", "minLength": 1 }
+          }
+        }
+      ]
+    },
+    "relationshipUnitItem": {
+      "type": "object",
+      "description": "Spec 154 — relationship-list item carrying a logical unit. Used for `establishes:` items written in the new typed shape.",
+      "additionalProperties": false,
+      "required": ["unit"],
+      "properties": {
+        "unit": { "$ref": "#/$defs/logicalUnit" }
+      }
+    },
+    "supersedeScopedItem": {
+      "type": "object",
+      "description": "Spec 130/154/216 Phase 2a: a structured `supersedes:` entry. `scope: full` normalises to a bare spec-id string at emission, so only `scope: partial` entries persist as objects. A partial entry scopes the authority transfer by `unit:` (a logical unit) or by a prose `note:`; `unit:` is not required.",
+      "additionalProperties": false,
+      "required": ["spec"],
+      "properties": {
+        "spec": { "type": "string", "minLength": 1 },
+        "scope": { "enum": ["full", "partial"] },
+        "unit": { "$ref": "#/$defs/logicalUnit" },
+        "note": { "type": "string", "minLength": 1 },
+        "rationale": { "type": "string", "minLength": 1 }
+      }
+    },
+    "referenceItem": {
+      "description": "Spec 154 — one entry in `references:`. Three accepted shapes: bare path string (legacy / hand-authored shorthand), `{role?, unit: <logical-unit>}` (spec 154 canonical), or `{role?, provenance: {kind, ref}}` (spec 156 — typed external derivation pointer, mutually exclusive with `unit:` per V-025). The optional `role:` is open-vocabulary and presentation-only — the coupling gate treats every `references:` item uniformly as non-owning.",
+      "oneOf": [
+        { "type": "string", "minLength": 1 },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["unit"],
+          "properties": {
+            "role": { "type": "string", "minLength": 1 },
+            "unit": { "$ref": "#/$defs/logicalUnit" }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["provenance"],
+          "properties": {
+            "role": { "type": "string", "minLength": 1 },
+            "provenance": { "$ref": "#/$defs/provenanceEntry" }
+          }
+        }
+      ]
+    },
+    "provenanceEntry": {
+      "description": "Spec 156 — typed external derivation pointer. Two initial kinds: `knowledge` (statecraft `knowledge_objects` URI shape) and `code-fingerprint` (xray content-addressed SHA-256). Adding a new kind requires an amendment spec that widens both this enum and V-027's scheme alignment table.",
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["kind", "ref"],
+      "properties": {
+        "kind": {
+          "type": "string",
+          "enum": ["knowledge", "code-fingerprint"]
+        },
+        "ref": {
+          "type": "string",
+          "minLength": 1,
+          "description": "URI matching the declared kind's scheme. `knowledge`: `statecraft://project/<uuid>/knowledge/<uuid>`; `code-fingerprint`: `xray-fingerprint://<sha256>`. Scheme alignment is enforced at compile time by V-027; body well-formedness by V-028."
+        }
+      }
+    },
+    "extraFrontmatterValue": {
+      "description": "Scalar or string-list only; no nested objects or heterogeneous arrays.",
+      "oneOf": [
+        { "type": "string" },
+        { "type": "number" },
+        { "type": "boolean" },
+        { "type": "null" },
+        {
+          "type": "array",
+          "items": { "type": "string", "minLength": 1 },
+          "maxItems": 64
+        }
+      ]
+    },
+    "violation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["code", "severity", "message"],
+      "properties": {
+        "code": { "type": "string", "pattern": "^V-[0-9]{3}$" },
+        "severity": { "type": "string", "enum": ["error", "warning"] },
+        "message": { "type": "string", "minLength": 1 },
+        "path": { "type": "string" }
+      }
+    },
+    "factoryProjectRecord": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["projectName", "buildSpecPath", "contentHash"],
+      "properties": {
+        "projectName": { "type": "string", "minLength": 1 },
+        "buildSpecPath": { "type": "string", "minLength": 1 },
+        "contentHash": { "type": "string", "pattern": "^[0-9a-f]{64}$" },
+        "variant": { "type": "string" },
+        "org": { "type": "string" },
+        "adapter": { "type": "string" },
+        "pipelineStatus": { "type": "string" }
+      }
+    }
+  }
+}

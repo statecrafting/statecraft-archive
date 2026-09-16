@@ -1,0 +1,94 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(./tools/spec-spine/*/target/release/*)",
+      "Bash(./tools/spec-spine/*/target/debug/*)",
+      "Bash(./tools/oap/*/target/release/*)",
+      "Bash(./tools/oap/*/target/debug/*)",
+      "Bash(./tools/lint/*)",
+      "Bash(./tools/lint/*/*)",
+      "Bash(./crates/axiomregent/target/release/axiomregent*)",
+      "Bash(./crates/target/release/build-certificate*)",
+      "Bash(./crates/target/release/verify-certificate*)"
+    ],
+    "deny": [
+      "Bash(cargo publish*)",
+      "Bash(npm publish*)",
+      "Bash(pnpm publish*)",
+      "Bash(gh release create *)",
+      "Bash(gh release delete *)",
+      "Bash(gh release upload *)",
+      "Bash(gh release edit *)",
+      "Bash(gh repo delete *)",
+      "Bash(gh repo archive *)"
+    ]
+  },
+  "hooks": {
+    "UserPromptSubmit": [],
+    "PermissionRequest": [],
+    "ConfigChange": [],
+    "PreCompact": [],
+    "Stop": [
+      {
+        "matcher": "*",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "cd \"${CLAUDE_PROJECT_DIR:-.}\" 2>/dev/null || exit 0; ci=spec-spine; command -v \"$ci\" >/dev/null 2>&1 || exit 0; \"$ci\" index check >/dev/null 2>&1 && exit 0; gd=$(git rev-parse --git-dir 2>/dev/null) || gd=.git; if [ -d \"$gd/rebase-merge\" ] || [ -d \"$gd/rebase-apply\" ] || [ -f \"$gd/MERGE_HEAD\" ] || [ -f \"$gd/CHERRY_PICK_HEAD\" ]; then echo '[codebase-index] stale, but rebase/merge in progress, left untouched (the oap-index-regen merge driver owns conflicts); run make index afterwards'; exit 0; fi; out=$(make index 2>&1); if [ $? -eq 0 ]; then echo '[codebase-index] was stale, auto-regenerated via make index; review git diff .derived/codebase-index/ and include it in your commit (amend if you just committed)'; else echo '[codebase-index] stale and make index FAILED:'; echo \"$out\" | tail -10; fi; true"
+          }
+        ]
+      }
+    ],
+    "TaskCompleted": [],
+    "TeammateIdle": [],
+    "PreToolUse": [
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "command -v jq >/dev/null 2>&1 || exit 0; cmd=$(jq -r '.tool_input.command // empty' 2>/dev/null); case \"$cmd\" in \"gh pr create\"*|*\"&& gh pr create\"*|*\"; gh pr create\"*) ;; *) exit 0 ;; esac; cd \"${CLAUDE_PROJECT_DIR:-.}\" 2>/dev/null || exit 0; out=$(make pr-prep 2>&1); ec=$?; if [ $ec -ne 0 ]; then case \"$cmd\" in *--body*Spec-Drift-Waiver*) echo '[pr-gate] coupling gate failed; Spec-Drift-Waiver present after --body — allowing (CI honours the body-at-creation waiver).' ;; *) { echo '[pr-gate] BLOCKED — make pr-prep failed and no Spec-Drift-Waiver in the PR body:'; echo \"$out\" | tail -25; echo '[pr-gate] Either fix the coupling (edit the owning spec.md so the relationship graph covers the changed paths), or — with explicit user approval — include the Spec-Drift-Waiver block inline in --body (not --body-file; it must be present at creation) and retry.'; } >&2; exit 2 ;; esac; fi; if ! git diff --quiet -- .derived/codebase-index/ 2>/dev/null; then { echo '[pr-gate] BLOCKED — pr-prep regenerated .derived/codebase-index/ and the result is uncommitted.'; echo '[pr-gate] Run: git add .derived/codebase-index/ then amend or commit, push, and retry.'; } >&2; exit 2; fi; true"
+          },
+          {
+            "type": "command",
+            "command": "command -v jq >/dev/null 2>&1 || exit 0; cmd=$(jq -r '.tool_input.command // empty' 2>/dev/null); case \"$cmd\" in *UPDATE_GOLDEN*) cd \"${CLAUDE_PROJECT_DIR:-.}\" 2>/dev/null || exit 0; sc=spec-spine; if command -v \"$sc\" >/dev/null 2>&1; then if \"$sc\" compile >/dev/null 2>&1; then echo '[golden-prep] spec registry recompiled before golden update: a stale registry yields silently-wrong goldens that pass locally but fail CI'; else echo '[golden-prep] spec registry compile FAILED, goldens would be generated from a stale registry; run make spec-compile'; fi; fi ;; esac; true"
+          }
+        ]
+      }
+    ],
+    "WorktreeRemove": [],
+    "Notification": [],
+    "PostToolUseFailure": [],
+    "SubagentStart": [],
+    "SubagentStop": [],
+    "WorktreeCreate": [],
+    "ElicitationResult": [],
+    "PostToolUse": [
+      {
+        "matcher": "Edit|Write",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "command -v jq >/dev/null 2>&1 || { echo '[hook] jq missing, staleness check skipped'; exit 0; }; fp=$(jq -r '.tool_input.file_path // empty' 2>/dev/null); cd \"${CLAUDE_PROJECT_DIR:-.}\" 2>/dev/null || exit 0; case \"$fp\" in */specs/*/spec.md) sc=spec-spine; if command -v \"$sc\" >/dev/null 2>&1; then if \"$sc\" compile >/dev/null 2>&1; then echo '[spec-registry] recompiled after spec edit'; else echo '[spec-registry] compile FAILED after spec edit, run make spec-compile to see the error'; fi; fi ;; esac; case \"$fp\" in */Cargo.toml|*/package.json|*/pnpm-workspace.yaml|*/specs/*/spec.md|*/.claude/settings.json|*/.mcp.json|*/.claude/agents/*.md|*/.claude/commands/*.md|*/.claude/rules/*.md|*/.claude/skills/*/*.md|*/.claude/skills/*/*/*.md|*/.github/workflows/*.yml|*/.github/workflows/*.yaml|*/standards/schemas/*) command -v spec-spine >/dev/null 2>&1 && spec-spine index check 2>&1 | tail -5 ;; esac; true"
+          }
+        ]
+      }
+    ],
+    "PostCompact": [],
+    "SessionStart": [
+      {
+        "matcher": "startup|resume|clear|compact",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "cd \"${CLAUDE_PROJECT_DIR:-.}\" 2>/dev/null || exit 0; sc=spec-spine; if command -v \"$sc\" >/dev/null 2>&1; then \"$sc\" compile >/dev/null 2>&1 && reg='recompiled fresh' || reg='compile FAILED, run make spec-compile'; else reg='spec-spine CLI absent, run make setup'; fi; if command -v \"$sc\" >/dev/null 2>&1; then \"$sc\" index check >/dev/null 2>&1 && idx='fresh' || idx='STALE, run make index'; else idx='spec-spine CLI absent, run make setup'; fi; echo \"[session-freshness] spec registry: $reg; codebase index: $idx\"; true"
+          }
+        ]
+      }
+    ],
+    "Elicitation": [],
+    "SessionEnd": [],
+    "Setup": [],
+    "InstructionsLoaded": []
+  }
+}

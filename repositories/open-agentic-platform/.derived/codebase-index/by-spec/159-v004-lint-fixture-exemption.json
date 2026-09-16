@@ -1,0 +1,17 @@
+{
+  "mapping": {
+    "amends": [
+      "000-bootstrap-spec-system"
+    ],
+    "dependsOn": [
+      "000-bootstrap-spec-system",
+      "001-spec-compiler-mvp",
+      "158-workflow-ref-sha-pinning-lint"
+    ],
+    "implementingPaths": [],
+    "specId": "159-v004-lint-fixture-exemption",
+    "specStatus": "approved"
+  },
+  "schemaVersion": "1.1.0",
+  "shardHash": "9f924e41e3fdb8a8349dae601bc4a8e1b8df9e072db29f83e5cd409a8a876c47"
+}

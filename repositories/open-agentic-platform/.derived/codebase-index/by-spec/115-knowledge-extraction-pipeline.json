@@ -1,0 +1,375 @@
+{
+  "mapping": {
+    "dependsOn": [
+      "036-safety-tier-governance",
+      "047-governance-control-plane",
+      "087-unified-workspace-architecture",
+      "114-async-project-clone-pipeline"
+    ],
+    "implementingPaths": [
+      {
+        "path": "platform/services/statecraft/api/knowledge/auditActions.ts",
+        "source": "spec-edge"
+      },
+      {
+        "path": "platform/services/statecraft/api/knowledge/extractionCore.ts",
+        "source": "spec-edge"
+      },
+      {
+        "path": "platform/services/statecraft/api/knowledge/extractionEvents.ts",
+        "source": "spec-edge"
+      },
+      {
+        "path": "platform/services/statecraft/api/knowledge/extractionOutput.ts",
+        "source": "spec-edge"
+      },
+      {
+        "path": "platform/services/statecraft/api/knowledge/extractionPolicy.ts",
+        "source": "spec-edge"
+      },
+      {
+        "path": "platform/services/statecraft/api/knowledge/extractionWorker.ts",
+        "source": "spec-edge"
+      },
+      {
+        "path": "platform/services/statecraft/api/knowledge/extractors/agent-base.ts",
+        "source": "spec-edge"
+      },
+      {
+        "path": "platform/services/statecraft/api/knowledge/extractors/agent-cost-helpers.ts",
+        "source": "spec-edge"
+      },
+      {
+        "path": "platform/services/statecraft/api/knowledge/extractors/agent-image-vision.ts",
+        "source": "spec-edge"
+      },
+      {
+        "path": "platform/services/statecraft/api/knowledge/extractors/agent-pdf-vision.ts",
+        "source": "spec-edge"
+      },
+      {
+        "path": "platform/services/statecraft/api/knowledge/extractors/deterministic-docx.ts",
+        "source": "spec-edge"
+      },
+      {
+        "path": "platform/services/statecraft/api/knowledge/extractors/deterministic-pdf-embedded.ts",
+        "source": "spec-edge"
+      },
+      {
+        "path": "platform/services/statecraft/api/knowledge/extractors/deterministic-text.ts",
+        "source": "spec-edge"
+      },
+      {
+        "path": "platform/services/statecraft/api/knowledge/extractors/dispatch.ts",
+        "source": "spec-edge"
+      },
+      {
+        "path": "platform/services/statecraft/api/knowledge/extractors/index.ts",
+        "source": "spec-edge"
+      },
+      {
+        "path": "platform/services/statecraft/api/knowledge/extractors/types.ts",
+        "source": "spec-edge"
+      },
+      {
+        "path": "platform/services/statecraft/api/knowledge/knowledge.ts",
+        "source": "spec-edge"
+      },
+      {
+        "path": "platform/services/statecraft/api/knowledge/magic.ts",
+        "source": "spec-edge"
+      },
+      {
+        "path": "platform/services/statecraft/api/knowledge/prompts.ts",
+        "source": "spec-edge"
+      },
+      {
+        "path": "platform/services/statecraft/web/app/routes/app.project.$projectId.knowledge.$id.tsx",
+        "source": "spec-edge"
+      },
+      {
+        "path": "platform/services/statecraft/web/app/routes/app.project.$projectId.knowledge.tsx",
+        "source": "spec-edge"
+      }
+    ],
+    "resolvedUnits": [
+      {
+        "locations": [
+          {
+            "file": "platform/services/statecraft/api/knowledge/auditActions.ts"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "file",
+          "path": "platform/services/statecraft/api/knowledge/auditActions.ts"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "platform/services/statecraft/api/knowledge/extractionCore.ts"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "file",
+          "path": "platform/services/statecraft/api/knowledge/extractionCore.ts"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "platform/services/statecraft/api/knowledge/extractionEvents.ts"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "file",
+          "path": "platform/services/statecraft/api/knowledge/extractionEvents.ts"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "platform/services/statecraft/api/knowledge/extractionOutput.ts"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "file",
+          "path": "platform/services/statecraft/api/knowledge/extractionOutput.ts"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "platform/services/statecraft/api/knowledge/extractionPolicy.ts"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "file",
+          "path": "platform/services/statecraft/api/knowledge/extractionPolicy.ts"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "platform/services/statecraft/api/knowledge/extractionWorker.ts"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "file",
+          "path": "platform/services/statecraft/api/knowledge/extractionWorker.ts"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "platform/services/statecraft/api/knowledge/extractors/agent-base.ts"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "file",
+          "path": "platform/services/statecraft/api/knowledge/extractors/agent-base.ts"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "platform/services/statecraft/api/knowledge/extractors/agent-cost-helpers.ts"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "file",
+          "path": "platform/services/statecraft/api/knowledge/extractors/agent-cost-helpers.ts"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "platform/services/statecraft/api/knowledge/extractors/agent-image-vision.ts"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "file",
+          "path": "platform/services/statecraft/api/knowledge/extractors/agent-image-vision.ts"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "platform/services/statecraft/api/knowledge/extractors/agent-pdf-vision.ts"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "file",
+          "path": "platform/services/statecraft/api/knowledge/extractors/agent-pdf-vision.ts"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "platform/services/statecraft/api/knowledge/extractors/deterministic-docx.ts"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "file",
+          "path": "platform/services/statecraft/api/knowledge/extractors/deterministic-docx.ts"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "platform/services/statecraft/api/knowledge/extractors/deterministic-pdf-embedded.ts"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "file",
+          "path": "platform/services/statecraft/api/knowledge/extractors/deterministic-pdf-embedded.ts"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "platform/services/statecraft/api/knowledge/extractors/deterministic-text.ts"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "file",
+          "path": "platform/services/statecraft/api/knowledge/extractors/deterministic-text.ts"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "platform/services/statecraft/api/knowledge/extractors/dispatch.ts"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "file",
+          "path": "platform/services/statecraft/api/knowledge/extractors/dispatch.ts"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "platform/services/statecraft/api/knowledge/extractors/index.ts"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "file",
+          "path": "platform/services/statecraft/api/knowledge/extractors/index.ts"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "platform/services/statecraft/api/knowledge/extractors/types.ts"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "file",
+          "path": "platform/services/statecraft/api/knowledge/extractors/types.ts"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "platform/services/statecraft/api/knowledge/knowledge.ts"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "file",
+          "path": "platform/services/statecraft/api/knowledge/knowledge.ts"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "platform/services/statecraft/api/knowledge/magic.ts"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "file",
+          "path": "platform/services/statecraft/api/knowledge/magic.ts"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "platform/services/statecraft/api/knowledge/prompts.ts"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "file",
+          "path": "platform/services/statecraft/api/knowledge/prompts.ts"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "platform/services/statecraft/web/app/routes/app.project.$projectId.knowledge.$id.tsx"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "file",
+          "path": "platform/services/statecraft/web/app/routes/app.project.$projectId.knowledge.$id.tsx"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "platform/services/statecraft/web/app/routes/app.project.$projectId.knowledge.tsx"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "file",
+          "path": "platform/services/statecraft/web/app/routes/app.project.$projectId.knowledge.tsx"
+        }
+      }
+    ],
+    "specId": "115-knowledge-extraction-pipeline",
+    "specStatus": "approved"
+  },
+  "schemaVersion": "1.1.0",
+  "shardHash": "a3d85ce03c54bea728276e1f82cbf9f3bb1ab2ee7466bca520dc3c2fff6c5d84"
+}

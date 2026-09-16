@@ -1,0 +1,69 @@
+{
+  "record": {
+    "authors": [
+      "open-agentic-platform"
+    ],
+    "created": "2026-07-08",
+    "dependsOn": [
+      "227-create-project-infra-config-projection"
+    ],
+    "domain": "platform",
+    "extends": [
+      {
+        "nature": "additive",
+        "spec": "034-featuregraph-registry-scanner-fix",
+        "unit": {
+          "kind": "file",
+          "path": "crates/featuregraph/tests/golden/features_graph.json"
+        }
+      }
+    ],
+    "extraFrontmatter": {
+      "approved": "2026-07-08",
+      "category": [
+        "infrastructure",
+        "data"
+      ],
+      "language": "en"
+    },
+    "featureBranch": "230-tenant-cron-scheduler-module",
+    "id": "230-tenant-cron-scheduler-module",
+    "implementation": "pending",
+    "kind": "platform",
+    "references": [
+      {
+        "role": "planned",
+        "unit": {
+          "kind": "file",
+          "path": "platform/services/statecraft/web/app/routes/app.projects.new.tsx"
+        }
+      },
+      {
+        "role": "planned",
+        "unit": {
+          "kind": "file",
+          "path": "platform/services/statecraft/api/projects/scaffold/moduleCatalog.ts"
+        }
+      }
+    ],
+    "sectionHeadings": [
+      "230: Tenant self-hosted cron via in-app scheduler",
+      "§1 Motivation",
+      "§2 The model",
+      "§3 Mechanism",
+      "§4 The lock and the scale tiers (decided)",
+      "§5 factory-encore `cron` module shape",
+      "§6 Create-project surface (OAP, spec-227 stage)",
+      "§7 Productionizing the daemon",
+      "§8 Relationships",
+      "§9 Out of scope / staged",
+      "§10 Acceptance criteria"
+    ],
+    "specPath": "specs/230-tenant-cron-scheduler-module/spec.md",
+    "status": "approved",
+    "summary": "Tenant apps deploy self-hosted via OAP deployd, where Encore's `CronJob` primitive is a no-op (there is no Encore Cloud scheduler). This spec gives each tenant app working self-hosted cron via an in-app scheduler baked into the generated Encore app, with no per-tenant Kubernetes CronJob. The scheduler stores schedules in Postgres and fires due jobs against the app's own endpoints. The distributed lock is tiered by the tenant's scale choice in create-project: small scale uses a Postgres atomic claim (postgres-only); large scale uses Redis (postgres + redis), production-grade for multi-replica deployments. Cron therefore always requires data-postgres and optionally peers with data-redis. Implemented as a new factory-encore adapter `cron` module and surfaced as the create-project Infra-axis cron option. This is distinct from spec 224 (statecraft's OWN control-plane sweepers, which stay on per-sweeper K8s CronJobs).\n",
+    "title": "Tenant self-hosted cron: in-app scheduler module (postgres small-scale / +redis large-scale), the create-project Infra axis"
+  },
+  "shardHash": "757826170cf0435e1ada8f838fa3f682f3bbb3979c083bc74458d43b9b842d2a",
+  "specVersion": "1.1.0"
+}

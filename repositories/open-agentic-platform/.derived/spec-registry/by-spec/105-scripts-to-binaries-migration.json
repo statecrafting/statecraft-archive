@@ -1,0 +1,81 @@
+{
+  "record": {
+    "amendmentRecord": "Amended 2026-06-11 — adapter-scopes derivation source cutover (spec 198\nFR-012). `adapter-scopes-compiler` no longer scrapes top-level directories\nfrom `directory_conventions:`; it projects each adapter manifest's\n`governance:` sub-envelope verbatim (`file_write_scope` as declared,\nadmission-validated write globs; `allowed_commands` still derived from the\nmanifest's own `commands:` map — the manifest's\n`allowed_commands_from: commands` declaration names that home and the\nadmission gate enforces it; the compiler itself reads `commands:`\nunconditionally). A\nmanifest without a `governance:` section now fails the compile —\nfail-closed, mirroring admissibility (adapter-manifest schema 1.1.0).\nInput moves to a factory-source checkout via a now-required\n`--adapters-dir` (the in-repo `factory/adapters/` this spec originally\nread was retired by spec 108); output narrows to the single committed\nstatecraft snapshot (the legacy `build/adapter-scopes.json` copy is\nretired, with the ci-parity-check PRODUCERS rule repointed under the\nspec 104 amendment of the same date). First derivation ran 2026-06-11\nagainst the admitted acme-vue-encore manifest\n(sha256 57f43e1a8908…, matching the sealed admission record's\nadapter_manifest_hashes). The governed-binary venue split this spec\nestablishes is unchanged.\n\nAmended 2026-06-04 — axiomregent demotion fetch re-point. `make fetch-axiomregent`\n(the Makefile recipe this spec moved off `scripts/fetch-axiomregent.js`) no longer\ndownloads from a GitHub *Release*: axiomregent has no standalone release (specs\n037/193, amended). It now pulls the host-triple sidecar from the latest successful\n`build-axiomregent.yml` CI run artifact (`gh run download`, non-ceremonial, 30-day\nretention), with `make axiomregent` (build-from-source) as the offline fallback.\nThe governed-binary vs Makefile-recipe split this spec establishes is unchanged;\nonly the recipe's fetch source moved from a release channel to a CI artifact.\nTrust posture (documented in the recipe): a CI artifact is produced on every push\nto main and is NOT attestation-verified — a wider trust surface than the former\nattested release asset. This is a dev-convenience path (not the production bundled\npath); `make axiomregent` (build from your own checkout) is the zero-trust-delegation\noption for contributors who want it.\n",
+    "coAuthority": [
+      {
+        "unit": {
+          "anchor": "axiomregent-build",
+          "file": "Makefile",
+          "kind": "section"
+        },
+        "with_specs": [
+          "037-cross-platform-axiomregent",
+          "073-axiomregent-unification",
+          "104-makefile-ci-parity-contract"
+        ]
+      }
+    ],
+    "codeAliases": [
+      "SCRIPTS_RETIRE"
+    ],
+    "created": "2026-04-16",
+    "dependsOn": [
+      "000-bootstrap-spec-system",
+      "037-cross-platform-axiomregent",
+      "073-axiomregent-unification",
+      "075-factory-workflow-engine",
+      "104-makefile-ci-parity-contract"
+    ],
+    "domain": "tooling",
+    "establishes": [
+      {
+        "kind": "file",
+        "path": "tools/oap/adapter-scopes-compiler/src/main.rs"
+      },
+      {
+        "kind": "file",
+        "path": "tools/oap/adapter-scopes-compiler/src/lib.rs"
+      }
+    ],
+    "extraFrontmatter": {
+      "amended": "2026-06-11"
+    },
+    "id": "105-scripts-to-binaries-migration",
+    "implementation": "complete",
+    "kind": "migration",
+    "owner": "bart",
+    "risk": "medium",
+    "sectionHeadings": [
+      "105 — Scripts-To-Binaries Migration",
+      "1. Problem Statement",
+      "2. Solution",
+      "2.1 Classification Rule",
+      "2.2 Target Layout",
+      "2.3 Migration Order",
+      "2.4 Governance Per Migration",
+      "3. Functional Requirements",
+      "FR-01: `adapter-scopes-compiler` Crate",
+      "FR-02: `fetch-axiomregent` Makefile Recipe",
+      "FR-03: `axiomregent-all` Makefile Recipe",
+      "FR-03.1: `check-deps` MUST List `gh`",
+      "FR-04: Makefile Integration",
+      "FR-05: Package.json Hooks",
+      "FR-06: Delete The Directory",
+      "4. Success Criteria",
+      "SC-01: adapter-scopes.json Is Byte-Identical Pre/Post Phase 1",
+      "SC-02: make setup Still Works End-To-End",
+      "SC-03: scripts/ Directory Is Absent After Phase 3",
+      "SC-04: Traceability Is Complete",
+      "SC-05: No Behavioural Regression",
+      "5. Out of Scope (MVP)",
+      "6. Clarifications",
+      "Cross-references"
+    ],
+    "specPath": "specs/105-scripts-to-binaries-migration/spec.md",
+    "status": "approved",
+    "summary": "Retire the repo-root `scripts/` directory. Each script moves to the venue that matches its nature: scripts that perform real logic (parsing, compilation, validation) become governed Rust binaries under `tools/`; scripts that are pure orchestration (loops, copies, invocation of existing tools like gh/cargo) become Makefile recipes.\n",
+    "title": "Retire scripts/ — Migrate To Rust Binaries Or Make Recipes By Nature"
+  },
+  "shardHash": "75eb1527d227555b1a25c2c6e5c762809c46838e97370081b1d8e490fb642a57",
+  "specVersion": "1.1.0"
+}

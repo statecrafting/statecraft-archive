@@ -1,0 +1,84 @@
+{
+  "record": {
+    "codeAliases": [
+      "SCHEMA_PARITY_CI"
+    ],
+    "created": "2026-05-30",
+    "dependsOn": [
+      "104-makefile-ci-parity-contract",
+      "125-schema-parity-walker-rebuild",
+      "158-workflow-ref-sha-pinning-lint",
+      "177-ci-orchestrator-pr-gate",
+      "189-duplex-envelope-version-parity"
+    ],
+    "domain": "tooling",
+    "establishes": [
+      {
+        "kind": "file",
+        "path": ".github/workflows/ci-schema-parity.yml"
+      },
+      {
+        "kind": "file",
+        "path": "tools/oap/ci-parity-check/tests/fixtures/aligned/.github/workflows/ci-schema-parity.yml"
+      },
+      {
+        "kind": "file",
+        "path": "tools/oap/ci-parity-check/tests/fixtures/divergent/.github/workflows/ci-schema-parity.yml"
+      }
+    ],
+    "extends": [
+      {
+        "nature": "additive",
+        "spec": "177-ci-orchestrator-pr-gate",
+        "unit": {
+          "kind": "file",
+          "path": ".github/workflows/ci.yml"
+        }
+      },
+      {
+        "nature": "additive",
+        "spec": "104-makefile-ci-parity-contract",
+        "unit": {
+          "kind": "file",
+          "path": "tools/oap/ci-parity-check/src/lib.rs"
+        }
+      },
+      {
+        "nature": "additive",
+        "spec": "034-featuregraph-registry-scanner-fix",
+        "unit": {
+          "kind": "file",
+          "path": "crates/featuregraph/tests/golden/features_graph.json"
+        }
+      }
+    ],
+    "extraFrontmatter": {
+      "approved": "2026-05-30",
+      "completed": "2026-05-30",
+      "slug": "schema-parity-ci-job"
+    },
+    "id": "191-schema-parity-ci-job",
+    "implementation": "complete",
+    "kind": "governance",
+    "owner": "bart",
+    "risk": "low",
+    "sectionHeadings": [
+      "191 — Wire ci-schema-parity as an enforcing CI job",
+      "1. Problem",
+      "2. Decision",
+      "2.1 The workflow",
+      "2.2 The route (spec 177)",
+      "2.3 The parity classification (spec 104)",
+      "3. Why bun (not node)",
+      "4. Acceptance",
+      "5. Non-goals",
+      "6. Cross-references"
+    ],
+    "specPath": "specs/191-schema-parity-ci-job/spec.md",
+    "status": "approved",
+    "summary": "The Rust↔TS schema-parity gate (`make ci-schema-parity`) — restored and extended with envelope-version parity by spec 189 — runs only in the local `make` loop; no CI workflow enforces it pre-merge (see `project_schema_parity_gate_not_in_ci`). This spec adds an enforcing reusable workflow `ci-schema-parity.yml` that mirrors the Makefile recipe (cargo fingerprint emit + `bun run` walker), routes it from the spec-177 orchestrator on the files it actually compares, and classifies it in `ci-parity-check`'s `ENFORCING_WORKFLOWS` so the Makefile↔CI run-mirror covers it. bun is the runtime: the walker imports `.ts` at runtime, bun's fast startup + native TS suit a per-PR gate, and mirroring the Makefile's `bun run` keeps spec 104 green with no Makefile churn.\n",
+    "title": "Wire ci-schema-parity as an enforcing CI job (bun runtime)"
+  },
+  "shardHash": "2a0f716b11212b6428c3761be576093efab2d57610c4abfb924450facf3f419f",
+  "specVersion": "1.1.0"
+}

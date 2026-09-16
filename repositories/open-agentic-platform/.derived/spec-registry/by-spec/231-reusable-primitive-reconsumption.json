@@ -1,0 +1,86 @@
+{
+  "record": {
+    "authors": [
+      "open-agentic-platform"
+    ],
+    "codeAliases": [
+      "REUSABLE_PRIMITIVE_RECONSUMPTION",
+      "PRIMITIVE_RECONSUMPTION"
+    ],
+    "created": "2026-07-14",
+    "dependsOn": [
+      "047-governance-control-plane"
+    ],
+    "domain": "platform",
+    "extends": [
+      {
+        "nature": "additive",
+        "spec": "034-featuregraph-registry-scanner-fix",
+        "unit": {
+          "kind": "file",
+          "path": "crates/featuregraph/tests/golden/features_graph.json"
+        }
+      }
+    ],
+    "extraFrontmatter": {
+      "language": "en"
+    },
+    "featureBranch": "231-reusable-primitive-reconsumption",
+    "id": "231-reusable-primitive-reconsumption",
+    "implementation": "complete",
+    "kind": "capability",
+    "references": [
+      {
+        "role": "context",
+        "unit": {
+          "kind": "file",
+          "path": "crates/policy-kernel/src/audit.rs"
+        }
+      }
+    ],
+    "refines": [
+      {
+        "aspect": "reconsume-canonical-json-and-action-gate",
+        "unit": {
+          "kind": "file",
+          "path": "crates/policy-kernel/src/lib.rs"
+        }
+      },
+      {
+        "aspect": "reconsume-attest-ledger-hashing",
+        "unit": {
+          "kind": "file",
+          "path": "crates/policy-kernel/src/proof_chain.rs"
+        }
+      },
+      {
+        "aspect": "reconsume-trust-window-scorer",
+        "unit": {
+          "kind": "file",
+          "path": "crates/policy-kernel/src/coherence.rs"
+        }
+      },
+      {
+        "aspect": "add-extracted-primitive-dependencies",
+        "unit": {
+          "kind": "file",
+          "path": "crates/policy-kernel/Cargo.toml"
+        }
+      }
+    ],
+    "sectionHeadings": [
+      "231: Reusable-primitive re-consumption",
+      "1. Purpose",
+      "2. The invariant: keep the shapes, swap the internals",
+      "3. Provenance and the relicensing vend",
+      "4. Scope",
+      "5. Success criteria"
+    ],
+    "specPath": "specs/231-reusable-primitive-reconsumption/spec.md",
+    "status": "approved",
+    "summary": "Four domain-neutral primitives were extracted from crates/policy-kernel into standalone Apache-2.0 crates and published to crates.io: canonical-keysort-json (the key-sorted JSON serializer), attest-ledger (the hash-linked record + audit chains), trust-window (the rolling-window trust scorer), and action-gate (the pluggable decision gate). This spec re-consumes them: policy-kernel becomes a thin OAP-specific shim over the shared cores, exactly as OAP already consumes the external spec-spine CLI. The re-consumption keeps every OAP public SHAPE (ProofRecord, ProofChainAnchor, CoherenceScheduler, PrivilegeLevel, ToolCallContext, PolicyBundle, PolicyDecision, evaluate) byte-identical for its seven consumers and its two verifier binaries, and delegates only the internals: canonical_json_sorted -> canonical-keysort-json; link_record_hash / sha256_hex -> attest-ledger-core; CoherenceScheduler -> a trust-window WindowScorer (DegradeOnly); evaluate() -> an action-gate Gate whose six checks are OAP's six domain checks. Hash and signature parity is guaranteed by a byte-equality parity test and the crate's existing proof-chain, audit-chain, coherence, and evaluate test suites, all of which pass unchanged.\n",
+    "title": "Reusable-primitive re-consumption (policy-kernel delegates to the extracted Apache-2.0 cores)"
+  },
+  "shardHash": "114749fe10d3c34bd5747b55bf4287f7a8cff14b66832bd8fbd3b480ea4ee530",
+  "specVersion": "1.1.0"
+}

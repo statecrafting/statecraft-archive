@@ -1,0 +1,26 @@
+# SPDX-License-Identifier: AGPL-3.0-or-later
+# Copyright (C) 2026 Bartek Kus
+
+[package]
+name = "open_agentic_assumption_cascade_check"
+publish = false   # internal workspace tool; binaries ship via release workflows, not crates.io
+version = "0.1.0"
+edition = "2024"
+description = "CI check for spec 121 FR-034 — fails if generated artifacts reference an assumption-only-manifest entry's surface forms outside pending-promotion.md."
+
+[lib]
+name = "open_agentic_assumption_cascade_check"
+path = "src/lib.rs"
+
+[[bin]]
+name = "assumption-cascade-check"
+path = "src/main.rs"
+
+[dependencies]
+factory-engine = { path = "../../../crates/factory-engine" }
+
+[dev-dependencies]
+tempfile = "3"
+
+[package.metadata.oap]
+spec = "121-claim-provenance-enforcement"

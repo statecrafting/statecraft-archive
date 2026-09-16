@@ -1,0 +1,40 @@
+{
+  "record": {
+    "authors": [
+      "open-agentic-platform"
+    ],
+    "created": "2026-03-22",
+    "domain": "tooling",
+    "extends": [
+      {
+        "nature": "additive",
+        "spec": "007-registry-consumer-status-report-mvp"
+      }
+    ],
+    "extraFrontmatter": {
+      "language": "en"
+    },
+    "featureBranch": "009-registry-consumer-status-report-nonzero-mvp",
+    "id": "009-registry-consumer-status-report-nonzero-mvp",
+    "implementation": "complete",
+    "kind": "platform-delivery",
+    "sectionHeadings": [
+      "Feature Specification: Registry consumer status-report nonzero filtering",
+      "Purpose and charter",
+      "In scope",
+      "Out of scope",
+      "Requirements *(mandatory)*",
+      "Functional Requirements",
+      "Key Entities",
+      "Success Criteria *(mandatory)*",
+      "Clarifications"
+    ],
+    "specPath": "specs/009-registry-consumer-status-report-nonzero-mvp/spec.md",
+    "status": "superseded",
+    "summary": "Add `--nonzero-only` to `registry-consumer status-report` so automation consumers can omit empty lifecycle buckets in both human-readable and JSON output modes.\n",
+    "supersededBy": "217-spec-spine-engine-swap-collapse",
+    "title": "Registry consumer status-report nonzero filtering"
+  },
+  "shardHash": "43446e9276cc352e67b9f70ce827f82a4f26651f860a1b22e58ba031333a666a",
+  "specVersion": "1.1.0"
+}

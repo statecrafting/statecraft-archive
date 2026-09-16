@@ -1,0 +1,64 @@
+{
+  "record": {
+    "codeAliases": [
+      "MODULE_MANIFEST_SCHEMA",
+      "MODULE_TAXONOMY"
+    ],
+    "created": "2026-06-10",
+    "domain": "generator",
+    "establishes": [
+      {
+        "kind": "file",
+        "path": "adapters/acme-vue-encore/scripts/lib/manifest.schema.ts"
+      },
+      {
+        "kind": "file",
+        "path": "adapters/acme-vue-encore/scripts/lib/modules-ts-generator.ts"
+      },
+      {
+        "kind": "file",
+        "path": "adapters/acme-vue-encore/modules/security-core/"
+      },
+      {
+        "kind": "file",
+        "path": "adapters/acme-vue-encore/modules/api-gateway/"
+      },
+      {
+        "kind": "file",
+        "path": "adapters/acme-vue-encore/modules/data-postgres/"
+      },
+      {
+        "kind": "file",
+        "path": "adapters/acme-vue-encore/modules/data-redis/"
+      }
+    ],
+    "id": "001-module-manifest-schema",
+    "implementation": "complete",
+    "kind": "architecture",
+    "owner": "bart",
+    "risk": "medium",
+    "sectionHeadings": [
+      "001. Module manifest schema: declarative service composition and the module taxonomy",
+      "1. Purpose",
+      "2. Territory",
+      "3. Behavior",
+      "3.1 Manifest schema",
+      "FR-001 — Required and kept fields",
+      "FR-002 — Encore service-composition fields",
+      "FR-003 — Schema validation",
+      "3.2 Module taxonomy",
+      "FR-004 — Cross-cutting modules are pure declarative payloads",
+      "FR-005 — Service modules ship a complete Encore service directory",
+      "3.3 `modules-ts-generator.ts`",
+      "FR-006 — Governed consumer of manifests",
+      "4. Acceptance criteria",
+      "5. Out of scope"
+    ],
+    "specPath": "specs/001-module-manifest-schema/spec.md",
+    "status": "approved",
+    "summary": "The module manifest schema: every module under modules/ declares its composition declaratively — services, secrets, corsEntries, middlewares, migrations — consumed by the generator at compose time. Service modules additionally ship an Encore service directory under files/. The four cross-cutting modules (security-core, api-gateway, data-postgres, data-redis) are pure declarative payloads with no copied source files.\n",
+    "title": "Module manifest schema: declarative service composition and the module taxonomy"
+  },
+  "shardHash": "6bafa3a5b474349220a246a082ee9fe181dab51f3825ea9df8bf941db46a11f0",
+  "specVersion": "1.1.0"
+}

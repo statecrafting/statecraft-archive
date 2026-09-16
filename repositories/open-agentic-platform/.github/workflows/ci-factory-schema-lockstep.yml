@@ -1,0 +1,110 @@
+# Spec: 212-factory-schema-lockstep-ci
+# Spec: 104-makefile-ci-parity-contract
+# Spec: 177-ci-orchestrator-pr-gate
+# Spec: 197-factory-contract-open-standard-extensions
+#
+# Factory schema lockstep — enforcing PR-lane workflow (spec 212 FR-003).
+#
+# Asserts the cross-repo contract surfaces agree: OAP's canonical
+# standards/schemas/factory/** vs the owned factory source factory's
+# contract/schemas/** at the COMMITTED PIN (specs/212-*/spec.md `pinned_ref`),
+# under the three-mode structural compare + the spec-197 FR-005 GoA-concept
+# guard. factory is `spec_spine: false`; enforcement is unidirectional,
+# OAP-side.
+#
+# Fetch is authenticated (factory is private): a repo-scoped read-only
+# PAT in the UPSTREAM_SOURCES_RO_TOKEN secret. FAIL-VISIBLE — a missing or
+# unauthorized token fails the job; it is NEVER skipped-green
+# (spec 212 FR-003 / AC-6, the spec 200 FR-004 posture).
+#
+# Mirrors `make factory-schema-lockstep` (the cargo build + the tool
+# invocation are token-identical; the git fetch is shell, not parity-scanned).
+# This workflow is in ci-parity-check's ENFORCING_WORKFLOWS (spec 104) —
+# `make ci-strict` mirrors it.
+#
+# Dispatched from ci.yml on changes to the lockstep surface (spec 177); runs
+# identically in merge_group. Pinned-and-blocking: the cron lane
+# (ci-factory-schema-lockstep-cron.yml) is the against-main, human-routed lane.
+
+name: CI factory schema lockstep
+
+on:
+  workflow_call:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+env:
+  CARGO_TERM_COLOR: always
+
+jobs:
+  factory-schema-lockstep:
+    runs-on: ubuntu-latest
+    name: factory-schema-lockstep / cross-repo contract parity
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+
+      - name: Rust toolchain
+        uses: dtolnay/rust-toolchain@29eef336d9b2848a0b548edc03f92a220660cdb8 # pinned for rust-toolchain.toml lockstep
+        with:
+          toolchain: '1.95.0'
+
+      - name: Cache Rust dependencies
+        uses: Swatinem/rust-cache@42dc69e1aa15d09112580998cf2ef0119e2e91ae # v2
+        with:
+          shared-key: factory-schema-lockstep
+
+      # The comparison-mode + GoA-guard logic tests — no network/token needed,
+      # so they run before the fetch and gate a tool change on their own.
+      - name: Tool tests
+        run: cargo test --manifest-path tools/oap/factory-schema-lockstep/Cargo.toml --target-dir tools/oap/factory-schema-lockstep/target
+
+      # Sparse-fetch ONLY contract/schemas/** from factory at the pinned
+      # ref (spec 212 FR-003 / FR-007). The pin lives in the spec frontmatter —
+      # authored markdown source, not a derived artifact. Fail-visible.
+      - name: Fetch factory contract/schemas at the pinned ref
+        env:
+          UPSTREAM_SOURCES_RO_TOKEN: ${{ secrets.UPSTREAM_SOURCES_RO_TOKEN }}
+          UPSTREAM_FACTORY_SOURCE: ${{ vars.UPSTREAM_FACTORY_SOURCE }}
+        run: |
+          set -euo pipefail
+          if [ -z "${UPSTREAM_SOURCES_RO_TOKEN:-}" ]; then
+            echo "::error::UPSTREAM_SOURCES_RO_TOKEN is not set — cannot fetch factory. This gate is fail-visible, never skipped-green (spec 212 FR-003 / AC-6)." >&2
+            exit 1
+          fi
+          if [ -z "${UPSTREAM_FACTORY_SOURCE:-}" ]; then
+            echo "::error::UPSTREAM_FACTORY_SOURCE is not set — cannot resolve factory. This gate is fail-visible, never skipped-green (spec 212 FR-003 / AC-6)." >&2
+            exit 1
+          fi
+          pin=$(grep -E '^pinned_ref:' specs/212-factory-schema-lockstep-ci/spec.md | head -1 | sed -E 's/^pinned_ref:[[:space:]]*"?([0-9a-fA-F]+)"?.*/\1/')
+          if [ -z "$pin" ]; then
+            echo "::error::could not read pinned_ref from specs/212-factory-schema-lockstep-ci/spec.md frontmatter" >&2
+            exit 1
+          fi
+          echo "pinned factory ref: $pin"
+          rm -rf .factory
+          mkdir .factory
+          cd .factory
+          git init -q
+          git remote add origin "https://x-access-token:${UPSTREAM_SOURCES_RO_TOKEN}@${UPSTREAM_FACTORY_SOURCE}.git"
+          git config core.sparseCheckout true
+          git sparse-checkout init --cone
+          git sparse-checkout set contract/schemas
+          if ! git fetch --depth 1 origin "$pin" 2> fetch.err; then
+            # Redact any token that leaked into the URL before surfacing the
+            # error (defence-in-depth; git already strips userinfo, and Actions
+            # masks the secret, but never echo a credential-bearing URL raw).
+            sed 's#x-access-token:[^@]*@#x-access-token:***@#g' fetch.err >&2
+            echo "::error::cannot fetch factory at $pin; check UPSTREAM_SOURCES_RO_TOKEN (read-only contents scope on statecrafting/factory)." >&2
+            exit 1
+          fi
+          git checkout -q FETCH_HEAD
+          test -d contract/schemas || { echo "::error::contract/schemas absent at $pin" >&2; exit 1; }
+
+      - name: Build the lockstep checker
+        run: cargo build --release --manifest-path tools/oap/factory-schema-lockstep/Cargo.toml --target-dir tools/oap/factory-schema-lockstep/target
+
+      - name: Assert cross-repo contract lockstep
+        run: ./tools/oap/factory-schema-lockstep/target/release/factory-schema-lockstep --oap-dir standards/schemas/factory --factory-dir .factory/contract/schemas

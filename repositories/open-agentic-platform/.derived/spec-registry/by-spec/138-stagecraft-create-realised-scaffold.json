@@ -1,0 +1,167 @@
+{
+  "record": {
+    "amends": [
+      "112-factory-project-lifecycle"
+    ],
+    "codeAliases": [
+      "STATECRAFT_CREATE_REALISED"
+    ],
+    "created": "2026-05-04",
+    "dependsOn": [
+      "112-factory-project-lifecycle",
+      "108-factory-as-platform-feature",
+      "109-factory-pat-and-pubsub-sync"
+    ],
+    "domain": "platform",
+    "extends": [
+      {
+        "nature": "additive",
+        "spec": "112-factory-project-lifecycle",
+        "unit": {
+          "kind": "file",
+          "path": "platform/services/statecraft/api/projects/create.ts"
+        }
+      },
+      {
+        "nature": "additive",
+        "spec": "112-factory-project-lifecycle",
+        "unit": {
+          "kind": "file",
+          "path": "platform/services/statecraft/api/projects/scaffoldReadiness.ts"
+        }
+      },
+      {
+        "nature": "additive",
+        "spec": "112-factory-project-lifecycle",
+        "unit": {
+          "kind": "file",
+          "path": "platform/services/statecraft/api/projects/scaffold/templateCache.ts"
+        }
+      },
+      {
+        "nature": "additive",
+        "spec": "112-factory-project-lifecycle",
+        "unit": {
+          "kind": "file",
+          "path": "platform/services/statecraft/api/projects/scaffold/scheduler.ts"
+        }
+      },
+      {
+        "nature": "additive",
+        "spec": "112-factory-project-lifecycle",
+        "unit": {
+          "kind": "file",
+          "path": "platform/services/statecraft/api/projects/scaffold/perRequestScaffold.ts"
+        }
+      },
+      {
+        "nature": "additive",
+        "spec": "112-factory-project-lifecycle",
+        "unit": {
+          "kind": "file",
+          "path": "platform/services/statecraft/api/projects/scaffold/gitInitAndPush.ts"
+        }
+      },
+      {
+        "nature": "additive",
+        "spec": "112-factory-project-lifecycle",
+        "unit": {
+          "kind": "file",
+          "path": "platform/services/statecraft/api/projects/scaffold/moduleCatalog.ts"
+        }
+      },
+      {
+        "nature": "additive",
+        "spec": "112-factory-project-lifecycle",
+        "unit": {
+          "kind": "file",
+          "path": "platform/services/statecraft/web/app/routes/app.projects.new.tsx"
+        }
+      },
+      {
+        "nature": "additive",
+        "spec": "112-factory-project-lifecycle",
+        "unit": {
+          "kind": "file",
+          "path": "platform/charts/statecraft/templates/workspace-pvc.yaml"
+        }
+      },
+      {
+        "nature": "additive",
+        "spec": "112-factory-project-lifecycle",
+        "unit": {
+          "kind": "file",
+          "path": "platform/services/statecraft/api/factory/syncPipeline.ts"
+        }
+      },
+      {
+        "nature": "additive",
+        "spec": "112-factory-project-lifecycle",
+        "unit": {
+          "kind": "file",
+          "path": "platform/services/statecraft/api/factory/syncWorker.ts"
+        }
+      },
+      {
+        "nature": "additive",
+        "spec": "112-factory-project-lifecycle",
+        "unit": {
+          "kind": "file",
+          "path": "platform/services/statecraft/api/factory/translator.test.ts"
+        }
+      },
+      {
+        "nature": "additive",
+        "spec": "112-factory-project-lifecycle",
+        "unit": {
+          "kind": "file",
+          "path": "platform/services/statecraft/api/github/repoInit.ts"
+        }
+      },
+      {
+        "nature": "additive",
+        "spec": "112-factory-project-lifecycle",
+        "unit": {
+          "kind": "file",
+          "path": "platform/services/statecraft/web/app/lib/projects-api.server.ts"
+        }
+      },
+      {
+        "nature": "additive",
+        "spec": "112-factory-project-lifecycle",
+        "unit": {
+          "kind": "file",
+          "path": "platform/services/statecraft/CLAUDE.md"
+        }
+      }
+    ],
+    "extraFrontmatter": {
+      "approved": "2026-05-04",
+      "closed": "2026-05-04",
+      "slug": "statecraft-create-realised-scaffold"
+    },
+    "id": "138-statecraft-create-realised-scaffold",
+    "implementation": "complete",
+    "kind": "amendment",
+    "owner": "bart",
+    "risk": "low",
+    "sectionHeadings": [
+      "138 — Statecraft Create — Realised Scaffold Subflow",
+      "1. Why this amendment",
+      "2. The four refinements",
+      "2.1 Profile set is statecraft-owned (§5.3 row 2)",
+      "2.2 environments row in the Create transaction (§5.2 step 7)",
+      "2.3 Scaffold-readiness endpoint contract (new §5.1.1)",
+      "2.4 Workspace PVC backs ${STATECRAFT_WORKSPACE_DIR} (§5.3 deployment note)",
+      "3. What does NOT change",
+      "4. Risks and follow-ups",
+      "5. Audit trail"
+    ],
+    "specPath": "specs/138-statecraft-create-realised-scaffold/spec.md",
+    "status": "approved",
+    "summary": "Spec 112 §5 specified Create at the contract level but left four points where the landed implementation diverged from the literal spec text: (1) the prebuild profile set is statecraft-owned, not adapter-driven; (2) the Create transaction also inserts an `environments` row; (3) the form gates on a new `GET /api/projects/scaffold-readiness` endpoint; (4) the workspace dir is backed by an RWO PVC. None of these contradicts spec 112's design — they refine load-bearing details the spec deferred. This amendment captures those refinements so spec 112's narrative matches the landed code.\n",
+    "title": "Statecraft Create — realised scaffold subflow (amendment of 112)"
+  },
+  "shardHash": "44c3e78558da420d77b37a463557166eeaccae3f71c4ace4b3526a6eeda7ebdc",
+  "specVersion": "1.1.0"
+}

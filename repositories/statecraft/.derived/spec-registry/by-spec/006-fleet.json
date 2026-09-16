@@ -1,0 +1,40 @@
+{
+  "record": {
+    "created": "2026-07-14",
+    "dependsOn": [
+      "005-factory-service"
+    ],
+    "establishes": [
+      {
+        "kind": "directory",
+        "path": "backend/fleet/"
+      }
+    ],
+    "id": "006-fleet",
+    "implementation": "complete",
+    "sectionHeadings": [
+      "006: Fleet",
+      "1. Source of the K8s knowledge (reference, not a port)",
+      "2. Territory",
+      "3. Behavior",
+      "4. Acceptance",
+      "Status (2026-07-15)",
+      "Live E2E attempt 2026-07-15 (first real deploy on hetzner-k3s)",
+      "2026-07-16: code fixes #2/#3 landed; live E2E still blocked on external state",
+      "2026-07-16 (later): live E2E passed on deployd.xyz; 006 complete",
+      "5. Out of scope",
+      "2026-07-20: the addon transferred out; this spec narrowed, not retired",
+      "Amendment (2026-07-21): spec 011 tenant lifecycle",
+      "Amendment (2026-07-22): remove-gate confirmation attributes",
+      "Amendment (2026-07-23): deploy-chosen container port",
+      "Amendment (2026-07-23): the in-pod two-stage E2E and the per-app ingress allow (fleet-native 0.2.0)",
+      "Amendment (2026-07-25): an app name is reserved by a live app, not by a row"
+    ],
+    "specPath": "specs/006-fleet/spec.md",
+    "status": "approved",
+    "summary": "Milestone M3: operate stamped apps. The unit of placement is \"one EnRaHiTu container + one volume + one ingress\" on the existing hetzner-k3s cluster. deployd-api-rs (the OAP-era Rust K8s orchestrator, axum + hiqlite) donates its orchestration core as a napi-rs addon (the hiqlite-native pattern): the axum HTTP layer disappears, the K8s knowledge stays. A fleet/ Encore service exposes deploy / status / update / backup over the addon. Done-when is a fleet of ten stamped apps on one box with update and backup exercised.\n",
+    "title": "Fleet: deployd's core as an in-process addon, placing EnRaHiTu apps"
+  },
+  "shardHash": "5187e4bef681a05e7247063b317cd77b591817fb9fb6fc0a6ef8d5eb93c8a17f",
+  "specVersion": "1.2.0"
+}

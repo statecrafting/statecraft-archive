@@ -1,0 +1,34 @@
+{
+  "name": "user-management",
+  "version": "2.0.0",
+  "description": "Application-side user + role management as an Encore service: an app-managed role catalog (app_role/user_role) keyed to the existing user_account identity, with admin CRUD endpoints behind auth + requireRole. The reference shape for feature modules (spec 003).",
+  "status": "stable",
+  "requires": [],
+  "requiresOneOf": [],
+  "optionalPeers": [],
+  "conflicts": [],
+  "services": ["user-management"],
+  "migrations": [
+    {
+      "source": "db/1_user_management.up.sql",
+      "description": "app_role catalog + user_role assignments (seeded with the template default roles)"
+    }
+  ],
+  "secrets": [],
+  "corsEntries": [],
+  "middlewares": ["securityHeaders", "csrfMiddleware", "apiRateLimit"],
+  "files": {
+    "apps/web/src/views/admin/UserListView.vue": "apps/web/src/views/admin/UserListView.vue",
+    "apps/web/src/views/admin/UserDetailView.vue": "apps/web/src/views/admin/UserDetailView.vue"
+  },
+  "authExports": [],
+  "webSnippetFile": "web.snippet.ts",
+  "packageDeps": {},
+  "envVars": {
+    "USER_MGMT_DEFAULT_ROLE": {
+      "value": "user",
+      "required": false,
+      "description": "Default app-managed role for new users (used by the opt-in provisioning seam; see spec 003)"
+    }
+  }
+}

@@ -1,0 +1,22 @@
+{
+  "$schema": "https://schema.tauri.app/config/2",
+  "app": {
+    "macOSPrivateApi": true
+  },
+  "bundle": {
+    "targets": ["app", "dmg"],
+    "macOS": {
+      "frameworks": [],
+      "minimumSystemVersion": "10.15",
+      "exceptionDomain": "",
+      "signingIdentity": null,
+      "providerShortName": null,
+      "entitlements": "entitlements.plist",
+      "dmg": {
+        "windowSize": { "width": 540, "height": 380 },
+        "appPosition": { "x": 140, "y": 200 },
+        "applicationFolderPosition": { "x": 400, "y": 200 }
+      }
+    }
+  }
+}

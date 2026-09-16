@@ -1,0 +1,41 @@
+{
+  "mapping": {
+    "amends": [
+      "006-conformance-lint-mvp"
+    ],
+    "dependsOn": [
+      "006-conformance-lint-mvp",
+      "104-makefile-ci-parity-contract"
+    ],
+    "implementingPaths": [
+      {
+        "path": "Makefile",
+        "source": "spec-edge"
+      }
+    ],
+    "resolvedUnits": [
+      {
+        "locations": [
+          {
+            "file": "Makefile",
+            "span": {
+              "endLine": 560,
+              "startLine": 528
+            }
+          }
+        ],
+        "ownership": true,
+        "sourceField": "co_authority",
+        "unit": {
+          "anchor": "spec-lint",
+          "file": "Makefile",
+          "kind": "section"
+        }
+      }
+    ],
+    "specId": "128-spec-lint-default-fail-on-warn",
+    "specStatus": "approved"
+  },
+  "schemaVersion": "1.1.0",
+  "shardHash": "9f8f2b307b3429d82252b7c4a0ed57dc8c3a2138557020df46a807c547e807c2"
+}

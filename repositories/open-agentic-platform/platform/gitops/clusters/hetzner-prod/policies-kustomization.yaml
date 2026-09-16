@@ -1,0 +1,30 @@
+# Spec 196 — Flux Kustomization for the cluster policy tier.
+#
+# Reconciles the namespace-EXPLICIT policy manifests under
+# `platform/k8s/policies/` (see the explicit resource list in
+# `platform/k8s/policies/kustomization.yaml` — the per-namespace
+# baseline templates stay out of it). This keeps spec 196's FR-006
+# NetworkPolicies on the declarative, drift-reverted path (FR-005 /
+# spec 151) instead of growing post-create.sh's imperative bootstrap.
+#
+# dependsOn infrastructure: the `monitoring` Namespace object is
+# applied by the infrastructure tier (monitoring.yaml); ordering here
+# avoids a first-reconcile failure on a bare cluster (the F8 lesson —
+# structural ordering over retry-loop hope).
+apiVersion: kustomize.toolkit.fluxcd.io/v1
+kind: Kustomization
+metadata:
+  name: policies
+  namespace: flux-system
+spec:
+  interval: 10m
+  retryInterval: 1m
+  timeout: 5m
+  path: ./platform/k8s/policies
+  prune: true
+  sourceRef:
+    kind: GitRepository
+    name: flux-system
+  dependsOn:
+    - name: infrastructure
+      namespace: flux-system

@@ -1,0 +1,5 @@
+# Source-only fast path (spec 001). Used by scripts/docker-build.sh to relayer
+# the current application bundle onto an already-built base image without
+# rebuilding the base. BASE_IMAGE is the tag produced from Dockerfile.base.
+ARG BASE_IMAGE
+FROM ${BASE_IMAGE}

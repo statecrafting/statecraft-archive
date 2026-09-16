@@ -1,0 +1,9 @@
+{
+  "mapping": {
+    "implementingPaths": [],
+    "specId": "016-registry-consumer-status-report-compact-json-mvp",
+    "specStatus": "superseded"
+  },
+  "schemaVersion": "1.1.0",
+  "shardHash": "1fc572586a2c2ab791f60223356d4c0c88722917e33a8910f4cbf1fc1e19d30f"
+}

@@ -1,0 +1,91 @@
+{
+  "record": {
+    "amendmentRecord": "119-project-as-unit-of-governance",
+    "codeAliases": [
+      "PROJECT_THREADING"
+    ],
+    "created": "2026-04-11",
+    "dependsOn": [
+      "087-unified-workspace-architecture",
+      "090-governance-non-optionality"
+    ],
+    "domain": "opc",
+    "extends": [
+      {
+        "nature": "additive",
+        "spec": "052-state-persistence",
+        "unit": {
+          "kind": "file",
+          "path": "crates/orchestrator/src/manifest.rs"
+        }
+      },
+      {
+        "nature": "additive",
+        "spec": "052-state-persistence",
+        "unit": {
+          "kind": "file",
+          "path": "crates/orchestrator/src/state.rs"
+        }
+      },
+      {
+        "nature": "additive",
+        "spec": "052-state-persistence",
+        "unit": {
+          "kind": "file",
+          "path": "crates/orchestrator/src/lib.rs"
+        }
+      },
+      {
+        "nature": "additive",
+        "spec": "041-checkpoint-restore-ui",
+        "unit": {
+          "kind": "file",
+          "path": "crates/axiomregent/src/checkpoint/types.rs"
+        }
+      },
+      {
+        "nature": "additive",
+        "spec": "041-checkpoint-restore-ui",
+        "unit": {
+          "kind": "file",
+          "path": "crates/axiomregent/src/checkpoint/provider.rs"
+        }
+      },
+      {
+        "nature": "additive",
+        "spec": "041-checkpoint-restore-ui",
+        "unit": {
+          "kind": "file",
+          "path": "crates/axiomregent/src/checkpoint/store.rs"
+        }
+      }
+    ],
+    "extraFrontmatter": {
+      "amended": "2026-04-29"
+    },
+    "id": "092-workspace-runtime-threading",
+    "implementation": "complete",
+    "kind": "platform",
+    "owner": "bart",
+    "risk": "high",
+    "sectionHeadings": [
+      "092 — Project Runtime Threading",
+      "Problem",
+      "Implementation Slices",
+      "1. Programmatic project selection in desktop (2 days)",
+      "2. Thread project_id into ClaudeExecutionRequest (1 day)",
+      "3. Thread project_id into orchestrator (1 day)",
+      "4. Thread project_id into checkpoints (1 day)",
+      "5. Make factory project_id mandatory (1 day)",
+      "6. Rename axiomregent WorkspaceTools (0.5 day)",
+      "Acceptance Criteria",
+      "Dependencies"
+    ],
+    "specPath": "specs/092-workspace-runtime-threading/spec.md",
+    "status": "approved",
+    "summary": "Make project_id flow as a first-class value through every execution path: desktop UI, ClaudeExecutionRequest, orchestrator manifests, checkpoints, factory contracts, and spawned Claude processes. Originally authored against workspace_id (spec 087); amended by spec 119 when workspace was collapsed into project.\n",
+    "title": "Project Runtime Threading"
+  },
+  "shardHash": "79b1ad94edcf74e7eb74ac1c1d71aafcdffb6d85d3d134b7576a0509bb8156c3",
+  "specVersion": "1.1.0"
+}

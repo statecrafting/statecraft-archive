@@ -1,0 +1,33 @@
+# Spec 151 Finding F8 follow-up — Flux Kustomization for the manifests tier.
+#
+# Depends on the `infrastructure` Flux Kustomization, which gates Ready on the
+# cert-manager HelmRelease healthCheck. That ordering guarantees the
+# `cert-manager.io/v1` CRDs are present in the cluster BEFORE this
+# Kustomization's apply set (Certificate, ClusterIssuer) hits server-side-apply
+# dry-run. The retry-pattern claim that F8 falsified is replaced with a
+# structural dependsOn.
+#
+# `wait: true` here is appropriate (unlike on `infrastructure`): the resources
+# this Kustomization applies are Certificate + ClusterIssuer, both of which
+# reach Ready quickly under normal cluster health. Tying the Kustomization's
+# Ready to those resources gives an accurate SC-003 step (d) measurement —
+# manifests Ready means the wildcard cert has actually issued, not just that
+# the YAML applied.
+apiVersion: kustomize.toolkit.fluxcd.io/v1
+kind: Kustomization
+metadata:
+  name: manifests
+  namespace: flux-system
+spec:
+  interval: 10m
+  retryInterval: 1m
+  timeout: 10m
+  path: ./platform/gitops/clusters/hetzner-prod/manifests
+  prune: true
+  sourceRef:
+    kind: GitRepository
+    name: flux-system
+  dependsOn:
+    - name: infrastructure
+      namespace: flux-system
+  wait: true

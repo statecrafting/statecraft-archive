@@ -1,0 +1,143 @@
+{
+  "record": {
+    "amendmentRecord": "143-presigned-upload-public-endpoint",
+    "created": "2026-04-27",
+    "dependsOn": [
+      "036-safety-tier-governance",
+      "047-governance-control-plane",
+      "087-unified-workspace-architecture",
+      "114-async-project-clone-pipeline"
+    ],
+    "domain": "platform",
+    "establishes": [
+      {
+        "kind": "file",
+        "path": "platform/services/statecraft/api/knowledge/extractionEvents.ts"
+      },
+      {
+        "kind": "file",
+        "path": "platform/services/statecraft/api/knowledge/extractionWorker.ts"
+      },
+      {
+        "kind": "file",
+        "path": "platform/services/statecraft/api/knowledge/extractionCore.ts"
+      },
+      {
+        "kind": "file",
+        "path": "platform/services/statecraft/api/knowledge/extractionOutput.ts"
+      },
+      {
+        "kind": "file",
+        "path": "platform/services/statecraft/api/knowledge/extractionPolicy.ts"
+      },
+      {
+        "kind": "file",
+        "path": "platform/services/statecraft/api/knowledge/auditActions.ts"
+      },
+      {
+        "kind": "file",
+        "path": "platform/services/statecraft/api/knowledge/prompts.ts"
+      },
+      {
+        "kind": "file",
+        "path": "platform/services/statecraft/api/knowledge/magic.ts"
+      },
+      {
+        "kind": "file",
+        "path": "platform/services/statecraft/api/knowledge/extractors/types.ts"
+      },
+      {
+        "kind": "file",
+        "path": "platform/services/statecraft/api/knowledge/extractors/dispatch.ts"
+      },
+      {
+        "kind": "file",
+        "path": "platform/services/statecraft/api/knowledge/extractors/index.ts"
+      },
+      {
+        "kind": "file",
+        "path": "platform/services/statecraft/api/knowledge/extractors/deterministic-text.ts"
+      },
+      {
+        "kind": "file",
+        "path": "platform/services/statecraft/api/knowledge/extractors/deterministic-pdf-embedded.ts"
+      },
+      {
+        "kind": "file",
+        "path": "platform/services/statecraft/api/knowledge/extractors/deterministic-docx.ts"
+      },
+      {
+        "kind": "file",
+        "path": "platform/services/statecraft/api/knowledge/extractors/agent-base.ts"
+      },
+      {
+        "kind": "file",
+        "path": "platform/services/statecraft/api/knowledge/extractors/agent-cost-helpers.ts"
+      },
+      {
+        "kind": "file",
+        "path": "platform/services/statecraft/api/knowledge/extractors/agent-pdf-vision.ts"
+      },
+      {
+        "kind": "file",
+        "path": "platform/services/statecraft/api/knowledge/extractors/agent-image-vision.ts"
+      },
+      {
+        "kind": "file",
+        "path": "platform/services/statecraft/api/knowledge/knowledge.ts"
+      },
+      {
+        "kind": "file",
+        "path": "platform/services/statecraft/web/app/routes/app.project.$projectId.knowledge.tsx"
+      },
+      {
+        "kind": "file",
+        "path": "platform/services/statecraft/web/app/routes/app.project.$projectId.knowledge.$id.tsx"
+      }
+    ],
+    "extraFrontmatter": {
+      "amended": "2026-05-08",
+      "slug": "knowledge-extraction-pipeline"
+    },
+    "id": "115-knowledge-extraction-pipeline",
+    "implementation": "complete",
+    "kind": "platform",
+    "owner": "bart",
+    "risk": "high",
+    "sectionHeadings": [
+      "115 — Knowledge Extraction Pipeline",
+      "1. Problem",
+      "2. Goals",
+      "3. Non-Goals",
+      "4. User Scenarios & Testing",
+      "User Story 1 — Upload a PDF and have it become factory-ready without clicking anything (Priority: P1)",
+      "User Story 2 — Scan-only PDF or image is extracted by a vision-capable agent (Priority: P1)",
+      "User Story 3 — Failed extraction is recoverable, not terminal (Priority: P2)",
+      "User Story 4 — Connector-synced object is extracted on the same path (Priority: P2)",
+      "Edge Cases",
+      "5. Requirements",
+      "5.1 Functional Requirements",
+      "Dispatch and worker",
+      "Enqueue triggers",
+      "Dispatch table",
+      "Extractor contract",
+      "Agent governance",
+      "Failure handling",
+      "Schema and audit",
+      "SDK and broadcast",
+      "5.2 Key Entities",
+      "5.3 Permissions and audit",
+      "5.4 Out-of-process operations",
+      "6. Success Criteria",
+      "Measurable Outcomes",
+      "7. Open Decisions",
+      "8. Provenance"
+    ],
+    "specPath": "specs/115-knowledge-extraction-pipeline/spec.md",
+    "status": "approved",
+    "summary": "Replaces the manual click-through `imported → extracting → extracted` state walk with an automatic, agent-aware extraction pipeline. On upload-confirm and on connector sync the worker dispatches by mime type to a deterministic fast path (plain text, markdown, structured JSON, PDFs with embedded text) or to an LLM-backed extractor (image-only PDFs, scans, images, audio). The extractor writes a typed `extraction_output` payload (text, pages, outline, language, metadata, model provenance), advances state through `extracting → extracted`, audits the run, and surfaces failures as a recoverable state with retry. The dashboard's manual \"Advance to extracting/extracted\" buttons are retired in favour of observational status with a Retry action on failed objects.\n",
+    "title": "Knowledge Extraction Pipeline"
+  },
+  "shardHash": "0c95b4f799e38d59acccac1eac3ade4e3b4db2d2298ef1e76e1c6cf707b713e9",
+  "specVersion": "1.1.0"
+}

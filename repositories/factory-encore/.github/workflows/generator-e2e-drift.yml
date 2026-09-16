@@ -1,0 +1,150 @@
+# Spec: 007-generator-e2e-harness
+#
+# Generator e2e -- against-main drift sweep (FR-006). The against-main companion
+# to the deterministic nightly (generator-e2e-nightly.yml). The nightly builds at
+# the COMMITTED pin and structurally cannot see template-encore moving ahead of
+# that pin. This lane fetches template-encore@main, runs the same full build
+# matrix, and surfaces baseline drift -- the module-vs-baseline compile-break
+# class -- before the pin is bumped.
+#
+# Advisory-but-not-ignorable (mirrors ci-factory-schema-lockstep-cron): a build
+# DIVERGENCE (content) is routed to a single label-deduplicated tracking issue,
+# not a gate failure, so it does not block unrelated PRs. An OPERATIONAL failure
+# (cannot fetch the baseline) still fails the job -- fail-visible, never
+# skipped-green. The build step is continue-on-error so a divergence reaches the
+# issue-routing step without failing the job.
+
+name: generator-e2e-drift
+
+on:
+  schedule:
+    # Mondays 05:23 UTC -- weekly against-main sweep.
+    - cron: '23 5 * * 1'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  issues: write # file/annotate the tracking issue
+
+concurrency:
+  group: generator-e2e-drift
+  cancel-in-progress: false
+
+env:
+  DRIFT_LABEL: e2e-baseline-drift
+
+jobs:
+  build-matrix-main:
+    runs-on: ubuntu-latest
+    name: generator-e2e / build matrix (template-encore@main)
+    timeout-minutes: 90
+    env:
+      LOCKFILE: adapters/acme-vue-encore/scripts/lockstep/baseline.lock.json
+    steps:
+      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+
+      - uses: actions/setup-node@48b55a011bda9f5d6aeb4c2d9c7362e8dae4041e # v6.4.0
+        with:
+          node-version: 24
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Install Encore CLI
+        run: |
+          set -euo pipefail
+          curl -fsSL https://encore.dev/install.sh | bash
+          echo "$HOME/.encore/bin" >> "$GITHUB_PATH"
+
+      - name: Read the baseline remote (fetch main, NOT the pin)
+        id: pin
+        run: |
+          set -euo pipefail
+          src="$(node -p "require('./${LOCKFILE}').upstreamSource")"
+          if [ -z "$src" ]; then
+            echo "::error::could not read upstreamSource from ${LOCKFILE}"
+            exit 1
+          fi
+          echo "src=$src" >> "$GITHUB_OUTPUT"
+          echo "baseline remote (main): $src"
+
+      - name: Fetch template-encore baseline at main (full tree)
+        run: |
+          set -euo pipefail
+          # Operational failure (cannot fetch) fails the job; only a build
+          # divergence is routed to the issue.
+          rm -rf .baseline
+          mkdir .baseline
+          cd .baseline
+          git init -q
+          git remote add origin "https://${{ steps.pin.outputs.src }}.git"
+          if ! git fetch --depth 1 origin main 2> fetch.err; then
+            cat fetch.err >&2
+            echo "::error::cannot fetch template-encore@main; this lane is fail-visible on operational failure"
+            exit 1
+          fi
+          git checkout -q FETCH_HEAD
+          headsha="$(git rev-parse HEAD)"
+          echo "HEADSHA=$headsha" >> "$GITHUB_ENV"
+          test -d apps || { echo "::error::baseline apps/ absent at main"; exit 1; }
+
+      - name: Build matrix (against main)
+        id: e2e
+        continue-on-error: true
+        env:
+          TEMPLATE_ENCORE: ${{ github.workspace }}/.baseline
+        run: npm run e2e:build
+
+      - name: Report summary
+        if: always()
+        run: |
+          {
+            echo "## Generator e2e drift sweep (template-encore@main)"
+            echo ""
+            echo "- baseline: \`${{ steps.pin.outputs.src }} @ main (${HEADSHA:-unknown})\`"
+            echo "- result: ${{ steps.e2e.outcome }}"
+            echo ""
+            if [ -f adapters/acme-vue-encore/e2e/.out/results.tsv ]; then
+              echo '```'
+              cat adapters/acme-vue-encore/e2e/.out/results.tsv
+              echo '```'
+            fi
+          } >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Upload e2e results + logs
+        if: always()
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7
+        with:
+          name: generator-e2e-drift
+          path: |
+            adapters/acme-vue-encore/e2e/.out/results.tsv
+            adapters/acme-vue-encore/e2e/.out/logs
+          if-no-files-found: ignore
+
+      - name: Route build divergence to a deduplicated tracking issue
+        if: steps.e2e.outcome == 'failure'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          gh label create "$DRIFT_LABEL" \
+            --description "Generator e2e build diverges from template-encore@main" \
+            --color BFD4F2 2>/dev/null || true
+          run_url="${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+          body="$(printf '%s\n' \
+            "The generator e2e build matrix FAILED against template-encore@main (\`${HEADSHA:-unknown}\`) on $(date -u +%F)." \
+            "" \
+            "This means upstream has drifted ahead of the committed pin in a way that breaks a composed app build, OR a module payload no longer compiles against the current baseline. Triage the failing combo(s) in the run artifact, then either fix the module (spec 002/003) or reconcile + bump the pin (spec 006)." \
+            "" \
+            "Run: ${run_url}")"
+          existing="$(gh issue list --state open --label "$DRIFT_LABEL" --json number --jq '.[0].number' || true)"
+          if [ -n "$existing" ]; then
+            gh issue comment "$existing" --body "$body"
+            echo "annotated existing drift issue #$existing"
+          else
+            gh issue create \
+              --title "Generator e2e drift: build fails against template-encore@main" \
+              --body "$body" \
+              --label "$DRIFT_LABEL"
+          fi

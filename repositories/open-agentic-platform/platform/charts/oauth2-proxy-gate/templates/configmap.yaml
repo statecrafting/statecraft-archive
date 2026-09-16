@@ -1,0 +1,20 @@
+{{- if .Values.allowlist.emails -}}
+{{/*
+oauth2-proxy reads the authenticated-emails file as a newline-delimited
+list. We mount this ConfigMap at /etc/oauth2-proxy/allowlist/emails and
+pass `--authenticated-emails-file=/etc/oauth2-proxy/allowlist/emails`.
+Empty list → no ConfigMap → no flag → no email-level allowlist (domain
+allowlist via `--email-domain=` still applies).
+*/}}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "oauth2-proxy-gate.configMapName" . }}
+  labels:
+    {{- include "oauth2-proxy-gate.labels" . | nindent 4 }}
+data:
+  emails: |
+    {{- range .Values.allowlist.emails }}
+    {{ . | lower }}
+    {{- end }}
+{{- end -}}

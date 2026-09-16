@@ -1,0 +1,146 @@
+{
+  "record": {
+    "codeAliases": [
+      "TOOL_SCHEMA_STRICTNESS",
+      "PERMISSIVE_SCHEMA_REJECTION"
+    ],
+    "created": "2026-05-22",
+    "dependsOn": [
+      "036-safety-tier-governance",
+      "049-permission-system",
+      "067-tool-definition-registry",
+      "068-permission-runtime"
+    ],
+    "domain": "opc",
+    "establishes": [
+      {
+        "kind": "file",
+        "path": "crates/tool-registry/src/strictness.rs"
+      }
+    ],
+    "extends": [
+      {
+        "nature": "additive",
+        "spec": "067-tool-definition-registry",
+        "unit": {
+          "kind": "file",
+          "path": "crates/tool-registry/Cargo.toml"
+        }
+      },
+      {
+        "nature": "additive",
+        "spec": "067-tool-definition-registry",
+        "unit": {
+          "kind": "file",
+          "path": "crates/tool-registry/src/tests.rs"
+        }
+      },
+      {
+        "nature": "additive",
+        "spec": "034-featuregraph-registry-scanner-fix",
+        "unit": {
+          "kind": "file",
+          "path": "crates/featuregraph/tests/golden/features_graph.json"
+        }
+      }
+    ],
+    "extraFrontmatter": {
+      "compliance": [
+        {
+          "controls": [
+            "ASI02"
+          ],
+          "framework": "owasp-asi-2026"
+        }
+      ],
+      "slug": "tool-schema-strictness"
+    },
+    "id": "169-tool-schema-strictness",
+    "implementation": "complete",
+    "kind": "governance",
+    "owner": "bart",
+    "references": [
+      {
+        "role": "decomposition-source",
+        "unit": {
+          "kind": "file",
+          "path": "docs/owasp/factory/AIDE-VELOCITY-OAP-INTENT.md"
+        }
+      },
+      {
+        "role": "substrate-spec",
+        "unit": {
+          "kind": "file",
+          "path": "specs/067-tool-definition-registry/spec.md"
+        }
+      },
+      {
+        "role": "doctrine-source",
+        "unit": {
+          "kind": "file",
+          "path": "docs/owasp/owasp_top_10_agentic_applications_summary.md"
+        }
+      }
+    ],
+    "refines": [
+      {
+        "aspect": "schema-strictness-validation",
+        "unit": {
+          "kind": "file",
+          "path": "crates/tool-registry/src/lib.rs"
+        }
+      },
+      {
+        "aspect": "schema-strictness-validation",
+        "unit": {
+          "kind": "file",
+          "path": "crates/tool-registry/src/registry.rs"
+        }
+      },
+      {
+        "aspect": "schema-strictness-validation",
+        "unit": {
+          "kind": "file",
+          "path": "crates/tool-registry/src/async_registry.rs"
+        }
+      },
+      {
+        "aspect": "schema-strictness-validation",
+        "unit": {
+          "kind": "file",
+          "path": "crates/tool-registry/src/types.rs"
+        }
+      },
+      {
+        "aspect": "permissive-schema-bridge",
+        "unit": {
+          "kind": "file",
+          "path": "crates/axiomregent/src/registry_bridge.rs"
+        }
+      }
+    ],
+    "risk": "medium",
+    "sectionHeadings": [
+      "169 — Per-tool JSON-Schema strictness enforcement",
+      "1. Problem",
+      "2. Decision",
+      "2.1 The migration opt-out",
+      "2.2 L2 inheritance",
+      "2.3 Default-read-only semantics — adjacent posture",
+      "3. Functional Requirements",
+      "4. Success Criteria",
+      "5. Scope",
+      "In scope",
+      "Out of scope (deferred)",
+      "6. Compliance",
+      "7. Cross-references",
+      "Amendments received"
+    ],
+    "specPath": "specs/169-tool-schema-strictness/spec.md",
+    "status": "approved",
+    "summary": "OWASP ASI02 (Tool Misuse & Exploitation) prescribes *\"Schema validation, strong typing, and transactional write guardrails\"* as its core mitigation. OAP's `crates/tool-registry` (spec 067) defines the `ToolDef` trait with permission gates today; the registry accepts whatever schema the `ToolDef` author writes. A tool registering with `additionalProperties: true`, `type: any`, or an unconstrained `object` without `properties:` passes registration silently — and presents an attacker-friendly attack surface where the agent can smuggle arbitrary fields into the tool call.\nSpec 169 refines spec 067 with a compile-time validation pass: registrations whose JSON Schema is permissive are rejected at build time, not at first invocation. A `permissive: true` opt-out exists for the migration window — surfaced as a spec-lint warning so existing tools migrate incrementally — but the default-rejected stance is the structural posture.\nThe rule applies symmetrically: at L1 (every OAP- registered tool) and at L2 (every tenant-side tool the substrate's born-with kernel produces — spec 167 inherits the validation).\n",
+    "title": "Per-tool JSON-Schema strictness enforcement — reject permissive ToolDef schemas"
+  },
+  "shardHash": "09bc97141fc496404b022df99e0cfcdc77c398f3bbc41e191a322d4ab3a19111",
+  "specVersion": "1.1.0"
+}

@@ -1,0 +1,50 @@
+{
+  "record": {
+    "amends": [
+      "133-amends-aware-coupling-gate",
+      "152-path-co-authority"
+    ],
+    "codeAliases": [
+      "SECTION_AMENDER_PARITY"
+    ],
+    "created": "2026-05-24",
+    "dependsOn": [
+      "133-amends-aware-coupling-gate",
+      "152-path-co-authority"
+    ],
+    "domain": "substrate",
+    "extends": [
+      {
+        "nature": "additive",
+        "spec": "133-amends-aware-coupling-gate"
+      }
+    ],
+    "extraFrontmatter": {
+      "approved": "2026-05-24",
+      "shape": "bug-fix",
+      "slug": "amends-aware-section-satisfaction-parity"
+    },
+    "id": "176-amends-aware-section-satisfaction-parity",
+    "implementation": "complete",
+    "kind": "amendment",
+    "owner": "bart",
+    "risk": "low",
+    "sectionHeadings": [
+      "176 — Amends-aware section satisfaction parity",
+      "1. Concern",
+      "2. Substrate gap",
+      "3. Decision: bug-fix-only, not a new contract",
+      "4. FR-005 strict-expansion preserved",
+      "5. Implementation",
+      "6. Acceptance criteria",
+      "7. Cross-references"
+    ],
+    "specPath": "specs/176-amends-aware-section-satisfaction-parity/spec.md",
+    "status": "superseded",
+    "summary": "Closes the implementation gap between spec 133 §4's satisfaction contract and the section-scoped code path in tools/spec-spine/spec-code-coupling-check/src/lib.rs. Spec 133 §4 computes the satisfaction predicate against `A` — the authority set, whether derived from `authorities(P)` (whole-file) or `authorities(P, S)` (section-scoped) — and admits direct edit, amender substitute, or amendment-record substitute uniformly. The whole-file branch honors all three classes via `OwnerSet::any_owner_in_diff`; the section-aware branch in `check_coupling_section_aware` consults only the bare `section_spec_ids` set and ignores the `amends:` and `amendmentRecord:` edges. This amendment reaches that branch through the same composition the whole-file branch uses, so an amender of a section authority — or the amendment-record target of a section authority — clears section coupling identically to whole-file coupling. No new contract; the §4 prose already commits to the property.\n",
+    "supersededBy": "217-spec-spine-engine-swap-collapse",
+    "title": "Amends-aware satisfaction parity between whole-file and section-scoped authority checks"
+  },
+  "shardHash": "cddac228c0ba704f282171e7980d50a0b830e5060dbbdade28776eaab16ce02c",
+  "specVersion": "1.1.0"
+}

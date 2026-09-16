@@ -1,0 +1,54 @@
+{
+  "record": {
+    "authors": [
+      "open-agentic-platform"
+    ],
+    "codeAliases": [
+      "VERIFICATION_SKILLS",
+      "VERIFY_PROTOCOL"
+    ],
+    "created": "2026-03-22",
+    "domain": "substrate",
+    "extraFrontmatter": {
+      "language": "en"
+    },
+    "featureBranch": "005-verification-reconciliation-mvp",
+    "id": "005-verification-reconciliation-mvp",
+    "implementation": "complete",
+    "kind": "platform",
+    "refines": [
+      {
+        "aspect": "verification-protocol",
+        "unit": {
+          "id": "orchestrator",
+          "kind": "crate"
+        }
+      }
+    ],
+    "sectionHeadings": [
+      "Feature Specification: Verification and reconciliation",
+      "Purpose and charter",
+      "Normative dependency",
+      "1. Verifiable evidence",
+      "2. Reconciliation dimensions",
+      "2.1 Files changed",
+      "2.2 Commands run",
+      "2.3 Tests and results",
+      "2.4 Stated scope",
+      "3. Changeset verification states",
+      "4. Drift",
+      "4.1 Task complete, evidence missing",
+      "4.2 Files changed outside declared scope",
+      "4.3 `spec` / `plan` / `tasks` no longer align",
+      "5. Minimum verification artifact",
+      "Success Criteria *(mandatory)*",
+      "Clarifications"
+    ],
+    "specPath": "specs/005-verification-reconciliation-mvp/spec.md",
+    "status": "approved",
+    "summary": "How execution claims are checked against the repo: verifiable evidence, reconciling tasks and changesets to files, commands, tests, and scope; verification states; drift handling; minimum markdown verification artifact—without compiler enforcement, CI prescriptions, or policy/runtime coupling.\n",
+    "title": "Verification and reconciliation (repository state)"
+  },
+  "shardHash": "8a5a8ce09d7ecfb90666c1c1d37c5d7bf42477798c24eb76115f7f4885f6039c",
+  "specVersion": "1.1.0"
+}

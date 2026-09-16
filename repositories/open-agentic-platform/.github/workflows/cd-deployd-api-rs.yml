@@ -1,0 +1,119 @@
+# Spec: 078-platform-completion-plan
+#
+# CD for deployd-api-rs: build Docker image, push to GHCR, deploy to Hetzner K3s.
+#
+# Required GitHub secrets:
+#   KUBECONFIG_HETZNER  -- contents of platform/infra/hetzner/kubeconfig (base64-encoded)
+#   GHCR_PAT            -- PAT with read:packages scope for pulling images from GHCR
+#
+# Required GitHub environment:
+#   "production"         -- create with protection rules for manual approval on deploy
+
+name: CD deployd-api-rs
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'platform/services/deployd-api-rs/**'
+      - 'platform/charts/deployd-api/**'
+  workflow_dispatch:
+    inputs:
+      deploy:
+        description: 'Deploy after build (true/false)'
+        required: false
+        default: 'true'
+        type: choice
+        options: ['true', 'false']
+
+concurrency:
+  group: cd-deployd-api-rs-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  # ghcr.io repo path is derived from github.repository so a repo rename
+  # doesn't require a workflow edit. Lowercased per OCI registry rules.
+  IMAGE: ghcr.io/${{ github.repository }}/deployd-api
+
+jobs:
+  # -- CI gate ---------------------------------------------------------------
+  ci:
+    uses: ./.github/workflows/ci-deployd-api-rs.yml
+
+  # -- Build & push Docker image ---------------------------------------------
+  build-and-push:
+    needs: ci
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+    outputs:
+      image-tag: ${{ steps.meta.outputs.sha-tag }}
+
+    steps:
+      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+
+      - name: Compute image tags
+        id: meta
+        run: |
+          SHA_SHORT=$(git rev-parse --short HEAD)
+          echo "sha-tag=sha-${SHA_SHORT}" >> "$GITHUB_OUTPUT"
+          echo "Building tags: sha-${SHA_SHORT}, latest"
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@bb05f3f5519dd87d3ba754cc423b652a5edd6d2c # v4
+
+      - name: Log in to GHCR
+        uses: docker/login-action@af1e73f918a031802d376d3c8bbc3fe56130a9b0 # v4
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Build and push
+        uses: docker/build-push-action@53b7df96c91f9c12dcc8a07bcb9ccacbed38856a # v7
+        with:
+          # Spec 136 Phase 2.b: context broadened to `platform/` so the
+          # builder stage can COPY `services/deployd-api-rs` AND `charts/`
+          # — the helm runner embeds chart bytes via include_str! from
+          # `../../../charts/<chart>/...` relative to src/helm.rs.
+          context: platform
+          file: platform/services/deployd-api-rs/Dockerfile
+          push: true
+          tags: |
+            ${{ env.IMAGE }}:${{ steps.meta.outputs.sha-tag }}
+            ${{ env.IMAGE }}:latest
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
+  # -- Deploy to Hetzner K3s -------------------------------------------------
+  deploy-hetzner:
+    needs: build-and-push
+    if: github.event_name == 'push' || github.event.inputs.deploy == 'true'
+    runs-on: ubuntu-latest
+    environment: production
+
+    steps:
+      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+
+      - name: Install Helm
+        uses: azure/setup-helm@9bc31f4ebc9c6b171d7bfbaa5d006ae7abdb4310 # v5
+
+      - name: Deploy to Hetzner
+        uses: ./.github/actions/helm-deploy
+        with:
+          namespace: deployd-system
+          release-name: deployd-api
+          chart-path: platform/charts/deployd-api
+          values-files: platform/charts/deployd-api/values.yaml,platform/charts/deployd-api/values-hetzner.yaml
+          helm-set-args: >-
+            --set image.repository=${{ env.IMAGE }}
+            --set image.tag=${{ needs.build-and-push.outputs.image-tag }}
+            --set "ingress.host=deploy.${{ vars.DOMAIN }}"
+            --set "oidc.endpoint=https://auth.${{ vars.DOMAIN }}"
+          app-label: deployd-api
+          kubeconfig-b64: ${{ secrets.KUBECONFIG_HETZNER }}
+          ghcr-pat: ${{ secrets.GHCR_PAT }}
+          ghcr-username: ${{ github.actor }}
+          pull-secret-name: ghcr-pull-secret
+          timeout: '300s'

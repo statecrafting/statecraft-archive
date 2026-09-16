@@ -1,0 +1,115 @@
+{
+  "mapping": {
+    "dependsOn": [
+      "000-bootstrap-spec-system",
+      "006-conformance-lint-mvp"
+    ],
+    "implementingPaths": [
+      {
+        "path": ".claude/skills/validate-and-fix/SKILL.md",
+        "source": "spec-edge"
+      },
+      {
+        "path": ".github/workflows/ci-parity.yml",
+        "source": "spec-edge"
+      },
+      {
+        "path": "Makefile",
+        "source": "spec-edge"
+      },
+      {
+        "path": "tools/oap/ci-parity-check",
+        "source": "manifest-metadata"
+      },
+      {
+        "path": "tools/oap/ci-parity-check/src/lib.rs",
+        "source": "spec-edge"
+      },
+      {
+        "path": "tools/oap/ci-parity-check/src/main.rs",
+        "source": "spec-edge"
+      }
+    ],
+    "resolvedUnits": [
+      {
+        "locations": [
+          {
+            "file": ".github/workflows/ci-parity.yml"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "file",
+          "path": ".github/workflows/ci-parity.yml"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "tools/oap/ci-parity-check/src/lib.rs"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "file",
+          "path": "tools/oap/ci-parity-check/src/lib.rs"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "tools/oap/ci-parity-check/src/main.rs"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "file",
+          "path": "tools/oap/ci-parity-check/src/main.rs"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": ".claude/skills/validate-and-fix/SKILL.md",
+            "span": {
+              "endLine": 93,
+              "startLine": 11
+            }
+          }
+        ],
+        "ownership": true,
+        "sourceField": "co_authority",
+        "unit": {
+          "anchor": "process",
+          "file": ".claude/skills/validate-and-fix/SKILL.md",
+          "kind": "section"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "Makefile",
+            "span": {
+              "endLine": 738,
+              "startLine": 736
+            }
+          }
+        ],
+        "ownership": true,
+        "sourceField": "co_authority",
+        "unit": {
+          "anchor": "ci-parity",
+          "file": "Makefile",
+          "kind": "section"
+        }
+      }
+    ],
+    "specId": "104-makefile-ci-parity-contract",
+    "specStatus": "approved"
+  },
+  "schemaVersion": "1.1.0",
+  "shardHash": "2e1b971d7996757aaea49b825ccd9da67fd6f471828ae1d2745636c3254046d6"
+}

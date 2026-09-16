@@ -1,0 +1,67 @@
+{
+  "record": {
+    "authors": [
+      "open-agentic-platform"
+    ],
+    "codeAliases": [
+      "NOTIFICATION_SYSTEM"
+    ],
+    "created": "2026-03-29",
+    "domain": "opc",
+    "establishes": [
+      {
+        "kind": "directory",
+        "path": "product/packages/notification-orchestrator"
+      }
+    ],
+    "extraFrontmatter": {
+      "language": "en"
+    },
+    "featureBranch": "057-notification-system",
+    "id": "057-notification-system",
+    "implementation": "complete",
+    "kind": "platform",
+    "references": [
+      {
+        "role": "historical",
+        "unit": {
+          "kind": "file",
+          "path": "product/apps/opc/src/lib/notificationOrchestrator.ts"
+        }
+      },
+      {
+        "role": "historical",
+        "unit": {
+          "kind": "file",
+          "path": "product/apps/opc/src/lib/notificationChannels.ts"
+        }
+      }
+    ],
+    "sectionHeadings": [
+      "Feature Specification: Notification Orchestrator",
+      "Purpose",
+      "Scope",
+      "In scope",
+      "Out of scope",
+      "Requirements",
+      "Functional",
+      "Non-functional",
+      "Architecture",
+      "Event schema",
+      "Channel adapter interface",
+      "User preferences",
+      "Package structure",
+      "Event flow",
+      "Implementation approach",
+      "Success criteria",
+      "Dependencies",
+      "Risk"
+    ],
+    "specPath": "specs/057-notification-system/spec.md",
+    "status": "approved",
+    "summary": "Server-side event and notification system with event creation, preference-gated delivery, a 20-second deduplication window, and multi-channel delivery (native OS notifications, web push). Events carry provider, session, kind, severity, and deduplication key.\n",
+    "title": "Notification Orchestrator"
+  },
+  "shardHash": "93751642bfee167ed4df8de005ac1faef79e6453f9025d58e954a53dd9b98bb0",
+  "specVersion": "1.1.0"
+}

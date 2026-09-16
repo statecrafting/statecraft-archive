@@ -1,0 +1,12 @@
+{
+  "package": {
+    "edition": "2024",
+    "kind": "rust-lib",
+    "name": "opc-decomposition-pipeline",
+    "path": "crates/opc-decomposition-pipeline",
+    "specRef": "165-opc-decomposition-pipeline",
+    "version": "0.1.0"
+  },
+  "schemaVersion": "1.1.0",
+  "shardHash": "c5419deb9ac99e48ea291f228ab313313ac4c138e56917aa6f42f56176cb0262"
+}

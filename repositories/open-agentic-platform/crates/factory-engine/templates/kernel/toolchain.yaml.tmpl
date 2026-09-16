@@ -1,0 +1,69 @@
+# spec 168 / 219 / 220: per-project governance certificate toolchain reference
+#
+# This file records the toolchain a tenant project uses to produce and check
+# its own governance certificates, and where each half comes from.
+#
+# Distribution (spec 219 FR-006): the VERIFIER is vended over npm as the
+# `tenant-tail` package, pinned as an exact-version devDependency next to
+# spec-spine. There is no tenant Rust toolchain (the npm migration removed it),
+# so the historical source-install path that built the verifier from the OAP git
+# repository is retired. `npm ci` sha512 lockfile verification is the integrity
+# surface, and one pin covers every tenant-tail verb.
+#
+# The EMITTER (build-certificate) is vended over npm as the `tenant-emit`
+# package (spec 220 FR-001), the emit-side counterpart of tenant-tail, pinned as
+# an exact-version devDependency next to spec-spine and tenant-tail. It is
+# identity-bearing and harness-bound: emission requires an attributable signer
+# and an operator-supplied Ed25519 key the agent cannot mint (spec 220 FR-003).
+# The firing point (the tenant CI step that invokes it at run completion) is
+# seeded separately in the born-with CI (spec 220 FR-002).
+#
+# `mode` and `binaries_dir` describe the adapter-determined fallback path (spec
+# 167 OQ-6) for any tenant-resident binaries. They are recorded as provenance
+# and do NOT govern the npm-vended verifier, which is mode-independent.
+
+mode: "@@toolchain_mode@@"
+binaries_dir: "@@binaries_dir@@"
+
+factory_engine:
+  # The factory-engine version whose behaviour the pinned toolchain vouches for
+  # (spec 168 FR-009: the binaries are deterministic; pinning by version is
+  # sufficient to guarantee identical certificate hash inputs).
+  version: "@@factory_engine_version@@"
+
+verifier:
+  # Vended via the tenant-tail npm pin (spec 219 FR-006 / AC-8). Offline-capable,
+  # identity-free: spec 102 do-not-trust-the-producer turned tenant-ward.
+  name: verify-certificate
+  package: "tenant-tail"
+  invoke: "npx --no-install tenant-tail verify-certificate"
+  docs: "https://github.com/bartekus/tenant-tail#readme"
+
+emitter:
+  # Vended via the tenant-emit npm pin (spec 220 FR-001). Post-hoc and
+  # identity-bearing: an attributable signer plus an operator-supplied Ed25519
+  # key (resolved via OAP_SIGNING_KEY / OAP_SIGNING_KEY_PATH), offline. The
+  # emitted certificate carries no platform countersign (a tenant run is outside
+  # OAP's admission flow): verifiable-but-unsealed (spec 220 FR-004).
+  name: build-certificate
+  package: "tenant-emit"
+  invoke: "npx --no-install tenant-emit build-certificate"
+  docs: "https://github.com/bartekus/tenant-emit#readme"
+
+# Tenant-verify invocation (spec 168 FR-004 / FR-005, vended via spec 219):
+#
+#   npx --no-install tenant-tail verify-certificate <cert-path> \
+#     [--artifact-dir <run-dir>]
+#
+# Tenant-emit invocation (spec 220 FR-001 / FR-003), vended via the tenant-emit
+# npm pin:
+#
+#   npx --no-install tenant-emit build-certificate <run-dir> \
+#     --tenant-mode \
+#     --signer-subject <subject> --signer-identity-provider <provider> \
+#     [--corpus-attestation <attestation.json>] \
+#     --require-operator-key
+#
+# --require-operator-key refuses the ephemeral dev fallback (production tenant
+# emission must sign with the operator-supplied key); --tenant-mode with no
+# resolvable signer halts before emitting (anonymous signing forbidden).

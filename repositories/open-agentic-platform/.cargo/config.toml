@@ -1,0 +1,16 @@
+# Repo-root cargo config.
+#
+# TS_RS_EXPORT_DIR pins the base directory ts-rs writes its generated TS
+# bindings into. Without this override, ts-rs defaults to `./bindings/`
+# which is meaningless for a multi-consumer workspace. Spec 111 §2.1 wants
+# the statecraft web service importing the same types the Rust crate owns;
+# pointing the export dir at statecraft's agent catalog folder makes
+# `cargo test` the generator of record — no copy-after-emit step.
+#
+# `relative = true` resolves the path against the directory holding this
+# config file (the repo root). Cargo's hierarchical config lookup walks
+# *parents* of the cwd, so this file must live at the repo root — not
+# under `crates/` — to apply when `cargo test` is run from anywhere.
+
+[env]
+TS_RS_EXPORT_DIR = { value = "platform/services/statecraft/api/agents/frontmatter", relative = true }

@@ -1,0 +1,78 @@
+# Git
+.git/
+.gitignore
+.gitattributes
+
+# CI/CD
+.github/
+.gitlab-ci.yml
+
+# Documentation
+*.md
+docs/
+LICENSE
+
+# Dependencies (will be installed in container)
+node_modules/
+npm-debug.log*
+yarn-error.log*
+
+# Environment files (use container env vars instead)
+.env
+.env.*
+!.env.example
+
+# Build outputs (will be built in container)
+dist/
+build/
+*.tsbuildinfo
+
+# Testing
+coverage/
+test-results/
+playwright-report/
+.nyc_output/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS files
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Logs
+logs/
+*.log
+
+# Temporary files
+tmp/
+temp/
+*.tmp
+
+# Docker
+docker-compose.yml
+docker-compose.*.yml
+Dockerfile
+*.Dockerfile
+
+# Scripts (not needed in container)
+scripts/
+
+# Database (local dev only)
+*.db
+*.sqlite
+postgres_data/
+
+# Source maps (FINDING-011: prevent source code exposure in production)
+**/*.js.map
+**/*.d.ts.map
+
+# Cache
+.cache/
+.vite/
+.eslintcache
+.prettiercache

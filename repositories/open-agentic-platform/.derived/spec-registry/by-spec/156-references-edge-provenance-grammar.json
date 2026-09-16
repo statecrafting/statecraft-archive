@@ -1,0 +1,102 @@
+{
+  "record": {
+    "amendmentRecord": "amended 2026-06-18 by spec 217 (engine-swap collapse): the in-tree spec-compiler and codebase-indexer that parsed and resolved the references-edge provenance grammar were deleted; that logic is now in spec-spine-core. The spec-compiler and codebase-indexer edges are stripped (paths deleted); the surviving edges (spec-types overlay, registry schema, featuregraph golden) carry this spec's authority, and the codebase-index schema edge is dropped with the in-tree codebase-index.schema.json (Workstream D).\n",
+    "codeAliases": [
+      "REFERENCES_EDGE_PROVENANCE",
+      "PROVENANCE_GRAMMAR"
+    ],
+    "created": "2026-05-22",
+    "dependsOn": [
+      "154-logical-unit-ownership-grammar"
+    ],
+    "domain": "substrate",
+    "extends": [
+      {
+        "nature": "additive",
+        "spec": "154-logical-unit-ownership-grammar",
+        "unit": {
+          "kind": "file",
+          "path": "tools/shared/spec-types/src/lib.rs"
+        }
+      },
+      {
+        "nature": "additive",
+        "spec": "154-logical-unit-ownership-grammar",
+        "unit": {
+          "kind": "file",
+          "path": "standards/schemas/spec-spine/registry.schema.json"
+        }
+      },
+      {
+        "nature": "additive",
+        "spec": "154-logical-unit-ownership-grammar",
+        "unit": {
+          "kind": "file",
+          "path": "crates/featuregraph/tests/golden/features_graph.json"
+        }
+      }
+    ],
+    "extraFrontmatter": {
+      "amended": "2026-06-18",
+      "approved": "2026-05-22",
+      "slug": "references-edge-provenance-grammar"
+    },
+    "id": "156-references-edge-provenance-grammar",
+    "implementation": "complete",
+    "kind": "governance",
+    "owner": "bart",
+    "references": [
+      {
+        "role": "precedent",
+        "unit": {
+          "kind": "file",
+          "path": "specs/155-logical-unit-resolution-semantics/spec.md"
+        }
+      },
+      {
+        "role": "precedent",
+        "unit": {
+          "kind": "file",
+          "path": "docs/owasp/factory/AIDE-VELOCITY-OAP-INTENT.md"
+        }
+      }
+    ],
+    "risk": "low",
+    "sectionHeadings": [
+      "156 — References-edge provenance grammar",
+      "1. Problem",
+      "2. Decision",
+      "3. Grammar",
+      "3.1 Shape",
+      "3.2 Why a sibling field, not an enum extension",
+      "3.3 Initial kinds",
+      "3.4 Knowledge URI — project-scoped",
+      "3.5 Code-fingerprint URI — flat, scope deferred",
+      "4. Non-owning semantic",
+      "5. Validation rules (V-025..V-029)",
+      "6. Indexer integration",
+      "6.1 `spec_scanner.rs::push_flat_units` — second arm",
+      "6.2 `ResolvedUnit.kind` widening",
+      "6.3 Resolver short-circuit on provenance kinds",
+      "6.4 Codebase-index schema bump",
+      "6.5 Registry schema additions",
+      "7. Compliance",
+      "7.1 ASI06 — Memory & Context Poisoning",
+      "7.2 ASI09 — Human-Agent Trust",
+      "7.3 Coupling-gate disposition",
+      "8. Scope",
+      "In scope (this spec)",
+      "Implementation lands in the same PR (or a follow-up segment)",
+      "Out of scope",
+      "9. Acceptance",
+      "10. Cross-references",
+      "Amendments received"
+    ],
+    "specPath": "specs/156-references-edge-provenance-grammar/spec.md",
+    "status": "approved",
+    "summary": "Spec 154 §4 introduces the ninth, non-owning `references:` edge: each entry carries a `unit:` pointing at a logical unit in the codebase (crate, symbol, module, section, directory, file). That shape covers in-tree code but not the two external derivation sources the OAP architecture already produces — statecraft knowledge objects and xray content-addressed fingerprints. Citing those today requires inventing prose hyperlinks the indexer cannot see and a structural reverse-lookup cannot answer.\nThis spec adds a sibling `provenance:` field on `references:` entries, mutually exclusive with `unit:`. Two initial kinds — `knowledge` and `code-fingerprint` — carry typed URI references to the external systems. The grammar is strictly additive on spec 154: every existing `references:` entry remains valid; the new field opens a parallel authoring channel for typed external provenance. The codebase-indexer threads provenance entries through the same `resolved_units` machine as in-tree units, with empty `locations` by design (provenance is non-owning by inheritance from spec 154 §4). Dangling provenance is benign — the certificate-at-derivation is the load-bearing artifact, not source liveness.\nThe grammar's load-bearing property is **structural reverse lookup**: `git grep \"statecraft://project/<uuid>/knowledge/<uuid>\"` across `specs/` answers *\"which specs were derived from this source?\"* deterministically and without an LLM. That property is what makes the provenance edge the substrate the OWASP ASI06 poisoned-source response needs, and the typed link the ASI09 anti-anthropomorphic-trust posture wants at spec-authoring time.\n",
+    "title": "References-edge provenance grammar — typed external pointers as a sibling field"
+  },
+  "shardHash": "39cf73bd8a4c16e7b7b2adcf33db14c18313b170f86014b3f741893d56bdec9b",
+  "specVersion": "1.1.0"
+}

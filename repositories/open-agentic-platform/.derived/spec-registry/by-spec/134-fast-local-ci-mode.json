@@ -1,0 +1,88 @@
+{
+  "record": {
+    "amendmentRecord": "amended by spec 135 (135-fast-ci-as-default, 2026-05-03).\n\namended by spec 182 (2026-05-30) — the `ci-fast-validation` aspect\nthis spec refines moved verbatim to\n`.claude/skills/validate-and-fix/SKILL.md` in the spec-182\ndeprecation PR (legacy command file deleted); the `refines:` unit\npath is repointed from `.claude/commands/validate-and-fix.md`\naccordingly. No behavioral change.\n",
+    "amends": [
+      "104-makefile-ci-parity-contract"
+    ],
+    "coAuthority": [
+      {
+        "unit": {
+          "anchor": "ci-fast",
+          "file": "Makefile",
+          "kind": "section"
+        },
+        "with_specs": [
+          "102-governed-excellence",
+          "104-makefile-ci-parity-contract",
+          "116-supply-chain-policy-gates",
+          "127-spec-code-coupling-gate",
+          "128-spec-lint-default-fail-on-warn",
+          "135-fast-ci-as-default"
+        ]
+      }
+    ],
+    "created": "2026-05-03",
+    "dependsOn": [
+      "104-makefile-ci-parity-contract"
+    ],
+    "domain": "tooling",
+    "extends": [
+      {
+        "nature": "additive",
+        "spec": "104-makefile-ci-parity-contract",
+        "unit": {
+          "kind": "file",
+          "path": "tools/oap/ci-parity-check/src/lib.rs"
+        }
+      }
+    ],
+    "extraFrontmatter": {
+      "amended": "2026-05-30"
+    },
+    "id": "134-fast-local-ci-mode",
+    "implementation": "complete",
+    "kind": "governance",
+    "owner": "bart",
+    "refines": [
+      {
+        "aspect": "ci-fast-validation",
+        "unit": {
+          "kind": "file",
+          "path": ".claude/skills/validate-and-fix/SKILL.md"
+        }
+      }
+    ],
+    "risk": "low",
+    "sectionHeadings": [
+      "134 — Fast Local CI Mode",
+      "1. Problem Statement",
+      "2. Solution",
+      "2.1 Two-Mode CI Contract",
+      "2.2 What Fast Mode May Do",
+      "2.3 Coverage Invariant",
+      "2.4 ci-parity-check Coverage",
+      "2.5 Documentation",
+      "3. Functional Requirements",
+      "FR-01: Fast-loop target exists",
+      "FR-02: Gate coverage mapping",
+      "FR-03: Sentinel-bracketed parity exemption",
+      "FR-04: validate-and-fix references both targets",
+      "FR-05: New gates extend both modes",
+      "4. Success Criteria",
+      "SC-01: Wall-time target (aspirational)",
+      "SC-02: Coverage parity",
+      "SC-03: parity-check unaffected",
+      "SC-04: Help discoverability",
+      "5. Out of Scope (MVP)",
+      "6. Clarifications",
+      "7. Cross-references",
+      "Amendments received"
+    ],
+    "specPath": "specs/134-fast-local-ci-mode/spec.md",
+    "status": "approved",
+    "summary": "Amend spec 104 to introduce a two-mode CI contract: the parity-bound recipe (renamed `make ci-strict` by spec 135) retains strict workflow→Makefile parity; the fast sibling (renamed `make ci` and promoted to default by spec 135) is a parity-exempt, performance-optimised local mirror that covers the same gate set with parallel/accelerated tooling. Reference target: 90+ min → ≤ 25 min warm on M1 Pro 10c / 64 GB (aspirational; measurement required within 7 days of `implementation: complete`).\n",
+    "title": "Fast Local CI Mode — Two-Mode Parity Contract"
+  },
+  "shardHash": "2ccaa584bd768c1b0a55c188f9323ab06d5817f2c0bff9874facf511f86d6c51",
+  "specVersion": "1.1.0"
+}

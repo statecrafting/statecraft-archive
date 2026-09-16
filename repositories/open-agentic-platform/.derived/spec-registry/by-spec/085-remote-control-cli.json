@@ -1,0 +1,56 @@
+{
+  "record": {
+    "authors": [
+      "open-agentic-platform"
+    ],
+    "codeAliases": [
+      "OAP_CTL",
+      "CONTROL_API"
+    ],
+    "created": "2026-04-08",
+    "domain": "opc",
+    "establishes": [
+      {
+        "kind": "file",
+        "path": "product/packages/oap-ctl/src/cli.js"
+      }
+    ],
+    "extends": [
+      {
+        "nature": "additive",
+        "spec": "032-opc-inspect-governance-wiring-mvp",
+        "unit": {
+          "kind": "file",
+          "path": "product/apps/opc/src-tauri/src/web_server.rs"
+        }
+      }
+    ],
+    "extraFrontmatter": {
+      "language": "en",
+      "sources": [
+        "claudepal"
+      ]
+    },
+    "featureBranch": "feat/085-remote-control-cli",
+    "id": "085-remote-control-cli",
+    "implementation": "complete",
+    "kind": "product",
+    "sectionHeadings": [
+      "085 — Remote Control CLI (oap-ctl)",
+      "Purpose",
+      "Scope",
+      "In Scope",
+      "Out of Scope",
+      "Functional Requirements",
+      "Non-Functional Requirements",
+      "Key Files",
+      "Verification"
+    ],
+    "specPath": "specs/085-remote-control-cli/spec.md",
+    "status": "approved",
+    "summary": "Exposes a localhost HTTP control API from the OPC desktop app and provides a zero-dependency Node.js CLI (oap-ctl) to drive it. Enables headless automation, scripting, and CI integration against a running desktop instance.\n",
+    "title": "Remote Control CLI (oap-ctl)"
+  },
+  "shardHash": "cc57f90f6c1bed17df3082971bd8a8d13af66f57ff381dfd21a6138d9531bc53",
+  "specVersion": "1.1.0"
+}

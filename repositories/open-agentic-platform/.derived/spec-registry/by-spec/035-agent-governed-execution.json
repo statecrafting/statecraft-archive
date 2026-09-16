@@ -1,0 +1,59 @@
+{
+  "record": {
+    "authors": [
+      "open-agentic-platform"
+    ],
+    "codeAliases": [
+      "AGENT_AUTOMATION"
+    ],
+    "created": "2026-03-29",
+    "domain": "opc",
+    "extends": [
+      {
+        "nature": "additive",
+        "spec": "033-axiomregent-activation",
+        "unit": {
+          "kind": "file",
+          "path": "product/apps/opc/src-tauri/src/commands/agents.rs"
+        }
+      },
+      {
+        "nature": "additive",
+        "spec": "033-axiomregent-activation",
+        "unit": {
+          "kind": "file",
+          "path": "product/apps/opc/src-tauri/src/commands/claude.rs"
+        }
+      }
+    ],
+    "extraFrontmatter": {
+      "language": "en"
+    },
+    "featureBranch": "035-agent-governed-execution",
+    "id": "035-agent-governed-execution",
+    "implementation": "complete",
+    "kind": "platform",
+    "sectionHeadings": [
+      "Feature Specification: agent governed execution",
+      "Purpose",
+      "Scope",
+      "In scope",
+      "Out of scope",
+      "Requirements",
+      "Functional",
+      "Non-functional",
+      "Architecture",
+      "Execution flow (governed)",
+      "Key integration points",
+      "Success criteria",
+      "Contract notes",
+      "Risk"
+    ],
+    "specPath": "specs/035-agent-governed-execution/spec.md",
+    "status": "approved",
+    "summary": "Route agent and Claude Code execution through axiomregent's governed dispatch so that stored permission flags (enable_file_read, enable_file_write, enable_network) and safety tiers are enforced at runtime — replacing the unconditional `--dangerously-skip-permissions` bypass in all seven execution paths.\n",
+    "title": "agent execution through governed dispatch"
+  },
+  "shardHash": "997c354f61fc119ef797169a01ac1e4bc4b539929a708e1bf82dd3bddf901320",
+  "specVersion": "1.1.0"
+}

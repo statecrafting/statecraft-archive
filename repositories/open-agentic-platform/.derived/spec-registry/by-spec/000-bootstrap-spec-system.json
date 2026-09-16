@@ -1,0 +1,74 @@
+{
+  "record": {
+    "amendmentRecord": "179-domain-frontmatter-field",
+    "authors": [
+      "open-agentic-platform"
+    ],
+    "created": "2026-03-22",
+    "domain": "substrate",
+    "extraFrontmatter": {
+      "amended": "2026-05-24",
+      "language": "en",
+      "ratified": "2026-03-22"
+    },
+    "featureBranch": "000-bootstrap-spec-system",
+    "id": "000-bootstrap-spec-system",
+    "implementation": "complete",
+    "kind": "constitutional-bootstrap",
+    "origin": {
+      "retroactive": true
+    },
+    "sectionHeadings": [
+      "Feature Specification: Bootstrap spec system",
+      "Purpose and charter",
+      "Why this repository is spec-first",
+      "Authored truth: markdown only (including frontmatter)",
+      "Machine truth: compiler-owned JSON only",
+      "Forbidden: standalone authored YAML",
+      "Initial `standards/spec/` contract (future features)",
+      "Markdown document grammar (normative minimum)",
+      "Amendment frontmatter convention *(introduced by spec 119, 2026-04-29)*",
+      "Minimum viable compiled JSON registry contract",
+      "Deterministic compiler expectations",
+      "Minimum validation invariants",
+      "Frozen invariants *(introduced by spec 132, 2026-05-02)*",
+      "Reverse-engineered provenance expectations",
+      "Legacy assumptions explicitly rejected",
+      "User Scenarios & Testing *(mandatory)*",
+      "User Story 1 — Author a feature spec that compiles cleanly (Priority: P1)",
+      "User Story 2 — Reviewer verifies no forbidden authored YAML (Priority: P2)",
+      "User Story 3 — Consumer reads stable JSON (Priority: P3)",
+      "Edge Cases",
+      "Requirements *(mandatory)*",
+      "Functional Requirements",
+      "Key Entities",
+      "Success Criteria *(mandatory)*",
+      "Measurable Outcomes",
+      "Clarifications",
+      "Session 2026-03-22 (initial)",
+      "Session 2026-03-22 (ratification pass)"
+    ],
+    "specPath": "specs/000-bootstrap-spec-system/spec.md",
+    "status": "approved",
+    "summary": "Foundational contract: authored truth lives only in markdown (with YAML frontmatter blocks permitted inside .md); machine-consumable truth is compiler-emitted JSON only; full markdown → registry compilation from day one; no standalone authored YAML. Amended by spec 119 to formally introduce the `amends:` and `amendment_record:` frontmatter convention. Amended by spec 132 (2026-05-02) to declare an `unamendable` list of frozen anchors and back it with V-011 in the spec compiler. The unamendable list in this frontmatter is the authoritative freeze surface. Amended by spec 147 (2026-05-13) to promote `kind` to a validated enum, introduce per-kind structural grammar (`shape`, `category`, capability/registry/profile kinds), and add governance-lifecycle frontmatter fields. Amended by spec 159 (2026-05-22) to extend V-004's scan-path policy (the \"explicitly listed third-party vendored paths in a later amendment\" extension point in this spec) with a path-shaped exemption for `tools/*/tests/fixtures/**`. V-004's `unamendable` anchor is unchanged; only the policy is refined. Amended by spec 179 (2026-05-24) to add a `domain:` frontmatter field (closed enum: `opc | platform | substrate | tooling`) declaring which tract owns a spec's authority. Strictly a lens over the unified corpus, not a partition; V-030 validates the enum at error severity, V-031 emits at warning severity when the field is absent.\n",
+    "title": "Bootstrap spec system (markdown → compiled JSON registry)",
+    "unamendable": [
+      "V-001",
+      "V-002",
+      "V-003",
+      "V-004",
+      "V-005",
+      "V-006",
+      "V-007",
+      "V-008",
+      "V-009",
+      "V-010",
+      "markdown-truth-boundary",
+      "json-truth-boundary",
+      "determinism-requirement",
+      "directory-name-equals-id"
+    ]
+  },
+  "shardHash": "525f780dd06ed48dd4e9db4b8440040f0171ae19c75794664859474e38927505",
+  "specVersion": "1.1.0"
+}

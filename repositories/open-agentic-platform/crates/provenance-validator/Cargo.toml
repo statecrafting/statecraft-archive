@@ -1,0 +1,39 @@
+# SPDX-License-Identifier: AGPL-3.0-or-later
+# Copyright (C) 2026 Bartek Kus
+
+[package]
+name = "provenance-validator"
+publish = false   # internal workspace crate; binaries ship via release workflows, not crates.io
+version = "0.1.0"
+edition = "2024"
+license = "AGPL-3.0-or-later"
+description = "Allowlist derivation, corpus view, and citation verification for spec 121 claim-provenance enforcement. LLM-independent by construction (FR-001)."
+
+[lib]
+name = "provenance_validator"
+path = "src/lib.rs"
+
+[[bin]]
+name = "provenance-validator"
+path = "src/bin/audit.rs"
+
+# FR-001: this list is capped at exactly five crates. Argument parsing
+# in the binary is hand-rolled to avoid pulling in `clap`. DateTime is
+# consumed via `factory-contracts`'s chrono re-export so chrono itself
+# is not a direct dependency here.
+[dependencies]
+factory-contracts = { path = "../factory-contracts" }
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+sha2 = "0.10"
+unicode-normalization = "0.1"
+
+# Test-only deps. `chrono` is needed for fixture timestamps; `tempfile`
+# for the read-only audit test.
+[dev-dependencies]
+toml = "1.1"
+chrono = { version = "0.4", features = ["serde"] }
+tempfile = "3"
+
+[package.metadata.oap]
+spec = "121-claim-provenance-enforcement"

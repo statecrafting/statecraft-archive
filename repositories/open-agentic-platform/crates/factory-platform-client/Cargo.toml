@@ -1,0 +1,36 @@
+# SPDX-License-Identifier: AGPL-3.0-or-later
+# Copyright (C) 2026 Bartek Kus
+
+[package]
+name = "factory-platform-client"
+publish = false   # internal workspace crate
+version = "0.1.0"
+edition = "2024"
+description = "Typed `/api/factory/*` client for the OPC desktop — content-addressed run-cache I/O and CatalogClient implementation (spec 124)"
+
+[dependencies]
+# Cache-root + run-sha primitives. Stable since Phase 0.
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+serde_yaml = "0.9"
+sha2 = "0.10"
+dirs = "6"
+# REST surface (Phase 4).
+reqwest = { version = "0.13", features = ["json"] }
+tokio = { version = "1", features = ["sync", "time", "rt-multi-thread", "macros"] }
+async-trait = "0.1"
+thiserror = "2"
+# Spec 123 trait + Spec 074 typed reference enum. The platform client is
+# the desktop's concrete `CatalogClient` implementation; one client
+# instance feeds both the run pipeline and the agent resolver.
+factory-engine = { path = "../factory-engine" }
+factory-contracts = { path = "../factory-contracts" }
+
+[dev-dependencies]
+tempfile = "3"
+# Mock HTTP server for unit tests against PlatformClient.
+wiremock = "0.6"
+tokio = { version = "1", features = ["macros", "rt", "time", "rt-multi-thread"] }
+
+[package.metadata.oap]
+spec = "124-opc-factory-run-platform-integration"

@@ -1,0 +1,12 @@
+{
+  "package": {
+    "edition": "2024",
+    "kind": "rust-lib-bin",
+    "name": "open_agentic_adapter_scopes_compiler",
+    "path": "tools/oap/adapter-scopes-compiler",
+    "specRef": "105-scripts-to-binaries-migration",
+    "version": "0.1.0"
+  },
+  "schemaVersion": "1.1.0",
+  "shardHash": "d2176ef869016bbc9f0a34e344410cc64f141cad1f8d0d3cc4a6cdac82015bf0"
+}

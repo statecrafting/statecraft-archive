@@ -1,0 +1,79 @@
+{
+  "record": {
+    "codeAliases": [
+      "MULTI_SESSION_ORCHESTRATOR_BINDING"
+    ],
+    "created": "2026-05-22",
+    "dependsOn": [
+      "052-state-persistence",
+      "095-checkpoint-branch-of-thought",
+      "157-opc-session-model"
+    ],
+    "domain": "opc",
+    "extraFrontmatter": {
+      "approved": "2026-05-23",
+      "slug": "opc-multi-session-orchestrator-binding"
+    },
+    "id": "173-opc-multi-session-orchestrator-binding",
+    "implementation": "complete",
+    "kind": "governance",
+    "owner": "bart",
+    "references": [
+      {
+        "role": "decomposition-source",
+        "unit": {
+          "kind": "file",
+          "path": "docs/owasp/factory/AIDE-VELOCITY-OAP-INTENT.md"
+        }
+      },
+      {
+        "role": "predecessor-spec",
+        "unit": {
+          "kind": "file",
+          "path": "specs/157-opc-session-model/spec.md"
+        }
+      },
+      {
+        "role": "companion-mechanism",
+        "unit": {
+          "kind": "file",
+          "path": "specs/095-checkpoint-branch-of-thought/spec.md"
+        }
+      }
+    ],
+    "refines": [
+      {
+        "aspect": "orchestrator-session-binding",
+        "unit": {
+          "kind": "directory",
+          "path": "crates/orchestrator"
+        }
+      }
+    ],
+    "risk": "low",
+    "sectionHeadings": [
+      "173 — OPC multi-session-by-project-path: orchestrator binding",
+      "1. Problem",
+      "2. Decision",
+      "2.1 Identity binding",
+      "2.2 Project-path-keyed accumulation",
+      "2.3 Non-disambiguation honoured",
+      "2.4 No per-session orchestrator state",
+      "2.5 The two fields carry different loads",
+      "3. Functional Requirements",
+      "4. Success Criteria",
+      "5. Scope",
+      "In scope",
+      "Out of scope (deferred)",
+      "Cross-crate coupling — explicit",
+      "6. Relationship to spec 157 — binding, not duplication",
+      "7. Cross-references"
+    ],
+    "specPath": "specs/173-opc-multi-session-orchestrator-binding/spec.md",
+    "status": "approved",
+    "summary": "Spec 157 formalises OPC's multi-session-per-project- path discipline at the *session model* layer (filesystem layout, JSONL authority, non- disambiguating across developers by design). Intent doc §9.14 named a single concern and carried two hints — \"session model (formalised)\" and \"refines spec 052\". Spec 157 took the session-model half; this spec takes the orchestrator binding the 052-refinement hint pointed at.\nSpec 157 covers what OPC reads from JSONL; spec 173 covers what the orchestrator persists in response. The two compose at the project-path key: a developer's many OPC sessions for one project path may each initiate orchestrator workflows, and the orchestrator's persistence keys workflows by the same path identity OPC uses, inheriting spec 157's non-disambiguating posture.\nSpec 173 is a thin refinement of spec 052: it adds one identity field on persisted workflows (`project_path`) and one trace field (`originating_session`), exposes a new consumer surface `workflows by-project-path`, and binds the orchestrator to honour spec 157's discipline rather than reasserting it.\n",
+    "title": "OPC multi-session-by-project-path — orchestrator binding (formalisation)"
+  },
+  "shardHash": "c8c4139d9ecb885b06f10d449334210e0e9f1423c6f7c95b75f3f1a282d0ed8a",
+  "specVersion": "1.1.0"
+}

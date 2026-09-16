@@ -1,0 +1,40 @@
+{
+  "record": {
+    "authors": [
+      "open-agentic-platform"
+    ],
+    "created": "2026-03-22",
+    "domain": "tooling",
+    "extends": [
+      {
+        "nature": "additive",
+        "spec": "002-registry-consumer-mvp"
+      }
+    ],
+    "extraFrontmatter": {
+      "language": "en"
+    },
+    "featureBranch": "031-registry-consumer-list-ids-only-contract-mvp",
+    "id": "031-registry-consumer-list-ids-only-contract-mvp",
+    "implementation": "complete",
+    "kind": "platform-delivery",
+    "refines": [
+      {
+        "aspect": "contract-tests"
+      }
+    ],
+    "sectionHeadings": [
+      "Feature Specification: list --ids-only contract",
+      "Purpose",
+      "Requirements",
+      "Out of scope"
+    ],
+    "specPath": "specs/031-registry-consumer-list-ids-only-contract-mvp/spec.md",
+    "status": "superseded",
+    "summary": "Add a narrow contract extension: `list --ids-only` emits one feature id per line while preserving existing filter and deterministic ordering semantics.\n",
+    "supersededBy": "217-spec-spine-engine-swap-collapse",
+    "title": "Registry consumer list ids-only contract MVP"
+  },
+  "shardHash": "5c7ecc39c277b5dd41bd6b60f73e24c0c1e740237d6a17c8acd05968e4396dab",
+  "specVersion": "1.1.0"
+}

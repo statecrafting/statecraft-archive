@@ -1,0 +1,54 @@
+{
+  "record": {
+    "codeAliases": [
+      "FACTORY_SCHEMA_LOCKSTEP"
+    ],
+    "created": "2026-06-23",
+    "dependsOn": [
+      "002-encore-generator-core"
+    ],
+    "domain": "ci-cd",
+    "establishes": [
+      {
+        "kind": "file",
+        "path": "adapters/acme-vue-encore/scripts/lockstep/check.ts"
+      },
+      {
+        "kind": "file",
+        "path": "adapters/acme-vue-encore/scripts/lockstep/check.test.ts"
+      },
+      {
+        "kind": "file",
+        "path": "adapters/acme-vue-encore/scripts/lockstep/baseline.lock.json"
+      },
+      {
+        "kind": "file",
+        "path": ".github/workflows/ci-lockstep.yml"
+      }
+    ],
+    "id": "006-factory-schema-lockstep",
+    "implementation": "complete",
+    "kind": "governance",
+    "owner": "bart",
+    "risk": "medium",
+    "sectionHeadings": [
+      "006. Generator/baseline lockstep: pin the generator to template-encore's frozen invariants",
+      "1. Purpose",
+      "2. Territory",
+      "3. Behavior",
+      "FR-001: The committed lockfile is the single source of truth",
+      "FR-002: Three-dimension verification",
+      "FR-003: The invariant pin defers until the Phase 3 handshake, then activates",
+      "FR-004: Fail-visible, never skipped-green",
+      "FR-005: Local verifiability",
+      "4. Acceptance criteria",
+      "5. Out of scope"
+    ],
+    "specPath": "specs/006-factory-schema-lockstep/spec.md",
+    "status": "approved",
+    "summary": "The generator clones the template-encore lean baseline, so it must not drift from the app invariants frozen there (`encore-app-architecture`, `security-data-invariants`) nor from the baseline's core-service and module-catalog shape. This spec stands up a cross-repo lockstep: a committed lockfile pins the upstream ref, the baseline core services, and the module catalog membership; a fail-visible CI gate fetches the baseline at the pinned ref and refuses any drift. The invariant-hash pin was DEFERRED through Phase 1 and Phase 2 (`encore-app-architecture` absorbed the static-serving wiring from spec 004 in Phase 2) and is now ACTIVE: the Phase 3 handshake flipped the pin to \"pinned\", filled the invariant spec.md hashes, and bumped pinnedRef to the finalized template-encore main, so a re-hash mismatch on either invariant now fails the gate. Mirrors the OAP `factory-schema-lockstep` pattern.\n",
+    "title": "Generator/baseline lockstep: pin the generator to template-encore's frozen invariants"
+  },
+  "shardHash": "3ddd0f21cd45faa242e255095deb9c6625ced7a57f99d3fd06d4f4f63222e09c",
+  "specVersion": "1.1.0"
+}

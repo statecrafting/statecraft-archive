@@ -1,0 +1,57 @@
+{
+  "record": {
+    "codeAliases": [
+      "SECURITY_INVARIANTS",
+      "INV_CATALOG"
+    ],
+    "created": "2026-06-10",
+    "dependsOn": [
+      "001-encore-app-architecture"
+    ],
+    "domain": "app",
+    "establishes": [
+      {
+        "kind": "file",
+        "path": "apps/api/lib/"
+      },
+      {
+        "kind": "file",
+        "path": "apps/api/db/"
+      }
+    ],
+    "id": "002-security-data-invariants",
+    "implementation": "complete",
+    "kind": "governance",
+    "owner": "bart",
+    "risk": "high",
+    "sectionHeadings": [
+      "002 — Security and data invariants: the API's non-negotiable guarantees (INV-1 - INV-11)",
+      "1. Purpose",
+      "2. Territory",
+      "3. Behavior",
+      "3.1 Invariant catalog",
+      "INV-1: Role-scoped data access (AUTH-007)",
+      "INV-2: Parameterized SQL only",
+      "INV-3: httpOnly cookies only (cookie-auth flow)",
+      "INV-4: CSRF double-submit",
+      "INV-5: Security headers",
+      "INV-6: Rate limiting",
+      "INV-7: Stateless RS256 JWT plus DB-backed refresh rotation",
+      "INV-8: Durable audit trail",
+      "INV-9: Multi-driver auth registry",
+      "INV-10: BFF proxy contract",
+      "INV-11: Compliance-tag discipline",
+      "3.2 Key entities",
+      "3.3 Enforcement table",
+      "3.4 Functional requirements",
+      "4. Acceptance criteria",
+      "5. Out of scope"
+    ],
+    "specPath": "specs/002-security-data-invariants/spec.md",
+    "status": "approved",
+    "summary": "Eleven non-negotiable security and data guarantees (INV-1 - INV-11) that every build of the template enforces: role-scoped data access, parameterized SQL, httpOnly cookies, CSRF, security headers, rate limiting, RS256 JWT with refresh rotation, audit trail, multi-driver auth, the BFF proxy contract, and compliance tags. apps/api/lib and apps/api/db are the enforcement substrate.\n",
+    "title": "Security and data invariants: the API's non-negotiable guarantees (INV-1 - INV-11)"
+  },
+  "shardHash": "56c278e7086931b985bad65b8e28c78a13af2c9f5a33c52524276ecc8537b32e",
+  "specVersion": "1.1.0"
+}

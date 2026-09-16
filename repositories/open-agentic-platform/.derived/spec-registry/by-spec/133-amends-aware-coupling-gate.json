@@ -1,0 +1,55 @@
+{
+  "record": {
+    "amendmentRecord": "Amended 2026-05-24 by 176-amends-aware-section-satisfaction-parity.\nRe-amended 2026-06-15 by 216-spec-spine-library-grammar-adoption (Phase 2b):\n§3's supersession-exclusion clause is now implemented in the gate's\n`legitimate_owners`, which previously composed only the\nestablishes/extends/refines/co_authority + amends classes and performed no\nsupersession filtering. Full supersession filters by the predecessor's\n`spec_status`; partial supersession filters over the superseded unit's paths\nvia the new codebase-index `TraceMapping.supersedes` field (index schema\n3.1.0). See §3.2.\n",
+    "codeAliases": [
+      "COUPLING_GATE"
+    ],
+    "created": "2026-05-03",
+    "dependsOn": [
+      "101-codebase-index-mvp",
+      "130-spec-coupling-primary-owner"
+    ],
+    "domain": "substrate",
+    "extends": [
+      {
+        "nature": "additive",
+        "spec": "101-codebase-index-mvp"
+      }
+    ],
+    "extraFrontmatter": {
+      "amended": "2026-06-15",
+      "approved": "2026-05-19",
+      "slug": "coupling-gate"
+    },
+    "id": "133-amends-aware-coupling-gate",
+    "implementation": "complete",
+    "kind": "governance",
+    "owner": "bart",
+    "risk": "low",
+    "sectionHeadings": [
+      "133 — Coupling Gate",
+      "1. Concern",
+      "2. Inputs",
+      "3. Authority derivation",
+      "3.1 Legacy spec handling",
+      "3.2 Supersession exclusion (implemented spec 216 Phase 2b)",
+      "4. Satisfaction semantics",
+      "5. Constraint evaluation",
+      "6. Library API",
+      "7. Output format",
+      "7.1 Silent success",
+      "7.2 Authority failure",
+      "7.3 Constraint failure",
+      "8. Migration and recursive verification",
+      "9. Performance",
+      "10. Cross-references"
+    ],
+    "specPath": "specs/133-amends-aware-coupling-gate/spec.md",
+    "status": "superseded",
+    "summary": "The derivation algorithm, satisfaction semantics, constraint evaluation, and output format of the spec/code coupling gate. Given a diff and the compiled spec corpus (via spec 101's codebase-index), the gate decides whether each edited path's current authority is touched, evaluates separate constraint invariants, and reports failures in precise authority-set form rather than historical multi-claim noise. The authority function `authorities(P)` is exposed as a library API for use by registry-consumer and other consumers.\n",
+    "supersededBy": "217-spec-spine-engine-swap-collapse",
+    "title": "Coupling Gate — authority derivation, satisfaction semantics, constraint evaluation"
+  },
+  "shardHash": "78292b15963caa5abc1d22b266efa18205cfd630f3ff4300f50311ce91fc6bf3",
+  "specVersion": "1.1.0"
+}

@@ -1,0 +1,11 @@
+{
+  "package": {
+    "kind": "npm-package",
+    "name": "@statecraft/frontend-admin",
+    "path": "frontend-admin",
+    "specRef": "012-frontend-admin-adoption",
+    "version": "0.1.0"
+  },
+  "schemaVersion": "1.1.0",
+  "shardHash": "132071c3da22a3a5483c42b23c44473d8f5f721c6ef8f91310e17957d5b6709b"
+}

@@ -1,0 +1,57 @@
+{
+  "record": {
+    "amendmentRecord": "amended by spec 182 (2026-05-26) — acknowledges that the OAP\nrepository now treats `.claude/skills/<name>/SKILL.md` as the\nprimary surface for slash-command-style entries, with\n`.claude/commands/*.md` retained as the legacy single-file form\nduring the spec-182 transition window. No behavioral change to\nthe factory mechanism; this is a surface-priority note so future\nauthors land new entries under `skills/` by default.\n",
+    "authors": [
+      "open-agentic-platform"
+    ],
+    "codeAliases": [
+      "SKILL_COMMAND_FACTORY"
+    ],
+    "created": "2026-03-31",
+    "domain": "opc",
+    "establishes": [
+      {
+        "id": "skill-factory",
+        "kind": "crate"
+      }
+    ],
+    "extraFrontmatter": {
+      "amended": "2026-05-26",
+      "language": "en",
+      "sources": [
+        "claude-code"
+      ]
+    },
+    "featureBranch": "071-skill-command-factory",
+    "id": "071-skill-command-factory",
+    "implementation": "complete",
+    "kind": "platform",
+    "sectionHeadings": [
+      "Feature Specification: Skill and Command Factory",
+      "Purpose",
+      "Scope",
+      "In scope",
+      "Out of scope",
+      "Requirements",
+      "Functional",
+      "Non-functional",
+      "Architecture",
+      "Skill frontmatter schema",
+      "Skill types",
+      "Skill factory",
+      "Loading pipeline",
+      "Tool allow-list enforcement",
+      "Implementation approach",
+      "Success criteria",
+      "Dependencies",
+      "Contract notes",
+      "Risk"
+    ],
+    "specPath": "specs/071-skill-command-factory/spec.md",
+    "status": "approved",
+    "summary": "Formalizes the skill/command pattern absorbed from Claude Code's extensible slash command system. Each skill is a self-contained unit with a prompt template, allowed tool list, handler type, and optional hooks. Skills are discoverable from bundled definitions, .claude/commands/ files (legacy form), .claude/skills/<name>/SKILL.md folders (primary surface post-spec-182), and plugin manifests. The factory pattern enables one-file skill authoring with automatic registration into the tool registry and prompt assembler.\n",
+    "title": "Skill and Command Factory"
+  },
+  "shardHash": "cab4a5e888e1b24684e26e34b199796f70ca16885f38fcaa038bfabcaa6d128c",
+  "specVersion": "1.1.0"
+}

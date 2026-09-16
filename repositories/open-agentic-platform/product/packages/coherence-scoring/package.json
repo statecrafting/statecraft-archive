@@ -1,0 +1,32 @@
+{
+  "name": "@opc/coherence-scoring",
+  "version": "0.1.0",
+  "description": "Coherence scoring with privilege degradation: continuous 0-1 score from violation rate, rework frequency, and intent drift driving progressive capability restriction with hash-chained proof trail (spec 063)",
+  "private": true,
+  "type": "module",
+  "main": "src/index.ts",
+  "types": "src/index.ts",
+  "exports": {
+    ".": "./src/index.ts",
+    "./types": "./src/types.ts",
+    "./scoring": "./src/scoring.ts",
+    "./privileges": "./src/privileges.ts",
+    "./enforcement": "./src/enforcement.ts",
+    "./proof-chain": "./src/proof-chain.ts",
+    "./pipeline": "./src/pipeline.ts",
+    "./conformance": "./src/conformance.ts"
+  },
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "test": "vitest run",
+    "lint": "eslint src/"
+  },
+  "devDependencies": {
+    "@types/node": "^24.5.0",
+    "typescript": "^6.0.3",
+    "vitest": "^4.1.5"
+  },
+  "oap": {
+    "spec": "063-coherence-scoring"
+  }
+}

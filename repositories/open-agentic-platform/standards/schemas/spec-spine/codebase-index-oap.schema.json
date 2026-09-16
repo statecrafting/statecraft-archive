@@ -1,0 +1,121 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://open-agentic-platform.local/schemas/codebase-index-oap.schema.json",
+  "title": "Open Agentic Platform — enriched codebase index (Cut D W-07a/c)",
+  "description": "Enriched superset of codebase-index.schema.json (Cut D W-07c): adds Layer 3 (factory adapters), Layer 4 (tool/infrastructure inventory), and Layer 5 (workflow-to-spec traceability) on top of the generic Layer 1+2 fields. Emitted by tools/oap-code-index-enrich into build/codebase-index/index-oap.json.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schemaVersion",
+    "build",
+    "inventory",
+    "traceability",
+    "factory",
+    "infrastructure",
+    "workflowTraceability",
+    "diagnostics"
+  ],
+  "properties": {
+    "schemaVersion": {
+      "type": "string",
+      "description": "Mirrors the generic index's schemaVersion. The enricher does not currently bump its own version separately."
+    },
+    "build": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["indexerId", "indexerVersion", "repoRoot", "contentHash"],
+      "properties": {
+        "indexerId": { "type": "string", "const": "codebase-indexer" },
+        "indexerVersion": { "type": "string", "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+$" },
+        "repoRoot": { "type": "string", "minLength": 1 },
+        "contentHash": { "type": "string", "pattern": "^[0-9a-f]{64}$" },
+        "enricherId": { "type": "string", "const": "oap-code-index-enrich" },
+        "enricherVersion": { "type": "string", "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+$" }
+      }
+    },
+    "inventory": { "type": "array" },
+    "traceability": { "type": "object" },
+    "factory": {
+      "description": "Layer 3: Factory adapter inventory (OAP-specific).",
+      "type": "array",
+      "items": { "$ref": "#/$defs/adapterRecord" }
+    },
+    "infrastructure": {
+      "description": "Layer 4: Tool and infrastructure inventory (OAP-specific).",
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["tools", "agents", "commands", "rules", "schemas"],
+      "properties": {
+        "tools": { "type": "array", "items": { "$ref": "#/$defs/toolEntry" } },
+        "agents": { "type": "array", "items": { "$ref": "#/$defs/namedEntry" } },
+        "commands": { "type": "array", "items": { "$ref": "#/$defs/namedEntry" } },
+        "rules": { "type": "array", "items": { "$ref": "#/$defs/namedEntry" } },
+        "schemas": { "type": "array", "items": { "$ref": "#/$defs/namedEntry" } }
+      }
+    },
+    "workflowTraceability": {
+      "description": "Layer 5: workflow-to-spec traceability (spec 118; OAP-specific).",
+      "type": "array",
+      "items": { "$ref": "#/$defs/workflowTrace" }
+    },
+    "diagnostics": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["warnings", "errors"],
+      "properties": {
+        "warnings": { "type": "array" },
+        "errors": { "type": "array" }
+      }
+    }
+  },
+  "$defs": {
+    "adapterRecord": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["name", "path"],
+      "properties": {
+        "name": { "type": "string", "minLength": 1 },
+        "path": { "type": "string", "minLength": 1 },
+        "targetStack": { "type": "string" },
+        "phaseCoverage": {
+          "type": "array",
+          "items": { "type": "string", "pattern": "^[a-z0-9]{2}-[a-z][a-z0-9-]*$" }
+        },
+        "displayName": { "type": "string" },
+        "version": { "type": "string" },
+        "stackLanguage": { "type": "string" },
+        "stackRuntime": { "type": "string" }
+      }
+    },
+    "toolEntry": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["name", "path"],
+      "properties": {
+        "name": { "type": "string", "minLength": 1 },
+        "path": { "type": "string", "minLength": 1 },
+        "binaries": { "type": "array", "items": { "type": "string", "minLength": 1 } }
+      }
+    },
+    "namedEntry": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["name", "path"],
+      "properties": {
+        "name": { "type": "string", "minLength": 1 },
+        "path": { "type": "string", "minLength": 1 },
+        "description": { "type": "string" }
+      }
+    },
+    "workflowTrace": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["path", "source"],
+      "properties": {
+        "path": { "type": "string", "minLength": 1 },
+        "specs": { "type": "array", "items": { "type": "string", "minLength": 1 } },
+        "source": { "type": "string", "enum": ["header", "allowlist", "unmapped"] }
+      }
+    }
+  }
+}

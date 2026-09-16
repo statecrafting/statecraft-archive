@@ -1,0 +1,61 @@
+{
+  "record": {
+    "codeAliases": [
+      "PROMOTION_GRADE_MIRROR"
+    ],
+    "created": "2026-04-11",
+    "dependsOn": [
+      "080-github-identity-onboarding",
+      "082-artifact-integrity-platform-hardening",
+      "092-workspace-runtime-threading",
+      "094-unified-artifact-store"
+    ],
+    "domain": "opc",
+    "establishes": [
+      {
+        "kind": "file",
+        "path": "crates/orchestrator/src/promotion.rs"
+      }
+    ],
+    "extends": [
+      {
+        "nature": "additive",
+        "spec": "052-state-persistence",
+        "unit": {
+          "kind": "file",
+          "path": "crates/orchestrator/src/state.rs"
+        }
+      },
+      {
+        "nature": "additive",
+        "spec": "052-state-persistence",
+        "unit": {
+          "kind": "file",
+          "path": "crates/orchestrator/src/lib.rs"
+        }
+      }
+    ],
+    "id": "097-promotion-grade-mirror",
+    "implementation": "complete",
+    "kind": "platform",
+    "owner": "bart",
+    "risk": "high",
+    "sectionHeadings": [
+      "097 — Promotion-Grade Platform Mirror",
+      "Problem",
+      "Solution",
+      "Implementation Slices",
+      "Slice 1: Define run promotion eligibility",
+      "Slice 2: Add `CompletedLocal` status",
+      "Slice 3: Statecraft promotion API endpoint",
+      "Slice 4: Integrate promotion check into orchestrator completion",
+      "Acceptance Criteria"
+    ],
+    "specPath": "specs/097-promotion-grade-mirror/spec.md",
+    "status": "approved",
+    "summary": "Elevate platform sync from fire-and-forget to promotion-grade. Define run promotion eligibility, add CompletedLocal status for local-only completions, create a Statecraft promotion validation endpoint, and integrate eligibility checks into the orchestrator completion path.\n",
+    "title": "Promotion-Grade Platform Mirror"
+  },
+  "shardHash": "515a987527afd52c4139a74cb831fb2cd0c6ba14af8adaab79a9b3267acb4770",
+  "specVersion": "1.1.0"
+}

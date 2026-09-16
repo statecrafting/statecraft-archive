@@ -1,0 +1,36 @@
+{{- /*
+Spec 112 §5.3 — PersistentVolumeClaim for the scaffold workspace.
+
+Holds:
+  - _template-cache/ — clone of the upstream `template` repo + npm install
+  - _prebuilt-{minimal,public,internal,dual}/ — pre-warmed profile trees
+  - .template-commit / .prebuilt-commit — sha tracking files
+
+Skipped when workspace.persistence.enabled is false (warmup will re-run on
+every pod restart, hitting an emptyDir backed by node ephemeral storage).
+
+The default access mode (RWO) is incompatible with replicaCount > 1: a
+second pod would block on volume attach. Fail at template-render time
+with a clear message rather than letting the user discover this at
+scheduler time.
+*/ -}}
+{{- if and .Values.workspace.persistence.enabled (gt (int (default 1 .Values.replicaCount)) 1) }}
+{{- fail "workspace.persistence.enabled requires replicaCount=1 (RWO PVC). Disable persistence (workspace.persistence.enabled=false) to scale horizontally, or pin replicaCount=1." }}
+{{- end }}
+{{- if .Values.workspace.persistence.enabled }}
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: statecraft-api-workspace
+  labels:
+    app: statecraft-api
+spec:
+  accessModes:
+    - {{ .Values.workspace.persistence.accessMode | default "ReadWriteOnce" }}
+  resources:
+    requests:
+      storage: {{ .Values.workspace.persistence.size | default "10Gi" | quote }}
+  {{- with .Values.workspace.persistence.storageClass }}
+  storageClassName: {{ . | quote }}
+  {{- end }}
+{{- end }}

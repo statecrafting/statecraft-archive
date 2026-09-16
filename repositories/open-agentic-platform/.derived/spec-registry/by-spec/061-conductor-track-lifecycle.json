@@ -1,0 +1,73 @@
+{
+  "record": {
+    "amendmentRecord": "amended by spec 182 (2026-05-30) — the `/implement-plan` command\nthis spec established was migrated verbatim to the skills surface\n(`.claude/skills/implement-plan/SKILL.md`) and the legacy command\nfile deleted in the spec-182 deprecation PR. Because spec 182\nestablishes the skill file, 061's `establishes:` claim on the now-\ndeleted command file is converted to a `references:` (role:\nhistorical) edge on the skill successor. No behavioral change.\n",
+    "authors": [
+      "open-agentic-platform"
+    ],
+    "codeAliases": [
+      "CONDUCTOR_TRACK"
+    ],
+    "created": "2026-03-29",
+    "domain": "opc",
+    "establishes": [
+      {
+        "kind": "directory",
+        "path": "product/packages/conductor-track"
+      }
+    ],
+    "extraFrontmatter": {
+      "amended": "2026-05-30",
+      "language": "en",
+      "sources": [
+        "agents/conductor",
+        "skills/plan-implementer",
+        "developer-cc-commands"
+      ]
+    },
+    "featureBranch": "061-conductor-track-lifecycle",
+    "id": "061-conductor-track-lifecycle",
+    "implementation": "complete",
+    "kind": "platform",
+    "references": [
+      {
+        "role": "historical",
+        "unit": {
+          "kind": "file",
+          "path": ".claude/skills/implement-plan/SKILL.md"
+        }
+      },
+      {
+        "role": "historical",
+        "unit": {
+          "kind": "file",
+          "path": ".claude/agents/conductor.md"
+        }
+      }
+    ],
+    "sectionHeadings": [
+      "Feature Specification: Conductor Track Lifecycle",
+      "Purpose",
+      "Scope",
+      "In scope",
+      "Out of scope",
+      "Requirements",
+      "Functional",
+      "Non-functional",
+      "Architecture",
+      "Track directory structure",
+      "metadata.json schema",
+      "State machine",
+      "Conductor and plan-implementer interaction",
+      "Implementation approach",
+      "Success criteria",
+      "Dependencies",
+      "Risk"
+    ],
+    "specPath": "specs/061-conductor-track-lifecycle/spec.md",
+    "status": "approved",
+    "summary": "Spec-driven work units (\"tracks\") with a formal lifecycle: Pending, In Progress, Complete, Archived. Each track is a directory containing spec.md, plan.md, and metadata.json. The conductor agent manages track transitions with TDD phase checkpoints. Tracks are git-aware, enabling logical-unit revert when a track fails. The plan-implementer skill executes plan steps within a track context.\n",
+    "title": "Conductor Track Lifecycle"
+  },
+  "shardHash": "d546d8532bf6621b1b743012db07bc27366ed1c12d0b63e03050545bf94a9f47",
+  "specVersion": "1.1.0"
+}

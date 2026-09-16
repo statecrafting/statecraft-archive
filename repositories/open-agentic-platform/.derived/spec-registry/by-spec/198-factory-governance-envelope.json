@@ -1,0 +1,369 @@
+{
+  "record": {
+    "amendmentRecord": "amended 2026-07-01 by spec 204 (session-memory write contract): the\nFR-013(a) override gate's carrier-class, secret, and UTF-8 rules were\nextracted into the shared @opc/carrier-gate package so the factory substrate\ngate and the session-memory write gate share one canonical rule set (spec\n204 FR-001, \"shared with, not copied from\"). overrideGate.ts now imports\nthose predicates; its verdicts, rule ids, and the two substrate-specific\nrules it keeps (size ceiling, kind stability) are unchanged.\n",
+    "authors": [
+      "open-agentic-platform"
+    ],
+    "codeAliases": [
+      "FACTORY_GOVERNANCE_ENVELOPE"
+    ],
+    "created": "2026-06-09",
+    "dependsOn": [
+      "102-governed-excellence",
+      "139-factory-artifact-substrate",
+      "074-factory-ingestion"
+    ],
+    "domain": "platform",
+    "establishes": [
+      {
+        "kind": "file",
+        "path": "standards/schemas/factory/governance-envelope.schema.yaml"
+      },
+      {
+        "kind": "file",
+        "path": "crates/factory-contracts/src/governance_envelope.rs"
+      },
+      {
+        "kind": "file",
+        "path": "platform/services/statecraft/api/factory/admission.ts"
+      },
+      {
+        "kind": "file",
+        "path": "platform/services/statecraft/api/factory/revocations.ts"
+      },
+      {
+        "kind": "file",
+        "path": "platform/services/statecraft/api/factory/signing-pure.ts"
+      },
+      {
+        "kind": "file",
+        "path": "platform/services/statecraft/api/factory/signing.ts"
+      },
+      {
+        "kind": "file",
+        "path": "platform/services/statecraft/api/factory/jwks.ts"
+      },
+      {
+        "kind": "file",
+        "path": "platform/services/statecraft/api/factory/grantDuplexHandlers.ts"
+      },
+      {
+        "kind": "file",
+        "path": "crates/factory-engine/src/platform_jws.rs"
+      },
+      {
+        "kind": "file",
+        "path": "crates/factory-engine/src/intent_capsule.rs"
+      },
+      {
+        "kind": "file",
+        "path": "product/apps/opc/src-tauri/src/commands/run_governance.rs"
+      },
+      {
+        "kind": "file",
+        "path": "platform/services/statecraft/api/factory/signing.test.ts"
+      },
+      {
+        "kind": "file",
+        "path": "platform/services/statecraft/api/factory/grantDuplexHandlers.test.ts"
+      },
+      {
+        "kind": "file",
+        "path": "platform/services/statecraft/api/factory/overrideGate.ts"
+      },
+      {
+        "kind": "file",
+        "path": "platform/services/statecraft/api/factory/overrideGate.test.ts"
+      },
+      {
+        "kind": "file",
+        "path": "platform/services/statecraft/api/factory/overrideTrustClass.test.ts"
+      }
+    ],
+    "extends": [
+      {
+        "nature": "additive",
+        "spec": "074-factory-ingestion",
+        "unit": {
+          "id": "factory-contracts",
+          "kind": "crate"
+        }
+      },
+      {
+        "nature": "additive",
+        "spec": "054-agent-frontmatter-schema",
+        "unit": {
+          "id": "agent-frontmatter",
+          "kind": "crate"
+        }
+      },
+      {
+        "nature": "additive",
+        "spec": "034-featuregraph-registry-scanner-fix",
+        "unit": {
+          "kind": "file",
+          "path": "crates/featuregraph/tests/golden/features_graph.json"
+        }
+      }
+    ],
+    "extraFrontmatter": {
+      "amended": "2026-07-01",
+      "compliance": [
+        {
+          "controls": [
+            "ASI01",
+            "ASI02",
+            "ASI03",
+            "ASI04",
+            "ASI05",
+            "ASI06",
+            "ASI07",
+            "ASI09",
+            "ASI10"
+          ],
+          "framework": "owasp-asi-2026"
+        }
+      ],
+      "language": "en"
+    },
+    "featureBranch": "feat/198-factory-governance-envelope",
+    "id": "198-factory-governance-envelope",
+    "implementation": "complete",
+    "kind": "platform",
+    "references": [
+      {
+        "role": "enforcer",
+        "unit": {
+          "id": "factory-engine",
+          "kind": "crate"
+        }
+      },
+      {
+        "role": "context",
+        "unit": {
+          "kind": "file",
+          "path": "docs/owasp-agentic-top-10-2026.md"
+        }
+      },
+      {
+        "role": "design-record",
+        "unit": {
+          "kind": "file",
+          "path": "docs/analysis/governance-envelope-unification.md"
+        }
+      },
+      {
+        "role": "context",
+        "unit": {
+          "kind": "file",
+          "path": "platform/services/statecraft/api/factory/substrateBrowser.ts"
+        }
+      }
+    ],
+    "refines": [
+      {
+        "aspect": "admission-time-governance",
+        "unit": {
+          "kind": "file",
+          "path": "platform/services/statecraft/api/factory/syncPipeline.ts"
+        }
+      },
+      {
+        "aspect": "adapter-scopes-fail-closed",
+        "unit": {
+          "kind": "file",
+          "path": "platform/services/statecraft/api/factory/factory.ts"
+        }
+      },
+      {
+        "aspect": "governance-sub-envelope-section",
+        "unit": {
+          "kind": "file",
+          "path": "standards/schemas/factory/adapter-manifest.schema.yaml"
+        }
+      },
+      {
+        "aspect": "run-grant-envelope-family",
+        "unit": {
+          "kind": "file",
+          "path": "platform/services/statecraft/api/sync/types.ts"
+        }
+      },
+      {
+        "aspect": "run-grant-envelope-family",
+        "unit": {
+          "kind": "file",
+          "path": "platform/services/statecraft/api/sync/service.ts"
+        }
+      },
+      {
+        "aspect": "certificate-countersign-on-completion",
+        "unit": {
+          "kind": "file",
+          "path": "platform/services/statecraft/api/factory/runDuplexHandlers.ts"
+        }
+      },
+      {
+        "aspect": "admission-seal-in-bundle",
+        "unit": {
+          "kind": "file",
+          "path": "platform/services/statecraft/api/projects/opcBundle.ts"
+        }
+      },
+      {
+        "aspect": "admission-seal-in-bundle",
+        "unit": {
+          "kind": "file",
+          "path": "platform/services/statecraft/api/projects/opcBundleHelpers.ts"
+        }
+      },
+      {
+        "aspect": "platform-countersign-binding",
+        "unit": {
+          "kind": "file",
+          "path": "crates/factory-engine/src/governance_certificate.rs"
+        }
+      },
+      {
+        "aspect": "platform-countersign-binding",
+        "unit": {
+          "kind": "file",
+          "path": "crates/factory-engine/src/bin/verify_certificate.rs"
+        }
+      },
+      {
+        "aspect": "stage-boundary-grant-renewal",
+        "unit": {
+          "kind": "file",
+          "path": "crates/orchestrator/src/lib.rs"
+        }
+      },
+      {
+        "aspect": "stage-boundary-grant-renewal",
+        "unit": {
+          "kind": "file",
+          "path": "product/apps/opc/src-tauri/src/commands/factory.rs"
+        }
+      },
+      {
+        "aspect": "run-grant-envelope-family",
+        "unit": {
+          "kind": "file",
+          "path": "product/apps/opc/src-tauri/src/commands/sync_client.rs"
+        }
+      },
+      {
+        "aspect": "run-grant-envelope-family",
+        "unit": {
+          "kind": "file",
+          "path": "product/apps/opc/src-tauri/src/commands/factory_platform.rs"
+        }
+      },
+      {
+        "aspect": "admission-seal-in-bundle",
+        "unit": {
+          "kind": "file",
+          "path": "product/apps/opc/src-tauri/src/commands/statecraft_client.rs"
+        }
+      },
+      {
+        "aspect": "run-grant-records",
+        "unit": {
+          "kind": "file",
+          "path": "platform/services/statecraft/api/db/schema.ts"
+        }
+      },
+      {
+        "aspect": "run-grant-records",
+        "unit": {
+          "kind": "file",
+          "path": "platform/services/statecraft/api/factory/auditActions.ts"
+        }
+      },
+      {
+        "aspect": "override-write-gate",
+        "unit": {
+          "kind": "file",
+          "path": "platform/services/statecraft/api/factory/artifacts.ts"
+        }
+      },
+      {
+        "aspect": "override-write-gate",
+        "unit": {
+          "kind": "file",
+          "path": "platform/services/statecraft/api/factory/conflicts.ts"
+        }
+      },
+      {
+        "aspect": "override-write-gate",
+        "unit": {
+          "kind": "file",
+          "path": "platform/services/statecraft/api/agents/catalog.ts"
+        }
+      },
+      {
+        "aspect": "override-trust-class",
+        "unit": {
+          "kind": "file",
+          "path": "platform/services/statecraft/api/factory/substrate.ts"
+        }
+      },
+      {
+        "aspect": "override-trust-class",
+        "unit": {
+          "kind": "file",
+          "path": "crates/factory-engine/src/substrate_version.rs"
+        }
+      },
+      {
+        "aspect": "override-verify-ui",
+        "unit": {
+          "kind": "file",
+          "path": "platform/services/statecraft/web/app/routes/app.factory.artifacts.tsx"
+        }
+      },
+      {
+        "aspect": "override-verify-ui",
+        "unit": {
+          "kind": "file",
+          "path": "platform/services/statecraft/web/app/lib/factory-api.server.ts"
+        }
+      }
+    ],
+    "sectionHeadings": [
+      "Feature Specification: Factory Governance Envelope (ASI Admission Contract)",
+      "Purpose and charter",
+      "Grounding in OWASP ASI 2026 (the envelope is named in the source)",
+      "Design principles (normative)",
+      "The envelope, structurally",
+      "Requirements",
+      "FR-001 — The envelope is the admission contract; it defines factory validity (normative)",
+      "FR-002 — The envelope schema is OAP-owned, open, predicate-shaped, ASI-tagged",
+      "FR-003 — Two-sided, fail-closed admission validation (recompute-and-reconcile)",
+      "FR-004 — Composition: process envelope + adapter sub-envelope(s), never flattened",
+      "FR-005 — Intent capsule as run-grant, renewed per stage boundary (ASI01 m5)",
+      "FR-006 — Behavioral manifest (ASI10 m5/m6)",
+      "FR-007 — PEP/PDP separation: OAP is the policy engine, OPC the executor (principle 4; ASI02 m4; ASI08 m4)",
+      "FR-008 — HITL declaration (ASI09; principle 5)",
+      "FR-009 — Provenance + pinning, bound into the certificate (principle 8; ASI04)",
+      "FR-010 — Containment: revocation keyed on the admission graph (principle 10; ASI04 m8; ASI10 m4/m7)",
+      "FR-011 — All ten ASI controls are explicitly mapped and defensible",
+      "FR-012 — Envelope homes: process file + in-manifest sub-envelope (resolves OQ-1)",
+      "FR-013 — Override-write contract: rules block, models quarantine (resolves OQ-2; ASI06)",
+      "FR-014 — Signing authority: statecraft seals, OPC is keyless (resolves OQ-4; ASI10 m6)",
+      "All-ten ASI coverage (the deferred gap analysis, delivered)",
+      "Acceptance criteria",
+      "Out of scope",
+      "Phasing (proposed; refine in plan.md)",
+      "Cross-repo coordination",
+      "Resolved questions",
+      "Implementation log"
+    ],
+    "specPath": "specs/198-factory-governance-envelope/spec.md",
+    "status": "approved",
+    "summary": "Define the governance envelope: the machine-checkable contract a factory must file for OAP to admit it, and the fail-closed admission gate that enforces it. The envelope is OAP's encoding of OWASP ASI 2026 obligations — a synthesis of the source's own ASI01 \"intent capsule\" (signed goal + constraints + context per run) and ASI10 \"signed behavioral manifest\" (declared capabilities, tools, goals, tiers — validated before each action), composed from a process envelope (the run) and per-adapter sub-envelopes (the scaffold boundary). OAP validates it two-sidedly — conformant to the schema AND reconciled against the factory's own atomic declarations (recompute-and-reconcile) — and refuses to admit a factory whose brief is absent, non-conformant, over-ceiling, or internally inconsistent. The envelope is the admission-time counterpart to the emission-time governance certificate (spec 102/168): the contract going in, the receipt coming out. OAP is the enforcer (judge/bouncer), not the rule-maker — ASI 2026 is the law, the factory interprets it for the org, OAP arbitrates, and OPC is an untrusted executor permitted only within the admitted envelope.\n",
+    "title": "Factory Governance Envelope (ASI Admission Contract)"
+  },
+  "shardHash": "865a11e48bf7a736d782fe14fad091b709a44c24c3eb558f8cda2078c1c47455",
+  "specVersion": "1.1.0"
+}

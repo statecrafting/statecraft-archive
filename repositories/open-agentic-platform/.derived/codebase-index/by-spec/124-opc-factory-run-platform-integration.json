@@ -1,0 +1,70 @@
+{
+  "mapping": {
+    "dependsOn": [
+      "087-unified-workspace-architecture",
+      "106-rauthy-native-oidc-and-membership",
+      "107-rauthy-client-redirect-convergence",
+      "108-factory-as-platform-feature",
+      "109-factory-pat-and-pubsub-sync",
+      "123-agent-catalog-org-rescope"
+    ],
+    "implementingPaths": [
+      {
+        "path": "crates/factory-platform-client",
+        "source": "manifest-metadata"
+      },
+      {
+        "path": "crates/factory-platform-client/src/client.rs",
+        "source": "comment-header"
+      },
+      {
+        "path": "crates/factory-platform-client/src/lib.rs",
+        "source": "comment-header"
+      },
+      {
+        "path": "platform/services/statecraft/api/factory/runs.ts",
+        "source": "spec-edge"
+      },
+      {
+        "path": "product/apps/opc/src-tauri/src/commands/factory.rs",
+        "source": "spec-edge"
+      },
+      {
+        "path": "product/apps/opc/src-tauri/src/commands/factory_platform.rs",
+        "source": "comment-header"
+      }
+    ],
+    "resolvedUnits": [
+      {
+        "locations": [
+          {
+            "file": "platform/services/statecraft/api/factory/runs.ts"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "file",
+          "path": "platform/services/statecraft/api/factory/runs.ts"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "product/apps/opc/src-tauri/src/commands/factory.rs"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "extends",
+        "unit": {
+          "kind": "file",
+          "path": "product/apps/opc/src-tauri/src/commands/factory.rs"
+        }
+      }
+    ],
+    "specId": "124-opc-factory-run-platform-integration",
+    "specStatus": "approved"
+  },
+  "schemaVersion": "1.1.0",
+  "shardHash": "133587fd55edc92da8352d280679ff2a9e25dd4e6984c76401e049764d7f3623"
+}

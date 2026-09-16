@@ -1,0 +1,130 @@
+# Security review fix (MEDIUM finding) -- statecraft-system NetworkPolicies.
+#
+# statecraft-system had NO enforced NetworkPolicy before this file:
+# post-create.sh applied only resourcequota/limitrange to this namespace
+# and explicitly skipped default-deny "for MVP" (see the historical
+# comment that used to live at platform/infra/hetzner/post-create.sh).
+# This is the first enforced default-deny for this namespace; the allow
+# set below is the complete list -- anything else in or out is dropped.
+#
+# 2026-06-12 incident lesson (see monitoring/networkpolicy-monitoring.yaml
+# header): a NetworkPolicy selects every pod it names for the policy
+# type(s) it declares -- there is no "dormant-additive" allow. Every rule
+# below lands in the same Flux apply as the default-deny (this file, via
+# the explicit list in platform/k8s/policies/kustomization.yaml), not
+# staged as a separate follow-up, to avoid re-creating that incident's
+# failure mode.
+#
+# This namespace hosts statecraft-api plus its imperatively-installed
+# siblings (postgresql, minio, nsqd -- see post-create.sh) and two
+# Helm-hook Jobs (migration, seed-rauthy) and two CronJob sweepers, all in
+# the same namespace.
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: default-deny-all
+  namespace: statecraft-system
+spec:
+  podSelector: {}
+  policyTypes:
+    - Ingress
+    - Egress
+---
+# Intra-namespace: statecraft-api <-> postgresql, minio, nsqd; the
+# migration/seed-rauthy Helm-hook Jobs <-> postgresql/rauthy-bound calls;
+# both sweeper CronJobs <-> statecraft-api (curl to the in-namespace
+# Service). All same-namespace, so one any-pod-to-any-pod allow covers
+# every pairing without pinning each service's port individually.
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: allow-intra-namespace
+  namespace: statecraft-system
+spec:
+  podSelector: {}
+  policyTypes:
+    - Ingress
+    - Egress
+  ingress:
+    - from:
+        - podSelector: {}
+  egress:
+    - to:
+        - podSelector: {}
+---
+# Public ingress: ingress-nginx -> statecraft-api (:4000) and -> minio's
+# API service (:9000, browser presigned PUT/GET per spec 143 FR-005/FR-011).
+# podSelector is deliberately namespace-wide (not pinned to statecraft-api's
+# own labels): minio's ingress targets a different pod in the same
+# namespace, and narrowing this to one app's selector is the exact shape
+# of the 2026-06-12 incident (an Ingress-type policy silently drops
+# unlisted ingress on every OTHER pod it also selects).
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: allow-ingress-nginx
+  namespace: statecraft-system
+spec:
+  podSelector: {}
+  policyTypes:
+    - Ingress
+  ingress:
+    - from:
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: ingress-nginx
+      ports:
+        - port: 4000
+          protocol: TCP
+        - port: 9000
+          protocol: TCP
+---
+# Outbound: DNS; general HTTPS for GitHub/Slack/Atlassian API calls and
+# S3-compatible object storage; the deployd-api trigger call
+# (DEPLOYD_AUDIENCE/DEPLOYD_SCOPE env, spec deployd-api chart :8080); and
+# the Rauthy OIDC calls (M2M token exchange, seed-rauthy Helm hook,
+# sweeper CronJobs). Also FR-006(a): statecraft's Encore prometheus
+# exporter pushes via remote_write to monitoring's Prometheus (:9090) --
+# see platform/k8s/policies/monitoring/networkpolicy-monitoring.yaml's
+# `allow-remote-write-from-statecraft` for the receiving side. This push
+# direction has no ingress-side counterpart to add here (egress only).
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: allow-egress-infra
+  namespace: statecraft-system
+spec:
+  podSelector: {}
+  policyTypes:
+    - Egress
+  egress:
+    - ports:
+        - port: 53
+          protocol: UDP
+        - port: 53
+          protocol: TCP
+    - ports:
+        - port: 443
+          protocol: TCP
+    - to:
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: deployd-system
+      ports:
+        - port: 8080
+          protocol: TCP
+    - to:
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: rauthy-system
+      ports:
+        - port: 8080
+          protocol: TCP
+    - to:
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: monitoring
+      ports:
+        - port: 9090
+          protocol: TCP

@@ -1,0 +1,134 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: statecraft-api
+spec:
+  replicas: 1
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      app: statecraft-api
+  template:
+    metadata:
+      labels:
+        app: statecraft-api
+        {{- with .Values.podLabels }}
+        {{- toYaml . | nindent 8 }}
+        {{- end }}
+    spec:
+      serviceAccountName: {{ .Values.serviceAccount.name }}
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 10001
+        runAsGroup: 10001
+        fsGroup: 10001
+      containers:
+        - name: statecraft-api
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy | default "IfNotPresent" }}
+          securityContext:
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+            capabilities:
+              drop:
+                - ALL
+          ports:
+            - containerPort: 4000
+          env:
+            - name: PORT
+              value: "4000"
+            - name: SECRETS_DIR
+              value: {{ .Values.secrets.mountPath | quote }}
+            - name: OIDC_ENDPOINT
+              value: {{ .Values.oidc.endpoint | quote }}
+            - name: DEPLOYD_AUDIENCE
+              value: {{ .Values.oidc.deploydAudience | quote }}
+            - name: DEPLOYD_SCOPE
+              value: {{ .Values.oidc.deploydScope | quote }}
+            - name: OIDC_M2M_CLIENT_ID_FILE
+              value: "{{ .Values.secrets.mountPath }}/OIDC_M2M_CLIENT_ID"
+            - name: OIDC_M2M_CLIENT_SECRET_FILE
+              value: "{{ .Values.secrets.mountPath }}/OIDC_M2M_CLIENT_SECRET"
+            # Rust helpers baked into the runtime image. Paths are a build-
+            # time contract with the Dockerfile / encore-build action, not
+            # an operator choice — keep them in sync if the image layout
+            # ever changes.
+            - name: ARTIFACT_EXTRACT_BIN
+              value: /usr/local/bin/artifact-extract
+            - name: FACTORY_PROJECT_DETECT_BIN
+              value: /usr/local/bin/factory-project-detect
+            # Spec 112 §5.3 — scaffold workspace mount; ensureTemplateCache /
+            # ensurePrebuilts read and write under this path.
+            - name: STATECRAFT_WORKSPACE_DIR
+              value: {{ .Values.workspace.dir | quote }}
+            {{- with .Values.nodeOptions }}
+            # Spec 143 FU-015 — V8 heap ceiling. Without an explicit
+            # --max-old-space-size, V8 aborts on FR-006 batch load before
+            # the cgroup OOM-killer engages. See values.yaml comment +
+            # §13 2026-05-10 ~07:48 UTC for budget math.
+            - name: NODE_OPTIONS
+              value: {{ . | quote }}
+            {{- end }}
+          envFrom:
+            - secretRef:
+                name: statecraft-api-secrets
+                optional: true
+          readinessProbe:
+            httpGet:
+              path: /healthz
+              port: 4000
+            initialDelaySeconds: 5
+            periodSeconds: 10
+            timeoutSeconds: 3
+            failureThreshold: 3
+          livenessProbe:
+            httpGet:
+              path: /healthz
+              port: 4000
+            initialDelaySeconds: 15
+            periodSeconds: 20
+            timeoutSeconds: 3
+            failureThreshold: 3
+          {{- with .Values.resources }}
+          resources:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          volumeMounts:
+            - name: secrets-store
+              mountPath: {{ .Values.secrets.mountPath | quote }}
+              readOnly: true
+            - name: tmp
+              mountPath: /tmp
+            - name: workspace
+              mountPath: {{ .Values.workspace.dir | quote }}
+      volumes:
+        - name: secrets-store
+          {{- if eq (default "k8s" .Values.secrets.provider) "csi-azure" }}
+          csi:
+            driver: secrets-store.csi.k8s.io
+            readOnly: true
+            volumeAttributes:
+              secretProviderClass: statecraft-api-secrets
+          {{- else }}
+          secret:
+            secretName: statecraft-api-secrets
+          {{- end }}
+        - name: tmp
+          emptyDir: {}
+        - name: workspace
+          {{- if .Values.workspace.persistence.enabled }}
+          persistentVolumeClaim:
+            claimName: statecraft-api-workspace
+          {{- else }}
+          # Persistence disabled — warmup re-runs every restart on node
+          # ephemeral storage. emptyDir size limit defaults to ~ephemeral
+          # node space; restrict via .Values.workspace.persistence.size when
+          # the cluster supports sizeLimit on emptyDir.
+          emptyDir:
+            sizeLimit: {{ .Values.workspace.persistence.size | default "10Gi" | quote }}
+          {{- end }}

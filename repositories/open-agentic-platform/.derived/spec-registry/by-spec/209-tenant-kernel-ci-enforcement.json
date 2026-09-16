@@ -1,0 +1,104 @@
+{
+  "record": {
+    "authors": [
+      "open-agentic-platform"
+    ],
+    "codeAliases": [
+      "TENANT_KERNEL_CI_ENFORCEMENT"
+    ],
+    "created": "2026-06-11",
+    "dependsOn": [
+      "167-born-with-spec-spine-kernel",
+      "168-per-project-governance-certificate",
+      "112-factory-project-lifecycle"
+    ],
+    "domain": "platform",
+    "extends": [
+      {
+        "nature": "additive",
+        "spec": "168-per-project-governance-certificate",
+        "unit": {
+          "kind": "file",
+          "path": "crates/factory-engine/src/governance_certificate.rs"
+        }
+      },
+      {
+        "nature": "additive",
+        "spec": "034-featuregraph-registry-scanner-fix",
+        "unit": {
+          "kind": "file",
+          "path": "crates/featuregraph/tests/golden/features_graph.json"
+        }
+      }
+    ],
+    "extraFrontmatter": {
+      "compliance": [
+        {
+          "controls": [
+            "ASI04"
+          ],
+          "framework": "owasp-asi-2026"
+        }
+      ],
+      "language": "en"
+    },
+    "featureBranch": "feat/209-tenant-kernel-ci-enforcement",
+    "id": "209-tenant-kernel-ci-enforcement",
+    "implementation": "complete",
+    "kind": "capability",
+    "references": [
+      {
+        "role": "context",
+        "unit": {
+          "kind": "file",
+          "path": "crates/factory-engine/src/stages/quality_gates.rs"
+        }
+      },
+      {
+        "role": "context",
+        "unit": {
+          "kind": "file",
+          "path": "docs/owasp-agentic-top-10-2026.md"
+        }
+      }
+    ],
+    "refines": [
+      {
+        "aspect": "born-with-kernel-completeness",
+        "unit": {
+          "kind": "file",
+          "path": "platform/services/statecraft/api/projects/scaffold/perRequestScaffold.ts"
+        }
+      },
+      {
+        "aspect": "vended-binary-integrity",
+        "unit": {
+          "kind": "file",
+          "path": "crates/factory-engine/src/kernel_emission/version.rs"
+        }
+      },
+      {
+        "aspect": "kernel-version-field-propagation",
+        "unit": {
+          "kind": "file",
+          "path": "crates/factory-engine/src/kernel_emission/emit.rs"
+        }
+      }
+    ],
+    "sectionHeadings": [
+      "Feature Specification: Tenant Kernel CI Enforcement Activation",
+      "Purpose",
+      "Functional requirements",
+      "Acceptance criteria (sketch)",
+      "Out of scope",
+      "Sequencing",
+      "Open questions"
+    ],
+    "specPath": "specs/209-tenant-kernel-ci-enforcement/spec.md",
+    "status": "approved",
+    "summary": "Convert the produced application from ASI-aware to ASI-enforcing. The born-with kernel (spec 167) seeds every produced project with the spec spine, validators, and a tenant CI workflow — but the machinery is carried, not wired: kernel emission does not auto-fire from pipeline transitions, tenant runs do not auto-emit governance certificates (spec 168's tenant-emit leg), and the seeded CI does not actually run the inherited gates (registry compile, spec-lint, coupling gate, provenance validator, certificate verify). A produced app that makes an unprovenance claim or drifts spec-from-code is not structurally prevented from merging it — the gates only fire on OAP's side. This spec is the activation: the seeded CI becomes enforcing (fail-the-PR, not advisory), emission and certificate auto-fire close the documented deferrals of specs 167/168, and the tenant CI verifies vended-tool integrity against .kernel-version before trusting any vended binary.\n",
+    "title": "Tenant Kernel CI Enforcement Activation (ASI04 continuous validation)"
+  },
+  "shardHash": "ba005d69fb1257e6eb5faf934571d9ca8b3f546d127bb3c14c5e2013630e3883",
+  "specVersion": "1.1.0"
+}

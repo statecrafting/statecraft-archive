@@ -1,0 +1,101 @@
+image:
+  repository: ghcr.io/sebadob/rauthy
+  tag: "0.35.0"
+  pullPolicy: IfNotPresent
+
+proxyMode: false
+trustedProxies:
+  - "10.244.0.0/16"
+
+replicas: 3
+
+oidc:
+  issuer: "https://rauthy.localdev.online/auth/v1/"
+
+ingress:
+  enabled: true
+  className: nginx
+  host: rauthy.localdev.online
+  annotations:
+    cert-manager.io/cluster-issuer: "letsencrypt-prod"
+    nginx.ingress.kubernetes.io/proxy-body-size: "10m"
+
+persistence:
+  size: 2Gi
+  storageClass: ""
+
+raft:
+  # Must be >= 16 characters. Override via --set or external-secrets in production.
+  secret: ""
+  existingSecret: "rauthy-secrets"
+  existingSecretKey: "raft-secret"
+
+api:
+  # Must be >= 16 characters. Override via --set or external-secrets in production.
+  secret: ""
+  existingSecret: "rauthy-secrets"
+  existingSecretKey: "api-secret"
+
+encryption:
+  # ENC_KEYS format: key_id/base64_encoded_32_byte_key
+  # ENC_KEY_ACTIVE: just the key_id
+  existingSecret: "rauthy-secrets"
+  existingSecretKeyEnc: "enc-keys"
+  existingSecretKeyActive: "enc-key-active"
+
+bootstrap:
+  adminEmail: "admin@example.com"
+  # Override via --set or external-secrets in production.
+  adminPassword: ""
+  existingSecret: "rauthy-secrets"
+  existingSecretKey: "admin-password"
+
+access:
+  # Rauthy defaults refresh-token `nbf = iat + access_token_lifetime - 60`,
+  # validated with clock-skew=0. Statecraft's spec 106 callback refreshes
+  # immediately after the code exchange to materialise the `oap` scope
+  # custom claims, which lands inside that lockout and fails with
+  # `401 JwtToken "Token is not valid yet"`. Keep this `true` so refresh
+  # tokens are valid from `iat` onwards.
+  disableRefreshTokenNbf: true
+
+  # deployd-api's `create_deployment` handler (routes.rs) rejects any bearer
+  # token that carries no `sub` claim ("token missing subject claim"). Rauthy's
+  # `client_credentials` grant (statecraft's machine-to-machine deploy dispatch,
+  # api/deploy/oidcM2m.ts) sets `sub = None` by default because that grant has
+  # no end-user subject. Enabling this maps `sub = <client id>` onto those M2M
+  # tokens, satisfying deployd's owner-bind guard (auth.rs `is_owner_or_admin`)
+  # so UI/webhook deploys dispatch instead of failing at the JWT check.
+  # Feature added in Rauthy v0.34.0; the deployed image (0.35.0) honours it.
+  clientCredentialsMapSub: true
+
+# Spec 106 amendment (2026-05-17) — SMTP for Rauthy's built-in
+# passwordless magic-link login. Required for spec 137 FR-005 / FR-008
+# magic-link evidence (E2/E3). Disabled by default; enable by setting
+# `smtp.enabled=true` and creating the K8s Secret named in
+# `existingSecret` with keys `from`, `url`, `port`, `username`,
+# `password`. Optionally `connection` (`tls` | `starttls`) and
+# `danger_insecure` (`true` | `false`).
+#
+# The Hetzner setup.sh creates `rauthy-smtp-secret` from .env values
+# when `SMTP_USERNAME` is present and flips `smtp.enabled=true` on the
+# helm upgrade. Other deployment paths can mount their own Secret of
+# the same shape.
+smtp:
+  enabled: false
+  existingSecret: "rauthy-smtp-secret"
+
+resources:
+  requests:
+    cpu: 50m
+    memory: 128Mi
+  limits:
+    cpu: 250m
+    memory: 512Mi
+
+# Upstream auth providers are managed via Rauthy's admin API, not Helm
+# values. Rauthy 0.35 stores providers in its hiqlite DB; there is no
+# `[[upstream_auth_provider]]` TOML section in RauthyConfig.Vars. The
+# statecraft Rauthy seeder (spec 106 FR-002) is the authoritative
+# provisioner — it runs as a Helm pre-install/pre-upgrade hook against
+# statecraft's chart and calls POST/PUT /auth/v1/providers.

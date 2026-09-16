@@ -1,0 +1,448 @@
+{
+  "diagnostics": {
+    "errors": [],
+    "warnings": [
+      {
+        "code": "W-001",
+        "message": "spec '151-declarative-cluster-reconciliation' file unit 'tools/spec-spine/spec-compiler/tests/v004_consolidation_excludes.rs' does not exist",
+        "path": "tools/spec-spine/spec-compiler/tests/v004_consolidation_excludes.rs"
+      },
+      {
+        "code": "W-001",
+        "message": "spec '151-declarative-cluster-reconciliation' file unit 'tools/spec-spine/spec-compiler/src/lib.rs' does not exist",
+        "path": "tools/spec-spine/spec-compiler/src/lib.rs"
+      }
+    ]
+  },
+  "mapping": {
+    "dependsOn": [
+      "087-unified-workspace-architecture",
+      "143-presigned-upload-public-endpoint"
+    ],
+    "implementingPaths": [
+      {
+        "path": ".sops.yaml",
+        "source": "spec-edge"
+      },
+      {
+        "path": "platform/Makefile",
+        "source": "spec-edge"
+      },
+      {
+        "path": "platform/gitops/clusters/hetzner-dr-stage2/README.md",
+        "source": "spec-edge"
+      },
+      {
+        "path": "platform/gitops/clusters/hetzner-dr-stage2/kustomization.yaml",
+        "source": "spec-edge"
+      },
+      {
+        "path": "platform/gitops/clusters/hetzner-prod/README.md",
+        "source": "spec-edge"
+      },
+      {
+        "path": "platform/gitops/clusters/hetzner-prod/infrastructure-kustomization.yaml",
+        "source": "spec-edge"
+      },
+      {
+        "path": "platform/gitops/clusters/hetzner-prod/infrastructure/README.md",
+        "source": "spec-edge"
+      },
+      {
+        "path": "platform/gitops/clusters/hetzner-prod/infrastructure/cert-manager.yaml",
+        "source": "spec-edge"
+      },
+      {
+        "path": "platform/gitops/clusters/hetzner-prod/infrastructure/ingress-nginx.yaml",
+        "source": "spec-edge"
+      },
+      {
+        "path": "platform/gitops/clusters/hetzner-prod/infrastructure/rauthy.yaml",
+        "source": "spec-edge"
+      },
+      {
+        "path": "platform/gitops/clusters/hetzner-prod/infrastructure/reflector.yaml",
+        "source": "spec-edge"
+      },
+      {
+        "path": "platform/gitops/clusters/hetzner-prod/kustomization.yaml",
+        "source": "spec-edge"
+      },
+      {
+        "path": "platform/gitops/clusters/hetzner-prod/manifests-kustomization.yaml",
+        "source": "spec-edge"
+      },
+      {
+        "path": "platform/gitops/clusters/hetzner-prod/manifests/README.md",
+        "source": "spec-edge"
+      },
+      {
+        "path": "platform/gitops/clusters/hetzner-prod/manifests/cert-manager-clusterissuers.yaml",
+        "source": "spec-edge"
+      },
+      {
+        "path": "platform/gitops/clusters/hetzner-prod/manifests/tenants-wildcard-certificate.yaml",
+        "source": "spec-edge"
+      },
+      {
+        "path": "platform/gitops/clusters/hetzner-prod/secrets/README.md",
+        "source": "spec-edge"
+      },
+      {
+        "path": "platform/infra/hetzner/.env.example",
+        "source": "spec-edge"
+      },
+      {
+        "path": "platform/infra/hetzner/cluster.yaml",
+        "source": "spec-edge"
+      },
+      {
+        "path": "platform/infra/hetzner/post-create.sh",
+        "source": "spec-edge"
+      },
+      {
+        "path": "platform/infra/hetzner/setup.sh",
+        "source": "spec-edge"
+      },
+      {
+        "path": "specs/151-declarative-cluster-reconciliation/execution/drift-detection.md",
+        "source": "spec-edge"
+      }
+    ],
+    "resolvedUnits": [
+      {
+        "locations": [
+          {
+            "file": ".sops.yaml"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "file",
+          "path": ".sops.yaml"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "platform/gitops/clusters/hetzner-dr-stage2/README.md"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "file",
+          "path": "platform/gitops/clusters/hetzner-dr-stage2/README.md"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "platform/gitops/clusters/hetzner-dr-stage2/kustomization.yaml"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "file",
+          "path": "platform/gitops/clusters/hetzner-dr-stage2/kustomization.yaml"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "platform/gitops/clusters/hetzner-prod/README.md"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "file",
+          "path": "platform/gitops/clusters/hetzner-prod/README.md"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "platform/gitops/clusters/hetzner-prod/infrastructure-kustomization.yaml"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "file",
+          "path": "platform/gitops/clusters/hetzner-prod/infrastructure-kustomization.yaml"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "platform/gitops/clusters/hetzner-prod/infrastructure/README.md"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "file",
+          "path": "platform/gitops/clusters/hetzner-prod/infrastructure/README.md"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "platform/gitops/clusters/hetzner-prod/infrastructure/cert-manager.yaml"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "file",
+          "path": "platform/gitops/clusters/hetzner-prod/infrastructure/cert-manager.yaml"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "platform/gitops/clusters/hetzner-prod/infrastructure/ingress-nginx.yaml"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "file",
+          "path": "platform/gitops/clusters/hetzner-prod/infrastructure/ingress-nginx.yaml"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "platform/gitops/clusters/hetzner-prod/infrastructure/rauthy.yaml"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "file",
+          "path": "platform/gitops/clusters/hetzner-prod/infrastructure/rauthy.yaml"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "platform/gitops/clusters/hetzner-prod/infrastructure/reflector.yaml"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "file",
+          "path": "platform/gitops/clusters/hetzner-prod/infrastructure/reflector.yaml"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "platform/gitops/clusters/hetzner-prod/kustomization.yaml"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "file",
+          "path": "platform/gitops/clusters/hetzner-prod/kustomization.yaml"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "platform/gitops/clusters/hetzner-prod/manifests-kustomization.yaml"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "file",
+          "path": "platform/gitops/clusters/hetzner-prod/manifests-kustomization.yaml"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "platform/gitops/clusters/hetzner-prod/manifests/README.md"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "file",
+          "path": "platform/gitops/clusters/hetzner-prod/manifests/README.md"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "platform/gitops/clusters/hetzner-prod/manifests/cert-manager-clusterissuers.yaml"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "file",
+          "path": "platform/gitops/clusters/hetzner-prod/manifests/cert-manager-clusterissuers.yaml"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "platform/gitops/clusters/hetzner-prod/manifests/tenants-wildcard-certificate.yaml"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "file",
+          "path": "platform/gitops/clusters/hetzner-prod/manifests/tenants-wildcard-certificate.yaml"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "platform/gitops/clusters/hetzner-prod/secrets/README.md"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "file",
+          "path": "platform/gitops/clusters/hetzner-prod/secrets/README.md"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "specs/151-declarative-cluster-reconciliation/execution/drift-detection.md"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "file",
+          "path": "specs/151-declarative-cluster-reconciliation/execution/drift-detection.md"
+        }
+      },
+      {
+        "locations": [],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "file",
+          "path": "tools/spec-spine/spec-compiler/tests/v004_consolidation_excludes.rs"
+        }
+      },
+      {
+        "locations": [],
+        "ownership": true,
+        "sourceField": "extends",
+        "unit": {
+          "kind": "file",
+          "path": "tools/spec-spine/spec-compiler/src/lib.rs"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "platform/Makefile",
+            "span": {
+              "endLine": 144,
+              "startLine": 128
+            }
+          }
+        ],
+        "ownership": true,
+        "sourceField": "co_authority",
+        "unit": {
+          "anchor": "rauthy-deploy",
+          "file": "platform/Makefile",
+          "kind": "section"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "platform/infra/hetzner/.env.example",
+            "span": {
+              "endLine": 20,
+              "startLine": 11
+            }
+          }
+        ],
+        "ownership": true,
+        "sourceField": "co_authority",
+        "unit": {
+          "anchor": "env-vars",
+          "file": "platform/infra/hetzner/.env.example",
+          "kind": "section"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "platform/infra/hetzner/cluster.yaml",
+            "span": {
+              "endLine": 9,
+              "startLine": 7
+            }
+          }
+        ],
+        "ownership": true,
+        "sourceField": "co_authority",
+        "unit": {
+          "anchor": "k3s-version",
+          "file": "platform/infra/hetzner/cluster.yaml",
+          "kind": "section"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "platform/infra/hetzner/post-create.sh",
+            "span": {
+              "endLine": 62,
+              "startLine": 25
+            }
+          }
+        ],
+        "ownership": true,
+        "sourceField": "co_authority",
+        "unit": {
+          "anchor": "cert-nginx-strikes",
+          "file": "platform/infra/hetzner/post-create.sh",
+          "kind": "section"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "platform/infra/hetzner/setup.sh",
+            "span": {
+              "endLine": 229,
+              "startLine": 193
+            }
+          }
+        ],
+        "ownership": true,
+        "sourceField": "co_authority",
+        "unit": {
+          "anchor": "bootstrap",
+          "file": "platform/infra/hetzner/setup.sh",
+          "kind": "section"
+        }
+      }
+    ],
+    "specId": "151-declarative-cluster-reconciliation",
+    "specStatus": "approved"
+  },
+  "schemaVersion": "1.1.0",
+  "shardHash": "7c302a6d6c37601b932d7861c0cf64094abb84267809719a7297ed3f9e2ed904"
+}

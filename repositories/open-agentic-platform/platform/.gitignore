@@ -1,0 +1,93 @@
+# Encore.dev specific
+/.encore
+encore.gen.go
+encore.gen.cue
+/encore.gen
+
+# Local development
+.local-infra
+scripts/infra-setup/.cache_droplet_ip
+scripts/infra-setup/.cache_project_id
+scripts/infra-setup/.cache_ssh_key_id
+
+# Dependency directories
+node_modules/
+
+# Build outputs
+.next/
+out/
+build/
+dist/
+.bin/
+.init/.cache*
+
+# Environment files
+.env
+.env*
+.env.local
+.env.prod
+.env.development.local
+.env.test.local
+.env.production.local
+!.env.sample
+!.env.digitalocean.sample
+!frontend/.env
+
+# Log files
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+*.log
+
+# OS generated files
+.DS_Store
+Thumbs.db
+
+# Editor directories and files
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# Testing
+coverage/
+
+# Temporary files
+*.tmp
+*.temp
+
+# Database files
+*.sqlite
+*.db
+
+# Compiled Python files
+*.pyc
+
+# Alembic migration files
+alembic/versions/
+
+# Miscellaneous
+*.pem
+*.tsbuildinfo
+
+ansible-venv
+packer_cache
+**tfstate**
+.terraform**
+!.terraform-version
+output/*
+packer_cache/*
+*.ova
+*.vmx
+*.box
+vmx/*
+builds/*
+ansible/roles/*
+!ansible/roles/requirements.yml
+**/*.tfvars
+**/.vscode
+**/*.pem
+**/*.pub
+**/__pycache__
+tmp
+kubeconfig

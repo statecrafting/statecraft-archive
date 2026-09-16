@@ -1,0 +1,61 @@
+{
+  "record": {
+    "amendmentRecord": "Re-amended 2026-06-04 — axiomregent demotion. axiomregent is demoted from a\nstandalone shipped product to an INTERNAL UPSTREAM COMPONENT of OPC: built\nfrom OPC's own release commit and bundled as a Tauri sidecar by\nrelease-desktop.yml, never independently published. The cross-platform build\nmatrix this spec establishes is unchanged; only its destination changed\n(bundle, not publish). This revises the release framing the prior amendment\n(193-paired-release-cadence) added: the standalone `axiomregent-v*` tag and\ndraft release are retired. release-axiomregent.yml is removed; the\nbuild-axiomregent.yml producer/validator is kept.\n",
+    "authors": [
+      "open-agentic-platform"
+    ],
+    "created": "2026-03-29",
+    "domain": "opc",
+    "extends": [
+      {
+        "nature": "additive",
+        "spec": "033-axiomregent-activation",
+        "unit": {
+          "id": "axiomregent",
+          "kind": "crate"
+        }
+      },
+      {
+        "nature": "additive",
+        "spec": "033-axiomregent-activation",
+        "unit": {
+          "kind": "directory",
+          "path": "product/apps/opc/src-tauri/binaries"
+        }
+      }
+    ],
+    "extraFrontmatter": {
+      "amended": "2026-06-04",
+      "language": "en"
+    },
+    "featureBranch": "037-cross-platform-axiomregent",
+    "id": "037-cross-platform-axiomregent",
+    "implementation": "complete",
+    "kind": "platform",
+    "sectionHeadings": [
+      "Feature Specification: cross-platform axiomregent binaries",
+      "Purpose",
+      "Scope",
+      "In scope",
+      "Out of scope",
+      "Requirements",
+      "Functional",
+      "Non-functional",
+      "Architecture",
+      "Binary naming convention (Tauri requirement)",
+      "Target matrix",
+      "Cross-compilation considerations",
+      "Reference implementation: gitctx-mcp resolution",
+      "Key integration points",
+      "Success criteria",
+      "Contract notes",
+      "Risk"
+    ],
+    "specPath": "specs/037-cross-platform-axiomregent/spec.md",
+    "status": "approved",
+    "summary": "Build and bundle axiomregent binaries for all supported desktop platforms (macOS arm64/x86_64, Linux x86_64/arm64, Windows x86_64) so that governed execution works on every platform instead of degrading to bypass mode on non-macOS hosts.\n",
+    "title": "cross-platform axiomregent binaries"
+  },
+  "shardHash": "116b4142317ebee1e896e35e374faa36094d11c3d57d943a9d31a20f3b768b62",
+  "specVersion": "1.1.0"
+}

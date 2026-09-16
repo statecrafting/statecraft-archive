@@ -1,0 +1,40 @@
+{
+  "record": {
+    "authors": [
+      "open-agentic-platform"
+    ],
+    "created": "2026-03-22",
+    "domain": "tooling",
+    "extends": [
+      {
+        "nature": "additive",
+        "spec": "002-registry-consumer-mvp"
+      }
+    ],
+    "extraFrontmatter": {
+      "language": "en"
+    },
+    "featureBranch": "027-registry-consumer-sorting-order-contract-mvp",
+    "id": "027-registry-consumer-sorting-order-contract-mvp",
+    "implementation": "complete",
+    "kind": "platform-delivery",
+    "refines": [
+      {
+        "aspect": "contract-tests"
+      }
+    ],
+    "sectionHeadings": [
+      "Feature Specification: Sorting-order contract",
+      "Purpose",
+      "Requirements",
+      "Out of scope"
+    ],
+    "specPath": "specs/027-registry-consumer-sorting-order-contract-mvp/spec.md",
+    "status": "superseded",
+    "summary": "Lock deterministic sorting-order behavior for list and status-report outputs, including feature-id ordering, status row ordering, and sorted ids within rows.\n",
+    "supersededBy": "217-spec-spine-engine-swap-collapse",
+    "title": "Registry consumer sorting-order contract MVP"
+  },
+  "shardHash": "35dd501d1de5f169edcb6e7cc56d6393343ecae4e4313fc72e8574dce10ce093",
+  "specVersion": "1.1.0"
+}

@@ -1,0 +1,43 @@
+{
+  "record": {
+    "authors": [
+      "open-agentic-platform"
+    ],
+    "created": "2026-03-29",
+    "domain": "opc",
+    "establishes": [
+      {
+        "id": "@opc/prompt-assembly",
+        "kind": "crate"
+      }
+    ],
+    "featureBranch": "046-context-compaction",
+    "id": "046-context-compaction",
+    "implementation": "complete",
+    "kind": "product",
+    "sectionHeadings": [
+      "Feature Specification: Context Compaction for Session Resumption",
+      "Purpose",
+      "Problem statement",
+      "Scope",
+      "In scope",
+      "Out of scope",
+      "Requirements",
+      "Functional",
+      "Non-functional",
+      "Architecture",
+      "Component overview",
+      "session_context block format",
+      "Preserve-vs-compress policy",
+      "Integration with session init protocol",
+      "Success criteria",
+      "Risk"
+    ],
+    "specPath": "specs/046-context-compaction/spec.md",
+    "status": "approved",
+    "summary": "When token usage exceeds a configurable threshold of the context window, older messages are replaced with structured summaries. The compactor produces <session_context> blocks that preserve task status, file modifications, and interruption state so sessions can be resumed efficiently without losing critical context.\n",
+    "title": "Context Compaction for Session Resumption"
+  },
+  "shardHash": "4bc97939dae0776e896277e0c1253df2f443202dc51f66efc4031abc611a7965",
+  "specVersion": "1.1.0"
+}

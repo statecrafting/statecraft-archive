@@ -1,0 +1,52 @@
+{
+  "diagnostics": {
+    "errors": [],
+    "warnings": [
+      {
+        "code": "W-002",
+        "message": "spec '059-git-panel' file unit 'product/apps/opc/src/components/GitPanel.tsx' does not exist",
+        "path": "product/apps/opc/src/components/GitPanel.tsx"
+      }
+    ]
+  },
+  "mapping": {
+    "implementingPaths": [
+      {
+        "path": "product/apps/opc/src-tauri/src/commands/git.rs",
+        "source": "spec-edge"
+      },
+      {
+        "path": "product/packages/git-panel",
+        "source": "manifest-metadata"
+      }
+    ],
+    "resolvedUnits": [
+      {
+        "locations": [
+          {
+            "file": "product/apps/opc/src-tauri/src/commands/git.rs"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "file",
+          "path": "product/apps/opc/src-tauri/src/commands/git.rs"
+        }
+      },
+      {
+        "locations": [],
+        "ownership": false,
+        "sourceField": "references",
+        "unit": {
+          "kind": "file",
+          "path": "product/apps/opc/src/components/GitPanel.tsx"
+        }
+      }
+    ],
+    "specId": "059-git-panel",
+    "specStatus": "approved"
+  },
+  "schemaVersion": "1.1.0",
+  "shardHash": "d4f8db5f47a9e23ec53afb2ec5b2938a6ff20853b1a0d7fb66cfd8b3c99d7bbe"
+}

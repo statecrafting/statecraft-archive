@@ -1,0 +1,212 @@
+{
+  "record": {
+    "authors": [
+      "open-agentic-platform"
+    ],
+    "codeAliases": [
+      "SUBSTRATE_OVERRIDE_ASYNC_SCANNER"
+    ],
+    "created": "2026-06-10",
+    "dependsOn": [
+      "198-factory-governance-envelope",
+      "139-factory-artifact-substrate"
+    ],
+    "domain": "platform",
+    "establishes": [
+      {
+        "kind": "file",
+        "path": "platform/services/statecraft/api/factory/overrideScanCore.ts"
+      },
+      {
+        "kind": "file",
+        "path": "platform/services/statecraft/api/factory/overrideScanEvents.ts"
+      },
+      {
+        "kind": "file",
+        "path": "platform/services/statecraft/api/factory/overrideScanWorker.ts"
+      },
+      {
+        "kind": "file",
+        "path": "platform/services/statecraft/api/factory/overrideScanScheduler.ts"
+      },
+      {
+        "kind": "file",
+        "path": "platform/services/statecraft/api/factory/overrideScanPolicy.ts"
+      },
+      {
+        "kind": "file",
+        "path": "platform/services/statecraft/api/factory/overrideScanPrompts.ts"
+      },
+      {
+        "kind": "file",
+        "path": "platform/services/statecraft/api/factory/overrideScanRuns.test.ts"
+      },
+      {
+        "kind": "file",
+        "path": "platform/services/statecraft/api/factory/overrideQuarantineEnforcement.test.ts"
+      },
+      {
+        "kind": "file",
+        "path": "platform/services/statecraft/api/factory/overrideScanStructure.test.ts"
+      }
+    ],
+    "extends": [
+      {
+        "nature": "additive",
+        "spec": "034-featuregraph-registry-scanner-fix",
+        "unit": {
+          "kind": "file",
+          "path": "crates/featuregraph/tests/golden/features_graph.json"
+        }
+      }
+    ],
+    "extraFrontmatter": {
+      "language": "en"
+    },
+    "featureBranch": "200-override-async-scanner",
+    "id": "200-substrate-override-async-scanner",
+    "implementation": "complete",
+    "kind": "platform",
+    "references": [
+      {
+        "role": "context",
+        "unit": {
+          "kind": "file",
+          "path": "platform/services/statecraft/api/factory/overrideGate.ts"
+        }
+      },
+      {
+        "role": "context",
+        "unit": {
+          "kind": "file",
+          "path": "docs/owasp-agentic-top-10-2026.md"
+        }
+      },
+      {
+        "role": "analog",
+        "unit": {
+          "kind": "file",
+          "path": "platform/services/statecraft/api/knowledge/extractionCore.ts"
+        }
+      }
+    ],
+    "refines": [
+      {
+        "aspect": "override-write-async-scanning",
+        "unit": {
+          "kind": "file",
+          "path": "platform/services/statecraft/api/factory/artifacts.ts"
+        }
+      },
+      {
+        "aspect": "override-write-async-scanning",
+        "unit": {
+          "kind": "file",
+          "path": "platform/services/statecraft/api/factory/conflicts.ts"
+        }
+      },
+      {
+        "aspect": "override-write-async-scanning",
+        "unit": {
+          "kind": "file",
+          "path": "platform/services/statecraft/api/agents/catalog.ts"
+        }
+      },
+      {
+        "aspect": "verify-quarantine-interplay",
+        "unit": {
+          "kind": "file",
+          "path": "platform/services/statecraft/api/factory/artifacts.ts"
+        }
+      },
+      {
+        "aspect": "consumed-override-revocation-sweep",
+        "unit": {
+          "kind": "file",
+          "path": "platform/services/statecraft/api/factory/admission.ts"
+        }
+      },
+      {
+        "aspect": "consumed-override-revocation-sweep",
+        "unit": {
+          "kind": "file",
+          "path": "platform/services/statecraft/api/factory/grantDuplexHandlers.ts"
+        }
+      },
+      {
+        "aspect": "consumed-override-revocation-sweep",
+        "unit": {
+          "kind": "file",
+          "path": "platform/services/statecraft/api/factory/approvalSummary.ts"
+        }
+      },
+      {
+        "aspect": "content-hash-quarantine-lift-mode",
+        "unit": {
+          "kind": "file",
+          "path": "platform/services/statecraft/api/factory/revocations.ts"
+        }
+      },
+      {
+        "aspect": "consumed-override-revocation-sweep",
+        "unit": {
+          "kind": "file",
+          "path": "platform/services/statecraft/api/factory/runAgentRefs.ts"
+        }
+      },
+      {
+        "aspect": "consumed-override-revocation-sweep",
+        "unit": {
+          "kind": "file",
+          "path": "platform/services/statecraft/api/factory/runs.ts"
+        }
+      },
+      {
+        "aspect": "consumed-override-revocation-sweep",
+        "unit": {
+          "kind": "file",
+          "path": "platform/services/statecraft/api/projects/opcBundle.ts"
+        }
+      },
+      {
+        "aspect": "scan-run-records",
+        "unit": {
+          "kind": "file",
+          "path": "platform/services/statecraft/api/db/schema.ts"
+        }
+      },
+      {
+        "aspect": "encore-test-lane-assignment",
+        "unit": {
+          "kind": "file",
+          "path": "platform/services/statecraft/vite.config.ts"
+        }
+      },
+      {
+        "aspect": "override-scan-topic-declaration",
+        "unit": {
+          "kind": "file",
+          "path": "platform/services/statecraft/infra.config.json"
+        }
+      }
+    ],
+    "sectionHeadings": [
+      "Feature Specification: Substrate Override Async Scanner",
+      "Purpose",
+      "Design findings (2026-06-12 refinement)",
+      "Functional requirements",
+      "Acceptance criteria",
+      "Out of scope",
+      "Open questions",
+      "Phasing (proposed; refine in plan.md)",
+      "Sequencing",
+      "Implementation log"
+    ],
+    "specPath": "specs/200-substrate-override-async-scanner/spec.md",
+    "status": "approved",
+    "summary": "The model-assisted leg of the substrate override-write contract (spec 198 FR-013 d, ASI06 m2): an asynchronous scanner that inspects user_body revisions for poisoning patterns the deterministic gate cannot express as rules, and quarantines suspect artifacts via the spec 198 FR-010 revocation machinery pending human review. The cross-cutting principle is preserved verbatim: a model may DETECT, only rules may BLOCK — the scanner never rejects a write synchronously and never lifts its own quarantines.\n",
+    "title": "Substrate Override Async Scanner (ASI06 model-assisted detection)"
+  },
+  "shardHash": "7124177534ece20cf7e6d92ca6b14f84b7667919818357e591bfae4f91897ae2",
+  "specVersion": "1.1.0"
+}

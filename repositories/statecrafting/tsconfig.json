@@ -1,0 +1,20 @@
+{
+  "compilerOptions": {
+    "target": "ES2022",
+    "module": "ESNext",
+    "moduleResolution": "bundler",
+    "lib": ["ES2022"],
+    "strict": true,
+    "esModuleInterop": true,
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true,
+    // Explicit, not inferred: without this, tsc's auto-scan of
+    // node_modules/@types did not pick up node (vitest's chai/deep-eql are
+    // also present), and every `node:` import failed with TS2591. Naming the
+    // ambient types keeps the type surface deterministic.
+    "types": ["node"]
+  },
+  "exclude": ["node_modules", "vendor", "**/target"]
+}

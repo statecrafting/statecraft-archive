@@ -1,0 +1,88 @@
+{
+  "mapping": {
+    "dependsOn": [
+      "130-spec-coupling-primary-owner",
+      "153-invariant-freeze-additive-evolution"
+    ],
+    "implementingPaths": [
+      {
+        "path": "crates/featuregraph/tests/golden/features_graph.json",
+        "source": "spec-edge"
+      },
+      {
+        "path": "standards/schemas/spec-spine/registry.schema.json",
+        "source": "spec-edge"
+      },
+      {
+        "path": "tools/oap/spec-unit-migrate",
+        "source": "manifest-metadata"
+      },
+      {
+        "path": "tools/spec-spine/spec-lint/src/lib.rs",
+        "source": "spec-edge"
+      },
+      {
+        "path": "tools/spec-spine/spec-lint/tests/lint.rs",
+        "source": "spec-edge"
+      }
+    ],
+    "resolvedUnits": [
+      {
+        "locations": [
+          {
+            "file": "crates/featuregraph/tests/golden/features_graph.json"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "extends",
+        "unit": {
+          "kind": "file",
+          "path": "crates/featuregraph/tests/golden/features_graph.json"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "standards/schemas/spec-spine/registry.schema.json"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "extends",
+        "unit": {
+          "kind": "file",
+          "path": "standards/schemas/spec-spine/registry.schema.json"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "tools/spec-spine/spec-lint/src/lib.rs"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "extends",
+        "unit": {
+          "kind": "file",
+          "path": "tools/spec-spine/spec-lint/src/lib.rs"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "tools/spec-spine/spec-lint/tests/lint.rs"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "extends",
+        "unit": {
+          "kind": "file",
+          "path": "tools/spec-spine/spec-lint/tests/lint.rs"
+        }
+      }
+    ],
+    "specId": "154-logical-unit-ownership-grammar",
+    "specStatus": "approved"
+  },
+  "schemaVersion": "1.1.0",
+  "shardHash": "e2b5a13d517652ed2700be318f2855831d8683831b0528452c6662b3bde86865"
+}

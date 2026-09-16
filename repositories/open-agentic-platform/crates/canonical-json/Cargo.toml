@@ -1,0 +1,21 @@
+# SPDX-License-Identifier: AGPL-3.0-or-later
+# Copyright (C) 2026 Bartek Kus
+
+[package]
+name = "canonical-json"
+publish = false   # internal workspace crate
+version = "0.1.0"
+edition = "2024"
+license = "AGPL-3.0-or-later"
+description = "Deterministic Canonical JSON helper: recursive lex-sort of object keys at the serialization boundary."
+rust-version = "1.85"
+
+[lib]
+name = "canonical_json"
+path = "src/lib.rs"
+
+[dependencies]
+serde_json = "1"
+
+# `[package.metadata.oap]` deliberately omitted until Segment 4 lands the
+# serialization-ordering principle spec that establishes this crate.

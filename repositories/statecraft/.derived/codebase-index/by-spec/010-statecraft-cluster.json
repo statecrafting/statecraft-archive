@@ -1,0 +1,32 @@
+{
+  "mapping": {
+    "dependsOn": [
+      "001-statecraft-thesis"
+    ],
+    "implementingPaths": [
+      {
+        "path": "infra/",
+        "source": "spec-edge"
+      }
+    ],
+    "resolvedUnits": [
+      {
+        "locations": [
+          {
+            "file": "infra/"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "directory",
+          "path": "infra/"
+        }
+      }
+    ],
+    "specId": "010-statecraft-cluster",
+    "specStatus": "approved"
+  },
+  "schemaVersion": "1.1.0",
+  "shardHash": "8d8407bc96ba5cec4ec4c06a9348d0558d40a95be07e7736c8864e1c9ccf700d"
+}

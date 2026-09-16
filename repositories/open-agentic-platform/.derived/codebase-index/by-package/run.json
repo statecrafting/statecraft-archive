@@ -1,0 +1,12 @@
+{
+  "package": {
+    "edition": "2024",
+    "kind": "rust-lib",
+    "name": "run",
+    "path": "crates/run",
+    "specRef": "052-state-persistence",
+    "version": "0.1.0"
+  },
+  "schemaVersion": "1.1.0",
+  "shardHash": "6d8cb91e6fc0b9bcc434e92bb5d19157ff2db69f16b8c954728046561daba2d4"
+}

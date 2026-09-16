@@ -1,0 +1,122 @@
+{
+  "record": {
+    "amendmentRecord": "Self-amended 2026-06-04 — axiomregent demotion. axiomregent is no longer an\nindependently released product (see 037, amended): it is an internal upstream\ncomponent of OPC, built from OPC's release commit and bundled as a Tauri\nsidecar. The paired train therefore collapses to a SINGLE product. This\namendment removes the `axiomregent-v*` tag grammar, the cross-product boundary\ninvariant (opc.minor == axiomregent.minor — there is no second product to\npair with), and the guard's axiomregent product arm; the version-consistency\nguard becomes OPC-only. release-axiomregent.yml is retired. The OPC mechanics\n(product-prefixed `opc-v*` tag, draft-first publish, fast-fail version-guard\njob, SBOM assertion) are unchanged.\n",
+    "amends": [
+      "037-cross-platform-axiomregent",
+      "086-open-source-launch",
+      "117-release-artifact-attestations"
+    ],
+    "codeAliases": [
+      "RELEASE_CADENCE",
+      "RELEASE_VERSION_GUARD"
+    ],
+    "created": "2026-06-01",
+    "dependsOn": [
+      "037-cross-platform-axiomregent",
+      "086-open-source-launch",
+      "117-release-artifact-attestations",
+      "116-supply-chain-policy-gates",
+      "158-workflow-ref-sha-pinning-lint"
+    ],
+    "domain": "tooling",
+    "establishes": [
+      {
+        "kind": "file",
+        "path": "tools/lint/release-version-guard.sh"
+      },
+      {
+        "kind": "file",
+        "path": "tools/lint/release-version-guard-test.sh"
+      }
+    ],
+    "extends": [
+      {
+        "nature": "additive",
+        "spec": "034-featuregraph-registry-scanner-fix",
+        "unit": {
+          "kind": "file",
+          "path": "crates/featuregraph/tests/golden/features_graph.json"
+        }
+      }
+    ],
+    "extraFrontmatter": {
+      "amended": "2026-06-04",
+      "approved": "2026-06-01",
+      "compliance": [
+        {
+          "controls": [
+            "ASI04"
+          ],
+          "framework": "owasp-asi-2026"
+        }
+      ],
+      "slug": "paired-release-cadence"
+    },
+    "id": "193-paired-release-cadence",
+    "implementation": "complete",
+    "kind": "governance",
+    "owner": "bart",
+    "refines": [
+      {
+        "aspect": "release-version-alignment",
+        "unit": {
+          "kind": "file",
+          "path": ".github/workflows/release-desktop.yml"
+        }
+      },
+      {
+        "aspect": "release-version-alignment",
+        "unit": {
+          "kind": "file",
+          "path": ".github/workflows/release-tools.yml"
+        }
+      },
+      {
+        "aspect": "release-version-alignment",
+        "unit": {
+          "kind": "file",
+          "path": ".github/workflows/ci-supply-chain.yml"
+        }
+      },
+      {
+        "aspect": "release-version",
+        "unit": {
+          "kind": "file",
+          "path": "product/apps/opc/src-tauri/tauri.conf.json"
+        }
+      },
+      {
+        "aspect": "release-version",
+        "unit": {
+          "kind": "file",
+          "path": "product/apps/opc/package.json"
+        }
+      },
+      {
+        "aspect": "release-version",
+        "unit": {
+          "kind": "file",
+          "path": "product/apps/opc/src-tauri/Cargo.toml"
+        }
+      }
+    ],
+    "risk": "medium",
+    "sectionHeadings": [
+      "193 — OPC release cadence + version-consistency guard",
+      "1. Problem Statement",
+      "2. Cadence policy",
+      "3. Tag grammar (naming unification)",
+      "4. Version-consistency guard (the contract)",
+      "5. Publish gating",
+      "5.1 Fast-fail front gate (refinement, 2026-06-01)",
+      "6. Acceptance criteria",
+      "7. Out of scope (human-gated, deferred)"
+    ],
+    "specPath": "specs/193-paired-release-cadence/spec.md",
+    "status": "approved",
+    "summary": "Establish OPC's release cadence, a product-prefixed tag grammar (opc-v*), and a pre-publish version-consistency guard that refuses any release whose tag disagrees with its committed version sources or its SBOM. OPC builds a draft first so every publish is guard-gated AND human-gated. Closes the class of bug where a release envelope (tag) carried one version while the artifacts carried a stale committed version (OPC drafts v0.3.5/6/7 shipped 0.3.4 assets). Amended 2026-06-04: OPC is the sole release lever — axiomregent is an internal upstream component bundled by OPC (037, amended), so the paired cadence and the axiomregent-v* tag grammar are retired and the guard is OPC-only.\n",
+    "title": "Paired release cadence + version-consistency guard (amends 037, 086, 117)"
+  },
+  "shardHash": "08138c396cc72650a857e780d88bef79905a1f8382bcd590f78f75b95018ebcb",
+  "specVersion": "1.1.0"
+}

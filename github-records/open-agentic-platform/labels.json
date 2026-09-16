@@ -1,0 +1,167 @@
+[
+  {
+    "id": 10494235141,
+    "node_id": "LA_kwDORt9J5s8AAAACcYFSBQ",
+    "url": "https://api.github.com/repos/statecrafting/open-agentic-platform/labels/bug",
+    "name": "bug",
+    "color": "d73a4a",
+    "default": true,
+    "description": "Something isn't working",
+    "archived_at": null,
+    "archived_by": null
+  },
+  {
+    "id": 11464891210,
+    "node_id": "LA_kwDORt9J5s8AAAACq1xbSg",
+    "url": "https://api.github.com/repos/statecrafting/open-agentic-platform/labels/dependencies",
+    "name": "dependencies",
+    "color": "0366d6",
+    "default": false,
+    "description": "Pull requests that update a dependency file",
+    "archived_at": null,
+    "archived_by": null
+  },
+  {
+    "id": 11464891634,
+    "node_id": "LA_kwDORt9J5s8AAAACq1xc8g",
+    "url": "https://api.github.com/repos/statecrafting/open-agentic-platform/labels/desktop",
+    "name": "desktop",
+    "color": "5319e7",
+    "default": false,
+    "description": "OPC desktop app (product/apps/opc)",
+    "archived_at": null,
+    "archived_by": null
+  },
+  {
+    "id": 10494235146,
+    "node_id": "LA_kwDORt9J5s8AAAACcYFSCg",
+    "url": "https://api.github.com/repos/statecrafting/open-agentic-platform/labels/documentation",
+    "name": "documentation",
+    "color": "0075ca",
+    "default": true,
+    "description": "Improvements or additions to documentation",
+    "archived_at": null,
+    "archived_by": null
+  },
+  {
+    "id": 10494235149,
+    "node_id": "LA_kwDORt9J5s8AAAACcYFSDQ",
+    "url": "https://api.github.com/repos/statecrafting/open-agentic-platform/labels/duplicate",
+    "name": "duplicate",
+    "color": "cfd3d7",
+    "default": true,
+    "description": "This issue or pull request already exists",
+    "archived_at": null,
+    "archived_by": null
+  },
+  {
+    "id": 10494235156,
+    "node_id": "LA_kwDORt9J5s8AAAACcYFSFA",
+    "url": "https://api.github.com/repos/statecrafting/open-agentic-platform/labels/enhancement",
+    "name": "enhancement",
+    "color": "a2eeef",
+    "default": true,
+    "description": "New feature or request",
+    "archived_at": null,
+    "archived_by": null
+  },
+  {
+    "id": 10494235165,
+    "node_id": "LA_kwDORt9J5s8AAAACcYFSHQ",
+    "url": "https://api.github.com/repos/statecrafting/open-agentic-platform/labels/good%20first%20issue",
+    "name": "good first issue",
+    "color": "7057ff",
+    "default": true,
+    "description": "Good for newcomers",
+    "archived_at": null,
+    "archived_by": null
+  },
+  {
+    "id": 10494235172,
+    "node_id": "LA_kwDORt9J5s8AAAACcYFSJA",
+    "url": "https://api.github.com/repos/statecrafting/open-agentic-platform/labels/help%20wanted",
+    "name": "help wanted",
+    "color": "008672",
+    "default": true,
+    "description": "Extra attention is needed",
+    "archived_at": null,
+    "archived_by": null
+  },
+  {
+    "id": 10494235181,
+    "node_id": "LA_kwDORt9J5s8AAAACcYFSLQ",
+    "url": "https://api.github.com/repos/statecrafting/open-agentic-platform/labels/invalid",
+    "name": "invalid",
+    "color": "e4e669",
+    "default": true,
+    "description": "This doesn't seem right",
+    "archived_at": null,
+    "archived_by": null
+  },
+  {
+    "id": 11464891465,
+    "node_id": "LA_kwDORt9J5s8AAAACq1xcSQ",
+    "url": "https://api.github.com/repos/statecrafting/open-agentic-platform/labels/javascript",
+    "name": "javascript",
+    "color": "f1e05a",
+    "default": false,
+    "description": "JavaScript / npm dependencies",
+    "archived_at": null,
+    "archived_by": null
+  },
+  {
+    "id": 10494235188,
+    "node_id": "LA_kwDORt9J5s8AAAACcYFSNA",
+    "url": "https://api.github.com/repos/statecrafting/open-agentic-platform/labels/question",
+    "name": "question",
+    "color": "d876e3",
+    "default": true,
+    "description": "Further information is requested",
+    "archived_at": null,
+    "archived_by": null
+  },
+  {
+    "id": 11464891315,
+    "node_id": "LA_kwDORt9J5s8AAAACq1xbsw",
+    "url": "https://api.github.com/repos/statecrafting/open-agentic-platform/labels/rust",
+    "name": "rust",
+    "color": "dea584",
+    "default": false,
+    "description": "Rust / cargo dependencies",
+    "archived_at": null,
+    "archived_by": null
+  },
+  {
+    "id": 11464891938,
+    "node_id": "LA_kwDORt9J5s8AAAACq1xeIg",
+    "url": "https://api.github.com/repos/statecrafting/open-agentic-platform/labels/stagecraft",
+    "name": "stagecraft",
+    "color": "0e8a16",
+    "default": false,
+    "description": "Stagecraft service (platform/services/stagecraft)",
+    "archived_at": null,
+    "archived_by": null
+  },
+  {
+    "id": 11464891827,
+    "node_id": "LA_kwDORt9J5s8AAAACq1xdsw",
+    "url": "https://api.github.com/repos/statecrafting/open-agentic-platform/labels/tools",
+    "name": "tools",
+    "color": "006b75",
+    "default": false,
+    "description": "Repo tools and lints (tools/)",
+    "archived_at": null,
+    "archived_by": null
+  },
+  {
+    "id": 10494235192,
+    "node_id": "LA_kwDORt9J5s8AAAACcYFSOA",
+    "url": "https://api.github.com/repos/statecrafting/open-agentic-platform/labels/wontfix",
+    "name": "wontfix",
+    "color": "ffffff",
+    "default": true,
+    "description": "This will not be worked on",
+    "archived_at": null,
+    "archived_by": null
+  }
+]

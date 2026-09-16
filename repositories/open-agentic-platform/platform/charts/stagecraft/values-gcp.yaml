@@ -1,0 +1,12 @@
+image:
+  repository: ""  # Set to GCR/Artifact Registry URL
+
+serviceAccount:
+  annotations:
+    iam.gke.io/gcp-service-account: ""
+
+secrets:
+  provider: "eso"
+  storeRef:
+    name: gcp-secret-manager
+    kind: ClusterSecretStore

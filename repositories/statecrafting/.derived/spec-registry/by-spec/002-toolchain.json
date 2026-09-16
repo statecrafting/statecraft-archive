@@ -1,0 +1,63 @@
+{
+  "record": {
+    "created": "2026-07-17",
+    "dependsOn": [
+      "000-bootstrap",
+      "001-packages-thesis"
+    ],
+    "establishes": [
+      {
+        "kind": "directory",
+        "path": "vendor/encore/"
+      },
+      {
+        "kind": "directory",
+        "path": "packages/toolchain/"
+      },
+      {
+        "kind": "directory",
+        "path": "packages/toolchain-darwin-arm64/"
+      },
+      {
+        "kind": "directory",
+        "path": "packages/toolchain-linux-x64/"
+      },
+      {
+        "kind": "directory",
+        "path": "packages/toolchain-linux-arm64/"
+      },
+      {
+        "kind": "file",
+        "path": ".github/workflows/publish.yml"
+      },
+      {
+        "kind": "file",
+        "path": "package.json"
+      }
+    ],
+    "id": "002-toolchain",
+    "implementation": "complete",
+    "sectionHeadings": [
+      "002: The Encore build toolchain",
+      "1. Purpose",
+      "2. Territory",
+      "3. Behavior",
+      "The MPL boundary",
+      "Versioning",
+      "Publishing",
+      "The old names",
+      "4. Ownership transfer",
+      "5. Acceptance",
+      "6. Out of scope",
+      "Amendment (2026-07-21): the app-model extract surface catches up (0.2.0)",
+      "Amendment (2026-07-22): observability.otel is observed, not declared (0.3.0)",
+      "Amendment (2026-07-29): the state layer is a second governed facade (0.4.0)"
+    ],
+    "specPath": "specs/002-toolchain/spec.md",
+    "status": "approved",
+    "summary": "The first package lands: the Encore build toolchain moves from enrahitu to `@statecrafting/toolchain`, bringing the vendored Encore tree (`vendor/encore/`, MPL-2.0, pinning upstream v1.57.9) and the three per-platform binary packages that carry `encore-runtime.node` and `tsparser-encore`. It is the deepest dependency in the family: both enrahitu and statecraft build with it. Retires enrahitu/008-vendored-encore-toolchain (whose only edge is `vendor/encore/`) and drops `packages/` from enrahitu/018-packaged-chassis.\n",
+    "title": "The Encore build toolchain: vendored core, per-platform binaries"
+  },
+  "shardHash": "49c5e62196d18ad0d5814f3c0917fa7a3f7f8cf818ee81298cfa86e914cb135c",
+  "specVersion": "1.2.0"
+}

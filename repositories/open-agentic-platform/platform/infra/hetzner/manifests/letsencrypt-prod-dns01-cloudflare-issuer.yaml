@@ -1,0 +1,36 @@
+# Spec 106 amendment (2026-05-17) — wildcard cert path for tenant hostnames
+# (spec 137 evidence prereq).
+#
+# A second ClusterIssuer alongside the existing HTTP-01 `letsencrypt-prod`.
+# HTTP-01 can't issue wildcards; DNS-01 with the Cloudflare solver can.
+# The API token lives in the `cloudflare-api-token` Secret created by
+# setup.sh from $CLOUDFLARE_DNS_API_TOKEN. Token scope:
+# `Zone.DNS:Edit` on the platform's zone only.
+#
+# Operators on other DNS providers can swap the solver block
+# (route53 / cloud-dns / acmedns / etc.) without changing the rest of the
+# spec 137 evidence path.
+apiVersion: cert-manager.io/v1
+kind: ClusterIssuer
+metadata:
+  name: letsencrypt-prod-dns01-cloudflare
+  labels:
+    oap.spec: "106-rauthy-native-oidc-and-membership"
+spec:
+  acme:
+    server: https://acme-v02.api.letsencrypt.org/directory
+    email: admin@${DOMAIN}
+    privateKeySecretRef:
+      name: letsencrypt-prod-dns01-cloudflare-account
+    solvers:
+      - dns01:
+          cloudflare:
+            apiTokenSecretRef:
+              name: cloudflare-api-token
+              key: api-token
+        selector:
+          # Only this issuer answers DNS-01 challenges for tenant
+          # hostnames. The existing `letsencrypt-prod` (HTTP-01) keeps
+          # handling statecraft / deployd / rauthy / minio Ingresses.
+          dnsZones:
+            - "tenants.${DOMAIN}"

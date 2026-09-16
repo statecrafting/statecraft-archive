@@ -1,0 +1,44 @@
+{
+  "record": {
+    "amendmentRecord": "amended 2026-06-18 by spec 217 (engine-swap collapse): the in-tree spec-compiler and registry-consumer that enforced the lifecycle status model were deleted; enforcement is now in spec-spine-core. The implementation code-units are stripped (paths deleted); the authored status-semantics model (draft/active/superseded/retired) remains this spec's contribution.\n",
+    "authors": [
+      "open-agentic-platform"
+    ],
+    "created": "2026-03-22",
+    "domain": "substrate",
+    "extraFrontmatter": {
+      "amended": "2026-06-18",
+      "language": "en"
+    },
+    "featureBranch": "003-feature-lifecycle-mvp",
+    "id": "003-feature-lifecycle-mvp",
+    "implementation": "complete",
+    "kind": "platform",
+    "refines": [
+      {
+        "aspect": "status-semantics"
+      }
+    ],
+    "sectionHeadings": [
+      "Feature Specification: Feature lifecycle & status semantics",
+      "Purpose and charter",
+      "Normative dependency",
+      "Definitions *(mandatory)*",
+      "Recommended transitions *(non-blocking for tooling)*",
+      "Requirements *(mandatory)*",
+      "Functional Requirements",
+      "Key Entities",
+      "Success Criteria *(mandatory)*",
+      "Examples *(non-normative)*",
+      "`superseded` — replacement pointer",
+      "`retired` — short rationale",
+      "Clarifications"
+    ],
+    "specPath": "specs/003-feature-lifecycle-mvp/spec.md",
+    "status": "approved",
+    "summary": "Normative definitions and allowed transitions for feature status (draft, active, superseded, retired) in authored specs and compiled registry; consumer guarantees and explicit non-goals so 004+ can build on stable lifecycle language without reopening 000/001 unless a constitutional amendment is required.\n",
+    "title": "Feature lifecycle & status semantics (registry status model)"
+  },
+  "shardHash": "23c8d5e80fd388bc2250deffcffaec095c35b680f99a4409566880728d5e48ff",
+  "specVersion": "1.1.0"
+}

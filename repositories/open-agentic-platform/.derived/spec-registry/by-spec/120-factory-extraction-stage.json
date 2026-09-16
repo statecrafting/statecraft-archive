@@ -1,0 +1,124 @@
+{
+  "record": {
+    "created": "2026-04-30",
+    "dependsOn": [
+      "074-factory-ingestion",
+      "075-factory-workflow-engine",
+      "077-statecraft-factory-api",
+      "094-unified-artifact-store",
+      "110-statecraft-to-opc-factory-trigger",
+      "115-knowledge-extraction-pipeline"
+    ],
+    "domain": "platform",
+    "establishes": [
+      {
+        "kind": "file",
+        "path": "crates/factory-contracts/src/knowledge.rs"
+      },
+      {
+        "kind": "file",
+        "path": "crates/factory-engine/src/stages/s_minus_1_extract.rs"
+      },
+      {
+        "kind": "file",
+        "path": "platform/services/statecraft/api/knowledge/extractionExternal.ts"
+      },
+      {
+        "kind": "file",
+        "path": "product/apps/opc/src/components/factory/ArtifactInspector.tsx"
+      }
+    ],
+    "extends": [
+      {
+        "nature": "additive",
+        "spec": "075-factory-workflow-engine",
+        "unit": {
+          "kind": "file",
+          "path": "crates/factory-engine/src/manifest_gen.rs"
+        }
+      },
+      {
+        "nature": "additive",
+        "spec": "075-factory-workflow-engine",
+        "unit": {
+          "kind": "file",
+          "path": "crates/artifact-extract/Cargo.toml"
+        }
+      },
+      {
+        "nature": "additive",
+        "spec": "075-factory-workflow-engine",
+        "unit": {
+          "kind": "file",
+          "path": "crates/artifact-extract/src/lib.rs"
+        }
+      },
+      {
+        "nature": "additive",
+        "spec": "108-factory-as-platform-feature",
+        "unit": {
+          "kind": "file",
+          "path": "product/apps/opc/src-tauri/src/commands/factory.rs"
+        }
+      },
+      {
+        "nature": "additive",
+        "spec": "108-factory-as-platform-feature",
+        "unit": {
+          "kind": "file",
+          "path": "product/apps/opc/src-tauri/src/commands/statecraft_client.rs"
+        }
+      },
+      {
+        "nature": "additive",
+        "spec": "108-factory-as-platform-feature",
+        "unit": {
+          "kind": "file",
+          "path": "platform/services/statecraft/api/knowledge/extractionOutput.ts"
+        }
+      }
+    ],
+    "extraFrontmatter": {
+      "amended": "2026-04-30",
+      "slug": "factory-extraction-stage"
+    },
+    "id": "120-factory-extraction-stage",
+    "implementation": "complete",
+    "kind": "platform",
+    "owner": "bart",
+    "risk": "high",
+    "sectionHeadings": [
+      "120 — Factory Extraction Stage",
+      "1. Problem",
+      "2. Goals",
+      "3. Non-Goals",
+      "4. User Scenarios & Testing",
+      "User Story 1 — Bundle of mixed text/PDF reaches Stage 1 as structured input (Priority: P1)",
+      "User Story 2 — Image-only PDF in a bundle yields back to statecraft (Priority: P1)",
+      "User Story 3 — Schema drift between Rust and TS fails CI (Priority: P1)",
+      "User Story 4 — Server and OPC versions co-exist; resolver picks the latest (Priority: P2)",
+      "Edge Cases",
+      "5. Requirements",
+      "5.1 Functional Requirements",
+      "Schema mirror",
+      "Canonical extractor",
+      "s-1-extract stage",
+      "Statecraft endpoint surface",
+      "OPC client surfaces",
+      "Operational",
+      "5.2 Key Entities",
+      "5.3 Permissions and audit",
+      "5.4 Out-of-process operations",
+      "6. Success Criteria",
+      "Measurable Outcomes",
+      "7. Open Decisions",
+      "8. Provenance"
+    ],
+    "specPath": "specs/120-factory-extraction-stage/spec.md",
+    "status": "approved",
+    "summary": "Promote the orphan `crates/artifact-extract` to a canonical, deterministic pre-stage of the Factory Phase 1 pipeline. Mirror statecraft's `ExtractionOutput` (spec 115) as Rust serde types in `factory-contracts` so the Rust producer and TypeScript consumer share one schema. Add an `s-1-extract` stage to `crates/factory-engine` that consumes the `KnowledgeBundle[]` delivered by the duplex envelope (spec 110), produces one typed `extraction-output.json` per object into the unified artifact store (spec 094), and posts the same payload back to a new content-addressed statecraft endpoint. Stage 1's business-requirements-analyst consumes the typed structure (text, pages, outline, language, agent provenance) instead of flat `.txt` paths, closing the raw-bytes-to-stage-1 reinterpretation seam. This spec is the carrier for spec 121 (claim provenance enforcement) and spec 122 (stakeholder-doc inversion); it does NOT enforce per-claim citations or invert Stage CD.\n",
+    "title": "Factory Extraction Stage"
+  },
+  "shardHash": "c00a6a2c9df947b43724c9ef5f5b71379592ea016c0502da69bdcb47158c1919",
+  "specVersion": "1.1.0"
+}

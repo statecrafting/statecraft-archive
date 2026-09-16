@@ -1,0 +1,26 @@
+{
+  "mapping": {
+    "implementingPaths": [
+      {
+        "path": "crates/factory-engine",
+        "source": "manifest-metadata"
+      },
+      {
+        "path": "crates/factory-engine/src/engine.rs",
+        "source": "comment-header"
+      },
+      {
+        "path": "crates/factory-engine/src/lib.rs",
+        "source": "comment-header"
+      },
+      {
+        "path": "crates/orchestrator/src/verify.rs",
+        "source": "comment-header"
+      }
+    ],
+    "specId": "075-factory-workflow-engine",
+    "specStatus": "approved"
+  },
+  "schemaVersion": "1.1.0",
+  "shardHash": "7139a6e25db51788c845fc16fe20d4e6eab220b53d3b1bfbc5938fec4ff3e6a6"
+}

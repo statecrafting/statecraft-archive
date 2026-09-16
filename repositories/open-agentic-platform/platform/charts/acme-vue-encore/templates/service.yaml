@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "acme-vue-encore.fullname" . }}
+  labels:
+    {{- include "acme-vue-encore.labels" . | nindent 4 }}
+spec:
+  type: {{ .Values.service.type }}
+  ports:
+    - port: {{ .Values.service.port }}
+      targetPort: http
+      protocol: TCP
+      name: http
+  selector:
+    {{- include "acme-vue-encore.selectorLabels" . | nindent 4 }}

@@ -1,0 +1,203 @@
+name: Reusable container deploy
+
+# =================================================================
+# REUSABLE WORKFLOW: generic container build, scan, push, and deploy
+# =================================================================
+# Cloud-agnostic CD. It runs the test suite and a vulnerability scan, builds the
+# Encore API Docker image (`encore build docker`) with the selected SPA bundled
+# in, pushes it to a container registry, then hands the pushed image to a deploy
+# step you wire to your own runtime: Kubernetes, App Service for Containers,
+# Container Apps, OpenShift, Encore Cloud, or a plain Docker host. The template
+# ships a documented placeholder deploy step; see docs/DEPLOYMENT.md.
+#
+# Caller workflows supply the environment name; secrets and variables resolve
+# from GitHub Environments (Settings > Environments).
+# =================================================================
+
+on:
+  workflow_call:
+    inputs:
+      environment:
+        description: 'GitHub environment name (e.g. production, staging, dev)'
+        required: true
+        type: string
+      node-version:
+        description: 'Node.js version to use'
+        required: false
+        type: string
+        default: '24.x'
+      web-app:
+        description: 'Which SPA to bundle and serve (web | web-internal)'
+        required: false
+        type: string
+        default: 'web'
+      registry:
+        description: 'Container registry hostname'
+        required: false
+        type: string
+        default: 'ghcr.io'
+      runner:
+        description: 'Runner label for the deploy job. Override with your infra runner if the target needs private network access.'
+        required: false
+        type: string
+        default: 'ubuntu-latest'
+
+permissions:
+  contents: read
+  actions: read
+  packages: write
+  id-token: write
+  security-events: write
+
+jobs:
+  # ---------------------------------------------------------------------------
+  # JOB 1: Test & Lint (fast, GitHub-hosted). Deployment is blocked until green.
+  # ---------------------------------------------------------------------------
+  test:
+    name: Test & Lint
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+
+      - name: Set up Node.js
+        uses: actions/setup-node@48b55a011bda9f5d6aeb4c2d9c7362e8dae4041e # v6.4.0
+        with:
+          node-version: ${{ inputs.node-version }}
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build shared packages
+        run: npm run build:packages
+
+      - name: Type check (SPAs + packages)
+        run: npm run typecheck --workspaces --if-present
+
+      - name: Lint
+        run: npm run lint
+
+      - name: Unit tests (SPAs + packages)
+        run: npm run test --workspaces --if-present
+
+  # ---------------------------------------------------------------------------
+  # JOB 2: Security Scan (Trivy filesystem scan)
+  # ---------------------------------------------------------------------------
+  security:
+    name: Trivy Vulnerability Scan
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+
+      - name: Run Trivy vulnerability scanner
+        uses: aquasecurity/trivy-action@ed142fd0673e97e23eac54620cfb913e5ce36c25 # v0.36.0
+        with:
+          scan-type: 'fs'
+          scan-ref: '.'
+          format: 'sarif'
+          output: 'trivy-results.sarif'
+          severity: 'HIGH,CRITICAL'
+          exit-code: '0'
+
+      - name: Upload Trivy SARIF to GitHub Security tab
+        uses: github/codeql-action/upload-sarif@54f647b7e1bb85c95cddabcd46b0c578ec92bc1a # v4
+        if: always()
+        continue-on-error: true
+        with:
+          sarif_file: 'trivy-results.sarif'
+
+  # ---------------------------------------------------------------------------
+  # JOB 3: Build & push the container image (the supported, robust deploy unit).
+  # Also runs the Encore API type check + unit tests (they need the Encore CLI).
+  # ---------------------------------------------------------------------------
+  build-and-push:
+    name: Build & push image
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+
+      - name: Set up Node.js
+        uses: actions/setup-node@48b55a011bda9f5d6aeb4c2d9c7362e8dae4041e # v6.4.0
+        with:
+          node-version: ${{ inputs.node-version }}
+          cache: 'npm'
+
+      - name: Install dependencies (root workspaces)
+        run: npm ci
+
+      - name: Build shared packages
+        run: npm run build:packages
+
+      - name: Build the selected SPA into apps/api/web/build
+        run: |
+          set -euo pipefail
+          npm run build --workspace=apps/${{ inputs.web-app }}
+          # Only apps/web's vite outDir targets apps/api/web/build directly. For
+          # any other SPA (e.g. web-internal), copy the bundle into the served dir.
+          if [ "${{ inputs.web-app }}" != "web" ]; then
+            rm -rf apps/api/web/build
+            mkdir -p apps/api/web/build
+            cp -r "apps/${{ inputs.web-app }}/dist/." apps/api/web/build/
+          fi
+
+      - name: Install Encore CLI
+        uses: ./.github/actions/encore-install
+
+      - name: Install API dependencies (standalone, not a workspace)
+        working-directory: ./apps/api
+        run: npm ci
+
+      - name: Type check (Encore API)
+        run: npm run typecheck:api
+
+      - name: Unit tests (Encore API)
+        working-directory: ./apps/api
+        run: npm test
+
+      - name: Log in to the container registry
+        uses: docker/login-action@af1e73f918a031802d376d3c8bbc3fe56130a9b0 # v4.4.0
+        with:
+          registry: ${{ inputs.registry }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Build + push the Encore image
+        uses: ./.github/actions/encore-build
+        with:
+          image-name: ${{ github.repository }}
+          registry: ${{ inputs.registry }}
+
+  # ---------------------------------------------------------------------------
+  # JOB 4: Deploy. Host-agnostic placeholder: the image is built and pushed
+  # above; wire this step to your runtime. Environment-gated for approvals.
+  # ---------------------------------------------------------------------------
+  deploy:
+    name: Deploy to ${{ inputs.environment }}
+    needs: [test, security, build-and-push]
+    if: ${{ always() && needs.test.result == 'success' && needs.build-and-push.result == 'success' }}
+    runs-on: ${{ inputs.runner }}
+    environment: ${{ inputs.environment }}
+    steps:
+      - name: Deploy the pushed image
+        run: |
+          set -euo pipefail
+          IMAGE="${{ inputs.registry }}/${{ github.repository }}:${{ github.sha }}"
+          echo "Image built and pushed: $IMAGE"
+          echo ""
+          echo "This template ships a generic placeholder deploy step. Point your"
+          echo "runtime at the image above (Kubernetes, App Service for Containers,"
+          echo "Container Apps, OpenShift, Encore Cloud, or a Docker host) and run"
+          echo "migrations against the target database. See docs/DEPLOYMENT.md."
+
+      - name: Deployment summary
+        run: |
+          echo "## Deployment" >> "$GITHUB_STEP_SUMMARY"
+          echo "" >> "$GITHUB_STEP_SUMMARY"
+          echo "**Environment:** ${{ inputs.environment }}" >> "$GITHUB_STEP_SUMMARY"
+          echo "**Image:** ${{ inputs.registry }}/${{ github.repository }}:${{ github.sha }}" >> "$GITHUB_STEP_SUMMARY"
+          echo "**SPA bundled:** ${{ inputs.web-app }}" >> "$GITHUB_STEP_SUMMARY"
+          echo "**Branch:** ${{ github.ref_name }}" >> "$GITHUB_STEP_SUMMARY"
+          echo "**Commit:** ${{ github.sha }}" >> "$GITHUB_STEP_SUMMARY"

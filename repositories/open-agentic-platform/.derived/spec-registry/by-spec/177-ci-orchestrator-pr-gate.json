@@ -1,0 +1,170 @@
+{
+  "record": {
+    "amendmentRecord": "self-amended (2026-05-31) — the AI PR review (`ai-pr-review.yml`, spec 085)\nis folded into the orchestrated gate. It was a standalone `pull_request`\nworkflow that was green-but-dead on every PR back to ~#220 (an empty\n`ANTHROPIC_API_KEY` won by precedence over the subscription OAuth token and\nthe failure was swallowed by `|| echo`), so a non-gating \"review\" gave\nfalse assurance. It is now a reusable (`workflow_call`) workflow dispatched\nfrom `ci.yml` as the PR-only `ai-review` job and added to the terminal\n`ci-gate` `needs:`, so a failed review blocks merge. A green ci-gate means\nthe AI review ran and passed OR — for a diff over `DIFF_SIZE_CAP` — was\nskipped with a visible \"manual review required\" PR comment (the size cap\nis a documented escape hatch, not a silent bypass; the folded gate caught\nthis hole on its own PR #267 and the skip path was made visible). PR-only\n(it needs PR context, like\nspec-code-coupling); skipped on push/merge_group, which ci-gate treats as\nsuccess. Job-level `pull-requests: write` (overriding ci.yml's read\ndefault for this job) + `secrets: inherit` give the called workflow the\ntoken scope to post its comment. It is parity-EXEMPT (spec 104): an AI\nreview has no `make ci-strict` mirror — the first gate without a local\nmirror, a carve-out documented in spec 104.\n\namended by spec 188 (2026-05-30, Phase 3) — the constitutional always-on\nPR set (§2.2) swaps `ci-codebase-index.yml` for `ci-config-hash.yml`. The\nbroad index-staleness gate was retired as a per-PR check: the broad\ncommitted `index.json` became a best-effort cache, and PRs no longer\ncarry a fresh broad `index.json`. (A direct-push post-merge heal was\nspecified then retired as incompatible with `main`'s PR-required +\nsigned-commits protection; the report-only `cd-index-staleness-report.yml`\nsurfaces drift instead — spec 188 FR-007.) The narrow `ci-config-hash`\ngate (spec 101 FR-12, spec 184)\nreplaces it in the constitutional set — it blocks an unacknowledged\n`.claude/settings.json` / `.mcp.json` edit but depends only on those two\nfiles, so it is merge-queue-safe. Spec 188 Phase 2 (same branch) adds the\n`merge_group:` trigger to `ci.yml` and forces the full routed suite on the\nspeculative merged tree (FR-001); *requiring* `ci-gate` on `merge_group`\nis the remaining ops step (branch protection), deliberately left to an\nadmin so FR-006's \"Phase 2 strictly after Phase 3\" holds as an ops\nordering.\n",
+    "amends": [
+      "104-makefile-ci-parity-contract"
+    ],
+    "codeAliases": [
+      "CI_GATE"
+    ],
+    "created": "2026-05-24",
+    "dependsOn": [
+      "104-makefile-ci-parity-contract",
+      "116-supply-chain-policy-gates",
+      "118-workflow-spec-traceability",
+      "127-spec-code-coupling-gate",
+      "135-fast-ci-as-default",
+      "152-path-co-authority",
+      "158-workflow-ref-sha-pinning-lint"
+    ],
+    "domain": "tooling",
+    "establishes": [
+      {
+        "kind": "file",
+        "path": ".github/workflows/ci.yml"
+      }
+    ],
+    "extraFrontmatter": {
+      "amended": "2026-05-31",
+      "approved": "2026-05-24",
+      "completed": "2026-05-24",
+      "slug": "ci-orchestrator-pr-gate"
+    },
+    "id": "177-ci-orchestrator-pr-gate",
+    "implementation": "complete",
+    "kind": "governance",
+    "owner": "bart",
+    "references": [
+      {
+        "role": "trigger-consolidation",
+        "unit": {
+          "kind": "file",
+          "path": ".github/workflows/ai-pr-review.yml"
+        }
+      },
+      {
+        "role": "trigger-consolidation",
+        "unit": {
+          "kind": "file",
+          "path": ".github/workflows/ci-axiomregent.yml"
+        }
+      },
+      {
+        "role": "trigger-consolidation",
+        "unit": {
+          "kind": "file",
+          "path": ".github/workflows/ci-config-hash.yml"
+        }
+      },
+      {
+        "role": "trigger-consolidation",
+        "unit": {
+          "kind": "file",
+          "path": ".github/workflows/ci-crates.yml"
+        }
+      },
+      {
+        "role": "trigger-consolidation",
+        "unit": {
+          "kind": "file",
+          "path": ".github/workflows/ci-deployd-api-rs.yml"
+        }
+      },
+      {
+        "role": "trigger-consolidation",
+        "unit": {
+          "kind": "file",
+          "path": ".github/workflows/ci-desktop.yml"
+        }
+      },
+      {
+        "role": "trigger-consolidation",
+        "unit": {
+          "kind": "file",
+          "path": ".github/workflows/ci-featuregraph-golden.yml"
+        }
+      },
+      {
+        "role": "trigger-consolidation",
+        "unit": {
+          "kind": "file",
+          "path": ".github/workflows/ci-orchestrator.yml"
+        }
+      },
+      {
+        "role": "trigger-consolidation",
+        "unit": {
+          "kind": "file",
+          "path": ".github/workflows/ci-parity.yml"
+        }
+      },
+      {
+        "role": "trigger-consolidation",
+        "unit": {
+          "kind": "file",
+          "path": ".github/workflows/ci-policy-kernel.yml"
+        }
+      },
+      {
+        "role": "trigger-consolidation",
+        "unit": {
+          "kind": "file",
+          "path": ".github/workflows/ci-spec-code-coupling.yml"
+        }
+      },
+      {
+        "role": "trigger-consolidation",
+        "unit": {
+          "kind": "file",
+          "path": ".github/workflows/ci-statecraft.yml"
+        }
+      },
+      {
+        "role": "trigger-consolidation",
+        "unit": {
+          "kind": "file",
+          "path": ".github/workflows/ci-supply-chain.yml"
+        }
+      },
+      {
+        "role": "trigger-consolidation",
+        "unit": {
+          "kind": "file",
+          "path": ".github/workflows/ci-tenant-hello.yml"
+        }
+      },
+      {
+        "role": "trigger-consolidation",
+        "unit": {
+          "kind": "file",
+          "path": ".github/workflows/spec-conformance.yml"
+        }
+      }
+    ],
+    "risk": "medium",
+    "sectionHeadings": [
+      "177 — CI orchestrator (PR-gate consolidation)",
+      "1. Problem Statement",
+      "2. Design",
+      "2.1 Topology",
+      "2.2 Constitutional carve-out (always-on)",
+      "2.3 Trigger normalisation",
+      "2.4 The `ci-gate` aggregator",
+      "2.5 Third-party action pinning (spec 158)",
+      "3. Functional Requirements",
+      "4. Acceptance Criteria",
+      "5. Out of Scope",
+      "6. Migration",
+      "7. Operator note — branch protection",
+      "8. Why this fits OAP's posture",
+      "Amendment — 2026-06-10: push-trim, config-hash fold, ai-review verifier mode",
+      "Amendment (2026-06-23): ai-review API-failure resilience"
+    ],
+    "specPath": "specs/177-ci-orchestrator-pr-gate/spec.md",
+    "status": "approved",
+    "summary": "Replace the 14-workflow PR-gate fleet's implicit merge contract — \"whatever workflows happen to fire on `pull_request` plus whatever the branch- protection UI lists\" — with one declared, hashable orchestrator at `.github/workflows/ci.yml`. Each existing `ci-*.yml` and `spec-conformance.yml` is converted to `workflow_call:` (preserving `workflow_dispatch:` and the supply-chain `schedule:` cron). The orchestrator runs a `dorny/paths-filter` job, dispatches each reusable workflow conditionally on its file-paths surface, and ends in a single `ci-gate` aggregator. Constitutional gates — `spec-conformance`, `ci-spec-code-coupling`, `ci-supply-chain`, `ci-codebase-index` — run unconditionally regardless of path-filter outputs. Branch protection's required-check surface shrinks from \"fourteen names + whatever's in the UI\" to one: `ci-gate`.\n",
+    "title": "CI orchestrator — collapse PR-gate workflow fleet behind a single ci-gate"
+  },
+  "shardHash": "c0d076c0086b6f8c31d868978f91972d614eae831bea90c16fc227beceb631e9",
+  "specVersion": "1.1.0"
+}

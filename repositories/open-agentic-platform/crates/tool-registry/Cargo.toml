@@ -1,0 +1,26 @@
+# SPDX-License-Identifier: AGPL-3.0-or-later
+# Copyright (C) 2026 Bartek Kus
+
+[package]
+name = "tool-registry"
+publish = false   # internal workspace crate; binaries ship via release workflows, not crates.io
+version = "0.1.0"
+edition = "2024"
+description = "Unified tool definition registry — spec 067"
+
+[dependencies]
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+anyhow = "1.0"
+thiserror = "2"
+jsonschema = "0.28"
+async-trait = "0.1"
+log = "0.4"
+policy-kernel = { package = "open_agentic_policy_kernel", path = "../policy-kernel", default-features = false }
+
+[dev-dependencies]
+serde = { version = "1", features = ["derive"] }
+schemars = "0.8"
+
+[package.metadata.oap]
+spec = "067-tool-definition-registry"

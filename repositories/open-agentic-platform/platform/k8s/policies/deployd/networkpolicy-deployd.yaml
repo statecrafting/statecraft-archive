@@ -1,0 +1,117 @@
+# Security review fix (MEDIUM finding) -- deployd-system NetworkPolicies.
+#
+# deployd-system had NO enforced NetworkPolicy before this file (same gap
+# as statecraft-system and rauthy-system -- see the sibling files in this
+# directory and monitoring/networkpolicy-monitoring.yaml's incident
+# header for the shared rationale). This is the first enforced
+# default-deny for this namespace; the allow set below is the complete
+# list -- anything else in or out is dropped.
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: default-deny-all
+  namespace: deployd-system
+spec:
+  podSelector: {}
+  policyTypes:
+    - Ingress
+    - Egress
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: allow-intra-namespace
+  namespace: deployd-system
+spec:
+  podSelector: {}
+  policyTypes:
+    - Ingress
+    - Egress
+  ingress:
+    - from:
+        - podSelector: {}
+  egress:
+    - to:
+        - podSelector: {}
+---
+# Public ingress: ingress-nginx -> deployd-api (:8080, the deployd.${DOMAIN}
+# REST API operators and statecraft call).
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: allow-ingress-nginx
+  namespace: deployd-system
+spec:
+  podSelector: {}
+  policyTypes:
+    - Ingress
+  ingress:
+    - from:
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: ingress-nginx
+      ports:
+        - port: 8080
+          protocol: TCP
+---
+# Cross-namespace direct callers reaching deployd-api without going
+# through public ingress: statecraft-api triggers deploys server-side,
+# and monitoring's Prometheus scrapes /metrics (spec 196 FR-003
+# podAnnotations on the deployd-api chart's pods).
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: allow-cross-namespace-ingress
+  namespace: deployd-system
+spec:
+  podSelector: {}
+  policyTypes:
+    - Ingress
+  ingress:
+    - from:
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: statecraft-system
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: monitoring
+      ports:
+        - port: 8080
+          protocol: TCP
+---
+# deployd-api's own outbound needs: DNS; the in-cluster kube-apiserver
+# (its entire job is driving Helm installs plus namespace/secret/workload
+# CRUD through the K8s API -- see templates/rbac.yaml in the deployd-api
+# chart -- both the ClusterIP Service port 443 and, depending on cluster
+# networking, the control-plane port 6443); Rauthy for JWT/JWKS
+# validation; and general HTTPS egress for S3-compatible backup uploads
+# (spec 145, opt-in -- disabled by default, see the deployd-api chart's
+# `backup` values).
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: allow-egress-infra
+  namespace: deployd-system
+spec:
+  podSelector: {}
+  policyTypes:
+    - Egress
+  egress:
+    - ports:
+        - port: 53
+          protocol: UDP
+        - port: 53
+          protocol: TCP
+    - ports:
+        - port: 443
+          protocol: TCP
+        - port: 6443
+          protocol: TCP
+    - to:
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: rauthy-system
+      ports:
+        - port: 8080
+          protocol: TCP

@@ -1,0 +1,66 @@
+{
+  "record": {
+    "amendmentRecord": "amended 2026-06-18 by spec 217 (engine-swap collapse): the in-tree codebase-indexer that scanned workflow headers was deleted; that logic is now in spec-spine-core. The codebase-indexer crate-unit is stripped (path deleted); this spec's authority over the `# Spec:` workflow-header convention (.github/workflows) survives.\n",
+    "codeAliases": [
+      "WORKFLOW_TRACEABILITY"
+    ],
+    "created": "2026-04-28",
+    "dependsOn": [
+      "000-bootstrap-spec-system",
+      "101-codebase-index-mvp",
+      "103-init-protocol-governed-reads"
+    ],
+    "domain": "tooling",
+    "extraFrontmatter": {
+      "amended": "2026-06-18",
+      "slug": "workflow-spec-traceability"
+    },
+    "id": "118-workflow-spec-traceability",
+    "implementation": "complete",
+    "kind": "governance",
+    "owner": "bart",
+    "references": [
+      {
+        "role": "artifact",
+        "unit": {
+          "kind": "file",
+          "path": ".derived/codebase-index/CODEBASE-INDEX.md"
+        }
+      }
+    ],
+    "refines": [
+      {
+        "aspect": "spec-header-convention",
+        "unit": {
+          "kind": "directory",
+          "path": ".github/workflows"
+        }
+      }
+    ],
+    "risk": "low",
+    "sectionHeadings": [
+      "118 — Workflow-to-Spec Traceability",
+      "1. Problem Statement",
+      "2. Goals",
+      "3. Scope",
+      "In scope",
+      "Out of scope",
+      "4. Header Convention",
+      "5. Index Schema",
+      "6. Renderer Output",
+      "7. Acceptance Criteria",
+      "8. Backfill Plan",
+      "9. Why this isn't a CLAUDE.md addendum",
+      "Cross-references",
+      "Amendments received",
+      "Amendment 2026-06-29 (reset-prep housekeeping)",
+      "Security hardening amendment (2026-07-02)"
+    ],
+    "specPath": "specs/118-workflow-spec-traceability/spec.md",
+    "status": "approved",
+    "summary": "Adopt a header-line convention `# Spec: NNN-slug` in every .github/workflows/*.yml. Extend tools/spec-spine/codebase-indexer to scan workflow files for the convention and emit a `workflow_traceability` block in index.json, rendered as a new \"Layer 5: CI Workflow Traceability\" section of CODEBASE-INDEX.md. Closes the gap where Rust crates trace to specs via `[package.metadata.oap]` but workflows have no equivalent.\n",
+    "title": "Workflow-to-Spec Traceability — surface \"# Spec:\" headers in the codebase index"
+  },
+  "shardHash": "6d49ebafd9fedf1a49c4dd4b45faf23670f96f702fa2c5251a33a97c188727eb",
+  "specVersion": "1.1.0"
+}

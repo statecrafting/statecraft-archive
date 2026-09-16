@@ -1,0 +1,11 @@
+.encore
+encore.gen.go
+encore.gen.cue
+/.encore
+node_modules
+/encore.gen
+.DS_Store
+.idea/
+.bin/
+frontend/build
+frontend/.react-router

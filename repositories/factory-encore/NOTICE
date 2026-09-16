@@ -1,0 +1,13 @@
+factory-encore
+Copyright 2026 Bartek Kus
+
+This product is an original, independent implementation of the Open Agentic
+Platform (OAP) factory standard. It was authored from the OAP contract
+specifications and public framework documentation.
+
+The contract schemas under contract/schemas/ mirror the author's own factory
+standard as published in the Open Agentic Platform
+(https://github.com/stagecraft-ing/open-agentic-platform). The process layer
+and documentation are original works authored for this repository.
+
+Licensed under the Apache License, Version 2.0. See LICENSE for the full terms.

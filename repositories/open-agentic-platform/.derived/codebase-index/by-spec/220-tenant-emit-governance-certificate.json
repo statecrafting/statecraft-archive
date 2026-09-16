@@ -1,0 +1,343 @@
+{
+  "mapping": {
+    "amends": [
+      "168-per-project-governance-certificate"
+    ],
+    "dependsOn": [
+      "102-governed-excellence",
+      "168-per-project-governance-certificate",
+      "167-born-with-spec-spine-kernel",
+      "198-factory-governance-envelope",
+      "209-tenant-kernel-ci-enforcement",
+      "218-run-cert-corpus-binding",
+      "219-tenant-tail-verifier-toolkit"
+    ],
+    "implementingPaths": [
+      {
+        "path": "crates/factory-engine/src/bin/build_certificate.rs",
+        "source": "spec-edge"
+      },
+      {
+        "path": "crates/factory-engine/src/governance_certificate.rs",
+        "source": "spec-edge"
+      },
+      {
+        "path": "crates/factory-engine/src/kernel_emission/templates.rs",
+        "source": "spec-edge"
+      },
+      {
+        "path": "crates/factory-engine/src/platform_jws.rs",
+        "source": "spec-edge"
+      },
+      {
+        "path": "crates/factory-engine/templates/kernel/toolchain.yaml.tmpl",
+        "source": "spec-edge"
+      },
+      {
+        "path": "crates/factory-engine/tests/tenant_emission_integration.rs",
+        "source": "spec-edge"
+      },
+      {
+        "path": "crates/featuregraph/tests/golden/features_graph.json",
+        "source": "spec-edge"
+      },
+      {
+        "path": "platform/services/statecraft/api/projects/create.ts",
+        "source": "spec-edge"
+      },
+      {
+        "path": "platform/services/statecraft/api/projects/scaffold/perRequestScaffold.ts",
+        "source": "spec-edge"
+      },
+      {
+        "path": "platform/services/statecraft/api/projects/scaffold/regenerateProducedClient.test.ts",
+        "source": "spec-edge"
+      },
+      {
+        "path": "platform/services/statecraft/api/projects/scaffold/templateCache.ts",
+        "source": "spec-edge"
+      },
+      {
+        "path": "platform/services/statecraft/api/projects/scaffold/tenantSigningKey.test.ts",
+        "source": "spec-edge"
+      },
+      {
+        "path": "platform/services/statecraft/api/projects/scaffold/tenantSigningKey.ts",
+        "source": "spec-edge"
+      },
+      {
+        "path": "platform/services/statecraft/api/projects/scaffold/types.ts",
+        "source": "spec-edge"
+      },
+      {
+        "path": "platform/services/statecraft/package.json",
+        "source": "spec-edge"
+      },
+      {
+        "path": "specs/168-per-project-governance-certificate/spec.md",
+        "source": "spec-edge"
+      },
+      {
+        "path": "specs/209-tenant-kernel-ci-enforcement/spec.md",
+        "source": "spec-edge"
+      },
+      {
+        "path": "specs/219-tenant-tail-verifier-toolkit/spec.md",
+        "source": "spec-edge"
+      }
+    ],
+    "resolvedUnits": [
+      {
+        "locations": [
+          {
+            "file": "platform/services/statecraft/api/projects/scaffold/regenerateProducedClient.test.ts"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "file",
+          "path": "platform/services/statecraft/api/projects/scaffold/regenerateProducedClient.test.ts"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "platform/services/statecraft/api/projects/scaffold/tenantSigningKey.test.ts"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "file",
+          "path": "platform/services/statecraft/api/projects/scaffold/tenantSigningKey.test.ts"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "platform/services/statecraft/api/projects/scaffold/tenantSigningKey.ts"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "file",
+          "path": "platform/services/statecraft/api/projects/scaffold/tenantSigningKey.ts"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "crates/factory-engine/src/bin/build_certificate.rs"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "extends",
+        "unit": {
+          "kind": "file",
+          "path": "crates/factory-engine/src/bin/build_certificate.rs"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "crates/factory-engine/src/bin/build_certificate.rs"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "extends",
+        "unit": {
+          "kind": "file",
+          "path": "crates/factory-engine/src/bin/build_certificate.rs"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "crates/factory-engine/tests/tenant_emission_integration.rs"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "extends",
+        "unit": {
+          "kind": "file",
+          "path": "crates/factory-engine/tests/tenant_emission_integration.rs"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "crates/featuregraph/tests/golden/features_graph.json"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "extends",
+        "unit": {
+          "kind": "file",
+          "path": "crates/featuregraph/tests/golden/features_graph.json"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "platform/services/statecraft/api/projects/create.ts"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "extends",
+        "unit": {
+          "kind": "file",
+          "path": "platform/services/statecraft/api/projects/create.ts"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "platform/services/statecraft/api/projects/scaffold/perRequestScaffold.ts"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "extends",
+        "unit": {
+          "kind": "file",
+          "path": "platform/services/statecraft/api/projects/scaffold/perRequestScaffold.ts"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "platform/services/statecraft/api/projects/scaffold/templateCache.ts"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "extends",
+        "unit": {
+          "kind": "file",
+          "path": "platform/services/statecraft/api/projects/scaffold/templateCache.ts"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "platform/services/statecraft/api/projects/scaffold/types.ts"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "extends",
+        "unit": {
+          "kind": "file",
+          "path": "platform/services/statecraft/api/projects/scaffold/types.ts"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "platform/services/statecraft/package.json"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "extends",
+        "unit": {
+          "kind": "file",
+          "path": "platform/services/statecraft/package.json"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "crates/factory-engine/src/kernel_emission/templates.rs"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "refines",
+        "unit": {
+          "kind": "file",
+          "path": "crates/factory-engine/src/kernel_emission/templates.rs"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "crates/factory-engine/templates/kernel/toolchain.yaml.tmpl"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "refines",
+        "unit": {
+          "kind": "file",
+          "path": "crates/factory-engine/templates/kernel/toolchain.yaml.tmpl"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "crates/factory-engine/src/governance_certificate.rs"
+          }
+        ],
+        "ownership": false,
+        "sourceField": "references",
+        "unit": {
+          "kind": "file",
+          "path": "crates/factory-engine/src/governance_certificate.rs"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "crates/factory-engine/src/platform_jws.rs"
+          }
+        ],
+        "ownership": false,
+        "sourceField": "references",
+        "unit": {
+          "kind": "file",
+          "path": "crates/factory-engine/src/platform_jws.rs"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "specs/168-per-project-governance-certificate/spec.md"
+          }
+        ],
+        "ownership": false,
+        "sourceField": "references",
+        "unit": {
+          "kind": "file",
+          "path": "specs/168-per-project-governance-certificate/spec.md"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "specs/209-tenant-kernel-ci-enforcement/spec.md"
+          }
+        ],
+        "ownership": false,
+        "sourceField": "references",
+        "unit": {
+          "kind": "file",
+          "path": "specs/209-tenant-kernel-ci-enforcement/spec.md"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "specs/219-tenant-tail-verifier-toolkit/spec.md"
+          }
+        ],
+        "ownership": false,
+        "sourceField": "references",
+        "unit": {
+          "kind": "file",
+          "path": "specs/219-tenant-tail-verifier-toolkit/spec.md"
+        }
+      }
+    ],
+    "specId": "220-tenant-emit-governance-certificate",
+    "specStatus": "approved"
+  },
+  "schemaVersion": "1.1.0",
+  "shardHash": "0b78fbe8b51578860b49e46243e7d793778efe4a3c0b41b6fdb34f7d74b80196"
+}

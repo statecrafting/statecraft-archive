@@ -1,0 +1,80 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "audiences.schema.json",
+  "title": "Audiences - Stage 2 Output",
+  "description": "Who uses the system: audience groups, authentication methods, and role-permission mappings.",
+  "type": "object",
+  "required": ["audiences"],
+  "additionalProperties": false,
+  "properties": {
+    "audiences": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "$ref": "#/$defs/audience" }
+    }
+  },
+  "$defs": {
+    "audience": {
+      "type": "object",
+      "required": ["name", "description", "auth_method", "provisioning_model", "roles"],
+      "additionalProperties": false,
+      "properties": {
+        "name": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Machine-safe audience name (e.g. \"citizen\", \"staff\")."
+        },
+        "description": {
+          "type": "string",
+          "minLength": 1
+        },
+        "auth_method": {
+          "type": "string",
+          "enum": ["saml", "oidc", "api-key", "basic", "mock"],
+          "description": "Abstract authentication method."
+        },
+        "auth_provider": {
+          "type": "string",
+          "description": "Identity provider name (e.g. \"keycloak\", \"auth0\")."
+        },
+        "provisioning_model": {
+          "type": "string",
+          "enum": ["admin-only", "open-authenticated"],
+          "description": "REQUIRED. How a principal of this audience gains access - the orthogonal how-users-gain-access axis, independent of roles[].permissions. An explicit, auditable decision with no silent default (a missing value is a hard error). 'admin-only' = a user record must be pre-created by an administrator (an unknown authenticated principal is denied, never auto-provisioned); 'open-authenticated' = any authenticated principal gains access, auto-created on first login. Carries the Stage 2 decision into the Build Spec."
+        },
+        "roles": {
+          "type": "array",
+          "minItems": 1,
+          "items": { "$ref": "#/$defs/role" }
+        }
+      }
+    },
+    "role": {
+      "type": "object",
+      "required": ["role_code", "display_name", "description", "permissions"],
+      "additionalProperties": false,
+      "properties": {
+        "role_code": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Machine-safe role identifier (e.g. \"onboarding-analyst\")."
+        },
+        "display_name": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Human-readable role name."
+        },
+        "description": {
+          "type": "string",
+          "minLength": 1,
+          "description": "What this role can do."
+        },
+        "permissions": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "Abstract permission labels (e.g. \"assess:write\", \"decision:read\")."
+        }
+      }
+    }
+  }
+}

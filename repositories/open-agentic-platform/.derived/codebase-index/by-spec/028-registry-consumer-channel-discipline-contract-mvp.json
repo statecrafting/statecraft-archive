@@ -1,0 +1,9 @@
+{
+  "mapping": {
+    "implementingPaths": [],
+    "specId": "028-registry-consumer-channel-discipline-contract-mvp",
+    "specStatus": "superseded"
+  },
+  "schemaVersion": "1.1.0",
+  "shardHash": "7625f9d5f16b78fee2375721600dc4b22a017d6657c8616c2ea878aac68964d1"
+}

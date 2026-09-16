@@ -1,0 +1,257 @@
+{
+  "diagnostics": {
+    "errors": [],
+    "warnings": [
+      {
+        "code": "W-002",
+        "message": "spec '212-factory-schema-lockstep-ci' directory unit 'factory' is not a directory",
+        "path": "factory"
+      }
+    ]
+  },
+  "mapping": {
+    "implementingPaths": [
+      {
+        "path": ".github/workflows/ci-factory-schema-lockstep-cron.yml",
+        "source": "spec-edge"
+      },
+      {
+        "path": ".github/workflows/ci-factory-schema-lockstep.yml",
+        "source": "spec-edge"
+      },
+      {
+        "path": ".github/workflows/ci.yml",
+        "source": "spec-edge"
+      },
+      {
+        "path": "Makefile",
+        "source": "spec-edge"
+      },
+      {
+        "path": "crates/featuregraph/tests/golden/features_graph.json",
+        "source": "spec-edge"
+      },
+      {
+        "path": "specs/197-factory-contract-open-standard-extensions/spec.md",
+        "source": "spec-edge"
+      },
+      {
+        "path": "standards/schemas/factory",
+        "source": "spec-edge"
+      },
+      {
+        "path": "tools/oap/ci-parity-check/src/lib.rs",
+        "source": "spec-edge"
+      },
+      {
+        "path": "tools/oap/ci-parity-check/tests/fixtures/aligned/.github/workflows/ci-factory-schema-lockstep.yml",
+        "source": "spec-edge"
+      },
+      {
+        "path": "tools/oap/ci-parity-check/tests/fixtures/aligned/Makefile",
+        "source": "spec-edge"
+      },
+      {
+        "path": "tools/oap/ci-parity-check/tests/fixtures/divergent/.github/workflows/ci-factory-schema-lockstep.yml",
+        "source": "spec-edge"
+      },
+      {
+        "path": "tools/oap/factory-schema-lockstep",
+        "source": "multiple"
+      },
+      {
+        "path": "tools/oap/schema-parity-check",
+        "source": "spec-edge"
+      }
+    ],
+    "resolvedUnits": [
+      {
+        "locations": [
+          {
+            "file": "tools/oap/factory-schema-lockstep"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "directory",
+          "path": "tools/oap/factory-schema-lockstep"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": ".github/workflows/ci-factory-schema-lockstep-cron.yml"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "file",
+          "path": ".github/workflows/ci-factory-schema-lockstep-cron.yml"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": ".github/workflows/ci-factory-schema-lockstep.yml"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "file",
+          "path": ".github/workflows/ci-factory-schema-lockstep.yml"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "tools/oap/ci-parity-check/tests/fixtures/aligned/.github/workflows/ci-factory-schema-lockstep.yml"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "file",
+          "path": "tools/oap/ci-parity-check/tests/fixtures/aligned/.github/workflows/ci-factory-schema-lockstep.yml"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "tools/oap/ci-parity-check/tests/fixtures/divergent/.github/workflows/ci-factory-schema-lockstep.yml"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "file",
+          "path": "tools/oap/ci-parity-check/tests/fixtures/divergent/.github/workflows/ci-factory-schema-lockstep.yml"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": ".github/workflows/ci.yml"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "extends",
+        "unit": {
+          "kind": "file",
+          "path": ".github/workflows/ci.yml"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "crates/featuregraph/tests/golden/features_graph.json"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "extends",
+        "unit": {
+          "kind": "file",
+          "path": "crates/featuregraph/tests/golden/features_graph.json"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "tools/oap/ci-parity-check/src/lib.rs"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "extends",
+        "unit": {
+          "kind": "file",
+          "path": "tools/oap/ci-parity-check/src/lib.rs"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "tools/oap/ci-parity-check/tests/fixtures/aligned/Makefile"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "extends",
+        "unit": {
+          "kind": "file",
+          "path": "tools/oap/ci-parity-check/tests/fixtures/aligned/Makefile"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "Makefile",
+            "span": {
+              "endLine": 656,
+              "startLine": 636
+            }
+          }
+        ],
+        "ownership": true,
+        "sourceField": "co_authority",
+        "unit": {
+          "anchor": "factory-schema-lockstep",
+          "file": "Makefile",
+          "kind": "section"
+        }
+      },
+      {
+        "locations": [],
+        "ownership": false,
+        "sourceField": "references",
+        "unit": {
+          "kind": "directory",
+          "path": "factory"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "standards/schemas/factory"
+          }
+        ],
+        "ownership": false,
+        "sourceField": "references",
+        "unit": {
+          "kind": "directory",
+          "path": "standards/schemas/factory"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "tools/oap/schema-parity-check"
+          }
+        ],
+        "ownership": false,
+        "sourceField": "references",
+        "unit": {
+          "kind": "directory",
+          "path": "tools/oap/schema-parity-check"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "specs/197-factory-contract-open-standard-extensions/spec.md"
+          }
+        ],
+        "ownership": false,
+        "sourceField": "references",
+        "unit": {
+          "kind": "file",
+          "path": "specs/197-factory-contract-open-standard-extensions/spec.md"
+        }
+      }
+    ],
+    "specId": "212-factory-schema-lockstep-ci",
+    "specStatus": "approved"
+  },
+  "schemaVersion": "1.1.0",
+  "shardHash": "041fe99f49f6f100845fb27cd08f16e39c620aff7cadda3381bdece9e7e1cf27"
+}

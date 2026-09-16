@@ -1,0 +1,445 @@
+{
+  "tools": [
+    {
+      "name": "agent.execute",
+      "description": "Execute a proposed changeset by replaying its tool_calls against the allowlisted tools",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "repo_root": {
+            "type": "string"
+          },
+          "changeset_id": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "repo_root",
+          "changeset_id"
+        ]
+      }
+    },
+    {
+      "name": "agent.propose",
+      "description": "Create a structured changeset artifact in changes/ (does not execute)",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "repo_root": {
+            "type": "string"
+          },
+          "subject": {
+            "type": "string"
+          },
+          "repo_key": {
+            "type": "string"
+          },
+          "base_state": {
+            "type": "string"
+          },
+          "goal": {
+            "type": "string"
+          },
+          "tasks": {
+            "type": "array",
+            "items": {
+              "type": "object"
+            }
+          },
+          "tiers": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "architecture_doc": {
+            "type": "string"
+          },
+          "base_state_created_at": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "repo_root",
+          "subject",
+          "repo_key",
+          "goal",
+          "tasks"
+        ]
+      }
+    },
+    {
+      "name": "agent.verify",
+      "description": "Validate a changeset's artifacts and post-execution state",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "repo_root": {
+            "type": "string"
+          },
+          "changeset_id": {
+            "type": "string"
+          },
+          "profile": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "repo_root",
+          "changeset_id"
+        ]
+      }
+    },
+    {
+      "name": "features.impact",
+      "description": "Given a list of changed file paths, returns which features are affected. Use before proposing any edit to understand governance scope and ownership.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "repo_root": {
+            "type": "string",
+            "description": "Absolute path to the repository root."
+          },
+          "paths": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "List of file paths (relative to repo_root or absolute) to analyze for feature attribution."
+          }
+        },
+        "required": [
+          "repo_root",
+          "paths"
+        ]
+      }
+    },
+    {
+      "name": "gov.drift",
+      "description": "Check for drift and violations",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "repo_root": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "repo_root"
+        ]
+      }
+    },
+    {
+      "name": "gov.preflight",
+      "description": "Check governance policy for proposed changes",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "repo_root": {
+            "type": "string"
+          },
+          "intent": {
+            "type": "string",
+            "description": "Natural-language description of planned change"
+          },
+          "mode": {
+            "type": "string",
+            "enum": [
+              "worktree",
+              "snapshot"
+            ]
+          },
+          "changed_paths": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "snapshot_id": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "repo_root",
+          "intent",
+          "mode",
+          "changed_paths"
+        ]
+      }
+    },
+    {
+      "name": "repo.apply_patch",
+      "description": "Apply a unified diff patch to the repository worktree",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "repo_root": {
+            "type": "string"
+          },
+          "patch": {
+            "type": "string"
+          },
+          "mode": {
+            "type": "string",
+            "enum": [
+              "worktree",
+              "snapshot"
+            ]
+          },
+          "lease_id": {
+            "type": "string"
+          },
+          "snapshot_id": {
+            "type": "string"
+          },
+          "strip": {
+            "type": "integer"
+          },
+          "reject_on_conflict": {
+            "type": "boolean"
+          },
+          "dry_run": {
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "repo_root",
+          "patch",
+          "mode"
+        ]
+      }
+    },
+    {
+      "name": "repo.delete",
+      "description": "Delete a file or directory inside the repository worktree",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "repo_root": {
+            "type": "string"
+          },
+          "path": {
+            "type": "string"
+          },
+          "lease_id": {
+            "type": "string"
+          },
+          "dry_run": {
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "repo_root",
+          "path",
+          "lease_id"
+        ]
+      }
+    },
+    {
+      "name": "repo.write_file",
+      "description": "Write file content inside the repository worktree",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "repo_root": {
+            "type": "string"
+          },
+          "path": {
+            "type": "string"
+          },
+          "content_base64": {
+            "type": "string"
+          },
+          "lease_id": {
+            "type": "string"
+          },
+          "create_dirs": {
+            "type": "boolean"
+          },
+          "dry_run": {
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "repo_root",
+          "path",
+          "content_base64",
+          "lease_id"
+        ]
+      }
+    },
+    {
+      "name": "run.execute",
+      "description": "Execute a run skill",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "skill": {
+            "type": "string"
+          },
+          "env": {
+            "type": "object"
+          }
+        },
+        "required": [
+          "skill"
+        ]
+      }
+    },
+    {
+      "name": "run.logs",
+      "description": "Get run logs",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "run_id": {
+            "type": "string"
+          },
+          "offset": {
+            "type": "integer"
+          },
+          "limit": {
+            "type": "integer"
+          }
+        },
+        "required": [
+          "run_id"
+        ]
+      }
+    },
+    {
+      "name": "run.status",
+      "description": "Get run status",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "run_id": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "run_id"
+        ]
+      }
+    },
+    {
+      "name": "workspace.apply_patch",
+      "description": "[Alias for repo.apply_patch] Apply a unified diff patch to the repository worktree",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "repo_root": {
+            "type": "string"
+          },
+          "patch": {
+            "type": "string"
+          },
+          "mode": {
+            "type": "string",
+            "enum": [
+              "worktree",
+              "snapshot"
+            ]
+          },
+          "lease_id": {
+            "type": "string"
+          },
+          "snapshot_id": {
+            "type": "string"
+          },
+          "strip": {
+            "type": "integer"
+          },
+          "reject_on_conflict": {
+            "type": "boolean"
+          },
+          "dry_run": {
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "repo_root",
+          "patch",
+          "mode"
+        ]
+      }
+    },
+    {
+      "name": "workspace.delete",
+      "description": "[Alias for repo.delete] Delete a file or directory inside the repository worktree",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "repo_root": {
+            "type": "string"
+          },
+          "path": {
+            "type": "string"
+          },
+          "lease_id": {
+            "type": "string"
+          },
+          "dry_run": {
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "repo_root",
+          "path",
+          "lease_id"
+        ]
+      }
+    },
+    {
+      "name": "workspace.write_file",
+      "description": "[Alias for repo.write_file] Write file content inside the repository worktree",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "repo_root": {
+            "type": "string"
+          },
+          "path": {
+            "type": "string"
+          },
+          "content_base64": {
+            "type": "string"
+          },
+          "lease_id": {
+            "type": "string"
+          },
+          "create_dirs": {
+            "type": "boolean"
+          },
+          "dry_run": {
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "repo_root",
+          "path",
+          "content_base64",
+          "lease_id"
+        ]
+      }
+    },
+    {
+      "name": "xray.scan",
+      "description": "Scan repository to build index",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "repo_root": {
+            "type": "string"
+          },
+          "path": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "repo_root"
+        ]
+      }
+    }
+  ]
+}

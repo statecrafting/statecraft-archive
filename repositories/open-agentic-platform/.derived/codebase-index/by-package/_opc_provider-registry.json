@@ -1,0 +1,11 @@
+{
+  "package": {
+    "kind": "npm-package",
+    "name": "@opc/provider-registry",
+    "path": "product/packages/provider-registry",
+    "specRef": "042-multi-provider-agent-registry",
+    "version": "0.1.0"
+  },
+  "schemaVersion": "1.1.0",
+  "shardHash": "0e79f68ad629b760b1195cb48d9d43acd61782e988f9ddc8c2df9591a54f4fea"
+}

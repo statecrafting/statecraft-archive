@@ -1,0 +1,146 @@
+{
+  "record": {
+    "amendmentRecord": "self-amended (2026-06-12) — implementation PR. The first-ever execution\nof the encore lane validated this spec's premise harder than its text\nanticipated: 11 of the 22 DB-bound files failed on accumulated rot\n(dropped-table seeds from the spec 139 migrations 34/35, a never-valid\nprojects.created_by omission in the spec 137 suites, a stale enum\nliteral in spec 115's seed, mock-runtime assumptions in spec 143's\nsuite) — none of it ever visible because nothing ran the lane. FR-001\nis refined from \"full suite minus check.test.ts\" to the DB-bound set\nderived from the vite.config.ts exclude list (the two lanes partition\nthe suite; pure suites already gate in ci-statecraft.yml, and\nmock-runtime suites like storage.dualClient.test.ts are bare-lane by\ndesign). FR-002's fast-lane decision is recorded: strict-only. Adds\nestablishes: edges for the lane, the coverage-guard script, and the\nparity fixtures; implementation flipped pending → in-progress. See\n§Implementation log. Completion flip (in-progress → complete) rode the\nfollow-up commit after the lane went green on main — see\n§Implementation log \"FR-005 discharged\".\n",
+    "authors": [
+      "open-agentic-platform"
+    ],
+    "coAuthority": [
+      {
+        "unit": {
+          "anchor": "ci-statecraft-encore",
+          "file": "Makefile",
+          "kind": "section"
+        },
+        "with_specs": [
+          "104-makefile-ci-parity-contract"
+        ]
+      }
+    ],
+    "codeAliases": [
+      "ENCORE_TEST_CI_JOB"
+    ],
+    "created": "2026-06-11",
+    "dependsOn": [
+      "104-makefile-ci-parity-contract",
+      "135-fast-ci-as-default",
+      "177-ci-orchestrator-pr-gate",
+      "198-factory-governance-envelope",
+      "201-anti-blind-approval-ui"
+    ],
+    "domain": "tooling",
+    "establishes": [
+      {
+        "kind": "file",
+        "path": ".github/workflows/ci-statecraft-encore.yml"
+      },
+      {
+        "kind": "file",
+        "path": "platform/services/statecraft/scripts/encore-test-lane.mjs"
+      },
+      {
+        "kind": "file",
+        "path": "tools/oap/ci-parity-check/tests/fixtures/aligned/.github/workflows/ci-statecraft-encore.yml"
+      },
+      {
+        "kind": "file",
+        "path": "tools/oap/ci-parity-check/tests/fixtures/divergent/.github/workflows/ci-statecraft-encore.yml"
+      }
+    ],
+    "extends": [
+      {
+        "nature": "additive",
+        "spec": "177-ci-orchestrator-pr-gate",
+        "unit": {
+          "kind": "file",
+          "path": ".github/workflows/ci.yml"
+        }
+      },
+      {
+        "nature": "additive",
+        "spec": "104-makefile-ci-parity-contract",
+        "unit": {
+          "kind": "file",
+          "path": "tools/oap/ci-parity-check/src/lib.rs"
+        }
+      },
+      {
+        "nature": "additive",
+        "spec": "104-makefile-ci-parity-contract",
+        "unit": {
+          "kind": "file",
+          "path": "tools/oap/ci-parity-check/tests/fixtures/aligned/Makefile"
+        }
+      },
+      {
+        "nature": "additive",
+        "spec": "034-featuregraph-registry-scanner-fix",
+        "unit": {
+          "kind": "file",
+          "path": "crates/featuregraph/tests/golden/features_graph.json"
+        }
+      }
+    ],
+    "extraFrontmatter": {
+      "amended": "2026-06-12",
+      "compliance": [
+        {
+          "controls": [
+            "ASI09"
+          ],
+          "framework": "owasp-asi-2026"
+        }
+      ],
+      "language": "en"
+    },
+    "featureBranch": "feat/211-encore-test-ci-job",
+    "id": "211-encore-test-ci-job",
+    "implementation": "complete",
+    "kind": "governance",
+    "references": [
+      {
+        "role": "context",
+        "unit": {
+          "kind": "file",
+          "path": "platform/services/statecraft/vite.config.ts"
+        }
+      },
+      {
+        "role": "context",
+        "unit": {
+          "kind": "file",
+          "path": ".github/workflows/ci-statecraft.yml"
+        }
+      },
+      {
+        "role": "context",
+        "unit": {
+          "kind": "file",
+          "path": "docs/owasp-agentic-top-10-2026.md"
+        }
+      }
+    ],
+    "sectionHeadings": [
+      "Feature Specification: Encore-Test CI Job",
+      "Purpose",
+      "Functional requirements (sketch — refine before implementation)",
+      "Acceptance criteria (sketch)",
+      "Out of scope",
+      "Sequencing",
+      "Implementation log (2026-06-12)",
+      "The first run proved the premise — at scale",
+      "FR-001 refined: the lane runs the DB-bound set, not the full suite",
+      "FR-003 as built",
+      "Sequential file execution is part of the lane contract",
+      "FR-004 as built: the lane runs unlinked from Encore Cloud",
+      "FR-002 decision: strict-lane only",
+      "FR-005 status",
+      "FR-005 discharged (2026-06-12, completion flip)"
+    ],
+    "specPath": "specs/211-encore-test-ci-job/spec.md",
+    "status": "approved",
+    "summary": "Close the encore-test CI gap: the bare-vitest exclude list in statecraft's vite.config.ts assigns 22 DB-bound test files (specs 115, 124, 137, 139–143, 198, 201) to the `encore test` lane, but no CI job runs that lane — CI runs bare vitest only, so DB-bound acceptance suites never execute before merge. The gap already shipped a real violation invisibly (spec 198's FR-013 correction note: audit INSERTs violating a live check constraint, covered by a test CI never ran). This spec adds an enforcing encore-test CI job dispatched from the spec-177 orchestrator, a Makefile mirror per the spec-104 parity contract, and a lane-coverage guard so a file excluded from bare vitest cannot silently skip both lanes. Its completion is the named trigger for spec 198's ASI09 row flipping to \"Solid\" and spec 201's implementation flipping to complete.\n",
+    "title": "Encore-Test CI Job (ASI09 verification integrity — the encore-test CI gap, closed)"
+  },
+  "shardHash": "df339115ed4a9ac2bf25f7b69e58231d86d4ab59557b8aabe7a13b5a3af0be62",
+  "specVersion": "1.1.0"
+}

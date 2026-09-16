@@ -1,0 +1,50 @@
+{
+  "mapping": {
+    "dependsOn": [
+      "002-encore-generator-core",
+      "003-user-management-module"
+    ],
+    "implementingPaths": [
+      {
+        "path": "adapters/acme-vue-encore/scripts/setup-dual-app.test.ts",
+        "source": "spec-edge"
+      },
+      {
+        "path": "adapters/acme-vue-encore/scripts/setup-dual-app.ts",
+        "source": "spec-edge"
+      }
+    ],
+    "resolvedUnits": [
+      {
+        "locations": [
+          {
+            "file": "adapters/acme-vue-encore/scripts/setup-dual-app.test.ts"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "file",
+          "path": "adapters/acme-vue-encore/scripts/setup-dual-app.test.ts"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "adapters/acme-vue-encore/scripts/setup-dual-app.ts"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "file",
+          "path": "adapters/acme-vue-encore/scripts/setup-dual-app.ts"
+        }
+      }
+    ],
+    "specId": "004-dual-app-generator",
+    "specStatus": "approved"
+  },
+  "schemaVersion": "1.1.0",
+  "shardHash": "48eda3c28861beab3d9bbab66df36be4d96fb62031a7386f115b30e27faa8d73"
+}

@@ -1,0 +1,65 @@
+{
+  "diagnostics": {
+    "errors": [],
+    "warnings": [
+      {
+        "code": "W-002",
+        "message": "spec '061-conductor-track-lifecycle' file unit '.claude/agents/conductor.md' does not exist",
+        "path": ".claude/agents/conductor.md"
+      }
+    ]
+  },
+  "mapping": {
+    "implementingPaths": [
+      {
+        "path": ".claude/skills/implement-plan/SKILL.md",
+        "source": "spec-edge"
+      },
+      {
+        "path": "product/packages/conductor-track",
+        "source": "multiple"
+      }
+    ],
+    "resolvedUnits": [
+      {
+        "locations": [
+          {
+            "file": "product/packages/conductor-track"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "directory",
+          "path": "product/packages/conductor-track"
+        }
+      },
+      {
+        "locations": [],
+        "ownership": false,
+        "sourceField": "references",
+        "unit": {
+          "kind": "file",
+          "path": ".claude/agents/conductor.md"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": ".claude/skills/implement-plan/SKILL.md"
+          }
+        ],
+        "ownership": false,
+        "sourceField": "references",
+        "unit": {
+          "kind": "file",
+          "path": ".claude/skills/implement-plan/SKILL.md"
+        }
+      }
+    ],
+    "specId": "061-conductor-track-lifecycle",
+    "specStatus": "approved"
+  },
+  "schemaVersion": "1.1.0",
+  "shardHash": "a1ed31010d50caca4f8cb8a2ceedb62179dd5281e577b368d76ce216a09e0a24"
+}

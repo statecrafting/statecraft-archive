@@ -1,0 +1,34 @@
+{
+  "record": {
+    "created": "2026-07-14",
+    "establishes": [
+      {
+        "kind": "file",
+        "path": "spec-spine.toml"
+      },
+      {
+        "kind": "file",
+        "path": ".github/workflows/spec-spine.yml"
+      }
+    ],
+    "id": "000-bootstrap",
+    "sectionHeadings": [
+      "000: Bootstrap spec system",
+      "1. The authoring / derived boundary",
+      "2. The typed authority graph"
+    ],
+    "specPath": "specs/000-bootstrap/spec.md",
+    "status": "approved",
+    "summary": "Foundational contract: authored truth lives only in markdown (+ YAML frontmatter); machine-consumable truth is compiler-emitted JSON only; every artifact is a deterministic function of (config, file contents); a typed authority graph governs who-owns-what. This repository is born governed: the spine exists before the first line of product code.\n",
+    "title": "Bootstrap spec system",
+    "unamendable": [
+      "markdown-truth-boundary",
+      "json-truth-boundary",
+      "determinism-requirement",
+      "typed-authority-graph",
+      "refusal-rule"
+    ]
+  },
+  "shardHash": "e233c6319046bc4d46dfc913847a32d540e7a0b882d6570354f152484adfafb4",
+  "specVersion": "1.2.0"
+}

@@ -1,0 +1,144 @@
+{
+  "diagnostics": {
+    "errors": [],
+    "warnings": [
+      {
+        "code": "W-002",
+        "message": "spec '160-factory-adapter-statecraft-relocation' file unit 'docs/owasp/factory/AIDE-VELOCITY-OAP-INTENT.md' does not exist",
+        "path": "docs/owasp/factory/AIDE-VELOCITY-OAP-INTENT.md"
+      },
+      {
+        "code": "W-002",
+        "message": "spec '160-factory-adapter-statecraft-relocation' file unit 'tools/spec-spine/codebase-indexer/src/lib.rs' does not exist",
+        "path": "tools/spec-spine/codebase-indexer/src/lib.rs"
+      }
+    ]
+  },
+  "mapping": {
+    "amends": [
+      "101-codebase-index-mvp"
+    ],
+    "dependsOn": [
+      "074-factory-ingestion",
+      "075-factory-workflow-engine",
+      "077-statecraft-factory-api",
+      "108-factory-as-platform-feature"
+    ],
+    "implementingPaths": [
+      {
+        "path": "Makefile",
+        "source": "spec-edge"
+      },
+      {
+        "path": "platform/services/statecraft",
+        "source": "spec-edge"
+      },
+      {
+        "path": "specs/074-factory-ingestion/spec.md",
+        "source": "spec-edge"
+      },
+      {
+        "path": "specs/077-statecraft-factory-api/spec.md",
+        "source": "spec-edge"
+      },
+      {
+        "path": "specs/108-factory-as-platform-feature/spec.md",
+        "source": "spec-edge"
+      }
+    ],
+    "resolvedUnits": [
+      {
+        "locations": [
+          {
+            "file": "platform/services/statecraft"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "extends",
+        "unit": {
+          "kind": "directory",
+          "path": "platform/services/statecraft"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "Makefile",
+            "span": {
+              "endLine": 197,
+              "startLine": 196
+            }
+          }
+        ],
+        "ownership": true,
+        "sourceField": "co_authority",
+        "unit": {
+          "anchor": "registry",
+          "file": "Makefile",
+          "kind": "section"
+        }
+      },
+      {
+        "locations": [],
+        "ownership": false,
+        "sourceField": "references",
+        "unit": {
+          "kind": "file",
+          "path": "docs/owasp/factory/AIDE-VELOCITY-OAP-INTENT.md"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "specs/074-factory-ingestion/spec.md"
+          }
+        ],
+        "ownership": false,
+        "sourceField": "references",
+        "unit": {
+          "kind": "file",
+          "path": "specs/074-factory-ingestion/spec.md"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "specs/077-statecraft-factory-api/spec.md"
+          }
+        ],
+        "ownership": false,
+        "sourceField": "references",
+        "unit": {
+          "kind": "file",
+          "path": "specs/077-statecraft-factory-api/spec.md"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "specs/108-factory-as-platform-feature/spec.md"
+          }
+        ],
+        "ownership": false,
+        "sourceField": "references",
+        "unit": {
+          "kind": "file",
+          "path": "specs/108-factory-as-platform-feature/spec.md"
+        }
+      },
+      {
+        "locations": [],
+        "ownership": false,
+        "sourceField": "references",
+        "unit": {
+          "kind": "file",
+          "path": "tools/spec-spine/codebase-indexer/src/lib.rs"
+        }
+      }
+    ],
+    "specId": "160-factory-adapter-statecraft-relocation",
+    "specStatus": "approved"
+  },
+  "schemaVersion": "1.1.0",
+  "shardHash": "e052122e4a1a613f4c16d1add7e2d92a45f2368ea8729ff23fa9cd830c082618"
+}
