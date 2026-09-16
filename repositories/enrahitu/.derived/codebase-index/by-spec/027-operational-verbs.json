@@ -1,0 +1,35 @@
+{
+  "mapping": {
+    "dependsOn": [
+      "003-coreledger",
+      "007-single-container-packaging",
+      "009-template-contract",
+      "011-coreledger-postgres-driver"
+    ],
+    "implementingPaths": [
+      {
+        "path": "scripts/ops/",
+        "source": "spec-edge"
+      }
+    ],
+    "resolvedUnits": [
+      {
+        "locations": [
+          {
+            "file": "scripts/ops/"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "directory",
+          "path": "scripts/ops/"
+        }
+      }
+    ],
+    "specId": "027-operational-verbs",
+    "specStatus": "approved"
+  },
+  "schemaVersion": "1.1.0",
+  "shardHash": "33b010876790c82308f4e32c5816ca077208fcbc983c08befd4a3c6ba9f3614c"
+}

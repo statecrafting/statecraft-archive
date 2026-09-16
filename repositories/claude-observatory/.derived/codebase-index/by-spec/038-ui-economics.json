@@ -1,0 +1,46 @@
+{
+  "mapping": {
+    "dependsOn": [
+      "029-ui-projects",
+      "030-run-economics"
+    ],
+    "implementingPaths": [
+      {
+        "path": "web/",
+        "source": "spec-edge"
+      }
+    ],
+    "resolvedUnits": [
+      {
+        "locations": [
+          {
+            "file": "web/"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "extends",
+        "unit": {
+          "kind": "file",
+          "path": "web/"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "docs/design/00-ecosystem-analysis.md"
+          }
+        ],
+        "ownership": false,
+        "sourceField": "references",
+        "unit": {
+          "kind": "file",
+          "path": "docs/design/00-ecosystem-analysis.md"
+        }
+      }
+    ],
+    "specId": "038-ui-economics",
+    "specStatus": "approved"
+  },
+  "schemaVersion": "1.1.0",
+  "shardHash": "4db436936e6f26de4fe518d0c788634beb8f692a0c8e29871102d3e7c2d6783b"
+}

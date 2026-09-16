@@ -1,0 +1,88 @@
+{
+  "mapping": {
+    "dependsOn": [
+      "001-enrahitu-architecture",
+      "009-template-contract",
+      "012-born-with-provenance",
+      "018-packaged-chassis",
+      "021-kernel-native-consumption",
+      "034-control-plane"
+    ],
+    "implementingPaths": [
+      {
+        "path": "app/",
+        "source": "spec-edge"
+      },
+      {
+        "path": "chassis.lock",
+        "source": "spec-edge"
+      },
+      {
+        "path": "scripts/chassis-lock.mjs",
+        "source": "spec-edge"
+      },
+      {
+        "path": "scripts/gen-manifest.mjs",
+        "source": "spec-edge"
+      }
+    ],
+    "resolvedUnits": [
+      {
+        "locations": [
+          {
+            "file": "app/"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "directory",
+          "path": "app/"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "chassis.lock"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "file",
+          "path": "chassis.lock"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "scripts/chassis-lock.mjs"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "file",
+          "path": "scripts/chassis-lock.mjs"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "scripts/gen-manifest.mjs"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "file",
+          "path": "scripts/gen-manifest.mjs"
+        }
+      }
+    ],
+    "specId": "035-chassis-boundary",
+    "specStatus": "approved"
+  },
+  "schemaVersion": "1.1.0",
+  "shardHash": "386c4fa0210760559e8ffe3e23f213bda470071d1378ddc09ed31ffa4e6fd488"
+}

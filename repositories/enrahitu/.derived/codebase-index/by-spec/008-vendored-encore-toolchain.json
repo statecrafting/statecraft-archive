@@ -1,0 +1,52 @@
+{
+  "mapping": {
+    "amends": [
+      "007-single-container-packaging"
+    ],
+    "dependsOn": [
+      "001-enrahitu-architecture"
+    ],
+    "implementingPaths": [
+      {
+        "path": "docker/Dockerfile.base",
+        "source": "spec-edge"
+      },
+      {
+        "path": "infra.config.dev.json",
+        "source": "spec-edge"
+      }
+    ],
+    "resolvedUnits": [
+      {
+        "locations": [
+          {
+            "file": "docker/Dockerfile.base"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "file",
+          "path": "docker/Dockerfile.base"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "infra.config.dev.json"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "file",
+          "path": "infra.config.dev.json"
+        }
+      }
+    ],
+    "specId": "008-vendored-encore-toolchain",
+    "specStatus": "approved"
+  },
+  "schemaVersion": "1.1.0",
+  "shardHash": "34010558b9554263b30a3f6a3bfefc85fc46ceb5eb5fc9e2447de7d68f05497c"
+}

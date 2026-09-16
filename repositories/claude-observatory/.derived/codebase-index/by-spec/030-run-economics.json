@@ -1,0 +1,117 @@
+{
+  "mapping": {
+    "dependsOn": [
+      "011-work-journal",
+      "013-run-state-machine",
+      "014-session-driver",
+      "027-api-projects",
+      "028-cli-projects"
+    ],
+    "implementingPaths": [
+      {
+        "path": "src/commands/orchestrator.ts",
+        "source": "spec-edge"
+      },
+      {
+        "path": "src/orchestrator/api/server.ts",
+        "source": "spec-edge"
+      },
+      {
+        "path": "src/orchestrator/api/state.ts",
+        "source": "spec-edge"
+      },
+      {
+        "path": "src/orchestrator/economics.test.ts",
+        "source": "spec-edge"
+      },
+      {
+        "path": "src/orchestrator/economics.ts",
+        "source": "spec-edge"
+      }
+    ],
+    "resolvedUnits": [
+      {
+        "locations": [
+          {
+            "file": "src/orchestrator/economics.test.ts"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "file",
+          "path": "src/orchestrator/economics.test.ts"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "src/orchestrator/economics.ts"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "file",
+          "path": "src/orchestrator/economics.ts"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "src/commands/orchestrator.ts"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "extends",
+        "unit": {
+          "kind": "file",
+          "path": "src/commands/orchestrator.ts"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "src/orchestrator/api/server.ts"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "extends",
+        "unit": {
+          "kind": "file",
+          "path": "src/orchestrator/api/server.ts"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "src/orchestrator/api/state.ts"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "extends",
+        "unit": {
+          "kind": "file",
+          "path": "src/orchestrator/api/state.ts"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "docs/design/00-ecosystem-analysis.md"
+          }
+        ],
+        "ownership": false,
+        "sourceField": "references",
+        "unit": {
+          "kind": "file",
+          "path": "docs/design/00-ecosystem-analysis.md"
+        }
+      }
+    ],
+    "specId": "030-run-economics",
+    "specStatus": "approved"
+  },
+  "schemaVersion": "1.1.0",
+  "shardHash": "86c7a8c081313e3181f4324a03155b641b7dad05a6faae251ba1d4187ed2db8b"
+}

@@ -1,0 +1,32 @@
+{
+  "mapping": {
+    "dependsOn": [
+      "021-orchestrator-daemon"
+    ],
+    "implementingPaths": [
+      {
+        "path": "src/orchestrator/api/",
+        "source": "spec-edge"
+      }
+    ],
+    "resolvedUnits": [
+      {
+        "locations": [
+          {
+            "file": "src/orchestrator/api/"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "file",
+          "path": "src/orchestrator/api/"
+        }
+      }
+    ],
+    "specId": "022-http-api-and-events",
+    "specStatus": "approved"
+  },
+  "schemaVersion": "1.1.0",
+  "shardHash": "5e2e753d89d9ce2f574889c2f1e5375feb5a3890f731624a54bbfcf5021f103a"
+}

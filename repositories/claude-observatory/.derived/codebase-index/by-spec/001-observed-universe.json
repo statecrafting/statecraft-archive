@@ -1,0 +1,46 @@
+{
+  "mapping": {
+    "implementingPaths": [
+      {
+        "path": "src/paths.ts",
+        "source": "spec-edge"
+      },
+      {
+        "path": "src/walker.ts",
+        "source": "spec-edge"
+      }
+    ],
+    "resolvedUnits": [
+      {
+        "locations": [
+          {
+            "file": "src/paths.ts"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "file",
+          "path": "src/paths.ts"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "src/walker.ts"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "file",
+          "path": "src/walker.ts"
+        }
+      }
+    ],
+    "specId": "001-observed-universe",
+    "specStatus": "approved"
+  },
+  "schemaVersion": "1.1.0",
+  "shardHash": "6e3545be2aff77b7b1c2f2cc967df5005c500bc504655bc9fff791249bcda6e0"
+}

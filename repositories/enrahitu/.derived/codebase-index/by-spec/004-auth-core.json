@@ -1,0 +1,67 @@
+{
+  "mapping": {
+    "dependsOn": [
+      "002-in-process-hiqlite",
+      "003-coreledger"
+    ],
+    "implementingPaths": [
+      {
+        "path": "backend/auth/",
+        "source": "spec-edge"
+      },
+      {
+        "path": "backend/lib/",
+        "source": "spec-edge"
+      },
+      {
+        "path": "scripts/generate-keys.ts",
+        "source": "spec-edge"
+      }
+    ],
+    "resolvedUnits": [
+      {
+        "locations": [
+          {
+            "file": "backend/auth/"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "directory",
+          "path": "backend/auth/"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "backend/lib/"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "directory",
+          "path": "backend/lib/"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "scripts/generate-keys.ts"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "file",
+          "path": "scripts/generate-keys.ts"
+        }
+      }
+    ],
+    "specId": "004-auth-core",
+    "specStatus": "approved"
+  },
+  "schemaVersion": "1.1.0",
+  "shardHash": "9563c8d3aaa3959ecda68e985a199457df06dfc8a01c38424319c85af0368961"
+}

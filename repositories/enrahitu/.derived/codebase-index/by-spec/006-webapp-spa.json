@@ -1,0 +1,32 @@
+{
+  "mapping": {
+    "dependsOn": [
+      "005-rauthy-same-origin"
+    ],
+    "implementingPaths": [
+      {
+        "path": "backend/web/",
+        "source": "spec-edge"
+      }
+    ],
+    "resolvedUnits": [
+      {
+        "locations": [
+          {
+            "file": "backend/web/"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "directory",
+          "path": "backend/web/"
+        }
+      }
+    ],
+    "specId": "006-webapp-spa",
+    "specStatus": "approved"
+  },
+  "schemaVersion": "1.1.0",
+  "shardHash": "e3d60761927c3449edf7ce78ba1d838527cc7a79df70d5cba37dc90a6427c54b"
+}

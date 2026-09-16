@@ -1,0 +1,138 @@
+{
+  "mapping": {
+    "dependsOn": [
+      "000-bootstrap"
+    ],
+    "implementingPaths": [
+      {
+        "path": "",
+        "source": "manifest-metadata"
+      },
+      {
+        "path": "backend/health/",
+        "source": "spec-edge"
+      },
+      {
+        "path": "encore.app",
+        "source": "spec-edge"
+      },
+      {
+        "path": "scripts/check-licenses.mjs",
+        "source": "spec-edge"
+      },
+      {
+        "path": "scripts/check-licenses.test.ts",
+        "source": "spec-edge"
+      },
+      {
+        "path": "tsconfig.json",
+        "source": "spec-edge"
+      },
+      {
+        "path": "vitest.config.ts",
+        "source": "spec-edge"
+      },
+      {
+        "path": "vitest.setup.ts",
+        "source": "spec-edge"
+      }
+    ],
+    "resolvedUnits": [
+      {
+        "locations": [
+          {
+            "file": "backend/health/"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "directory",
+          "path": "backend/health/"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "encore.app"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "file",
+          "path": "encore.app"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "scripts/check-licenses.mjs"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "file",
+          "path": "scripts/check-licenses.mjs"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "scripts/check-licenses.test.ts"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "file",
+          "path": "scripts/check-licenses.test.ts"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "tsconfig.json"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "file",
+          "path": "tsconfig.json"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "vitest.config.ts"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "file",
+          "path": "vitest.config.ts"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "vitest.setup.ts"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "file",
+          "path": "vitest.setup.ts"
+        }
+      }
+    ],
+    "specId": "001-enrahitu-architecture",
+    "specStatus": "approved"
+  },
+  "schemaVersion": "1.1.0",
+  "shardHash": "f43b3c685988cf799865cc98e0f4b7c3b02fd0274b2ed56a3bd849645fd90d7a"
+}

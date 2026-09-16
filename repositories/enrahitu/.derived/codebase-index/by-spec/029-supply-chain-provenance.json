@@ -1,0 +1,51 @@
+{
+  "mapping": {
+    "dependsOn": [
+      "012-born-with-provenance",
+      "016-amd64-image",
+      "027-operational-verbs"
+    ],
+    "implementingPaths": [
+      {
+        "path": "scripts/airgap-bundle.sh",
+        "source": "spec-edge"
+      },
+      {
+        "path": "scripts/airgap-bundle.test.ts",
+        "source": "spec-edge"
+      }
+    ],
+    "resolvedUnits": [
+      {
+        "locations": [
+          {
+            "file": "scripts/airgap-bundle.sh"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "file",
+          "path": "scripts/airgap-bundle.sh"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "scripts/airgap-bundle.test.ts"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "file",
+          "path": "scripts/airgap-bundle.test.ts"
+        }
+      }
+    ],
+    "specId": "029-supply-chain-provenance",
+    "specStatus": "approved"
+  },
+  "schemaVersion": "1.1.0",
+  "shardHash": "e03d5f07fa7ba60e8263781ada225c3a6e2870906b37df783bb49c0e90dfc71c"
+}

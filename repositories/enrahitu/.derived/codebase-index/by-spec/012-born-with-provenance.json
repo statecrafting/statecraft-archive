@@ -1,0 +1,83 @@
+{
+  "mapping": {
+    "dependsOn": [
+      "009-template-contract"
+    ],
+    "implementingPaths": [
+      {
+        "path": ".statecraft/born-with.schema.json",
+        "source": "spec-edge"
+      },
+      {
+        "path": "scripts/fixtures/born-with.example.json",
+        "source": "spec-edge"
+      },
+      {
+        "path": "scripts/verify-born-with.mjs",
+        "source": "spec-edge"
+      },
+      {
+        "path": "scripts/verify-born-with.test.ts",
+        "source": "spec-edge"
+      }
+    ],
+    "resolvedUnits": [
+      {
+        "locations": [
+          {
+            "file": ".statecraft/born-with.schema.json"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "file",
+          "path": ".statecraft/born-with.schema.json"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "scripts/fixtures/born-with.example.json"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "file",
+          "path": "scripts/fixtures/born-with.example.json"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "scripts/verify-born-with.mjs"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "file",
+          "path": "scripts/verify-born-with.mjs"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "scripts/verify-born-with.test.ts"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "file",
+          "path": "scripts/verify-born-with.test.ts"
+        }
+      }
+    ],
+    "specId": "012-born-with-provenance",
+    "specStatus": "approved"
+  },
+  "schemaVersion": "1.1.0",
+  "shardHash": "f4b7a28cc01eb798a8e69d18f5e998aec9d8b978bc7ba4ec5cda2aa936e267d1"
+}

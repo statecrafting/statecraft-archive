@@ -1,0 +1,32 @@
+{
+  "mapping": {
+    "dependsOn": [
+      "001-enrahitu-architecture"
+    ],
+    "implementingPaths": [
+      {
+        "path": "backend/core/",
+        "source": "spec-edge"
+      }
+    ],
+    "resolvedUnits": [
+      {
+        "locations": [
+          {
+            "file": "backend/core/"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "directory",
+          "path": "backend/core/"
+        }
+      }
+    ],
+    "specId": "003-coreledger",
+    "specStatus": "approved"
+  },
+  "schemaVersion": "1.1.0",
+  "shardHash": "dbafa3a7d4d88638ec81fd52e1aa82e8a6be3a8e8ffea54844ef84ad780b938e"
+}

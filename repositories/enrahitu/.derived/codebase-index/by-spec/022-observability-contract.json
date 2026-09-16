@@ -1,0 +1,35 @@
+{
+  "mapping": {
+    "dependsOn": [
+      "001-enrahitu-architecture",
+      "008-vendored-encore-toolchain",
+      "019-two-directory-layout",
+      "021-kernel-native-consumption"
+    ],
+    "implementingPaths": [
+      {
+        "path": "backend/obs/",
+        "source": "spec-edge"
+      }
+    ],
+    "resolvedUnits": [
+      {
+        "locations": [
+          {
+            "file": "backend/obs/"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "directory",
+          "path": "backend/obs/"
+        }
+      }
+    ],
+    "specId": "022-observability-contract",
+    "specStatus": "approved"
+  },
+  "schemaVersion": "1.1.0",
+  "shardHash": "449eef2df234c84137294c9337d10cd64402bbda0c4383f2201878704dc4e9ea"
+}

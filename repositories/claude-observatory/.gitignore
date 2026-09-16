@@ -1,0 +1,21 @@
+# Captured observations of ~/.claude: never committed. Baselines, event db,
+# daemon logs, and any samples may reference private paths and activity.
+data/
+*.log
+*.db
+*.db-wal
+*.db-shm
+node_modules/
+.idea/
+
+# spec-spine derived artifacts: shards are committed, build metadata is not
+.derived/**/build-meta.json
+.derived/attestation/
+
+# The web UI's build output: produced by `bun run web:build`, served by the
+# daemon from disk, never committed.
+web/dist/
+
+# Member binaries (spec 042 B-1, D-5): produced by `bun run build:member:*`,
+# never committed; the coupling gate polices sources, not artifacts.
+dist/

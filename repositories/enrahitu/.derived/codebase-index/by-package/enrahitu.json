@@ -1,0 +1,11 @@
+{
+  "package": {
+    "kind": "npm-package",
+    "name": "enrahitu",
+    "path": "",
+    "specRef": "001-enrahitu-architecture",
+    "version": "0.2.0"
+  },
+  "schemaVersion": "1.1.0",
+  "shardHash": "176680daa1864804dcaa0c4c6d31784884143fe81d49baf13f326a806272ee9b"
+}

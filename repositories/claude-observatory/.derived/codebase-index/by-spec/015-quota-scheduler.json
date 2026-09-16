@@ -1,0 +1,49 @@
+{
+  "mapping": {
+    "dependsOn": [
+      "014-session-driver"
+    ],
+    "implementingPaths": [
+      {
+        "path": "src/orchestrator/quota.test.ts",
+        "source": "spec-edge"
+      },
+      {
+        "path": "src/orchestrator/quota.ts",
+        "source": "spec-edge"
+      }
+    ],
+    "resolvedUnits": [
+      {
+        "locations": [
+          {
+            "file": "src/orchestrator/quota.test.ts"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "file",
+          "path": "src/orchestrator/quota.test.ts"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "src/orchestrator/quota.ts"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "file",
+          "path": "src/orchestrator/quota.ts"
+        }
+      }
+    ],
+    "specId": "015-quota-scheduler",
+    "specStatus": "approved"
+  },
+  "schemaVersion": "1.1.0",
+  "shardHash": "db082d278aae467659b777e7512092af68073244877cfc2890441a366f8342e3"
+}

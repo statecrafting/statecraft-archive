@@ -1,0 +1,83 @@
+{
+  "mapping": {
+    "dependsOn": [
+      "013-run-state-machine"
+    ],
+    "implementingPaths": [
+      {
+        "path": "src/orchestrator/classify-termination.test.ts",
+        "source": "spec-edge"
+      },
+      {
+        "path": "src/orchestrator/classify-termination.ts",
+        "source": "spec-edge"
+      },
+      {
+        "path": "src/orchestrator/session.test.ts",
+        "source": "spec-edge"
+      },
+      {
+        "path": "src/orchestrator/session.ts",
+        "source": "spec-edge"
+      }
+    ],
+    "resolvedUnits": [
+      {
+        "locations": [
+          {
+            "file": "src/orchestrator/classify-termination.test.ts"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "file",
+          "path": "src/orchestrator/classify-termination.test.ts"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "src/orchestrator/classify-termination.ts"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "file",
+          "path": "src/orchestrator/classify-termination.ts"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "src/orchestrator/session.test.ts"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "file",
+          "path": "src/orchestrator/session.test.ts"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "src/orchestrator/session.ts"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "file",
+          "path": "src/orchestrator/session.ts"
+        }
+      }
+    ],
+    "specId": "014-session-driver",
+    "specStatus": "approved"
+  },
+  "schemaVersion": "1.1.0",
+  "shardHash": "f3a5eac81aed41ddc843cd92b5c68f2e0e16b323cba946c01ab50817405ae54f"
+}

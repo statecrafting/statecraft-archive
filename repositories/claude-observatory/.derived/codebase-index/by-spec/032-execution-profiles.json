@@ -1,0 +1,318 @@
+{
+  "mapping": {
+    "dependsOn": [
+      "014-session-driver",
+      "025-project-registry"
+    ],
+    "implementingPaths": [
+      {
+        "path": "src/commands/orchestrator.ts",
+        "source": "spec-edge"
+      },
+      {
+        "path": "src/orchestrator/api/api-client.ts",
+        "source": "spec-edge"
+      },
+      {
+        "path": "src/orchestrator/api/fixtures.ts",
+        "source": "spec-edge"
+      },
+      {
+        "path": "src/orchestrator/api/server.test.ts",
+        "source": "spec-edge"
+      },
+      {
+        "path": "src/orchestrator/api/server.ts",
+        "source": "spec-edge"
+      },
+      {
+        "path": "src/orchestrator/api/state.ts",
+        "source": "spec-edge"
+      },
+      {
+        "path": "src/orchestrator/api/types.ts",
+        "source": "spec-edge"
+      },
+      {
+        "path": "src/orchestrator/daemon.ts",
+        "source": "spec-edge"
+      },
+      {
+        "path": "src/orchestrator/profile.test.ts",
+        "source": "spec-edge"
+      },
+      {
+        "path": "src/orchestrator/profile.ts",
+        "source": "spec-edge"
+      },
+      {
+        "path": "src/orchestrator/projects.test.ts",
+        "source": "spec-edge"
+      },
+      {
+        "path": "src/orchestrator/projects.ts",
+        "source": "spec-edge"
+      },
+      {
+        "path": "src/orchestrator/session.ts",
+        "source": "spec-edge"
+      },
+      {
+        "path": "src/orchestrator/stages/build.ts",
+        "source": "spec-edge"
+      },
+      {
+        "path": "src/orchestrator/stages/verify.ts",
+        "source": "spec-edge"
+      },
+      {
+        "path": "web/test/fixtures.ts",
+        "source": "spec-edge"
+      },
+      {
+        "path": "web/test/store.test.tsx",
+        "source": "spec-edge"
+      }
+    ],
+    "resolvedUnits": [
+      {
+        "locations": [
+          {
+            "file": "src/orchestrator/profile.test.ts"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "file",
+          "path": "src/orchestrator/profile.test.ts"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "src/orchestrator/profile.ts"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "file",
+          "path": "src/orchestrator/profile.ts"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "src/commands/orchestrator.ts"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "extends",
+        "unit": {
+          "kind": "file",
+          "path": "src/commands/orchestrator.ts"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "src/orchestrator/api/api-client.ts"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "extends",
+        "unit": {
+          "kind": "file",
+          "path": "src/orchestrator/api/api-client.ts"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "src/orchestrator/api/fixtures.ts"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "extends",
+        "unit": {
+          "kind": "file",
+          "path": "src/orchestrator/api/fixtures.ts"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "src/orchestrator/api/server.test.ts"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "extends",
+        "unit": {
+          "kind": "file",
+          "path": "src/orchestrator/api/server.test.ts"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "src/orchestrator/api/server.ts"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "extends",
+        "unit": {
+          "kind": "file",
+          "path": "src/orchestrator/api/server.ts"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "src/orchestrator/api/state.ts"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "extends",
+        "unit": {
+          "kind": "file",
+          "path": "src/orchestrator/api/state.ts"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "src/orchestrator/api/types.ts"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "extends",
+        "unit": {
+          "kind": "file",
+          "path": "src/orchestrator/api/types.ts"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "src/orchestrator/daemon.ts"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "extends",
+        "unit": {
+          "kind": "file",
+          "path": "src/orchestrator/daemon.ts"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "src/orchestrator/projects.test.ts"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "extends",
+        "unit": {
+          "kind": "file",
+          "path": "src/orchestrator/projects.test.ts"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "src/orchestrator/projects.ts"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "extends",
+        "unit": {
+          "kind": "file",
+          "path": "src/orchestrator/projects.ts"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "src/orchestrator/session.ts"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "extends",
+        "unit": {
+          "kind": "file",
+          "path": "src/orchestrator/session.ts"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "src/orchestrator/stages/build.ts"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "extends",
+        "unit": {
+          "kind": "file",
+          "path": "src/orchestrator/stages/build.ts"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "src/orchestrator/stages/verify.ts"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "extends",
+        "unit": {
+          "kind": "file",
+          "path": "src/orchestrator/stages/verify.ts"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "web/test/fixtures.ts"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "extends",
+        "unit": {
+          "kind": "file",
+          "path": "web/test/fixtures.ts"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "web/test/store.test.tsx"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "extends",
+        "unit": {
+          "kind": "file",
+          "path": "web/test/store.test.tsx"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "docs/design/00-ecosystem-analysis.md"
+          }
+        ],
+        "ownership": false,
+        "sourceField": "references",
+        "unit": {
+          "kind": "file",
+          "path": "docs/design/00-ecosystem-analysis.md"
+        }
+      }
+    ],
+    "specId": "032-execution-profiles",
+    "specStatus": "approved"
+  },
+  "schemaVersion": "1.1.0",
+  "shardHash": "14ea2efc09da77462be6f6dd3766feec87733fe710c84e8cbb814b70913ffaba"
+}

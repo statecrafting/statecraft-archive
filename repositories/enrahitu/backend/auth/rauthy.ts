@@ -1,0 +1,194 @@
+/**
+ * rauthy (OIDC) driver built on openid-client v6 (authorization code + PKCE).
+ * The issuer is discovered from RAUTHY_ISSUER (.well-known/openid-configuration),
+ * so no provider URLs are hard-coded; in the enrahitu topology the issuer is this
+ * app's own origin, served through the idp proxy (idp/proxy.ts). Stateless:
+ * the state, PKCE verifier, and nonce ride a short-lived httpOnly cookie
+ * across the redirect. Config-gated: unavailable unless issuer, client id,
+ * and secret are set.
+ *
+ * rauthy emits `roles` on every token and `groups` when the `groups` scope is
+ * requested, so roles are taken first, then groups, then RAUTHY_DEFAULT_ROLE.
+ */
+import { api } from "encore.dev/api";
+import * as client from "openid-client";
+
+import { demand } from "../kernel/adjudicate";
+import { authCookieOptions } from "../lib/cookie-config";
+import { parseCookies, serializeCookie, setIdHintCookie } from "../lib/cookies";
+import { env } from "../lib/env";
+import { withinAuthRateLimit } from "../lib/rate-limit";
+import { rauthyClientSecretValue } from "../lib/secrets";
+
+import { clientIp, redirect, requestUrl, userAgent } from "./http";
+import { finalizeLogin, frontendUrl } from "./service";
+import type { SSOProfile } from "./types";
+
+const OIDC_TX_COOKIE = "oidc_tx";
+
+export function isRauthyConfigured(): boolean {
+  return Boolean(env.rauthyIssuer && env.rauthyClientId && rauthyClientSecretValue());
+}
+
+/**
+ * The RP-initiated logout URL (spec 005, amendment 2026-07-23): rauthy's
+ * end-session endpoint on the same-origin issuer, carrying the id-token
+ * hint and the registered post-logout landing. Pure URL construction:
+ * no egress happens here; the browser makes the round-trip.
+ */
+export function rauthyEndSessionUrl(idTokenHint: string): string {
+  const issuer = env.rauthyIssuer!;
+  const url = new URL("oidc/logout", issuer.endsWith("/") ? issuer : `${issuer}/`);
+  url.searchParams.set("id_token_hint", idTokenHint);
+  url.searchParams.set("post_logout_redirect_uri", frontendUrl("/"));
+  return url.href;
+}
+
+/** The discovered issuer config, shared with the refresh grant (spec 004 §3.4). */
+export function rauthyConfig(): Promise<client.Configuration> {
+  const issuer = new URL(env.rauthyIssuer!);
+  // Governed egress (spec 021 §3.5): the discovery round-trip leaves the
+  // process, adjudicated as http.egress on 'rauthy-issuer'. The issuer
+  // host is runtime config and never enters the model.
+  demand("http.egress", "rauthy-issuer", { attributes: { domain: issuer.hostname } });
+  // Local development runs the whole loop over plain http on one origin;
+  // openid-client refuses http unless explicitly allowed.
+  const execute = issuer.protocol === "http:" ? [client.allowInsecureRequests] : [];
+  return client.discovery(issuer, env.rauthyClientId!, rauthyClientSecretValue(), undefined, {
+    execute,
+  });
+}
+
+export function profileFromClaims(claims: Record<string, unknown>): SSOProfile {
+  const rolesClaim = claims["roles"] ?? claims["groups"];
+  const roles = Array.isArray(rolesClaim)
+    ? (rolesClaim as unknown[]).map(String)
+    : [env.rauthyDefaultRole];
+
+  // `preferred_username` deliberately does NOT stand in for a missing email.
+  // It used to, and that was a real hole: the member plane matches a session to
+  // a member record by address (spec 036 §3.8), and `preferred_username` is a
+  // display handle that no provider verifies and several let the user choose.
+  // An absent email claim now yields an absent email, which links nothing.
+  const email = typeof claims["email"] === "string" ? claims["email"] : "";
+  const name =
+    (typeof claims["name"] === "string" ? claims["name"] : "") ||
+    (typeof claims["preferred_username"] === "string" ? claims["preferred_username"] : "") ||
+    email;
+
+  return {
+    ssoProvider: "rauthy",
+    subject: (claims["sub"] as string) ?? "",
+    email,
+    // Strictly the claim, and only when there is an address it can qualify.
+    emailVerified: email !== "" && claims["email_verified"] === true,
+    name,
+    roles: roles.length ? roles : [env.rauthyDefaultRole],
+  };
+}
+
+export const rauthyLogin = api.raw(
+  { expose: true, method: "GET", path: "/api/v1/auth/rauthy/login" },
+  async (req, res) => {
+    if (!isRauthyConfigured()) {
+      res.statusCode = 404;
+      res.end();
+      return;
+    }
+    if (!(await withinAuthRateLimit(clientIp(req)))) {
+      res.statusCode = 429;
+      res.setHeader("Retry-After", "60");
+      res.end("rate limit exceeded");
+      return;
+    }
+    const config = await rauthyConfig();
+    const verifier = client.randomPKCECodeVerifier();
+    const challenge = await client.calculatePKCECodeChallenge(verifier);
+    const state = client.randomState();
+    const nonce = client.randomNonce();
+
+    const url = client.buildAuthorizationUrl(config, {
+      redirect_uri: env.rauthyRedirectUri,
+      scope: env.rauthyScopes,
+      response_type: "code",
+      state,
+      nonce,
+      code_challenge: challenge,
+      code_challenge_method: "S256",
+    });
+
+    const tx = Buffer.from(JSON.stringify({ state, verifier, nonce })).toString("base64url");
+    res.setHeader("Set-Cookie", serializeCookie(OIDC_TX_COOKIE, tx, authCookieOptions(600)));
+    redirect(res, url.href);
+  },
+);
+
+export const rauthyCallback = api.raw(
+  { expose: true, method: "GET", path: "/api/v1/auth/rauthy/callback" },
+  async (req, res) => {
+    if (!isRauthyConfigured()) {
+      res.statusCode = 404;
+      res.end();
+      return;
+    }
+    if (!(await withinAuthRateLimit(clientIp(req)))) {
+      res.statusCode = 429;
+      res.setHeader("Retry-After", "60");
+      res.end("rate limit exceeded");
+      return;
+    }
+    const cookies = parseCookies(req.headers.cookie);
+    const txRaw = cookies[OIDC_TX_COOKIE];
+    if (!txRaw) {
+      res.statusCode = 400;
+      res.end("missing login transaction");
+      return;
+    }
+    const { state, verifier, nonce } = JSON.parse(
+      Buffer.from(txRaw, "base64url").toString("utf8"),
+    ) as { state: string; verifier: string; nonce: string };
+
+    const config = await rauthyConfig();
+    const currentUrl = new URL(env.rauthyRedirectUri);
+    currentUrl.search = requestUrl(req).search;
+
+    // The code-grant round-trip is a second egress to the issuer.
+    demand("http.egress", "rauthy-issuer", {
+      attributes: { domain: new URL(env.rauthyIssuer!).hostname },
+    });
+    const tokens = await client.authorizationCodeGrant(config, currentUrl, {
+      expectedState: state,
+      pkceCodeVerifier: verifier,
+      expectedNonce: nonce,
+    });
+    const claims = tokens.claims();
+    if (!claims) {
+      res.statusCode = 401;
+      res.end("no id token");
+      return;
+    }
+
+    // Clear the transaction cookie, then finalize (which appends the auth cookies).
+    res.setHeader("Set-Cookie", serializeCookie(OIDC_TX_COOKIE, "", authCookieOptions(0)));
+    // Keep the id token as the browser-held RP-initiated logout hint
+    // (spec 005 amendment 2026-07-23): never persisted server-side.
+    if (tokens.id_token) setIdHintCookie(res, tokens.id_token);
+    const profile = profileFromClaims(claims as unknown as Record<string, unknown>);
+    // The session carries rauthy's OWN refresh token, so revoking the session
+    // at rauthy revokes it here on the next refresh with nothing to keep in
+    // step. A deployment whose IdP has no refresh token to give gets an
+    // access-token-only session that simply expires (spec 004 §3.4).
+    await finalizeLogin(
+      res,
+      profile,
+      { driver: "rauthy", refreshToken: tokens.refresh_token ?? "", subject: profile.subject },
+      {
+        ipAddress: clientIp(req),
+        userAgent: userAgent(req),
+        // rauthy's clock, not ours: see signAccessToken's note on `nbf`.
+        ...(tokens.expires_in === undefined ? {} : { accessTtlSeconds: tokens.expires_in }),
+      },
+    );
+    redirect(res, frontendUrl("/"));
+  },
+);

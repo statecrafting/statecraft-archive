@@ -1,0 +1,41 @@
+{
+  "record": {
+    "authors": [
+      "Bartek Kus"
+    ],
+    "created": "2026-07-29",
+    "dependsOn": [
+      "016-stage-build"
+    ],
+    "establishes": [
+      {
+        "kind": "file",
+        "path": "src/orchestrator/stages/ship.ts"
+      },
+      {
+        "kind": "file",
+        "path": "src/orchestrator/stages/ship.test.ts"
+      }
+    ],
+    "id": "017-stage-ship",
+    "implementation": "complete",
+    "kind": "stage",
+    "risk": "medium",
+    "sectionHeadings": [
+      "017: Ship stage",
+      "1. Purpose",
+      "2. Territory",
+      "3. Behavior",
+      "4. Functional requirements",
+      "5. Acceptance criteria",
+      "6. Out of scope",
+      "7. Resolved decisions"
+    ],
+    "specPath": "specs/017-stage-ship/spec.md",
+    "status": "approved",
+    "summary": "Turn a green build branch into an open PR. The stage drives the target repo's own /ship discipline in a session rather than reimplementing the gate, treats PreToolUse hook exit-2 refusals as the first-class hook-blocked outcome, and verifies the result from the outside: PR exists, head sha matches the built branch, body carries no waiver unless a human approved one, and no session link or AI attribution appears anywhere.\n",
+    "title": "Ship stage: commit, push, open the PR through the governed discipline"
+  },
+  "shardHash": "f47d540547e3c28f7d29d2b87807041a9f105b41e0932d4cd815c6bf99479c00",
+  "specVersion": "1.2.0"
+}

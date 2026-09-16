@@ -1,0 +1,67 @@
+{
+  "record": {
+    "authors": [
+      "Bartek Kus"
+    ],
+    "created": "2026-08-01",
+    "dependsOn": [
+      "022-http-api-and-events",
+      "026-standby-daemon"
+    ],
+    "extends": [
+      {
+        "nature": "superseding",
+        "spec": "022-http-api-and-events",
+        "unit": {
+          "kind": "file",
+          "path": "src/orchestrator/api/"
+        }
+      },
+      {
+        "nature": "additive",
+        "spec": "023-orchestrator-cli",
+        "unit": {
+          "kind": "file",
+          "path": "src/commands/orchestrator.ts"
+        }
+      },
+      {
+        "nature": "additive",
+        "spec": "024-web-ui",
+        "unit": {
+          "kind": "file",
+          "path": "web/"
+        }
+      }
+    ],
+    "id": "027-api-projects",
+    "implementation": "complete",
+    "kind": "surface",
+    "references": [
+      {
+        "role": "context",
+        "unit": {
+          "kind": "file",
+          "path": "docs/design/00-ecosystem-analysis.md"
+        }
+      }
+    ],
+    "risk": "medium",
+    "sectionHeadings": [
+      "027: API v2, project-scoped",
+      "1. Purpose",
+      "2. Territory",
+      "3. Behavior",
+      "4. Functional requirements",
+      "5. Acceptance criteria",
+      "6. Out of scope",
+      "7. Resolved decisions"
+    ],
+    "specPath": "specs/027-api-projects/spec.md",
+    "status": "approved",
+    "summary": "The breaking apiVersion 2 (010 D15): every project-scoped fact moves under /api/projects/<name>/, the project collection gains registration and arm/disarm controls, and genuinely global facts (daemon meta with standby state, account quota, the SSE stream) stay global with a project field on every event. v1 routes are retired, not aliased; the corpus's own pin-invalidation absorbs the break. Envelope, honesty, bounded-event, and route-table-driven client rules from 022 carry over verbatim.\n",
+    "title": "API v2: project-scoped routes"
+  },
+  "shardHash": "0342649d881f25bb808a844de952dd3b1e44cd5e9bc4bea2660d8acb25b817bf",
+  "specVersion": "1.2.0"
+}

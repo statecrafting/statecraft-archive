@@ -1,0 +1,62 @@
+{
+  "mapping": {
+    "dependsOn": [
+      "010-orchestrator-thesis"
+    ],
+    "implementingPaths": [
+      {
+        "path": "src/orchestrator/journal.test.ts",
+        "source": "spec-edge"
+      },
+      {
+        "path": "src/orchestrator/journal.ts",
+        "source": "spec-edge"
+      }
+    ],
+    "resolvedUnits": [
+      {
+        "locations": [
+          {
+            "file": "src/orchestrator/journal.test.ts"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "file",
+          "path": "src/orchestrator/journal.test.ts"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "src/orchestrator/journal.ts"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "file",
+          "path": "src/orchestrator/journal.ts"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "docs/design/00-ecosystem-analysis.md"
+          }
+        ],
+        "ownership": false,
+        "sourceField": "references",
+        "unit": {
+          "kind": "file",
+          "path": "docs/design/00-ecosystem-analysis.md"
+        }
+      }
+    ],
+    "specId": "011-work-journal",
+    "specStatus": "approved"
+  },
+  "schemaVersion": "1.1.0",
+  "shardHash": "618c44629e482841afaf465ee458a517702ab13c673cb6ced9c7813a1f59b0d2"
+}

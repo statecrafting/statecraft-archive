@@ -1,0 +1,48 @@
+{
+  "record": {
+    "created": "2026-07-25",
+    "dependsOn": [
+      "001-enrahitu-architecture",
+      "002-in-process-hiqlite",
+      "005-rauthy-same-origin",
+      "007-single-container-packaging",
+      "009-template-contract",
+      "021-kernel-native-consumption",
+      "024-decision-chain-integrity"
+    ],
+    "establishes": [
+      {
+        "kind": "file",
+        "path": "docker/compose.cluster.yml"
+      },
+      {
+        "kind": "directory",
+        "path": "backend/bus/"
+      }
+    ],
+    "id": "030-infra-topology",
+    "implementation": "pending",
+    "sectionHeadings": [
+      "030: Infra topology",
+      "1. Purpose",
+      "2. Territory",
+      "3. Behavior",
+      "3.1 What multiplies",
+      "3.2 Key material",
+      "3.3 What does not span, and what to do about it",
+      "3.4 The scale path",
+      "3.5 Pub/sub, governed",
+      "3.6 `sql_servers` stays unpopulated pending a decision",
+      "3.7 Contract",
+      "4. Acceptance",
+      "5. Out of scope",
+      "6. Rewrite record"
+    ],
+    "specPath": "specs/030-infra-topology/spec.md",
+    "status": "approved",
+    "summary": "Rewritten 2026-07-27 for the pivot. The first version of this spec solved the wrong problem: it treated the single container as a limit to escape and designed a stateless app tier around a singleton identity provider, which required a role selector, a key-injection ceremony, and a shared external ledger. Once hiqlite is the state layer and rauthy clusters its own hiqlite alongside it, all three dissolve. The topology is now uniform: every replica is a stateful Raft member, one container by default with a single voter, and three or five members under a Kubernetes StatefulSet when a tenant outgrows it. N=1 is the primary mode and every behavior here is stated at N=1 first. This spec owns the cluster compose realization, the three operational requirements that make N>1 safe (PodDisruptionBudget, readiness-not-liveness on quorum, anti-affinity), the rule that Raft is never bridged across clusters, and the governed pub/sub path so the bus does not become the one ungoverned channel out of a governed deployment.\n",
+    "title": "Infra topology: N=1 is the primary mode, N=3 is the scale path"
+  },
+  "shardHash": "9e58711509af5a643ca98bdffdfea96a1d14a3240033f2cb22c3676fe6165d18",
+  "specVersion": "1.1.0"
+}

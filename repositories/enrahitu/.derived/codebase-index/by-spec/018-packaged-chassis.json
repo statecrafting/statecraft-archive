@@ -1,0 +1,18 @@
+{
+  "mapping": {
+    "amends": [
+      "002-in-process-hiqlite",
+      "008-vendored-encore-toolchain",
+      "009-template-contract"
+    ],
+    "dependsOn": [
+      "008-vendored-encore-toolchain",
+      "009-template-contract"
+    ],
+    "implementingPaths": [],
+    "specId": "018-packaged-chassis",
+    "specStatus": "approved"
+  },
+  "schemaVersion": "1.1.0",
+  "shardHash": "4157e486a5429fabceaf7c60dc994b45c81bc4360a61da2dce14abdc07b3b30a"
+}

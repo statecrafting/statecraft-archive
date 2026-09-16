@@ -1,0 +1,41 @@
+{
+  "record": {
+    "created": "2026-07-14",
+    "dependsOn": [
+      "001-enrahitu-architecture"
+    ],
+    "establishes": [
+      {
+        "kind": "directory",
+        "path": "backend/hiq/"
+      }
+    ],
+    "id": "002-in-process-hiqlite",
+    "implementation": "complete",
+    "origin": {
+      "retroactive": true
+    },
+    "sectionHeadings": [
+      "002: In-process hiqlite",
+      "1. Purpose",
+      "2. Territory",
+      "3. Behavior",
+      "4. Out of scope",
+      "5. Publishing (amended by spec 018, 2026-07-14)",
+      "6. Phase A seam (amended by spec 021, 2026-07-20)",
+      "Amendment (2026-07-21): the addon moves to @statecrafting/hiqlite-native",
+      "Amendment (2026-07-22): observability seam (spec 022)",
+      "Amendment (2026-07-25): the demo surface is operator-gated (spec 025)",
+      "Pivot (2026-07-27): two invariants deleted, nothing added",
+      "Amendment (2026-07-29): the HTTP demo surface retires",
+      "Amendment (2026-07-30): reclaiming a state machine whose owner is gone",
+      "Amendment (2026-08-02): ownership stops being keyed on the hostname"
+    ],
+    "specPath": "specs/002-in-process-hiqlite/spec.md",
+    "status": "approved",
+    "summary": "The hiqlite runtime embedded in the Node process: a napi-rs cdylib (@enrahitu/hiqlite-native) exposing init/health, TTL'd KV, and counters, plus the thin `hiq` Encore service that starts the node at service load and fronts the addon over HTTP. Replaces Redis for cache and rate-limit state with zero extra processes.\n",
+    "title": "In-process hiqlite via a napi-rs native addon"
+  },
+  "shardHash": "5d7de5604c5d813f713193652df2068251c39b38321cc46eb8c4d18270247ef5",
+  "specVersion": "1.1.0"
+}

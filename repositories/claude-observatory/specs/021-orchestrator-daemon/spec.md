@@ -1,0 +1,387 @@
+---
+id: "021-orchestrator-daemon"
+title: "Orchestrator daemon: the serial run loop"
+status: approved
+created: "2026-07-29"
+authors: ["Bartek Kus"]
+kind: kernel
+implementation: complete
+risk: critical
+depends_on:
+  - "012-spec-dag-readiness"
+  - "015-quota-scheduler"
+  - "016-stage-build"
+  - "017-stage-ship"
+  - "018-stage-shepherd"
+  - "019-stage-verify"
+  - "020-decision-ledger"
+summary: >
+  The long-lived process that composes everything: recover state from the
+  journal, reconcile any intent-without-outcome, then loop serially: pick
+  the next ready spec (012), walk its stages (016-019) through the state
+  machine (013), park and resume on quota (015), stop honestly on
+  needsHuman. Identity-checked single instance (pid plus process start
+  time), consumes no model quota itself, and hosts the HTTP API (022) in
+  the same process.
+establishes:
+  - "src/orchestrator/daemon.ts"
+  - "src/orchestrator/daemon.test.ts"
+---
+
+# 021: Orchestrator daemon
+
+## 1. Purpose
+
+One process that can be killed at any moment and trusted after restart.
+Everything hard lives in the kernel specs; the daemon is their disciplined
+composition, which is exactly why it is specified rather than improvised.
+
+## 2. Territory
+
+`src/orchestrator/daemon.ts` and tests.
+
+## 3. Behavior
+
+- **B-1 (single instance).** Lock: `data/orchestrator/daemon.lock` holding
+  pid plus process start time; liveness is verified against both (pid reuse
+  is detected, fixing the recorded defect pattern of spec 007). A stale
+  lock is reclaimed with a journal note.
+- **B-2 (recovery first).** Startup order: acquire lock, open journals
+  (011, 020), fold state, resolve every `needsReconcile` (013 B-6) by
+  inspecting the world (branch existence, PR state, merge state) and
+  journaling the reconciliation, only then start the loop and the API.
+- **B-3 (the loop).** While the run is `running`: compute `nextReady`;
+  none pending completes the run; none ready but pending exist stops as
+  `failed` with per-spec blockers (or waits, if blockers are in-flight
+  specs); otherwise execute the spec's stages in order, honoring stage
+  outcomes: passed advances, failed retries within the stage's budget then
+  fails the spec execution, blocked and needsHuman pause the run with the
+  reason surfaced.
+- **B-4 (control).** The API (spec 022) can pause, resume, skip a spec,
+  retry a stage, re-run verify, and force a human gate on a named spec (the
+  spec's next stage transition waits for explicit approval). Every control
+  action is journaled with its source.
+- **B-5 (no quota).** The daemon's own operation spawns no sessions outside
+  stage execution; observability, scheduling, and the API are quota-free.
+- **B-6 (shutdown).** SIGTERM finishes the current journal write, kills any
+  live session child (which journals its termination), releases the lock,
+  and exits; SIGKILL at any byte is covered by 011's recovery guarantees.
+
+## 4. Functional requirements
+
+- **FR-001.** An end-to-end kernel test drives a two-spec fixture DAG with
+  fake claude, fake GitHub, and a compressed clock through: build, ship,
+  shepherd, verify, quota park/resume injected at shepherd, daemon kill and
+  restart injected at build, ending with both specs shipped and a verified
+  chain.
+- **FR-002.** The loop journals a heartbeat state summary at most once per
+  minute (bounded, not chatty) so "what was it doing when it died" is
+  always answerable.
+
+## 5. Acceptance criteria
+
+- **AC-1.** `bun test src/orchestrator/daemon.test.ts` passes, including
+  the FR-001 scenario.
+- **AC-2.** `verifyChain` passes over the journal produced by AC-1's kills
+  and restarts.
+
+## 6. Out of scope
+
+Parallel spec execution, multi-repo runs, and daemonization ergonomics
+(launchd plist etc. follow spec 007's print-only stance later).
+
+A-1 (2026-08-01, recorded by spec 026's build session under the authority
+its §2 grants). The "multi-repo runs" clause above is superseded. Spec 026
+puts a scheduler over spec 025's project registry above this spec's
+per-run loop, so one daemon drives whichever registered project next has
+work, serially, one at a time. Parallel spec execution stays out of scope,
+and the serial invariant is only restated (010 D15): one live stage
+session globally. Two things inside this territory change with it, both
+declared superseding in 026's `extends`. The loop reports why it stopped
+(completed, failed, paused, or shutdown) instead of ending the process,
+which is what lets a supervisor outlive a terminal run. And a `supervised`
+instance is one project's run inside that standby daemon: it acquires no
+identity lock of its own (B-1's lock is one per daemon home, held by the
+supervisor) and yields the flight slot when its run pauses on a human
+decision, rather than waiting that pause out. A quota park is deliberately
+not a yield: the account's quota is one pool, so that wait stays where
+nothing else can start.
+
+## 7. Resolved decisions
+
+D-1. Process start time (the second half of B-1's identity check) is read
+through an injected `ProcessInspector` seam; the production implementation
+shells out to `ps -o lstart= -p <pid>` and parses the result with
+`Date.parse`, matching the local wall-clock format `ps` itself emits on the
+same host. `isAlive` is `process.kill(pid, 0)`, caught. Liveness is "pid
+alive AND the process currently holding that pid reports the same start
+time as recorded"; a live pid with a *different* start time is pid reuse,
+reclaimed exactly like a dead pid, fixing spec 007's own recorded defect.
+The daemon's own pid is also seam-injectable (`DaemonDeps.pid`, defaults to
+`process.pid`) so identity logic is testable without a second real OS
+process.
+
+D-2. Mid-stage shutdown (B-6) does not attempt to cancel an in-flight stage
+call. `shutdown()` sets a flag and awaits the loop's own promise; every
+wait point in the loop (the per-stage retry loop's top, every chunk of a
+parked or gated wait) checks the flag and unwinds honestly, but a call
+already inside `await stageFns.<stage>(...)` runs to completion first, and
+its outcome is journaled normally before the loop notices the flag and
+exits. This is deliberate for v1 (a real stage session should not be
+severed mid-write); a future spec may add cooperative cancellation.
+
+D-3. The in-memory control queue (B-4) is drained on every chunk of every
+chunked wait, not only at the top of the main loop. Without this, a
+`resume()`/`approve()` issued while the loop is inside a long parked or
+human-gated wait would sit unread until the wait's own condition happened
+to become true on its own, which for a park could be hours away. Every
+`chunkedSleepUntil` call therefore applies pending controls before its
+first condition check and after every subsequent chunk.
+
+D-4. `dag.adopted` (the bootstrap-era shipped-set from `dag.adoptedShipped`,
+spec 012 D-1) is computed once, on the first recovery that finds no prior
+`dag.adopted` record in the work journal, and is treated as immutable
+afterward: subsequent restarts read the existing record rather than
+recomputing it. Recomputing on every restart would let a spec's adoption
+silently track drift in its own file after the fact, which is exactly the
+pin-drift cascade spec 012 B-4 is supposed to catch deliberately, not
+absorb quietly into a "first observation" pin that keeps moving.
+
+D-5. `nextReady`'s own readiness filter trusts the target repo's registry
+`implementation: pending` field, which in production only flips once a
+build session's frontmatter edit has been merged to the default branch and
+a fresh registry read reflects it; nothing in this spec's territory
+refreshes the daemon's local checkout of the default branch between specs.
+To avoid ever re-selecting a spec this run has already shipped (or a human
+has skipped) because of a lagging registry read, the daemon computes a
+working snapshot for each `nextReady` call that overrides the
+`implementation` field of any spec already shipped-this-run or
+control-skipped to a non-"pending" sentinel, independent of what the
+registry currently reports. `ready()`/`invalidatedSet()` calls (build
+stage's own preflight) are unaffected: they are keyed off the shipped-map,
+not this sentinel.
+
+D-6. Only shepherd's and verify's own `StageOutcome` enums carry a
+first-class `"quota"` value; build's and ship's evidence shapes
+(`SessionEvidence`, `ShipSessionEvidence`) preserve the session
+classification kind but not its parsed reset time. The daemon's own quota
+detector therefore treats a build/ship stage whose session evidence
+classifies `"quota"` as a park trigger with `resetAtMs: null` (always an
+estimate, honestly reflecting what that evidence actually carries), and
+trusts shepherd's/verify's own explicit `"quota"` outcome directly (verify
+alone also carries `quotaResetAtMs`, since its own evidence preserves it).
+
+D-7. A quota-triggered park/resume inside the per-stage retry loop does not
+consume the stage's ordinary retry budget (default 1 retry, B-3): the
+attempt counter used for the journaled `StageExec.attempt` field still
+increments (so every attempt is distinguishable in the journal), but the
+separate budget counter that decides "has this stage failed too many times"
+only increments on a genuine `"failed"` outcome. A run can therefore be
+parked and resumed by quota indefinitely without ever exhausting a stage's
+failure budget, matching B-3's "resumes the same stage as a fresh attempt"
+literally.
+
+D-8. `reverify(specId)` (B-4) only has a run to act on while that run's own
+loop is still cycling (a completed `Run` is a terminal state per spec 013's
+own transition table, with no way back). It is therefore scoped to
+re-verifying a spec that is currently `shipped` under the *current* run,
+skipping straight to the verify stage (`invalidated -> verifying`, spec 012
+B-4's own re-qualification edge) rather than walking build/ship/shepherd
+again; a reverify request for a spec with no such shipped `SpecExec` is
+refused and journaled (`control.reverify.refused`) rather than silently
+dropped or misapplied to the wrong entity.
+
+D-9. Recovery's needsReconcile sweep (B-2) journals what it observed
+(`daemon.reconciled`, including a best-effort `gh.prForBranch` read for a
+stageExec's owning spec) but does not itself force a transition to close
+out the dangling intent. Every stage entry point (build/ship/shepherd/
+verify) was independently designed to be safely re-driven for the same
+spec (branch reuse, ship's own PR idempotency precheck, shepherd's fresh
+head-sha re-derivation, verify's fresh worktree checkout each time), so the
+loop's normal per-spec resume (which always re-derives "what stage to run
+next" from the live `SpecExec.status`, never an in-memory cursor) already
+completes the reconciliation honestly; a stageExec's own dangling attempt
+is superseded by the fresh attempt the resumed walk creates, never resumed
+in place.
+
+D-10. Found by the first live run: the build bracket flips the target spec
+to in-progress, which made nextReady skip that same spec after a
+retryStage, dead-ending the resume (the registry honestly said
+in-progress, so the spec was neither pending nor shipped). The working
+snapshot now reads any spec with a live or failed SpecExec in the current
+run as schedulable, regardless of the registry's implementation field; the
+regression test drives the registry flip the way the real bracket does.
+
+D-11. Found by the second live relaunch: an amendment to spec 021 itself
+drifted the adopted pin, and the invalidation cascade blocked the entire
+backlog with no re-qualification path (reverify is scoped to
+pipeline-shipped specs, and re-verification of an adopted spec is vacuous
+anyway). Resolution: adoption tracks the registry continuously rather than
+being computed once. On every scheduling pass, a registry spec reading
+complete or n-a that is not pipeline-shipped is (re)adopted at its current
+pin, journaled as dag.adopted.refreshed with the old pin (null for a late
+first adoption). Pipeline-shipped specs never take this path; their
+invalidation and re-verification stay strict per spec 012 B-4.
+
+D-12. A terminal (completed or failed) latest run is history, not a verdict
+on the mission: recovery creates a fresh run and continues the backlog,
+with the whole journal retained. Only idle, running, paused, or parked runs
+are resumed as-is.
+
+D-13. Same relaunch: that bracket throw propagated out of the loop and
+killed the daemon with the identity lock left behind. A stage
+implementation throwing is now a contained failed attempt: journaled as
+stage.crashed with the error, retried within the stage budget, then an
+honest pause. The loop must outlive any single stage's bug.
+
+D-14. The daemon's test fixtures implement the Runner seam owned by spec
+016, so interface ripples there (such as pullFfOnly, 016 D-7) touch the
+fixture fakes here without changing any daemon behavior.
+
+D-15. Found by the first live run of the 025 wave: a daemon restarted
+while the checkout sat on a failed spec's own branch, where that spec's
+frontmatter reads complete, and D-11's continuous adoption adopted the
+unmerged spec as shipped from that branch read. Adoption is monotone, so
+the poisoned entry then outranked the D-10 resumable path (shipped wins
+over resumable in the working snapshot) and the scheduler dead-ended
+driving the spec's dependent, which build preflight honestly refused.
+Resolution: the durable adoption appends (recovery's first `dag.adopted`
+and every `dag.adopted.refreshed`) trust a registry read only when the
+checkout is on the default branch, observed through an injectable
+`readCheckoutBranch` seam (absent means trusted, for fixtures; a null
+answer from a real checkout is not trusted). Withheld candidates journal
+one `dag.adoption.deferred` per pass; readiness keeps using the
+previously adopted set, and a deferred first adoption arrives later as
+D-11's own late first adoption once the checkout is back on the default
+branch.
+
+D-16. Found when 026 became the first pipeline-shipped spec another spec
+depends on: a spec exec's pin is recorded at scheduling, before the build
+session's own frontmatter flip, so the moment the spec's PR merges its
+pipeline pin drifts against its own merged content and every future
+dependent is born blocked (spec 027 was, failing the run). The milestone
+never saw this because 023/024 had no scheduled dependents and 022 was
+adoption-healed after failed execs. Resolution: a pipeline entry's pin is
+resolved from the spec file at the journaled `daemon.merge-sha` through
+an injectable `readSpecFileAtSha` seam (production: `git show
+<sha>:specs/<id>/spec.md`), cached per (spec, sha). The merge sha is the
+run's own evidence of what shipped, so the pin is anchored to what
+actually landed; a post-merge amendment still drifts against it and
+invalidates per spec 012 B-4. A missing sha or unreadable file falls
+back to the creation pin, which can only over-invalidate.
+
+D-17. Same incident, the second half: scheduling passes read the registry
+from wherever the last stage left the checkout (ship works on the spec
+branch; shepherd never moves it back), which is what let D-15's deferral
+withhold a legitimate adoption heal mid-run. Each pass now first offers
+the checkout back to the default branch through a best-effort
+`normalizeCheckoutForScheduling` seam (production: clean tree and not on
+the default branch means checkout plus fast-forward; anything else is a
+no-op). D-15's guard remains the backstop when normalization cannot run.
+
+D-18. Found when 028 became unbuildable: 026's build session amended spec
+023 post-ship under its declared authority, D-16's rule invalidated 023,
+and the sanctioned re-qualification edge (reverify, D-8) only reaches
+specs shipped under the current run, so the invalidation was permanent.
+Reverify now widens: when the named spec has no shipped exec in the
+current run but is pipeline-shipped under a prior run, the daemon
+requalifies it directly: normalize the checkout, read the default-branch
+head sha, journal `spec.requalify.intent`, run the verify stage at that
+sha (`isReVerification`), and on a passed or vacuous not-declared outcome
+journal `spec.requalified` with the amended content's pin, which
+`computeShippedMap` replays over the pipeline entry (latest record wins).
+No SpecExec is created, so spec 013's transition table stays untouched; a
+failed or crashed requalification journals `spec.requalify.failed` and
+changes nothing. A later amendment drifts against the requalified pin and
+invalidates again: D-8's scoping sentence is superseded exactly this far
+and no further.
+
+D-19 (2026-08-02, operator-directed fix wave). B-6's "kills any live
+session child" is now wired; it previously was not, and a mid-build
+SIGTERM left the claude child alive while `daemon stop` timed out
+(operator SIGKILL plus 011 recovery was the workaround). Both shutdown
+verbs that a SIGTERM reaches (`Daemon.shutdown()` and the standby
+scheduler's `shutdown()`, which the production signal handler calls) now
+sever the live child through an injectable `killLiveSession` seam
+(production: spec 014's module-global kill, D-7 there; absent in fixture
+deps is a no-op). D-2 is superseded exactly this far: shutdown no longer
+waits out an in-flight stage's session, it severs the child and the stage
+call returns promptly; D-2's second half stands unchanged, the severed
+stage's outcome (classification "killed") is still journaled normally
+before the loop notices the flag and unwinds. `requestShutdown()` remains
+flag-only: the scheduler that calls it performs the kill itself, and a
+supervisor that only flags was exactly the gap this closes. One narrower
+gap is recorded rather than closed: a stage that spawns its next session
+after the kill fired (a between-attempts window) is not severed;
+cooperative stage cancellation remains future work exactly as D-2 left
+it, and the loop's flag checks still stop the run at the stage boundary.
+
+D-20 (2026-08-02, operator-directed fix wave). D-16's production read (the
+spec file's bytes at the journaled merge sha, via `git show`) moves from an
+inline closure in the daemon factory to `createProcessSpecFileAtShaReader`
+in dag.ts, memoized per (repoDir, sha, specId) since sha-addressed content
+is immutable, so the daemon and the API server compose the same evidence
+read instead of the API refolding without it. Daemon behavior unchanged.
+
+D-21 (2026-08-02, operator-directed fix wave). The adoption refresh in
+computeShippedMap gates on 012 D-3's `statusSchedulable` before treating
+a registry entry as adoptable: an unapproved spec never enters the
+shipped set through adoption, no matter what its implementation field
+claims. Companion to 012 D-3; the deferral and journaling semantics of
+D-15 are unchanged.
+
+D-22 (2026-08-04, operator). `queueAutoReverifies(source)` queues the
+reverify half of 026 D-8's amendment healing: every invalidated spec
+whose own pipeline pin has drifted, dependencies before dependents, each
+through the existing `reverify()` control so the journal carries
+`control.reverify` records whose source names the automatic caller.
+Adopted drift is deliberately not queued: computeShippedMap's refresh
+(D-11) re-adopts amended bootstrap-era specs on a trusted checkout as a
+side effect of the same call, and transitive invalidation evaporates once
+the drifted roots requalify. Found live: a 16-spec cascade from one
+kernel amendment sat idle for a day because nothing scheduled its
+reverifies; the two operator verbs it took to drain it are exactly what
+this method automates.
+
+D-23 (2026-08-04, operator). `concludeIdle()`: the supervisor-facing
+conclusion for a run that was opened but never driven. `start()` always
+leaves a run in "running" (B-2's recovery either resumes a non-terminal
+run or creates a fresh one), which is right for a daemon about to loop
+and a lie for 026 D-8's amendment probe, whose zero-queued path closes
+the journals without ever driving. `concludeIdle()` transitions the run
+to "completed" through the same `run.result` record and journaled
+transition the loop's nothing-ready branch writes, and refuses (returns
+false, journals nothing) unless the run is "running" with no live or
+failed specExec of its own: paused and parked runs, and runs still
+holding unfinished or retryable spec work, are the loop's to reconcile,
+never a supervisor's to declare done. 026 D-9 records the scheduler
+half, including the drive-on-refusal it implies.
+
+D-24 (2026-08-06, operator). Journaled controls survive the process that
+received them. Found live three times over: tenant-tail's bootstrap
+retry was journaled, its daemon died before any drive applied it, and
+the operator had to re-issue it after every restart, a
+journaled-but-broken promise. Every control issue now journals
+`restorable: true` and queues the record's own seq; applying a control,
+including a state-conditional no-op apply, journals `control.applied`
+keyed to that seq, so consumption is a fact of the chain rather than a
+memory of the process. Recovery replays every restorable control with
+no applied record, in journal order, and journals one
+`daemon.controls.restored` summary; records without the marker (every
+pre-D-24 journal) are history and never re-fire, because a
+consumed-but-unmarked control cannot be told from an unconsumed one.
+Standby-auto reverifies are the one exclusion: 026 D-8's next scan
+re-derives them from drift, so restoring them would double-queue the
+same healing. `concludeIdle()` refuses while restored controls sit
+unapplied: a run with queued controls is not idle, and the probe's
+drive is what applies and journals them exactly once. 026 D-11 records
+the scheduler half.
+
+D-25 (2026-08-06, operator). A refusal's pause reason carries the
+refusal itself: when a blocked stage outcome pauses the run, the
+journaled reason appends the build refusal's kind and message (bounded
+to 400 characters) beside the outcome word, so the status surface
+answers "why is it paused right now" without the operator spelunking
+the journal. Found live: the first driven family-repo build paused as
+`build outcome "refused"` while the actionable fact (gate-red-at-base,
+"bun run typecheck" exited 1) sat one journal record away.

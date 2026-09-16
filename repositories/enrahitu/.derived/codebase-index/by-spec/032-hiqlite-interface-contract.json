@@ -1,0 +1,35 @@
+{
+  "mapping": {
+    "dependsOn": [
+      "001-enrahitu-architecture",
+      "002-in-process-hiqlite",
+      "021-kernel-native-consumption",
+      "024-decision-chain-integrity"
+    ],
+    "implementingPaths": [
+      {
+        "path": "backend/state/",
+        "source": "spec-edge"
+      }
+    ],
+    "resolvedUnits": [
+      {
+        "locations": [
+          {
+            "file": "backend/state/"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "directory",
+          "path": "backend/state/"
+        }
+      }
+    ],
+    "specId": "032-hiqlite-interface-contract",
+    "specStatus": "approved"
+  },
+  "schemaVersion": "1.1.0",
+  "shardHash": "c740968234bf46ffc8138d137937839ea024e69b73182ac4869886542e1da66b"
+}

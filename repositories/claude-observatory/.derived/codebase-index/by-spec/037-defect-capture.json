@@ -1,0 +1,62 @@
+{
+  "mapping": {
+    "dependsOn": [
+      "035-corpus-synthesis"
+    ],
+    "implementingPaths": [
+      {
+        "path": "src/orchestrator/adopt/defects.test.ts",
+        "source": "spec-edge"
+      },
+      {
+        "path": "src/orchestrator/adopt/defects.ts",
+        "source": "spec-edge"
+      }
+    ],
+    "resolvedUnits": [
+      {
+        "locations": [
+          {
+            "file": "src/orchestrator/adopt/defects.test.ts"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "file",
+          "path": "src/orchestrator/adopt/defects.test.ts"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "src/orchestrator/adopt/defects.ts"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "file",
+          "path": "src/orchestrator/adopt/defects.ts"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "docs/design/00-ecosystem-analysis.md"
+          }
+        ],
+        "ownership": false,
+        "sourceField": "references",
+        "unit": {
+          "kind": "file",
+          "path": "docs/design/00-ecosystem-analysis.md"
+        }
+      }
+    ],
+    "specId": "037-defect-capture",
+    "specStatus": "approved"
+  },
+  "schemaVersion": "1.1.0",
+  "shardHash": "aa20b7dc6252321a2b8276dd6fd77403589b6c1cb34c0adb4f9acfc3a04de42e"
+}

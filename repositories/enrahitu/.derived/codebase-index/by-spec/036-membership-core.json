@@ -1,0 +1,36 @@
+{
+  "mapping": {
+    "dependsOn": [
+      "001-enrahitu-architecture",
+      "021-kernel-native-consumption",
+      "032-hiqlite-interface-contract",
+      "034-control-plane",
+      "035-chassis-boundary"
+    ],
+    "implementingPaths": [
+      {
+        "path": "backend/members/",
+        "source": "spec-edge"
+      }
+    ],
+    "resolvedUnits": [
+      {
+        "locations": [
+          {
+            "file": "backend/members/"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "directory",
+          "path": "backend/members/"
+        }
+      }
+    ],
+    "specId": "036-membership-core",
+    "specStatus": "approved"
+  },
+  "schemaVersion": "1.1.0",
+  "shardHash": "6cbf24ca2f0f7aa4cad15431d3990d2fa3e818c2ac0eb0d50b558a7f56c0c284"
+}

@@ -1,0 +1,37 @@
+{
+  "mapping": {
+    "dependsOn": [
+      "006-webapp-spa",
+      "014-scaffold-verb"
+    ],
+    "implementingPaths": [
+      {
+        "path": "frontend",
+        "source": "manifest-metadata"
+      },
+      {
+        "path": "frontend/",
+        "source": "spec-edge"
+      }
+    ],
+    "resolvedUnits": [
+      {
+        "locations": [
+          {
+            "file": "frontend/"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "directory",
+          "path": "frontend/"
+        }
+      }
+    ],
+    "specId": "015-react-rr7-flavor",
+    "specStatus": "approved"
+  },
+  "schemaVersion": "1.1.0",
+  "shardHash": "d343513b7d407f87828fe5b9245dfecc2c8fcfcb58235afc0dfe27482a0514a4"
+}

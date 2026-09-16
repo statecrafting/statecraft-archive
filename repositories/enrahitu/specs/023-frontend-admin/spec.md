@@ -1,0 +1,288 @@
+---
+id: "023-frontend-admin"
+title: "frontend-admin: the flag-gated admin dashboard"
+status: approved
+created: "2026-07-21"
+implementation: complete
+depends_on:
+  - "001-enrahitu-architecture"
+  - "004-auth-core"
+  - "005-rauthy-same-origin"
+  - "009-template-contract"
+  - "015-react-rr7-flavor"
+  - "019-two-directory-layout"
+  - "022-observability-contract"
+establishes:
+  - { kind: directory, path: "frontend-admin/" }
+  - { kind: directory, path: "backend/admin/" }
+summary: >
+  The first-class admin dashboard spec 001 section 4.4 promises: an
+  encore.dev-style operator surface, recreated from the dashapp
+  reference (~/DevWork/dashapp), served same-origin by the app itself,
+  gated server-side on the <app>_operator role, and flag-gated so the
+  end-user of a stamped app chooses whether it exists at all. dashapp
+  talked WebSocket JSON-RPC to the Encore daemon; the substrate has no
+  daemon, so the dashboard's data plane is a new backend/admin service
+  reading the app's own truth: app-model.json and the runtime route
+  registry for the catalog and API explorer, the spec 022 trace buffer
+  for traces. The lift is a recreation, not a copy: dashapp's own code
+  is relicensed into the template by its author, while every
+  Encore-owned asset (fonts, logos, wordmarks, Go snippets, generated
+  protobuf types, brand design tokens) is excluded and replaced.
+  statecraft adopts the result as its platform operator dashboard
+  (statecraft spec 012); every stamped app inherits it at stamp time.
+---
+
+# 023: frontend-admin
+
+## 1. Purpose
+
+Spec 001 §4.4 defines the surface: `frontend-admin`, first-class,
+flag-gated, access gated on the `<app>_operator` role convention
+(`enrahitu_operator` here, `statecraft_operator` on the platform,
+`<app>_operator` in every stamped cell). The functional reference is
+`~/DevWork/dashapp` (spec 001 names it): a working React 19 + React
+Router 7 + Vite 7 + Tailwind 4 parity rebuild of Encore's local dev
+dashboard, which conveniently matches the spec 015 flavor stack
+exactly. This spec turns the reference into the substrate's own
+dashboard.
+
+Two facts force a recreation rather than a lift-and-rename:
+
+- **The data plane does not exist here.** dashapp opens a WebSocket
+  JSON-RPC connection to the Encore daemon (`/__encore`), whose
+  `status`/`traces/list`/`api-call` methods are the daemon's, and some
+  of whose surfaces (DB explorer) were built against inferred methods
+  that do not exist even there. Spec 008 removed the daemon from this
+  substrate on purpose. The dashboard must be re-pointed at the app's
+  own truth: the extracted model, the runtime registry, the spec 022
+  trace buffer.
+- **The provenance is mixed.** dashapp carries no license file and
+  embeds Encore-owned material: brand fonts explicitly excluded from
+  Encore's license, logos and wordmarks, Encore-Go snippet content,
+  and protobuf-generated types from Encore's schemas. The author's own
+  reimplementation code can enter Apache-2.0 by their grant; the
+  Encore-owned assets cannot and are replaced wholesale.
+
+## 2. Territory
+
+- `frontend-admin/` (new top-level directory): the dashboard app,
+  React + React Router v7 + Vite + Tailwind, on the spec 015 flavor
+  conventions, building into `backend/web/dist-admin/`.
+- `backend/admin/` (new service directory): the same-origin admin API
+  and the gated static serving of the dashboard bundle.
+- Coordinated edits, each paired with a dated pointer amendment in
+  the owning spec: `template.toml` (spec 009: the flag slot and a
+  contract version bump), spec 019 (the two-directory layout claim
+  gains its deliberate third sibling, flag-gated and prunable), the
+  scaffold verb (spec 014's `scripts/stamp.mjs`: keep-or-prune for
+  the admin slot), packaging (spec 007/016: bundle when enabled),
+  and the model/extractor line (specs 020/021) so the model records
+  the admin surface truthfully.
+
+## 3. Behavior
+
+### 3.1 The flag (stamp-time and runtime)
+
+- `template.toml` gains an `admin` slot
+  (`default = "on"`, `allowed = ["on", "off"]`); the scaffold verb
+  keeps or prunes `frontend-admin/` + `backend/admin/` accordingly,
+  the same keep-or-prune mechanism the frontend flavor slot uses.
+  This is a `[contract]` version bump, coordinated with the factory's
+  reader (statecraft spec 005 consumes `template.toml` and nothing
+  else).
+- At runtime, `ADMIN_UI_ENABLED=false` disables serving even where
+  stamped on (the kill switch). Off means 404, indistinguishable from
+  absent.
+
+### 3.2 The gate
+
+- Every `/admin` asset request and every `/api/admin/*` call is
+  enforced server-side in `backend/admin/` against the chassis auth
+  session: the caller must hold the `<app>_operator` role (the app
+  name is known at stamp time; `enrahitu_operator` in the template
+  itself). No operator role, no bytes: `permissionDenied` for API
+  calls, login redirect for the page. `rauthy_admin` confers nothing
+  (role separation per spec 001 §4.4).
+- The dashboard is same-origin behind the app (spec 005's posture);
+  it authenticates with the ordinary session cookie, adding no new
+  auth mechanism, no token plumbing, and no second origin.
+
+### 3.3 The data plane
+
+`backend/admin/` exposes, gated as above:
+
+- **Catalog**: services, endpoints, schemas, derived from
+  `app-model.json` plus the runtime route registry (richer request/
+  response shapes where the runtime knows them). Replaces the
+  daemon's `status.meta` APIMeta.
+- **Traces**: recent-trace list, single-trace span detail, and a
+  live stream (SSE) of new traces, all reading the spec 022 buffer.
+  Replaces `traces/list` + the `trace/new` notification.
+- **Overview**: the governed-cell surface: identity posture, the
+  model hash, capability summary, observability posture, read-only
+  (spec 020 already frames frontend-admin as a model renderer).
+- **API caller**: executes a request against the app's own endpoint
+  on behalf of the operator's session, returning status/body/timing
+  (replaces the daemon's `api-call`). Calls are subject to the
+  kernel's ordinary adjudication like any other request; the admin
+  surface grants no bypass.
+
+  Amended 2026-07-22 (implementation): the caller is a dashboard
+  (frontend) concern, not a `backend/admin/` endpoint. The daemon's
+  `api-call` existed because dashapp's browser was a different origin
+  from the app; here the dashboard is same-origin and the browser
+  already holds the operator's session cookie, so the caller issues a
+  plain credentialed `fetch` to the target endpoint and measures
+  status/body/timing itself. A server-side replay would be strictly
+  worse: it would forward cookies through a second hop and need an
+  egress-seam exception (`fetch` in `backend/` is ban-listed outside
+  the kernel facade). Adjudication and tracing see the operator's
+  real request either way.
+
+### 3.4 The surfaces (v1)
+
+Recreated from dashapp, in priority order: **Overview** (new, the
+governed-cell page), **Service catalog + API explorer** (dashapp's
+`AppAPI`/`SchemaView`/`RPCCaller` line), **Traces** (dashapp's
+`AppTraces`/`SpanList`/`SpanDetail` line). The flow diagram is a
+stretch surface (derivable from model edges; include if cheap).
+Explicitly not lifted: the DB explorer (built on daemon methods that
+do not exist; a CoreLedger browser is a future spec), snippets
+(Encore-Go content), the cloud dashboard stub, and the JSON-RPC/
+WebSocket transport (plain HTTP + SSE here).
+
+### 3.5 Provenance rules for the lift
+
+- dashapp's own reimplementation code may be adapted under the
+  author's grant and lands as Apache-2.0 with the repo license.
+- Excluded and replaced: Encore fonts (system/open font stack
+  instead), Encore logos/wordmarks/patch art (neutral template
+  identity), Encore design tokens (own token set), Go snippet
+  content, `*.pb.ts` generated types (typed against the app-model
+  schema and the admin API instead). MIT-licensed vendored bits keep
+  their attribution headers.
+- Nothing in `frontend-admin/` may claim to be, or visually imitate,
+  the Encore product.
+
+## 4. Acceptance
+
+1. In the template dev run, an `enrahitu_operator` session loads
+   `/admin` and sees the Overview, the catalog listing real services
+   and endpoints, and a trace produced by ordinary API traffic; a
+   non-operator session gets no dashboard and `permissionDenied` on
+   `/api/admin/*`; signed-out gets the login redirect.
+2. The API caller executes a real endpoint round-trip from the
+   dashboard, and the resulting request appears in Traces.
+3. A stamp with `admin = "off"` contains neither `frontend-admin/`
+   nor `backend/admin/` and serves 404 on `/admin`; a stamp with
+   `admin = "on"` serves the gated dashboard under
+   `<app>_operator`; `ADMIN_UI_ENABLED=false` yields 404 at runtime.
+4. `template.toml` carries the `admin` slot and the bumped contract
+   version; the factory contract test in the consuming repo reads it
+   (cross-repo: statecraft spec 005's reader tolerates or adopts the
+   bump before the template release is pinned).
+5. The extracted model records the admin surface and operator role
+   truthfully; hand-editing it still fails the gate.
+6. Verify verbs and spec-spine gates green; the packaged image serves
+   the dashboard identically to the dev run.
+
+### 4.1 Status (2026-07-22)
+
+Acceptance 4's cross-repo arm holds by tolerance: the statecraft
+factory's reader supports the whole major-0 contract range
+(`>=0.1.0 <1.0.0`, statecraft spec 005 §4), so contract 0.6.0 passes it
+unchanged, and an older reader that ignores the `admin` slot stamps
+with the default (`on`). Statecraft's own pinned-template fixture and
+its adoption of the dashboard remain statecraft spec 012's work, out of
+scope here (§5).
+
+## 5. Out of scope
+
+- statecraft's adoption and platform branding (statecraft spec 012)
+  and any statecraft domain UI (tenants console: statecraft spec 011).
+- A CoreLedger data browser (future spec; needs its own privileged
+  read model, not inferred daemon RPCs).
+- Metrics charting/alerting; the dashboard renders traces and
+  catalog, `/metrics` remains scrape-oriented (spec 022).
+- The React-only frontend convergence of spec 001 §4.3; this spec
+  neither requires nor advances retiring the Vue flavor.
+
+## Amendment (2026-07-30): the schema surface
+
+The admin data plane gains two endpoints: `GET /api/admin/schema` reports the
+applied state-layer version and what is pending, and `POST /api/admin/schema/apply`
+applies it. Both pass the §3.1 gate unchanged.
+
+This is here rather than in a script because of where the store is. Spec 032 §3.6
+requires migration to be a deploy step with one runner, and at N=1 the embedded
+node owns the volume, so no second process can open it while the app runs. The
+deploy step therefore has to be performed by the running app, and the operator
+plane is the correct place for an operator's act: it is authenticated, it is
+role-gated, and the resulting effect is adjudicated and lands on the Decision
+chain naming a principal, which a shell script on the host would not.
+
+The `admin` service holds `cap.db.state.migrate` and `cap.db.state.read` for it,
+declared in the manifest and used under admin's own attribution. It does not
+borrow the `state` service's identity through `runAsService`: a capability
+exercised under a name the manifest does not grant is a ceiling that lies, and
+the ceiling being readable is the whole point of spec 021.
+
+**One implementation note, because the extractor caught it and a reader would
+not.** The first version imported `CONTROL_PLANE_MIGRATIONS` from the control
+plane's barrel, and the model extractor immediately reported `admin` using
+`db.txn` and `notify.publish` on `state` beyond its ceiling: a barrel import
+makes every effect reachable through it part of the importing service's traced
+surface. Importing the schema module directly narrows it back to the constant
+that was wanted. The ceiling is computed from what is reachable, so what a
+service imports is part of what it claims.
+
+No new UI ships with this. The dashboard's existing API caller (§3.3 amendment)
+calls both endpoints under the operator's own session, which is what makes the
+verb usable the day it lands rather than the day a panel is designed for it.
+
+## Amendment (2026-08-04): the ledger's schema pair joins the plane (spec 027)
+
+`GET /api/admin/ledger/schema` and `POST /api/admin/ledger/schema/apply` join the
+state layer's pair from the 2026-07-30 amendment, gated identically through
+`requireOperator()`: the kill switch answers 404 and a non-operator gets
+permissionDenied. Spec 027 §3.7 records why CoreLedger's half of `migrate`
+belongs on this plane rather than in a script, and the short form is that a
+script would have to carry a second copy of the runner.
+
+`pendingMigrations()` now takes the `{ version, name }` summary that both stores'
+migration types already satisfy, rather than either store's own type. One
+function serves both because both runners refuse the same two things, duplicate
+versions and versions that do not ascend, which is what makes "everything above
+the high-water mark" exact rather than approximate. Taking the summary is what
+stops one store's list being planned against the other store's version.
+
+The dashboard itself is unchanged: this is data plane only, and no screen reads
+it yet.
+
+## Amendment (2026-08-05): the state layer's backup pair (spec 027)
+
+`POST /api/admin/state/backups` and `GET /api/admin/state/backups` join the two
+schema pairs on this plane, gated identically through `requireOperator()`.
+
+They are here for the reason the schema verb is here, which spec 027 §3.4's
+2026-08-04 settlement generalized: at N=1 the app's embedded hiqlite node holds
+the volume open, so an operation on that store is performed BY the running app,
+under an authenticated operator, or it is not performed at all. A hot backup is
+such an operation, so the `backup` verb calls this pair rather than copying
+`/data/hiqlite` around a live raft log. A cold backup needs neither endpoint,
+because a stopped node's directory is already the state it would recover from.
+
+The `admin` service's ceiling grows by `cap.backup.state.write` and
+`cap.backup.state.list`, which spec 032 declared and no service held.
+
+The create endpoint reads the backup listing **before as well as after** taking
+the snapshot, which is the one thing here that is not a gate plus a call. The
+addon's sixty-second duplicate-request guard is silent, so a second request
+inside the window returns the first snapshot with nothing to say so; without the
+before-reading, the verb could not distinguish a fresh snapshot from a suppressed
+one and spec 027 §3.6's promise to report the age of what it ships would be
+unanswerable. The response carries `fresh` for exactly that.
+
+The dashboard itself is unchanged: this is data plane only, and no screen reads
+it yet.

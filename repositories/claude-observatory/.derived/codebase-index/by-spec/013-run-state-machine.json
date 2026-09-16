@@ -1,0 +1,49 @@
+{
+  "mapping": {
+    "dependsOn": [
+      "011-work-journal"
+    ],
+    "implementingPaths": [
+      {
+        "path": "src/orchestrator/state.test.ts",
+        "source": "spec-edge"
+      },
+      {
+        "path": "src/orchestrator/state.ts",
+        "source": "spec-edge"
+      }
+    ],
+    "resolvedUnits": [
+      {
+        "locations": [
+          {
+            "file": "src/orchestrator/state.test.ts"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "file",
+          "path": "src/orchestrator/state.test.ts"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "src/orchestrator/state.ts"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "file",
+          "path": "src/orchestrator/state.ts"
+        }
+      }
+    ],
+    "specId": "013-run-state-machine",
+    "specStatus": "approved"
+  },
+  "schemaVersion": "1.1.0",
+  "shardHash": "87afadb2edd2f7c813102b11924783ada66156885f4f35c65d40ce9dcec6755a"
+}

@@ -1,0 +1,763 @@
+{
+  "agents": [],
+  "app": {
+    "name": "enrahitu",
+    "org": "statecrafting"
+  },
+  "auth": {
+    "idp": "rauthy-embedded",
+    "operatorRole": "enrahitu_operator"
+  },
+  "capabilities": [
+    {
+      "id": "cap.backup.state.list",
+      "kind": "bucket.list",
+      "resource": "state-backups"
+    },
+    {
+      "id": "cap.backup.state.write",
+      "kind": "bucket.write",
+      "resource": "state-backups"
+    },
+    {
+      "constraints": {
+        "keyPrefix": "rl:"
+      },
+      "id": "cap.counter.rate-limit.add",
+      "kind": "counter.add",
+      "resource": "counters"
+    },
+    {
+      "constraints": {
+        "keyPrefix": "rl:"
+      },
+      "id": "cap.counter.rate-limit.delete",
+      "kind": "counter.delete",
+      "resource": "counters"
+    },
+    {
+      "id": "cap.db.app.migrate",
+      "kind": "db.migrate",
+      "resource": "app"
+    },
+    {
+      "id": "cap.db.app.read",
+      "kind": "db.read",
+      "resource": "app"
+    },
+    {
+      "id": "cap.db.app.txn",
+      "kind": "db.txn",
+      "resource": "app"
+    },
+    {
+      "id": "cap.db.app.write",
+      "kind": "db.write",
+      "resource": "app"
+    },
+    {
+      "id": "cap.db.state.migrate",
+      "kind": "db.migrate",
+      "resource": "state"
+    },
+    {
+      "id": "cap.db.state.read",
+      "kind": "db.read",
+      "resource": "state"
+    },
+    {
+      "id": "cap.db.state.txn",
+      "kind": "db.txn",
+      "resource": "state"
+    },
+    {
+      "id": "cap.db.state.write",
+      "kind": "db.write",
+      "resource": "state"
+    },
+    {
+      "id": "cap.egress.mail-provider",
+      "kind": "http.egress",
+      "resource": "mail-provider"
+    },
+    {
+      "id": "cap.egress.rauthy-issuer",
+      "kind": "http.egress",
+      "resource": "rauthy-issuer"
+    },
+    {
+      "id": "cap.egress.rauthy-upstream",
+      "kind": "http.egress",
+      "resource": "rauthy-upstream"
+    },
+    {
+      "id": "cap.lock.state.acquire",
+      "kind": "lock.acquire",
+      "resource": "state"
+    },
+    {
+      "id": "cap.notify.state.listen",
+      "kind": "notify.listen",
+      "resource": "state"
+    },
+    {
+      "id": "cap.notify.state.publish",
+      "kind": "notify.publish",
+      "resource": "state"
+    },
+    {
+      "id": "cap.secret.jwt-private",
+      "kind": "secret.read",
+      "resource": "jwt_private_key"
+    },
+    {
+      "id": "cap.secret.jwt-public",
+      "kind": "secret.read",
+      "resource": "jwt_public_key"
+    },
+    {
+      "id": "cap.secret.jwt-refresh-private",
+      "kind": "secret.read",
+      "resource": "jwt_refresh_private_key"
+    },
+    {
+      "id": "cap.secret.jwt-refresh-public",
+      "kind": "secret.read",
+      "resource": "jwt_refresh_public_key"
+    },
+    {
+      "id": "cap.secret.mail-password",
+      "kind": "secret.read",
+      "resource": "enrahitu_mail_password"
+    },
+    {
+      "id": "cap.secret.rauthy-client",
+      "kind": "secret.read",
+      "resource": "rauthy_client_secret"
+    },
+    {
+      "id": "cap.smtp.mail-relay",
+      "kind": "smtp.egress",
+      "resource": "mail-relay"
+    }
+  ],
+  "contract": {
+    "name": "app-model",
+    "version": "0.1.0"
+  },
+  "extraction": {
+    "producers": [
+      {
+        "tier": "ts",
+        "tool": "enrahitu-extract",
+        "version": "0.4.0"
+      }
+    ],
+    "verified": true
+  },
+  "gate": {
+    "checks": [
+      "secrets"
+    ],
+    "configHash": "sha256:801f914badea9b738bdec5cb08168f4b278b57f1fb54f3ee75df0f3b2467c145"
+  },
+  "integrity": {
+    "algorithm": "sha256-canonical-keysort-v1",
+    "hash": "sha256:29a235bc093eea09ae42d8c1c560eb82cf7a01c6774d53f61d845ad87cee100a"
+  },
+  "ledger": {
+    "maxRecordBytes": 1024,
+    "recordSchema": "decision/v1",
+    "signing": {
+      "algorithm": "ed25519",
+      "keyEnv": "ENRAHITU_LEDGER_SIGNING_KEY"
+    }
+  },
+  "observability": {
+    "metricsPath": "/metrics",
+    "otel": true
+  },
+  "resources": {
+    "buckets": [
+      {
+        "name": "state-backups"
+      }
+    ],
+    "counters": [
+      {
+        "name": "counters"
+      }
+    ],
+    "databases": [
+      {
+        "engine": "coreledger-libsql",
+        "name": "app"
+      },
+      {
+        "engine": "hiqlite",
+        "name": "state"
+      }
+    ],
+    "kv": [
+      {
+        "name": "cache"
+      }
+    ],
+    "secrets": [
+      {
+        "name": "enrahitu_mail_password"
+      },
+      {
+        "name": "jwt_private_key"
+      },
+      {
+        "name": "jwt_public_key"
+      },
+      {
+        "name": "jwt_refresh_private_key"
+      },
+      {
+        "name": "jwt_refresh_public_key"
+      },
+      {
+        "name": "rauthy_client_secret"
+      }
+    ]
+  },
+  "services": [
+    {
+      "capabilities": [
+        "cap.backup.state.list",
+        "cap.backup.state.write",
+        "cap.db.app.migrate",
+        "cap.db.app.read",
+        "cap.db.state.migrate",
+        "cap.db.state.read",
+        "cap.secret.jwt-public"
+      ],
+      "endpoints": [
+        {
+          "access": "public",
+          "methods": [
+            "GET"
+          ],
+          "name": "adminAssets",
+          "path": "/admin/*rest",
+          "raw": true
+        },
+        {
+          "access": "public",
+          "methods": [
+            "GET"
+          ],
+          "name": "adminIndex",
+          "path": "/admin",
+          "raw": true
+        },
+        {
+          "access": "auth",
+          "methods": [
+            "POST"
+          ],
+          "name": "applyLedgerSchema",
+          "path": "/api/admin/ledger/schema/apply"
+        },
+        {
+          "access": "auth",
+          "methods": [
+            "POST"
+          ],
+          "name": "applySchema",
+          "path": "/api/admin/schema/apply"
+        },
+        {
+          "access": "auth",
+          "methods": [
+            "GET"
+          ],
+          "name": "catalog",
+          "path": "/api/admin/catalog"
+        },
+        {
+          "access": "auth",
+          "methods": [
+            "POST"
+          ],
+          "name": "createStateBackup",
+          "path": "/api/admin/state/backups"
+        },
+        {
+          "access": "auth",
+          "methods": [
+            "GET"
+          ],
+          "name": "ledgerSchema",
+          "path": "/api/admin/ledger/schema"
+        },
+        {
+          "access": "auth",
+          "methods": [
+            "GET"
+          ],
+          "name": "listStateBackups",
+          "path": "/api/admin/state/backups"
+        },
+        {
+          "access": "auth",
+          "methods": [
+            "GET"
+          ],
+          "name": "overview",
+          "path": "/api/admin/overview"
+        },
+        {
+          "access": "auth",
+          "methods": [
+            "GET"
+          ],
+          "name": "schema",
+          "path": "/api/admin/schema"
+        },
+        {
+          "access": "auth",
+          "methods": [
+            "GET"
+          ],
+          "name": "traceDetail",
+          "path": "/api/admin/traces/:id"
+        },
+        {
+          "access": "auth",
+          "methods": [
+            "GET"
+          ],
+          "name": "traceStream",
+          "path": "/api/admin/traces/stream/live",
+          "raw": true
+        },
+        {
+          "access": "auth",
+          "methods": [
+            "GET"
+          ],
+          "name": "traces",
+          "path": "/api/admin/traces"
+        }
+      ],
+      "name": "admin",
+      "tier": "ts"
+    },
+    {
+      "capabilities": [
+        "cap.counter.rate-limit.add",
+        "cap.counter.rate-limit.delete",
+        "cap.db.app.migrate",
+        "cap.db.app.read",
+        "cap.db.app.txn",
+        "cap.db.app.write",
+        "cap.egress.rauthy-issuer",
+        "cap.secret.jwt-private",
+        "cap.secret.jwt-public",
+        "cap.secret.jwt-refresh-private",
+        "cap.secret.jwt-refresh-public",
+        "cap.secret.rauthy-client"
+      ],
+      "endpoints": [
+        {
+          "access": "public",
+          "methods": [
+            "GET"
+          ],
+          "name": "csrfToken",
+          "path": "/api/v1/auth/csrf-token",
+          "raw": true
+        },
+        {
+          "access": "public",
+          "methods": [
+            "GET"
+          ],
+          "name": "drivers",
+          "path": "/api/v1/auth/drivers"
+        },
+        {
+          "access": "public",
+          "methods": [
+            "GET"
+          ],
+          "name": "login",
+          "path": "/api/v1/auth/login",
+          "raw": true
+        },
+        {
+          "access": "auth",
+          "methods": [
+            "POST"
+          ],
+          "name": "logout",
+          "path": "/api/v1/auth/logout",
+          "raw": true
+        },
+        {
+          "access": "auth",
+          "methods": [
+            "GET"
+          ],
+          "name": "me",
+          "path": "/api/v1/auth/me"
+        },
+        {
+          "access": "public",
+          "methods": [
+            "GET"
+          ],
+          "name": "mockLogin",
+          "path": "/api/v1/auth/mock/login",
+          "raw": true
+        },
+        {
+          "access": "public",
+          "methods": [
+            "GET"
+          ],
+          "name": "rauthyCallback",
+          "path": "/api/v1/auth/rauthy/callback",
+          "raw": true
+        },
+        {
+          "access": "public",
+          "methods": [
+            "GET"
+          ],
+          "name": "rauthyLogin",
+          "path": "/api/v1/auth/rauthy/login",
+          "raw": true
+        },
+        {
+          "access": "public",
+          "methods": [
+            "POST"
+          ],
+          "name": "refresh",
+          "path": "/api/v1/auth/refresh",
+          "raw": true
+        },
+        {
+          "access": "public",
+          "methods": [
+            "GET"
+          ],
+          "name": "status",
+          "path": "/api/v1/auth/status",
+          "raw": true
+        }
+      ],
+      "name": "auth",
+      "tier": "ts"
+    },
+    {
+      "capabilities": [
+        "cap.db.state.read",
+        "cap.db.state.txn",
+        "cap.db.state.write",
+        "cap.lock.state.acquire",
+        "cap.notify.state.listen",
+        "cap.notify.state.publish"
+      ],
+      "endpoints": [],
+      "name": "control",
+      "tier": "ts"
+    },
+    {
+      "capabilities": [
+        "cap.db.app.read"
+      ],
+      "endpoints": [
+        {
+          "access": "public",
+          "methods": [
+            "GET"
+          ],
+          "name": "health",
+          "path": "/health"
+        },
+        {
+          "access": "public",
+          "methods": [
+            "GET"
+          ],
+          "name": "healthz",
+          "path": "/healthz"
+        },
+        {
+          "access": "public",
+          "methods": [
+            "GET"
+          ],
+          "name": "readyz",
+          "path": "/readyz"
+        }
+      ],
+      "name": "health",
+      "tier": "ts"
+    },
+    {
+      "capabilities": [],
+      "endpoints": [
+        {
+          "access": "public",
+          "methods": [
+            "GET"
+          ],
+          "name": "health",
+          "path": "/hiq/health"
+        }
+      ],
+      "name": "hiq",
+      "tier": "ts"
+    },
+    {
+      "capabilities": [
+        "cap.egress.rauthy-upstream"
+      ],
+      "endpoints": [
+        {
+          "access": "public",
+          "methods": [
+            "DELETE",
+            "GET",
+            "HEAD",
+            "OPTIONS",
+            "PATCH",
+            "POST",
+            "PUT"
+          ],
+          "name": "proxy",
+          "path": "/auth/*rest",
+          "raw": true
+        }
+      ],
+      "name": "idp",
+      "tier": "ts"
+    },
+    {
+      "capabilities": [],
+      "endpoints": [],
+      "name": "lib",
+      "tier": "ts"
+    },
+    {
+      "capabilities": [
+        "cap.db.state.read",
+        "cap.db.state.txn",
+        "cap.db.state.write",
+        "cap.egress.mail-provider",
+        "cap.lock.state.acquire",
+        "cap.notify.state.listen",
+        "cap.notify.state.publish",
+        "cap.secret.mail-password",
+        "cap.smtp.mail-relay"
+      ],
+      "endpoints": [
+        {
+          "access": "auth",
+          "methods": [
+            "GET"
+          ],
+          "name": "listNotices",
+          "path": "/api/notices"
+        }
+      ],
+      "name": "mail",
+      "tier": "ts"
+    },
+    {
+      "capabilities": [
+        "cap.db.state.read",
+        "cap.db.state.txn",
+        "cap.db.state.write",
+        "cap.lock.state.acquire",
+        "cap.notify.state.listen",
+        "cap.notify.state.publish"
+      ],
+      "endpoints": [
+        {
+          "access": "auth",
+          "methods": [
+            "DELETE"
+          ],
+          "name": "deleteMember",
+          "path": "/api/members/:name"
+        },
+        {
+          "access": "auth",
+          "methods": [
+            "DELETE"
+          ],
+          "name": "deleteTier",
+          "path": "/api/tiers/:name"
+        },
+        {
+          "access": "auth",
+          "methods": [
+            "GET"
+          ],
+          "name": "getMember",
+          "path": "/api/members/:name"
+        },
+        {
+          "access": "auth",
+          "methods": [
+            "GET"
+          ],
+          "name": "getOrg",
+          "path": "/api/org"
+        },
+        {
+          "access": "auth",
+          "methods": [
+            "GET"
+          ],
+          "name": "listDues",
+          "path": "/api/dues"
+        },
+        {
+          "access": "auth",
+          "methods": [
+            "GET"
+          ],
+          "name": "listMembers",
+          "path": "/api/members"
+        },
+        {
+          "access": "auth",
+          "methods": [
+            "GET"
+          ],
+          "name": "listMemberships",
+          "path": "/api/memberships"
+        },
+        {
+          "access": "auth",
+          "methods": [
+            "GET"
+          ],
+          "name": "listTiers",
+          "path": "/api/tiers"
+        },
+        {
+          "access": "auth",
+          "methods": [
+            "GET"
+          ],
+          "name": "myMembership",
+          "path": "/api/me/membership"
+        },
+        {
+          "access": "auth",
+          "methods": [
+            "PUT"
+          ],
+          "name": "putMember",
+          "path": "/api/members/:name"
+        },
+        {
+          "access": "auth",
+          "methods": [
+            "PUT"
+          ],
+          "name": "putMembership",
+          "path": "/api/memberships/:name"
+        },
+        {
+          "access": "auth",
+          "methods": [
+            "PUT"
+          ],
+          "name": "putOrg",
+          "path": "/api/org"
+        },
+        {
+          "access": "auth",
+          "methods": [
+            "PUT"
+          ],
+          "name": "putTier",
+          "path": "/api/tiers/:name"
+        },
+        {
+          "access": "auth",
+          "methods": [
+            "POST"
+          ],
+          "name": "recordPayment",
+          "path": "/api/dues/:name/paid"
+        },
+        {
+          "access": "auth",
+          "methods": [
+            "POST"
+          ],
+          "name": "voidInvoice",
+          "path": "/api/dues/:name/void"
+        }
+      ],
+      "name": "members",
+      "tier": "ts"
+    },
+    {
+      "capabilities": [],
+      "endpoints": [
+        {
+          "access": "public",
+          "methods": [
+            "GET"
+          ],
+          "name": "metrics",
+          "path": "/metrics",
+          "raw": true
+        }
+      ],
+      "name": "obs",
+      "tier": "ts"
+    },
+    {
+      "capabilities": [
+        "cap.db.state.migrate",
+        "cap.db.state.read"
+      ],
+      "endpoints": [],
+      "name": "state",
+      "tier": "ts"
+    },
+    {
+      "capabilities": [],
+      "endpoints": [
+        {
+          "access": "public",
+          "methods": [
+            "GET",
+            "HEAD"
+          ],
+          "name": "spa",
+          "path": "/!path"
+        }
+      ],
+      "name": "web",
+      "tier": "ts"
+    }
+  ],
+  "source": {
+    "revision": "07fdcfefa8369d01699cb63cb3e4783ffd5f0126",
+    "uncommittedChanges": true
+  },
+  "trust": {
+    "levels": [
+      "full",
+      "restricted",
+      "read-only",
+      "suspended"
+    ]
+  },
+  "types": []
+}

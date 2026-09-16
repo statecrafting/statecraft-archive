@@ -1,0 +1,69 @@
+{
+  "record": {
+    "authors": [
+      "Bartek Kus"
+    ],
+    "created": "2026-07-29",
+    "dependsOn": [
+      "012-spec-dag-readiness",
+      "014-session-driver",
+      "020-decision-ledger"
+    ],
+    "establishes": [
+      {
+        "kind": "file",
+        "path": "src/orchestrator/stages/build.ts"
+      },
+      {
+        "kind": "file",
+        "path": "src/orchestrator/stages/build.test.ts"
+      }
+    ],
+    "extends": [
+      {
+        "nature": "additive",
+        "spec": "021-orchestrator-daemon",
+        "unit": {
+          "kind": "file",
+          "path": "src/orchestrator/daemon.ts"
+        }
+      },
+      {
+        "nature": "additive",
+        "spec": "021-orchestrator-daemon",
+        "unit": {
+          "kind": "file",
+          "path": "src/orchestrator/daemon.test.ts"
+        }
+      },
+      {
+        "nature": "additive",
+        "spec": "026-standby-daemon",
+        "unit": {
+          "kind": "file",
+          "path": "src/orchestrator/standby.test.ts"
+        }
+      }
+    ],
+    "id": "016-stage-build",
+    "implementation": "complete",
+    "kind": "stage",
+    "risk": "high",
+    "sectionHeadings": [
+      "016: Build stage",
+      "1. Purpose",
+      "2. Territory",
+      "3. Behavior",
+      "4. Functional requirements",
+      "5. Acceptance criteria",
+      "6. Out of scope",
+      "7. Resolved decisions"
+    ],
+    "specPath": "specs/016-stage-build/spec.md",
+    "status": "approved",
+    "summary": "The first pipeline stage: assemble the context a fresh session needs (the target spec verbatim, the backlog protocol, relevant decision-ledger entries, dependency pins), flip the spec to in-progress on a fresh feature branch, drive one session to implement exactly that spec's territory, and judge completion from evidence (gate commands green, spec acceptance criteria addressed, working tree state) rather than the session's own claim.\n",
+    "title": "Build stage: implement one spec in one fresh session"
+  },
+  "shardHash": "5e1f03e1b303ee6d860229cb003359486fcbe14225fcc424c369c245fc99d132",
+  "specVersion": "1.2.0"
+}

@@ -1,0 +1,49 @@
+{
+  "mapping": {
+    "dependsOn": [
+      "016-stage-build"
+    ],
+    "implementingPaths": [
+      {
+        "path": "src/orchestrator/stages/ship.test.ts",
+        "source": "spec-edge"
+      },
+      {
+        "path": "src/orchestrator/stages/ship.ts",
+        "source": "spec-edge"
+      }
+    ],
+    "resolvedUnits": [
+      {
+        "locations": [
+          {
+            "file": "src/orchestrator/stages/ship.test.ts"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "file",
+          "path": "src/orchestrator/stages/ship.test.ts"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "src/orchestrator/stages/ship.ts"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "file",
+          "path": "src/orchestrator/stages/ship.ts"
+        }
+      }
+    ],
+    "specId": "017-stage-ship",
+    "specStatus": "approved"
+  },
+  "schemaVersion": "1.1.0",
+  "shardHash": "24c1e553aa26f96efbb782d2b75208d4325deecabcba8959b4e3b6ef43f8389d"
+}

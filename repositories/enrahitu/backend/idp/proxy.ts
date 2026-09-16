@@ -1,0 +1,133 @@
+/**
+ * Raw passthrough proxy for rauthy.
+ *
+ * Everything under /auth/* (rauthy serves its whole surface below /auth/v1:
+ * OIDC discovery, authorize, token, JWKS, the account and admin UIs) is
+ * streamed to RAUTHY_UPSTREAM: in dev the docker-compose rauthy on
+ * 127.0.0.1:8081, in the enrahitu container the co-resident rauthy process on
+ * the same address. rauthy runs with PROXY_MODE=true and PUB_URL set to this
+ * app's public host, so every absolute URL it mints stays on this origin.
+ */
+import type { IncomingMessage, ServerResponse } from "node:http";
+import { Readable } from "node:stream";
+import { pipeline } from "node:stream/promises";
+
+import { api, APIError, ErrCode } from "encore.dev/api";
+
+import { governedFetch } from "../kernel/egress";
+import { vouchedForwardedFor } from "../lib/client-identity";
+
+const UPSTREAM = process.env.RAUTHY_UPSTREAM ?? "http://127.0.0.1:8081";
+
+/** Hop-by-hop headers never forwarded in either direction (RFC 9110 §7.6.1). */
+const HOP_BY_HOP = new Set([
+  "connection",
+  "keep-alive",
+  "proxy-authenticate",
+  "proxy-authorization",
+  "proxy-connection",
+  "te",
+  "trailer",
+  "transfer-encoding",
+  "upgrade",
+]);
+
+// Undici transparently decompresses, so these response headers would lie
+// about the body we actually write back.
+const RESPONSE_STRIP = new Set([...HOP_BY_HOP, "content-encoding", "content-length"]);
+
+function forwardHeaders(req: IncomingMessage): Headers {
+  const headers = new Headers();
+  for (const [key, value] of Object.entries(req.headers)) {
+    const name = key.toLowerCase();
+    if (HOP_BY_HOP.has(name) || name === "host") continue;
+    for (const v of Array.isArray(value) ? value : value === undefined ? [] : [value]) {
+      headers.append(key, v);
+    }
+  }
+  // Only values this app vouches for (spec 025 §3.2). Concatenating the
+  // client's prior X-Forwarded-For with the socket address forwarded the
+  // forgery intact, and rauthy trusts this chain under
+  // TRUSTED_PROXIES=127.0.0.0/8, so its own IP-based defenses inherited the
+  // spoof. Entries the declared topology does not cover are dropped.
+  headers.set(
+    "x-forwarded-for",
+    vouchedForwardedFor(req.headers, req.socket?.remoteAddress ?? undefined),
+  );
+  if (!headers.has("x-forwarded-proto")) headers.set("x-forwarded-proto", "http");
+  if (req.headers.host) headers.set("x-forwarded-host", req.headers.host);
+  return headers;
+}
+
+async function proxyToRauthy(req: IncomingMessage, res: ServerResponse): Promise<void> {
+  const target = new URL(req.url ?? "/", UPSTREAM);
+  const method = (req.method ?? "GET").toUpperCase();
+
+  let upstream: Response;
+  try {
+    // Governed egress (spec 021 §3.5): adjudicated as http.egress on
+    // 'rauthy-upstream' before the request leaves the process.
+    upstream = await governedFetch("rauthy-upstream", target, {
+      method,
+      headers: forwardHeaders(req),
+      // Readable.from re-wraps Encore's RawRequest before toWeb: RawRequest
+      // carries a non-EventEmitter `.req` (the napi handle), and node's
+      // end-of-stream cleanup calls `.req.removeListener()` on any stream
+      // that has one, crashing the process on the first body-bearing proxy
+      // request (the browser login POST).
+      body:
+        method === "GET" || method === "HEAD"
+          ? undefined
+          : Readable.toWeb(Readable.from(req)),
+      redirect: "manual", // rauthy's redirects belong to the browser, not the proxy
+      // duplex is required by undici for streaming request bodies.
+      duplex: "half",
+    });
+  } catch (err) {
+    if (err instanceof APIError && err.code === ErrCode.PermissionDenied) {
+      res.statusCode = 403;
+      res.setHeader("Content-Type", "application/json");
+      res.end(JSON.stringify({ code: "kernel_denied", message: err.message }));
+      return;
+    }
+    res.statusCode = 502;
+    res.setHeader("Content-Type", "application/json");
+    res.end(JSON.stringify({ code: "idp_unavailable", message: "rauthy upstream unreachable" }));
+    return;
+  }
+
+  res.statusCode = upstream.status;
+  upstream.headers.forEach((value, name) => {
+    if (RESPONSE_STRIP.has(name) || name === "set-cookie") return;
+    res.setHeader(name, value);
+  });
+  const setCookies = upstream.headers.getSetCookie();
+  if (setCookies.length > 0) res.setHeader("Set-Cookie", setCookies);
+
+  if (upstream.body) {
+    // Awaited so the handler resolves when the response has flushed, not
+    // when the pipe starts: the obs middleware's span and duration
+    // histogram (spec 022) measure the real request, and a mid-stream
+    // upstream failure rejects here instead of leaking an unhandled
+    // 'error' event.
+    try {
+      await pipeline(
+        Readable.fromWeb(upstream.body as import("node:stream/web").ReadableStream),
+        res,
+      );
+    } catch {
+      // Headers are already sent; nothing to salvage beyond ending the
+      // response. The client sees the truncation; the span records the
+      // duration up to the failure.
+      res.destroy();
+    }
+  } else {
+    res.end();
+  }
+}
+
+// All methods, everything below /auth/.
+export const proxy = api.raw(
+  { expose: true, method: "*", path: "/auth/*rest" },
+  proxyToRauthy,
+);

@@ -1,0 +1,237 @@
+---
+id: "023-orchestrator-cli"
+title: "Orchestrator CLI: the primary control plane"
+status: approved
+created: "2026-07-29"
+authors: ["Bartek Kus"]
+kind: surface
+implementation: complete
+risk: low
+depends_on:
+  - "022-http-api-and-events"
+summary: >
+  The observatory binary gains an `orchestrator` command group that is a
+  pure client of the HTTP API: status, dag, next, start/pause/resume, spec
+  controls (skip, retry-stage, reverify, force-gate, approve), decisions
+  search, history, journal verify (offline, direct), and daemon
+  start/stop/status with the identity-checked lock. Anything the UI can
+  do, the CLI can do; several things (journal verify, daemon lifecycle)
+  only the CLI does.
+establishes:
+  - "src/commands/orchestrator.ts"
+  - "start.sh"
+  - "stop.sh"
+extends:
+  - { spec: "005-cli-surface", unit: "src/index.ts", nature: additive }
+---
+
+# 023: Orchestrator CLI
+
+## 1. Purpose
+
+CLI-first control keeps the orchestrator scriptable and honest: if a
+capability exists, it is reachable from a terminal and therefore from
+automation and tests.
+
+## 2. Territory
+
+`src/commands/orchestrator.ts`; one additive dispatch case in
+`src/index.ts` (owned by spec 005, extended here); and the two operator
+scripts at the repository root, `start.sh` and `stop.sh` (B-5, D-11).
+
+## 3. Behavior
+
+- **B-1 (client, not engine).** Every command except `journal verify` and
+  `daemon start|stop|status` talks to the API through the generated typed
+  client (spec 022 FR-002). No command re-derives state locally while a
+  daemon is running.
+- **B-2 (verbs).** `observatory orchestrator projects [add <path> |
+  arm|disarm|requalify|remove <name>] | status | dag | next | start |
+  pause | resume | history | decisions <query> | spec <id>
+  skip|retry|reverify|force-gate|approve | journal verify | daemon
+  start|stop|status`. Amended to v2 by spec 028's build session under the
+  authority 028 §2 grants: `status` through `spec` each take
+  `--project <name>` to scope them to one registered project (028 B-2),
+  `journal verify` takes `--project <name>` or `--dir <path>` to choose
+  the state root it walks (028 B-3), and `projects add` takes `--name
+  <slug>` and `--disarmed`.
+- **B-3 (output).** Human-readable by default, `--json` for the raw
+  envelope; exit codes: 0 ok, 1 operational failure, 2 unreachable daemon,
+  3 usage. Human output states estimates as estimates (quota).
+- **B-4 (offline verify).** `journal verify` walks both chains (011, 020)
+  directly and works with no daemon running; it is the operator's
+  independent check, so it must not depend on the API.
+
+- **B-5 (operator scripts).** `./start.sh` boots the checkout in one
+  command: preflight (bun, spec-spine, git on PATH), `bun install
+  --frozen-lockfile`, `bun run web:build` (the dashboard is served from
+  the gitignored `web/dist`, spec 024), `orchestrator daemon start`, the
+  observatory watcher's `daemon start` (spec 007 B-1), then both status
+  views and the dashboard address. `./stop.sh` reverses it: `orchestrator
+  daemon stop` (one SIGTERM and a wait for the lock, 021 B-6) and the
+  watcher's `daemon stop` (007 B-2), polling the watcher's old pid so
+  "stopped" is observed rather than assumed. `start.sh --restart` runs
+  stop first; `--skip-build` and `--no-watcher` skip those steps. Neither
+  script escalates to SIGKILL or adds a verb: each step is one of the CLI
+  verbs above, and the exit code is the first failing step's.
+
+## 4. Functional requirements
+
+- **FR-001.** Command tests run against a fixture API server; usage errors
+  are tested for exit code 3 and a usage line on stderr.
+- **FR-002.** The spec 005 usage text gains one line for the group;
+  existing commands are untouched.
+
+## 5. Acceptance criteria
+
+- **AC-1.** `bun test` for the CLI territory passes.
+- **AC-2.** With the daemon from spec 021's fixture running,
+  `observatory orchestrator status --json` returns the documented envelope.
+
+## 6. Out of scope
+
+Interactive TUI, shell completions, and configuration profiles.
+
+## 7. Resolved decisions
+
+D-1. `status` is the composite read, and v2 makes it two of them (amended
+by spec 028's build session under the authority 028 §2 grants). Without
+`--project` it fetches `/api/meta`, `/api/quota`, and `/api/projects` and
+renders the daemon's own state (standby, driving, parked), the account's
+one quota pool, and one row per project; `--json` prints
+`{ok: true, data: {meta, quota, projects}}` composed from the three served
+envelopes, whose payloads are the `ApiMeta`, `QuotaView`, and
+`ProjectsView` types verbatim from `types.ts`. With `--project <name>` it
+fetches that project's `/api/projects/<name>/run` plus the global
+`/api/quota` and prints `{ok: true, data: {run, quota}}`, the original
+composition against v2's shapes. Every other API-backed command maps to
+exactly one route and prints that route's envelope unchanged. B-3 requires
+human output to call an estimated quota horizon an estimate, and a run view
+alone cannot do that (a parked run reads as idle); composing already-shared
+shapes adds no further declaration of the contract.
+
+D-2. The group gains a fourth daemon verb, `daemon run`: the foreground
+process that composes `createProductionDaemonDeps`, `Daemon.start()` (spec
+021 B-2's lock, journals, recovery, loop) and `createApiServer` (spec 022),
+and the thing `daemon start` spawns detached with its log at
+`data/orchestrator/daemon.log`. B-2 names start, stop, and status, but
+nothing in the repository composed a daemon with its API, so those three
+verbs would have had no process to manage. Shutdown is composed here rather
+than delegated to `installShutdownSignalHandler`: SIGTERM stops the HTTP
+server first, then calls the daemon's own `shutdown()`, so no client can
+reach a daemon that has already released its journals.
+
+A-1 (2026-08-01, recorded by spec 026's build session under the authority
+its §2 grants). What `daemon run` composes changed, additively: the
+foreground process boots spec 026's standby daemon (identity lock, project
+registry, the one flight slot) rather than a single `Daemon`, so it
+outlives a terminal run and keeps serving instead of exiting with the API
+and the UI. `--repo` keeps its meaning: a registry chain that has never
+held a record registers that checkout as its first project. The shutdown
+shape above is unchanged, one level up: SIGTERM stops the HTTP server
+first, then the standby daemon, which inherits 021 B-6 and D-2 for
+whichever run holds the slot. Until spec 027's project-scoped routes land,
+the control routes address the run holding the slot, or the single paused
+run when the daemon is in standby, and refuse with the candidates named
+rather than guessing.
+
+D-3. That hosted API reads both chains from their files
+(`journalViewFromDir`), not from the daemon's handle. Spec 022's
+`journalViewFromHandle` hands the API a view over the live handle, but that
+handle is a private field of the `Daemon` class and spec 011's per-chain lock
+refuses a second writer, so an in-process API can obtain neither. The file view re-parses only when size or
+mtime changes and stops at the first line that does not parse or does not
+continue the sequence, which is the torn tail journal.ts's own open-time
+recovery drops as well. It can only report what the daemon has already
+fsynced, and it can never append. The cleaner alternative (a read accessor
+on `Daemon`) sits in spec 021's territory.
+
+D-4. Only `unreachable` maps to exit 2; every other error kind,
+`malformed-response` included, is an operational failure and exits 1, since
+a daemon that answered off-contract is running and broken, not absent.
+Usage errors (no command, unknown command, unknown flag, a flag missing its
+value, an unknown verb, a trailing argument) print the reason and the usage
+block to stderr and exit 3. `daemon status` also exits 2 when no live lock
+holder exists, so one code answers "there is no daemon" whether the question
+went over HTTP or to the lock file.
+
+D-5. The offline commands (B-4's `journal verify`, and the daemon lifecycle)
+answer in the same envelope under `--json`, always `ok: true`, with the
+verdict inside `data` (`verified`, `running`, `staleLock`, `ready`) and the
+outcome in the exit code. A tampered chain is
+`{ok: true, data: {verified: false, ...}}` with exit 1, and a missing anchor
+is reported the same way rather than thrown. The error kinds are the API's
+vocabulary for what a request did, and no request was made.
+
+D-6. One `--url` base address serves both halves: it tells a client where to
+look and tells `daemon run|start` where to bind, resolved as `--url`, then
+`OBSERVATORY_ORCHESTRATOR_URL`, then `http://127.0.0.1:4519`. Separate bind
+and client knobs are how an operator starts a daemon on one port and queries
+another with no error anywhere. Unknown flags are refused rather than
+ignored: spec 005 records silent flag-swallowing as a defect, and in a
+control plane whose verbs journal irreversible facts, `--jsonn` quietly
+executing the verb in human mode is worse than an annoyance.
+
+D-7. The CLI's spec verbs are aliases over the API's (`retry` ->
+`retry-stage`, `force-gate` -> `force-human-gate`, with the long forms
+accepted too), so B-2's grammar and spec 022 B-5's routes are one set of
+verbs under two names. Every control the CLI issues carries
+`X-Control-Source: cli`, so the record the daemon journals names the
+terminal rather than defaulting to `api`, which is what lets the ledger
+distinguish an operator's action from the web UI's.
+
+D-8 (operator, 2026-08-02). Found by this spec's first live
+re-qualification (021 D-18): the unreachable-client assertion targeted
+the default port, and re-qualification runs from a daemon that is, by
+construction, alive and serving it, so the assertion failed against the
+very machinery verifying it. The assertion now targets a scratch loopback
+port: it asserts the client's honesty about an absent server, which was
+always its point, not the accident of an idle machine. The daemon's tests
+passed in the same requalification, so this was the only environmental
+dependence in the section.
+
+## Verification
+
+```verify:cli
+bun test src/commands/orchestrator.test.ts
+```
+
+```verify:cli
+# The client must exit 2 (unreachable), the documented honest outcome,
+# never a crash, when nothing answers. Asserted against a scratch loopback
+# port (D-8): the default port may legitimately hold a live daemon while
+# this runs, re-qualification included, and the assertion is about the
+# client's honesty, not about the operator's machine being idle.
+bun src/index.ts orchestrator status --url http://127.0.0.1:4599 --json > /dev/null 2>&1; test $? -eq 2
+```
+
+D-9 (2026-08-02, operator-directed fix wave). The status/run views' blocker
+list is the run's own journaled stop reason (`run.blocked`), a historical
+fact that a later requalification can heal without the run record changing;
+rendered bare it read as a live claim the scheduler contradicted (found
+live: after 023/026 requalified and 028 built, `status` still showed the
+stale cascade). The render now labels it "blocked (journaled at run stop;
+`dag` shows the live view):" rather than recomputing it, because the run
+view reports the run, and the dag view, whose fold 027 D-6 brought to
+scheduler parity, is the live surface.
+
+D-10 (2026-08-04, operator). `cmdDaemonRun` wires 026 D-7's `readCodeSha`
+with a process-local git HEAD read rooted at the code checkout this
+module was loaded from (two levels above the commands directory), never
+at `--repo`: the two coincide for the self-hosted daemon, but only the
+former names the running modules.
+
+D-11 (operator, 2026-09-01). The scripts exist because the operational
+rule spec 026 D-7 encodes (after a self-repo merge the daemon announces
+code-stale and idles until an operator restarts it) had no one-command
+answer: a restart meant remembering the dashboard build, two daemons, and
+their order. They compose the existing verbs rather than adding any (B-1's
+point: everything is already reachable from a terminal), so they can never
+do what the CLI cannot, and `stop.sh` inherits `daemon stop`'s refusal to
+escalate to SIGKILL: a daemon that ignores SIGTERM is reported with its pid
+and lock path, and the operator decides. The watcher half is opt-out rather
+than opt-in because the README names both layers as the product;
+`--no-watcher` is for a machine that only drives builds. They are owned
+here rather than by 007 or 021 because they are a composition over this
+file's lifecycle verbs, the same layer B-1 places `daemon start|stop|status`
+in; 007 and 021 keep owning what the signals do once delivered.

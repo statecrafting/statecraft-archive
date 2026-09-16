@@ -1,0 +1,56 @@
+{
+  "record": {
+    "authors": [
+      "Bartek Kus"
+    ],
+    "created": "2026-07-29",
+    "dependsOn": [
+      "022-http-api-and-events"
+    ],
+    "establishes": [
+      {
+        "kind": "file",
+        "path": "src/commands/orchestrator.ts"
+      },
+      {
+        "kind": "file",
+        "path": "start.sh"
+      },
+      {
+        "kind": "file",
+        "path": "stop.sh"
+      }
+    ],
+    "extends": [
+      {
+        "nature": "additive",
+        "spec": "005-cli-surface",
+        "unit": {
+          "kind": "file",
+          "path": "src/index.ts"
+        }
+      }
+    ],
+    "id": "023-orchestrator-cli",
+    "implementation": "complete",
+    "kind": "surface",
+    "risk": "low",
+    "sectionHeadings": [
+      "023: Orchestrator CLI",
+      "1. Purpose",
+      "2. Territory",
+      "3. Behavior",
+      "4. Functional requirements",
+      "5. Acceptance criteria",
+      "6. Out of scope",
+      "7. Resolved decisions",
+      "Verification"
+    ],
+    "specPath": "specs/023-orchestrator-cli/spec.md",
+    "status": "approved",
+    "summary": "The observatory binary gains an `orchestrator` command group that is a pure client of the HTTP API: status, dag, next, start/pause/resume, spec controls (skip, retry-stage, reverify, force-gate, approve), decisions search, history, journal verify (offline, direct), and daemon start/stop/status with the identity-checked lock. Anything the UI can do, the CLI can do; several things (journal verify, daemon lifecycle) only the CLI does.\n",
+    "title": "Orchestrator CLI: the primary control plane"
+  },
+  "shardHash": "4db512fbb8f17f2a3f93828dc7b8e5f3dfe1741353a493c13369cdb7690d8b54",
+  "specVersion": "1.2.0"
+}

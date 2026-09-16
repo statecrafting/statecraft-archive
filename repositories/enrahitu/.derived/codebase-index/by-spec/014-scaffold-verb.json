@@ -1,0 +1,50 @@
+{
+  "mapping": {
+    "dependsOn": [
+      "009-template-contract",
+      "012-born-with-provenance"
+    ],
+    "implementingPaths": [
+      {
+        "path": "scripts/stamp.mjs",
+        "source": "spec-edge"
+      },
+      {
+        "path": "scripts/stamp.test.ts",
+        "source": "spec-edge"
+      }
+    ],
+    "resolvedUnits": [
+      {
+        "locations": [
+          {
+            "file": "scripts/stamp.mjs"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "file",
+          "path": "scripts/stamp.mjs"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "scripts/stamp.test.ts"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "file",
+          "path": "scripts/stamp.test.ts"
+        }
+      }
+    ],
+    "specId": "014-scaffold-verb",
+    "specStatus": "approved"
+  },
+  "schemaVersion": "1.1.0",
+  "shardHash": "8bc30e5060e9dc02aef77406967e47b1c2487d56e3a99d40fd12e3fdbfe4eca6"
+}

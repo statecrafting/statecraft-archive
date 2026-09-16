@@ -1,0 +1,33 @@
+{
+  "mapping": {
+    "dependsOn": [
+      "007-single-container-packaging",
+      "008-vendored-encore-toolchain"
+    ],
+    "implementingPaths": [
+      {
+        "path": ".github/workflows/image.yml",
+        "source": "spec-edge"
+      }
+    ],
+    "resolvedUnits": [
+      {
+        "locations": [
+          {
+            "file": ".github/workflows/image.yml"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "file",
+          "path": ".github/workflows/image.yml"
+        }
+      }
+    ],
+    "specId": "016-amd64-image",
+    "specStatus": "approved"
+  },
+  "schemaVersion": "1.1.0",
+  "shardHash": "e0ea201a8d137ffb9c256bee43acd0910dee74e26b0b21b49e02fe20d50a5b05"
+}

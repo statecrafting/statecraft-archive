@@ -1,0 +1,123 @@
+# The default development topology (spec 033 §3.3): N=1.
+#
+#   docker compose -f docker/compose.yml up
+#
+# One container, one volume, one command. rauthy on loopback :8081, the app on
+# :4000, both supervised by entrypoint.sh with the same die-together policy the
+# packaged image uses. This is the same SHAPE as the N=1 deployment, which is
+# the property that stops development and production drifting into two systems
+# (spec 033 §1): before this file, dev ran the app on the host with rauthy in a
+# separate compose file, and the resulting defects were only ever visible on CI.
+#
+# The scale tier is spec 030's docker/compose.cluster.yml. It is a separate file
+# for a separate purpose, and most deployments never need it.
+#
+# What is bind-mounted and why:
+#   - the working tree at /workspace, so the watch loop rebuilds what you edit
+#   - node_modules is NOT masked, because the linux binaries the addon and the
+#     napi runtime need are not the ones a macOS host installed. The container
+#     gets its own, in a named volume, populated by `npm ci` on first boot.
+services:
+  app:
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile.dev
+    ports:
+      # Published on loopback only. The dev container holds real key material
+      # in its volume and runs with the mock auth driver enabled; neither
+      # belongs on a LAN.
+      - "127.0.0.1:4000:4000"
+    environment:
+      PORT: "4000"
+      ENRAHITU_DEV: "1"
+      # Plain http on localhost, so the entrypoint selects rauthy's
+      # danger-insecure cookie mode. Safari refuses to store a Secure cookie
+      # over http even on localhost, which otherwise breaks every login with a
+      # sub-millisecond 401 that looks like a bad password (spec 007).
+      ENRAHITU_PUBLIC_URL: "http://localhost:4000"
+      ENRAHITU_DATA_DIR: /data
+      # Development, not test and not production: "test" puts the Encore
+      # runtime in test mode where it never opens its listener, and
+      # "production" disables the mock auth driver (spec 033 §3.1).
+      NODE_ENV: development
+      AUTH_DRIVER: "${AUTH_DRIVER:-mock}"
+      ENRAHITU_LEDGER_URL: "file:/data/ledger/enrahitu.db"
+      ENRAHITU_HIQ_DATA_DIR: /data/hiqlite
+      # rauthy's embedded hiqlite owns 8100/8200 in this network namespace.
+      ENRAHITU_HIQ_ADDR_RAFT: "127.0.0.1:8300"
+      ENRAHITU_HIQ_ADDR_API: "127.0.0.1:8400"
+      # Mail, caught locally (spec 026 §3.3). The entrypoint passes these into
+      # rauthy, so password reset, email verification, registration and
+      # invitation actually deliver in the dev loop instead of being silently
+      # inert. Plaintext with no auth is correct here and nowhere else: the
+      # relay is a catcher on the compose network that never forwards anything.
+      ENRAHITU_SMTP_URL: mailpit
+      ENRAHITU_SMTP_PORT: "1025"
+      ENRAHITU_SMTP_FROM: enrahitu-dev@localhost
+      ENRAHITU_SMTP_DANGER_INSECURE: "true"
+      # The APPLICATION's mail, which is a separate surface from the IdP's above
+      # and is held by this process rather than scoped into the rauthy subshell
+      # (spec 037 §3.1). Same catcher, two senders: that is configuration
+      # duplication, which is cheap, rather than privilege duplication, which is
+      # not. Both point at Mailpit here and would point at different relays, or
+      # at least different credentials, anywhere else.
+      ENRAHITU_MAIL_TRANSPORT: smtp
+      ENRAHITU_MAIL_HOST: mailpit
+      ENRAHITU_MAIL_PORT: "1025"
+      ENRAHITU_MAIL_FROM: hollis-society@localhost
+      # Plaintext, no STARTTLS. Correct here and nowhere else: the relay is a
+      # catcher on the compose network that never forwards anything.
+      ENRAHITU_MAIL_DANGER_INSECURE: "true"
+    depends_on:
+      # Ordering only. Mailpit accepts connections immediately and rauthy does
+      # not send during startup, so a health condition would buy nothing.
+      - mailpit
+    volumes:
+      - ..:/workspace
+      - dev-node-modules:/workspace/node_modules
+      - dev-data:/data
+    # The image's HEALTHCHECK is the packaged image's concern; here the app
+    # port is what a developer waits on.
+    healthcheck:
+      test:
+        [
+          "CMD",
+          "node",
+          "-e",
+          "fetch('http://127.0.0.1:4000/healthz').then(r=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))",
+        ]
+      interval: 10s
+      timeout: 5s
+      start_period: 90s
+      retries: 5
+
+  # The mail catcher (spec 026 §3.3). It exists so the IdP's delivery path is
+  # exercised rather than conceded: before it, spec 026's mapping could be
+  # asserted but nothing could confirm that a message actually arrives, because
+  # a live SMTP server is external state and CI has none.
+  #
+  # It is development-only and appears in no other topology. The packaged image
+  # takes a real relay through the same ENRAHITU_SMTP_* surface, which is the
+  # property worth having: dev and production differ in which relay is
+  # configured, not in whether the code path runs.
+  #
+  # MIT-licensed and a single static binary, which is why it clears the
+  # permissive-licensing posture this repository holds (spec 001 §4.7) and why
+  # it costs one small container rather than a runtime to host it.
+  mailpit:
+    image: axllent/mailpit:latest
+    ports:
+      # 8025 is the web UI: open http://localhost:8025 to read what the IdP
+      # sent. 1025 is SMTP and stays on the compose network, unpublished,
+      # because nothing outside it has any business submitting mail here.
+      - "127.0.0.1:8025:8025"
+    environment:
+      # Keep caught mail in memory only. A dev mail catcher that accumulates a
+      # volume is a dev mail catcher somebody has to garbage-collect.
+      MP_MAX_MESSAGES: "500"
+      MP_SMTP_AUTH_ACCEPT_ANY: "1"
+      MP_SMTP_AUTH_ALLOW_INSECURE: "1"
+
+volumes:
+  dev-node-modules:
+  dev-data:

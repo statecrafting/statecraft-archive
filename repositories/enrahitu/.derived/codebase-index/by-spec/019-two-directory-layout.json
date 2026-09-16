@@ -1,0 +1,49 @@
+{
+  "mapping": {
+    "dependsOn": [
+      "018-packaged-chassis"
+    ],
+    "implementingPaths": [
+      {
+        "path": "backend/",
+        "source": "spec-edge"
+      },
+      {
+        "path": "frontend/",
+        "source": "spec-edge"
+      }
+    ],
+    "resolvedUnits": [
+      {
+        "locations": [
+          {
+            "file": "backend/"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "directory",
+          "path": "backend/"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "frontend/"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "directory",
+          "path": "frontend/"
+        }
+      }
+    ],
+    "specId": "019-two-directory-layout",
+    "specStatus": "approved"
+  },
+  "schemaVersion": "1.1.0",
+  "shardHash": "053f25f0572aef1db22f14a8a845fa02d059358eb48164470a6d8ced56542bea"
+}

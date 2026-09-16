@@ -1,0 +1,109 @@
+# template.toml: the versioned contract between this template and the
+# Statecraft factory (spec 009). The factory reads ONLY this file to learn
+# how to stamp, verify, and package an app from this chassis; anything not
+# expressed here is not part of the interface.
+
+[template]
+name = "enrahitu"
+version = "0.2.0"
+license = "Apache-2.0"
+
+[contract]
+# Contract schema version (semver). The factory pins a compatible range;
+# a breaking change to this file's shape bumps the major. v0.2 added the
+# optional [requires].toolchain key (spec 018); v0.3 added the [provenance]
+# table (spec 012); v0.4 added the scaffold verb (spec 014); v0.5 added the
+# react-rr7 frontend flavor (spec 015); v0.6 added the admin slot (spec 023).
+# Each of those is a minor bump per spec 009 §3.1.
+#
+# v0.7 REMOVES the `frontend` slot (spec 015, the React-only convergence). Under
+# a `^0.6` caret pin this is a BREAKING change, because at 0.x the minor is the
+# breaking position: a factory that passes --frontend must stop. Spec 009 §3.1
+# calls a removal a "major" bump; the literal 1.0.0 is reserved for declaring
+# the contract stable, which this is not, so the break lands where a caret pin
+# actually sees it.
+#
+# v0.8 adds the four run-time verbs (spec 027): preflight, migrate, backup, and
+# restore. Additive keys, so a minor bump under §3.1, and one bump rather than
+# four: they are a single vocabulary, and a factory that learned them one at a
+# time would have three intermediate versions where the fleet could operate a
+# stamped app halfway.
+version = "0.8.0"
+
+[requires]
+node = ">=24"
+# The packaged build toolchain (statecrafting spec 002), consumed as a
+# devDependency (@statecrafting/toolchain): the Encore build drivers, the
+# app-model extractor, and prebuilt per-platform encore-runtime.node /
+# tsparser-encore binaries. Its @statecrafting/hiqlite-native companion carries
+# the prebuilt addon (statecrafting spec 003). The template and a stamped app
+# consume the same published packages; neither builds Encore or the addon from
+# source, so no Rust or protoc toolchain is required to build.
+toolchain = "^0.3"
+
+[slots]
+# Values the factory substitutes at stamp time.
+app_name = { required = true, pattern = "^[a-z][a-z0-9-]*$" }
+org = { required = true }
+# The `frontend` slot is GONE as of contract v0.7 (spec 015). It offered vue and
+# react-rr7 as sibling flavor directories the scaffold verb pruned to one. The
+# pivot makes enrahitu a membership platform that ships a working application
+# rather than a shell to fill in, so the SPA carries the product's own screens
+# and there is no framework left to choose: `frontend/` is React 19 + React
+# Router v7, period. A slot with one value is not a knob, it is a lie about
+# where the variation lives.
+# admin (contract v0.6, spec 023): whether the stamped app carries the
+# flag-gated operator dashboard (frontend-admin/ + backend/admin/, served
+# same-origin under /admin, gated on the <app>_operator role). "off" prunes
+# both directories; ADMIN_UI_ENABLED=false is the separate runtime kill
+# switch where stamped on.
+admin = { default = "on", allowed = ["on", "off"] }
+
+[verbs]
+# Commands the factory runs inside a stamped repo. Exit code is the verdict.
+verify = "npm run typecheck && npm test"
+package = "scripts/docker-build.sh"
+# scaffold (contract v0.4, spec 014): the in-template stamping recipe. Run from
+#   the repo root of a fresh clone to turn it into a named app: slot validation,
+#   app-name substitution in the manifest and lockfile, provenance-cert
+#   placement, derived-truth regeneration, and a README lineage marker. Required
+#   flags: --app-name, --org; optional: --frontend, --cert, --stamped-from.
+scaffold = "node scripts/stamp.mjs"
+# The run-time verbs (contract v0.8, spec 027). Everything above this line is a
+# build-time verb: it acts on a repo. These act on a RUNNING cell, which is the
+# vocabulary a fleet operating stamped apps on customer hardware needs and the
+# template did not have.
+#
+# preflight: the conditions that must hold before anything starts (§3.5). The
+#   entrypoint calls it and fails closed; it is a verb as well so a fleet can ask
+#   the question without booting the answer.
+# migrate: applies pending schema changes to BOTH stores over the admin plane
+#   (§3.4). A deploy step, not a boot step: boot-time migration ties schema
+#   change to process restart, so a crash loop becomes a migration loop.
+# backup: one archive holding every class of state on the volume (§3.2). Cold by
+#   default (the container is stopped, which is the only mode with no
+#   cross-store skew); --online captures each store through the process that
+#   owns it.
+# restore: puts an archive back, verifying every checksum before touching the
+#   volume (§3.3), and refuses a live container.
+#
+# migrate and backup --online need an operator session (ENRAHITU_OPERATOR_COOKIE)
+# because at N=1 the app holds the volume open, so the act is performed by the
+# running app under an authenticated principal and lands on the Decision chain.
+preflight = "node scripts/ops/preflight.mjs"
+migrate = "node scripts/ops/migrate.mjs"
+backup = "node scripts/ops/backup.mjs"
+restore = "node scripts/ops/restore.mjs"
+# deploy: owned by the Statecraft fleet service, never by the template.
+
+[provenance]
+# Born-with certificate + agentic-posture binding (spec 012, contract v0.3).
+# The template owns the cert schema and its validator; the factory emits the
+# instance at stamp time. cert_path exists only in stamped repos, never in the
+# template itself. Kept out of the verify verb on purpose: cert validation is a
+# provenance concern the factory invokes separately, since verify must also
+# pass here, where there is no cert.
+cert_path = ".statecraft/born-with.json"
+cert_schema = ".statecraft/born-with.schema.json"
+verify = "node scripts/verify-born-with.mjs"
+postures = ["none", "assisted", "autonomous"]

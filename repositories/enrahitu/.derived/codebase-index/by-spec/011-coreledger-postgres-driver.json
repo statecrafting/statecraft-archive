@@ -1,0 +1,66 @@
+{
+  "mapping": {
+    "dependsOn": [
+      "003-coreledger"
+    ],
+    "implementingPaths": [
+      {
+        "path": "backend/core/ledger/migrations.ts",
+        "source": "spec-edge"
+      },
+      {
+        "path": "backend/core/ledger/postgres.test.ts",
+        "source": "spec-edge"
+      },
+      {
+        "path": "backend/core/ledger/postgres.ts",
+        "source": "spec-edge"
+      }
+    ],
+    "resolvedUnits": [
+      {
+        "locations": [
+          {
+            "file": "backend/core/ledger/migrations.ts"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "file",
+          "path": "backend/core/ledger/migrations.ts"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "backend/core/ledger/postgres.test.ts"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "file",
+          "path": "backend/core/ledger/postgres.test.ts"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "backend/core/ledger/postgres.ts"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "file",
+          "path": "backend/core/ledger/postgres.ts"
+        }
+      }
+    ],
+    "specId": "011-coreledger-postgres-driver",
+    "specStatus": "approved"
+  },
+  "schemaVersion": "1.1.0",
+  "shardHash": "d3b2c54e341d9ed597247ca2c101a7d80c40084e98a6c55c1a87a11153d8afda"
+}

@@ -1,0 +1,101 @@
+[
+  {
+    "id": 11669724333,
+    "node_id": "LA_kwDOTnoxtc8AAAACt5HcrQ",
+    "url": "https://api.github.com/repos/statecrafting/claude-observatory/labels/bug",
+    "name": "bug",
+    "color": "d73a4a",
+    "default": true,
+    "description": "Something isn't working",
+    "archived_at": null,
+    "archived_by": null
+  },
+  {
+    "id": 11669724339,
+    "node_id": "LA_kwDOTnoxtc8AAAACt5Hcsw",
+    "url": "https://api.github.com/repos/statecrafting/claude-observatory/labels/documentation",
+    "name": "documentation",
+    "color": "0075ca",
+    "default": true,
+    "description": "Improvements or additions to documentation",
+    "archived_at": null,
+    "archived_by": null
+  },
+  {
+    "id": 11669724344,
+    "node_id": "LA_kwDOTnoxtc8AAAACt5HcuA",
+    "url": "https://api.github.com/repos/statecrafting/claude-observatory/labels/duplicate",
+    "name": "duplicate",
+    "color": "cfd3d7",
+    "default": true,
+    "description": "This issue or pull request already exists",
+    "archived_at": null,
+    "archived_by": null
+  },
+  {
+    "id": 11669724349,
+    "node_id": "LA_kwDOTnoxtc8AAAACt5HcvQ",
+    "url": "https://api.github.com/repos/statecrafting/claude-observatory/labels/enhancement",
+    "name": "enhancement",
+    "color": "a2eeef",
+    "default": true,
+    "description": "New feature or request",
+    "archived_at": null,
+    "archived_by": null
+  },
+  {
+    "id": 11669724363,
+    "node_id": "LA_kwDOTnoxtc8AAAACt5Hcyw",
+    "url": "https://api.github.com/repos/statecrafting/claude-observatory/labels/good%20first%20issue",
+    "name": "good first issue",
+    "color": "7057ff",
+    "default": true,
+    "description": "Good for newcomers",
+    "archived_at": null,
+    "archived_by": null
+  },
+  {
+    "id": 11669724356,
+    "node_id": "LA_kwDOTnoxtc8AAAACt5HcxA",
+    "url": "https://api.github.com/repos/statecrafting/claude-observatory/labels/help%20wanted",
+    "name": "help wanted",
+    "color": "008672",
+    "default": true,
+    "description": "Extra attention is needed",
+    "archived_at": null,
+    "archived_by": null
+  },
+  {
+    "id": 11669724371,
+    "node_id": "LA_kwDOTnoxtc8AAAACt5Hc0w",
+    "url": "https://api.github.com/repos/statecrafting/claude-observatory/labels/invalid",
+    "name": "invalid",
+    "color": "e4e669",
+    "default": true,
+    "description": "This doesn't seem right",
+    "archived_at": null,
+    "archived_by": null
+  },
+  {
+    "id": 11669724377,
+    "node_id": "LA_kwDOTnoxtc8AAAACt5Hc2Q",
+    "url": "https://api.github.com/repos/statecrafting/claude-observatory/labels/question",
+    "name": "question",
+    "color": "d876e3",
+    "default": true,
+    "description": "Further information is requested",
+    "archived_at": null,
+    "archived_by": null
+  },
+  {
+    "id": 11669724383,
+    "node_id": "LA_kwDOTnoxtc8AAAACt5Hc3w",
+    "url": "https://api.github.com/repos/statecrafting/claude-observatory/labels/wontfix",
+    "name": "wontfix",
+    "color": "ffffff",
+    "default": true,
+    "description": "This will not be worked on",
+    "archived_at": null,
+    "archived_by": null
+  }
+]

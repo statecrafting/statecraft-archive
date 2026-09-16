@@ -1,0 +1,32 @@
+{
+  "mapping": {
+    "dependsOn": [
+      "001-enrahitu-architecture"
+    ],
+    "implementingPaths": [
+      {
+        "path": "backend/hiq/",
+        "source": "spec-edge"
+      }
+    ],
+    "resolvedUnits": [
+      {
+        "locations": [
+          {
+            "file": "backend/hiq/"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "directory",
+          "path": "backend/hiq/"
+        }
+      }
+    ],
+    "specId": "002-in-process-hiqlite",
+    "specStatus": "approved"
+  },
+  "schemaVersion": "1.1.0",
+  "shardHash": "7d9e0c65da2f3c2b3118a1d081390ac4f32148229e30c740f1f46d64a9b111f7"
+}

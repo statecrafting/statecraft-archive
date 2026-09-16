@@ -1,0 +1,49 @@
+{
+  "mapping": {
+    "dependsOn": [
+      "018-stage-shepherd"
+    ],
+    "implementingPaths": [
+      {
+        "path": "src/orchestrator/stages/verify.test.ts",
+        "source": "spec-edge"
+      },
+      {
+        "path": "src/orchestrator/stages/verify.ts",
+        "source": "spec-edge"
+      }
+    ],
+    "resolvedUnits": [
+      {
+        "locations": [
+          {
+            "file": "src/orchestrator/stages/verify.test.ts"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "file",
+          "path": "src/orchestrator/stages/verify.test.ts"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "src/orchestrator/stages/verify.ts"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "file",
+          "path": "src/orchestrator/stages/verify.ts"
+        }
+      }
+    ],
+    "specId": "019-stage-verify",
+    "specStatus": "approved"
+  },
+  "schemaVersion": "1.1.0",
+  "shardHash": "6c0b2abc6e9f35e78debe7cb7dcdadaae67cabff873087ea939a53d43edf9ef6"
+}

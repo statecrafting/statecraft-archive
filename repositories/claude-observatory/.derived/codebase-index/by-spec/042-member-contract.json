@@ -1,0 +1,170 @@
+{
+  "mapping": {
+    "dependsOn": [
+      "005-cli-surface",
+      "023-orchestrator-cli"
+    ],
+    "implementingPaths": [
+      {
+        "path": "package.json",
+        "source": "spec-edge"
+      },
+      {
+        "path": "src/index.ts",
+        "source": "spec-edge"
+      },
+      {
+        "path": "src/members/driver.ts",
+        "source": "spec-edge"
+      },
+      {
+        "path": "src/members/engine.ts",
+        "source": "spec-edge"
+      },
+      {
+        "path": "src/members/entrypoints.test.ts",
+        "source": "spec-edge"
+      },
+      {
+        "path": "src/members/manifest.test.ts",
+        "source": "spec-edge"
+      },
+      {
+        "path": "src/members/manifest.ts",
+        "source": "spec-edge"
+      },
+      {
+        "path": "src/members/sensor.ts",
+        "source": "spec-edge"
+      }
+    ],
+    "resolvedUnits": [
+      {
+        "locations": [
+          {
+            "file": "src/members/driver.ts"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "file",
+          "path": "src/members/driver.ts"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "src/members/engine.ts"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "file",
+          "path": "src/members/engine.ts"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "src/members/entrypoints.test.ts"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "file",
+          "path": "src/members/entrypoints.test.ts"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "src/members/manifest.test.ts"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "file",
+          "path": "src/members/manifest.test.ts"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "src/members/manifest.ts"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "file",
+          "path": "src/members/manifest.ts"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "src/members/sensor.ts"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "file",
+          "path": "src/members/sensor.ts"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "src/index.ts"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "extends",
+        "unit": {
+          "kind": "file",
+          "path": "src/index.ts"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "package.json",
+            "span": {
+              "endLine": 19,
+              "startLine": 10
+            }
+          }
+        ],
+        "ownership": true,
+        "sourceField": "extends",
+        "unit": {
+          "anchor": "scripts",
+          "file": "package.json",
+          "kind": "section"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "docs/design/01-umbrella-cli-and-member-seams.md"
+          }
+        ],
+        "ownership": false,
+        "sourceField": "references",
+        "unit": {
+          "kind": "file",
+          "path": "docs/design/01-umbrella-cli-and-member-seams.md"
+        }
+      }
+    ],
+    "specId": "042-member-contract",
+    "specStatus": "approved"
+  },
+  "schemaVersion": "1.1.0",
+  "shardHash": "ee110ead604449e12f46802e9358dfdcd56d03bf7c800e8e4029a42a6737f65b"
+}

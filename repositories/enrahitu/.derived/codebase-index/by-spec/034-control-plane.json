@@ -1,0 +1,36 @@
+{
+  "mapping": {
+    "dependsOn": [
+      "001-enrahitu-architecture",
+      "020-app-model-contract",
+      "021-kernel-native-consumption",
+      "024-decision-chain-integrity",
+      "032-hiqlite-interface-contract"
+    ],
+    "implementingPaths": [
+      {
+        "path": "backend/control/",
+        "source": "spec-edge"
+      }
+    ],
+    "resolvedUnits": [
+      {
+        "locations": [
+          {
+            "file": "backend/control/"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "directory",
+          "path": "backend/control/"
+        }
+      }
+    ],
+    "specId": "034-control-plane",
+    "specStatus": "approved"
+  },
+  "schemaVersion": "1.1.0",
+  "shardHash": "ec93683f629ad738bd330b852879de1c95ee95a0f9b17b4e5ce9f1b628e5a8c5"
+}

@@ -1,0 +1,33 @@
+{
+  "mapping": {
+    "dependsOn": [
+      "001-enrahitu-architecture",
+      "008-vendored-encore-toolchain"
+    ],
+    "implementingPaths": [
+      {
+        "path": "template.toml",
+        "source": "spec-edge"
+      }
+    ],
+    "resolvedUnits": [
+      {
+        "locations": [
+          {
+            "file": "template.toml"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "file",
+          "path": "template.toml"
+        }
+      }
+    ],
+    "specId": "009-template-contract",
+    "specStatus": "approved"
+  },
+  "schemaVersion": "1.1.0",
+  "shardHash": "afc4c328d987bee2c45ea8f8bdaf4718e34da0e53227d86a5fb0e1b848ac68d2"
+}

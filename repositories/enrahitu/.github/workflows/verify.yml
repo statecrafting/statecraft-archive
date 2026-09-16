@@ -1,0 +1,87 @@
+# Verify (spec 010 LI-1): run the template contract's verify verb
+# (spec 009 §3.2, template.toml [verbs].verify) in CI, after the same
+# builds a stamped app's toolchain performs. CI and factory verification
+# exercise one gate, not two.
+#
+# A Postgres service backs the CoreLedger Postgres-driver arm (spec 011):
+# the parameterized ledger suite runs against both drivers on every CI run
+# via TEST_POSTGRES_URL, so "scaling is a driver swap" stays continuously
+# proven, not proven once. The image is digest-pinned (cross-arch index).
+name: verify
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: verify-${{ github.ref }}
+  cancel-in-progress: true
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        # postgres:17-alpine, pinned to the multi-arch index digest.
+        image: postgres@sha256:742f40ea20b9ff2ff31db5458d127452988a2164df9e17441e191f3b72252193
+        env:
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: enrahitu_test
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U postgres"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+    steps:
+      - uses: actions/checkout@93cb6efe18208431cddfb8368fd83d5badbf9bfd # v5.0.1
+      - uses: actions/setup-node@a0853c24544627f65ddf259abe73b1d18a591444 # v5.0.0
+        with:
+          node-version: 24
+          cache: npm
+          cache-dependency-path: |
+            package-lock.json
+            frontend/package-lock.json
+            frontend-react/package-lock.json
+            frontend-admin/package-lock.json
+      - run: npm ci
+      # The AGPL boundary guard (spec 001 §4.7). Runs before the build, because
+      # its whole job is to refuse a dependency graph, and the cheapest place to
+      # learn the graph is wrong is before anything is compiled against it.
+      - name: License boundary
+        run: npm run check:licenses
+      # The infra configs are generated (spec 033 §3.4). A hand-edit is caught
+      # here rather than discovered at boot in an environment nobody develops in.
+      - name: Infra config drift
+        run: npm run check:infra
+      # app-manifest.json is composed from the chassis manifest and the
+      # organization's overlay (spec 035 §3.3). A hand-edit to the derived file
+      # would be a capability that exists in the model and in nobody's authored
+      # intent, so it is caught here rather than at adjudication.
+      - name: Manifest composition drift
+        run: npm run check:manifest
+      # The chassis lock is what lets a stamped deployment tell an edited
+      # chassis file from an untouched one before it takes an upgrade (spec 035
+      # §3.2). In THIS repo every chassis change is legitimate and the lock has
+      # to keep up, so a stale lock fails here rather than shipping a lock that
+      # would misreport a downstream deployment's local edits.
+      - name: Chassis lock drift
+        run: npm run check:chassis
+      # The template carries every frontend flavor (spec 015); the Encore parse
+      # walk (build:app) resolves each flavor's vite.config imports, so both
+      # flavor packages are installed here. A stamped app keeps only one flavor
+      # (the scaffold verb prunes the rest), so its CI installs just the survivor.
+      - run: npm --prefix frontend ci
+      - run: npm --prefix frontend-admin ci
+      - name: Build app (generates encore.gen)
+        run: npm run build:app
+      # The app-model staleness gate (spec 021 §3.3): the committed model
+      # must match recomputation from this tree; exit 2 fails the job.
+      - name: Model staleness gate
+        run: npx enrahitu-extract --check
+      - name: Verify (contract verb)
+        env:
+          TEST_POSTGRES_URL: postgres://postgres:postgres@localhost:5432/enrahitu_test
+        run: npm run typecheck && npm test

@@ -1,0 +1,121 @@
+{
+  "mapping": {
+    "dependsOn": [
+      "001-enrahitu-architecture",
+      "007-single-container-packaging",
+      "008-vendored-encore-toolchain",
+      "025-substrate-hardening",
+      "032-hiqlite-interface-contract"
+    ],
+    "implementingPaths": [
+      {
+        "path": "docker/Dockerfile.dev",
+        "source": "spec-edge"
+      },
+      {
+        "path": "docker/compose.yml",
+        "source": "spec-edge"
+      },
+      {
+        "path": "scripts/dev-watch.mjs",
+        "source": "spec-edge"
+      },
+      {
+        "path": "scripts/gen-infra-config.mjs",
+        "source": "spec-edge"
+      },
+      {
+        "path": "scripts/gen-infra-config.test.ts",
+        "source": "spec-edge"
+      },
+      {
+        "path": "testing/",
+        "source": "spec-edge"
+      }
+    ],
+    "resolvedUnits": [
+      {
+        "locations": [
+          {
+            "file": "testing/"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "directory",
+          "path": "testing/"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "docker/Dockerfile.dev"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "file",
+          "path": "docker/Dockerfile.dev"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "docker/compose.yml"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "file",
+          "path": "docker/compose.yml"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "scripts/dev-watch.mjs"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "file",
+          "path": "scripts/dev-watch.mjs"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "scripts/gen-infra-config.mjs"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "file",
+          "path": "scripts/gen-infra-config.mjs"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "scripts/gen-infra-config.test.ts"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "file",
+          "path": "scripts/gen-infra-config.test.ts"
+        }
+      }
+    ],
+    "specId": "033-dev-substrate",
+    "specStatus": "approved"
+  },
+  "schemaVersion": "1.1.0",
+  "shardHash": "ed9013f8ab184164f74fc629f52c2f092efeea3580bd2352d7d16f89a3922514"
+}

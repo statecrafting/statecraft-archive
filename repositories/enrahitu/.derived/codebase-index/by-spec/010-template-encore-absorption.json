@@ -1,0 +1,32 @@
+{
+  "mapping": {
+    "dependsOn": [
+      "009-template-contract"
+    ],
+    "implementingPaths": [
+      {
+        "path": ".github/workflows/verify.yml",
+        "source": "spec-edge"
+      }
+    ],
+    "resolvedUnits": [
+      {
+        "locations": [
+          {
+            "file": ".github/workflows/verify.yml"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "file",
+          "path": ".github/workflows/verify.yml"
+        }
+      }
+    ],
+    "specId": "010-template-encore-absorption",
+    "specStatus": "approved"
+  },
+  "schemaVersion": "1.1.0",
+  "shardHash": "1885caf2c8f8465c08e7cf045d07f1a04ea9d38f44345d3498edc15b5adb3ff0"
+}

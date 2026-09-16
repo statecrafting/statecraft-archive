@@ -1,0 +1,11 @@
+{
+  "package": {
+    "kind": "npm-package",
+    "name": "claude-observatory",
+    "path": "",
+    "specRef": "000-bootstrap",
+    "version": "0.1.0"
+  },
+  "schemaVersion": "1.1.0",
+  "shardHash": "87b2b7f19094cb4bb0138cc55356c93db0b6bcb6397433a60658eb4352c7ce5d"
+}

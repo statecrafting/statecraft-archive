@@ -1,0 +1,44 @@
+name: govern
+on: pull_request
+permissions:
+  contents: read
+jobs:
+  govern:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: oven-sh/setup-bun@v2
+      - run: npm install -g spec-spine@0.15.0
+      - run: bun install --frozen-lockfile
+      - run: spec-spine compile
+      - run: spec-spine index check
+      - run: spec-spine lint --fail-on-warn
+      - name: Coupling gate
+        env:
+          PR_BODY: ${{ github.event.pull_request.body }}
+        run: |
+          set -euo pipefail
+          printf '%s' "${PR_BODY:-}" > /tmp/pr-body.txt
+          spec-spine couple \
+            --base "${{ github.event.pull_request.base.sha }}" \
+            --head HEAD \
+            --pr-body /tmp/pr-body.txt
+      - run: bun run typecheck
+      # Spec 024 FR-001: the SPA the daemon serves has to build in CI, not just
+      # on the machine that wrote it. The output is never committed (.gitignore).
+      - name: Build web UI
+        run: bun run web:build
+      # Spec 042 FR-006: the three member binaries build in CI on the same
+      # reasoning. Each answers `--member-manifest`, so a target that compiles
+      # but cannot run standalone is caught here, not by the umbrella.
+      - name: Build members
+        run: |
+          bun run build:member:sensor && ./dist/statecraft-sensor-claude --member-manifest
+          bun run build:member:engine && ./dist/statecraft-engine --member-manifest
+          bun run build:member:driver && ./dist/statecraft-driver-claude --member-manifest
+      # Unconditional: `bun test` discovers every test file itself (src/ and
+      # web/test/); a conditional glob here silently narrows the contract.
+      - name: Tests
+        run: bun test

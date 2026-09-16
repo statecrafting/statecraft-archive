@@ -1,0 +1,32 @@
+{
+  "record": {
+    "created": "2026-07-14",
+    "dependsOn": [
+      "010-template-encore-absorption"
+    ],
+    "establishes": [
+      {
+        "kind": "file",
+        "path": ".github/workflows/pages.yml"
+      }
+    ],
+    "id": "013-pages-deploy-slot",
+    "implementation": "complete",
+    "sectionHeadings": [
+      "013: Pages deployment slot",
+      "1. Purpose",
+      "2. Territory",
+      "3. Behavior",
+      "4. Acceptance",
+      "5. Out of scope",
+      "6. Amendment (2026-07-15): project-site base path + flavor-agnostic build",
+      "Amendment (2026-07-29): one SPA directory, no flavor resolution"
+    ],
+    "specPath": "specs/013-pages-deploy-slot/spec.md",
+    "status": "approved",
+    "summary": "An optional, off-by-default GitHub Pages workflow that stamped apps are born with: it publishes the built SPA (backend/web/dist) as a static preview site when the repo owner enables Pages. Absorption line item LI-3 of spec 010. Not a contract verb: it is CI-side, not factory-side. The workflow must be inert (skip cleanly, not fail) in repos where Pages is disabled, which is the default posture.\n",
+    "title": "GitHub Pages deployment slot (LI-3)"
+  },
+  "shardHash": "25f68cdabf3cbc08957afe9604511ce47ed3bd57cfc1295ace1b04fa24b99f94",
+  "specVersion": "1.1.0"
+}

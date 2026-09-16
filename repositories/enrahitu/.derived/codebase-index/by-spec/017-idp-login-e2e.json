@@ -1,0 +1,50 @@
+{
+  "mapping": {
+    "dependsOn": [
+      "005-rauthy-same-origin",
+      "006-webapp-spa"
+    ],
+    "implementingPaths": [
+      {
+        "path": ".github/workflows/e2e.yml",
+        "source": "spec-edge"
+      },
+      {
+        "path": "e2e/",
+        "source": "spec-edge"
+      }
+    ],
+    "resolvedUnits": [
+      {
+        "locations": [
+          {
+            "file": "e2e/"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "directory",
+          "path": "e2e/"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": ".github/workflows/e2e.yml"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "file",
+          "path": ".github/workflows/e2e.yml"
+        }
+      }
+    ],
+    "specId": "017-idp-login-e2e",
+    "specStatus": "approved"
+  },
+  "schemaVersion": "1.1.0",
+  "shardHash": "d16f8a8e9072dbb3cc65363e52473703a0bccbd79ac47b538e8366330b63f942"
+}

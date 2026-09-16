@@ -1,0 +1,55 @@
+{
+  "mapping": {
+    "dependsOn": [
+      "001-enrahitu-architecture",
+      "004-auth-core",
+      "005-rauthy-same-origin",
+      "009-template-contract",
+      "015-react-rr7-flavor",
+      "019-two-directory-layout",
+      "022-observability-contract"
+    ],
+    "implementingPaths": [
+      {
+        "path": "backend/admin/",
+        "source": "spec-edge"
+      },
+      {
+        "path": "frontend-admin/",
+        "source": "spec-edge"
+      }
+    ],
+    "resolvedUnits": [
+      {
+        "locations": [
+          {
+            "file": "backend/admin/"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "directory",
+          "path": "backend/admin/"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "frontend-admin/"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "directory",
+          "path": "frontend-admin/"
+        }
+      }
+    ],
+    "specId": "023-frontend-admin",
+    "specStatus": "approved"
+  },
+  "schemaVersion": "1.1.0",
+  "shardHash": "268545db95e4c7e15fc69a0a003701cb45d1b86c6efdf286cb018ffd86d36709"
+}

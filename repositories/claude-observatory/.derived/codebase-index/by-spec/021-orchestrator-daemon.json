@@ -1,0 +1,55 @@
+{
+  "mapping": {
+    "dependsOn": [
+      "012-spec-dag-readiness",
+      "015-quota-scheduler",
+      "016-stage-build",
+      "017-stage-ship",
+      "018-stage-shepherd",
+      "019-stage-verify",
+      "020-decision-ledger"
+    ],
+    "implementingPaths": [
+      {
+        "path": "src/orchestrator/daemon.test.ts",
+        "source": "spec-edge"
+      },
+      {
+        "path": "src/orchestrator/daemon.ts",
+        "source": "spec-edge"
+      }
+    ],
+    "resolvedUnits": [
+      {
+        "locations": [
+          {
+            "file": "src/orchestrator/daemon.test.ts"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "file",
+          "path": "src/orchestrator/daemon.test.ts"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "src/orchestrator/daemon.ts"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "file",
+          "path": "src/orchestrator/daemon.ts"
+        }
+      }
+    ],
+    "specId": "021-orchestrator-daemon",
+    "specStatus": "approved"
+  },
+  "schemaVersion": "1.1.0",
+  "shardHash": "ec233640d818d73ab38b30ee99000c1db7dc435767a997ac1a9c6ca2ea0b6d5b"
+}

@@ -1,0 +1,32 @@
+{
+  "mapping": {
+    "dependsOn": [
+      "010-template-encore-absorption"
+    ],
+    "implementingPaths": [
+      {
+        "path": ".github/workflows/pages.yml",
+        "source": "spec-edge"
+      }
+    ],
+    "resolvedUnits": [
+      {
+        "locations": [
+          {
+            "file": ".github/workflows/pages.yml"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "file",
+          "path": ".github/workflows/pages.yml"
+        }
+      }
+    ],
+    "specId": "013-pages-deploy-slot",
+    "specStatus": "approved"
+  },
+  "schemaVersion": "1.1.0",
+  "shardHash": "9668848ff39075291ec2deb2effc0f788416276e059c2a5e1da4580343c5657a"
+}

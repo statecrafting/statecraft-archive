@@ -1,0 +1,49 @@
+{
+  "mapping": {
+    "dependsOn": [
+      "011-work-journal"
+    ],
+    "implementingPaths": [
+      {
+        "path": "src/orchestrator/decisions.test.ts",
+        "source": "spec-edge"
+      },
+      {
+        "path": "src/orchestrator/decisions.ts",
+        "source": "spec-edge"
+      }
+    ],
+    "resolvedUnits": [
+      {
+        "locations": [
+          {
+            "file": "src/orchestrator/decisions.test.ts"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "file",
+          "path": "src/orchestrator/decisions.test.ts"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "src/orchestrator/decisions.ts"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "file",
+          "path": "src/orchestrator/decisions.ts"
+        }
+      }
+    ],
+    "specId": "020-decision-ledger",
+    "specStatus": "approved"
+  },
+  "schemaVersion": "1.1.0",
+  "shardHash": "7e5239dca6aa5237578b8e9fdb4a32291915f68421d44dec1f8d9af6116c7778"
+}

@@ -1,0 +1,55 @@
+{
+  "mapping": {
+    "dependsOn": [
+      "001-enrahitu-architecture",
+      "002-in-process-hiqlite",
+      "004-auth-core",
+      "005-rauthy-same-origin",
+      "007-single-container-packaging",
+      "021-kernel-native-consumption",
+      "022-observability-contract"
+    ],
+    "implementingPaths": [
+      {
+        "path": "backend/lib/client-identity.test.ts",
+        "source": "spec-edge"
+      },
+      {
+        "path": "backend/lib/client-identity.ts",
+        "source": "spec-edge"
+      }
+    ],
+    "resolvedUnits": [
+      {
+        "locations": [
+          {
+            "file": "backend/lib/client-identity.test.ts"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "file",
+          "path": "backend/lib/client-identity.test.ts"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "backend/lib/client-identity.ts"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "file",
+          "path": "backend/lib/client-identity.ts"
+        }
+      }
+    ],
+    "specId": "025-substrate-hardening",
+    "specStatus": "approved"
+  },
+  "schemaVersion": "1.1.0",
+  "shardHash": "cb6a01a820f7847219acc2f7d6ce98fad16a662611576cb3689282e92331197f"
+}

@@ -4505,6 +4505,803 @@
       ],
       "verified_object_count": 206,
       "lfs_inventory": ""
+    },
+    {
+      "name": "claude-observatory",
+      "url": "https://github.com/statecrafting/claude-observatory",
+      "default_branch": "main",
+      "default_commit": "134c08d5413ddf51662774ef9543f259a80e06e8",
+      "was_archived": false,
+      "refs": [
+        {
+          "source": "refs/heads/016-turn-budget",
+          "archive": "refs/heads/history/claude-observatory/016-turn-budget",
+          "object": "425ea988a74f1a5b3615a3bf906042a1d7cfb411"
+        },
+        {
+          "source": "refs/heads/032-033-safety-wave",
+          "archive": "refs/heads/history/claude-observatory/032-033-safety-wave",
+          "object": "e5912cc6acd3f11c5a8c445850a5e66f4c7c37ae"
+        },
+        {
+          "source": "refs/heads/032-execution-profiles",
+          "archive": "refs/heads/history/claude-observatory/032-execution-profiles",
+          "object": "2cda87cbb4dc93747ab624ba3c7e093daa5c0e2a"
+        },
+        {
+          "source": "refs/heads/033-cost-ceiling",
+          "archive": "refs/heads/history/claude-observatory/033-cost-ceiling",
+          "object": "11fe0c4307aa0aa4aba2f71ad3678fe3f0ac684d"
+        },
+        {
+          "source": "refs/heads/034-037-adoption-wave",
+          "archive": "refs/heads/history/claude-observatory/034-037-adoption-wave",
+          "object": "d7d2f700ce1e5df2047e853f50236f47ec34a584"
+        },
+        {
+          "source": "refs/heads/chore-spec-spine-0-15-0",
+          "archive": "refs/heads/history/claude-observatory/chore-spec-spine-0-15-0",
+          "object": "0b01f3b2474644c7220bebe141619b87ebb8bc09"
+        },
+        {
+          "source": "refs/heads/evidence-and-reframe",
+          "archive": "refs/heads/history/claude-observatory/evidence-and-reframe",
+          "object": "2da7fd60b8b194f9d0dee836c7b9c1da3e8ed282"
+        },
+        {
+          "source": "refs/heads/main",
+          "archive": "refs/heads/history/claude-observatory/main",
+          "object": "134c08d5413ddf51662774ef9543f259a80e06e8"
+        },
+        {
+          "source": "refs/pull/1/head",
+          "archive": "refs/tags/source-refs/claude-observatory/pull/1/head",
+          "object": "8da46589e23bd0669eef241791c0995f70eb842e"
+        },
+        {
+          "source": "refs/pull/10/head",
+          "archive": "refs/tags/source-refs/claude-observatory/pull/10/head",
+          "object": "f28f838075a0dd96158f5b016a884ef8f67ec5b0"
+        },
+        {
+          "source": "refs/pull/11/head",
+          "archive": "refs/tags/source-refs/claude-observatory/pull/11/head",
+          "object": "2efe4f924288d273e0068777770030455185bf66"
+        },
+        {
+          "source": "refs/pull/12/head",
+          "archive": "refs/tags/source-refs/claude-observatory/pull/12/head",
+          "object": "34cecd2be8edeae0317a13ea6d66305396f05570"
+        },
+        {
+          "source": "refs/pull/13/head",
+          "archive": "refs/tags/source-refs/claude-observatory/pull/13/head",
+          "object": "f509169c9ec51f92b5c4d48cdc8fd3ccf0c7d222"
+        },
+        {
+          "source": "refs/pull/14/head",
+          "archive": "refs/tags/source-refs/claude-observatory/pull/14/head",
+          "object": "dfda60ea50a748bcb7f7f94501700b9a3f49fb39"
+        },
+        {
+          "source": "refs/pull/15/head",
+          "archive": "refs/tags/source-refs/claude-observatory/pull/15/head",
+          "object": "06dc1789b71343aba67b1174ec5fe32214ff7678"
+        },
+        {
+          "source": "refs/pull/16/head",
+          "archive": "refs/tags/source-refs/claude-observatory/pull/16/head",
+          "object": "a696528a629a9ccce1e1bce6af59b4255ea7e89a"
+        },
+        {
+          "source": "refs/pull/17/head",
+          "archive": "refs/tags/source-refs/claude-observatory/pull/17/head",
+          "object": "1882c36b456c5c030a426308a7898b28fbd2981e"
+        },
+        {
+          "source": "refs/pull/18/head",
+          "archive": "refs/tags/source-refs/claude-observatory/pull/18/head",
+          "object": "6d8e643df36ecb9c689dd5281243f5ebe038ea17"
+        },
+        {
+          "source": "refs/pull/19/head",
+          "archive": "refs/tags/source-refs/claude-observatory/pull/19/head",
+          "object": "47989ece55a412e2dd369cd737a10b5f727a35c0"
+        },
+        {
+          "source": "refs/pull/2/head",
+          "archive": "refs/tags/source-refs/claude-observatory/pull/2/head",
+          "object": "6371c6bda3f907f1d1407316fcc2ff279b9073ef"
+        },
+        {
+          "source": "refs/pull/20/head",
+          "archive": "refs/tags/source-refs/claude-observatory/pull/20/head",
+          "object": "76d2295c00a6d068af1f2a38b50470073636a334"
+        },
+        {
+          "source": "refs/pull/21/head",
+          "archive": "refs/tags/source-refs/claude-observatory/pull/21/head",
+          "object": "b0076af3f1d789a68644e7b21a210c25d8033043"
+        },
+        {
+          "source": "refs/pull/22/head",
+          "archive": "refs/tags/source-refs/claude-observatory/pull/22/head",
+          "object": "db07539f0786e5ed0e6c9ad29d571ba2b98557bd"
+        },
+        {
+          "source": "refs/pull/23/head",
+          "archive": "refs/tags/source-refs/claude-observatory/pull/23/head",
+          "object": "7d4b8090d69fb3b756124b1f980dd0f1abf17cc4"
+        },
+        {
+          "source": "refs/pull/24/head",
+          "archive": "refs/tags/source-refs/claude-observatory/pull/24/head",
+          "object": "a84f231b943ccdc63e1150267722845e4d23e209"
+        },
+        {
+          "source": "refs/pull/25/head",
+          "archive": "refs/tags/source-refs/claude-observatory/pull/25/head",
+          "object": "0c6aa3d1ac5b1c79abad48eed2abb52d16fb249d"
+        },
+        {
+          "source": "refs/pull/26/head",
+          "archive": "refs/tags/source-refs/claude-observatory/pull/26/head",
+          "object": "db4af8d4df44344b5fa9adf011f35a3b172f4572"
+        },
+        {
+          "source": "refs/pull/27/head",
+          "archive": "refs/tags/source-refs/claude-observatory/pull/27/head",
+          "object": "4a3eaf39bdd9f1cdfc4d683417cbd6f6a2655c31"
+        },
+        {
+          "source": "refs/pull/28/head",
+          "archive": "refs/tags/source-refs/claude-observatory/pull/28/head",
+          "object": "ea74f55fa4d0cae38dd69b7d7ae2f8ad9f19a24b"
+        },
+        {
+          "source": "refs/pull/29/head",
+          "archive": "refs/tags/source-refs/claude-observatory/pull/29/head",
+          "object": "8dce83fbe68e038535d31fe97ee312dee770510c"
+        },
+        {
+          "source": "refs/pull/3/head",
+          "archive": "refs/tags/source-refs/claude-observatory/pull/3/head",
+          "object": "e53003459cebd752889d77a90c6b05c27dc7bb5c"
+        },
+        {
+          "source": "refs/pull/30/head",
+          "archive": "refs/tags/source-refs/claude-observatory/pull/30/head",
+          "object": "803553308dd15a1b7c4bab38d6515d21a2d2a6fa"
+        },
+        {
+          "source": "refs/pull/31/head",
+          "archive": "refs/tags/source-refs/claude-observatory/pull/31/head",
+          "object": "ec668ab5d09c1a37fea8e3e7a1832d5cbadf8eb8"
+        },
+        {
+          "source": "refs/pull/32/head",
+          "archive": "refs/tags/source-refs/claude-observatory/pull/32/head",
+          "object": "cc85b3401bd46d2a1d0266fb616018bb146cd8d7"
+        },
+        {
+          "source": "refs/pull/33/head",
+          "archive": "refs/tags/source-refs/claude-observatory/pull/33/head",
+          "object": "d98f311776f366d9d1919a43a2859fbee48bf14a"
+        },
+        {
+          "source": "refs/pull/34/head",
+          "archive": "refs/tags/source-refs/claude-observatory/pull/34/head",
+          "object": "a0abfadc9d394137b61f1e118f9cb5143d307ca3"
+        },
+        {
+          "source": "refs/pull/35/head",
+          "archive": "refs/tags/source-refs/claude-observatory/pull/35/head",
+          "object": "428552fdb4c514d5db2a0e7520183de472f25fdb"
+        },
+        {
+          "source": "refs/pull/36/head",
+          "archive": "refs/tags/source-refs/claude-observatory/pull/36/head",
+          "object": "f43e8f959933fad1820c6b93b08ad8758cde61a8"
+        },
+        {
+          "source": "refs/pull/37/head",
+          "archive": "refs/tags/source-refs/claude-observatory/pull/37/head",
+          "object": "f64044910b1715c0d3b844c255f62d7a7a947ca0"
+        },
+        {
+          "source": "refs/pull/38/head",
+          "archive": "refs/tags/source-refs/claude-observatory/pull/38/head",
+          "object": "649886e7bca2ac1aea7a08e277d70f93fc33bb8b"
+        },
+        {
+          "source": "refs/pull/39/head",
+          "archive": "refs/tags/source-refs/claude-observatory/pull/39/head",
+          "object": "6b5892edec14207309d04a85731a4e927065c352"
+        },
+        {
+          "source": "refs/pull/4/head",
+          "archive": "refs/tags/source-refs/claude-observatory/pull/4/head",
+          "object": "a82ac784145a665dbde7bbd3757162da9c788f8e"
+        },
+        {
+          "source": "refs/pull/40/head",
+          "archive": "refs/tags/source-refs/claude-observatory/pull/40/head",
+          "object": "30f3642ddc7e0ff586522f5ede19f2e5c7e32ca2"
+        },
+        {
+          "source": "refs/pull/41/head",
+          "archive": "refs/tags/source-refs/claude-observatory/pull/41/head",
+          "object": "43988a1c91d3885a2ad36bc596d924eabaaaf503"
+        },
+        {
+          "source": "refs/pull/42/head",
+          "archive": "refs/tags/source-refs/claude-observatory/pull/42/head",
+          "object": "2299e595ce08f41bd534276572f6bcb68ba9b659"
+        },
+        {
+          "source": "refs/pull/43/head",
+          "archive": "refs/tags/source-refs/claude-observatory/pull/43/head",
+          "object": "6a3dc3a9bc5627a90b911a7cafa54aaf9837ec7f"
+        },
+        {
+          "source": "refs/pull/44/head",
+          "archive": "refs/tags/source-refs/claude-observatory/pull/44/head",
+          "object": "eb0a70f8ce1556bf75e97b5a6c9226994a735af5"
+        },
+        {
+          "source": "refs/pull/45/head",
+          "archive": "refs/tags/source-refs/claude-observatory/pull/45/head",
+          "object": "69bfd16328400afa81b5316aaff8eede14b27253"
+        },
+        {
+          "source": "refs/pull/46/head",
+          "archive": "refs/tags/source-refs/claude-observatory/pull/46/head",
+          "object": "f72d8e87c6a48adf65b327ec4df2e88500ebfaef"
+        },
+        {
+          "source": "refs/pull/47/head",
+          "archive": "refs/tags/source-refs/claude-observatory/pull/47/head",
+          "object": "e5912cc6acd3f11c5a8c445850a5e66f4c7c37ae"
+        },
+        {
+          "source": "refs/pull/48/head",
+          "archive": "refs/tags/source-refs/claude-observatory/pull/48/head",
+          "object": "d7d2f700ce1e5df2047e853f50236f47ec34a584"
+        },
+        {
+          "source": "refs/pull/49/head",
+          "archive": "refs/tags/source-refs/claude-observatory/pull/49/head",
+          "object": "2da7fd60b8b194f9d0dee836c7b9c1da3e8ed282"
+        },
+        {
+          "source": "refs/pull/5/head",
+          "archive": "refs/tags/source-refs/claude-observatory/pull/5/head",
+          "object": "6dfe2bfb9b569724c62314848a8bcd7143ee136e"
+        },
+        {
+          "source": "refs/pull/50/head",
+          "archive": "refs/tags/source-refs/claude-observatory/pull/50/head",
+          "object": "2cda87cbb4dc93747ab624ba3c7e093daa5c0e2a"
+        },
+        {
+          "source": "refs/pull/51/head",
+          "archive": "refs/tags/source-refs/claude-observatory/pull/51/head",
+          "object": "11fe0c4307aa0aa4aba2f71ad3678fe3f0ac684d"
+        },
+        {
+          "source": "refs/pull/52/head",
+          "archive": "refs/tags/source-refs/claude-observatory/pull/52/head",
+          "object": "425ea988a74f1a5b3615a3bf906042a1d7cfb411"
+        },
+        {
+          "source": "refs/pull/53/head",
+          "archive": "refs/tags/source-refs/claude-observatory/pull/53/head",
+          "object": "52ef9676905bed31c54165bd282a9d88fe53b886"
+        },
+        {
+          "source": "refs/pull/54/head",
+          "archive": "refs/tags/source-refs/claude-observatory/pull/54/head",
+          "object": "d1cbd3255ad4d8b53563795d11a6917601e3ef91"
+        },
+        {
+          "source": "refs/pull/55/head",
+          "archive": "refs/tags/source-refs/claude-observatory/pull/55/head",
+          "object": "a115bd04e309d835181618822edb17dce434d4c3"
+        },
+        {
+          "source": "refs/pull/56/head",
+          "archive": "refs/tags/source-refs/claude-observatory/pull/56/head",
+          "object": "7800ca0887d34d4414d87e8fe1d37759a2869ad4"
+        },
+        {
+          "source": "refs/pull/57/head",
+          "archive": "refs/tags/source-refs/claude-observatory/pull/57/head",
+          "object": "5e93a28900d2e17099a88457d9f7dafb7152bc61"
+        },
+        {
+          "source": "refs/pull/58/head",
+          "archive": "refs/tags/source-refs/claude-observatory/pull/58/head",
+          "object": "fc2bae6e759fd9d74b436725517fe2e5f2658f5e"
+        },
+        {
+          "source": "refs/pull/59/head",
+          "archive": "refs/tags/source-refs/claude-observatory/pull/59/head",
+          "object": "2244f9ff729f3fd59a01cfbef1420ab57d77858a"
+        },
+        {
+          "source": "refs/pull/6/head",
+          "archive": "refs/tags/source-refs/claude-observatory/pull/6/head",
+          "object": "e5eee86ef40d17b6f7169442e467945ecd3bb3ea"
+        },
+        {
+          "source": "refs/pull/60/head",
+          "archive": "refs/tags/source-refs/claude-observatory/pull/60/head",
+          "object": "fb7a963a8ae2ab66c2cd76073313061eae6ceca5"
+        },
+        {
+          "source": "refs/pull/61/head",
+          "archive": "refs/tags/source-refs/claude-observatory/pull/61/head",
+          "object": "39ce33f297bddb337e69bb3d34763da9317f015b"
+        },
+        {
+          "source": "refs/pull/62/head",
+          "archive": "refs/tags/source-refs/claude-observatory/pull/62/head",
+          "object": "13bba96772e034b869a37437979d7f01a997bcd2"
+        },
+        {
+          "source": "refs/pull/63/head",
+          "archive": "refs/tags/source-refs/claude-observatory/pull/63/head",
+          "object": "b8fc031604282519e6bc8fae07d80328de988b3a"
+        },
+        {
+          "source": "refs/pull/64/head",
+          "archive": "refs/tags/source-refs/claude-observatory/pull/64/head",
+          "object": "6c9adbb1eb97a2452246f08d960e11693826fcee"
+        },
+        {
+          "source": "refs/pull/65/head",
+          "archive": "refs/tags/source-refs/claude-observatory/pull/65/head",
+          "object": "32acb5bb9f29834506b2336cc0493032a03c0fb1"
+        },
+        {
+          "source": "refs/pull/66/head",
+          "archive": "refs/tags/source-refs/claude-observatory/pull/66/head",
+          "object": "289904f179becf8e1bcd40a2a30ed5104d5d5056"
+        },
+        {
+          "source": "refs/pull/67/head",
+          "archive": "refs/tags/source-refs/claude-observatory/pull/67/head",
+          "object": "24769d542df51d2091570fbdfb044a7f232ae4c1"
+        },
+        {
+          "source": "refs/pull/68/head",
+          "archive": "refs/tags/source-refs/claude-observatory/pull/68/head",
+          "object": "677c6b372bce8aa67dd02357099c3a86d2e34d5b"
+        },
+        {
+          "source": "refs/pull/69/head",
+          "archive": "refs/tags/source-refs/claude-observatory/pull/69/head",
+          "object": "89cca3304f31585449535fd4d08eedc3daa98724"
+        },
+        {
+          "source": "refs/pull/7/head",
+          "archive": "refs/tags/source-refs/claude-observatory/pull/7/head",
+          "object": "60b6c3e015921317f2adada9bcba7c4247aa9969"
+        },
+        {
+          "source": "refs/pull/70/head",
+          "archive": "refs/tags/source-refs/claude-observatory/pull/70/head",
+          "object": "868875b1c50255ce09f1c16fef24e04746b0525d"
+        },
+        {
+          "source": "refs/pull/71/head",
+          "archive": "refs/tags/source-refs/claude-observatory/pull/71/head",
+          "object": "6f133e1c75529fc9b75a122dd084f3e39dc2279f"
+        },
+        {
+          "source": "refs/pull/72/head",
+          "archive": "refs/tags/source-refs/claude-observatory/pull/72/head",
+          "object": "911bb089f426ab794468f4ff825b85b7b5156dfc"
+        },
+        {
+          "source": "refs/pull/73/head",
+          "archive": "refs/tags/source-refs/claude-observatory/pull/73/head",
+          "object": "5b98d8197c85b21c5a18ae22b2f888cd286de114"
+        },
+        {
+          "source": "refs/pull/74/head",
+          "archive": "refs/tags/source-refs/claude-observatory/pull/74/head",
+          "object": "b1249a10bd9bcea40aa2be73bf8867db965100ac"
+        },
+        {
+          "source": "refs/pull/75/head",
+          "archive": "refs/tags/source-refs/claude-observatory/pull/75/head",
+          "object": "f76068c1fe123a2838f1c2128bff4f2b1eb54c09"
+        },
+        {
+          "source": "refs/pull/76/head",
+          "archive": "refs/tags/source-refs/claude-observatory/pull/76/head",
+          "object": "ea4937583540eecf4f8b9eb003d95e5cfc8df054"
+        },
+        {
+          "source": "refs/pull/77/head",
+          "archive": "refs/tags/source-refs/claude-observatory/pull/77/head",
+          "object": "be3b9a99296eb28c41c59be1ed2ae4d2a1063c28"
+        },
+        {
+          "source": "refs/pull/78/head",
+          "archive": "refs/tags/source-refs/claude-observatory/pull/78/head",
+          "object": "0ae8c169a4f4c7e09c82e3d15785d2411a1557af"
+        },
+        {
+          "source": "refs/pull/79/head",
+          "archive": "refs/tags/source-refs/claude-observatory/pull/79/head",
+          "object": "b1fa8a581f61247413ce618bdcf68dcf54829749"
+        },
+        {
+          "source": "refs/pull/8/head",
+          "archive": "refs/tags/source-refs/claude-observatory/pull/8/head",
+          "object": "ee01c2694c5501949a7ef9be4a91619c502a8767"
+        },
+        {
+          "source": "refs/pull/80/head",
+          "archive": "refs/tags/source-refs/claude-observatory/pull/80/head",
+          "object": "135b0a7fcbd6a455592208a3a8ecaf0d06b2ff67"
+        },
+        {
+          "source": "refs/pull/9/head",
+          "archive": "refs/tags/source-refs/claude-observatory/pull/9/head",
+          "object": "1b2c4c6e5c5bc9a83e71bcca6e52af373679c82d"
+        }
+      ],
+      "verified_object_count": 2427,
+      "lfs_inventory": ""
+    },
+    {
+      "name": "enrahitu",
+      "url": "https://github.com/statecrafting/enrahitu",
+      "default_branch": "main",
+      "default_commit": "26c75e20c37a08f072b7c424cae610d402af2a40",
+      "was_archived": false,
+      "refs": [
+        {
+          "source": "refs/heads/main",
+          "archive": "refs/heads/history/enrahitu/main",
+          "object": "26c75e20c37a08f072b7c424cae610d402af2a40"
+        },
+        {
+          "source": "refs/pull/1/head",
+          "archive": "refs/tags/source-refs/enrahitu/pull/1/head",
+          "object": "7b3d491b1f00c866444c81f4b5bd28d52fe8d822"
+        },
+        {
+          "source": "refs/pull/10/head",
+          "archive": "refs/tags/source-refs/enrahitu/pull/10/head",
+          "object": "8ad0254e1b95e8533e55ceaa48438dc7e8da7b07"
+        },
+        {
+          "source": "refs/pull/11/head",
+          "archive": "refs/tags/source-refs/enrahitu/pull/11/head",
+          "object": "ff31e11d280fd131e05065139c9cbf159c6ad37d"
+        },
+        {
+          "source": "refs/pull/12/head",
+          "archive": "refs/tags/source-refs/enrahitu/pull/12/head",
+          "object": "ea80fce81d0561136ca179edf675915fafa4de94"
+        },
+        {
+          "source": "refs/pull/13/head",
+          "archive": "refs/tags/source-refs/enrahitu/pull/13/head",
+          "object": "67f6de8ce666b8c0514bb6798a16d5a4b230dca6"
+        },
+        {
+          "source": "refs/pull/14/head",
+          "archive": "refs/tags/source-refs/enrahitu/pull/14/head",
+          "object": "d72933029f20ce4a93d1e055007b0a99fec3699f"
+        },
+        {
+          "source": "refs/pull/15/head",
+          "archive": "refs/tags/source-refs/enrahitu/pull/15/head",
+          "object": "3fc2c82be7db27d78e0d02941915c57a42f025b4"
+        },
+        {
+          "source": "refs/pull/16/head",
+          "archive": "refs/tags/source-refs/enrahitu/pull/16/head",
+          "object": "ecf0b0955c7159e25c49afb72aa077e4deb89236"
+        },
+        {
+          "source": "refs/pull/17/head",
+          "archive": "refs/tags/source-refs/enrahitu/pull/17/head",
+          "object": "beaff6d2a4aef01e953dc1bde1be78fe75c6e7a5"
+        },
+        {
+          "source": "refs/pull/18/head",
+          "archive": "refs/tags/source-refs/enrahitu/pull/18/head",
+          "object": "2a0c3e9d5b421b05299e0cfba23879d130508843"
+        },
+        {
+          "source": "refs/pull/19/head",
+          "archive": "refs/tags/source-refs/enrahitu/pull/19/head",
+          "object": "412609f1b9adf1732e54f73b53c7040300e54c46"
+        },
+        {
+          "source": "refs/pull/2/head",
+          "archive": "refs/tags/source-refs/enrahitu/pull/2/head",
+          "object": "59704245c133dce3a3e8ba58b11c1fb9208839c7"
+        },
+        {
+          "source": "refs/pull/20/head",
+          "archive": "refs/tags/source-refs/enrahitu/pull/20/head",
+          "object": "29496db52fd70381984e8cf062b86e6c1100b6ca"
+        },
+        {
+          "source": "refs/pull/21/head",
+          "archive": "refs/tags/source-refs/enrahitu/pull/21/head",
+          "object": "3724263ccd7e74f97c1bcc5ee5cf0ecbbf633b7a"
+        },
+        {
+          "source": "refs/pull/22/head",
+          "archive": "refs/tags/source-refs/enrahitu/pull/22/head",
+          "object": "1ccdce65d047d854094f75564f9d2ddaa6a430fd"
+        },
+        {
+          "source": "refs/pull/23/head",
+          "archive": "refs/tags/source-refs/enrahitu/pull/23/head",
+          "object": "5385721651d9b29f4fb44d1d807d53dd6c39fd61"
+        },
+        {
+          "source": "refs/pull/24/head",
+          "archive": "refs/tags/source-refs/enrahitu/pull/24/head",
+          "object": "aa886bf955d72105fab325036e19b0c60a0712a9"
+        },
+        {
+          "source": "refs/pull/25/head",
+          "archive": "refs/tags/source-refs/enrahitu/pull/25/head",
+          "object": "fdfbee31697e2442528ae491bf92c8bd4d712a1d"
+        },
+        {
+          "source": "refs/pull/26/head",
+          "archive": "refs/tags/source-refs/enrahitu/pull/26/head",
+          "object": "d90405c3808bda4131f1474ae07566b549f98156"
+        },
+        {
+          "source": "refs/pull/27/head",
+          "archive": "refs/tags/source-refs/enrahitu/pull/27/head",
+          "object": "51c873475e6d30842f0d9f58b798f3c24a0a0173"
+        },
+        {
+          "source": "refs/pull/28/head",
+          "archive": "refs/tags/source-refs/enrahitu/pull/28/head",
+          "object": "0505c804101f0ae225c5be86a38fcf73edfcba1c"
+        },
+        {
+          "source": "refs/pull/29/head",
+          "archive": "refs/tags/source-refs/enrahitu/pull/29/head",
+          "object": "97bea146362de88740c67af1f76a9858593768ff"
+        },
+        {
+          "source": "refs/pull/3/head",
+          "archive": "refs/tags/source-refs/enrahitu/pull/3/head",
+          "object": "eab8945264c25997ec9e0dc6c573ad310c09a0db"
+        },
+        {
+          "source": "refs/pull/30/head",
+          "archive": "refs/tags/source-refs/enrahitu/pull/30/head",
+          "object": "c89cebf752804efd9c8a6c5efdfdd84f8ce36ea9"
+        },
+        {
+          "source": "refs/pull/31/head",
+          "archive": "refs/tags/source-refs/enrahitu/pull/31/head",
+          "object": "ad35d555267411528d25d36e87d96d50a091e819"
+        },
+        {
+          "source": "refs/pull/32/head",
+          "archive": "refs/tags/source-refs/enrahitu/pull/32/head",
+          "object": "521a32dad5b26c925323eac801f961bd88e43f09"
+        },
+        {
+          "source": "refs/pull/33/head",
+          "archive": "refs/tags/source-refs/enrahitu/pull/33/head",
+          "object": "f7f9fb0bb2a6d4a1a6b581ac22d1158b355ba6c5"
+        },
+        {
+          "source": "refs/pull/34/head",
+          "archive": "refs/tags/source-refs/enrahitu/pull/34/head",
+          "object": "61ffb770d54f70399ec31f187e28a5d7b6e763cd"
+        },
+        {
+          "source": "refs/pull/35/head",
+          "archive": "refs/tags/source-refs/enrahitu/pull/35/head",
+          "object": "f136eebef038fcdfc01b7e17f446b04c31feae95"
+        },
+        {
+          "source": "refs/pull/36/head",
+          "archive": "refs/tags/source-refs/enrahitu/pull/36/head",
+          "object": "81849d02a3e9c1e06c36af430d69710dc83e87e7"
+        },
+        {
+          "source": "refs/pull/37/head",
+          "archive": "refs/tags/source-refs/enrahitu/pull/37/head",
+          "object": "d89049bcf54b6831b403379800f0e6b484c50c4f"
+        },
+        {
+          "source": "refs/pull/38/head",
+          "archive": "refs/tags/source-refs/enrahitu/pull/38/head",
+          "object": "100bf1ec77628913308a61d4bc32301741c25e4d"
+        },
+        {
+          "source": "refs/pull/39/head",
+          "archive": "refs/tags/source-refs/enrahitu/pull/39/head",
+          "object": "468f10328c1d245b1a4dc9ef3329b33cd1d93007"
+        },
+        {
+          "source": "refs/pull/4/head",
+          "archive": "refs/tags/source-refs/enrahitu/pull/4/head",
+          "object": "ecfd9a869eebd5cd552b4bf22d00926bee6e38bc"
+        },
+        {
+          "source": "refs/pull/40/head",
+          "archive": "refs/tags/source-refs/enrahitu/pull/40/head",
+          "object": "69af11b451ae1b3b84d8cdee0a4bb7ec3a25fbd2"
+        },
+        {
+          "source": "refs/pull/41/head",
+          "archive": "refs/tags/source-refs/enrahitu/pull/41/head",
+          "object": "5340340dfc5bf2de0081aa5b3fe2264c3907282f"
+        },
+        {
+          "source": "refs/pull/42/head",
+          "archive": "refs/tags/source-refs/enrahitu/pull/42/head",
+          "object": "f5f84866d2cfeee3bfcf980210b33520c72a0923"
+        },
+        {
+          "source": "refs/pull/43/head",
+          "archive": "refs/tags/source-refs/enrahitu/pull/43/head",
+          "object": "13b0f28ed9530b2f4f7f2fb2b0698debe2a8dfff"
+        },
+        {
+          "source": "refs/pull/44/head",
+          "archive": "refs/tags/source-refs/enrahitu/pull/44/head",
+          "object": "02bdc30a606eaeca45eb42163ac8484d0e914995"
+        },
+        {
+          "source": "refs/pull/45/head",
+          "archive": "refs/tags/source-refs/enrahitu/pull/45/head",
+          "object": "3bfac431d705dbd6ccd27f8ec9c914cc6948ec09"
+        },
+        {
+          "source": "refs/pull/46/head",
+          "archive": "refs/tags/source-refs/enrahitu/pull/46/head",
+          "object": "b2c37296f0d0e18dbfedf87de9c7da700969cadc"
+        },
+        {
+          "source": "refs/pull/47/head",
+          "archive": "refs/tags/source-refs/enrahitu/pull/47/head",
+          "object": "6d5cb41b8690a93e57167172b9a3d183b9593583"
+        },
+        {
+          "source": "refs/pull/48/head",
+          "archive": "refs/tags/source-refs/enrahitu/pull/48/head",
+          "object": "2d58bf68c2c27290f24fbfe09c6d858f7e07dc97"
+        },
+        {
+          "source": "refs/pull/49/head",
+          "archive": "refs/tags/source-refs/enrahitu/pull/49/head",
+          "object": "81d5a7733cec4187d1c3d7c4322a0bf403db013d"
+        },
+        {
+          "source": "refs/pull/5/head",
+          "archive": "refs/tags/source-refs/enrahitu/pull/5/head",
+          "object": "219f92ee3c151832d1876c3b6d0c8ea5e696ea99"
+        },
+        {
+          "source": "refs/pull/50/head",
+          "archive": "refs/tags/source-refs/enrahitu/pull/50/head",
+          "object": "e7684fc6d66abd472f9c74a9e29726a34c85826a"
+        },
+        {
+          "source": "refs/pull/51/head",
+          "archive": "refs/tags/source-refs/enrahitu/pull/51/head",
+          "object": "a59db2e5ed96ab33fc7de96a8e404fe14b353f0e"
+        },
+        {
+          "source": "refs/pull/52/head",
+          "archive": "refs/tags/source-refs/enrahitu/pull/52/head",
+          "object": "1e1770e6e989ea9498033415eb402eac6132bce5"
+        },
+        {
+          "source": "refs/pull/53/head",
+          "archive": "refs/tags/source-refs/enrahitu/pull/53/head",
+          "object": "b2c40e30bfe5b4115366d6ec705b997fc6d1dcb0"
+        },
+        {
+          "source": "refs/pull/54/head",
+          "archive": "refs/tags/source-refs/enrahitu/pull/54/head",
+          "object": "6811fac092bc8b26d48749aa9e02c189b7b0f0a9"
+        },
+        {
+          "source": "refs/pull/55/head",
+          "archive": "refs/tags/source-refs/enrahitu/pull/55/head",
+          "object": "a116f35e73ce5b5e83054249aee86a02b028c8cd"
+        },
+        {
+          "source": "refs/pull/56/head",
+          "archive": "refs/tags/source-refs/enrahitu/pull/56/head",
+          "object": "98551a14ee5286a985b0ed5554b979c9ddb868c3"
+        },
+        {
+          "source": "refs/pull/57/head",
+          "archive": "refs/tags/source-refs/enrahitu/pull/57/head",
+          "object": "58d97d39b59927f8a16638b1f19b736984b73c8a"
+        },
+        {
+          "source": "refs/pull/58/head",
+          "archive": "refs/tags/source-refs/enrahitu/pull/58/head",
+          "object": "648efa67a64fa8760f70a194bca9dbecf8729b7a"
+        },
+        {
+          "source": "refs/pull/59/head",
+          "archive": "refs/tags/source-refs/enrahitu/pull/59/head",
+          "object": "af56c98f5354c1125077bd1c6b0cc445cd9287e9"
+        },
+        {
+          "source": "refs/pull/6/head",
+          "archive": "refs/tags/source-refs/enrahitu/pull/6/head",
+          "object": "cae7a72d8e22ecb9f1ce442e29339200d5e6b2c1"
+        },
+        {
+          "source": "refs/pull/60/head",
+          "archive": "refs/tags/source-refs/enrahitu/pull/60/head",
+          "object": "2c22f4028d70e12ba184725ab476eeca00f8f7ef"
+        },
+        {
+          "source": "refs/pull/61/head",
+          "archive": "refs/tags/source-refs/enrahitu/pull/61/head",
+          "object": "7f79111f7de7ac6de2a675b6128151a50bf89599"
+        },
+        {
+          "source": "refs/pull/62/head",
+          "archive": "refs/tags/source-refs/enrahitu/pull/62/head",
+          "object": "1b603e93b5ed2e2db4454220199143c7f0c785a8"
+        },
+        {
+          "source": "refs/pull/63/head",
+          "archive": "refs/tags/source-refs/enrahitu/pull/63/head",
+          "object": "4d40cc66b261d2bee0715bdaae527d6475cc08b1"
+        },
+        {
+          "source": "refs/pull/64/head",
+          "archive": "refs/tags/source-refs/enrahitu/pull/64/head",
+          "object": "a249605333b76d4ec67bfddaf570f16cb24b1d55"
+        },
+        {
+          "source": "refs/pull/7/head",
+          "archive": "refs/tags/source-refs/enrahitu/pull/7/head",
+          "object": "c9eaa1ab9614438d6c6d0ff5aa11ea8d47f9a554"
+        },
+        {
+          "source": "refs/pull/8/head",
+          "archive": "refs/tags/source-refs/enrahitu/pull/8/head",
+          "object": "9ee2b7a0ea27b4e17b8867106de30eea1c73667c"
+        },
+        {
+          "source": "refs/pull/9/head",
+          "archive": "refs/tags/source-refs/enrahitu/pull/9/head",
+          "object": "072d90959ab57b5a30659b950c558747318317cd"
+        },
+        {
+          "source": "refs/tags/v0.1.0",
+          "archive": "refs/tags/history/enrahitu/v0.1.0",
+          "object": "3c8547600b4891d535e3414b6904ae79eb5d1e19"
+        },
+        {
+          "source": "refs/tags/v0.2.0",
+          "archive": "refs/tags/history/enrahitu/v0.2.0",
+          "object": "49d00f233dcd08dfc535172dd11f5699acba4738"
+        }
+      ],
+      "verified_object_count": 3869,
+      "lfs_inventory": ""
     }
   ]
 }

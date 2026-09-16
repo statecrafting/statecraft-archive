@@ -1,0 +1,54 @@
+{
+  "mapping": {
+    "dependsOn": [
+      "020-app-model-contract",
+      "021-kernel-native-consumption",
+      "026-idp-mail-delivery",
+      "034-control-plane",
+      "035-chassis-boundary",
+      "036-membership-core"
+    ],
+    "implementingPaths": [
+      {
+        "path": "app/mail/README.md",
+        "source": "spec-edge"
+      },
+      {
+        "path": "backend/mail/",
+        "source": "spec-edge"
+      }
+    ],
+    "resolvedUnits": [
+      {
+        "locations": [
+          {
+            "file": "backend/mail/"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "directory",
+          "path": "backend/mail/"
+        }
+      },
+      {
+        "locations": [
+          {
+            "file": "app/mail/README.md"
+          }
+        ],
+        "ownership": true,
+        "sourceField": "establishes",
+        "unit": {
+          "kind": "file",
+          "path": "app/mail/README.md"
+        }
+      }
+    ],
+    "specId": "037-app-mail",
+    "specStatus": "approved"
+  },
+  "schemaVersion": "1.1.0",
+  "shardHash": "60d96f321f8759facb80353d24ed89682e2a2b4f059513638d3338d6ab9a9a50"
+}
